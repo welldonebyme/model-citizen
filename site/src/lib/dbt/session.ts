@@ -47,7 +47,7 @@ const ON_MACHINE = new Set(['python', 'python3', 'py', 'pip', 'pip3', 'uv', 'bre
 const FILTERS = new Set(['grep', 'head', 'tail', 'wc', 'sort', 'uniq', 'cat',
   // PowerShell (powershell.ts)
   'select-string', 'sls', 'select-object', 'sort-object', 'foreach-object', '%', 'measure-object', 'set-content', 'add-content',
-  'out-file', 'where-object', '?', 'convertfrom-json', 'convertto-json']);
+  'out-file', 'where-object', '?', 'convertfrom-json', 'convertto-json', 'out-null']);
 const PS_LISTS = new Set(['copy-item', 'move-item', 'remove-item', 'new-item']);
 const ANSI = /\x1b\[[0-9;]*m/g;
 

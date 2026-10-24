@@ -112,12 +112,13 @@ type Filters = Pick<Challenge, 'chapters' | 'mocks' | 'topics' | 'formats'>;
 
 /** The questions that match the filters, in a fixed order (by id), so every browser has the same list. */
 export function challengePool<T extends BankItem>(bank: T[], f: Filters): T[] {
-  const anySource = f.chapters.length === 0 && f.mocks.length === 0;
+  // nothing chosen = every chapter quiz; mock questions only when a mock is chosen (keep them fresh for the mocks)
+  const anyChapter = f.chapters.length === 0;
   const ch = new Set(f.chapters);
   const mk = new Set(f.mocks);
   const matched = filterBank(bank as unknown as Question[], { ...EMPTY_FILTER, topics: f.topics, formats: f.formats }, NO_HISTORY) as unknown as T[];
   return matched
-    .filter((q) => anySource || (q.source.kind === 'chapter' ? ch.has(q.source.chapter) : mk.has(q.source.mock)))
+    .filter((q) => (q.source.kind === 'chapter' ? anyChapter || ch.has(q.source.chapter) : mk.has(q.source.mock)))
     .slice()
     .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 }

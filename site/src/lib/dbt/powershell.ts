@@ -100,6 +100,7 @@ export class PowerShell {
       case 'foreach-object': case '%': return this.forEach(args, io, stdin);
       case 'measure-object': return this.measure(io, stdin);
       case 'set-content': case 'add-content': case 'out-file': return this.setContent(name, args, io, stdin);
+      case 'out-null': return 0; // discards what comes in, like PowerShell
       case 'where-object': case '?': case 'convertfrom-json': case 'convertto-json':
         io.note({ tone: 'warn', text: `${name} is not available in this browser terminal (PowerShell objects are not supported here). On your computer it works as the lesson shows.` });
         return 1;

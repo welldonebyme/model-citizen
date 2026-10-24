@@ -139,7 +139,7 @@ export default function SettingsApp() {
       <section className="panel st-sec" aria-labelledby="ex-h">
         <h2 id="ex-h">Mock exams</h2>
         <label className="st-check"><input type="checkbox" checked={s.domcEarlyEnd} onChange={(e) => patch({ domcEarlyEnd: e.target.checked })} /> DOMC: end a question as soon as its result is known (like the real exam)</label>
-        <label className="st-check"><input type="checkbox" checked={s.domcExtraOption} onChange={(e) => patch({ domcExtraOption: e.target.checked })} /> DOMC: show one more option after the question is decided, so the end does not tell you if you were right</label>
+        <label className="st-check"><input type="checkbox" checked={s.domcExtraOption} onChange={(e) => patch({ domcExtraOption: e.target.checked })} /> DOMC: sometimes show one more option after the question is decided (like the real exam), so where a question ends does not tell you when it was decided</label>
         <label className="st-check"><input type="checkbox" checked={!!s.examPauseOnClose} onChange={(e) => patch({ examPauseOnClose: e.target.checked || undefined })} /> Pause the timer when I close the page (on the real exam, the time keeps passing: leave this off to practise like the real exam)</label>
       </section>
 

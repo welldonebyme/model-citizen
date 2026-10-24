@@ -254,7 +254,7 @@ export default function ChallengeApp(p: ChallengeAppProps) {
             </label>
           ))}
         </div>
-        <p className="dr-hint">None ticked, and no mock exam: questions from every chapter quiz and every mock exam.</p>
+        <p className="dr-hint">None ticked: questions from every chapter quiz. Tick a mock exam only if you have already taken it, so its questions stay new for the real practice.</p>
       </fieldset>
 
       <div className="ch-row">

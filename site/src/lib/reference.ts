@@ -18,16 +18,22 @@ export const traps: Trap[] = Array.isArray(trapsRaw) ? trapsRaw : trapsRaw?.trap
 const objRaw = one<Objective[] | { objectives: Objective[] }>(import.meta.glob('../generated/objectives.json', { eager: true, import: 'default' }));
 export const objectives: Objective[] = Array.isArray(objRaw) ? objRaw : objRaw?.objectives ?? [];
 
-type CovRaw = CoverageRow[] | Record<string, { lessons?: string[]; labs?: string[]; questions?: string[]; mockQuestions?: string[]; chapterQuestions?: string[] }>;
+type CovEntry = { lessons?: string[]; labs?: string[]; questions?: string[]; mockQuestions?: string[]; chapterQuestions?: string[] };
+type CovRaw = CoverageRow[] | { objectives: Record<string, CovEntry>; gaps?: unknown[] } | Record<string, CovEntry>;
 const covRaw = one<CovRaw>(import.meta.glob('../generated/coverage.json', { eager: true, import: 'default' }));
+const covMap: Record<string, CovEntry> | undefined = !covRaw || Array.isArray(covRaw) ? undefined
+  : 'objectives' in covRaw && typeof covRaw.objectives === 'object' ? (covRaw.objectives as Record<string, CovEntry>) : (covRaw as Record<string, CovEntry>);
 export const coverage: CoverageRow[] = !covRaw ? [] : Array.isArray(covRaw) ? covRaw
-  : Object.entries(covRaw).map(([objective, v]) => ({
+  : Object.entries(covMap ?? {}).map(([objective, v]) => ({
       objective, lessons: v.lessons ?? [], labs: v.labs ?? [],
       questions: [...(v.questions ?? []), ...(v.chapterQuestions ?? []), ...(v.mockQuestions ?? [])],
     }));
 
-const cheatRaw = one<Chapter | { blocks: Block[] }>(import.meta.glob('../generated/cheatsheets.json', { eager: true, import: 'default' }));
-export const cheatsheets: Chapter | undefined = cheatRaw && 'lessons' in cheatRaw ? (cheatRaw as Chapter) : undefined;
+const cheatRaw = one<Chapter | { id: string; title: string; intro: Block[]; sections: Chapter['lessons'] }>(import.meta.glob('../generated/cheatsheets.json', { eager: true, import: 'default' }));
+/** Appendix A: the converter writes { intro, sections } (sections have the lesson shape). */
+export const cheatsheets: { intro: Block[]; lessons: Chapter['lessons'] } | undefined = !cheatRaw ? undefined
+  : 'lessons' in cheatRaw ? { intro: cheatRaw.intro, lessons: cheatRaw.lessons }
+  : { intro: cheatRaw.intro ?? [], lessons: cheatRaw.sections ?? [] };
 
 export const TOPICS: Record<string, string> = {
   CP0: 'Prerequisites',

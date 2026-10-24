@@ -136,3 +136,17 @@ details[open].mc-callout > summary { margin-bottom: 8px; }
 .mc-fig-svg { display: flex; justify-content: center; padding: 14px; background: var(--fig-paper); border: 1px solid var(--line); border-radius: 12px; overflow-x: auto; }
 .mc-fig-svg svg { max-width: 100%; height: auto; }
 .mc-fig figcaption { margin-top: 8px; color: var(--muted); font-size: var(--fs-sm); text-align: center; }
+
+/* paste-to-verify (lib/verify/ui.ts) */
+.mc-verify { margin: -8px 0 var(--s5); border: 1px dashed var(--line-strong); border-radius: 0 0 12px 12px; padding: 8px 14px; background: var(--surface); max-width: 100%; }
+.mc-verify > summary { cursor: pointer; font-size: var(--fs-sm); font-weight: 700; color: var(--accent-strong); }
+.mc-verify label { display: block; margin: 10px 0 6px; font-size: var(--fs-sm); color: var(--muted); }
+.mc-verify textarea { width: 100%; font: 400 0.8125rem/1.5 var(--mono); padding: 8px 10px; border: 1.5px solid var(--line-strong); border-radius: 8px; background: var(--code-bg); color: var(--code-ink); resize: vertical; }
+.mc-verify-row { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+.mc-verify-note { font-size: var(--fs-xs); color: var(--muted); }
+.mc-verify-result:empty { display: none; }
+.mc-verify-result { margin: 10px 0 4px; padding: 10px 12px; border-radius: 8px; font-size: var(--fs-sm); }
+.mc-verify-result[data-ok="true"] { background: var(--ok-bg); }
+.mc-verify-result[data-ok="false"] { background: var(--bad-bg); }
+.mc-verify-head { margin: 0 0 4px; font-weight: 700; color: var(--ink); }
+.mc-verify-result ul { margin: 0; padding-left: 1.2em; }

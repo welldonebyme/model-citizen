@@ -137,7 +137,7 @@ export default function PomodoroLauncher() {
     ];
     setChoices(list);
     setChoice((c) => (list.some((x) => x.key === c) ? c : list[0].key));
-    requestAnimationFrame(() => headRef.current?.focus());
+    headRef.current?.focus();
   }, [open]);
 
   // Close with Escape or a click outside; the focus goes back to the launcher.
@@ -150,9 +150,10 @@ export default function PomodoroLauncher() {
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
-      const inside = panelRef.current?.contains(document.activeElement);
+      const a = document.activeElement;
+      const elsewhere = a && a !== document.body && a !== document.documentElement && !panelRef.current?.contains(a);
       setOpen(false);
-      if (inside || document.activeElement === document.body) btnRef.current?.focus();
+      if (!elsewhere) btnRef.current?.focus();
     };
     document.addEventListener('pointerdown', onDown);
     document.addEventListener('keydown', onKey);
@@ -173,7 +174,7 @@ export default function PomodoroLauncher() {
     commit(startFocus(stateRef.current, t, task));
     setNow(t);
     setAnnounce(`Focus period started: ${stateRef.current.focusMin} minutes.`);
-    requestAnimationFrame(() => headRef.current?.focus());
+    headRef.current?.focus();
   };
   const doStop = () => {
     const t = Date.now();
@@ -181,7 +182,7 @@ export default function PomodoroLauncher() {
     commit(r.state);
     if (r.minutes > 0) { logFocus(r.id, r.minutes, t); setAnnounce(`Stopped. ${r.minutes} ${r.minutes === 1 ? 'minute' : 'minutes'} added to today.`); }
     else setAnnounce('Stopped.');
-    requestAnimationFrame(() => headRef.current?.focus());
+    headRef.current?.focus();
   };
   const toggleNotify = async (on: boolean) => {
     setNotice('');
@@ -249,8 +250,8 @@ export default function PomodoroLauncher() {
 
         <div className="dl-pomo-actions">
           {s.phase === 'idle' && <button type="button" className="btn btn-primary btn-small" onClick={start}>Start {s.focusMin} minutes of focus</button>}
-          {s.phase !== 'idle' && !paused && <button type="button" className="btn btn-quiet btn-small" onClick={() => { commit(pause(stateRef.current, Date.now())); requestAnimationFrame(() => headRef.current?.focus()); }}>Pause</button>}
-          {paused && <button type="button" className="btn btn-primary btn-small" onClick={() => { const t = Date.now(); commit(resume(stateRef.current, t)); setNow(t); requestAnimationFrame(() => headRef.current?.focus()); }}>Resume</button>}
+          {s.phase !== 'idle' && !paused && <button type="button" className="btn btn-quiet btn-small" onClick={() => { commit(pause(stateRef.current, Date.now())); headRef.current?.focus(); }}>Pause</button>}
+          {paused && <button type="button" className="btn btn-primary btn-small" onClick={() => { const t = Date.now(); commit(resume(stateRef.current, t)); setNow(t); headRef.current?.focus(); }}>Resume</button>}
           {s.phase === 'focus' && <button type="button" className="btn btn-quiet btn-small" onClick={doStop}>Stop</button>}
           {s.phase === 'break' && <button type="button" className="btn btn-quiet btn-small" onClick={doStop}>Skip the break</button>}
         </div>

@@ -11,6 +11,7 @@ const toast = (page: Page) => page.locator('.dl-toast');
 async function open(page: Page) {
   await page.goto('test/delight/');
   await expect(compact(page).locator('.dl-level-name')).toHaveText('Level 1 Seed');
+  await expect(page.locator('.dl-pomo[data-loaded]')).toBeAttached(); // the focus timer island is ready (client:idle)
 }
 
 test('XP and badges start at zero, then an "explain it back" note earns a badge and a calm celebration', async ({ page }) => {
@@ -51,6 +52,7 @@ test('"Compare with the book" shows the chapter\'s own box', async ({ page }) =>
   await open(page);
   const btn = page.getByRole('button', { name: 'Compare with the book' }).first();
   await btn.scrollIntoViewIfNeeded();
+  await expect(page.getByLabel('The idea in simple words')).toBeEnabled(); // the island is hydrated (client:visible)
   await expect(btn).toHaveAttribute('aria-expanded', 'false');
   await btn.click();
   await expect(page.getByRole('button', { name: 'Hide the book' }).first()).toHaveAttribute('aria-expanded', 'true');

@@ -21,6 +21,7 @@ for (const scheme of ['light', 'dark'] as const) {
     test('delight islands: panels, celebration, focus timer, shortcuts, explain it back', async ({ page }) => {
       await page.goto('test/delight/');
       await expect(page.getByTestId('compact').locator('.dl-level-name')).toHaveText('Level 1 Seed');
+      await expect(page.locator('.dl-pomo[data-loaded]')).toBeAttached();
       await axe(page, 'panels');
       await page.getByTestId('compact').getByText('All badges and how XP works').click();
       await page.getByTestId('full').getByText('How XP works').click();
@@ -40,6 +41,7 @@ for (const scheme of ['light', 'dark'] as const) {
       await page.keyboard.press('Escape');
       const btn = page.getByRole('button', { name: 'Compare with the book' }).first();
       await btn.scrollIntoViewIfNeeded();
+      await expect(page.getByLabel('The idea in simple words')).toBeEnabled();
       await btn.click();
       await axe(page, 'explain it back, book shown');
     });

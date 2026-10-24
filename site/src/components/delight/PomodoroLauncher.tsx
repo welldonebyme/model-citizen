@@ -148,8 +148,15 @@ export default function PomodoroLauncher() {
       if (panelRef.current?.contains(t) || btnRef.current?.contains(t)) return;
       setOpen(false);
     };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || document.querySelector('dialog[open]')) return;
+      const inside = panelRef.current?.contains(document.activeElement);
+      setOpen(false);
+      if (inside || document.activeElement === document.body) btnRef.current?.focus();
+    };
     document.addEventListener('pointerdown', onDown);
-    return () => document.removeEventListener('pointerdown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('pointerdown', onDown); document.removeEventListener('keydown', onKey); };
   }, [open]);
   const close = () => { setOpen(false); btnRef.current?.focus(); };
 
@@ -166,6 +173,7 @@ export default function PomodoroLauncher() {
     commit(startFocus(stateRef.current, t, task));
     setNow(t);
     setAnnounce(`Focus period started: ${stateRef.current.focusMin} minutes.`);
+    requestAnimationFrame(() => headRef.current?.focus());
   };
   const doStop = () => {
     const t = Date.now();
@@ -173,6 +181,7 @@ export default function PomodoroLauncher() {
     commit(r.state);
     if (r.minutes > 0) { logFocus(r.id, r.minutes, t); setAnnounce(`Stopped. ${r.minutes} ${r.minutes === 1 ? 'minute' : 'minutes'} added to today.`); }
     else setAnnounce('Stopped.');
+    requestAnimationFrame(() => headRef.current?.focus());
   };
   const toggleNotify = async (on: boolean) => {
     setNotice('');
@@ -203,7 +212,7 @@ export default function PomodoroLauncher() {
       </button>
 
       <div ref={panelRef} id={`${uid}-panel`} className="dl-pomo-panel" role="dialog" aria-modal="false" aria-labelledby={`${uid}-h`} hidden={!open}
-        onKeyDown={(e) => { if (e.key === 'Escape') { e.stopPropagation(); close(); } }}>
+>
         <div className="dl-pomo-head">
           <h2 id={`${uid}-h`} ref={headRef} tabIndex={-1}>Focus timer</h2>
           <button type="button" className="dl-icon-btn" onClick={close} aria-label="Close the focus timer">
@@ -240,8 +249,8 @@ export default function PomodoroLauncher() {
 
         <div className="dl-pomo-actions">
           {s.phase === 'idle' && <button type="button" className="btn btn-primary btn-small" onClick={start}>Start {s.focusMin} minutes of focus</button>}
-          {s.phase !== 'idle' && !paused && <button type="button" className="btn btn-quiet btn-small" onClick={() => commit(pause(stateRef.current, Date.now()))}>Pause</button>}
-          {paused && <button type="button" className="btn btn-primary btn-small" onClick={() => { const t = Date.now(); commit(resume(stateRef.current, t)); setNow(t); }}>Resume</button>}
+          {s.phase !== 'idle' && !paused && <button type="button" className="btn btn-quiet btn-small" onClick={() => { commit(pause(stateRef.current, Date.now())); requestAnimationFrame(() => headRef.current?.focus()); }}>Pause</button>}
+          {paused && <button type="button" className="btn btn-primary btn-small" onClick={() => { const t = Date.now(); commit(resume(stateRef.current, t)); setNow(t); requestAnimationFrame(() => headRef.current?.focus()); }}>Resume</button>}
           {s.phase === 'focus' && <button type="button" className="btn btn-quiet btn-small" onClick={doStop}>Stop</button>}
           {s.phase === 'break' && <button type="button" className="btn btn-quiet btn-small" onClick={doStop}>Skip the break</button>}
         </div>

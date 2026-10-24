@@ -111,7 +111,7 @@ export default function XpBadgesPanel({ variant = 'compact', id = 'badges', head
   }
 
   const earned = game.badges.filter((b) => b.earned);
-  const nextUp = game.badges.filter((b) => !b.earned).sort((a, b) => (b.progress ? b.progress.value / b.progress.target : 0) - (a.progress ? a.progress.value / a.progress.target : 0)).slice(0, 3);
+  const nextUp = game.badges.filter((b) => !b.earned && b.progress && b.progress.value > 0).sort((a, b) => (b.progress ? b.progress.value / b.progress.target : 0) - (a.progress ? a.progress.value / a.progress.target : 0)).slice(0, 3);
 
   if (variant === 'compact') {
     return (

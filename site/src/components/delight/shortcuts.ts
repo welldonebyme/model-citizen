@@ -15,14 +15,14 @@ export function openShortcuts() {
 export function moveStep(dir: 1 | -1): boolean {
   const steps = Array.from(document.querySelectorAll<HTMLElement>('[data-step]'));
   if (!steps.length) return false;
-  const line = 180; // reading line, below the sticky header and lesson bar
+  const pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+  const line = pad + 100; // reading line, a little below where a step starts after a jump
   let cur = -1;
   steps.forEach((s, i) => { if (s.getBoundingClientRect().top <= line) cur = i; });
-  let i: number;
-  if (dir === 1) i = cur + 1;
-  else i = cur >= 0 && steps[cur].getBoundingClientRect().top < line - 60 ? cur : cur - 1;
-  const target = steps[Math.max(0, Math.min(steps.length - 1, i))];
-  if (!target || (dir === 1 && i >= steps.length)) return false;
+  // K inside a step (its start already scrolled away) goes back to its start; at its start, to the previous one
+  const i = dir === 1 ? cur + 1 : cur >= 0 && steps[cur].getBoundingClientRect().top < pad - 24 ? cur : cur - 1;
+  if (i < 0 || i >= steps.length) return false;
+  const target = steps[i];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
   const h = target.querySelector<HTMLElement>('h2, h3');

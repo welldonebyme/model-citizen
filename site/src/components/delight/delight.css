@@ -66,6 +66,7 @@
 
 .dl-full-grid { display: grid; grid-template-columns: minmax(280px, 380px) minmax(0, 1fr); gap: 16px; align-items: start; }
 .dl-full-level { display: grid; gap: 12px; }
+.dl-full-level > .dl-more { margin-top: 0; }
 .dl-sub { font-size: var(--fs-md); margin: 6px 0 0; }
 .dl-parts { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: var(--fs-sm); }
 .dl-parts li { display: grid; grid-template-columns: minmax(0, 1fr) 80px 52px; gap: 10px; align-items: center; }

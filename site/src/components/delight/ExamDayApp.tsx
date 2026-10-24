@@ -177,8 +177,8 @@ export default function ExamDayApp(p: ExamDayProps) {
                       {isToday && <span className="pill pill-review">Today</span>}
                       {w.days !== null && w.days > 0 && (
                         <label className="ed-day-check">
-                          <input type="checkbox" checked={on} disabled={!ticks} onChange={(e) => tickWeek(w.id, e.target.checked)} />
-                          <span>Done<span className="visually-hidden">: {w.day}</span></span>
+                          <input type="checkbox" checked={on} disabled={!ticks} aria-label={`Done: ${w.day}`} onChange={(e) => tickWeek(w.id, e.target.checked)} />
+                          <span aria-hidden="true">Done</span>
                         </label>
                       )}
                     </div>

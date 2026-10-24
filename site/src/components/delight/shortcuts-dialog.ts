@@ -37,7 +37,7 @@ export const GROUPS: Group[] = [
     { keys: [['Enter']], what: 'Run the command' },
     { keys: [['↑'], ['↓']], what: 'Earlier commands' },
     { keys: [['Ctrl', 'L']], what: 'Clear the terminal' },
-    { keys: [['Ctrl', 'C']], what: 'Stop the running command (when no text is selected)' },
+    { keys: [['Control', 'C']], what: 'Stop the running command (when no text is selected)' },
   ] },
   { title: 'Selector playground', items: [
     { keys: [['←'], ['→'], ['↑'], ['↓']], what: 'Move between the models of the graph' },
@@ -57,11 +57,12 @@ const CSS = `
 .mc-keys-head p { margin: 2px 0 0; color: var(--muted); font-size: var(--fs-sm); }
 .mc-keys-close { margin-left: auto; align-self: start; display: inline-grid; place-items: center; width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); color: var(--muted); }
 .mc-keys-close:hover { color: var(--ink); border-color: var(--line-strong); }
+.mc-keys-body:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; }
 .mc-keys-body { overflow-y: auto; padding: 8px 20px 20px; columns: 2 300px; column-gap: 32px; }
 .mc-keys-group { break-inside: avoid; padding-top: 12px; }
 .mc-keys-group h3 { font-size: var(--fs-sm); text-transform: none; color: var(--accent-strong); margin: 0 0 6px; }
-.mc-keys-group dl { margin: 0; display: grid; gap: 6px; }
-.mc-keys-group dl > div { display: grid; grid-template-columns: minmax(96px, auto) 1fr; gap: 12px; align-items: baseline; }
+.mc-keys-group dl { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 14px; align-items: baseline; }
+.mc-keys-group dl > div { display: contents; }
 .mc-keys-group dt { white-space: nowrap; }
 .mc-keys-group dd { margin: 0; font-size: var(--fs-sm); color: var(--text); }
 .mc-keys kbd { display: inline-block; min-width: 1.7em; padding: 1px 6px; margin: 0 2px 2px 0; font: 600 var(--fs-xs)/1.5 var(--mono); text-align: center; color: var(--ink); background: var(--paper); border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 5px; }
@@ -76,11 +77,13 @@ function el<K extends keyof HTMLElementTagNameMap>(tag: K, attrs: Record<string,
   return e;
 }
 
+/** "Ctrl" is ⌘ on a Mac (the site accepts both); "Control" is the Ctrl key on every computer. */
 function keyCombo(combo: string[], mac: boolean): HTMLElement {
-  const span = el('span');
-  const label = combo.map((k) => (k === 'Ctrl' && mac ? 'Command' : KEY_NAME[k] ?? k)).join(' + ');
-  span.setAttribute('aria-label', label);
-  combo.forEach((k) => span.append(el('kbd', { 'aria-hidden': 'true' }, k === 'Ctrl' && mac ? '⌘' : k)));
+  const span = el('span', { class: 'mc-keys-combo' });
+  const shown = (k: string) => (k === 'Ctrl' && mac ? '⌘' : k === 'Control' ? 'Ctrl' : k);
+  const spoken = (k: string) => (k === 'Ctrl' && mac ? 'Command' : k === 'Control' ? 'Control' : KEY_NAME[k] ?? k);
+  span.append(el('span', { class: 'visually-hidden' }, combo.map(spoken).join(' + ')));
+  combo.forEach((k) => span.append(el('kbd', { 'aria-hidden': 'true' }, shown(k))));
   return span;
 }
 
@@ -95,9 +98,9 @@ function build(): HTMLDialogElement {
   close.addEventListener('click', () => d.close());
   const head = el('div', { class: 'mc-keys-head' },
     el('div', {}, el('h2', { id: 'mc-keys-h' }, 'Keyboard shortcuts'),
-      el('p', {}, mac ? 'On this Mac, ⌘ (Command) works where the list says Ctrl. ' : 'On a Mac, use ⌘ (Command) instead of Ctrl. ', 'One-letter shortcuts work when you are not typing in a field.')),
+      el('p', {}, mac ? 'On this Mac, the list shows ⌘ (Command) where Windows uses Ctrl. ' : 'On a Mac, use ⌘ (Command) instead of Ctrl, except to stop a dbt command. ', 'One-letter shortcuts work when you are not typing in a field.')),
     close);
-  const body = el('div', { class: 'mc-keys-body' });
+  const body = el('div', { class: 'mc-keys-body', tabindex: '0', role: 'group', 'aria-label': 'List of shortcuts' });
   for (const g of GROUPS) {
     const dl = el('dl');
     for (const it of g.items) {

@@ -2,6 +2,7 @@
 // browser's progress (IndexedDB rows). Pure functions, unit-tested.
 import type { Activity, Answer, ExamAttempt, Progress } from './store/db';
 import { today } from './store/db';
+import { isCapstoneLab, labOfStep } from './lab-steps';
 
 export interface Mastery { correct: number; answered: number; available: number }
 
@@ -72,7 +73,7 @@ export function labsDone(progress: Progress[], labSteps: Record<string, number>)
   const ticked = new Map<string, number>();
   for (const p of progress) {
     if (p.kind !== 'labstep') continue;
-    const lab = p.ref.replace(/:\d+$/, '');
+    const lab = labOfStep(p.ref);
     ticked.set(lab, (ticked.get(lab) ?? 0) + 1);
   }
   const done = new Set<string>();
@@ -82,6 +83,11 @@ export function labsDone(progress: Progress[], labSteps: Record<string, number>)
     if (labSteps[lab] && n >= labSteps[lab]) done.add(lab);
   }
   return { done, started };
+}
+
+/** Capstone milestones finished: the ch26 labs whose requirement checklist is fully ticked. */
+export function capstoneDone(progress: Progress[], labSteps: Record<string, number>): number {
+  return [...labsDone(progress, labSteps).done].filter(isCapstoneLab).length;
 }
 
 /** Study minutes per day for the last `days` days, oldest first (missing days = 0). */

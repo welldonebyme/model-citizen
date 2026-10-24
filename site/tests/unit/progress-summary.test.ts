@@ -36,3 +36,30 @@ describe('progress summary', () => {
     expect(d[0].date).toBe('2026-10-22');
   });
 });
+
+import { labStepRefs, labOfStep, milestoneOf } from '../../src/lib/lab-steps';
+import { capstoneDone } from '../../src/lib/progress-summary';
+import type { Block } from '../../src/lib/content-types';
+
+describe('lab steps', () => {
+  const p = (t: string): Block => ({ t: 'p', c: [t] }) as Block;
+  const list = (kind: 'ol' | 'ul', n: number, start?: number): Block => ({ t: 'list', kind, start, items: Array.from({ length: n }, () => ({ blocks: [p('x')] })) }) as Block;
+  const lab = (id: string, blocks: Block[]) => ({ t: 'lab', id, title: [], objectives: [], blocks }) as Extract<Block, { t: 'lab' }>;
+  it('numbered steps, capstone requirements, or one done tick', () => {
+    expect(labStepRefs(lab('ch07-lab1', [list('ol', 2), p('a'), list('ol', 2, 3)]))).toEqual(['ch07-lab1:1', 'ch07-lab1:2', 'ch07-lab1:3', 'ch07-lab1:4']);
+    expect(labStepRefs(lab('ch26-lab3', [list('ul', 3), p('Expected result')]))).toEqual(['ch26-lab3:r1', 'ch26-lab3:r2', 'ch26-lab3:r3']);
+    expect(labStepRefs(lab('ch05-lab1', [p('a')]))).toEqual(['ch05-lab1:done']);
+    expect(labStepRefs(lab('ch18-lab4', [list('ul', 2)]))).toEqual(['ch18-lab4:done']);
+  });
+  it('maps ticks back to labs and milestones', () => {
+    expect(['ch07-lab2:3', 'ch26-lab3:r12', 'ch05-lab1:done'].map(labOfStep)).toEqual(['ch07-lab2', 'ch26-lab3', 'ch05-lab1']);
+    expect(milestoneOf('ch26-lab1')).toBe('m00');
+    expect(milestoneOf('ch26-lab15')).toBe('m14');
+  });
+  it('counts finished capstone milestones only', () => {
+    const P = (ref: string) => ({ id: `labstep:${ref}`, kind: 'labstep', ref, status: 'done', firstAt: 1, updatedAt: 1 }) as const;
+    const steps = { 'ch26-lab1': 2, 'ch26-lab2': 1, 'ch05-lab1': 1 };
+    expect(capstoneDone([P('ch26-lab1:r1'), P('ch26-lab1:r2'), P('ch26-lab2:r1'), P('ch05-lab1:done')] as never, steps)).toBe(2);
+    expect(capstoneDone([P('ch26-lab1:r1')] as never, steps)).toBe(0);
+  });
+});

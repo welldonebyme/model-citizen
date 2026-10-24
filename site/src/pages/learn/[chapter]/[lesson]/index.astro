@@ -4,6 +4,8 @@ import { StaticBlocks } from '../../../../components/content/StaticBlocks';
 import { Inline } from '../../../../components/content/Inline';
 import OsSwitch from '../../../../components/ui/OsSwitch.astro';
 import LessonCheckpoints from '../../../../components/quiz/LessonCheckpoints';
+import SqlWorkspace from '../../../../components/labs/SqlWorkspace';
+import sqlMeta from '../../../../lib/sql/book-sql-meta.json';
 import { lessons, neighbours, routes, partName } from '../../../../lib/content';
 import { figuresFor } from '../../../../lib/figures';
 import { url } from '../../../../lib/url';
@@ -20,6 +22,16 @@ const allBlocks: Block[] = lesson.steps.flatMap((s) => s.blocks);
 const figures = figuresFor(allBlocks);
 const steps = lesson.steps;
 const isLast = !next || next.chapter.id !== chapter.id;
+// The SQL workspace (DuckDB in the browser) sits in a right column when the lesson has book SQL it can run.
+const codeIds: string[] = [];
+const walkCode = (bs: Block[]) => bs.forEach((b) => {
+  if (b.t === 'code') codeIds.push(b.id);
+  if (b.t === 'callout' || b.t === 'lab') walkCode(b.blocks);
+  if (b.t === 'list') b.items.forEach((it) => walkCode(it.blocks));
+});
+walkCode(allBlocks);
+const sqlExamples = codeIds.filter((id) => id in (sqlMeta as { examples: Record<string, unknown> }).examples);
+const hasWork = sqlExamples.length > 0;
 ---
 <Base title={`${lesson.number} ${lesson.titleText}`} section="path" description={`Lesson ${lesson.number} of the Model Citizen dbt course: ${lesson.titleText}.`}>
   <div class="lessonbar">
@@ -36,7 +48,7 @@ const isLast = !next || next.chapter.id !== chapter.id;
     <OsSwitch />
   </div>
 
-  <div class="lesson" data-lesson={lesson.id} data-chapter={chapter.id}>
+  <div class:list={['lesson', { 'has-work': hasWork }]} data-lesson={lesson.id} data-chapter={chapter.id}>
     <nav class="outline" aria-label={`Chapter ${chapter.number} lessons`}>
       <p class="outline-title"><a href={url(routes.chapter(chapter))}>{partName(chapter.part)}, chapter {chapter.number}</a></p>
       <ol>
@@ -63,7 +75,8 @@ const isLast = !next || next.chapter.id !== chapter.id;
       </header>
 
       {steps.map((s, i) => (
-        <section class="step" id={s.id} data-step={s.id} aria-labelledby={`${s.id}-h`}>
+        <section class="step" id={s.id} data-step={s.id} aria-labelledby={`${s.id}-h`}
+          data-hints={s.titleText === 'Hints' ? '' : undefined} data-checkpoint={s.titleText === 'Checkpoint' ? '' : undefined}>
           {i > 0 ? <h2 class="step-h" id={`${s.id}-h`}><span class="step-n">Step {i + 1} of {steps.length}</span><Inline c={s.title} /></h2>
                  : <h2 class="visually-hidden" id={`${s.id}-h`}>Step 1 of {steps.length}: {s.titleText}</h2>}
           <div class="step-body"><StaticBlocks blocks={s.blocks} figures={figures} /></div>
@@ -89,10 +102,20 @@ const isLast = !next || next.chapter.id !== chapter.id;
           : next && <a class="pg next" href={url(routes.lesson(next.lesson, next.chapter.id))}><span>Next lesson</span><b>{next.lesson.number} {next.lesson.titleText}</b></a>}
       </nav>
     </article>
+    {hasWork && (
+      <aside class="work" aria-label="SQL workspace" data-sql-workspace>
+        <div class="work-in">
+          <SqlWorkspace client:idle heading="Try it here" description={`The practice database runs in your browser. Press "Run in workspace" on any example of this lesson, or write your own query.`} initialCodeId={sqlExamples[0]} />
+        </div>
+      </aside>
+    )}
   </div>
   <script>
     import '../../../../lib/lesson-progress';
     import '../../../../lib/verify/ui';
+    import '../../../../lib/hints';
+    // "Run in workspace" only where a SQL workspace is on the page
+    if (!document.querySelector('[data-sql-workspace]')) document.querySelectorAll('[data-send-to-workspace]').forEach((b) => b.remove());
   </script>
 </Base>
 
@@ -152,6 +175,19 @@ const isLast = !next || next.chapter.id !== chapter.id;
   .pg.next { text-align: right; border-color: var(--accent); }
   .pg:hover { box-shadow: var(--shadow); }
 
+  /* lessons with a workspace: outline | reading | workspace, then the workspace moves below the lesson */
+  .lesson.has-work { grid-template-columns: 240px minmax(0, 1fr) minmax(400px, 480px); max-width: 1720px; }
+  .work { min-width: 0; border-left: 1px solid var(--line); background: var(--surface-2); }
+  .work-in { position: sticky; top: calc(var(--header-h) + 52px); max-height: calc(100vh - var(--header-h) - 52px); overflow-y: auto; padding: 20px 18px 28px; }
+  @media (max-width: 1460px) {
+    .lesson.has-work { grid-template-columns: minmax(0, 1fr) minmax(380px, 440px); }
+    .lesson.has-work .outline { display: none; }
+  }
+  @media (max-width: 1080px) {
+    .lesson.has-work { grid-template-columns: minmax(0, 1fr); }
+    .work { border-left: 0; border-top: 1px solid var(--line); }
+    .work-in { position: static; max-height: none; padding: 24px; }
+  }
   @media (max-width: 1080px) {
     .lesson { grid-template-columns: minmax(0, 1fr); }
     .outline { display: none; }

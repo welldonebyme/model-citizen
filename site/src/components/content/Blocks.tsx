@@ -5,6 +5,7 @@ import { url } from '../../lib/url';
 import { Inline } from './Inline';
 import { CodeBlock } from './CodeBlock';
 import { Callout } from './Callout';
+import { isCapstoneLab, labStepRefs } from '../../lib/lab-steps';
 
 /** Inline SVG markup for figures (so CSS variables theme them). Astro pages provide it; islands fall back to <img>. */
 export const FigureContext = createContext<Record<string, string>>({});
@@ -61,6 +62,22 @@ function BlockNode({ b, inLab, labId, runnable }: { b: Block; inLab?: boolean; l
           </ol>
         );
       }
+      if (b.kind === 'ul' && inLab && labId && isCapstoneLab(labId)) {
+        // capstone milestone: the requirements are a checklist (ticks saved like lab steps)
+        return (
+          <ul className="mc-steps mc-reqs">
+            {b.items.map((it, i) => (
+              <li key={i} className="mc-step">
+                <label className="mc-tick" data-n="">
+                  <input type="checkbox" data-lab-step={`${labId}:r${i + 1}`} />
+                  <span className="visually-hidden">Requirement {i + 1} done</span>
+                </label>
+                <div className="mc-step-body"><Blocks blocks={it.blocks} /></div>
+              </li>
+            ))}
+          </ul>
+        );
+      }
       return b.kind === 'ol'
         ? <ol className="mc-ol" start={b.start}>{b.items.map((it, i) => <li key={i}><Blocks blocks={it.blocks} /></li>)}</ol>
         : <ul className="mc-ul">{b.items.map((it, i) => <li key={i}><Blocks blocks={it.blocks} /></li>)}</ul>;
@@ -79,7 +96,12 @@ function BlockNode({ b, inLab, labId, runnable }: { b: Block; inLab?: boolean; l
             </div>
             {b.objectives.length > 0 && <p className="mc-lab-objs">{b.objectives.map((o) => <Inline key={o} c={[{ t: 'obj', id: o }]} />)}</p>}
           </header>
-          <div className="mc-lab-body"><Blocks blocks={b.blocks} inLab labId={b.id} /></div>
+          <div className="mc-lab-body">
+            <Blocks blocks={b.blocks} inLab labId={b.id} />
+            {labStepRefs(b)[0] === `${b.id}:done` && (
+              <label className="mc-lab-done"><input type="checkbox" data-lab-step={`${b.id}:done`} /> <span>I did this lab</span></label>
+            )}
+          </div>
         </section>
       );
     case 'objectives':

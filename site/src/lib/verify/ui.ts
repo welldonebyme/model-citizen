@@ -4,7 +4,8 @@
 function enhance() {
   document.querySelectorAll<HTMLElement>('figure.mc-out').forEach((out) => {
     const prev = out.previousElementSibling as HTMLElement | null;
-    if (!prev?.matches('figure.mc-term-block') || out.nextElementSibling?.matches('.mc-verify')) return;
+    // a result right after a terminal block, or any result in a capstone "Checkpoint" step
+    if (!(prev?.matches('figure.mc-term-block') || out.closest('[data-checkpoint]')) || out.nextElementSibling?.matches('.mc-verify')) return;
     const expected = out.querySelector<HTMLElement>('[data-copy-text]')?.dataset.copyText ?? out.textContent ?? '';
     const d = document.createElement('details');
     d.className = 'mc-verify';

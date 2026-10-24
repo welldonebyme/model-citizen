@@ -1,0 +1,86 @@
+---
+import Base from '../../../layouts/Base.astro';
+import CapstoneBoard, { type Milestone } from '../../../components/labs/CapstoneBoard';
+import { existsSync, statSync } from 'node:fs';
+import { chapters, routes } from '../../../lib/content';
+import type { Block, Inline } from '../../../lib/content-types';
+import { publicPath } from '../../../lib/paths';
+import { url } from '../../../lib/url';
+
+// Chapter 26: lesson 26.1 is the story, 26.2 to 26.16 are the milestones m00 to m14 (one lab each),
+// then the trap hunt, the rubric and "if you are stuck".
+const ch = chapters.find((c) => c.id === 'ch26');
+type Lab = Extract<Block, { t: 'lab' }>;
+const findLab = (bs: Block[]): Lab | undefined => {
+  for (const b of bs) {
+    if (b.t === 'lab') return b;
+    if (b.t === 'callout') { const x = findLab(b.blocks); if (x) return x; }
+  }
+};
+const milestones: Milestone[] = (ch?.lessons ?? []).flatMap((l) => {
+  const m = l.titleText.match(/^Milestone (m\d\d) — (.+)$/);
+  if (!m) return [];
+  const first = l.steps[0].blocks;
+  const lab = l.steps.map((s) => findLab(s.blocks)).find(Boolean);
+  if (!lab) return [];
+  const goalP = first.find((b) => b.t === 'p') as Extract<Block, { t: 'p' }> | undefined;
+  const goal = (goalP?.c ?? []).filter((n, i) => !(i === 0 && typeof n === 'object' && n.t === 'b')) as Inline[];
+  const req = lab.blocks.find((b) => b.t === 'list' && b.kind === 'ul') as Extract<Block, { t: 'list' }> | undefined;
+  const expected = lab.blocks.filter((b) => b.t === 'p').at(-1) as Extract<Block, { t: 'p' }> | undefined;
+  const hints = l.steps.find((s) => s.titleText === 'Hints');
+  const hintList = hints?.blocks.find((b) => b.t === 'list') as Extract<Block, { t: 'list' }> | undefined;
+  return [{
+    id: m[1], labId: lab.id, number: l.number, title: m[2], lessonPath: routes.lesson(l, 'ch26'),
+    goal: typeof goal[0] === 'string' ? [goal[0].replace(/^\s+/, ''), ...goal.slice(1)] : goal,
+    requirements: (req?.items ?? []).map((it) => it.blocks),
+    expected: expected?.c,
+    hintsAnchor: hints?.id, hints: hintList?.items.length ?? 0,
+    checkpointAnchor: l.steps.find((s) => s.titleText === 'Checkpoint')?.id,
+  }];
+});
+const extra = (title: RegExp) => ch?.lessons.find((l) => title.test(l.titleText));
+const story = ch?.lessons[0];
+const traps = extra(/trap hunt/i), rubric = extra(/rubric/i), stuck = extra(/stuck/i);
+const kitFile = publicPath('kits', 'shopflow-capstone-kit.zip');
+const kitSize = existsSync(kitFile) ? `${(statSync(kitFile).size / 1024 / 1024).toFixed(1)} MB` : null;
+---
+<Base title="Capstone: ShopFlow" section="labs" description="The capstone project of the Model Citizen dbt course: build ShopFlow's dbt project in 15 milestones, from setup to release.">
+  <div class="wrap cph">
+    <header class="cph-head">
+      <p class="cph-kicker">Chapter 26, the capstone project</p>
+      <h1>ShopFlow, from raw data to release</h1>
+      <p class="lead">You are the first analytics engineer of an online shop. Build its dbt project on your own computer in 15 milestones, from an empty folder to a tested, documented release with slim CI. Each milestone lists its requirements: tick them as you go, check your output against the book, and compare with the solution only when you are done.</p>
+      <div class="cph-actions">
+        {kitSize && <a class="btn btn-primary btn-small" href={url('kits/shopflow-capstone-kit.zip')} download>Download the capstone kit ({kitSize})</a>}
+        {story && <a class="btn btn-quiet btn-small" href={url(routes.lesson(story, 'ch26'))}>Read the ShopFlow story</a>}
+        {milestones[0] && <a class="btn btn-quiet btn-small" href={url(milestones[0].lessonPath)}>Start with m00, setup</a>}
+      </div>
+    </header>
+    {milestones.length ? <CapstoneBoard client:load milestones={milestones} /> : <p>The capstone chapter is not converted yet.</p>}
+    <section class="cph-after" aria-labelledby="after-h">
+      <h2 id="after-h">When you have finished</h2>
+      <ul>
+        {traps && <li><a href={url(routes.lesson(traps, 'ch26'))}><b>{traps.number} {traps.titleText}</b></a><span>The traps hidden in the data, and how your project should handle each one. Read it after m14, not before.</span></li>}
+        {rubric && <li><a href={url(routes.lesson(rubric, 'ch26'))}><b>{rubric.number} {rubric.titleText}</b></a><span>Score your own project. The book's condition before booking the exam: the capstone finished.</span></li>}
+        {stuck && <li><a href={url(routes.lesson(stuck, 'ch26'))}><b>{stuck.number} {stuck.titleText}</b></a><span>What to do when a milestone does not work: the order in which to look.</span></li>}
+        <li><a href={url('labs/reference/?repo=shopflow')}><b>Solutions, milestone by milestone</b></a><span>The book's solution project at every milestone tag, and what each milestone changed. Hidden until you choose to look.</span></li>
+      </ul>
+    </section>
+  </div>
+</Base>
+<style>
+  .cph { padding-block: 40px 48px; }
+  .cph-head { max-width: 860px; margin-bottom: 28px; }
+  .cph-kicker { margin: 0 0 6px; color: var(--lab); font-weight: 700; font-size: var(--fs-sm); }
+  .cph-head h1 { font-size: 2.5rem; }
+  .lead { color: var(--muted); font-size: var(--fs-lg); max-width: 72ch; }
+  .cph-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  .cph-after { margin-top: 36px; max-width: 860px; }
+  .cph-after h2 { font-size: var(--fs-xl); margin-bottom: 10px; }
+  .cph-after ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .cph-after li { display: grid; gap: 2px; padding: 12px 2px; border-bottom: 1px solid var(--line); }
+  .cph-after a { color: var(--ink); text-decoration: none; }
+  .cph-after a:hover { text-decoration: underline; }
+  .cph-after span { color: var(--muted); font-size: var(--fs-sm); }
+  @media (max-width: 700px) { .cph { padding-top: 24px; } .cph-head h1 { font-size: var(--fs-2xl); } .lead { font-size: var(--fs-md); } }
+</style>

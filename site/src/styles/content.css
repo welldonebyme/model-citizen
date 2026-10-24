@@ -110,6 +110,11 @@ details[open].mc-callout > summary { margin-bottom: 8px; }
 .mc-tick:has(input:checked) { background: var(--lab); border-color: var(--lab); }
 .mc-tick:has(input:checked)::before { content: "✓"; color: var(--surface); }
 .mc-tick:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+.mc-reqs .mc-tick { width: 26px; height: 26px; border-radius: 7px; }
+.mc-lab-done { display: inline-flex; align-items: center; gap: 10px; margin: 4px 0 var(--s4); padding: 8px 14px 8px 10px; border: 1.5px solid var(--lab-line); border-radius: var(--r-ctl); font-weight: 700; color: var(--ink); cursor: pointer; }
+.mc-lab-done input { width: 20px; height: 20px; margin: 0; accent-color: var(--lab); cursor: pointer; }
+.mc-lab-done:has(input:checked) { background: var(--lab-bg); border-color: var(--lab); color: var(--lab); }
+.mc-lab-done:has(input:checked) span::after { content: " ✓"; }
 .mc-step-body > :first-child { margin-top: 0; }
 .mc-step-body > .mc-p:last-child { margin-bottom: 0; }
 
@@ -150,3 +155,9 @@ details[open].mc-callout > summary { margin-bottom: 8px; }
 .mc-verify-result[data-ok="false"] { background: var(--bad-bg); }
 .mc-verify-head { margin: 0 0 4px; font-weight: 700; color: var(--ink); }
 .mc-verify-result ul { margin: 0; padding-left: 1.2em; }
+
+/* capstone hints, shown one at a time (lib/hints.ts) */
+.mc-hints-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 10px 0 4px; }
+.mc-hints-bar .btn[hidden] { display: none; }
+.mc-hints-note { color: var(--muted); font-size: var(--fs-sm); }
+[data-hints] .step-body li:focus { outline: none; }

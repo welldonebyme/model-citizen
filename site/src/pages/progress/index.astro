@@ -14,12 +14,11 @@ const dashChapters: DashChapter[] = chapters.filter((c) => c.number <= 27 && c.l
   id: c.id, number: c.number, title: c.title, path: routes.chapter(c),
   quizPath: c.quiz.length ? routes.quiz(c) : undefined,
   lessons: c.lessons.map((l) => l.id),
-  labs: Object.keys(labChapter).filter((lab) => labChapter[lab] === c.id && labSteps[lab] > 0),
+  labs: Object.keys(labChapter).filter((lab) => labChapter[lab] === c.id),
 }));
-const steps = Object.fromEntries(Object.entries(labSteps).filter(([, n]) => n > 0));
 ---
 <Base title="Your progress" section="progress" description="Your Model Citizen progress: readiness for the exam, mastery per objective, study time, mock exams and chapters.">
   <div class="wrap">
-    <DashboardApp client:only="react" topics={topics} objectives={objectives} questionObjectives={questionObjectives} chapterQuiz={chapterQuiz} chapters={dashChapters} labSteps={steps} labTitles={labTitles} capstoneMilestones={15} totalLessons={lessons.length} />
+    <DashboardApp client:only="react" topics={topics} objectives={objectives} questionObjectives={questionObjectives} chapterQuiz={chapterQuiz} chapters={dashChapters} labSteps={labSteps} labTitles={labTitles} capstoneMilestones={15} totalLessons={lessons.length} />
   </div>
 </Base>

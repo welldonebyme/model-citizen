@@ -5,7 +5,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db, getSettings, saveSettings, today, streakFrom, type Rhythm, type Settings } from '../../lib/store/db';
 import { calendar, mission, readiness, schedule, studyDayIndex, RHYTHMS, STANDARD_WEEKS, type PlanLesson, type MissionItem } from '../../lib/planner';
 import { url } from '../../lib/url';
-import { masteryByObjective, masteryLevel, mocksAt80, quizzesAt80 } from '../../lib/progress-summary';
+import { capstoneDone, masteryByObjective, masteryLevel, mocksAt80, quizzesAt80 } from '../../lib/progress-summary';
 
 export interface TodayProps {
   lessons: PlanLesson[];
@@ -16,6 +16,8 @@ export interface TodayProps {
   objectives: { id: string; title: string }[];
   questionObjectives: Record<string, string>;
   capstoneMilestones: number;
+  /** capstone lab id → number of requirements (a milestone is done when all are ticked) */
+  capstoneSteps: Record<string, number>;
   labTitles: Record<string, string>;
   /** the static course map, rendered by Astro */
   children?: ReactNode;
@@ -39,7 +41,7 @@ export default function TodayApp(p: TodayProps) {
   const answers = useLiveQuery(() => db().answers.toArray(), [], []);
   const attempts = useLiveQuery(() => db().examAttempts.where('status').equals('finished').toArray(), [], []);
   const quizRows = useLiveQuery(() => db().progress.where('kind').equals('chapter').toArray(), [], []);
-  const capstoneDone = useLiveQuery(() => db().progress.where('kind').equals('capstone').count(), [], 0);
+  const capstoneRows = useLiveQuery(() => db().progress.where('ref').startsWith('ch26-lab').toArray(), [], []);
   const notes = useLiveQuery(() => db().notes.where('kind').equals('error').count(), [], 0);
 
   const lessonMap = useMemo(() => new Map(p.lessons.map((l) => [l.id, l])), [p.lessons]);
@@ -70,7 +72,7 @@ export default function TodayApp(p: TodayProps) {
   const mocksOk = mocksAt80(attempts);
   const r = readiness({
     quizzes: { ok: quizzes.ok, total: quizzes.total },
-    capstone: { ok: capstoneDone, total: p.capstoneMilestones },
+    capstone: { ok: capstoneDone(capstoneRows, p.capstoneSteps), total: p.capstoneMilestones },
     mocks: { ok: Math.min(2, mocksOk), total: 2 },
     notebook: { reread: !!settings.notebookReread, notes },
   });

@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, getSettings, today, streakFrom, type Settings } from '../../lib/store/db';
 import { readiness } from '../../lib/planner';
-import { labsDone, lessonsDone, masteryByObjective, minutesByDay, mocksAt80, quizzesAt80, type Mastery } from '../../lib/progress-summary';
+import { capstoneDone, labsDone, lessonsDone, masteryByObjective, minutesByDay, mocksAt80, quizzesAt80, type Mastery } from '../../lib/progress-summary';
 import { HistoryChart } from '../exam/charts';
 import type { Attempt } from '../../lib/exam/engine';
 import { url } from '../../lib/url';
@@ -67,7 +67,7 @@ export default function DashboardApp(p: DashboardProps) {
   const totalLabs = Object.keys(p.labSteps).length;
   const quizzes = quizzesAt80(progress, answers, chapterQuiz);
   const mocksOk = mocksAt80(attempts);
-  const capstone = progress.filter((r) => r.kind === 'capstone' && r.status === 'done').length;
+  const capstone = capstoneDone(progress, p.labSteps);
   const r = readiness({
     quizzes: { ok: quizzes.ok, total: quizzes.total },
     capstone: { ok: capstone, total: p.capstoneMilestones },

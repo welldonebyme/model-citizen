@@ -3,7 +3,8 @@ import Base from '../layouts/Base.astro';
 import CourseDag from '../components/ui/CourseDag.astro';
 import TodayApp from '../components/today/TodayApp';
 import { lessons, parts, routes } from '../lib/content';
-import { chapterQuiz, chapterTitles, labTitles, questionObjectives } from '../lib/course-facts';
+import { chapterQuiz, chapterTitles, labSteps, labTitles, questionObjectives } from '../lib/course-facts';
+import { isCapstoneLab } from '../lib/lab-steps';
 import type { PlanLesson } from '../lib/planner';
 import '../styles/today.css';
 
@@ -19,11 +20,12 @@ const planLessons: PlanLesson[] = lessons.map(({ chapter, lesson }) => ({
   half: chapter.id === 'ch04' ? (Number(lesson.number.split('.')[1]) <= 9 ? 'a' : 'b') : undefined,
 }));
 const lessonPaths = Object.fromEntries(lessons.map(({ chapter, lesson }) => [lesson.id, routes.lesson(lesson, chapter.id)]));
+const capstoneSteps = Object.fromEntries(Object.entries(labSteps).filter(([id]) => isCapstoneLab(id)));
 const labLessons = Object.fromEntries(lessons.flatMap(({ lesson }) => lesson.labs.map((lab) => [lab, lesson.id])));
 ---
 <Base title="Model Citizen" section="today">
   <div class="wrap today-page">
-    <TodayApp client:load lessons={planLessons} chapterQuiz={chapterQuiz} chapterTitles={chapterTitles} lessonPaths={lessonPaths} labLessons={labLessons} objectives={objectives} questionObjectives={questionObjectives} capstoneMilestones={15} labTitles={labTitles}>
+    <TodayApp client:load lessons={planLessons} chapterQuiz={chapterQuiz} chapterTitles={chapterTitles} lessonPaths={lessonPaths} labLessons={labLessons} objectives={objectives} questionObjectives={questionObjectives} capstoneMilestones={15} capstoneSteps={capstoneSteps} labTitles={labTitles}>
       <section class="panel today-map" aria-labelledby="map-h">
         <div class="map-head"><h2 id="map-h">Your course, as a DAG</h2><p>Each part depends on the ones before it, like models in a project.</p></div>
         <CourseDag compact />

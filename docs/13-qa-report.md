@@ -1,6 +1,6 @@
 # 13 — QA report (quality gates of 07-quality.md)
 
-State on 2026-10-24 (after the review fixes), local build only (nothing published). Numbers are from runs made that day; each line says
+State on 2026-10-24 (after the review fixes). Live site: https://welldonebyme.github.io/model-citizen/ (GitHub Pages). Numbers are from runs made that day; each line says
 how to run the check again.
 
 ## 1. Content parity
@@ -36,8 +36,8 @@ how to run the check again.
 | Shell blocks with a PowerShell variant | 572 of 572 in Windows mode (171 with rewritten commands, the rest with the `PS>` prompt); 0 lines without an OS rule; Windows notes wherever a lesson shows or explains macOS-only output |
 | PowerShell replay of every Windows block (pwsh 7.6 on macOS, next to zsh) | 145 ok, 24 partly, 2 untested, 0 different; 1,032 commands compared |
 | Practice and capstone kits | macOS 40/40, pwsh 15/15 (including the "Get the course files" commands exactly as shown); 51 paths shown by the site: 20 exist after setup, 31 are created by a lab step, 0 missing |
-| `windows-latest` CI job | **written, never run**: it needs a GitHub repository (Adnane's OK needed) |
-| Real Windows PowerShell 5.1, Edge on Windows, iOS Safari | **not tested** (no device here) |
+| `windows-latest` CI job (`.github/workflows/kit-matrix.yml`) on real Windows | setup.ps1 under Windows PowerShell 5.1 and PowerShell 7, the lesson 1.6 course-files commands (5.1), venv versions, DuckDB CLI 1.5.6, the README's data scripts, `dbt build` at ch07 (`PASS=17`), the 9 bug patches on a CRLF checkout: **all pass**; macOS and Linux jobs pass every step. The replay of every Windows command of the lessons is being re-based (its macOS reference predates the `PS>` forms added in the review fixes) |
+| Edge on Windows, iOS Safari, real phones | **not tested** (no device here) |
 
 ## 5. UX, accessibility, performance
 | Check | Result | How to rerun |
@@ -47,6 +47,16 @@ how to run the check again.
 | Feature specs (dashboard, capstone, offline, delight, learning flow, design, exam, quiz, formats...) | all passed (part of the suite above) | same folder |
 | Lighthouse (mobile profile) on 10 pages | Performance 92 to 100; Accessibility, Best practices, SEO 100; CLS at most 0.015 | Lighthouse 12.6.1 against the preview |
 | Unit tests (site) | 555 passed; selector suite 2,884 passed; type check clean | `npm --prefix site test`, `npm --prefix site run test:selector`, `npx tsc --noEmit -p site` |
+
+## 5b. Live site (GitHub Pages)
+| Check | Result |
+|---|---|
+| Browser suites against the live URL (accessibility sweep, learning flow, capstone, progress, offline; Chromium and phone) | 200 of 200 passed |
+| Real dbt in the browser on the live site | ready in 12 s; `dbt build` at ch07 prints `Done. PASS=17 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=17` |
+| SQL workspace on the live site | lesson 4.3 example: "Matches the book" |
+| How GitHub Pages serves the SQL engine | `application/wasm`, gzip: 34 MB file sent as 8.3 MB |
+| Lighthouse (mobile) on the live site | Performance 99-100; Accessibility, Best practices, SEO 100 |
+| Book PDF | not published (404), as decided |
 
 ## 6. Human-style reviews
 Run as a workflow of four independent reviewers, each followed by a skeptic who tried to reproduce and refute

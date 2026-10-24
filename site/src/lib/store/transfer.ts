@@ -49,6 +49,9 @@ export interface ImportSummary { added: number; updated: number; skipped: number
 export async function importProgress(file: ProgressFile, database: ModelCitizenDB = db()): Promise<ImportSummary> {
   const sum: ImportSummary = { added: 0, updated: 0, skipped: 0 };
   await database.transaction('rw', TABLES.map((t) => database.table(t)), async () => {
+    // A browser with no progress yet (only the first-visit setup, done a minute ago) takes the plan from the
+    // file: otherwise its newer settings row would win and the imported start date and rhythm would be lost.
+    const fresh = (await database.progress.count()) + (await database.answers.count()) + (await database.examAttempts.count()) === 0;
     for (const t of TABLES) {
       const rows = (file.data[t] ?? []) as Record<string, unknown>[];
       const table = database.table(t);
@@ -66,7 +69,7 @@ export async function importProgress(file: ProgressFile, database: ModelCitizenD
       for (const r of rows) {
         const old = (await table.get(r[pk] as string)) as { updatedAt?: number } | undefined;
         if (!old) { await table.put(r); sum.added++; }
-        else if (((r.updatedAt as number) ?? 0) > (old.updatedAt ?? 0)) { await table.put(r); sum.updated++; }
+        else if (((r.updatedAt as number) ?? 0) > (old.updatedAt ?? 0) || (fresh && t === 'settings')) { await table.put(r); sum.updated++; }
         else sum.skipped++;
       }
     }

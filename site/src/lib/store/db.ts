@@ -161,6 +161,16 @@ export async function markProgress(kind: ProgressKind, ref: string, status: Prog
   await logActivity(0);
 }
 
+/** Sets a status even when it is lower than the saved one (the learner unticked "I understood this"). */
+export async function setProgress(kind: ProgressKind, ref: string, status: Progress['status'], data?: Record<string, unknown>) {
+  const id = `${kind}:${ref}`;
+  const now = Date.now();
+  await db().transaction('rw', db().progress, async () => {
+    const old = await db().progress.get(id);
+    await db().progress.put({ id, kind, ref, status, firstAt: old?.firstAt ?? now, updatedAt: now, data: data ?? old?.data });
+  });
+}
+
 export async function unmarkProgress(kind: ProgressKind, ref: string) {
   await db().progress.delete(`${kind}:${ref}`);
 }

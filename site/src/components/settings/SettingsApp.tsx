@@ -60,6 +60,9 @@ export default function SettingsApp() {
     try {
       const parsed = validateProgressFile(JSON.parse(await file.text()));
       const r = await importProgress(parsed);
+      // the computer chosen in the file applies here too (terminals, paths)
+      const os = (await getSettings()).os;
+      if (os) { setLocal('mc:os', os); document.documentElement.dataset.os = os; setOs(os); }
       setMsg(`Progress imported: ${r.added} new items, ${r.updated} updated, ${r.skipped} already here.`);
       refresh();
     } catch (e) {
@@ -72,7 +75,11 @@ export default function SettingsApp() {
   async function resetAll() {
     if (!confirm('Delete all your progress in this browser? Export your progress file first if you want to keep it. This cannot be undone.')) return;
     await db().delete();
-    setLocal('mc:resume', null);
+    // also the per-browser helpers (quiz sessions, timer, badges seen, hints opened...); reading preferences stay
+    const KEEP = new Set(['mc:theme', 'mc:size', 'mc:os', 'mc:focus']);
+    try {
+      for (const k of Object.keys(localStorage)) if (k.startsWith('mc:') && !KEEP.has(k)) localStorage.removeItem(k);
+    } catch { /* storage blocked */ }
     location.reload();
   }
 
@@ -106,6 +113,7 @@ export default function SettingsApp() {
           <label className="st-field"><span>Plan start date (day 1)</span><input type="date" value={s.startDate ?? ''} onChange={(e) => patch({ startDate: e.target.value || undefined })} /></label>
           <label className="st-field"><span>Exam date</span><input type="date" value={s.examDate ?? ''} onChange={(e) => patch({ examDate: e.target.value || undefined })} /></label>
         </div>
+        <label className="st-field"><span>Daily study goal, in minutes (the line on the Progress page's study-time chart)</span><input type="number" min={15} max={480} step={15} value={s.dailyMinutes} onChange={(e) => { const v = Math.round(Number(e.target.value)); if (v >= 15 && v <= 480) patch({ dailyMinutes: v }); }} /></label>
         <label className="st-check"><input type="checkbox" checked={!!s.notebookReread} onChange={(e) => patch({ notebookReread: e.target.checked ? today() : undefined })} /> I have re-read my whole error notebook {s.notebookReread && <span className="st-muted">(on {s.notebookReread})</span>}</label>
       </section>
 

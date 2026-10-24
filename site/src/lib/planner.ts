@@ -25,7 +25,7 @@ export const STUDY_DAYS_PER_WEEK = 6;
 export const RHYTHMS: Record<Rhythm, { label: string; hoursPerDay: string; describe: string }> = {
   standard: { label: 'Standard', hoursPerDay: 'about 2 h a day', describe: 'The 14-week plan of the book.' },
   intensive: { label: 'Intensive', hoursPerDay: '3 to 4 h a day', describe: 'About 8 weeks: two plan weeks per week for weeks 1 to 12, then a full week each for the capstone and the mocks.' },
-  relaxed: { label: 'Relaxed', hoursPerDay: 'about 1 h a day', describe: 'Each plan week of Parts II to VII takes two weeks.' },
+  relaxed: { label: 'Relaxed', hoursPerDay: 'about 1 h a day', describe: 'Each plan week of Parts II to VII takes two weeks (the book counts 24 to 26 weeks with a few weeks of slack).' },
 };
 
 /** Calendar weeks for a rhythm: each entry lists the plan weeks studied in that calendar week (possibly half of one). */
@@ -114,6 +114,7 @@ export interface MissionInput {
   quizDone: Set<string>;         // chapters whose quiz was taken
   readingBudget?: number;        // minutes of reading per day (book: 40 of 120)
   labTitles?: Map<string, string>;
+  labsDone?: Set<string>;        // labs whose ticks are all done (progress-summary labsDone)
 }
 
 /**
@@ -138,9 +139,20 @@ export function mission(m: MissionInput): { items: MissionItem[]; behind: number
   }
   const items: MissionItem[] = [];
   if (m.dueCards > 0) items.push({ kind: 'review', title: `Spaced review, ${m.dueCards} ${m.dueCards === 1 ? 'card' : 'cards'}`, minutes: 10 });
+  // Lessons of today already finished stay on the list, ticked, so the day's progress shows.
+  const readIds = new Set(read.map((l) => l.id));
+  for (const id of m.days[m.dayIndex] ?? []) {
+    const l = m.lessons.get(id);
+    if (l && m.done.has(id) && !readIds.has(id)) items.push({ kind: 'read', title: `${l.number} ${l.title}`, minutes: l.minutes, refs: [l.id], done: true });
+  }
   for (const l of read) items.push({ kind: 'read', title: `${l.number} ${l.title}`, minutes: l.minutes, refs: [l.id] });
-  // Labs: the lesson's lab time from the converter (shared between its labs), at most 3 labs a day.
-  const todayLabs = read.flatMap((l) => l.labs.map((lab) => ({ lab, mins: l.labMinutes ? Math.max(10, Math.round(l.labMinutes / l.labs.length / 5) * 5) : 25 }))).slice(0, 3);
+  // Labs: the labs of today's reading, then the unfinished labs of lessons already read (a lesson can be
+  // understood before its lab is done). The lesson's lab time comes from the converter; at most 3 labs a day.
+  const labMins = (l: PlanLesson) => (l.labMinutes ? Math.max(10, Math.round(l.labMinutes / l.labs.length / 5) * 5) : 25);
+  const labDone = (lab: string) => m.labsDone?.has(lab) ?? false;
+  const owed = upToToday.map((id) => m.lessons.get(id)).filter((l): l is PlanLesson => !!l && m.done.has(l.id));
+  const todayLabs = [...read, ...owed].flatMap((l) => l.labs.filter((lab) => !labDone(lab)).map((lab) => ({ lab, mins: labMins(l) })))
+    .filter((x, i, all) => all.findIndex((y) => y.lab === x.lab) === i).slice(0, 3);
   for (const { lab, mins } of todayLabs) items.push({ kind: 'lab', title: m.labTitles?.get(lab) ?? 'The lab of this lesson', minutes: mins, refs: [lab] });
   // Quiz: when today's reading finishes a chapter (or a chapter is finished but its quiz not taken).
   const finished = new Set<string>();

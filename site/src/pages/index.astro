@@ -4,7 +4,6 @@ import CourseDag from '../components/ui/CourseDag.astro';
 import TodayApp from '../components/today/TodayApp';
 import { lessons, parts, routes } from '../lib/content';
 import { chapterQuiz, chapterTitles, labSteps, labTitles, questionObjectives } from '../lib/course-facts';
-import { isCapstoneLab } from '../lib/lab-steps';
 import type { PlanLesson } from '../lib/planner';
 import '../styles/today.css';
 
@@ -12,7 +11,7 @@ const OBJ_FILE = import.meta.glob('../generated/objectives.json', { eager: true,
 const FALLBACK_OBJ = ['CP0-SQL', 'CP0-GIT', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '1.10', '1.11', '1.12', '1.13', '1.14', '2.1', '2.2', '2.3', '3.1', '3.2', '3.3', '3.4', '3.5', '4.1', '4.2', '5.1', '5.2', '5.3', '6.1', '6.2', '7.1', '7.2'].map((id) => ({ id, title: id }));
 const objectivesRaw = Object.values(OBJ_FILE)[0];
 const objectives = (Array.isArray(objectivesRaw) ? objectivesRaw : FALLBACK_OBJ)
-  .filter((o) => /^(CP0-(SQL|GIT)|\d+\.\d+)$/.test(o.id))
+  .filter((o) => /^(CP0-[A-Z]+|\d+\.\d+)$/.test(o.id) && Object.values(questionObjectives).includes(o.id))
   .map((o) => ({ id: o.id, title: o.title }));
 
 const planLessons: PlanLesson[] = lessons.map(({ chapter, lesson }) => ({
@@ -20,12 +19,11 @@ const planLessons: PlanLesson[] = lessons.map(({ chapter, lesson }) => ({
   half: chapter.id === 'ch04' ? (Number(lesson.number.split('.')[1]) <= 9 ? 'a' : 'b') : undefined,
 }));
 const lessonPaths = Object.fromEntries(lessons.map(({ chapter, lesson }) => [lesson.id, routes.lesson(lesson, chapter.id)]));
-const capstoneSteps = Object.fromEntries(Object.entries(labSteps).filter(([id]) => isCapstoneLab(id)));
 const labLessons = Object.fromEntries(lessons.flatMap(({ lesson }) => lesson.labs.map((lab) => [lab, lesson.id])));
 ---
 <Base title="Model Citizen" section="today">
   <div class="wrap today-page">
-    <TodayApp client:load lessons={planLessons} chapterQuiz={chapterQuiz} chapterTitles={chapterTitles} lessonPaths={lessonPaths} labLessons={labLessons} objectives={objectives} questionObjectives={questionObjectives} capstoneMilestones={15} capstoneSteps={capstoneSteps} labTitles={labTitles}>
+    <TodayApp client:load lessons={planLessons} chapterQuiz={chapterQuiz} chapterTitles={chapterTitles} lessonPaths={lessonPaths} labLessons={labLessons} objectives={objectives} questionObjectives={questionObjectives} capstoneMilestones={15} labSteps={labSteps} labTitles={labTitles}>
       <section class="panel today-map" aria-labelledby="map-h">
         <div class="map-head"><h2 id="map-h">Your course, as a DAG</h2><p>Each part depends on the ones before it, like models in a project.</p></div>
         <CourseDag compact />

@@ -1,16 +1,20 @@
 // Flashcards with spaced repetition (Leitner boxes 1, 3, 7, 21, 60 days).
-// Decks: the 145 traps (confusion → truth) and the glossary (English → French + chapter).
-// Missed quiz questions are reviewed in the error notebook and in drills ("my mistakes").
+// Decks: the 145 traps (confusion → truth), the glossary (English → French + chapter), and the questions you
+// missed: those are answered again with the quiz player, and a right answer moves their card on (learning.ts).
 import { useEffect, useMemo, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import type { Inline as InlineT } from '../../lib/content-types';
 import { Inline } from '../content/Inline';
 import { db, today, logActivity, type SrsCard } from '../../lib/store/db';
 import { newCard, review, isDue } from '../../lib/srs';
+import type { Question } from '../../lib/content-types';
+import { QuizRunner } from '../quiz/QuizRunner';
+import { url } from '../../lib/url';
+import '../quiz/quiz.css';
 
 export interface CardData { id: string; kind: 'trap' | 'term'; front: InlineT[]; back: InlineT[]; where?: InlineT[]; tag?: string }
 
-type Deck = 'due' | 'trap' | 'term';
+type Deck = 'due' | 'trap' | 'term' | 'questions';
 
 export default function Flashcards({ cards }: { cards: CardData[] }) {
   const live = useLiveQuery(() => db().srs.toArray(), []);
@@ -37,6 +41,14 @@ export default function Flashcards({ cards }: { cards: CardData[] }) {
   const id = queue?.[i];
   const card = id ? byId.get(id) : undefined;
   const dueCount = srs.filter((s) => isDue(s) && byId.has(s.id)).length;
+  const dueQuestions = srs.filter((s) => s.kind === 'question' && isDue(s)).map((s) => s.id);
+  // only missed questions are due today: open their deck first
+  const [autoDeck, setAutoDeck] = useState(false);
+  useEffect(() => {
+    if (!live || autoDeck) return;
+    setAutoDeck(true);
+    if (dueCount === 0 && dueQuestions.length > 0) setDeck('questions');
+  }, [live, autoDeck, dueCount, dueQuestions.length]);
 
   async function grade(remembered: boolean) {
     if (!card) return;
@@ -66,14 +78,17 @@ export default function Flashcards({ cards }: { cards: CardData[] }) {
         <button type="button" aria-pressed={deck === 'due'} onClick={() => setDeck('due')}>Due today ({dueCount})</button>
         <button type="button" aria-pressed={deck === 'trap'} onClick={() => setDeck('trap')}>Traps</button>
         <button type="button" aria-pressed={deck === 'term'} onClick={() => setDeck('term')}>Glossary</button>
+        <button type="button" aria-pressed={deck === 'questions'} onClick={() => setDeck('questions')}>Missed questions ({dueQuestions.length})</button>
       </div>
 
-      {!card ? (
+      {deck === 'questions' ? <QuestionDeck ids={dueQuestions} /> : null}
+
+      {deck === 'questions' ? null : !card ? (
         <div className="fc-empty panel">
           <h2>{deck === 'due' ? (dueCount === 0 ? 'Nothing is due today' : 'Session finished') : 'This deck is finished for today'}</h2>
           <p>{session.ok + session.again > 0 ? `This session: ${session.ok} remembered, ${session.again} to see again soon. ` : ''}
             {deck === 'due' ? 'Cards come back after 1, 3, 7, 21 and 60 days. Start a deck to add new cards.' : 'Come back tomorrow for the next cards.'}</p>
-          {deck === 'due' && <div className="fc-row"><button type="button" className="btn btn-primary" onClick={() => setDeck('trap')}>Study the traps</button><button type="button" className="btn btn-quiet" onClick={() => setDeck('term')}>Study the glossary</button></div>}
+          {deck === 'due' && <div className="fc-row">{dueQuestions.length > 0 && <button type="button" className="btn btn-primary" onClick={() => setDeck('questions')}>Answer the {dueQuestions.length} missed {dueQuestions.length === 1 ? 'question' : 'questions'} due</button>}<button type="button" className={dueQuestions.length ? 'btn btn-quiet' : 'btn btn-primary'} onClick={() => setDeck('trap')}>Study the traps</button><button type="button" className="btn btn-quiet" onClick={() => setDeck('term')}>Study the glossary</button></div>}
         </div>
       ) : (
         <div className="fc-card panel" aria-live="polite">
@@ -101,4 +116,33 @@ export default function Flashcards({ cards }: { cards: CardData[] }) {
       )}
     </div>
   );
+}
+
+/** Due question cards (chapter and mock questions you missed), answered again with the quiz player. */
+function QuestionDeck({ ids }: { ids: string[] }) {
+  const [snapshot] = useState(ids); // the session keeps its questions while their cards move on
+  const [questions, setQuestions] = useState<Question[] | null>(null);
+  const [error, setError] = useState('');
+  useEffect(() => {
+    if (!snapshot.length) return;
+    const files = new Set(snapshot.map((id) => {
+      const ch = id.match(/^q-(ch\d+)-/), mk = id.match(/^m(\d)-q/);
+      return ch ? url(`quiz/data/${ch[1]}.json`) : mk ? url(`exams/data/mock${mk[1]}.json`) : '';
+    }).filter(Boolean));
+    Promise.all([...files].map((f) => fetch(f).then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))))
+      .then((all: { questions: Question[] }[]) => {
+        const byId = new Map(all.flatMap((d) => d.questions).map((q) => [q.id, q]));
+        setQuestions(snapshot.map((id) => byId.get(id)).filter((q): q is Question => !!q));
+      })
+      .catch(() => setError('The questions could not be loaded. Check your connection, then reload the page.'));
+  }, [snapshot]);
+  if (!snapshot.length) return (
+    <div className="fc-empty panel">
+      <h2>No missed question is due</h2>
+      <p>A question you miss in a quiz, a checkpoint, a drill or a mock comes back here after 1, 3, 7, 21 and 60 days, until you answer it right.</p>
+    </div>
+  );
+  if (error) return <p className="qz-warn" role="alert">{error}</p>;
+  if (!questions) return <p className="qz-muted">Loading the questions…</p>;
+  return <QuizRunner questions={questions} mode="drill" title="Missed questions" domcExamLike={false} seed={snapshot.length * 7919} compact={false} moreHref={url('practice/notebook/')} moreLabel="Your error notebook" />;
 }

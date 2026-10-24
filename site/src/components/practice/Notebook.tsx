@@ -1,7 +1,7 @@
 // Error notebook: one entry per missed question (written by quizzes and mocks) plus your own notes.
 import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db, type Note } from '../../lib/store/db';
+import { db, getSettings, saveSettings, today, type Note } from '../../lib/store/db';
 import { url } from '../../lib/url';
 
 export default function Notebook() {
@@ -9,6 +9,16 @@ export default function Notebook() {
   const [text, setText] = useState('');
   const [filter, setFilter] = useState<'all' | 'error' | 'personal' | 'explain'>('all');
   const shown = notes.filter((n) => filter === 'all' || n.kind === filter);
+  // the book's fourth condition before booking: re-read the whole notebook (saved in Settings)
+  const reread = useLiveQuery(async () => (await getSettings()).notebookReread ?? null, [], null);
+  // a missed question answered right since then is marked "now right"
+  const refs = notes.filter((n) => n.kind === 'error' && n.ref).map((n) => n.ref!);
+  const nowRight = useLiveQuery(async () => {
+    const rows = await db().answers.where('qid').anyOf(refs).toArray();
+    const last = new Map<string, { at: number; correct: boolean }>();
+    for (const a of rows) if (!last.has(a.qid) || a.at > last.get(a.qid)!.at) last.set(a.qid, a);
+    return new Set([...last].filter(([, a]) => a.correct).map(([q]) => q));
+  }, [refs.join(',')], new Set<string>());
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
@@ -36,6 +46,11 @@ export default function Notebook() {
         <textarea id="nb-new" rows={3} value={text} onChange={(e) => setText(e.target.value)} placeholder="For example: --empty limits ref() and source(), not tables written by hand." />
         <button className="btn btn-primary btn-small" type="submit">Save note</button>
       </form>
+      <div className="nb-reread panel">
+        {reread
+          ? <p>You re-read your whole notebook on <b>{reread}</b>. <button type="button" className="btn btn-quiet btn-small" onClick={() => saveSettings({ notebookReread: undefined })}>Not done after all</button></p>
+          : <p>Before you book the exam, re-read every entry once, slowly (one of the book's four conditions). <button type="button" className="btn btn-primary btn-small" onClick={() => saveSettings({ notebookReread: today() })}>I have re-read my whole notebook</button></p>}
+      </div>
       <div className="seg" role="group" aria-label="Show">
         {([['all', 'All'], ['error', 'Missed questions'], ['explain', 'Explain it back'], ['personal', 'My notes']] as const).map(([v, l]) => (
           <button key={v} type="button" aria-pressed={filter === v} onClick={() => setFilter(v)}>{l}</button>
@@ -48,9 +63,10 @@ export default function Notebook() {
             <p className="nb-meta">
               <span className="pill pill-muted">{n.kind === 'error' ? 'Missed question' : n.kind === 'explain' ? 'Explain it back' : 'My note'}</span>
               {refHref(n.ref) && <a href={refHref(n.ref)}>{n.ref}</a>}
+              {n.kind === 'error' && n.ref && nowRight.has(n.ref) && <span className="pill pill-ok">Now right</span>}
               <span className="nb-date">{new Date(n.updatedAt).toLocaleDateString()}</span>
             </p>
-            <textarea aria-label="Note text" defaultValue={n.text} rows={Math.min(8, Math.max(2, Math.ceil(n.text.length / 80)))} onBlur={(e) => e.target.value !== n.text && edit(n, e.target.value)} />
+            <textarea aria-label="Note text" defaultValue={n.text} rows={Math.min(16, Math.max(3, n.text.split('\n').reduce((r, line) => r + Math.max(1, Math.ceil(line.length / 70)), 0) + 1))} onBlur={(e) => e.target.value !== n.text && edit(n, e.target.value)} />
             <button type="button" className="nb-del" onClick={() => remove(n)}>Delete</button>
           </li>
         ))}

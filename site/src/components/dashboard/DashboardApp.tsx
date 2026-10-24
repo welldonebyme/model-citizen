@@ -4,7 +4,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, getSettings, today, streakFrom, type Settings } from '../../lib/store/db';
-import { readiness } from '../../lib/planner';
+import { calendar, readiness } from '../../lib/planner';
 import { capstoneDone, labsDone, lessonsDone, masteryByObjective, minutesByDay, mocksAt80, quizzesAt80, type Mastery } from '../../lib/progress-summary';
 import { HistoryChart } from '../exam/charts';
 import type { Attempt } from '../../lib/exam/engine';
@@ -86,6 +86,8 @@ export default function DashboardApp(p: DashboardProps) {
   const streak = streakFrom(activity.filter((a) => a.events > 0).map((a) => a.date));
   const finished = (attempts as Attempt[]).filter((a) => a.status === 'finished' && a.score).sort((a, b) => b.startedAt - a.startedAt);
   const nothingYet = !progress.length && !answers.length && !attempts.length;
+  // the calendar week of the learner's rhythm that holds plan week 14 (the book's mock exams week)
+  const mockWeek = calendar(settings.rhythm).findIndex((w) => w.planWeeks.includes(14)) + 1;
 
   // The objectives to work on next: the weakest ones with answers, then the heaviest topics not started.
   const weight = new Map(p.topics.map((t) => [t.n, t.blueprint ?? 0]));
@@ -194,7 +196,7 @@ export default function DashboardApp(p: DashboardProps) {
             </table>
           </>
         ) : (
-          <p className="db-empty">No finished mock exam yet. The plan schedules the first one in week 11; you can <a href={url('exams/')}>look at the mock exams</a> any time.</p>
+          <p className="db-empty">No finished mock exam yet. {mockWeek > 0 ? `Your plan (${settings.rhythm} rhythm) schedules the mocks in week ${mockWeek}; you` : 'You'} can <a href={url('exams/')}>look at the mock exams</a> any time.</p>
         )}
       </section>
 
@@ -287,7 +289,7 @@ function Heatmap({ topics, objectives, mastery }: { topics: DashboardProps['topi
       <div className="db-heat viz-box" ref={boxRef} onPointerLeave={() => setTip(null)} hidden={table}>
         {rows.map(({ t, objs }) => (
           <div className="db-heat-row" key={t.n}>
-            <div className="db-heat-topic"><b>{t.n ? `Topic ${t.n}` : 'Before dbt'}</b><span>{t.short}{t.blueprint ? `, ${t.blueprint}% of the exam` : ''}</span></div>
+            <div className="db-heat-topic"><b>{t.n ? `Topic ${t.n}` : 'Before dbt'}</b><span>{t.short}{t.blueprint ? `, ${Math.round((100 * t.blueprint) / 65)}% of the exam (${t.blueprint} of 65 questions)` : ''}</span></div>
             <ul className="db-heat-cells">
               {objs.map((o) => {
                 const m = mastery.get(o.id);

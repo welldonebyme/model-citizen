@@ -82,3 +82,8 @@
   .t-cta { text-align: left; }
   .t-grid { grid-template-columns: 1fr; }
 }
+/* legend swatches, same fills as the tiles */
+.t-obj-key span { display: inline-flex; align-items: center; gap: 6px; }
+.t-obj-key span::before { content: ""; width: 12px; height: 12px; border-radius: 3px; background: var(--paper); border: 1px solid var(--line); }
+.t-obj-key span:nth-child(2)::before { background: var(--accent-soft); border-color: transparent; }
+.t-obj-key span:nth-child(3)::before { background: var(--accent); border-color: transparent; }

@@ -7,7 +7,7 @@ import { calendar, mission, readiness, schedule, studyDayIndex, RHYTHMS, STANDAR
 import { url } from '../../lib/url';
 import XpBadgesPanel from '../delight/XpBadgesPanel';
 import RememberMission from '../delight/RememberMission';
-import { capstoneDone, masteryByObjective, masteryLevel, mocksAt80, quizzesAt80 } from '../../lib/progress-summary';
+import { capstoneDone, labsDone, masteryByObjective, masteryLevel, mocksAt80, quizzesAt80 } from '../../lib/progress-summary';
 
 export interface TodayProps {
   lessons: PlanLesson[];
@@ -18,8 +18,8 @@ export interface TodayProps {
   objectives: { id: string; title: string }[];
   questionObjectives: Record<string, string>;
   capstoneMilestones: number;
-  /** capstone lab id → number of requirements (a milestone is done when all are ticked) */
-  capstoneSteps: Record<string, number>;
+  /** lab id → number of ticks that finish it (lab-steps.ts); capstone milestones are the ch26 labs */
+  labSteps: Record<string, number>;
   labTitles: Record<string, string>;
   /** the static course map, rendered by Astro */
   children?: ReactNode;
@@ -43,16 +43,18 @@ export default function TodayApp(p: TodayProps) {
   const answers = useLiveQuery(() => db().answers.toArray(), [], []);
   const attempts = useLiveQuery(() => db().examAttempts.where('status').equals('finished').toArray(), [], []);
   const quizRows = useLiveQuery(() => db().progress.where('kind').equals('chapter').toArray(), [], []);
-  const capstoneRows = useLiveQuery(() => db().progress.where('ref').startsWith('ch26-lab').toArray(), [], []);
+  const labRows = useLiveQuery(() => db().progress.where('kind').equals('labstep').toArray(), [], []);
   const notes = useLiveQuery(() => db().notes.where('kind').equals('error').count(), [], 0);
 
   const lessonMap = useMemo(() => new Map(p.lessons.map((l) => [l.id, l])), [p.lessons]);
+  // the course map (children) exists only once this island has rendered: fill its progress then
+  useEffect(() => { if (settings) import('../../lib/path-progress').then((mod) => mod.fillProgress()); }, [settings, doneLessons]);
   const chapterQuiz = useMemo(() => new Map(p.chapterQuiz), [p.chapterQuiz]);
   const labTitles = useMemo(() => new Map(Object.entries(p.labTitles)), [p.labTitles]);
 
   if (storeError) return <div className="t-notice" role="status">{storeError}</div>;
   if (!settings) return <div className="t-loading" aria-busy="true">Loading your progress…</div>;
-  if (!settings.startDate) return <><Onboarding onDone={setSettings} />{p.children}</>;
+  if (!settings.startDate) return <><Onboarding initial={settings} onDone={setSettings} />{p.children}</>;
 
   const rhythm = settings.rhythm;
   const days = schedule(p.lessons, rhythm);
@@ -67,14 +69,14 @@ export default function TodayApp(p: TodayProps) {
   // Reading budget per day = the course's reading time spread over the plan's study days (the book: about 40 of 120 minutes).
   const totalReading = p.lessons.reduce((n, l) => n + l.minutes, 0);
   const readingBudget = Math.max(30, Math.round(totalReading / Math.max(1, days.length) / 5) * 5);
-  const m = mission({ days, dayIndex: dayIdx, done: doneLessons, dueCards, lessons: lessonMap, chapterQuiz, quizDone, labTitles, readingBudget });
+  const m = mission({ days, dayIndex: dayIdx, done: doneLessons, dueCards, lessons: lessonMap, chapterQuiz, quizDone, labTitles, readingBudget, labsDone: labsDone(labRows, p.labSteps).done });
 
   // the same numbers as the dashboard (lib/progress-summary)
   const quizzes = quizzesAt80(quizRows, answers, chapterQuiz);
   const mocksOk = mocksAt80(attempts);
   const r = readiness({
     quizzes: { ok: quizzes.ok, total: quizzes.total },
-    capstone: { ok: capstoneDone(capstoneRows, p.capstoneSteps), total: p.capstoneMilestones },
+    capstone: { ok: capstoneDone(labRows, p.labSteps), total: p.capstoneMilestones },
     mocks: { ok: Math.min(2, mocksOk), total: 2 },
     notebook: { reread: !!settings.notebookReread, notes },
   });
@@ -88,7 +90,9 @@ export default function TodayApp(p: TodayProps) {
 
   let resume: { lesson: string; path: string } | null = null;
   try { resume = JSON.parse(localStorage.getItem('mc:resume') || 'null'); } catch { resume = null; }
-  const firstRead = m.items.find((i) => i.kind === 'read');
+  // "Continue" only for a lesson left half-way; a finished one gives way to the first unfinished item of the mission
+  if (resume && doneLessons.has(resume.lesson)) resume = null;
+  const firstRead = m.items.find((i) => i.kind === 'read' && !i.done);
   const continueHref = resume?.path ?? (firstRead?.refs ? url(p.lessonPaths[firstRead.refs[0]]) : url('path/'));
   const continueLabel = resume ? `Continue lesson ${lessonMap.get(resume.lesson)?.number ?? ''}` : firstRead ? `Start lesson ${firstRead.title}` : 'Open your path';
   const daysToExam = settings.examDate ? Math.ceil((new Date(settings.examDate + 'T09:00:00').getTime() - Date.now()) / 86400000) : null;
@@ -215,10 +219,11 @@ function Week({ activity }: { activity: string[] }) {
   );
 }
 
-function Onboarding({ onDone }: { onDone: (s: Settings) => void }) {
-  const [name, setName] = useState('');
-  const [rhythm, setRhythm] = useState<Rhythm>('standard');
-  const [examDate, setExamDate] = useState('');
+function Onboarding({ initial, onDone }: { initial: Settings; onDone: (s: Settings) => void }) {
+  // prefilled with what was saved earlier (Settings, the exam-day page), so starting the plan never erases it
+  const [name, setName] = useState(initial.name ?? '');
+  const [rhythm, setRhythm] = useState<Rhythm>(initial.rhythm ?? 'standard');
+  const [examDate, setExamDate] = useState(initial.examDate ?? '');
   const [error, setError] = useState<string | null>(null);
   async function start(e: React.FormEvent) {
     e.preventDefault();

@@ -1,6 +1,6 @@
 // Lesson page enhancements: remembers seen and understood steps, ticked lab steps, and the reading position.
 // The page is fully readable without this script.
-import { db, markProgress, unmarkProgress } from './store/db';
+import { db, markProgress, setProgress, unmarkProgress } from './store/db';
 
 const lessonEl = document.querySelector<HTMLElement>('[data-lesson]');
 const lessonId = lessonEl?.dataset.lesson;
@@ -46,7 +46,12 @@ document.addEventListener('click', async (e) => {
   b.textContent = on ? 'Understood' : 'I understood this';
   const dot = document.querySelector<HTMLElement>(`[data-step-dot="${step}"]`);
   if (dot) dot.dataset.state = on ? 'understood' : 'seen';
-  await safe(() => (on ? markProgress('step', step, 'understood', { lesson: lessonId }) : markProgress('step', step, 'seen', { lesson: lessonId })));
+  await safe(() => (on ? markProgress('step', step, 'understood', { lesson: lessonId }) : setProgress('step', step, 'seen', { lesson: lessonId })));
+  if (!on && lessonId) {
+    // a step is no longer understood: the lesson is not done any more
+    await safe(() => unmarkProgress('lesson', lessonId));
+    document.querySelector<HTMLElement>(`[data-outline-lesson="${lessonId}"]`)?.removeAttribute('data-state');
+  }
   if (on) {
     // When every step is understood, the lesson is done.
     const all = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-understood]'));

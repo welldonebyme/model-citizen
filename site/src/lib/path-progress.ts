@@ -16,7 +16,8 @@ export function resume(): Resume | null {
   try { return JSON.parse(localStorage.getItem('mc:resume') || 'null'); } catch { return null; }
 }
 
-async function run() {
+/** Fill every progress hook on the page. Pages whose map is drawn by an island (Today) call it again once drawn. */
+export async function fillProgress() {
   const done = await loadDoneLessons();
   const r = resume();
   // chapters: [data-chapter-progress] with data-lessons="id,id,..."
@@ -51,4 +52,4 @@ async function run() {
     else if (!nowSet && (frac > 0 || p.done === 0)) { g.dataset.state = 'now'; nowSet = true; }
   });
 }
-run();
+fillProgress();

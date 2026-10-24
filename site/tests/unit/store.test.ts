@@ -20,6 +20,23 @@ describe('progress file', () => {
     expect(s2.added).toBe(0);
     expect(await b.answers.count()).toBe(1);
   });
+  it('a fresh browser takes the plan from the file, even after its own first-visit setup', async () => {
+    const a = new ModelCitizenDB('test-plan-a');
+    await a.settings.put({ key: 'settings', rhythm: 'intensive', startDate: '2026-10-03', examDate: '2026-11-20', name: 'Amal', os: 'win', dailyMinutes: 120, domcExtraOption: true, domcEarlyEnd: true, updatedAt: 100 });
+    await a.progress.put({ id: 'lesson:ch00-s1', kind: 'lesson', ref: 'ch00-s1', status: 'done', firstAt: 1, updatedAt: 100 });
+    const file = validateProgressFile(JSON.parse(JSON.stringify(await exportProgress(a))));
+    const fresh = new ModelCitizenDB('test-plan-b');
+    await fresh.settings.put({ key: 'settings', rhythm: 'standard', startDate: '2026-10-24', dailyMinutes: 120, domcExtraOption: true, domcEarlyEnd: true, updatedAt: 999 });
+    await importProgress(file, fresh);
+    const s = await fresh.settings.get('settings');
+    expect([s?.startDate, s?.rhythm, s?.examDate, s?.os]).toEqual(['2026-10-03', 'intensive', '2026-11-20', 'win']);
+    // a browser that already has progress keeps its newer plan
+    const used = new ModelCitizenDB('test-plan-c');
+    await used.settings.put({ key: 'settings', rhythm: 'relaxed', startDate: '2026-09-01', dailyMinutes: 60, domcExtraOption: true, domcEarlyEnd: true, updatedAt: 999 });
+    await used.answers.add({ qid: 'q-ch01-01', mode: 'quiz', response: null, correct: true, at: 5 });
+    await importProgress(file, used);
+    expect((await used.settings.get('settings'))?.rhythm).toBe('relaxed');
+  });
   it('rejects foreign files with a clear message', () => {
     expect(() => validateProgressFile({ hello: 1 })).toThrow(ImportError);
     expect(() => validateProgressFile({ app: 'model-citizen', schema: 99, data: {} })).toThrow(/newer version/);

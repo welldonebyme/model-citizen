@@ -123,7 +123,8 @@ def sh(args, home: Path, cwd: Path | None = None, check=True, env_extra=None) ->
 
 
 def base_env(home: Path) -> dict:
-    real = os.environ["HOME"]
+    # the machine's own home, for uv's caches (Windows has USERPROFILE and usually no HOME)
+    real = os.environ.get("HOME") or os.environ.get("USERPROFILE") or str(Path.home())
     env = {k: v for k, v in os.environ.items() if not k.startswith(("DBT_", "VIRTUAL_ENV", "GIT_"))}
     env.update(HOME=str(home), DBT_SEND_ANONYMOUS_USAGE_STATS="false", DBT_USE_COLORS="false", NO_COLOR="1",
                TERM="dumb", PAGER="cat", GIT_PAGER="cat", MANPAGER="cat", GIT_EDITOR="true",
@@ -131,7 +132,9 @@ def base_env(home: Path) -> dict:
                GIT_COMMITTER_EMAIL="learner@example.com", TEMP=str(home / "tmp"), TMPDIR=str(home / "tmp"),
                UV_CACHE_DIR=os.environ.get("UV_CACHE_DIR", f"{real}/.cache/uv"),
                UV_PYTHON_INSTALL_DIR=os.environ.get("UV_PYTHON_INSTALL_DIR", f"{real}/.local/share/uv/python"))
-    env["PATH"] = f"{real}/.local/bin:" + env.get("PATH", "")
+    if os.name == "nt":
+        env["USERPROFILE"] = str(home)
+    env["PATH"] = os.pathsep.join([str(Path(real) / ".local" / "bin"), env.get("PATH", "")])
     return env
 
 

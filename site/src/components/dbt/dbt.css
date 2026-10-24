@@ -32,6 +32,7 @@
 .dbt-start-preset ul { margin: 6px 0 0; padding-left: 1.2em; color: var(--text); }
 .dbt-start-preset li { margin: 2px 0; }
 .dbt-start-size { color: var(--muted); font-size: var(--fs-sm) !important; }
+.dbt-start-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .dbt-start-queued code, .dbt-chip code { font-family: var(--mono); }
 .dbt-warn { margin: 0; padding: 10px 12px; border-radius: 10px; background: var(--warn-bg); color: var(--text); border: 1px solid var(--idea-line); font-size: var(--fs-sm); }
 .dbt-error { margin: 0; padding: 10px 12px; border-radius: 10px; background: var(--bad-bg); color: var(--ink); border: 1px solid var(--trap-line); font-size: var(--fs-sm); }

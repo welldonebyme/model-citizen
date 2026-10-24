@@ -107,4 +107,7 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'mc:sw-version') {
     event.source && event.source.postMessage({ type: 'mc:sw-version', version: SW_VERSION, rules: RULES.map((r) => r.id) });
   }
+  // a page loaded with a hard reload (Shift+Reload, or some automated browsers) is not controlled: take it back,
+  // so the Web Workers it starts use the caches above (sw-register.ts asks for it before a heavy engine starts)
+  if (event.data && event.data.type === 'mc:claim') event.waitUntil(self.clients.claim());
 });

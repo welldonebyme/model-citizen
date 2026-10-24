@@ -153,3 +153,15 @@ test('sandbox: dbt deps installs the saved packages, apply day2, Stop @long', as
   r = await run(page, 'pwd');
   expect(r.lines).toEqual(['/home/pyodide/dbt-course/jaffle_dbt']);
 });
+
+test('capstone: m08 end prepares (snapshots, day2) and its unit tests parse (libyaml fallback) @long', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'the capstone preparation is the same code in every browser');
+  test.setTimeout(20 * 60_000);
+  await startWorkspace(page, 'm08-end');
+  await expect(page.locator('.t-log')).toContainText('Ready: Capstone milestone m08, end');
+  const ls = await run(page, 'dbt ls --resource-type unit_test');
+  expect(ls.code).toBe(0);
+  expect(ls.lines.join('\n')).toMatch(/unit_test:shopflow_dbt\./);
+  const q = await run(page, 'duckdb ../shopflow-data/shopflow.duckdb -c "select count(*) as n from shopflow_app.orders"');
+  expect(q.lines.join('\n')).toMatch(/│\s+3040\s+│/); // day 2 applied (3000 + 40 new orders)
+});

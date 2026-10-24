@@ -30,8 +30,13 @@ export async function ensureServiceWorker(opts: { waitMs?: number } = {}): Promi
   const reg = await register();
   if (!reg) return typeof navigator !== 'undefined' && 'serviceWorker' in navigator ? 'failed' : 'unsupported';
   if (navigator.serviceWorker.controller) return 'controlled';
-  const waitMs = opts.waitMs ?? 0;
+  let waitMs = opts.waitMs ?? 0;
   if (waitMs <= 0) return 'registered';
+  // already active but not controlling this page (hard reload): ask it to claim the page, and wait less
+  if (reg.active && !reg.installing && !reg.waiting) {
+    reg.active.postMessage({ type: 'mc:claim' });
+    waitMs = Math.min(waitMs, 1000);
+  }
   const controlled = await new Promise<boolean>((resolve) => {
     const done = (v: boolean) => { clearTimeout(timer); navigator.serviceWorker.removeEventListener('controllerchange', onChange); resolve(v); };
     const onChange = () => done(true);

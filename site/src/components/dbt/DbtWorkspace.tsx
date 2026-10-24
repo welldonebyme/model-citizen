@@ -189,7 +189,9 @@ export default function DbtWorkspace({ preset: presetId, workspace, layout = 'co
       sys(`Ready: ${p.title}${p.chapterTitle ? ` (${p.chapterTitle})` : ''}. Prepared in ${((r.prepareMs ?? 0) / 1000).toFixed(1)} s.`);
       for (const s of p.summary) sys(`  ${s}`);
     } else {
-      setError(`The preparation stopped at "${r.failed}". Open "How this workspace was prepared" to see why, then use Reset.`);
+      setError(`The preparation stopped at "${r.failed}". Open "How this workspace was prepared" in the terminal log to see why, then try again or reset.`);
+      setPhase('error');
+      return;
     }
     if (r.persist === false) note('This browser does not let the page save files (private window?). Your work is lost when you close the page.', 'warn');
     const h = r.meta?.history ?? [];
@@ -235,8 +237,8 @@ export default function DbtWorkspace({ preset: presetId, workspace, layout = 'co
         const m = all.find((x) => x.ws === ws && x.state === 'ready');
         // same chapter, other state ("start" -> "end"): replace only if asked
         if (m && m.preset !== presetId) setConfirm(presetId.endsWith('-end') ? 'end' : 'start');
-        void openWorkspace('continue', m?.preset ?? presetId);
-      }).catch(() => void openWorkspace('continue', presetId));
+        return openWorkspace('continue', m?.preset ?? presetId);
+      }).catch((e) => { setError((e as Error).message); setPhase('error'); });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presetId]);
@@ -433,7 +435,17 @@ export default function DbtWorkspace({ preset: presetId, workspace, layout = 'co
           )}
           {queued.length > 0 && <p className="dbt-start-queued">After the start, this command is ready in the terminal: <code>{queued[0]}</code></p>}
           {error && <p className="dbt-error" role="alert">{error}</p>}
-          <button type="button" className="btn btn-primary" onClick={start} disabled={!manifest || !index}>Start dbt in your browser</button>
+          <div className="dbt-start-actions">
+            <button type="button" className="btn btn-primary" onClick={start} disabled={!manifest || !index}>Start dbt in your browser</button>
+            {error && manifest && (
+              <button type="button" className="btn btn-quiet" onClick={async () => {
+                // a damaged download in the cache: remove the engine files kept by this browser, then start again
+                try { for (const n of await caches.keys()) if (n.startsWith('mc-engines-')) await caches.delete(n); } catch { /* no Cache Storage */ }
+                setCached(false);
+                void start();
+              }}>Download the engine again</button>
+            )}
+          </div>
         </div>
       )}
 
@@ -452,7 +464,7 @@ export default function DbtWorkspace({ preset: presetId, workspace, layout = 'co
         </div>
       )}
 
-      <div className="dbt-ws-body" hidden={phase !== 'ready' && !(phase === 'opening' && model.blocks.length > 0)}>
+      <div className="dbt-ws-body" hidden={!(phase === 'ready' || ((phase === 'opening' || phase === 'error') && model.blocks.length > 0))}>
         {layout === 'column' ? (
           <>
             <Tabs ws={ws} tabs={[['terminal', 'Terminal'], ['files', 'Files'], ['help', 'What is different?']]} value={tab} onChange={(t) => setTab(t as Tab)} />

@@ -14,7 +14,10 @@ Builds the 64 TikZ figures of the book (`../dbt-bible`, read only) as SVGs for t
 The output uses the **site palette** by default (`colors.PALETTES["site"]`): the book's accent family is
 re-based on the site accent (light `#B4237A`, dark `#F06AB4`; every tint such as `accent!15` is recomputed
 from it), ink is `#16213B` in light mode, the dark paper is the site's dark surface `#17223A` (light paper
-`#FFFFFF`); muted and the semantic colours (why/idea/lab/trap/tip/quiz) keep the book values.
+`#FFFFFF`), and muted and the semantic colours (why/idea/lab/trap/tip/quiz) take the site's tokens from
+`site/src/styles/tokens.css` (light / dark), their tints recomputed the same way. One tint is adjusted for
+contrast: `ink!60` is computed as `ink!62` in light mode (`light_tints`). Result: every text span ≥ 4.5:1 in
+both modes (see COLORS.md).
 `build.py --palette book` builds the book's own colours into `converter/figures/build/palette-book/`
 (SVGs + figures.json + figures.css + COLORS.md; `contact.py --dir build/palette-book` to review it).
 Token names never change (`--fig-accent` is the site accent in the site palette).

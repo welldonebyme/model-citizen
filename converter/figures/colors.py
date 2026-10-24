@@ -60,9 +60,18 @@ PDF_ALIASES = {
 # every tint/mix (accent!15, ink!70 ...) is recomputed from the overridden base.
 PALETTES = {
     # the site's brand (default output): accent family -> magenta, slightly deeper ink, the site's dark surface
+    # and the site's semantic colours (site/src/styles/tokens.css)
     "site": {
-        "light": {"accent": "#B4237A", "ink": "#16213B", "examC": "#16213B"},
-        "dark": {**DARK_BASE, "accent": "#F06AB4", "white": "#17223A"},
+        "light": {"accent": "#B4237A", "ink": "#16213B", "examC": "#16213B",
+                  "muted": "#5B6782", "deepC": "#5B6782",
+                  "whyC": "#1D4ED8", "ideaC": "#8A5300", "labC": "#0B7350", "trapC": "#B42318",
+                  "tipC": "#0B6A80", "quizC": "#5B34C0"},
+        "dark": {**DARK_BASE, "accent": "#F06AB4", "white": "#17223A",
+                 "muted": "#97A3BC", "deepC": "#97A3BC",
+                 "whyC": "#8DB0FF", "ideaC": "#F5B74E", "labC": "#4FD1A1", "trapC": "#FF8A7A",
+                 "tipC": "#6FD3EA", "quizC": "#B39BFF"},
+        # tints adjusted minimally to keep every text span >= 4.5:1 (light mode): expression -> replacement
+        "light_tints": {"ink!60": "ink!62"},   # small grey notes on white: 4.31:1 -> 4.62:1
     },
     # the book's own colours (light = exactly the PDF)
     "book": {"light": {}, "dark": dict(DARK_BASE)},
@@ -184,8 +193,9 @@ class Mapper:
                 tok = token(expr)
                 if tok not in self.used:
                     dark = DARK_OVERRIDE.get(expr) or rgb_hex(evaluate(expr, self.dark_pal))
+                    light_expr = PALETTES[self.palette].get("light_tints", {}).get(expr, expr)
                     self.used[tok] = {"expr": expr, "book": rgb_hex(evaluate(expr, self.pal)),
-                                      "light": rgb_hex(evaluate(expr, self.light_pal)), "dark": dark,
+                                      "light": rgb_hex(evaluate(light_expr, self.light_pal)), "dark": dark,
                                       "figures": set(), "hex": set()}
                 info = self.used[tok]
         info["figures"].add(fig_id)

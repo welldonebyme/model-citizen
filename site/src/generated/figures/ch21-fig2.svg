@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 399.48 73.43" width="533" height="98" role="img" data-figure="ch21-fig2" font-family="var(--fig-font-sans, 'Fira Sans', 'Helvetica Neue', Arial, sans-serif)" fill="var(--fig-text, #000000)" stroke-miterlimit="10" aria-labelledby="ch21-fig2-title">
 <title id="ch21-fig2-title">Source freshness on an age axis, where age = now − max(_loaded_at). From age 0 (just loaded) to warn_after (12 hours) the result is PASS; from 12 hours to error_after (24 hours) it is WARN; after 24 hours it is ERROR STALE.</title>
-<path transform="matrix(1 0 0 -1 28.58 48.25)" d="M0 0V14.17H141.73V0ZM141.73 14.17" fill="var(--fig-lab-25, #C0E5DA)" />
-<path transform="matrix(1 0 0 -1 28.58 48.25)" d="M141.73 0V14.17H240.95V0ZM240.95 14.17" fill="var(--fig-idea-35, #F2CFA8)" />
-<path transform="matrix(1 0 0 -1 28.58 48.25)" d="M240.95 0V14.17H368.51V0ZM368.51 14.17" fill="var(--fig-trap-30, #F4BEBE)" />
+<path transform="matrix(1 0 0 -1 28.58 48.25)" d="M0 0V14.17H141.73V0ZM141.73 14.17" fill="var(--fig-lab-25, #C2DCD3)" />
+<path transform="matrix(1 0 0 -1 28.58 48.25)" d="M141.73 0V14.17H240.95V0ZM240.95 14.17" fill="var(--fig-idea-35, #D6C3A6)" />
+<path transform="matrix(1 0 0 -1 28.58 48.25)" d="M240.95 0V14.17H368.51V0ZM368.51 14.17" fill="var(--fig-trap-30, #E8BDBA)" />
 <text xml:space="preserve" transform="translate(133.94 67.67)" font-size="7.97" font-weight="600"><tspan x="-43.42" y="-23.75">PASS</tspan></text>
 <text xml:space="preserve" transform="translate(252.54 67.67)" font-size="7.97" font-weight="600"><tspan x="-43.42" y="-23.75">WARN</tspan></text>
 <text xml:space="preserve" transform="translate(353.04 67.67)" font-size="7.97" font-weight="600"><tspan x="-43.42" y="-23.75">ERROR </tspan><tspan x="-17.17">STALE</tspan></text>
@@ -14,11 +14,11 @@
 <path transform="matrix(1 0 0 -1 28.58 48.25)" stroke-width=".797" fill="none" stroke="var(--fig-ink, #16213B)" d="M240.95 0V21.26" />
 <text fill="var(--fig-ink, #16213B)" xml:space="preserve" transform="translate(273.2 45.49)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="-43.42" y="-23.75">error_after</tspan></text>
 <text fill="var(--fig-ink, #16213B)" xml:space="preserve" transform="translate(273.2 45.49)" font-size="7.97"><tspan x=".77" y="-23.75">: </tspan><tspan x="5.49">24 </tspan><tspan x="15.58">hours</tspan></text>
-<path transform="matrix(1 0 0 -1 28.58 48.25)" stroke-width=".797" fill="none" stroke="var(--fig-ink-60, #737A89)" d="M0-7.09H365.01" />
-<path transform="matrix(1 0 0 -1 391.42 55.33)" d="M4.53 0 1.29 1.23 2.37 0 1.29-1.23Z" fill="var(--fig-ink-60, #737A89)" stroke-width=".797" stroke="var(--fig-ink-60, #737A89)" />
-<text fill="var(--fig-ink-60, #737A89)" xml:space="preserve" transform="translate(329.42 89.86)" font-size="7.97"><tspan x="-43.42" y="-23.75">age </tspan><tspan x="-28.53">= </tspan><tspan x="-22.43">now</tspan></text>
-<text fill="var(--fig-ink-60, #737A89)" xml:space="preserve" transform="translate(329.42 89.86)" font-size="7.97" font-family="var(--fig-font-math, 'Fira Sans', 'STIX Two Math', 'Cambria Math', 'Segoe UI Symbol', 'Apple Symbols', 'DejaVu Sans', sans-serif)"><tspan y="-23.75" x="-5.34">−</tspan></text>
-<text fill="var(--fig-ink-60, #737A89)" xml:space="preserve" transform="translate(329.42 89.86)" font-size="7.97"><tspan x="3.36" y="-23.75">max(</tspan></text>
-<text fill="var(--fig-ink-60, #737A89)" xml:space="preserve" transform="translate(329.42 89.86)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="20.88" y="-23.75">_loaded_at</tspan></text>
-<text fill="var(--fig-ink-60, #737A89)" xml:space="preserve" transform="translate(329.42 89.86)" font-size="7.97"><tspan y="-23.75" x="61.05">)</tspan></text>
+<path transform="matrix(1 0 0 -1 28.58 48.25)" stroke-width=".797" fill="none" stroke="var(--fig-ink-60, #6F7585)" d="M0-7.09H365.01" />
+<path transform="matrix(1 0 0 -1 391.42 55.33)" d="M4.53 0 1.29 1.23 2.37 0 1.29-1.23Z" fill="var(--fig-ink-60, #6F7585)" stroke-width=".797" stroke="var(--fig-ink-60, #6F7585)" />
+<text fill="var(--fig-ink-60, #6F7585)" xml:space="preserve" transform="translate(329.42 89.86)" font-size="7.97"><tspan x="-43.42" y="-23.75">age </tspan><tspan x="-28.53">= </tspan><tspan x="-22.43">now</tspan></text>
+<text fill="var(--fig-ink-60, #6F7585)" xml:space="preserve" transform="translate(329.42 89.86)" font-size="7.97" font-family="var(--fig-font-math, 'Fira Sans', 'STIX Two Math', 'Cambria Math', 'Segoe UI Symbol', 'Apple Symbols', 'DejaVu Sans', sans-serif)"><tspan y="-23.75" x="-5.34">−</tspan></text>
+<text fill="var(--fig-ink-60, #6F7585)" xml:space="preserve" transform="translate(329.42 89.86)" font-size="7.97"><tspan x="3.36" y="-23.75">max(</tspan></text>
+<text fill="var(--fig-ink-60, #6F7585)" xml:space="preserve" transform="translate(329.42 89.86)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="20.88" y="-23.75">_loaded_at</tspan></text>
+<text fill="var(--fig-ink-60, #6F7585)" xml:space="preserve" transform="translate(329.42 89.86)" font-size="7.97"><tspan y="-23.75" x="61.05">)</tspan></text>
 </svg>

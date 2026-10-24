@@ -18,20 +18,21 @@ on the palette's paper. Default: `site` (the site's brand). Other palette(s): `b
 | `white` | `#FFFFFF` | `#FFFFFF` | `#17223A` |
 | `black` | `#000000` | `#000000` | `#ECEFF4` |
 | `ink` | `#1F2A44` | `#16213B` | `#DCE2EC` |
-| `muted` | `#6B7280` | `#6B7280` | `#9BA3B1` |
+| `muted` | `#6B7280` | `#5B6782` | `#97A3BC` |
 | `codebg` | `#F6F7F9` | `#F6F7F9` | `#1B2230` |
 | `codeframe` | `#D7DBE2` | `#D7DBE2` | `#3A4456` |
 | `outbg` | `#FBFBF5` | `#FBFBF5` | `#1C201B` |
 | `accent` | `#E8573F` | `#B4237A` | `#F06AB4` |
-| `whyC` | `#2563EB` | `#2563EB` | `#6FA6FA` |
-| `ideaC` | `#D97706` | `#D97706` | `#F2A43A` |
-| `labC` | `#059669` | `#059669` | `#3CC79C` |
-| `trapC` | `#DC2626` | `#DC2626` | `#F47474` |
-| `tipC` | `#0891B2` | `#0891B2` | `#2BC0E0` |
-| `quizC` | `#7C3AED` | `#7C3AED` | `#A98EF8` |
+| `whyC` | `#2563EB` | `#1D4ED8` | `#8DB0FF` |
+| `ideaC` | `#D97706` | `#8A5300` | `#F5B74E` |
+| `labC` | `#059669` | `#0B7350` | `#4FD1A1` |
+| `trapC` | `#DC2626` | `#B42318` | `#FF8A7A` |
+| `tipC` | `#0891B2` | `#0B6A80` | `#6FD3EA` |
+| `quizC` | `#7C3AED` | `#5B34C0` | `#B39BFF` |
 
-Overrides of this palette — light: `accent` #B4237A, `ink` #16213B, `examC` #16213B;
-dark: the dark base palette above.
+Overrides of this palette — light: `accent` #B4237A, `ink` #16213B, `examC` #16213B, `muted` #5B6782, `deepC` #5B6782, `whyC` #1D4ED8, `ideaC` #8A5300, `labC` #0B7350, `trapC` #B42318, `tipC` #0B6A80, `quizC` #5B34C0;
+dark: the dark base palette above. Tints adjusted for contrast (light mode):
+`ink!60` computed as `ink!62`.
 
 ## Rules
 
@@ -58,22 +59,22 @@ dark: the dark base palette above.
 
 ## Text contrast of this build (`contrast.py`: every text span against the shape under it, or the paper)
 
-965 text spans. Minimum **dark 4.54:1**, **light 3.19:1**. White text on solid accent badges (16 spans): light 6.07:1, dark 5.60:1.
+965 text spans. Minimum **dark 4.54:1**, **light 4.61:1**. White text on solid accent badges (16 spans): light 6.07:1, dark 5.60:1.
 
 - Lowest in dark mode:
   - 4.54:1 ch20-fig2 “monthly_revenue_dashboard” (`--fig-text` on `--fig-orange-60`)
-  - 4.78:1 ch09-fig1 “ephemeral” (`--fig-accent` on `--fig-idea-9`)
+  - 4.72:1 ch09-fig1 “ephemeral” (`--fig-accent` on `--fig-idea-9`)
   - 4.87:1 ch04-fig2 “A” (`--fig-text` on `--fig-accent-60`)
   - 4.98:1 ch20-fig2 “int_orders__enriched” (`--fig-text` on `--fig-yellow-70-orange`)
-  - 5.26:1 ch00-fig1 “week13” (`--fig-muted` on `--fig-accent-12`)
   - 5.26:1 ch07-fig2 “compile” (`--fig-ink-60` on `page (paper)`)
+  - 5.26:1 ch10-fig2 “repeatedforeveryselectedmodel” (`--fig-ink-60` on `page (paper)`)
 - Lowest in light mode:
-  - 3.19:1 ch03-fig6 “qa” (`--fig-on-solid` on `--fig-idea`)
-  - 3.77:1 ch05-fig1 “Python:transform(rare)” (`--fig-on-solid` on `--fig-lab`)
-  - 3.77:1 ch07-fig4 “sources” (`--fig-lab` on `page (paper)`)
-  - 3.77:1 ch10-fig2 “onetransactionpermodel(adapterswithtrans” (`--fig-lab` on `page (paper)`)
-  - 3.77:1 ch14-fig1 “Laterruns(thetableexists)” (`--fig-on-solid` on `--fig-lab`)
-  - 3.77:1 ch18-fig1 “datatests(realdata)” (`--fig-on-solid` on `--fig-lab`)
+  - 4.61:1 ch07-fig2 “compile” (`--fig-ink-60` on `page (paper)`)
+  - 4.61:1 ch10-fig2 “repeatedforeveryselectedmodel” (`--fig-ink-60` on `page (paper)`)
+  - 4.61:1 ch20-fig1 “copied” (`--fig-ink-60` on `page (paper)`)
+  - 4.61:1 ch21-fig2 “)” (`--fig-ink-60` on `page (paper)`)
+  - 4.61:1 ch23-fig2 “select*from” (`--fig-ink-60` on `page (paper)`)
+  - 4.69:1 ch00-fig1 “week13” (`--fig-muted` on `--fig-accent-12`)
 
 ## Every token used (68)
 
@@ -97,53 +98,53 @@ dark: the dark base palette above.
 | `--fig-code-bg` | `codebg` | #f6f7f9 | `#F6F7F9` | `#F6F7F9` | `#1B2230` | 23 | ch01-fig2, ch04-fig3, ch04-fig4, ch05-fig1, ch05-fig2, ch06-fig1 … (+17) |
 | `--fig-code-frame` | `codeframe` | #d7dbe2 | `#D7DBE2` | `#D7DBE2` | `#3A4456` | 6 | ch04-fig3, ch04-fig4, ch06-fig1, ch07-fig1, ch07-fig2, ch20-fig2 |
 | `--fig-green-35-black` | `green!35!black` | #005900 | `#005900` | `#005900` | `#99F59F` | 1 | ch20-fig2 |
-| `--fig-idea` | `ideaC` | #d97706 | `#D97706` | `#D97706` | `#F2A43A` | 3 | ch00-fig3, ch03-fig6, ch26-fig1 |
-| `--fig-idea-10` | `ideaC!10` | #fbf1e6 | `#FBF1E6` | `#FBF1E6` | `#2D2F3A` | 2 | ch03-fig1, ch08-fig3 |
-| `--fig-idea-12` | `ideaC!12` | #faefe1 | `#FAEFE1` | `#FAEFE1` | `#31323A` | 2 | ch01-fig2, ch26-fig1 |
-| `--fig-idea-15` | `ideaC!15` | #f9ebda | `#F9EBDA` | `#F9EBDA` | `#38363A` | 2 | ch01-fig1, ch21-fig1 |
-| `--fig-idea-20` | `ideaC!20` | #f7e4cd | `#F7E4CD` | `#F7E4CD` | `#433C3A` | 2 | ch07-fig3, ch16-fig1 |
-| `--fig-idea-35` | `ideaC!35` | #f2cfa8 | `#F2CFA8` | `#F2CFA8` | `#64503A` | 1 | ch21-fig2 |
-| `--fig-idea-80-black` | `ideaC!80!black` | #ae5f05 | `#AE5F05` | `#AE5F05` | `#F1B35F` | 1 | ch21-fig1 |
-| `--fig-idea-9` | `ideaC!9` | #fcf3e9 | `#FCF3E9` | `#FCF3E9` | `#2B2E3A` | 1 | ch09-fig1 |
+| `--fig-idea` | `ideaC` | #d97706 | `#D97706` | `#8A5300` | `#F5B74E` | 3 | ch00-fig3, ch03-fig6, ch26-fig1 |
+| `--fig-idea-10` | `ideaC!10` | #fbf1e6 | `#FBF1E6` | `#F3EEE6` | `#2D313C` | 2 | ch03-fig1, ch08-fig3 |
+| `--fig-idea-12` | `ideaC!12` | #faefe1 | `#FAEFE1` | `#F1EAE0` | `#32343C` | 2 | ch01-fig2, ch26-fig1 |
+| `--fig-idea-15` | `ideaC!15` | #f9ebda | `#F9EBDA` | `#EDE5D9` | `#38383D` | 2 | ch01-fig1, ch21-fig1 |
+| `--fig-idea-20` | `ideaC!20` | #f7e4cd | `#F7E4CD` | `#E8DDCC` | `#43403E` | 2 | ch07-fig3, ch16-fig1 |
+| `--fig-idea-35` | `ideaC!35` | #f2cfa8 | `#F2CFA8` | `#D6C3A6` | `#655641` | 1 | ch21-fig2 |
+| `--fig-idea-80-black` | `ideaC!80!black` | #ae5f05 | `#AE5F05` | `#6E4200` | `#F3C26F` | 1 | ch21-fig1 |
+| `--fig-idea-9` | `ideaC!9` | #fcf3e9 | `#FCF3E9` | `#F4F0E8` | `#2B2F3C` | 1 | ch09-fig1 |
 | `--fig-ink` | `ink` | #1f2a44 | `#1F2A44` | `#16213B` | `#DCE2EC` | 56 | ch00-fig1, ch00-fig2, ch01-fig1, ch01-fig2, ch01-fig3, ch01-fig4 … (+50) |
 | `--fig-ink-40` | `ink!40` | #a5aab4 | `#A5AAB4` | `#A2A6B1` | `#666F81` | 1 | ch07-fig4 |
 | `--fig-ink-50` | `ink!50` | #8f94a1, #8f95a2 | `#8F94A2` | `#8A909D` | `#7A8293` | 9 | ch01-fig1, ch02-fig1, ch13-fig1, ch17-fig1, ch20-fig1, ch20-fig2 … (+3) |
 | `--fig-ink-55` | `ink!55` | #848a98 | `#848A98` | `#7F8593` | `#838C9C` | 2 | ch16-fig1, ch26-fig1 |
-| `--fig-ink-60` | `ink!60` | #797f8f | `#797F8F` | `#737A89` | `#8D95A5` | 22 | ch00-fig1, ch01-fig3, ch03-fig2, ch03-fig3, ch04-fig3, ch07-fig2 … (+16) |
+| `--fig-ink-60` | `ink!60` | #797f8f | `#797F8F` | `#6F7585` | `#8D95A5` | 22 | ch00-fig1, ch01-fig3, ch03-fig2, ch03-fig3, ch04-fig3, ch07-fig2 … (+16) |
 | `--fig-ink-70` | `ink!70` | #626a7c | `#626A7C` | `#5C6476` | `#A1A8B7` | 29 | ch01-fig2, ch01-fig4, ch03-fig1, ch03-fig2, ch03-fig4, ch04-fig1 … (+23) |
-| `--fig-lab` | `labC` | #059669 | `#059669` | `#059669` | `#3CC79C` | 16 | ch00-fig3, ch01-fig4, ch03-fig3, ch05-fig1, ch07-fig4, ch10-fig2 … (+10) |
-| `--fig-lab-10` | `labC!10` | #e6f4f0 | `#E6F4F0` | `#E6F4F0` | `#1B3344` | 3 | ch03-fig1, ch07-fig4, ch15-fig1 |
-| `--fig-lab-12` | `labC!12` | #e1f2ed | `#E1F2ED` | `#E1F2ED` | `#1B3646` | 5 | ch01-fig1, ch01-fig2, ch01-fig4, ch21-fig1, ch26-fig1 |
-| `--fig-lab-14` | `labC!14` | #dcf0ea | `#DCF0EA` | `#DCF0EA` | `#1C3948` | 1 | ch17-fig1 |
-| `--fig-lab-15` | `labC!15` | #d9efe8, #daefe9 | `#DAEFE8` | `#DAEFE8` | `#1D3B49` | 4 | ch07-fig3, ch13-fig1, ch16-fig1, ch18-fig2 |
-| `--fig-lab-16` | `labC!16` | #d7eee7 | `#D7EEE7` | `#D7EEE7` | `#1D3C4A` | 1 | ch27-fig3 |
-| `--fig-lab-20` | `labC!20` | #cdeae1 | `#CDEAE1` | `#CDEAE1` | `#1E434E` | 1 | ch03-fig3 |
-| `--fig-lab-25` | `labC!25` | #c1e5d9, #c1e5da | `#C0E5DA` | `#C0E5DA` | `#204B52` | 3 | ch14-fig2, ch20-fig2, ch21-fig2 |
-| `--fig-lab-7` | `labC!7` | #edf8f5 | `#EDF8F4` | `#EDF8F4` | `#1A2E41` | 1 | ch09-fig1 |
-| `--fig-lab-70-black` | `labC!70!black` | #046949 | `#03694A` | `#03694A` | `#71D3B6` | 1 | ch21-fig1 |
-| `--fig-lab-8` | `labC!8` | #ebf7f3 | `#EBF7F3` | `#EBF7F3` | `#1A2F42` | 5 | ch08-fig3, ch17-fig2, ch20-fig1, ch22-fig2, ch24-fig2 |
-| `--fig-lab-80-black` | `labC!80!black` | #047854 | `#047854` | `#047854` | `#5FCFAE` | 1 | ch14-fig2 |
-| `--fig-muted` | `muted` | #6b7280 | `#6B7280` | `#6B7280` | `#9BA3B1` | 31 | ch00-fig1, ch01-fig1, ch01-fig2, ch01-fig4, ch02-fig1, ch03-fig1 … (+25) |
-| `--fig-muted-15` | `muted!15` | #e9eaec | `#E9EAEC` | `#E9EAEC` | `#2B354C` | 1 | ch27-fig3 |
+| `--fig-lab` | `labC` | #059669 | `#059669` | `#0B7350` | `#4FD1A1` | 16 | ch00-fig3, ch01-fig4, ch03-fig3, ch05-fig1, ch07-fig4, ch10-fig2 … (+10) |
+| `--fig-lab-10` | `labC!10` | #e6f4f0 | `#E6F4F0` | `#E7F1EE` | `#1D3444` | 3 | ch03-fig1, ch07-fig4, ch15-fig1 |
+| `--fig-lab-12` | `labC!12` | #e1f2ed | `#E1F2ED` | `#E2EEEA` | `#1E3746` | 5 | ch01-fig1, ch01-fig2, ch01-fig4, ch21-fig1, ch26-fig1 |
+| `--fig-lab-14` | `labC!14` | #dcf0ea | `#DCF0EA` | `#DDEBE6` | `#1F3B48` | 1 | ch17-fig1 |
+| `--fig-lab-15` | `labC!15` | #d9efe8, #daefe9 | `#DAEFE8` | `#DAEAE5` | `#1F3C49` | 4 | ch07-fig3, ch13-fig1, ch16-fig1, ch18-fig2 |
+| `--fig-lab-16` | `labC!16` | #d7eee7 | `#D7EEE7` | `#D8E9E3` | `#203E4A` | 1 | ch27-fig3 |
+| `--fig-lab-20` | `labC!20` | #cdeae1 | `#CDEAE1` | `#CEE3DC` | `#22454F` | 1 | ch03-fig3 |
+| `--fig-lab-25` | `labC!25` | #c1e5d9, #c1e5da | `#C0E5DA` | `#C2DCD3` | `#254E54` | 3 | ch14-fig2, ch20-fig2, ch21-fig2 |
+| `--fig-lab-7` | `labC!7` | #edf8f5 | `#EDF8F4` | `#EEF5F3` | `#1B2E41` | 1 | ch09-fig1 |
+| `--fig-lab-70-black` | `labC!70!black` | #046949 | `#03694A` | `#085038` | `#7EDABA` | 1 | ch21-fig1 |
+| `--fig-lab-8` | `labC!8` | #ebf7f3 | `#EBF7F3` | `#EBF4F1` | `#1B3042` | 5 | ch08-fig3, ch17-fig2, ch20-fig1, ch22-fig2, ch24-fig2 |
+| `--fig-lab-80-black` | `labC!80!black` | #047854 | `#047854` | `#095C40` | `#6ED7B2` | 1 | ch14-fig2 |
+| `--fig-muted` | `muted` | #6b7280 | `#6B7280` | `#5B6782` | `#97A3BC` | 31 | ch00-fig1, ch01-fig1, ch01-fig2, ch01-fig4, ch02-fig1, ch03-fig1 … (+25) |
+| `--fig-muted-15` | `muted!15` | #e9eaec | `#E9EAEC` | `#E6E8EC` | `#2A354E` | 1 | ch27-fig3 |
 | `--fig-orange-60` | `orange!60` | #ffb366 | `#FFB266` | `#FFB266` | `#A25A17` | 1 | ch20-fig2 |
-| `--fig-quiz` | `quizC` | #7c3aed | `#7C3AED` | `#7C3AED` | `#A98EF8` | 4 | ch00-fig3, ch01-fig4, ch18-fig1, ch26-fig1 |
-| `--fig-quiz-10` | `quizC!10` | #f2ebfd | `#F2EBFD` | `#F2EBFD` | `#262D4D` | 1 | ch01-fig4 |
-| `--fig-quiz-8` | `quizC!8` | #f5effe | `#F5EFFE` | `#F5EFFE` | `#232B49` | 1 | ch26-fig1 |
-| `--fig-tip` | `tipC` | #0891b2 | `#0891B2` | `#0891B2` | `#2BC0E0` | 1 | ch00-fig3 |
-| `--fig-trap` | `trapC` | #dc2626 | `#DC2626` | `#DC2626` | `#F47474` | 8 | ch00-fig3, ch04-fig3, ch09-fig2, ch14-fig2, ch18-fig2, ch22-fig1 … (+2) |
-| `--fig-trap-15` | `trapC!15` | #fadede | `#FADEDE` | `#FADEDE` | `#382E43` | 2 | ch14-fig2, ch18-fig2 |
-| `--fig-trap-30` | `trapC!30` | #f5bebe | `#F4BEBE` | `#F4BEBE` | `#593B4B` | 1 | ch21-fig2 |
-| `--fig-trap-50` | `trapC!50` | #ee9393 | `#EE9292` | `#EE9292` | `#864B57` | 1 | ch04-fig3 |
-| `--fig-trap-6` | `trapC!6` | #fdf2f2 | `#FDF2F2` | `#FDF2F2` | `#24273D` | 1 | ch22-fig1 |
-| `--fig-trap-8` | `trapC!8` | #fceeee | `#FCEEEE` | `#FCEEEE` | `#29293F` | 3 | ch04-fig3, ch17-fig1, ch17-fig2 |
-| `--fig-trap-80-black` | `trapC!80!black` | #b01e1e | `#B01E1E` | `#B01E1E` | `#F28D8E` | 1 | ch17-fig1 |
+| `--fig-quiz` | `quizC` | #7c3aed | `#7C3AED` | `#5B34C0` | `#B39BFF` | 4 | ch00-fig3, ch01-fig4, ch18-fig1, ch26-fig1 |
+| `--fig-quiz-10` | `quizC!10` | #f2ebfd | `#F2EBFD` | `#EFEBF9` | `#272E4E` | 1 | ch01-fig4 |
+| `--fig-quiz-8` | `quizC!8` | #f5effe | `#F5EFFE` | `#F2EFFA` | `#232C4A` | 1 | ch26-fig1 |
+| `--fig-tip` | `tipC` | #0891b2 | `#0891B2` | `#0B6A80` | `#6FD3EA` | 1 | ch00-fig3 |
+| `--fig-trap` | `trapC` | #dc2626 | `#DC2626` | `#B42318` | `#FF8A7A` | 8 | ch00-fig3, ch04-fig3, ch09-fig2, ch14-fig2, ch18-fig2, ch22-fig1 … (+2) |
+| `--fig-trap-15` | `trapC!15` | #fadede | `#FADEDE` | `#F4DEDC` | `#3A3244` | 2 | ch14-fig2, ch18-fig2 |
+| `--fig-trap-30` | `trapC!30` | #f5bebe | `#F4BEBE` | `#E8BDBA` | `#5D414D` | 1 | ch21-fig2 |
+| `--fig-trap-50` | `trapC!50` | #ee9393 | `#EE9292` | `#DA918C` | `#8B565A` | 1 | ch04-fig3 |
+| `--fig-trap-6` | `trapC!6` | #fdf2f2 | `#FDF2F2` | `#FAF2F1` | `#25283E` | 1 | ch22-fig1 |
+| `--fig-trap-8` | `trapC!8` | #fceeee | `#FCEEEE` | `#F9EDED` | `#2A2A3F` | 3 | ch04-fig3, ch17-fig1, ch17-fig2 |
+| `--fig-trap-80-black` | `trapC!80!black` | #b01e1e | `#B01E1E` | `#901C13` | `#FB9E92` | 1 | ch17-fig1 |
 | `--fig-paper` | `white` | #ffffff | `#FFFFFF` | `#FFFFFF` | `#17223A` | 45 | ch00-fig1, ch00-fig2, ch01-fig4, ch03-fig2, ch03-fig3, ch03-fig4 … (+39) |
 | `--fig-on-solid` | `white (text on a solid fill)` | #ffffff | `#FFFFFF` | `#FFFFFF` | `#17223A` | 12 | ch03-fig2, ch03-fig3, ch03-fig5, ch03-fig6, ch05-fig1, ch10-fig1 … (+6) |
-| `--fig-why` | `whyC` | #2563eb | `#2563EB` | `#2563EB` | `#6FA6FA` | 4 | ch00-fig3, ch05-fig1, ch14-fig1, ch18-fig3 |
-| `--fig-why-10` | `whyC!10` | #e9effd | `#E9EFFD` | `#E9EFFD` | `#202F4D` | 2 | ch01-fig2, ch23-fig1 |
-| `--fig-why-12` | `whyC!12` | #e5ecfd | `#E5ECFD` | `#E5ECFD` | `#223251` | 1 | ch01-fig1 |
-| `--fig-why-14` | `whyC!14` | #e0e9fc | `#E0E9FC` | `#E0E9FC` | `#233455` | 2 | ch16-fig1, ch27-fig3 |
-| `--fig-why-15` | `whyC!15` | #dee8fc | `#DEE8FC` | `#DEE8FC` | `#243657` | 2 | ch07-fig3, ch13-fig1 |
-| `--fig-why-6` | `whyC!6` | #f2f6fe | `#F2F6FE` | `#F2F6FE` | `#1C2A46` | 1 | ch26-fig1 |
-| `--fig-why-8` | `whyC!8` | #eef3fd | `#EEF3FD` | `#EEF3FD` | `#1E2D49` | 2 | ch01-fig3, ch03-fig1 |
+| `--fig-why` | `whyC` | #2563eb | `#2563EB` | `#1D4ED8` | `#8DB0FF` | 4 | ch00-fig3, ch05-fig1, ch14-fig1, ch18-fig3 |
+| `--fig-why-10` | `whyC!10` | #e9effd | `#E9EFFD` | `#E8EDFB` | `#23304E` | 2 | ch01-fig2, ch23-fig1 |
+| `--fig-why-12` | `whyC!12` | #e5ecfd | `#E5ECFD` | `#E4EAFA` | `#253352` | 1 | ch01-fig1 |
+| `--fig-why-14` | `whyC!14` | #e0e9fc | `#E0E9FC` | `#DFE6FA` | `#283656` | 2 | ch16-fig1, ch27-fig3 |
+| `--fig-why-15` | `whyC!15` | #dee8fc | `#DEE8FC` | `#DDE4F9` | `#293758` | 2 | ch07-fig3, ch13-fig1 |
+| `--fig-why-6` | `whyC!6` | #f2f6fe | `#F2F6FE` | `#F1F4FD` | `#1E2B46` | 1 | ch26-fig1 |
+| `--fig-why-8` | `whyC!8` | #eef3fd | `#EEF3FD` | `#EDF1FC` | `#202D4A` | 2 | ch01-fig3, ch03-fig1 |
 | `--fig-yellow-70-orange` | `yellow!70!orange` | #ffd401 | `#FFD900` | `#FFD900` | `#7A6413` | 1 | ch20-fig2 |

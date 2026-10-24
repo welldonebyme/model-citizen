@@ -141,7 +141,8 @@ on the palette's paper. Default: `site` (the site's brand). Other palette(s): {o
 {base}
 
 Overrides of this palette — light: {", ".join(f"`{k}` {v}" for k, v in pal["light"].items()) or "none (book colours)"};
-dark: the dark base palette above.
+dark: the dark base palette above. Tints adjusted for contrast (light mode):
+{", ".join(f"`{k}` computed as `{v}`" for k, v in pal.get("light_tints", {}).items()) or "none"}.
 
 ## Rules
 

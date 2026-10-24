@@ -16,9 +16,16 @@ export interface CodeBlockProps {
   hideCopy?: boolean;
 }
 
-/** dbt command lines of a shell block ("$ dbt build", "$ DBT_X=1 dbt run"): offered to the browser terminal. */
+/**
+ * dbt command lines of a shell block, offered to the browser terminal: "$ dbt build", "(.venv) $ dbt run",
+ * "PS> dbt ls", "$ DBT_X=1 dbt run". Lines without a prompt count only when the block has no prompt at all.
+ */
 export function dbtCommands(text: string): string[] {
-  return commandsOnly(text).split('\n').map((l) => l.trim()).filter((l) => /^([A-Za-z_][A-Za-z0-9_]*=\S*\s+)*dbt(\s|$)/.test(l));
+  const PROMPT = /^\s*(?:\([^)]*\)\s*)?(?:\$|PS>|PS [^>]*>)\s+(.*)$/;
+  const lines = text.split('\n');
+  const prompted = lines.map((l) => l.match(PROMPT)?.[1]).filter((l): l is string => l !== undefined);
+  const cmds = prompted.length ? prompted : lines;
+  return cmds.map((l) => l.trim()).filter((l) => /^([A-Za-z_][A-Za-z0-9_]*=\S*\s+)*dbt(\s|$)/.test(l));
 }
 
 function lines(block: CodeBlockT, text: string): string[] {

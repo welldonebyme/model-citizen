@@ -29,7 +29,7 @@ const NAME = /[A-Za-z_][A-Za-z0-9_]*/y;
 
 /** Remove a prompt pasted with the command ("$ dbt run", "PS> dbt run"). */
 export function stripPrompt(line: string): string {
-  return line.replace(/^\s*(?:\$|PS>|PS [^>]*>|>)\s+/, '');
+  return line.replace(/^\s*(?:\([^)]*\)\s*)?(?:\$|PS>|PS [^>]*>|>)\s+/, '');
 }
 
 function readVar(s: string, i: number, ctx: ExpandContext): { value: string; next: number } | null {

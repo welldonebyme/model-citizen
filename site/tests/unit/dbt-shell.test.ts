@@ -58,6 +58,7 @@ describe('parseLine', () => {
   it('pasted prompts and PowerShell env', () => {
     expect(stripPrompt('$ dbt run')).toBe('dbt run');
     expect(stripPrompt('PS> dbt run')).toBe('dbt run');
+    expect(stripPrompt('(.venv) $ dbt run')).toBe('dbt run');
     expect(stripPrompt('PS C:\\Users\\a\\jaffle_dbt> dbt run')).toBe('dbt run');
     expect(parsePowerShellEnv('$env:DBT_DUCKDB_PATH = "../practice/x.duckdb"')).toEqual({ name: 'DBT_DUCKDB_PATH', value: '../practice/x.duckdb' });
     expect(parsePowerShellEnv('dbt run')).toBeNull();
@@ -73,6 +74,9 @@ describe('ansi and code blocks', () => {
   it('dbtCommands picks the dbt command lines of a shell block', () => {
     expect(dbtCommands('$ cd ~/dbt-course/jaffle_dbt\n$ dbt build\n12:00:00  output\n$ DBT_X=1 dbt run -s a\n$ git status')).toEqual(['dbt build', 'DBT_X=1 dbt run -s a']);
     expect(dbtCommands('$ git add .')).toEqual([]);
+    expect(dbtCommands('(.venv) $ dbt run\n12:00:00  Done.\n(.venv) $ dbt show --select x')).toEqual(['dbt run', 'dbt show --select x']);
+    expect(dbtCommands('(.venv) PS> dbt build')).toEqual(['dbt build']);
+    expect(dbtCommands('dbt run')).toEqual(['dbt run']);
   });
 });
 

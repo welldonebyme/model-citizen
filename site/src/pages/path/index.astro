@@ -25,9 +25,9 @@ const hours = Math.round(lessons.reduce((m, l) => m + l.lesson.minutes, 0) / 60)
               <div class="ch-main">
                 <a class="ch-title" href={url(routes.chapter(c))}>{c.title}</a>
                 <p class="meta">
-                  <span>{c.lessons.length} lessons</span>
+                  <span>{c.lessons.length} {c.lessons.length === 1 ? 'lesson' : 'lessons'}</span>
                   <span>about {Math.max(5, Math.round(c.minutes / 5) * 5)} min</span>
-                  {c.lessons.some((l) => l.labs.length) && <span class="pill pill-lab">{c.lessons.reduce((n, l) => n + l.labs.length, 0)} labs</span>}
+                  {c.lessons.some((l) => l.labs.length) && (() => { const n = c.lessons.reduce((k, l) => k + l.labs.length, 0); return <span class="pill pill-lab">{n} {n === 1 ? 'lab' : 'labs'}</span>; })()}
                   {c.quiz.length > 0 && <a class="pill pill-quiz" href={url(routes.quiz(c))}>{c.quiz.length} questions</a>}
                   <span class="prog" data-progress-label></span>
                 </p>

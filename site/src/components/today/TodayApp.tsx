@@ -67,7 +67,10 @@ export default function TodayApp(p: TodayProps) {
     quizBest.set(m[1], s);
   }
   const quizDone = new Set([...quizBest.keys()]);
-  const m = mission({ days, dayIndex: dayIdx, done: doneLessons, dueCards, lessons: lessonMap, chapterQuiz, quizDone, labTitles });
+  // Reading budget per day = the course's reading time spread over the plan's study days (the book: about 40 of 120 minutes).
+  const totalReading = p.lessons.reduce((n, l) => n + l.minutes, 0);
+  const readingBudget = Math.max(30, Math.round(totalReading / Math.max(1, days.length) / 5) * 5);
+  const m = mission({ days, dayIndex: dayIdx, done: doneLessons, dueCards, lessons: lessonMap, chapterQuiz, quizDone, labTitles, readingBudget });
 
   const quizzesOk = [...chapterQuiz.entries()].filter(([c, n]) => { const s = quizBest.get(c); return s && s.total >= n && s.correct / n >= 0.8; }).length;
   const mocksOk = new Set(attempts.filter((a) => a.mode === 'exam' && (a.score?.pct ?? 0) >= 80).map((a) => a.mock)).size;

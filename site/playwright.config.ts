@@ -30,7 +30,8 @@ export default defineConfig({
     { name: 'mobile', use: { ...devices['Pixel 7'] } },
   ],
   webServer: process.env.E2E_URL ? undefined : {
-    command: `npx astro build --config ${CONFIG} --outDir ${OUT} && npx astro preview --config ${CONFIG} --outDir ${OUT} --port ${PORT} --host 127.0.0.1 --ignore-lock`,
+    // the same steps as `npm run build` after astro: the search index and the offline file list
+    command: `npx astro build --config ${CONFIG} --outDir ${OUT} && npx pagefind --site ${OUT} --output-subdir pagefind --glob "**/*.html" && node scripts/offline-manifest.mjs ${OUT} && npx astro preview --config ${CONFIG} --outDir ${OUT} --port ${PORT} --host 127.0.0.1 --ignore-lock`,
     url: BASE,
     reuseExistingServer: !!process.env.E2E_REUSE,
     timeout: 240_000,

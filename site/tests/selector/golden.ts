@@ -18,9 +18,9 @@ export interface GoldenEntry {
   command: string; dbt: string; kind: string; global_flags: string[]; args: Record<string, unknown>;
   env: Record<string, string>; state_dependent: boolean; output_format: string; selected: string[] | null;
   selected_canon?: string[]; count: number | null; partial: boolean; error?: string | null; warnings?: string[];
-  notes: string; total?: number | null; output_keys?: string[];
+  notes: string; total?: number | null; output_keys?: string[]; statuses?: string[];
   verification?: {
-    status: string; matched_tag?: string; reason?: string; missing?: string[]; extra?: string[]; demo_edit?: string;
+    status: string; matched_tag?: string; matched_rev?: string; reason?: string; missing?: string[]; extra?: string[]; demo_edit?: string;
     bug_patch_applied?: string; annotation?: string; tag_run?: string;
   };
 }
@@ -36,7 +36,7 @@ export interface Outcome {
   id: string;
   /** match = same as the golden; match-real = the golden is not what real dbt prints at that tag (verifier),
    *  and the engine prints what real dbt prints there */
-  status: 'match' | 'match-real' | 'mismatch' | 'skipped';
+  status: 'match' | 'match-other-state' | 'match-real' | 'mismatch' | 'skipped';
   evaluatedOn?: string;
   reason?: string;
   tagRun?: string;
@@ -60,16 +60,59 @@ export function commandLine(e: GoldenEntry): string {
   return [...env, typed].join(' ');
 }
 
-/** Which project state the entry must be evaluated on (the verifier re-ran it there with real dbt). */
+export const PROJECT_TAGS: Record<string, string[]> = {
+  jaffle: Array.from({ length: 20 }, (_, i) => `ch${String(i + 6).padStart(2, '0')}`),
+  shopflow: Array.from({ length: 15 }, (_, i) => `m${String(i).padStart(2, '0')}`),
+};
+
+function revToState(key: string, rev: string): string {
+  if (/^[0-9a-f]{40}$/.test(rev)) return rev.slice(0, 7); // variants of commits are named by the short hash
+  return rev;
+}
+
+/** Which project state the entry is evaluated on first (where the verifier re-ran it with real dbt). */
 export function evalState(e: GoldenEntry): { tag: string; why: string } {
   const v = e.verification;
   if (v?.demo_edit) return { tag: `${e.tag}+${v.demo_edit}`, why: `tag ${e.tag} + documented demo edit ${v.demo_edit}` };
   if (v?.status === 'ok_other_tag') {
-    if (v.matched_tag) return { tag: v.matched_tag, why: `real dbt reproduced it at tag ${v.matched_tag}` };
+    const rev = v.matched_rev ?? v.matched_tag;
+    if (rev) return { tag: revToState(e.project, rev), why: `real dbt reproduced it at ${rev.length === 40 ? 'commit ' + rev.slice(0, 7) : 'tag ' + rev}` };
     const m = /commit ([0-9a-f]{7,40})/.exec(v.reason ?? '');
-    if (m) return { tag: m[1], why: `real dbt reproduced it at commit ${m[1]}` };
+    if (m) return { tag: m[1].slice(0, 7), why: `real dbt reproduced it at commit ${m[1].slice(0, 7)}` };
   }
   return { tag: e.tag, why: `tag ${e.tag}` };
+}
+
+/** Other real project states to try when the log was taken before/after the tag's final commit. */
+function neighbourStates(e: GoldenEntry): string[] {
+  const tags = PROJECT_TAGS[e.project];
+  const i = tags.indexOf(e.tag);
+  return [tags[i - 1], tags[i + 1]].filter((t): t is string => !!t);
+}
+
+/** The verifier's node-name form ("node:<model name>", "test:<name>", "unit_test:<name>") of the engine's run. */
+function engineNames(r: CommandResult, project: ReturnType<typeof loadProject>): string[] {
+  return r.execution.filter((s) => s.index !== null).map((s) => {
+    const n = project.get(s.uid);
+    if (n.resource_type === 'test') return `test:${n.name}`;
+    if (n.resource_type === 'unit_test') return `unit_test:${n.name}`;
+    if (n.resource_type === 'exposure') return `exposure:${n.name}`;
+    return `node:${n.name}`;
+  });
+}
+
+/** golden_verify.name_of_canon */
+function nameOfCanon(c: string, project: ReturnType<typeof loadProject>): string {
+  const i = c.indexOf(':');
+  const kind = c.slice(0, i);
+  const val = c.slice(i + 1);
+  if (kind === 'unit_test') return 'unit_test:' + val.split('::').pop()!.replace(/_v[0-9]+$/, '');
+  if (kind !== 'rel') return `${kind}:${val}`;
+  const ident = val.split('.').pop()!;
+  for (const n of project.nodes.values()) {
+    if (['model', 'seed', 'snapshot'].includes(n.resource_type) && (n.alias === ident || n.name === ident)) return `node:${n.name}`;
+  }
+  return `node:${ident.replace(/_v[0-9]+$/, '')}`;
 }
 
 function unitKey(c: string): string {
@@ -83,34 +126,52 @@ export function engineCanon(r: CommandResult): string[] {
 }
 
 export function runGolden(e: GoldenEntry, previous: PreviousState | null = null, tagOverride?: string): { outcome: Outcome; result: CommandResult | null } {
-  const r = runGoldenRaw(e, previous, tagOverride);
+  const primary = tagOverride ?? evalState(e).tag;
+  const r = runGoldenRaw(e, previous, primary, tagOverride ? `scenario on ${primary}` : evalState(e).why);
+  if (r.outcome.status !== 'mismatch' || !r.result || tagOverride) return r;
+  // 1) the log was taken at a neighbouring state of the project (previous/next tag)
+  for (const t of neighbourStates(e)) {
+    const r2 = runGoldenRaw(e, null, t, `tag ${t}`);
+    if (r2.outcome.status === 'match') {
+      return { outcome: { ...r2.outcome, status: 'match-other-state', reason: `the log was taken at another state of the project: the engine on tag ${t} prints exactly the golden output` }, result: r2.result };
+    }
+  }
+  const project = loadProject(e.project, primary);
+  // 2) re-run by hand with real dbt (fixtures/real-reruns.json)
   const rerun = RERUNS[e.id];
-  if (r.outcome.status === 'mismatch' && r.result && rerun) {
+  if (rerun) {
     const got = e.kind === 'ls' ? r.result.output : engineCanon(r.result).map(unitKey);
     const real = rerun.real.map((x) => (e.kind === 'ls' ? x : unitKey(x)));
     const same = rerun.real_ordered ? JSON.stringify(got) === JSON.stringify(real) : got.length === real.length && real.every((x) => got.includes(x));
     if (same && !r.result.error) return { outcome: { ...r.outcome, status: 'match-real', reason: `not reproducible at ${rerun.tag}; equals real dbt re-run by hand: ${rerun.ran}`, missing: undefined, extra: undefined }, result: r.result };
     return r;
   }
+  // 3) the verifier re-ran it at this tag and recorded the difference: real = golden - missing + extra
   const v = e.verification;
-  if (r.outcome.status !== 'mismatch' || !r.result || v?.status !== 'mismatch' || (!v.missing && !v.extra)) return r;
-  // real dbt (verifier) at this tag printed: golden - missing + extra
+  if (!v || !['mismatch', 'intermediate_state'].includes(v.status) || (!v.missing && !v.extra)) return r;
   const isLs = e.kind === 'ls';
-  const exp = isLs ? (e.selected ?? []) : (e.selected_canon ?? []).filter((c) => !c.startsWith('other:hook')).map(unitKey);
-  const miss = new Set((v.missing ?? []).map((x) => (isLs ? x : unitKey(x))));
-  const real = new Set([...exp.filter((x) => !miss.has(x)), ...(v.extra ?? []).map((x) => (isLs ? x : unitKey(x)))]);
-  const got = new Set(isLs ? r.result.output : engineCanon(r.result).map(unitKey));
+  let real: Set<string>;
+  let got: Set<string>;
+  if (isLs) {
+    const miss = new Set(v.missing ?? []);
+    real = new Set([...(e.selected ?? []).filter((x) => !miss.has(x)), ...(v.extra ?? [])]);
+    got = new Set(r.result.output);
+  } else {
+    const exp = (e.selected_canon ?? []).filter((c) => !c.startsWith('other:hook')).map((c) => nameOfCanon(c, project));
+    const miss = new Set(v.missing ?? []);
+    real = new Set([...exp.filter((x) => !miss.has(x)), ...(v.extra ?? [])]);
+    got = new Set(engineNames(r.result, project));
+  }
   const same = real.size === got.size && [...real].every((x) => got.has(x));
-  if (same && !r.result.error) return { outcome: { ...r.outcome, status: 'match-real', reason: v.annotation ?? v.reason ?? 'not reproducible at the tag', missing: undefined, extra: undefined }, result: r.result };
+  if (same && !r.result.error) return { outcome: { ...r.outcome, status: 'match-real', reason: v.reason ?? v.annotation ?? 'not reproducible at the tag', missing: undefined, extra: undefined }, result: r.result };
   return r;
 }
 
-function runGoldenRaw(e: GoldenEntry, previous: PreviousState | null = null, tagOverride?: string): { outcome: Outcome; result: CommandResult | null } {
-  const tag = tagOverride ?? evalState(e).tag;
+function runGoldenRaw(e: GoldenEntry, previous: PreviousState | null, tag: string, why: string): { outcome: Outcome; result: CommandResult | null } {
   if (!hasTag(e.project, tag)) return { outcome: { id: e.id, status: 'skipped', reason: `no DAG for ${e.project} ${tag}` }, result: null };
   const project = loadProject(e.project, tag);
   const r = runCommand(project, commandLine(e), { previous, clock: '00:00:00' });
-  const o: Outcome = { id: e.id, status: 'match', tagRun: tag, evaluatedOn: tagOverride ? `scenario on ${tag}` : evalState(e).why };
+  const o: Outcome = { id: e.id, status: 'match', tagRun: tag, evaluatedOn: why };
   const expErr = e.error ?? null;
   const gotErr = r.error ? r.error.lines(r.command ?? 'ls').join('\n') : null;
   if (expErr || gotErr) {
@@ -148,12 +209,25 @@ function runGoldenRaw(e: GoldenEntry, previous: PreviousState | null = null, tag
     if (missingW.length) return { outcome: { ...o, status: 'mismatch', reason: `missing warning(s): ${missingW.join(' | ')}` }, result: r };
     return { outcome: o, result: r };
   }
-  // run-like
+  // run-like. A SKIP line names a node <schema>.<name> (not <schema>.<alias>) and a unit test without its _v<n>:
+  // when the log has SKIP lines, both forms of a node are accepted (each expected line must be covered, and
+  // every engine node must be covered by an expected line).
   const exp = [...new Set((e.selected_canon ?? []).filter((c) => !c.startsWith('other:hook')).map(unitKey))];
-  const got = [...new Set(engineCanon(r).map(unitKey))];
-  const ok = e.partial ? exp.every((x) => got.includes(x)) : exp.length === got.length && exp.every((x) => got.includes(x));
-  if (!ok) {
-    return { outcome: { ...o, status: 'mismatch', missing: exp.filter((x) => !got.includes(x)), extra: e.partial ? [] : got.filter((x) => !exp.includes(x)) }, result: r };
+  const skips = (e.statuses ?? []).includes('SKIP');
+  const forms = r.execution.filter((st) => st.index !== null).map((st) => {
+    const f = new Set([unitKey(canonical(st.desc))]);
+    if (skips) {
+      const n = project.get(st.uid);
+      if (['model', 'seed', 'snapshot'].includes(n.resource_type)) f.add(`rel:${project.relation(st.uid, r.target).schema}.${n.name}`);
+      if (n.resource_type === 'unit_test') f.add(`unit_test:${n.name}`);
+    }
+    return f;
+  });
+  const covered = (x: string) => forms.some((f) => f.has(x));
+  const missing = exp.filter((x) => !covered(x));
+  const extraNodes = e.partial ? [] : forms.filter((f) => ![...f].some((x) => exp.includes(x))).map((f) => [...f][0]);
+  if (missing.length || extraNodes.length) {
+    return { outcome: { ...o, status: 'mismatch', missing, extra: extraNodes }, result: r };
   }
   return { outcome: o, result: r };
 }

@@ -373,7 +373,7 @@ function execute(project: Project, parsed: ParsedCommand, opts: RunOptions, res:
   const selectionArg = command === 'ls' && args.models ? args.models : args.select;
   let spec: Spec;
   const selectors = () => parseSelectors(project.selectors, args.indirectSelection);
-  const defaultSelector = Object.entries(project.selectors).find(([, s]) => s.default === true || s.default === 'true' || s.default === 'True')?.[0] ?? null;
+  const defaultSelector = defaultSelectorName(project, target);
   if (args.selector) {
     if (!(args.selector in project.selectors)) {
       throw runtimeError(`Could not find selector named ${args.selector}, expected one of ${pyListRepr(project.selectorNames)}`);
@@ -448,6 +448,30 @@ function execute(project: Project, parsed: ParsedCommand, opts: RunOptions, res:
     i++;
     res.execution.push({ uid, index: i, total, kind: 'node', desc: describeNode(project, uid, target) });
   }
+}
+
+/**
+ * RuntimeConfig.get_default_selector_name(): the selector with `default: true`. The value is rendered with Jinja
+ * for the current target: the manifest stores the value rendered for dev, so the raw text of selectors.yml is read
+ * for the common form "{{ target.name == 'dev' }}" (or !=).
+ */
+export function defaultSelectorName(project: Project, target: Target): string | null {
+  const yml = project.dag.selectors_yml ?? '';
+  for (const [name, s] of Object.entries(project.selectors)) {
+    const block = new RegExp(`-\\s+name:\\s*['"]?${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}['"]?\\s*\\n([\\s\\S]*?)(?=\\n\\s*-\\s+name:|$)`).exec(yml);
+    const raw = block ? /\n\s*default:\s*(.+)/.exec('\n' + block[1])?.[1]?.trim() : undefined;
+    let isDefault: boolean;
+    if (raw !== undefined) {
+      const unq = raw.replace(/^["']|["']$/g, '');
+      const m = /^\{\{\s*target\.name\s*(==|!=)\s*['"]([^'"]+)['"]\s*\}\}$/.exec(unq);
+      if (m) isDefault = m[1] === '==' ? target === m[2] : target !== m[2];
+      else isDefault = ['true', 'True', 'yes'].includes(unq);
+    } else {
+      isDefault = s.default === true || s.default === 'true' || s.default === 'True';
+    }
+    if (isDefault) return name;
+  }
+  return null;
 }
 
 /** Facts where the real 1.11.16 behaviour surprises (shown next to the result). */

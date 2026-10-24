@@ -1,0 +1,230 @@
+{
+ "about": "Golden entries of converter/golden/dbt-ls.json that are not a plain match of the engine on the entry's tag, with the reason. Written by the selection-engine agent; the golden file itself is not edited. Verdicts: other-state = valid output recorded at the previous/next tag (the engine reproduces it there); not-reproducible = recorded in a temporary state of the chapter (demo edits, deleted models...), the engine equals real dbt at the tag; golden-invalid = the entry's expected lines are not a dbt ls output; out-of-scope = dbt stops before node selection or the project state has no DAG; not-simulated = a state-dependent entry whose --state folder cannot be rebuilt from the data.",
+ "entries": [
+  {
+   "id": "book-ch07-002",
+   "verdict": "not-reproducible",
+   "reason": "taken before the marts were written (5 staging models) (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "book-ch08-002",
+   "verdict": "not-reproducible",
+   "reason": "taken before the marts folder config (+materialized: table) was added (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "book-ch10-001",
+   "verdict": "golden-invalid",
+   "reason": "the recorded \"selected\" lines are a dbt warning (\"There are 1 unused configuration paths: ...\"), not dbt ls output; the book output was abbreviated and taken with a temporary meta config",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "book-ch10-004",
+   "verdict": "other-state",
+   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch09 prints exactly the golden output",
+   "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
+  },
+  {
+   "id": "book-ch10-005",
+   "verdict": "other-state",
+   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch11 prints exactly the golden output",
+   "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
+  },
+  {
+   "id": "book-ch11-001",
+   "verdict": "not-reproducible",
+   "reason": "temporary model tmp_comment_demo (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "book-ch11-002",
+   "verdict": "out-of-scope",
+   "reason": "a temporary require-dbt-version in dbt_project.yml makes dbt stop before selection (version check, not node selection)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "book-ch14-006",
+   "verdict": "not-reproducible",
+   "reason": "not reproducible at ch14; equals real dbt re-run by hand: dbt run --select playground",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "book-ch16-001",
+   "verdict": "not-reproducible",
+   "reason": "temporary failing test demo_payment_check (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "book-ch16-063",
+   "verdict": "not-reproducible",
+   "reason": "not reproducible at ch16; equals real dbt re-run by hand: dbt build --select staging tests/demo_always_fails.sql",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "book-ch16-064",
+   "verdict": "not-reproducible",
+   "reason": "not reproducible at ch16; equals real dbt re-run by hand: dbt build --select staging tests/demo_always_fails.sql --fail-fast --threads 1",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "book-ch16-069",
+   "verdict": "out-of-scope",
+   "reason": "run right after `dbt clean`: dbt stops because dbt_packages is missing (package check, not node selection); with packages installed real dbt prints jaffle_dbt.marts.fct_orders, like the engine",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "cap-m13-001",
+   "verdict": "not-reproducible",
+   "reason": "production = main BEFORE the feature (fct_sessions without is_bounce), log section title (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "cap-m13-008",
+   "verdict": "not-simulated",
+   "reason": "run with the CI profiles folder of the capstone (schema ci_pr_<PR_NUMBER> from env vars): the relation names come from a profile the data does not have"
+  },
+  {
+   "id": "log-ch06-001",
+   "verdict": "not-reproducible",
+   "reason": "the two dbt init example models, deleted before the ch06 commit (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch06-002",
+   "verdict": "not-reproducible",
+   "reason": "the tests of the two dbt init example models, deleted before the ch06 commit (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch08-004",
+   "verdict": "not-reproducible",
+   "reason": "demo model, not committed (log section 'Demo (not committed)') (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch10-012",
+   "verdict": "not-reproducible",
+   "reason": "alias demo, reverted afterwards (log section 6) (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch10-013",
+   "verdict": "not-reproducible",
+   "reason": "alias demo, reverted afterwards (log section 6) (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch13-005",
+   "verdict": "not-reproducible",
+   "reason": "throwaway copy: legacy SQL snapshot demo (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch13-006",
+   "verdict": "not-reproducible",
+   "reason": "throwaway copy: snapshot config demo (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch16-047",
+   "verdict": "not-reproducible",
+   "reason": "temporary singular test tests/demo_always_fails.sql (log section 9) (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch16-048",
+   "verdict": "not-reproducible",
+   "reason": "temporary singular test tests/demo_always_fails.sql (log section 9) (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch17-001",
+   "verdict": "not-reproducible",
+   "reason": "taken before dim_customers became versioned (v1/v2 added later in Chapter 17) (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch17-004",
+   "verdict": "other-state",
+   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
+   "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
+  },
+  {
+   "id": "log-ch17-005",
+   "verdict": "other-state",
+   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
+   "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
+  },
+  {
+   "id": "log-ch17-006",
+   "verdict": "other-state",
+   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
+   "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
+  },
+  {
+   "id": "log-ch17-007",
+   "verdict": "other-state",
+   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
+   "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
+  },
+  {
+   "id": "log-ch17-008",
+   "verdict": "other-state",
+   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
+   "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
+  },
+  {
+   "id": "log-ch17-009",
+   "verdict": "other-state",
+   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
+   "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
+  },
+  {
+   "id": "log-ch17-010",
+   "verdict": "not-reproducible",
+   "reason": "taken while latest_version was still 1 (Chapter 17 promotes v2 afterwards) (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch17-012",
+   "verdict": "not-reproducible",
+   "reason": "taken while latest_version was still 1 (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch17-017",
+   "verdict": "not-reproducible",
+   "reason": "temporary model demo_uses_v1 (deleted in Chapter 17) (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch17-018",
+   "verdict": "not-reproducible",
+   "reason": "temporary model demo_uses_v1 (deleted in Chapter 17) (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch22-002",
+   "verdict": "out-of-scope",
+   "reason": "recorded with bug patch 04-dependency-cycle.patch applied: the project has a dependency cycle and dbt stops with 'Found a cycle: ...' (networkx find_cycle order on the manifest parse order). A cyclic project has no DAG export, so this state is not in the data; the engine has no cycle detection.",
+   "checked_with": "golden_verify (bug patch applied): real dbt prints the same error"
+  },
+  {
+   "id": "log-ch23-004",
+   "verdict": "not-reproducible",
+   "reason": "temporary failing singular test demo_enriched_orders_fail (not reproducible from any tag)",
+   "checked_with": "the engine equals what real dbt 1.11.16 prints at the tag (golden_verify re-run, or fixtures/real-reruns.json)"
+  },
+  {
+   "id": "log-ch24-019",
+   "verdict": "not-simulated",
+   "reason": "state demo with a NEW model fct_daily_revenue (added then removed in Chapter 24): the node is in no tag, so it cannot be simulated"
+  },
+  {
+   "id": "log-ch24-020",
+   "verdict": "not-simulated",
+   "reason": "state demo with a NEW model fct_daily_revenue (added then removed in Chapter 24): the node is in no tag, so it cannot be simulated"
+  }
+ ]
+}

@@ -40,10 +40,11 @@ describe('golden set: real dbt 1.11.16 outputs', () => {
       by_kind: by((o) => o.kind),
       state_simulated: by((o) => (o.state ? 'state' : 'plain')),
       mismatches: outcomes.filter((o) => o.status === 'mismatch'),
+      not_plain_match: outcomes.filter((o) => o.status !== 'match').map((o) => ({ id: o.id, status: o.status, evaluatedOn: o.evaluatedOn, reason: o.reason })),
     };
     if (process.env.GOLDEN_REPORT) writeFileSync(process.env.GOLDEN_REPORT, JSON.stringify(report, null, 1));
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify({ ...report, mismatches: report.mismatches.map((m) => `${m.id}${m.noted ? ` (${m.noted})` : ''}`) }, null, 1));
+    console.log(JSON.stringify({ ...report, not_plain_match: undefined, mismatches: report.mismatches.map((m) => `${m.id}${m.noted ? ` (${m.noted})` : ''}`) }, null, 1));
     expect(outcomes.length).toBeGreaterThan(0);
   });
 });

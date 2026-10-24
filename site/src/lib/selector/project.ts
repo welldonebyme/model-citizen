@@ -49,7 +49,9 @@ export class Project {
     const all: DagNode[] = [...dag.nodes, ...dag.sources, ...dag.exposures];
     for (const n of all) {
       if (n.resource_type === 'operation' || n.resource_type === 'sql_operation') continue;
-      const p: PNode = { ...n, bucket: bucketOf(n.resource_type) };
+      // search_name = what `dbt ls --output name` prints (node.search_name in dbt-core 1.11.16). Computed here because
+      // the generated DAG adds a _v<version> suffix to versioned unit tests, which dbt does not print.
+      const p: PNode = { ...n, bucket: bucketOf(n.resource_type), search_name: searchName(n) };
       if (extras) {
         p.patch_path = extras.patch_path[n.unique_id] ?? null;
         p.empty = extras.empty.includes(n.unique_id);
@@ -123,6 +125,12 @@ export class Project {
     const n = this.get(uid);
     return n.resource_type === 'model' && n.config.materialized === 'ephemeral';
   }
+}
+
+function searchName(n: DagNode): string {
+  if (n.resource_type === 'source') return `${n.source_name}.${n.name}`;
+  if (n.resource_type === 'model' && n.version !== null && n.version !== undefined) return `${n.name}.v${n.version}`;
+  return n.name;
 }
 
 /** Without the extras file, the folders `path:` can see are those of the nodes' own files. */

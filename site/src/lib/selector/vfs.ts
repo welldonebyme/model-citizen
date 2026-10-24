@@ -72,31 +72,38 @@ export class VirtualFs {
     if (pattern.endsWith('/')) parts.push('');
     if (parts.length === 0) throw new GlobError('tuple index out of range');
     for (const p of parts) {
-      // "..": Python looks outside the project folder; nothing there is a node, so nothing matches
-      if (p === '..') return new Set();
       if (p !== '**' && p.includes('**')) throw new GlobError("Invalid pattern: '**' can only be an entire path component");
     }
     const out = new Set<string>();
-    const select = (idx: number, dir: string) => {
+    // `text` keeps what Python yields ('..' stays in the path); `real` is the folder really listed.
+    // A path with '..' never equals a node file or folder, so such patterns select nothing.
+    const join = (a: string, b: string) => (a ? `${a}/${b}` : b);
+    const select = (idx: number, text: string, real: string | null) => {
       if (idx >= parts.length || parts[idx] === '') {
-        out.add(dir === '' ? '.' : dir);
+        out.add(text === '' ? '.' : text);
         return;
       }
       const pat = parts[idx];
+      if (pat === '..') {
+        const up = real === null || real === '' ? null : real.split('/').slice(0, -1).join('/');
+        select(idx + 1, join(text, '..'), up);
+        return;
+      }
+      if (real === null) return; // outside the project folder: unknown, nothing that dbt could match
       if (pat === '**') {
         let next = idx + 1;
         while (next < parts.length && parts[next] === '**') next++;
-        for (const d of this.walkDirs(dir)) select(next, d);
+        for (const d of this.walkDirs(real)) select(next, text + d.slice(real.length) .replace(/^\//, text ? '/' : ''), d);
         return;
       }
       const dirOnly = idx + 1 < parts.length;
       const re = fnmatchRegExp(pat);
-      for (const [name, kind] of this.entries(dir)) {
+      for (const [name, kind] of this.entries(real)) {
         if (dirOnly && kind !== 'dir') continue;
-        if (re.test(name)) select(idx + 1, dir ? `${dir}/${name}` : name);
+        if (re.test(name)) select(idx + 1, join(text, name), join(real, name));
       }
     };
-    select(0, '');
+    select(0, '', '');
     return out;
   }
 }

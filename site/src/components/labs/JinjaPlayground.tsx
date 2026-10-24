@@ -27,6 +27,7 @@ const EXERCISES = exercisesData.exercises as Exercise[];
 const CASES = casesData.cases as unknown as JinjaCase[];
 const SOLVED_KEY = 'mc:labs:jinja:solved';
 const MACRO_FILE = 'macros/playground.sql';
+const FREE_TEMPLATE = "{% set statuses = ['completed', 'shipped', 'returned'] %}\nselect\n    {%- for s in statuses %}\n    count(*) filter (where status = '{{ s }}') as {{ s }}_orders{% if not loop.last %},{% endif %}\n    {%- endfor %}\nfrom {{ source('jaffle_shop', 'orders') }}\n";
 
 const CTX_LABEL: Record<Ctx, string> = {
   plain: 'Plain Jinja (render.py, Chapter 5)',
@@ -163,10 +164,10 @@ export default function JinjaPlayground() {
   function open(ex: Exercise | null, bc: JinjaCase | null) {
     setExercise(ex);
     setBookCase(bc);
-    const c: Ctx = ex ? (ex.mode === 'plain' ? 'plain' : ex.project ?? 'ch11') : bc ? (bc.mode === 'plain' ? 'plain' : bc.project ?? 'ch11') : 'plain';
+    const c: Ctx = ex ? (ex.mode === 'plain' ? 'plain' : ex.project ?? 'ch11') : bc ? (bc.mode === 'plain' ? 'plain' : bc.project ?? 'ch11') : 'ch11';
     setCtx(c);
     setTarget((bc?.target as 'dev' | 'prod' | undefined) ?? 'dev');
-    tplEditor.current?.setValue(ex?.template ?? bc?.template ?? '');
+    tplEditor.current?.setValue(ex?.template ?? bc?.template ?? FREE_TEMPLATE);
     macroEditor.current?.setValue(ex?.macros ?? (bc?.extra_macro_files ? Object.values(bc.extra_macro_files)[0] : ''));
     setTab('template');
     setOut(null);
@@ -193,6 +194,7 @@ export default function JinjaPlayground() {
       <div className="mcl-pane mcl-pane-pad mcl-list-pane" id="jinja-exercises">
         <h2 className="mcl-pane-h">Exercises</h2>
         <p className="mcl-note">{solved.size} of {EXERCISES.length} solved. Compile (Ctrl + Enter) to check.</p>
+        <p><button type="button" className="mcl-btn mcl-btn-small" aria-current={!exercise && !bookCase} onClick={() => open(null, null)} data-testid="free-jinja">Your own template (free editor)</button></p>
         <ul className="mcl-ex-list">
           {EXERCISES.map((e) => (
             <li key={e.id}>

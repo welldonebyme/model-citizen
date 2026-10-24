@@ -36,6 +36,18 @@ test.describe('Jinja playground', () => {
     expect(errors).toEqual([]);
   });
 
+  test('free editor: a dbt template with source(), compiled and run', async ({ page }) => {
+    await page.goto('labs/jinja/');
+    await pyReady(page);
+    await page.getByTestId('free-jinja').click();
+    const tool = page.getByTestId('jinja-tool');
+    await tool.getByTestId('compile').click();
+    await expect(tool.getByTestId('compiled-text')).toContainText(`count(*) filter (where status = 'completed') as completed_orders,`);
+    await expect(tool.getByTestId('compiled-text')).toContainText('from "practice"."jaffle_shop"."orders"');
+    await tool.getByTestId('run-compiled').click();
+    await expect(tool.getByTestId('result-grid').locator('tbody td')).toHaveText(['239', '21', '18']);
+  });
+
   test('run_query answered by DuckDB-WASM: the execute guard exercise', async ({ page }) => {
     await page.goto('labs/jinja/');
     await pyReady(page);

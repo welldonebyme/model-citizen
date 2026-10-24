@@ -25,6 +25,7 @@ const CASES = casesData.cases as unknown as YamlCase[];
 const GROUPS: [string, string][] = [['fix', 'Fix the broken file'], ['jinja', 'Quote the Jinja'], ['indent', 'Indentation traps'], ['values', 'Values that YAML changes']];
 const SOLVED_KEY = 'mc:labs:yaml:solved';
 const PYODIDE_MB = '6';
+const FREE_YAML = 'version: 2\n\nmodels:\n  - name: stg_orders\n    description: One row per order\n    columns:\n      - name: order_id\n        data_tests:\n          - unique\n          - not_null\n';
 
 /** What a learner should do about the most common PyYAML / libyaml problems. */
 function explain(problem: string | null | undefined, context: string | null | undefined): string | null {
@@ -140,7 +141,7 @@ export default function YamlPlayground() {
   }, [text, engine, filePath, exercise, bookCase, validate, py.phase, nonce]);
 
   function open(ex: Exercise | null, bc: YamlCase | null) {
-    const t = ex?.start ?? bc?.text ?? '';
+    const t = ex?.start ?? bc?.text ?? FREE_YAML;
     setExercise(ex);
     setBookCase(bc);
     setEngine(ex?.engine ?? bc?.engine ?? 'dbt');
@@ -180,6 +181,7 @@ export default function YamlPlayground() {
       <div className="mcl-pane mcl-pane-pad mcl-list-pane" id="yaml-exercises">
         <h2 className="mcl-pane-h">Exercises</h2>
         <p className="mcl-note">{solved.size} of {EXERCISES.length} solved. Each check runs while you type.</p>
+        <p><button type="button" className="mcl-btn mcl-btn-small" aria-current={!exercise && !bookCase} onClick={() => open(null, null)} data-testid="free-yaml">Your own file (free editor)</button></p>
         {GROUPS.map(([g, label]) => (
           <div key={g}>
             <h3 className="mcl-group-h">{label}</h3>

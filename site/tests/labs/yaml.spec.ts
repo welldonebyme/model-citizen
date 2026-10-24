@@ -29,6 +29,18 @@ test.describe('YAML playground', () => {
     expect(errors).toEqual([]);
   });
 
+  test('free editor: a valid properties file, then a broken one', async ({ page }) => {
+    await page.goto('labs/yaml/');
+    await pyReady(page);
+    await page.getByTestId('free-yaml').click();
+    const tool = page.getByTestId('yaml-tool');
+    await expect(tool.getByTestId('yaml-ok')).toBeVisible();
+    await expect(tool.getByTestId('yaml-repr')).toContainText("'name': 'stg_orders'");
+    await setEditor(page, 'yaml-editor', 'models:\n  - name: stg_orders\n   description: x\n');
+    await expect(tool.getByTestId('yaml-error')).toBeVisible();
+    await expect(tool.getByTestId('yaml-state')).toHaveText(/^Line \d+, column \d+$/);
+  });
+
   test('a book example: the dbt duplicate-key warning, as in the book', async ({ page }) => {
     await page.goto('labs/yaml/');
     await pyReady(page);

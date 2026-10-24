@@ -9,6 +9,9 @@ import '@fontsource/atkinson-hyperlegible-mono/600.css';
 import '../styles/base.css';
 import Logo from '../components/ui/Logo.astro';
 import { url } from '../lib/url';
+// The two text weights used above the fold, preloaded so the first paint already has the right font (no reflow).
+import font400 from '@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-400-normal.woff2?url';
+import font800 from '@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-800-normal.woff2?url';
 
 interface Props {
   title: string;
@@ -39,6 +42,8 @@ const nav = [
   <title>{fullTitle}</title>
   <meta name="description" content={description} />
   <meta name="color-scheme" content="light dark" />
+  <link rel="preload" as="font" type="font/woff2" href={font400} crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href={font800} crossorigin />
   <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
   <script is:inline>
     // Apply saved reader preferences before first paint (per-browser conveniences only).
@@ -128,6 +133,8 @@ const nav = [
   .mobile-nav { display: grid; gap: 2px; padding: 8px 16px 14px; border-top: 1px solid var(--line); }
   .mobile-nav a[aria-current="page"] { color: var(--ink); background: var(--paper); }
   main:focus { outline: none; }
+  /* the page fills the window, so content drawn by an island never pushes a visible footer down (layout shift) */
+  main { min-height: calc(100vh - var(--header-h)); min-height: calc(100dvh - var(--header-h)); }
   .site-footer { border-top: 1px solid var(--line); margin-top: var(--s9); }
   .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-block: 22px; color: var(--muted); font-size: var(--fs-sm); }
   .foot p { margin: 0; }

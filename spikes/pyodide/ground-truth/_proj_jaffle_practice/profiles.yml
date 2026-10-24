@@ -1,8 +1,0 @@
-jaffle_practice:
-  target: dev
-  outputs:
-    dev:
-      type: duckdb
-      path: '/Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jaffle_practice/practice.duckdb'
-      schema: dbt_adnane
-      threads: 1

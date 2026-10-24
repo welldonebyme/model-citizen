@@ -123,7 +123,7 @@
 .mcl-ex-state[data-state="failed"] { border-color: var(--bad); color: var(--bad); }
 .mcl-group-h { font-size: var(--fs-sm); color: var(--muted); font-weight: 700; margin: 20px 0 8px; }
 .mcl-pane-h + .mcl-note + div > .mcl-group-h { margin-top: 0; }
-.mcl-jump { display: none; }
+.mcl-jump { display: none; text-decoration: none; }
 @media (max-width: 960px) { .mcl-jump { display: inline-flex; } }
 
 .mcl-msg { margin: 12px var(--mcl-pad) 0; padding: 12px 14px; border-radius: 12px; font-size: var(--fs-sm); }

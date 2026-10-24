@@ -1,0 +1,471 @@
+{
+ "info": {
+  "pyodide": "314.0.7",
+  "python": "3.14.2",
+  "pyyaml": "6.0.3",
+  "jinja2": "3.1.6",
+  "libyaml": "0.1.7",
+  "stages": {
+   "imported": 7,
+   "core": 1300,
+   "packages": 1405,
+   "modules": 1688,
+   "fixtures": 1690
+  },
+  "crossOriginIsolated": false,
+  "sharedArrayBuffer": false,
+  "mainThreadReadyMs": 1697
+ },
+ "yaml": [
+  {
+   "id": "ch05-m1-tab",
+   "passed": true,
+   "byteExact": false,
+   "detail": "raw error exact; line 5 (book 5); whole block: same words"
+  },
+  {
+   "id": "ch05-m2-nospace",
+   "passed": true,
+   "byteExact": false,
+   "detail": "raw error exact; line 5 (book 5); whole block: same lines"
+  },
+  {
+   "id": "ch05-m3-jinja",
+   "passed": true,
+   "byteExact": false,
+   "detail": "raw error exact; line 6 (book 6); whole block: same lines"
+  },
+  {
+   "id": "ch05-m4-colon-dbt",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phrases found, position same"
+  },
+  {
+   "id": "ch05-m4-colon-pyyaml",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phrases found, position same"
+  },
+  {
+   "id": "ch05-m5-dupkey",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-m5-dupkey-value",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-lab-step3",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-lab-step4",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-lab-step5",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-lab-final",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-lab-final-valid",
+   "passed": true,
+   "byteExact": null
+  },
+  {
+   "id": "ch05-quiz2",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phrases found, position same"
+  },
+  {
+   "id": "ch05-quiz-folded",
+   "passed": true,
+   "byteExact": null
+  },
+  {
+   "id": "ch05-trap-jinja",
+   "passed": true,
+   "byteExact": null
+  },
+  {
+   "id": "ch05-scalar-00",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-scalar-01",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-scalar-02",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-scalar-03",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-scalar-04",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-scalar-05",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-scalar-06",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-scalar-07",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-scalar-08",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-scalar-09",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-scalar-10",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-scalar-11",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-list-of-mappings",
+   "passed": true,
+   "byteExact": false
+  },
+  {
+   "id": "ch05-multiline",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-anchor-merge",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch22-bug2-indent",
+   "passed": true,
+   "byteExact": false,
+   "detail": "raw error exact; line 15 (book 15); whole block: same lines"
+  },
+  {
+   "id": "ch22-table-colon",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phrases found"
+  },
+  {
+   "id": "ch22-table-flow",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phrases found"
+  },
+  {
+   "id": "ch22-table-tab",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phrases found"
+  },
+  {
+   "id": "ch22-shape-columns",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phrases found"
+  },
+  {
+   "id": "ch05-shape-config",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phrases found"
+  },
+  {
+   "id": "ch22-bug9-typo",
+   "passed": true,
+   "byteExact": null
+  }
+ ],
+ "yamlExercises": 14,
+ "jinja": [
+  {
+   "id": "ch05-plain-677",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-plain-697",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-plain-736",
+   "passed": true,
+   "byteExact": false
+  },
+  {
+   "id": "ch05-plain-772",
+   "passed": true,
+   "byteExact": false
+  },
+  {
+   "id": "ch05-plain-837",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-plain-881",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-plain-set-in-loop",
+   "passed": true,
+   "byteExact": false
+  },
+  {
+   "id": "ch05-plain-namespace",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-plain-quiz9",
+   "passed": true,
+   "byteExact": false
+  },
+  {
+   "id": "ch05-plain-tilde",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-dbt-source",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-dbt-braces",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phase parse"
+  },
+  {
+   "id": "ch05-dbt-undefined",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch05-dbt-quiz10",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-context-inline",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-this-dev",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-this-prod",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-log-twice",
+   "passed": true,
+   "byteExact": false
+  },
+  {
+   "id": "ch11-ref-in-sql-comment",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-duplicate-macro",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phase load"
+  },
+  {
+   "id": "ch11-macro-in-model",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-unquoted-arg",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-too-many-args",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phase parse"
+  },
+  {
+   "id": "ch11-missing-arg",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-namespace-call",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-undefined-macro",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phase execute"
+  },
+  {
+   "id": "ch11-dateadd",
+   "passed": true,
+   "byteExact": false
+  },
+  {
+   "id": "ch11-return",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-run-query-no-guard",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phase parse"
+  },
+  {
+   "id": "ch11-run-query-guarded",
+   "passed": true,
+   "byteExact": false
+  },
+  {
+   "id": "ch11-raise-compiler-error",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phase parse"
+  },
+  {
+   "id": "ch11-adapter-describe",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-print-row-counts",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-print-row-counts-views",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-pivot-model",
+   "passed": true,
+   "byteExact": false
+  },
+  {
+   "id": "ch11-get-column-values",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-surrogate-key",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-star",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "ch11-quiz-get-statuses",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phase parse"
+  },
+  {
+   "id": "ch11-quiz-deleted-ref",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phase parse"
+  },
+  {
+   "id": "ch11-trap-macro-newline",
+   "passed": true,
+   "byteExact": false
+  }
+ ],
+ "jinjaSynthetic": [
+  {
+   "id": "syn-var-envvar-target",
+   "passed": true,
+   "byteExact": true
+  },
+  {
+   "id": "syn-var-missing",
+   "passed": true,
+   "byteExact": null,
+   "detail": "phase execute"
+  },
+  {
+   "id": "syn-is-incremental",
+   "passed": true,
+   "byteExact": false
+  },
+  {
+   "id": "syn-config-get",
+   "passed": true,
+   "byteExact": false
+  }
+ ],
+ "jinjaExercises": 8,
+ "modelsCreated": [
+  "stg_jaffle_shop__products",
+  "stg_jaffle_shop__order_items",
+  "stg_jaffle_shop__customers",
+  "stg_jaffle_shop__orders",
+  "stg_stripe__payments",
+  "int_orders__enriched",
+  "int_orders__payment_methods_pivoted",
+  "fct_orders",
+  "dim_customers",
+  "fct_monthly_revenue",
+  "fct_order_items"
+ ]
+}

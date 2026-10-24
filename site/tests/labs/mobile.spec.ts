@@ -22,3 +22,15 @@ test('phone: the workspace stacks and follows "Run in workspace"', async ({ page
   await expect(ws.getByTestId('result-error')).toContainText('Binder Error');
   expect(errors).toEqual([]);
 });
+
+test('phone: on a lesson page the workspace stacks under the lesson and comes into view', async ({ page }) => {
+  await page.goto('labs/sql/lesson-test/');
+  const ws = page.getByTestId('sql-workspace');
+  const read = await page.locator('.tl-read').boundingBox();
+  const wsBox = await ws.boundingBox();
+  expect(wsBox!.y).toBeGreaterThan(read!.y + read!.height - 1); // under the lesson
+  const btn = page.locator('[data-send-to-workspace="ch04-c27"]');
+  await btn.tap();
+  await expect(page.locator('#workspace-h')).toBeInViewport({ timeout: 5000 });
+  await expect(ws.getByTestId('match-status')).toHaveAttribute('data-match', 'true', { timeout: 60_000 });
+});

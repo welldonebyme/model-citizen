@@ -1,0 +1,47 @@
+{
+ "sql": {
+  "coldReadyMs": 940,
+  "coldFirstResultMs": 1063,
+  "warmReadyMs": 720,
+  "slowLink9MbitColdReadyMs": 10276,
+  "runs": {
+   "cold": [
+    940,
+    944,
+    918
+   ],
+   "warm": [
+    743,
+    720,
+    706
+   ],
+   "slow": [
+    11151,
+    10114,
+    10276
+   ]
+  }
+ },
+ "yaml": {
+  "coldReadyMs": 1900,
+  "warmReadyMs": 1765,
+  "slowLink9MbitColdReadyMs": 9287,
+  "runs": {
+   "cold": [
+    1831,
+    1900,
+    1936
+   ],
+   "warm": [
+    1731,
+    1765,
+    1803
+   ],
+   "slow": [
+    9725,
+    9287,
+    9287
+   ]
+  }
+ }
+}

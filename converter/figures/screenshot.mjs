@@ -2,6 +2,7 @@
 //   node screenshot.mjs                 -> screenshots/chromium-01.png ...
 //   node screenshot.mjs --all-browsers  -> also firefox-*.png and webkit-*.png
 //   node screenshot.mjs --per 4         -> rows per image (default 4)
+//   node screenshot.mjs --browsers chromium,webkit --only ch03-fig2,ch10-fig1   -> 2x zooms of some rows
 import { chromium, firefox, webkit } from "playwright";
 import { mkdirSync, readdirSync, unlinkSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -11,7 +12,10 @@ const here = dirname(fileURLToPath(import.meta.url));
 const args = process.argv.slice(2);
 const per = Number(args[args.indexOf("--per") + 1]) || 4;
 const only = args.includes("--only") ? args[args.indexOf("--only") + 1].split(",") : null; // e.g. --only ch08-fig1,ch20-fig2
-const browsers = args.includes("--all-browsers") ? { chromium, firefox, webkit } : { chromium };
+const all = { chromium, firefox, webkit };
+const browsers = args.includes("--browsers")       // e.g. --browsers chromium,webkit
+  ? Object.fromEntries(args[args.indexOf("--browsers") + 1].split(",").map((b) => [b, all[b]]))
+  : args.includes("--all-browsers") ? all : { chromium };
 const outDir = join(here, "screenshots");
 mkdirSync(outDir, { recursive: true });
 if (!only) for (const f of readdirSync(outDir)) if (f.endsWith(".png")) unlinkSync(join(outDir, f));

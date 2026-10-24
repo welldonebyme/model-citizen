@@ -100,13 +100,23 @@ def book_crops(meta) -> dict[str, tuple[int, str]]:
     return res
 
 
-def dark_css() -> str:
+def dark_css(OUT) -> str:
     css = (OUT / "figures.css").read_text()
     block = re.search(r':root\[data-theme="dark"\] \{(.*?)\}', css, re.S).group(1)
     return ".dark {" + block + "}"
 
 
+def paper(css: str, mode: str) -> str:
+    block = css.split(':root[data-theme="dark"]')[1] if mode == "dark" else css.split("@media")[0]
+    return re.search(r"--fig-paper: (#[0-9A-Fa-f]{6});", block).group(1)
+
+
 def main() -> None:
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--dir", type=Path, default=figsrc.ACADEMY / "site/src/generated/figures", help="folder with the SVGs, figures.json and figures.css "
+                                                       "(e.g. build/palette-book)")
+    OUT = ap.parse_args().dir.resolve()
     meta = json.loads((OUT / "figures.json").read_text())
     faces = copy_fonts()
     crops = book_crops(meta)
@@ -130,7 +140,7 @@ def main() -> None:
 <style>
 {chr(10).join(faces)}
 {css}
-{dark_css()}
+{dark_css(OUT)}
 body {{ margin: 0; padding: 16px; font: 14px/1.4 system-ui, sans-serif; background: #e9ecf1; color: #111; }}
 .row {{ background: #fff; margin: 0 0 14px; padding: 8px 12px 12px; border-radius: 6px; }}
 h2 {{ font-size: 15px; margin: 0 0 2px; }} h2 small {{ font-weight: 400; color: #555; }}
@@ -140,11 +150,11 @@ figure {{ margin: 0; padding: 8px; border-radius: 4px; }}
 figure svg, figure img {{ width: 100%; height: auto; display: block; }}
 figcaption {{ font-size: 11px; color: #777; margin-top: 4px; }}
 .book {{ background: #fff; border: 1px solid #ddd; }}
-.light {{ background: #ffffff; border: 1px solid #ddd; }}
-.dark {{ background: #0E131B; border: 1px solid #0E131B; }}
+.light {{ background: {paper(css, "light")}; border: 1px solid #ddd; }}
+.dark {{ background: {paper(css, "dark")}; border: 1px solid {paper(css, "dark")}; }}
 .dark figcaption {{ color: #aaa; }}
 </style></head><body>
-<h1>Model Citizen: 64 book figures (book · light · dark)</h1>
+<h1>Model Citizen: 64 book figures (book · light · dark) — {html.escape(str(OUT.relative_to(figsrc.ACADEMY)))}</h1>
 {chr(10).join(rows)}
 </body></html>
 """

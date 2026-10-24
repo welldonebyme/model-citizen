@@ -7,7 +7,17 @@ Builds the 64 TikZ figures of the book (`../dbt-bible`, read only) as SVGs for t
 | `site/src/generated/figures/chNN-figK.svg` | one SVG per figure, text kept as text, colours as CSS variables |
 | `site/src/generated/figures/figures.json` | `[{id, svg, file, line, sha1, width, height, alt, description?}]` in book order |
 | `site/src/generated/figures/figures.css` | light + dark values of every `--fig-*` token (and font stacks) |
-| `converter/figures/COLORS.md` | the colour → token mapping actually found in the figures |
+| `converter/figures/COLORS.md` | the colour → token mapping actually found in the figures, palette, text contrast |
+
+## Palettes
+
+The output uses the **site palette** by default (`colors.PALETTES["site"]`): the book's accent family is
+re-based on the site accent (light `#B4237A`, dark `#F06AB4`; every tint such as `accent!15` is recomputed
+from it), ink is `#16213B` in light mode, the dark paper is the site's dark surface `#17223A` (light paper
+`#FFFFFF`); muted and the semantic colours (why/idea/lab/trap/tip/quiz) keep the book values.
+`build.py --palette book` builds the book's own colours into `converter/figures/build/palette-book/`
+(SVGs + figures.json + figures.css + COLORS.md; `contact.py --dir build/palette-book` to review it).
+Token names never change (`--fig-accent` is the site accent in the site palette).
 
 Hand-written input: `converter/overrides/figures.yaml` (alt text + optional long description per figure, keyed
 by id, with the SHA-1 of the figure source; the build fails if a figure changed and its alt text was not
@@ -31,14 +41,15 @@ uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python pymupdf 
 .venv/bin/python build.py              # ~3 min the first time (64 tectonic runs), then cached: seconds
 .venv/bin/python build.py --force      # recompile every PDF
 .venv/bin/python figsrc.py             # list ids, source lines and sha1s
-.venv/bin/python contrast.py           # WCAG contrast of every text span, light and dark
+.venv/bin/python build.py --palette book   # the book's colours -> build/palette-book/
+.venv/bin/python contrast.py           # WCAG contrast of every text span, light and dark (--palette book)
 # review
 npm install                            # once (Playwright 1.64.1; browsers already in ~/Library/Caches/ms-playwright
                                        #   or: npx playwright install chromium)
 .venv/bin/python contact.py            # contact-sheet.html: book crop | SVG light | SVG dark, + alt text
 node screenshot.mjs                    # screenshots/chromium-01..16.png (4 figures each)
 node screenshot.mjs --all-browsers     # + firefox-*.png, webkit-*.png
-node screenshot.mjs --only ch20-fig2   # 2x zoom of one row
+node screenshot.mjs --only ch20-fig2   # 2x zoom of one row (--browsers chromium,webkit)
 ```
 Needs `/opt/homebrew/bin/tectonic` with its bundle cached (the book is built with it). Re-running gives
 byte-identical output (checked: `build.py --force` twice → same SHA-1 for all 67 generated files).
@@ -70,8 +81,8 @@ byte-identical output (checked: `build.py --force` twice → same SHA-1 for all 
   Mono (400, 700) — e.g. `@fontsource/fira-sans`, `@fontsource/fira-mono` (SIL OFL) — for an exact match.
   Without them the stacks fall back to Helvetica/Arial/Menlo: still readable (checked), but word widths differ
   slightly, so some words sit closer together. Overriding `--fig-font-sans` with the site font works the same way.
-- In dark mode, `--fig-paper` (white node fills) should equal the background behind the figure: two figures
-  use white to erase part of a shape (ch04-fig2 left anti, ch04-fig5 EXCEPT).
+- In dark mode, `--fig-paper` (white node fills, `#17223A`) must equal the background behind the figure: two
+  figures use white to erase part of a shape (ch04-fig2 left anti, ch04-fig5 EXCEPT).
 - Captions are not in the SVGs (ch14-fig1, ch14-fig2, ch26-fig1 have a `\caption` in the book: converter's job).
 
 ## Figures that needed special handling

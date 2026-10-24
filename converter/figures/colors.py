@@ -2,8 +2,9 @@
 
 Every colour that appears in a figure is traced back to the xcolor expression that produced it
 (``accent``, ``accent!12``, ``labC!80!black``, ``green!35!black`` ...). Each expression gets one token
-``--fig-<name>[-<pct>[-<name2>]]`` whose light value is the exact book colour and whose dark value is
-the same expression evaluated with the dark base palette below. Because "white" means *paper* and
+``--fig-<name>[-<pct>[-<name2>]]`` whose light and dark values are the same expression evaluated with the
+light and dark base colours of the chosen output palette (PALETTES: "site" = the site's brand, default;
+"book" = the book's own colours). Because "white" means *paper* and
 "black" means *text* in the book, tints (``x!12`` = 12 % x on white) become dark tints in dark mode and
 shades (``x!80!black``) become lighter, so contrast follows automatically.
 """
@@ -54,11 +55,19 @@ DARK_OVERRIDE = {
 PDF_ALIASES = {
     "#FFD401": "yellow!70!orange",   # cmyk(0, .15, 1, 0); naive RGB would be #FFD900
 }
-# special roles that do not follow the expression rule
-ROLE_TOKENS = {
-    # white *text* sits on solid colour badges; it becomes paper-dark in dark mode
-    "on-solid": ("#FFFFFF", DARK_BASE["white"]),
+# Output palettes. The PDF always uses the book colours (they identify the expression); the palette decides
+# the values written to the SVG fallbacks and to figures.css: `light` and `dark` override base colours, and
+# every tint/mix (accent!15, ink!70 ...) is recomputed from the overridden base.
+PALETTES = {
+    # the site's brand (default output): accent family -> magenta, slightly deeper ink, the site's dark surface
+    "site": {
+        "light": {"accent": "#B4237A", "ink": "#16213B", "examC": "#16213B"},
+        "dark": {**DARK_BASE, "accent": "#F06AB4", "white": "#17223A"},
+    },
+    # the book's own colours (light = exactly the PDF)
+    "book": {"light": {}, "dark": dict(DARK_BASE)},
 }
+DEFAULT_PALETTE = "site"
 
 
 def book_palette() -> dict[str, tuple[float, float, float]]:
@@ -122,11 +131,14 @@ def expressions_in(text: str, pal: dict) -> set[str]:
 class Mapper:
     """Map hex colours found in one figure's SVG to tokens."""
 
-    def __init__(self):
-        self.pal = book_palette()
-        dark = {k: hex_rgb(v) for k, v in DARK_BASE.items()}
-        self.dark_pal = {**self.pal, **dark}
-        self.used: dict[str, dict] = {}     # token -> info (expr, light, dark, figures)
+    def __init__(self, palette: str = DEFAULT_PALETTE):
+        self.palette = palette
+        spec = PALETTES[palette]
+        self.pal = book_palette()                     # matching (what the PDF contains) and the "book" column
+        self.light_pal = {**self.pal, **{k: hex_rgb(v) for k, v in spec["light"].items()}}
+        self.dark_pal = {**self.pal, **{k: hex_rgb(v) for k, v in spec["dark"].items()}}
+        self.paper = {"light": rgb_hex(self.light_pal["white"]), "dark": rgb_hex(self.dark_pal["white"])}
+        self.used: dict[str, dict] = {}     # token -> info (expr, book, light, dark, figures)
         self.unmatched: dict[str, set] = {}
 
     def candidates(self, fig_text: str) -> list[str]:
@@ -156,21 +168,24 @@ class Mapper:
         light = rgb_hex(hex_rgb(hexv))
         if role == "text" and light == "#FFFFFF":
             tok = "--fig-on-solid"
-            info = self.used.setdefault(tok, {"expr": "white (text on a solid fill)", "light": "#FFFFFF",
-                                              "dark": ROLE_TOKENS["on-solid"][1], "figures": set(), "hex": set()})
+            # white *text* sits on solid colour badges: it stays white in light mode, becomes paper-dark in dark mode
+            info = self.used.setdefault(tok, {"expr": "white (text on a solid fill)", "book": "#FFFFFF",
+                                              "light": "#FFFFFF", "dark": self.paper["dark"],
+                                              "figures": set(), "hex": set()})
         else:
             expr = self.match(hexv, cands)
             if expr is None:
                 self.unmatched.setdefault(light, set()).add(fig_id)
                 tok = "--fig-x-" + light[1:].lower()
-                info = self.used.setdefault(tok, {"expr": "(unmatched)", "light": light, "dark": light,
-                                                  "figures": set(), "hex": set()})
+                info = self.used.setdefault(tok, {"expr": "(unmatched)", "book": light, "light": light,
+                                                  "dark": light, "figures": set(), "hex": set()})
             else:
                 expr = re.sub(r"!100$", "", expr)
                 tok = token(expr)
                 if tok not in self.used:
                     dark = DARK_OVERRIDE.get(expr) or rgb_hex(evaluate(expr, self.dark_pal))
-                    self.used[tok] = {"expr": expr, "light": rgb_hex(evaluate(expr, self.pal)), "dark": dark,
+                    self.used[tok] = {"expr": expr, "book": rgb_hex(evaluate(expr, self.pal)),
+                                      "light": rgb_hex(evaluate(expr, self.light_pal)), "dark": dark,
                                       "figures": set(), "hex": set()}
                 info = self.used[tok]
         info["figures"].add(fig_id)

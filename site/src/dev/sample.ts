@@ -10,6 +10,8 @@ export const sampleBlocks: Block[] = [
   { t: 'callout', kind: 'why', blocks: [{ t: 'p', c: ['Five customers have no email address. Understanding NULL is understanding half of dbt testing.'] }] },
   { t: 'p', c: ['Five customers have no email address. In the table, their ', { t: 'code', v: 'email' }, ' is ', { t: 'term', en: ['NULL'], fr: 'NULL (valeur absente)', id: 'term-null' }, '. NULL means ', { t: 'i', c: ['unknown'] }, ' or ', { t: 'i', c: ['missing'] }, '. It is not zero, it is not an empty text ', { t: 'code', v: "''" }, ', it is "we do not know".'] },
   { t: 'callout', kind: 'analogy', blocks: [{ t: 'p', c: ['Imagine a form where somebody did not answer the question "What is your age?". You cannot say the age is 0. SQL reasons exactly like this.'] }] },
+  { t: 'figure', id: 'ch07-fig1', src: 'figures/ch07-fig1.svg', alt: 'A model file becomes a warehouse object with dbt run.' },
+  { t: 'figure', id: 'ch16-fig1', src: 'figures/ch16-fig1.svg', alt: 'Graph operators on the DAG.' },
   { t: 'h', level: 3, c: ['Three-valued logic'], anchor: 'three-valued' },
   { t: 'code', id: 'ch04-c40', lang: 'sql', text: 'select null = null as a, null <> 1 as b, null is null as c, 1 + null as d;', expected: 'ch04-c41' },
   { t: 'code', id: 'ch04-c41', lang: 'output', text: '+------+------+------+------+\n| a    | b    | c    | d    |\n+------+------+------+------+\n| NULL | NULL | true | NULL |\n+------+------+------+------+\n(1 row)' },

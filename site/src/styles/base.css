@@ -1,6 +1,14 @@
 /* Base styles: reset, typography, controls. Component styles live next to their components. */
 @import "./tokens.css";
 @import "./content.css";
+@import "../generated/figures/figures.css";
+/* the book's figure fonts (Fira); @font-face downloads only on pages that show a figure */
+@import "@fontsource/fira-sans/400.css";
+@import "@fontsource/fira-sans/400-italic.css";
+@import "@fontsource/fira-sans/600.css";
+@import "@fontsource/fira-sans/700.css";
+@import "@fontsource/fira-mono/400.css";
+@import "@fontsource/fira-mono/700.css";
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 16px); }

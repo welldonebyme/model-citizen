@@ -59,13 +59,6 @@
   --tok-key: #1D4ED8;
   --tok-punct: #5B6782;
 
-  /* figures (TikZ SVGs map the book palette to these) */
-  --fig-ink: #16213B;
-  --fig-accent: #B4237A;
-  --fig-muted: #6B7280;
-  --fig-paper: #FFFFFF;
-  --fig-code-bg: #F6F7F9;
-  --fig-code-frame: #D7DBE2;
 
   /* type */
   --sans: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -110,7 +103,6 @@
     --term-bg: #0B1120; --term-ink: #E4E9F3; --term-dim: #8592AD; --term-prompt: #F06AB4;
     --out-bg: #141E33; --out-ink: #D4DBE8;
     --tok-kw: #8DB0FF; --tok-str: #6EE0B2; --tok-num: #FDBA74; --tok-cmt: #7F8BA6; --tok-fn: #C4B5FD; --tok-jinja: #F5B74E; --tok-key: #8DB0FF; --tok-punct: #97A3BC;
-    --fig-ink: #E4E9F3; --fig-accent: #F06AB4; --fig-muted: #A3ADC2; --fig-paper: #17223A; --fig-code-bg: #0E1628; --fig-code-frame: #33415F;
     --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 28px -14px rgba(0, 0, 0, .6);
     --shadow-pop: 0 16px 40px -12px rgba(0, 0, 0, .7);
   }
@@ -135,7 +127,6 @@
   --term-bg: #0B1120; --term-ink: #E4E9F3; --term-dim: #8592AD; --term-prompt: #F06AB4;
   --out-bg: #141E33; --out-ink: #D4DBE8;
   --tok-kw: #8DB0FF; --tok-str: #6EE0B2; --tok-num: #FDBA74; --tok-cmt: #7F8BA6; --tok-fn: #C4B5FD; --tok-jinja: #F5B74E; --tok-key: #8DB0FF; --tok-punct: #97A3BC;
-  --fig-ink: #E4E9F3; --fig-accent: #F06AB4; --fig-muted: #A3ADC2; --fig-paper: #17223A; --fig-code-bg: #0E1628; --fig-code-frame: #33415F;
   --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 28px -14px rgba(0, 0, 0, .6);
   --shadow-pop: 0 16px 40px -12px rgba(0, 0, 0, .7);
 }

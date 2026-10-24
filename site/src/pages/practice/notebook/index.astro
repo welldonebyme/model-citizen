@@ -1,0 +1,28 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Notebook from '../../../components/practice/Notebook';
+---
+<Base title="Error notebook" section="practice">
+  <div class="wrap nbp">
+    <h1>Error notebook</h1>
+    <p class="lead">Every question you miss is added here automatically. Write why you missed it, in your own words. Re-read the whole notebook before you book the exam: it is one of the book's four conditions.</p>
+    <Notebook client:only="react" />
+  </div>
+</Base>
+<style>
+  .nbp { padding-block: 40px 16px; max-width: 860px; }
+  .lead { color: var(--muted); font-size: var(--fs-lg); }
+  :global(.nb) { display: grid; gap: 16px; margin-top: 20px; }
+  :global(.nb-add) { display: grid; gap: 8px; }
+  :global(.nb-add label) { font-weight: 700; color: var(--ink); }
+  :global(.nb textarea) { width: 100%; padding: 10px 12px; border: 1.5px solid var(--line-strong); border-radius: var(--r-ctl); background: var(--surface); resize: vertical; font-size: var(--fs-md); line-height: 1.5; }
+  :global(.nb-add .btn) { justify-self: start; }
+  :global(.nb > .seg) { justify-self: start; }
+  :global(.nb-list) { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  :global(.nb-item) { display: grid; gap: 8px; }
+  :global(.nb-meta) { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 0; font-size: var(--fs-sm); }
+  :global(.nb-date) { margin-left: auto; color: var(--muted); }
+  :global(.nb-item textarea) { border-color: var(--line); }
+  :global(.nb-del) { justify-self: end; border: 0; background: none; color: var(--muted); font-size: var(--fs-sm); text-decoration: underline; }
+  :global(.nb-empty) { color: var(--muted); }
+</style>

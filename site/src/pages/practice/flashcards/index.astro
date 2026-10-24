@@ -1,0 +1,33 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Flashcards, { type CardData } from '../../../components/practice/Flashcards';
+import { traps, glossary } from '../../../lib/reference';
+const cards: CardData[] = [
+  ...traps.map((t) => ({ id: t.id, kind: 'trap' as const, front: t.confusion, back: t.truth, where: t.where, tag: `T${t.n}` })),
+  ...glossary.map((g) => ({ id: g.id, kind: 'term' as const, front: [g.en], back: [g.fr], where: [`first used in Chapter ${g.chapter}`] })),
+];
+---
+<Base title="Flashcards" section="practice">
+  <div class="wrap fcp">
+    <h1>Flashcards</h1>
+    <p class="lead">Short daily reviews make knowledge stick (the book's day 3, day 7, day 21 rule). Read the card, answer in your head, then check and be honest.</p>
+    <Flashcards client:only="react" cards={cards} />
+  </div>
+</Base>
+<style>
+  .fcp { padding-block: 40px 16px; max-width: 760px; }
+  .lead { color: var(--muted); font-size: var(--fs-lg); }
+  :global(.fc) { display: grid; gap: 16px; margin-top: 20px; }
+  :global(.fc-decks) { justify-self: start; }
+  :global(.fc-card) { padding: 22px 24px; border-radius: var(--r-panel); box-shadow: var(--shadow); }
+  :global(.fc-meta) { display: flex; gap: 10px; align-items: baseline; margin: 0 0 14px; font-size: var(--fs-sm); font-weight: 700; color: var(--muted); }
+  :global(.fc-count) { margin-left: auto; font-weight: 500; }
+  :global(.fc-label) { margin: 0 0 4px; font-size: var(--fs-sm); color: var(--muted); }
+  :global(.fc-text) { font-size: var(--fs-xl); line-height: 1.45; color: var(--ink); margin: 0; }
+  :global(.fc-back) { margin-top: 18px; padding-top: 16px; border-top: 1px dashed var(--line-strong); }
+  :global(.fc-back .fc-text) { font-size: var(--fs-lg); color: var(--text); }
+  :global(.fc-where) { margin: 10px 0 0; color: var(--muted); font-size: var(--fs-sm); }
+  :global(.fc-row) { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  :global(.fc-row kbd) { margin-left: 4px; }
+  :global(.fc-empty h2) { font-size: var(--fs-lg); margin-bottom: 6px; }
+</style>

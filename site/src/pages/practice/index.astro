@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import { url } from '../../lib/url';
+import { traps } from '../../lib/reference';
+const cards = [
+  { href: 'practice/flashcards/', title: 'Flashcards', text: 'Spaced review of the traps and the glossary. A few minutes every day.' },
+  { href: 'practice/drills/', title: 'Drills', text: 'Build your own quiz from all the questions: by topic, objective, format, or only your mistakes. DOMC training and a speed round.' },
+  { href: 'practice/traps/', title: 'The top exam traps', text: `${traps.length || 145} confusions that cost points, with the truth and where the book explains it.` },
+  { href: 'practice/notebook/', title: 'Error notebook', text: 'Every question you missed, with your own explanation. Re-read it before the exam.' },
+  { href: 'exams/', title: 'Mock exams', text: 'Three full exams: 65 questions, 2 hours, all formats, in exam mode or practice mode.' },
+];
+---
+<Base title="Practice" section="practice">
+  <div class="wrap pr">
+    <h1>Practice</h1>
+    <p class="lead">Train like the exam: formats, timing, and the traps that cost points.</p>
+    <ul class="cards">{cards.map((c) => <li><a href={url(c.href)}><h2>{c.title}</h2><p>{c.text}</p></a></li>)}</ul>
+  </div>
+</Base>
+<style>
+  .pr { padding-block: 40px 16px; }
+  .lead { color: var(--muted); font-size: var(--fs-lg); }
+  .cards { list-style: none; margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .cards a { display: block; height: 100%; padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card); text-decoration: none; color: var(--text); }
+  .cards a:hover { border-color: var(--ink); }
+  .cards h2 { font-size: var(--fs-lg); margin-bottom: 6px; }
+  .cards p { margin: 0; color: var(--muted); }
+</style>

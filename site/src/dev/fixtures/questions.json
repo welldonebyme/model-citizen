@@ -1,0 +1,3573 @@
+[
+ {
+  "id": "q-ch07-01",
+  "source": {
+   "kind": "chapter",
+   "chapter": 7,
+   "n": 1
+  },
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "This file is the only declaration of the source ",
+     {
+      "t": "code",
+      "v": "crm"
+     },
+     ". The target database is ",
+     {
+      "t": "code",
+      "v": "analytics"
+     },
+     ". What does ",
+     {
+      "t": "code",
+      "v": "{{ source('crm', 'accounts') }}"
+     },
+     " compile to (ignoring quotes)?"
+    ]
+   },
+   {
+    "t": "code",
+    "id": "ch07-c57",
+    "lang": "yaml",
+    "text": "sources:\n  - name: crm\n    tables:\n      - name: accounts\n        identifier: accounts_v2"
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     {
+      "t": "code",
+      "v": "analytics.crm.accounts"
+     }
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     {
+      "t": "code",
+      "v": "analytics.crm.accounts_v2"
+     }
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     {
+      "t": "code",
+      "v": "analytics.dbt_adnane.accounts_v2"
+     }
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     {
+      "t": "code",
+      "v": "crm.accounts.accounts_v2"
+     }
+    ]
+   }
+  ],
+  "key": "B",
+  "keyRaw": "B.",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     "Without ",
+     {
+      "t": "code",
+      "v": "schema"
+     },
+     ", the schema is the source name (",
+     {
+      "t": "code",
+      "v": "crm"
+     },
+     "); without ",
+     {
+      "t": "code",
+      "v": "database"
+     },
+     ", the target database (",
+     {
+      "t": "code",
+      "v": "analytics"
+     },
+     "); the ",
+     {
+      "t": "code",
+      "v": "identifier"
+     },
+     " replaces the table name. A forgets the identifier. C uses the target schema, which sources never do. D puts the names in the wrong places."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "q-ch07-02",
+  "source": {
+   "kind": "chapter",
+   "chapter": 7,
+   "n": 2
+  },
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     " takes two arguments: the source name and the ",
+     {
+      "t": "blank"
+     },
+     " name, both as written in the YAML file."
+    ]
+   }
+  ],
+  "key": {
+   "accepted": [
+    "table"
+   ]
+  },
+  "keyRaw": "table.",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     "For example ",
+     {
+      "t": "code",
+      "v": "source('stripe', 'payments')"
+     },
+     ": source ",
+     {
+      "t": "code",
+      "v": "stripe"
+     },
+     ", table ",
+     {
+      "t": "code",
+      "v": "payments"
+     },
+     "."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "q-ch07-03",
+  "source": {
+   "kind": "chapter",
+   "chapter": 7,
+   "n": 3
+  },
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "Which line creates ",
+     {
+      "t": "i",
+      "c": [
+       "no"
+      ]
+     },
+     " dependency in the DAG?"
+    ]
+   },
+   {
+    "t": "code",
+    "id": "ch07-c58",
+    "lang": "dbt",
+    "text": "with orders as (\n    select * from {{ ref('stg_shop__orders') }}\n),\nrefunds as (\n    select * from raw_payments.refunds\n),\ncustomers as (\n    select * from {{ source('shop', 'customers') }}\n)\nselect ...",
+    "lineNumbers": true
+   }
+  ],
+  "hotspot": {
+   "codeId": "ch07-c58",
+   "lines": 10
+  },
+  "key": 5,
+  "keyRaw": "Line 5.",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "code",
+      "v": "raw_payments.refunds"
+     },
+     " is plain text for dbt. Line 2 (",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     ") and line 8 (",
+     {
+      "t": "code",
+      "v": "source"
+     },
+     ") both create edges."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "q-ch07-05",
+  "source": {
+   "kind": "chapter",
+   "chapter": 7,
+   "n": 5
+  },
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "choose": 2,
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "Which two practices belong in a staging model?"
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     "Renaming ",
+     {
+      "t": "code",
+      "v": "id"
+     },
+     " to ",
+     {
+      "t": "code",
+      "v": "customer_id"
+     },
+     "."
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     "Joining orders with payments to compute revenue."
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     "Converting an amount in cents to a decimal amount in dollars."
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     "Aggregating payments per customer."
+    ]
+   },
+   {
+    "id": "E",
+    "c": [
+     "Reading another staging model with ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " to enrich it."
+    ]
+   }
+  ],
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "A and C.",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     "Renaming and casting are the job of staging. B and D are business logic and aggregation (marts or intermediate models). E: staging models read one source table each, not other staging models."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "q-ch07-06",
+  "source": {
+   "kind": "chapter",
+   "chapter": 7,
+   "n": 6
+  },
+  "format": "match",
+  "formatLabel": "Matching",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "Match each file with its role in our project."
+    ]
+   }
+  ],
+  "match": {
+   "left": [
+    {
+     "id": "1",
+     "c": [
+      {
+       "t": "code",
+       "v": "_stripe__sources.yml"
+      }
+     ]
+    },
+    {
+     "id": "2",
+     "c": [
+      {
+       "t": "code",
+       "v": "_stripe__models.yml"
+      }
+     ]
+    },
+    {
+     "id": "3",
+     "c": [
+      {
+       "t": "code",
+       "v": "stg_stripe__payments.sql"
+      }
+     ]
+    },
+    {
+     "id": "4",
+     "c": [
+      {
+       "t": "code",
+       "v": "fct_orders.sql"
+      }
+     ]
+    }
+   ],
+   "right": [
+    {
+     "id": "a",
+     "c": [
+      "One row per order, built from two staging models"
+     ]
+    },
+    {
+     "id": "b",
+     "c": [
+      "Declares the raw Stripe tables"
+     ]
+    },
+    {
+     "id": "c",
+     "c": [
+      "Descriptions and tests of the Stripe staging model"
+     ]
+    },
+    {
+     "id": "d",
+     "c": [
+      "The only model that reads ",
+      {
+       "t": "code",
+       "v": "source('stripe', 'payments')"
+      }
+     ]
+    }
+   ]
+  },
+  "key": {
+   "1": "b",
+   "2": "c",
+   "3": "d",
+   "4": "a"
+  },
+  "keyRaw": "1-b, 2-c, 3-d, 4-a.",
+  "explanation": []
+ },
+ {
+  "id": "q-ch07-07",
+  "source": {
+   "kind": "chapter",
+   "chapter": 7,
+   "n": 7
+  },
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "A new raw table ",
+     {
+      "t": "code",
+      "v": "stripe.refunds"
+     },
+     " has arrived. Put the steps in a sensible order."
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     "Write ",
+     {
+      "t": "code",
+      "v": "stg_stripe__refunds.sql"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "source('stripe', 'refunds')"
+     },
+     "."
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "refunds"
+     },
+     " under ",
+     {
+      "t": "code",
+      "v": "tables:"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "_stripe__sources.yml"
+     },
+     "."
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     "Run ",
+     {
+      "t": "code",
+      "v": "dbt build --select stg_stripe__refunds"
+     },
+     "."
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     "Check it with ",
+     {
+      "t": "code",
+      "v": "dbt show --inline \"select count(*) from {{ source('stripe', 'refunds') }}\""
+     },
+     "."
+    ]
+   },
+   {
+    "id": "E",
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "unique"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " on ",
+     {
+      "t": "code",
+      "v": "refund_id"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "_stripe__models.yml"
+     },
+     "."
+    ]
+   }
+  ],
+  "key": [
+   "B",
+   "D",
+   "A",
+   "E",
+   "C"
+  ],
+  "keyRaw": "B, D, A, E, C.",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     "Declare the table, verify it exists through ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     ", write the staging model, add its tests, build it (models and tests). D could also come after A, but checking the declaration before writing SQL saves time."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "q-ch07-08",
+  "source": {
+   "kind": "chapter",
+   "chapter": 7,
+   "n": 8
+  },
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     ":"
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     "It creates an edge between two nodes of the DAG."
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     "It compiles to the relation of that model in the current environment (target)."
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     "It is the right function to read a raw table declared under ",
+     {
+      "t": "code",
+      "v": "sources:"
+     },
+     "."
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     "dbt finds dependencies by reading the ",
+     {
+      "t": "code",
+      "v": "from"
+     },
+     " clauses of the SQL."
+    ]
+   }
+  ],
+  "key": {
+   "A": true,
+   "B": true,
+   "C": false,
+   "D": false
+  },
+  "keyRaw": "YES, YES, NO, NO.",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     "B: ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " becomes the relation built for the target of this command (",
+     {
+      "t": "code",
+      "v": "dbt_adnane"
+     },
+     " in dev, ",
+     {
+      "t": "code",
+      "v": "prod"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "--target prod"
+     },
+     "). Raw tables are read with ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     ". dbt finds dependencies from ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     " calls during parsing, not from ",
+     {
+      "t": "code",
+      "v": "from"
+     },
+     " clauses (that is why hard-coded names are invisible)."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "q-ch07-16",
+  "source": {
+   "kind": "chapter",
+   "chapter": 7,
+   "n": 16
+  },
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "Statements about lineage in the dbt platform:"
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     "The Studio IDE shows a Lineage tab for the open model."
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     "Catalog needs at least one successful job run in a production or staging environment."
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     "A model that reads ",
+     {
+      "t": "code",
+      "v": "analytics.fct_orders"
+     },
+     " by name appears connected to ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " in Catalog."
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     "Catalog was formerly called dbt Explorer."
+    ]
+   }
+  ],
+  "key": {
+   "A": true,
+   "B": true,
+   "C": false,
+   "D": true
+  },
+  "keyRaw": "YES, YES, NO, YES.",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     "A hard-coded name creates no edge, so Catalog cannot connect the two models."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "q-ch16-04",
+  "source": {
+   "kind": "chapter",
+   "chapter": 16,
+   "n": 4
+  },
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "dbt ls -s \"tag:finance,config.materialized:table\""
+     },
+     ", the comma between the two methods means ",
+     {
+      "t": "blank"
+     },
+     ": only the nodes that match both are kept."
+    ]
+   }
+  ],
+  "key": {
+   "accepted": [
+    "intersection",
+    "and"
+   ]
+  },
+  "keyRaw": "Intersection (\"and\").",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     "A space would mean union (\"or\"); the comma must not be followed by a space."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "q-ch16-05",
+  "source": {
+   "kind": "chapter",
+   "chapter": 16,
+   "n": 5
+  },
+  "format": "match",
+  "formatLabel": "Matching",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "Match each indirect selection mode with its rule."
+    ]
+   }
+  ],
+  "match": {
+   "left": [
+    {
+     "id": "1",
+     "c": [
+      {
+       "t": "code",
+       "v": "eager"
+      }
+     ]
+    },
+    {
+     "id": "2",
+     "c": [
+      {
+       "t": "code",
+       "v": "buildable"
+      }
+     ]
+    },
+    {
+     "id": "3",
+     "c": [
+      {
+       "t": "code",
+       "v": "cautious"
+      }
+     ]
+    },
+    {
+     "id": "4",
+     "c": [
+      {
+       "t": "code",
+       "v": "empty"
+      }
+     ]
+    }
+   ],
+   "right": [
+    {
+     "id": "a",
+     "c": [
+      "No test is added to the selection."
+     ]
+    },
+    {
+     "id": "b",
+     "c": [
+      "A test is added only if ",
+      {
+       "t": "i",
+       "c": [
+        "all"
+       ]
+      },
+      " its parents are selected."
+     ]
+    },
+    {
+     "id": "c",
+     "c": [
+      "A test is added if ",
+      {
+       "t": "i",
+       "c": [
+        "at least one"
+       ]
+      },
+      " of its parents is selected."
+     ]
+    },
+    {
+     "id": "d",
+     "c": [
+      "A test is added if all its parents are selected or are ancestors of the selection."
+     ]
+    }
+   ]
+  },
+  "key": {
+   "1": "c",
+   "2": "d",
+   "3": "b",
+   "4": "a"
+  },
+  "keyRaw": "1-c, 2-d, 3-b, 4-a.",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     "Eager is the most inclusive and the default; cautious is the most exclusive one that still adds tests; empty adds none."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "q-ch16-06",
+  "source": {
+   "kind": "chapter",
+   "chapter": 16,
+   "n": 6
+  },
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " has one unit test and one data test. Put these events of ",
+     {
+      "t": "code",
+      "v": "dbt build -s +fct_orders"
+     },
+     " in the order they happen for this chain:"
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     "the data test on ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " runs"
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     "the unit test of ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " runs"
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     {
+      "t": "code",
+      "v": "int_orders__enriched"
+     },
+     " is built"
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " is built"
+    ]
+   },
+   {
+    "id": "E",
+    "c": [
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     " is built and its data tests run"
+    ]
+   }
+  ],
+  "key": [
+   "E",
+   "C",
+   "B",
+   "D",
+   "A"
+  ],
+  "keyRaw": "e, c, b, d, a.",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     "Parents first (with their data tests right after them), then the unit test of ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " ",
+     {
+      "t": "i",
+      "c": [
+       "before"
+      ]
+     },
+     " the model, the model, and finally its data test."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "q-ch16-07",
+  "source": {
+   "kind": "chapter",
+   "chapter": 16,
+   "n": 7
+  },
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "A CI script runs these commands one after the other. Which line stops the script with a usage error, before anything runs?"
+    ]
+   },
+   {
+    "t": "code",
+    "id": "ch16-c89",
+    "lang": "plain",
+    "text": "dbt deps\ndbt parse\ndbt seed --empty\ndbt build --empty --exclude-resource-type snapshot\ndbt build -s state:modified+ --defer --state prod-artifacts",
+    "lineNumbers": true
+   }
+  ],
+  "hotspot": {
+   "codeId": "ch16-c89",
+   "lines": 5
+  },
+  "key": 3,
+  "keyRaw": "Line 3.",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt seed"
+     },
+     " has no ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     " option: \"No such option ",
+     {
+      "t": "code",
+      "v": "'--empty'"
+     },
+     "\". Lines 1, 2 and 4 are valid (line 4 is the safe empty build). Line 5 is valid syntax; it needs the artifacts folder to exist."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "q-ch16-08",
+  "source": {
+   "kind": "chapter",
+   "chapter": 16,
+   "n": 8
+  },
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "dbt build --empty"
+     },
+     ":"
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     "It creates the selected models in the warehouse, with their columns and zero rows."
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     "It loads the seeds with zero rows."
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     "A table name hard-coded in a model (not ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "source"
+     },
+     ") is read in full."
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     "The data tests fail, because the tables are empty."
+    ]
+   },
+   {
+    "id": "E",
+    "c": [
+     "The unit tests are skipped."
+    ]
+   }
+  ],
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": false,
+   "E": false
+  },
+  "keyRaw": "YES, NO, YES, NO, NO.",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     "Objects are created with 0 rows. Seeds load fully (",
+     {
+      "t": "code",
+      "v": "INSERT 6"
+     },
+     "). Only ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "source"
+     },
+     " are limited, so a hard-coded table is read in full. The usual data tests pass on empty tables (no failing rows); only a test that expects rows would fail. Unit tests still run with their fake rows."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "q-ch16-15",
+  "source": {
+   "kind": "chapter",
+   "chapter": 16,
+   "n": 15
+  },
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "The one-letter short form of ",
+     {
+      "t": "code",
+      "v": "--fail-fast"
+     },
+     " is ",
+     {
+      "t": "blank"
+     },
+     "."
+    ]
+   }
+  ],
+  "key": {
+   "accepted": [
+    "-x"
+   ]
+  },
+  "keyRaw": "-x",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     "(",
+     {
+      "t": "code",
+      "v": "dbt build -x"
+     },
+     "). It stops the whole command at the first failure."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "q-ch16-18",
+  "source": {
+   "kind": "chapter",
+   "chapter": 16,
+   "n": 18
+  },
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ":"
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     "It runs ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     " before the models."
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     "It runs the unit tests of a model before building that model."
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     "A failing test with ",
+     {
+      "t": "code",
+      "v": "severity: warn"
+     },
+     " skips the children of the tested model."
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     "It loads the seeds."
+    ]
+   }
+  ],
+  "key": {
+   "A": false,
+   "B": true,
+   "C": false,
+   "D": true
+  },
+  "keyRaw": "NO, YES, NO, YES.",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     "Freshness is a separate command. Unit tests run before their model. A ",
+     {
+      "t": "code",
+      "v": "warn"
+     },
+     " test reports a warning and nothing is skipped. Seeds are part of ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "."
+    ]
+   }
+  ]
+ },
+ {
+  "id": "m1-q01",
+  "source": {
+   "kind": "mock",
+   "mock": 1,
+   "n": 1
+  },
+  "objective": "1.2",
+  "topic": 1,
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "jaffle_dbt"
+     },
+     ", the model ",
+     {
+      "t": "code",
+      "v": "int_payments__successful"
+     },
+     " has ",
+     {
+      "t": "code",
+      "v": "{{ config(materialized='ephemeral') }}"
+     },
+     " at the top of its file. Only ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " references it with ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     ". Adnane runs ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     ", then looks in the warehouse and in the ",
+     {
+      "t": "code",
+      "v": "target/"
+     },
+     " folder. Which statement is true?"
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     "The warehouse has a view ",
+     {
+      "t": "code",
+      "v": "dbt_adnane.int_payments__successful"
+     },
+     ", and ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " selects from this view."
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     "dbt creates a temporary table for ",
+     {
+      "t": "code",
+      "v": "int_payments__successful"
+     },
+     " during the run, and drops it at the end of the run."
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " fails, because an ephemeral model must be referenced by at least two models."
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     "There is no ",
+     {
+      "t": "code",
+      "v": "int_payments__successful"
+     },
+     " object in the warehouse. The compiled SQL of ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " starts with ",
+     {
+      "t": "code",
+      "v": "with __dbt__cte__int_payments__successful as (...)"
+     },
+     "."
+    ]
+   }
+  ],
+  "key": "D",
+  "keyRaw": "D",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why D is correct."
+      ]
+     },
+     " An ephemeral model is never created in the warehouse. When another model uses ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " on it, dbt pastes its SQL into that model as a CTE (a ",
+     {
+      "t": "code",
+      "v": "with"
+     },
+     " block) whose name starts with ",
+     {
+      "t": "code",
+      "v": "__dbt__cte__"
+     },
+     ". In the practice project, the compiled ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " starts with ",
+     {
+      "t": "code",
+      "v": "with __dbt__cte__int_payments__successful as (...)"
+     },
+     ", and no object with that name exists in the schema."
+    ]
+   }
+  ],
+  "whyWrong": [
+   {
+    "option": "A",
+    "c": [
+     "This describes the ",
+     {
+      "t": "code",
+      "v": "view"
+     },
+     " materialization, not ",
+     {
+      "t": "code",
+      "v": "ephemeral"
+     },
+     "."
+    ]
+   },
+   {
+    "option": "B",
+    "c": [
+     "dbt creates no temporary table; the code only lives inside the CTE."
+    ]
+   },
+   {
+    "option": "C",
+    "c": [
+     "One ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " is enough. Ephemeral is even recommended for light logic used by only one or two models."
+    ]
+   }
+  ],
+  "review": [
+   {
+    "t": "ref",
+    "label": "ch:materializations",
+    "text": "Chapter 8",
+    "href": "/learn/ch08/"
+   }
+  ]
+ },
+ {
+  "id": "m1-q02",
+  "source": {
+   "kind": "mock",
+   "mock": 1,
+   "n": 2
+  },
+  "objective": "5.2",
+  "topic": 5,
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "choose": 2,
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "The finance team gives Adnane two rules about ",
+     {
+      "t": "code",
+      "v": "stg_stripe__payments"
+     },
+     ": (1) ",
+     {
+      "t": "code",
+      "v": "payment_method"
+     },
+     " must only contain ",
+     {
+      "t": "code",
+      "v": "credit_card"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "coupon"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "bank_transfer"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "gift_card"
+     },
+     "; (2) every ",
+     {
+      "t": "code",
+      "v": "order_id"
+     },
+     " must exist in ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders.order_id"
+     },
+     ". Which ",
+     {
+      "t": "b",
+      "c": [
+       "two"
+      ]
+     },
+     " built-in generic data tests express these two rules?"
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     {
+      "t": "code",
+      "v": "unique"
+     },
+     " on ",
+     {
+      "t": "code",
+      "v": "payment_method"
+     }
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     {
+      "t": "code",
+      "v": "accepted_values"
+     },
+     " on ",
+     {
+      "t": "code",
+      "v": "payment_method"
+     },
+     ", with the four values"
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " on ",
+     {
+      "t": "code",
+      "v": "order_id"
+     }
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     {
+      "t": "code",
+      "v": "relationships"
+     },
+     " on ",
+     {
+      "t": "code",
+      "v": "order_id"
+     },
+     ", with ",
+     {
+      "t": "code",
+      "v": "to: ref('stg_jaffle_shop__orders')"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "field: order_id"
+     }
+    ]
+   },
+   {
+    "id": "E",
+    "c": [
+     "a unit test with fixed input rows for ",
+     {
+      "t": "code",
+      "v": "stg_stripe__payments"
+     }
+    ]
+   }
+  ],
+  "key": [
+   "B",
+   "D"
+  ],
+  "keyRaw": "B, D",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why B and D are correct."
+      ]
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "accepted_values"
+     },
+     " fails when a column contains a value that is not in the list you give. ",
+     {
+      "t": "code",
+      "v": "relationships"
+     },
+     " fails when a value has no matching value in another model (here: a payment whose order does not exist). In dbt 1.10 and later, the parameters of these tests go under ",
+     {
+      "t": "code",
+      "v": "arguments:"
+     },
+     " (",
+     {
+      "t": "code",
+      "v": "values:"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "to:"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "field:"
+     },
+     ")."
+    ]
+   }
+  ],
+  "whyWrong": [
+   {
+    "option": "A",
+    "c": [
+     {
+      "t": "code",
+      "v": "unique"
+     },
+     " would fail: many payments share the same payment method."
+    ]
+   },
+   {
+    "option": "C",
+    "c": [
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " only checks for NULL; it says nothing about the orders table."
+    ]
+   },
+   {
+    "option": "E",
+    "c": [
+     "A unit test checks SQL logic on invented rows, not the real data."
+    ]
+   }
+  ],
+  "review": [
+   {
+    "t": "ref",
+    "label": "ch:data-tests",
+    "text": "Chapter 18",
+    "href": "/learn/ch18/"
+   }
+  ]
+ },
+ {
+  "id": "m1-q03",
+  "source": {
+   "kind": "mock",
+   "mock": 1,
+   "n": 3
+  },
+  "objective": "1.1",
+  "topic": 1,
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "A teammate declared this source in ",
+     {
+      "t": "code",
+      "v": "jaffle_dbt"
+     },
+     ":"
+    ]
+   },
+   {
+    "t": "code",
+    "id": "ch28-c1",
+    "lang": "yaml",
+    "text": "sources:\n  - name: shop\n    database: practice\n    schema: jaffle_shop\n    tables:\n      - name: orders_raw\n        identifier: orders"
+   },
+   {
+    "t": "p",
+    "c": [
+     "Complete the two blanks so that the model reads the raw table ",
+     {
+      "t": "b",
+      "c": [
+       "through this source declaration"
+      ]
+     },
+     " and compiles to ",
+     {
+      "t": "code",
+      "v": "select * from \"practice\".\"jaffle_shop\".\"orders\""
+     },
+     "."
+    ]
+   },
+   {
+    "t": "code",
+    "id": "ch28-c2",
+    "lang": "dbt",
+    "text": "select * from {{ source('_______', '_______') }}"
+   }
+  ],
+  "key": {
+   "accepted": [
+    "shop, orders_raw"
+   ]
+  },
+  "keyRaw": "\\code{shop}, \\code{orders\\_raw}",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why."
+      ]
+     },
+     " The full call is ",
+     {
+      "t": "code",
+      "v": "{{ source('shop', 'orders_raw') }}"
+     },
+     ". The first argument is the ",
+     {
+      "t": "code",
+      "v": "name"
+     },
+     " of the source (",
+     {
+      "t": "code",
+      "v": "shop"
+     },
+     "), not its schema. The second is the ",
+     {
+      "t": "code",
+      "v": "name"
+     },
+     " of the table in the YAML (",
+     {
+      "t": "code",
+      "v": "orders_raw"
+     },
+     "), not its ",
+     {
+      "t": "code",
+      "v": "identifier"
+     },
+     ". dbt then builds the real address from ",
+     {
+      "t": "code",
+      "v": "database"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "schema"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "identifier"
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "\"practice\".\"jaffle_shop\".\"orders\""
+     },
+     ". We checked this with ",
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     "."
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Typical wrong answers."
+      ]
+     }
+    ]
+   },
+   {
+    "t": "list",
+    "kind": "ul",
+    "items": [
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "code",
+          "v": "source('jaffle_shop', 'orders')"
+         },
+         ": it uses the schema and the identifier, not the names declared in ",
+         {
+          "t": "i",
+          "c": [
+           "this"
+          ]
+         },
+         " YAML block. With only this declaration, dbt would not find such a source."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "code",
+          "v": "source('shop', 'orders')"
+         },
+         ": ",
+         {
+          "t": "code",
+          "v": "orders"
+         },
+         " is the identifier, not the table name."
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "review": [
+   {
+    "t": "ref",
+    "label": "ch:models-sources-dag",
+    "text": "Chapter 7",
+    "href": "/learn/ch07/"
+   }
+  ]
+ },
+ {
+  "id": "m1-q04",
+  "source": {
+   "kind": "mock",
+   "mock": 1,
+   "n": 4
+  },
+  "objective": "7.1",
+  "topic": 7,
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "The folder ",
+     {
+      "t": "code",
+      "v": "prod-artifacts/"
+     },
+     " contains the ",
+     {
+      "t": "code",
+      "v": "manifest.json"
+     },
+     " of the last production run. In this question, the models of ",
+     {
+      "t": "code",
+      "v": "jaffle_dbt"
+     },
+     " depend on each other like this (an arrow means \"is used by\"):"
+    ]
+   },
+   {
+    "t": "code",
+    "id": "ch28-c3",
+    "lang": "plain",
+    "text": "stg_jaffle_shop__orders    -> fct_orders\nstg_stripe__payments       -> int_payments__successful -> fct_orders\nfct_orders                 -> dim_customers, int_orders__enriched\nstg_jaffle_shop__customers -> dim_customers, int_orders__enriched\nint_orders__enriched       -> fct_monthly_revenue\ndim_customers              -> customer_segments"
+   },
+   {
+    "t": "p",
+    "c": [
+     "Adnane changes only the SQL of ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     ". Then he runs:"
+    ]
+   },
+   {
+    "t": "code",
+    "id": "ch28-c4",
+    "lang": "bash",
+    "text": "$ dbt ls -s state:modified+ --state prod-artifacts --resource-type model"
+   },
+   {
+    "t": "p",
+    "c": [
+     "Which models are listed?"
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     "Only ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     "."
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     "All the models of the project, because state comparison always adds the parents of the modified model."
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "int_orders__enriched"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "fct_monthly_revenue"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "customer_segments"
+     },
+     "."
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "stg_stripe__payments"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "int_payments__successful"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     "."
+    ]
+   }
+  ],
+  "key": "C",
+  "keyRaw": "C",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why C is correct."
+      ]
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "state:modified"
+     },
+     " compares the current project with the manifest in ",
+     {
+      "t": "code",
+      "v": "prod-artifacts/"
+     },
+     " and selects only ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     ". The ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     " after the selector adds all its ",
+     {
+      "t": "i",
+      "c": [
+       "descendants"
+      ]
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     ", then ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "int_orders__enriched"
+     },
+     ", then ",
+     {
+      "t": "code",
+      "v": "fct_monthly_revenue"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "customer_segments"
+     },
+     ". We ran this exact command and got these 6 models (plus their tests when ",
+     {
+      "t": "code",
+      "v": "--resource-type"
+     },
+     " is not used)."
+    ]
+   }
+  ],
+  "whyWrong": [
+   {
+    "option": "A",
+    "c": [
+     "This would be ",
+     {
+      "t": "code",
+      "v": "state:modified"
+     },
+     " without the ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     "."
+    ]
+   },
+   {
+    "option": "B",
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     " ",
+     {
+      "t": "i",
+      "c": [
+       "after"
+      ]
+     },
+     " the selector adds children, not parents."
+    ]
+   },
+   {
+    "option": "D",
+    "c": [
+     {
+      "t": "code",
+      "v": "stg_stripe__payments"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "int_payments__successful"
+     },
+     " did not change and are not descendants of the modified model."
+    ]
+   }
+  ],
+  "review": [
+   {
+    "t": "ref",
+    "label": "ch:state-defer-retry",
+    "text": "Chapter 24",
+    "href": "/learn/ch24/"
+   }
+  ]
+ },
+ {
+  "id": "m1-q05",
+  "source": {
+   "kind": "mock",
+   "mock": 1,
+   "n": 5
+  },
+  "objective": "3.3",
+  "topic": 3,
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "After Adnane edits ",
+     {
+      "t": "code",
+      "v": "models/staging/stripe/_stripe__models.yml"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " stops with a ",
+     {
+      "t": "code",
+      "v": "Parsing Error"
+     },
+     " for this file. Which line causes the error?"
+    ]
+   },
+   {
+    "t": "code",
+    "id": "ch28-c5",
+    "lang": "yaml",
+    "text": "models:\n  - name: stg_stripe__payments\n    description: One row per payment attempt.\n    columns:\n      - name: payment_id\n        data_tests:\n          - unique\n          - not_null\n       - name: payment_method\n        data_tests:\n          - accepted_values:\n              arguments:\n                values: [credit_card, coupon, bank_transfer, gift_card]",
+    "lineNumbers": true
+   }
+  ],
+  "hotspot": {
+   "codeId": "ch28-c5",
+   "lines": 13
+  },
+  "key": 9,
+  "keyRaw": "Line 9",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why line 9."
+      ]
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "- name: payment_method"
+     },
+     " starts with 7 spaces, but the other item of the same list (line 5) starts with 6. In YAML, all items of one list must start at the same column. dbt shows ",
+     {
+      "t": "code",
+      "v": "Syntax error near line 9"
+     },
+     ", and the raw YAML error says ",
+     {
+      "t": "code",
+      "v": "did not find expected '-' indicator ... line 9, column 8"
+     },
+     "."
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why the other lines are fine."
+      ]
+     },
+     " Line 12 (",
+     {
+      "t": "code",
+      "v": "arguments:"
+     },
+     ") is the correct syntax for test parameters since dbt 1.10. Line 13 is a valid YAML list of plain strings. The error message points to the line where the parser got lost; always check the indentation of that line and of the line just before it."
+    ]
+   }
+  ],
+  "review": [
+   {
+    "t": "ref",
+    "label": "ch:debugging",
+    "text": "Chapter 22",
+    "href": "/learn/ch22/"
+   },
+   " and ",
+   {
+    "t": "ref",
+    "label": "ch:yaml-jinja-python",
+    "text": "Chapter 5",
+    "href": "/learn/ch05/"
+   }
+  ]
+ },
+ {
+  "id": "m1-q06",
+  "source": {
+   "kind": "mock",
+   "mock": 1,
+   "n": 6
+  },
+  "objective": "1.6",
+  "topic": 1,
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "The ",
+     {
+      "t": "code",
+      "v": "materialized"
+     },
+     " config of ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " is set in four places at the same time, with four different values. Put the four places in order, from the ",
+     {
+      "t": "b",
+      "c": [
+       "lowest"
+      ]
+     },
+     " priority (always overridden) to the ",
+     {
+      "t": "b",
+      "c": [
+       "highest"
+      ]
+     },
+     " priority (the value dbt finally uses)."
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "config:"
+     },
+     " block for ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " in a properties file (",
+     {
+      "t": "code",
+      "v": "_marts__models.yml"
+     },
+     ")"
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     {
+      "t": "code",
+      "v": "+materialized"
+     },
+     " directly under ",
+     {
+      "t": "code",
+      "v": "models: jaffle_dbt:"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     }
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     {
+      "t": "code",
+      "v": "{{ config(materialized=...) }}"
+     },
+     " at the top of ",
+     {
+      "t": "code",
+      "v": "fct_orders.sql"
+     }
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     {
+      "t": "code",
+      "v": "+materialized"
+     },
+     " under ",
+     {
+      "t": "code",
+      "v": "models: jaffle_dbt: marts:"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     }
+    ]
+   }
+  ],
+  "key": [
+   "B",
+   "D",
+   "A",
+   "C"
+  ],
+  "keyRaw": "B, D, A, C",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why."
+      ]
+     },
+     " The more specific the place, the higher the priority. A value at the root of ",
+     {
+      "t": "code",
+      "v": "models: jaffle_dbt:"
+     },
+     " (B) is overridden by a value for the ",
+     {
+      "t": "code",
+      "v": "marts"
+     },
+     " folder (D). A ",
+     {
+      "t": "code",
+      "v": "config:"
+     },
+     " block in a properties YAML file (A) overrides ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ". The ",
+     {
+      "t": "code",
+      "v": "config()"
+     },
+     " call inside the SQL file (C) wins over everything. We checked it: with all four places set, dbt used the SQL value; after removing it, the YAML value; then the folder value; then the root value."
+    ]
+   }
+  ],
+  "review": [
+   {
+    "t": "ref",
+    "label": "ch:configuration",
+    "text": "Chapter 10",
+    "href": "/learn/ch10/"
+   }
+  ]
+ },
+ {
+  "id": "m1-q07",
+  "source": {
+   "kind": "mock",
+   "mock": 1,
+   "n": 7
+  },
+  "objective": "2.1",
+  "topic": 2,
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     " has an enforced contract with 9 columns in its YAML file. Adnane adds the line ",
+     {
+      "t": "code",
+      "v": "c.signup_date,"
+     },
+     " to the SELECT of ",
+     {
+      "t": "code",
+      "v": "dim_customers.sql"
+     },
+     ", but he does not change the YAML. He runs ",
+     {
+      "t": "code",
+      "v": "dbt run -s dim_customers"
+     },
+     ":"
+    ]
+   },
+   {
+    "t": "code",
+    "id": "ch28-c6",
+    "lang": "output",
+    "text": "Compilation Error in model dim_customers (models/marts/dim_customers.sql)\n  This model has an enforced contract that failed.\n  Please ensure the name, data_type, and number of columns in your contract\n  match the columns in your model's definition.\n\n  | column_name | definition_type | contract_type | mismatch_reason     |\n  | ----------- | --------------- | ------------- | ------------------- |\n  | signup_date | DATE            |               | missing in contract |"
+   },
+   {
+    "t": "p",
+    "c": [
+     "Which statement is correct?"
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     "dbt did not build the new version of ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     ". Adnane must add ",
+     {
+      "t": "code",
+      "v": "signup_date"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "data_type: date"
+     },
+     " to the YAML (or remove it from the SQL), then run the model again."
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     "dbt built the table with the new column and only printed a warning."
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     "The warehouse rejected a row because of a constraint. Adnane must remove the ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " constraint on ",
+     {
+      "t": "code",
+      "v": "customer_id"
+     },
+     "."
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     "A contract only checks data types, so Adnane must cast ",
+     {
+      "t": "code",
+      "v": "signup_date"
+     },
+     " to ",
+     {
+      "t": "code",
+      "v": "varchar"
+     },
+     "."
+    ]
+   }
+  ],
+  "key": "A",
+  "keyRaw": "A",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why A is correct."
+      ]
+     },
+     " With an enforced contract, dbt compares the columns returned by the query with the columns in the YAML ",
+     {
+      "t": "i",
+      "c": [
+       "before"
+      ]
+     },
+     " it builds the model. Here the query returns one column (",
+     {
+      "t": "code",
+      "v": "signup_date"
+     },
+     ") that the contract does not list, so dbt stops with a compilation error and builds nothing. The old table stays exactly as it was (we checked: still 9 columns). To fix it, declare the column with its ",
+     {
+      "t": "code",
+      "v": "data_type"
+     },
+     ", or remove it from the SQL."
+    ]
+   }
+  ],
+  "whyWrong": [
+   {
+    "option": "B",
+    "c": [
+     "A contract failure is an error, not a warning."
+    ]
+   },
+   {
+    "option": "C",
+    "c": [
+     "No row was inserted; the message is about the column list (",
+     {
+      "t": "code",
+      "v": "missing in contract"
+     },
+     "), not a constraint."
+    ]
+   },
+   {
+    "option": "D",
+    "c": [
+     "A contract checks column names, data types ",
+     {
+      "t": "i",
+      "c": [
+       "and"
+      ]
+     },
+     " the number of columns."
+    ]
+   }
+  ],
+  "review": [
+   {
+    "t": "ref",
+    "label": "ch:governance",
+    "text": "Chapter 17",
+    "href": "/learn/ch17/"
+   }
+  ]
+ },
+ {
+  "id": "m1-q08",
+  "source": {
+   "kind": "mock",
+   "mock": 1,
+   "n": 8
+  },
+  "objective": "1.12",
+  "topic": 1,
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "In the CI job of ",
+     {
+      "t": "code",
+      "v": "jaffle_dbt"
+     },
+     ", Adnane runs ",
+     {
+      "t": "code",
+      "v": "dbt build --empty"
+     },
+     ". For each statement, answer YES (true) or NO (false)."
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     "Every ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     " is replaced by a subquery that returns zero rows."
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     "A table name written by hand in the SQL, like ",
+     {
+      "t": "code",
+      "v": "from practice.jaffle_shop.orders"
+     },
+     ", is also limited to zero rows."
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     "The SQL is still sent to the warehouse, so a wrong column name still makes the model fail."
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     "dbt still builds the tables and views of the models in the warehouse, with the right columns."
+    ]
+   },
+   {
+    "id": "E",
+    "c": [
+     "It is a cheap way to check, in CI, that every model compiles and runs, without reading the large input tables."
+    ]
+   }
+  ],
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": true,
+   "E": true
+  },
+  "keyRaw": "A-YES, B-NO, C-YES, D-YES, E-YES",
+  "explanation": [
+   {
+    "t": "list",
+    "kind": "ul",
+    "items": [
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "A YES"
+          ]
+         },
+         ": each ",
+         {
+          "t": "code",
+          "v": "ref()"
+         },
+         "/",
+         {
+          "t": "code",
+          "v": "source()"
+         },
+         " becomes ",
+         {
+          "t": "code",
+          "v": "(select * from ... where false limit 0)"
+         },
+         "."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "B NO"
+          ]
+         },
+         ": dbt only changes what it renders. A hard-coded table name is plain text: in our test, a model reading ",
+         {
+          "t": "code",
+          "v": "practice.jaffle_shop.orders"
+         },
+         " directly still returned 300 rows."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "C YES"
+          ]
+         },
+         ": the SQL still runs in the warehouse, so a wrong column (",
+         {
+          "t": "code",
+          "v": "Referenced column ... not found"
+         },
+         ") still fails. That is the point of the flag."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "D YES"
+          ]
+         },
+         ": the models are really built, only with zero rows. In our test, ",
+         {
+          "t": "code",
+          "v": "fct_orders"
+         },
+         " was a real table with its 5 columns and 0 rows, and each staging view was created with the ",
+         {
+          "t": "code",
+          "v": "where false limit 0"
+         },
+         " subquery inside. The data tests also run (on empty models they pass)."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "E YES"
+          ]
+         },
+         ": it validates SQL and dependencies cheaply, which is why it is popular as a first step in CI."
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "review": [
+   {
+    "t": "ref",
+    "label": "ch:commands-selection",
+    "text": "Chapter 16",
+    "href": "/learn/ch16/"
+   }
+  ]
+ },
+ {
+  "id": "m1-q09",
+  "source": {
+   "kind": "mock",
+   "mock": 1,
+   "n": 9
+  },
+  "objective": "4.1",
+  "topic": 4,
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "Use the same model dependencies as in Question 4. The ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " test on ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__customers.email"
+     },
+     " has the default severity (",
+     {
+      "t": "code",
+      "v": "error"
+     },
+     "). Five customers have no email. Adnane runs ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " and sees:"
+    ]
+   },
+   {
+    "t": "code",
+    "id": "ch28-c7",
+    "lang": "output",
+    "text": "12 of 27 FAIL 5 not_null_stg_jaffle_shop__customers_email ...... [FAIL 5 in 0.03s]"
+   },
+   {
+    "t": "p",
+    "c": [
+     "Which models does ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " skip?"
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     "Every node that comes after node 12 in the log, because dbt stops at the first failure."
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     "Only ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__customers"
+     },
+     ", because the test belongs to this model."
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "int_orders__enriched"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "fct_monthly_revenue"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "customer_segments"
+     },
+     ". ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " is still built."
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     "None. A failing test only changes the exit code; tests never cause models to be skipped."
+    ]
+   }
+  ],
+  "key": "C",
+  "keyRaw": "C",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why C is correct."
+      ]
+     },
+     " In ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", a failing test (severity ",
+     {
+      "t": "code",
+      "v": "error"
+     },
+     ") blocks every node downstream of the tested model. The tested model is ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__customers"
+     },
+     ". Its children are ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "int_orders__enriched"
+     },
+     "; their children are ",
+     {
+      "t": "code",
+      "v": "customer_segments"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "fct_monthly_revenue"
+     },
+     ". All four are skipped. ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " does not depend on the customers model, so it is built normally."
+    ]
+   }
+  ],
+  "whyWrong": [
+   {
+    "option": "A",
+    "c": [
+     "dbt only stops everything with ",
+     {
+      "t": "code",
+      "v": "--fail-fast"
+     },
+     "."
+    ]
+   },
+   {
+    "option": "B",
+    "c": [
+     "The model itself was already built: tests run ",
+     {
+      "t": "i",
+      "c": [
+       "after"
+      ]
+     },
+     " their model."
+    ]
+   },
+   {
+    "option": "D",
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", tests do cause downstream nodes to be skipped."
+    ]
+   }
+  ],
+  "review": [
+   {
+    "t": "ref",
+    "label": "ch:pipelines-clone",
+    "text": "Chapter 23",
+    "href": "/learn/ch23/"
+   },
+   " and ",
+   {
+    "t": "ref",
+    "label": "ch:data-tests",
+    "text": "Chapter 18",
+    "href": "/learn/ch18/"
+   }
+  ]
+ },
+ {
+  "id": "m1-q10",
+  "source": {
+   "kind": "mock",
+   "mock": 1,
+   "n": 10
+  },
+  "objective": "6.2",
+  "topic": 6,
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "The source table ",
+     {
+      "t": "code",
+      "v": "jaffle_shop.orders"
+     },
+     " has this freshness configuration:"
+    ]
+   },
+   {
+    "t": "code",
+    "id": "ch28-c8",
+    "lang": "yaml",
+    "text": "      - name: orders\n        loaded_at_field: _loaded_at\n        freshness:\n          warn_after: {count: 12, period: hour}\n          error_after: {count: 24, period: hour}"
+   },
+   {
+    "t": "p",
+    "c": [
+     "The most recent value of ",
+     {
+      "t": "code",
+      "v": "_loaded_at"
+     },
+     " is 15 hours old. What does ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     " report for this table?"
+    ]
+   }
+  ],
+  "options": [
+   {
+    "id": "A",
+    "c": [
+     {
+      "t": "code",
+      "v": "PASS"
+     },
+     ", because 15 hours is less than ",
+     {
+      "t": "code",
+      "v": "error_after"
+     },
+     "."
+    ]
+   },
+   {
+    "id": "B",
+    "c": [
+     {
+      "t": "code",
+      "v": "WARN"
+     }
+    ]
+   },
+   {
+    "id": "C",
+    "c": [
+     {
+      "t": "code",
+      "v": "ERROR STALE"
+     }
+    ]
+   },
+   {
+    "id": "D",
+    "c": [
+     "Nothing: freshness is only checked inside ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "."
+    ]
+   }
+  ],
+  "key": "B",
+  "keyRaw": "B",
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why B is correct."
+      ]
+     },
+     " dbt takes the most recent ",
+     {
+      "t": "code",
+      "v": "_loaded_at"
+     },
+     " and compares its age with the thresholds. 15 hours is older than ",
+     {
+      "t": "code",
+      "v": "warn_after"
+     },
+     " (12 hours) but younger than ",
+     {
+      "t": "code",
+      "v": "error_after"
+     },
+     " (24 hours), so the status is ",
+     {
+      "t": "code",
+      "v": "WARN"
+     },
+     ". We reproduced it: ",
+     {
+      "t": "code",
+      "v": "WARN freshness of jaffle_shop.orders"
+     },
+     ", and ",
+     {
+      "t": "code",
+      "v": "target/sources.json"
+     },
+     " shows the status ",
+     {
+      "t": "code",
+      "v": "warn"
+     },
+     "."
+    ]
+   }
+  ],
+  "whyWrong": [
+   {
+    "option": "A",
+    "c": [
+     "The warning threshold is already passed."
+    ]
+   },
+   {
+    "option": "C",
+    "c": [
+     {
+      "t": "code",
+      "v": "ERROR STALE"
+     },
+     " needs data older than 24 hours."
+    ]
+   },
+   {
+    "option": "D",
+    "c": [
+     "Freshness has its own command, ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     "; ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " does not check it."
+    ]
+   }
+  ],
+  "review": [
+   {
+    "t": "ref",
+    "label": "ch:freshness-exposures",
+    "text": "Chapter 21",
+    "href": "/learn/ch21/"
+   }
+  ]
+ },
+ {
+  "id": "m1-q11",
+  "source": {
+   "kind": "mock",
+   "mock": 1,
+   "n": 11
+  },
+  "objective": "1.4",
+  "topic": 1,
+  "format": "match",
+  "formatLabel": "Matching",
+  "stem": [
+   {
+    "t": "p",
+    "c": [
+     "Match each command (1–6) with what it does (A–F)."
+    ]
+   }
+  ],
+  "match": {
+   "left": [
+    {
+     "id": "1",
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt seed"
+      }
+     ]
+    },
+    {
+     "id": "2",
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt snapshot"
+      }
+     ]
+    },
+    {
+     "id": "3",
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt show"
+      }
+     ]
+    },
+    {
+     "id": "4",
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt docs generate"
+      }
+     ]
+    },
+    {
+     "id": "5",
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt compile"
+      }
+     ]
+    },
+    {
+     "id": "6",
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt build"
+      }
+     ]
+    }
+   ],
+   "right": [
+    {
+     "id": "A",
+     "c": [
+      "Renders the Jinja of the models into plain SQL files in ",
+      {
+       "t": "code",
+       "v": "target/compiled"
+      },
+      ", without creating any table or view."
+     ]
+    },
+    {
+     "id": "B",
+     "c": [
+      "Runs models, tests, seeds and snapshots in DAG order, in one command."
+     ]
+    },
+    {
+     "id": "C",
+     "c": [
+      "Loads the CSV files of the ",
+      {
+       "t": "code",
+       "v": "seeds/"
+      },
+      " folder into tables."
+     ]
+    },
+    {
+     "id": "D",
+     "c": [
+      "Compares the current source rows with the stored history and records the changed rows with validity dates."
+     ]
+    },
+    {
+     "id": "E",
+     "c": [
+      "Runs the query of one model and prints a few rows in the terminal; nothing is created."
+     ]
+    },
+    {
+     "id": "F",
+     "c": [
+      "Writes ",
+      {
+       "t": "code",
+       "v": "catalog.json"
+      },
+      " (and the files of the documentation website) by asking the warehouse for column information."
+     ]
+    }
+   ]
+  },
+  "key": {
+   "1": "C",
+   "2": "D",
+   "3": "E",
+   "4": "F",
+   "5": "A",
+   "6": "B"
+  },
+  "keyRaw": "1-C, 2-D, 3-E, 4-F, 5-A, 6-B",
+  "explanation": [
+   {
+    "t": "list",
+    "kind": "ul",
+    "items": [
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "1-C"
+          ]
+         },
+         " ",
+         {
+          "t": "code",
+          "v": "dbt seed"
+         },
+         " loads the CSV files of ",
+         {
+          "t": "code",
+          "v": "seeds/"
+         },
+         " (",
+         {
+          "t": "code",
+          "v": "country_regions.csv"
+         },
+         " became a table)."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "2-D"
+          ]
+         },
+         " ",
+         {
+          "t": "code",
+          "v": "dbt snapshot"
+         },
+         " records changes over time, with ",
+         {
+          "t": "code",
+          "v": "dbt_valid_from"
+         },
+         " and ",
+         {
+          "t": "code",
+          "v": "dbt_valid_to"
+         },
+         "."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "3-E"
+          ]
+         },
+         " ",
+         {
+          "t": "code",
+          "v": "dbt show"
+         },
+         " runs the query and prints rows; it creates nothing."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "4-F"
+          ]
+         },
+         " ",
+         {
+          "t": "code",
+          "v": "dbt docs generate"
+         },
+         " writes ",
+         {
+          "t": "code",
+          "v": "catalog.json"
+         },
+         " and ",
+         {
+          "t": "code",
+          "v": "index.html"
+         },
+         " in ",
+         {
+          "t": "code",
+          "v": "target/"
+         },
+         "."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "5-A"
+          ]
+         },
+         " ",
+         {
+          "t": "code",
+          "v": "dbt compile"
+         },
+         " only renders Jinja into ",
+         {
+          "t": "code",
+          "v": "target/compiled"
+         },
+         "."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "6-B"
+          ]
+         },
+         " ",
+         {
+          "t": "code",
+          "v": "dbt build"
+         },
+         " runs models, tests, seeds and snapshots (and unit tests) in DAG order."
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "review": [
+   {
+    "t": "ref",
+    "label": "ch:commands-selection",
+    "text": "Chapter 16",
+    "href": "/learn/ch16/"
+   }
+  ]
+ }
+]

@@ -58,6 +58,7 @@ const labHref = lesson.labs[0] ? `${url(routes.lesson(lesson, chapter.id))}#${le
       </ol>
     )}
     <OsSwitch />
+    <button type="button" class="btn btn-quiet btn-small focus-btn" data-focus-toggle aria-pressed="false" title="Hide the menus to read (Esc to leave)">Focus</button>
   </div>
 
   <div class:list={['lesson', { 'has-work': hasWork }]} data-lesson={lesson.id} data-chapter={chapter.id}>
@@ -134,6 +135,19 @@ const labHref = lesson.labs[0] ? `${url(routes.lesson(lesson, chapter.id))}#${le
     import '../../../../lib/lesson-progress';
     import '../../../../lib/verify/ui';
     import '../../../../lib/hints';
+    // Focus mode: only the lesson (and its workspace) on screen; remembered in this browser, Esc leaves it
+    const root = document.documentElement;
+    const focusBtn = document.querySelector<HTMLButtonElement>('[data-focus-toggle]');
+    const setFocus = (on: boolean) => {
+      if (on) root.dataset.focus = 'on'; else delete root.dataset.focus;
+      focusBtn?.setAttribute('aria-pressed', String(on));
+      try { if (on) localStorage.setItem('mc:focus', 'on'); else localStorage.removeItem('mc:focus'); } catch { /* not saved */ }
+    };
+    let saved = false;
+    try { saved = localStorage.getItem('mc:focus') === 'on'; } catch { /* storage blocked */ }
+    setFocus(saved);
+    focusBtn?.addEventListener('click', () => setFocus(root.dataset.focus !== 'on'));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && root.dataset.focus === 'on' && !(e.target as HTMLElement).closest('input, textarea, [contenteditable], .cm-editor, dialog')) setFocus(false); });
     // "Run in workspace" only where a SQL workspace is on the page
     if (!document.querySelector('[data-sql-workspace]')) document.querySelectorAll('[data-send-to-workspace]').forEach((b) => b.remove());
   </script>
@@ -151,6 +165,16 @@ const labHref = lesson.labs[0] ? `${url(routes.lesson(lesson, chapter.id))}#${le
   .dots a[data-state="understood"] { background: var(--ink); }
   .dots a[data-current] { background: var(--accent); }
   .lessonbar :global(.seg) { margin-left: auto; }
+  .focus-btn { flex: none; }
+  /* focus mode (computers and tablets): the site menu, the outline and the footer step aside */
+  @media (min-width: 701px) {
+    :global(:root[data-focus="on"] .site-header nav), :global(:root[data-focus="on"] .site-footer) { display: none; }
+    :global(:root[data-focus="on"]) .outline { display: none; }
+    :global(:root[data-focus="on"]) .lesson { grid-template-columns: minmax(0, 1fr); max-width: 980px; }
+    :global(:root[data-focus="on"]) .lesson.has-work { grid-template-columns: minmax(0, 1fr) minmax(380px, 460px); max-width: 1500px; }
+  }
+  @media (min-width: 701px) and (max-width: 1080px) { :global(:root[data-focus="on"]) .lesson.has-work { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 700px) { .focus-btn { display: none; } }
   .dots + :global(.seg) { margin-left: 0; }
 
   .lesson { display: grid; grid-template-columns: 260px minmax(0, 1fr); max-width: 1320px; margin-inline: auto; }

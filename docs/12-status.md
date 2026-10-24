@@ -1,7 +1,8 @@
 # 12 — Status (2026-10-24, end of the build and of the review fixes)
 
-The code is in a public repository, https://github.com/welldonebyme/model-citizen (commits under the GitHub
-account `welldonebyme`, with its no-reply email). The site itself is not published yet (GitHub Pages is off).
+Live site: https://welldonebyme.github.io/model-citizen/ (GitHub Pages, published by `.github/workflows/deploy.yml`
+on every push to `main`). Code: https://github.com/welldonebyme/model-citizen (commits under the GitHub account
+`welldonebyme`, with its no-reply email). The book PDF is not part of the site.
 Quality-gate results are in `13-qa-report.md`; decisions in `10-decisions.md`; book corrections in
 `11-book-errata.md` (originals saved in `reference/book-snapshot-2026-10-24/`).
 
@@ -27,7 +28,7 @@ Quality-gate results are in `13-qa-report.md`; decisions in `10-decisions.md`; b
 - **Settings**: plan and dates, OS, theme, text size, progress file export/import, offline copy (opt-in).
 
 ## Needs Adnane's explicit OK (not done on purpose)
-1. **Publishing** the site (turning on GitHub Pages) and sharing its link.
+1. (Done 2026-10-24: the site is published on GitHub Pages, at Adnane's request.)
 2. (Done 2026-10-24: public repository created; the Windows CI job `.github/workflows/kit-matrix.yml` runs there.)
 3. **Shipping the book PDF** with the site: it has Adnane's name and local paths. Build with
    `MC_INCLUDE_PDF=1` to include it; without it the Reference page simply does not offer the PDF.

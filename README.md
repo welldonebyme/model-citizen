@@ -5,13 +5,15 @@ A free, interactive course to prepare the **dbt Analytics Engineering Certificat
 exam formats (including DOMC). It works on Windows, macOS and Linux, in the browser, with no account: progress
 stays in the learner's browser.
 
+**Live site: https://welldonebyme.github.io/model-citizen/**
+
 > Unofficial study guide. Not affiliated with or endorsed by dbt Labs. dbt is a trademark of dbt Labs, Inc.
 
 ## What is inside
 
 | Folder | What it is |
 |---|---|
-| `site/` | The website: Astro + React, static, built for GitHub Pages (`/model-citizen/`) |
+| `site/` | The website: Astro + React, static; `.github/workflows/deploy.yml` builds and publishes it on every push to `main` |
 | `converter/` | Turns the course book (LaTeX) into the site's content, with acceptance checks against the book |
 | `converter/reference/` | The practice and capstone kits (macOS, Windows, WSL setup scripts) and their tests |
 | `reference/` | Verification material: content inventory, recorded dbt outputs used as golden tests |

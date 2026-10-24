@@ -1,0 +1,60 @@
+# Builds the website and publishes it on GitHub Pages: https://welldonebyme.github.io/model-citizen/
+# Runs on every push to main (and by hand from the Actions tab). The book PDF is not included (MC_INCLUDE_PDF unset).
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# one deployment at a time; a newer push waits for the running one instead of cancelling it mid-way
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: site/.nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      # the in-browser dbt engine (dbt-core, dbt-duckdb, Pyodide parts) is downloaded at build time, checked
+      # against pinned SHA-256 sums; keep the downloads between runs
+      - uses: actions/cache@v4
+        with:
+          path: site/.cache
+          key: dbt-engine-${{ hashFiles('site/scripts/dbt/**', 'site/src/lib/dbt/runtime/mc_dbt.py') }}
+
+      - run: npm ci --no-audit --no-fund
+
+      # astro build + search index (pagefind) + offline file list; SITE_URL and SITE_BASE default to this repository
+      - run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

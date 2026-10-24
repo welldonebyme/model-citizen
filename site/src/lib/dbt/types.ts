@@ -1,6 +1,6 @@
 // Shared types of "dbt in the browser": presets (public/presets/dbt/index.json), terminal output, worker protocol.
 
-export type PresetStep = { run: string } | { checkout: string; bundle: string };
+export type PresetStep = { run: string } | { checkout: string; bundle: string; label?: string };
 
 export interface Preset {
   id: string;              // "ch07-start"

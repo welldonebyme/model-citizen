@@ -212,9 +212,9 @@ export class Session {
     for (let i = 0; i < n; i++) {
       const step = preset.steps[i];
       if ('checkout' in step) {
-        const label = `git checkout ${step.checkout}`;
+        const label = step.label ? `files: ${step.label}` : `git checkout ${step.checkout}`;
         onStep?.(i + 1, n, label);
-        io.cmd?.(label + '   (files of the reference project at this tag)');
+        io.cmd?.(step.label ? label : label + '   (files of the reference project at this tag)');
         const dir = this.course + '/' + project.dir;
         if (this.exists(dir)) for (const name of this.readdir(dir)) if (!KEEP_ON_CHECKOUT.has(name)) this.rmrf(dir + '/' + name);
         this.fs.mkdirTree(dir);

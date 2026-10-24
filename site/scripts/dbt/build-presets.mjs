@@ -164,15 +164,18 @@ const shopData_ = (n, state) => {
 };
 const shopProd = (n, state) => (state === 'end' ? n >= 13 : n >= 14);
 
+// "main before the feature" (m13 log): the files of m13 (selectors.yml with `nightly`, the ci target) with the
+// models of m12 (fct_sessions without is_bounce). Production is built from it; the feature then shows in state:modified.
+const PROD_BASE = { checkout: 'm13-before-feature', bundle: 'shopflow/files-m13-before-feature.json', label: 'm13 without the feature: fct_sessions without is_bounce (main before the feature)' };
+
 function shopSteps(filesN, data, prod, info) {
   const steps = [{ run: CD_DATA }, { run: SHOP_SETUP }];
   if (data.fresh1) steps.push({ run: 'duckdb shopflow.duckdb < updates/fresh_load.sql' });
   if (filesN == null) return steps;
-  // with production, the history is built on the code of m12 ("main before the feature"), then the files move on
-  const histN = prod ? 12 : filesN;
-  const hist = info[mtag(histN)];
+  // with production, the history is built on "main before the feature", then the files move on
+  const hist = prod ? info.m13 : info[mtag(filesN)];
   const buildFor = (t) => (t.unitTests ? 'dbt build --exclude-resource-type unit_test' : 'dbt build');
-  steps.push({ checkout: mtag(histN), bundle: `shopflow/files-${mtag(histN)}.json` }, { run: CD_SHOP });
+  steps.push(prod ? { ...PROD_BASE } : { checkout: mtag(filesN), bundle: `shopflow/files-${mtag(filesN)}.json` }, { run: CD_SHOP });
   if (hist.packages) steps.push({ run: 'dbt deps' });
   if (data.day2 && hist.snapshots) steps.push({ run: 'dbt snapshot' }); // day 1 version
   if (data.day2) steps.push({ run: CD_DATA }, { run: 'duckdb shopflow.duckdb < updates/day2.sql' }, { run: CD_SHOP });
@@ -180,11 +183,8 @@ function shopSteps(filesN, data, prod, info) {
   if (data.day3) steps.push({ run: CD_DATA }, { run: 'duckdb shopflow.duckdb < updates/day3.sql' }, { run: CD_SHOP });
   if (prod) {
     steps.push({ run: 'dbt build --target prod --selector nightly' }, { run: 'mkdir -p prod-artifacts' },
-      { run: 'cp target/manifest.json target/run_results.json prod-artifacts/' });
-    if (filesN !== histN) {
-      steps.push({ checkout: mtag(filesN), bundle: `shopflow/files-${mtag(filesN)}.json` });
-      if (info[mtag(filesN)].packages && !hist.packages) steps.push({ run: 'dbt deps' });
-    }
+      { run: 'cp target/manifest.json target/run_results.json prod-artifacts/' },
+      { checkout: mtag(filesN), bundle: `shopflow/files-${mtag(filesN)}.json` });
   }
   // m14's fresh load comes after the production build of m13
   if (data.fresh2) steps.push({ run: CD_DATA }, { run: 'duckdb shopflow.duckdb < updates/fresh_load.sql' }, { run: CD_SHOP });
@@ -295,6 +295,13 @@ async function main() {
       minfo[t].profile = key;
       subject[t] = execFileSync('git', ['-C', SHOP_REPO, 'log', '-1', '--format=%s', t], { encoding: 'utf8' }).trim().replace(/^m\d\d:\s*/, '');
     }
+    // the production base of m13 (see PROD_BASE)
+    {
+      const m12 = new Map(gitTagFiles(SHOP_REPO, 'm12').map((e) => [e.name, e.data]));
+      const base = gitTagFiles(SHOP_REPO, 'm13').map((e) => (e.name.startsWith('models/') && m12.has(e.name) ? { name: e.name, data: m12.get(e.name) } : e))
+        .filter((e) => !e.name.startsWith('models/') || m12.has(e.name));
+      writeJson(PROD_BASE.bundle, { tag: PROD_BASE.checkout, files: encodeFiles(base) });
+    }
     for (let n = 0; n <= 14; n++) {
       for (const state of ['start', 'end']) {
         const filesN = state === 'start' ? (n === 0 ? null : n - 1) : n;
@@ -310,16 +317,16 @@ async function main() {
         if (data.fresh2) dataText.push('fresh_load.sql again (m14)');
         const summary = [
           t ? `Project files: the reference solution at tag ${t}${state === 'start' ? ` (the end of milestone ${t})` : ''}.` : 'No project yet: you create it with dbt init shopflow_dbt --skip-profile-setup.',
-          `${dataText.join(', then ')}.${data.day2 && (prod ? minfo.m12 : info)?.snapshots ? ' Snapshots have their history.' : ''}`,
+          `${dataText.join(', then ')}.${data.day2 && (prod ? minfo.m13 : info)?.snapshots ? ' Snapshots have their history.' : ''}`,
         ];
         if (t) summary.push(`Models already built with ${info.unitTests ? 'dbt build --exclude-resource-type unit_test' : 'dbt build'}${info.packages ? ' (dbt_utils installed from a saved copy)' : ''}.`);
-        if (prod) summary.push('Production built from the code of m12 (main before the feature) with --selector nightly, artifacts in prod-artifacts/.');
+        if (prod) summary.push('Production built from main before the feature (m13 without is_bounce) with --selector nightly, artifacts in prod-artifacts/.');
         const profileKey = (info ?? minfo.m00).profile;
         presets.push(finishPreset({
           id: `${mtag(n)}-${state}`, project: 'shopflow', chapter: 26, milestone: mtag(n), label: `Capstone ${mtag(n)}`, state,
           title: `Capstone milestone ${mtag(n)}, ${state}`, chapterTitle: subject[mtag(n)] ?? '',
           filesTag: t, filesBundle: info ? info.bundle.path : null, profile: profileKey,
-          packages: !!info?.packages, python: !!info?.python || (prod && minfo.m12.python), cwd: t ? '~/dbt-course/shopflow_dbt' : '~/dbt-course',
+          packages: !!info?.packages, python: !!info?.python || (prod && minfo.m13.python), cwd: t ? '~/dbt-course/shopflow_dbt' : '~/dbt-course',
           summary, steps,
         }, [info?.bundle.sha256, dataBundle.sha256, packagesBundle.sha256, shopProfiles[profileKey]]));
       }

@@ -81,7 +81,13 @@
    {
     "t": "p",
     "c": [
-     "Without ",
+     {
+      "t": "b",
+      "c": [
+       "B."
+      ]
+     },
+     " Without ",
      {
       "t": "code",
       "v": "schema"
@@ -146,7 +152,13 @@
    {
     "t": "p",
     "c": [
-     "For example ",
+     {
+      "t": "b",
+      "c": [
+       "table."
+      ]
+     },
+     " For example ",
      {
       "t": "code",
       "v": "source('stripe', 'payments')"
@@ -207,6 +219,13 @@
    {
     "t": "p",
     "c": [
+     {
+      "t": "b",
+      "c": [
+       "Line 5."
+      ]
+     },
+     " ",
      {
       "t": "code",
       "v": "raw_payments.refunds"
@@ -300,7 +319,13 @@
    {
     "t": "p",
     "c": [
-     "Renaming and casting are the job of staging. B and D are business logic and aggregation (marts or intermediate models). E: staging models read one source table each, not other staging models."
+     {
+      "t": "b",
+      "c": [
+       "A and C."
+      ]
+     },
+     " Renaming and casting are the job of staging. B and D are business logic and aggregation (marts or intermediate models). E: staging models read one source table each, not other staging models."
     ]
    }
   ]
@@ -399,7 +424,19 @@
    "4": "a"
   },
   "keyRaw": "1-b, 2-c, 3-d, 4-a.",
-  "explanation": []
+  "explanation": [
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "1-b, 2-c, 3-d, 4-a."
+      ]
+     }
+    ]
+   }
+  ]
  },
  {
   "id": "q-ch07-07",
@@ -522,7 +559,13 @@
    {
     "t": "p",
     "c": [
-     "Declare the table, verify it exists through ",
+     {
+      "t": "b",
+      "c": [
+       "B, D, A, E, C."
+      ]
+     },
+     " Declare the table, verify it exists through ",
      {
       "t": "code",
       "v": "source()"
@@ -601,7 +644,13 @@
    {
     "t": "p",
     "c": [
-     "B: ",
+     {
+      "t": "b",
+      "c": [
+       "YES, YES, NO, NO."
+      ]
+     },
+     " B: ",
      {
       "t": "code",
       "v": "ref()"
@@ -647,11 +696,11 @@
   ]
  },
  {
-  "id": "q-ch07-16",
+  "id": "q-ch07-17",
   "source": {
    "kind": "chapter",
    "chapter": 7,
-   "n": 16
+   "n": 17
   },
   "format": "domc",
   "formatLabel": "DOMC — judge each option YES/NO independently",
@@ -710,7 +759,13 @@
    {
     "t": "p",
     "c": [
-     "A hard-coded name creates no edge, so Catalog cannot connect the two models."
+     {
+      "t": "b",
+      "c": [
+       "YES, YES, NO, YES."
+      ]
+     },
+     " A hard-coded name creates no edge, so Catalog cannot connect the two models."
     ]
    }
   ]
@@ -743,8 +798,7 @@
   ],
   "key": {
    "accepted": [
-    "intersection",
-    "and"
+    "Intersection"
    ]
   },
   "keyRaw": "Intersection (\"and\").",
@@ -752,7 +806,13 @@
    {
     "t": "p",
     "c": [
-     "A space would mean union (\"or\"); the comma must not be followed by a space."
+     {
+      "t": "b",
+      "c": [
+       "Intersection"
+      ]
+     },
+     " (\"and\"). A space would mean union (\"or\"); the comma must not be followed by a space."
     ]
    }
   ]
@@ -865,7 +925,13 @@
    {
     "t": "p",
     "c": [
-     "Eager is the most inclusive and the default; cautious is the most exclusive one that still adds tests; empty adds none."
+     {
+      "t": "b",
+      "c": [
+       "1-c, 2-d, 3-b, 4-a."
+      ]
+     },
+     " Eager is the most inclusive and the default; cautious is the most exclusive one that still adds tests; empty adds none."
     ]
    }
   ]
@@ -962,7 +1028,13 @@
    {
     "t": "p",
     "c": [
-     "Parents first (with their data tests right after them), then the unit test of ",
+     {
+      "t": "b",
+      "c": [
+       "e, c, b, d, a."
+      ]
+     },
+     " Parents first (with their data tests right after them), then the unit test of ",
      {
       "t": "code",
       "v": "fct_orders"
@@ -1013,6 +1085,13 @@
    {
     "t": "p",
     "c": [
+     {
+      "t": "b",
+      "c": [
+       "Line 3."
+      ]
+     },
+     " ",
      {
       "t": "code",
       "v": "dbt seed"
@@ -1108,7 +1187,13 @@
    {
     "t": "p",
     "c": [
-     "Objects are created with 0 rows. Seeds load fully (",
+     {
+      "t": "b",
+      "c": [
+       "YES, NO, YES, NO, NO."
+      ]
+     },
+     " Objects are created with 0 rows. Seeds load fully (",
      {
       "t": "code",
       "v": "INSERT 6"
@@ -1164,7 +1249,16 @@
    {
     "t": "p",
     "c": [
-     "(",
+     {
+      "t": "b",
+      "c": [
+       {
+        "t": "code",
+        "v": "-x"
+       }
+      ]
+     },
+     " (",
      {
       "t": "code",
       "v": "dbt build -x"
@@ -1243,7 +1337,13 @@
    {
     "t": "p",
     "c": [
-     "Freshness is a separate command. Unit tests run before their model. A ",
+     {
+      "t": "b",
+      "c": [
+       "NO, YES, NO, YES."
+      ]
+     },
+     " Freshness is a separate command. Unit tests run before their model. A ",
      {
       "t": "code",
       "v": "warn"
@@ -1410,6 +1510,89 @@
       "v": "with __dbt__cte__int_payments__successful as (...)"
      },
      ", and no object with that name exists in the schema."
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why the others are wrong."
+      ]
+     }
+    ]
+   },
+   {
+    "t": "list",
+    "kind": "ul",
+    "items": [
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "A"
+          ]
+         },
+         " — ",
+         "This describes the ",
+         {
+          "t": "code",
+          "v": "view"
+         },
+         " materialization, not ",
+         {
+          "t": "code",
+          "v": "ephemeral"
+         },
+         "."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "B"
+          ]
+         },
+         " — ",
+         "dbt creates no temporary table; the code only lives inside the CTE."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "C"
+          ]
+         },
+         " — ",
+         "One ",
+         {
+          "t": "code",
+          "v": "ref()"
+         },
+         " is enough. Ephemeral is even recommended for light logic used by only one or two models."
+        ]
+       }
+      ]
+     }
     ]
    }
   ],
@@ -1650,6 +1833,82 @@
      },
      ")."
     ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why the others are wrong."
+      ]
+     }
+    ]
+   },
+   {
+    "t": "list",
+    "kind": "ul",
+    "items": [
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "A"
+          ]
+         },
+         " — ",
+         {
+          "t": "code",
+          "v": "unique"
+         },
+         " would fail: many payments share the same payment method."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "C"
+          ]
+         },
+         " — ",
+         {
+          "t": "code",
+          "v": "not_null"
+         },
+         " only checks for NULL; it says nothing about the orders table."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "E"
+          ]
+         },
+         " — ",
+         "A unit test checks SQL logic on invented rows, not the real data."
+        ]
+       }
+      ]
+     }
+    ]
    }
   ],
   "whyWrong": [
@@ -1743,9 +2002,15 @@
     "text": "select * from {{ source('_______', '_______') }}"
    }
   ],
+  "blanks": 2,
   "key": {
-   "accepted": [
-    "shop, orders_raw"
+   "blanks": [
+    [
+     "shop"
+    ],
+    [
+     "orders_raw"
+    ]
    ]
   },
   "keyRaw": "\\code{shop}, \\code{orders\\_raw}",
@@ -2096,6 +2361,105 @@
       "v": "--resource-type"
      },
      " is not used)."
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why the others are wrong."
+      ]
+     }
+    ]
+   },
+   {
+    "t": "list",
+    "kind": "ul",
+    "items": [
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "A"
+          ]
+         },
+         " — ",
+         "This would be ",
+         {
+          "t": "code",
+          "v": "state:modified"
+         },
+         " without the ",
+         {
+          "t": "code",
+          "v": "+"
+         },
+         "."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "B"
+          ]
+         },
+         " — ",
+         "A ",
+         {
+          "t": "code",
+          "v": "+"
+         },
+         " ",
+         {
+          "t": "i",
+          "c": [
+           "after"
+          ]
+         },
+         " the selector adds children, not parents."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "D"
+          ]
+         },
+         " — ",
+         {
+          "t": "code",
+          "v": "stg_stripe__payments"
+         },
+         " and ",
+         {
+          "t": "code",
+          "v": "int_payments__successful"
+         },
+         " did not change and are not descendants of the modified model."
+        ]
+       }
+      ]
+     }
     ]
    }
   ],
@@ -2583,6 +2947,86 @@
      },
      ", or remove it from the SQL."
     ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why the others are wrong."
+      ]
+     }
+    ]
+   },
+   {
+    "t": "list",
+    "kind": "ul",
+    "items": [
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "B"
+          ]
+         },
+         " — ",
+         "A contract failure is an error, not a warning."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "C"
+          ]
+         },
+         " — ",
+         "No row was inserted; the message is about the column list (",
+         {
+          "t": "code",
+          "v": "missing in contract"
+         },
+         "), not a constraint."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "D"
+          ]
+         },
+         " — ",
+         "A contract checks column names, data types ",
+         {
+          "t": "i",
+          "c": [
+           "and"
+          ]
+         },
+         " the number of columns."
+        ]
+       }
+      ]
+     }
+    ]
    }
   ],
   "whyWrong": [
@@ -3007,6 +3451,91 @@
      },
      " does not depend on the customers model, so it is built normally."
     ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why the others are wrong."
+      ]
+     }
+    ]
+   },
+   {
+    "t": "list",
+    "kind": "ul",
+    "items": [
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "A"
+          ]
+         },
+         " — ",
+         "dbt only stops everything with ",
+         {
+          "t": "code",
+          "v": "--fail-fast"
+         },
+         "."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "B"
+          ]
+         },
+         " — ",
+         "The model itself was already built: tests run ",
+         {
+          "t": "i",
+          "c": [
+           "after"
+          ]
+         },
+         " their model."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "D"
+          ]
+         },
+         " — ",
+         "In ",
+         {
+          "t": "code",
+          "v": "dbt build"
+         },
+         ", tests do cause downstream nodes to be skipped."
+        ]
+       }
+      ]
+     }
+    ]
    }
   ],
   "whyWrong": [
@@ -3202,6 +3731,88 @@
       "v": "warn"
      },
      "."
+    ]
+   },
+   {
+    "t": "p",
+    "c": [
+     {
+      "t": "b",
+      "c": [
+       "Why the others are wrong."
+      ]
+     }
+    ]
+   },
+   {
+    "t": "list",
+    "kind": "ul",
+    "items": [
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "A"
+          ]
+         },
+         " — ",
+         "The warning threshold is already passed."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "C"
+          ]
+         },
+         " — ",
+         {
+          "t": "code",
+          "v": "ERROR STALE"
+         },
+         " needs data older than 24 hours."
+        ]
+       }
+      ]
+     },
+     {
+      "blocks": [
+       {
+        "t": "p",
+        "c": [
+         {
+          "t": "b",
+          "c": [
+           "D"
+          ]
+         },
+         " — ",
+         "Freshness has its own command, ",
+         {
+          "t": "code",
+          "v": "dbt source freshness"
+         },
+         "; ",
+         {
+          "t": "code",
+          "v": "dbt build"
+         },
+         " does not check it."
+        ]
+       }
+      ]
+     }
     ]
    }
   ],

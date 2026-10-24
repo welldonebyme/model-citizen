@@ -144,30 +144,11 @@ export function progressOf(a: Attempt, questions: Question[]): Progress {
   return { answered, unanswered, incomplete, flagged: a.flags.filter((f) => a.questionIds.includes(f)) };
 }
 
-/** Number of answer blanks in a fill-in question (inline blank nodes, else runs of ___ in code, else 1). */
+/** Number of answer inputs of a fill-in question: one per blank when the key lists blanks, else one. */
 export function blanksOf(q: Question): number {
   if (q.format !== 'fill') return 1;
-  let inline = 0;
-  let code = 0;
-  const walkInline = (c: unknown[]) => {
-    for (const n of c) {
-      if (n && typeof n === 'object') {
-        const node = n as { t: string; c?: unknown[]; en?: unknown[] };
-        if (node.t === 'blank') inline++;
-        if (Array.isArray(node.c)) walkInline(node.c);
-      }
-    }
-  };
-  const walk = (blocks: Question['stem']) => {
-    for (const b of blocks) {
-      if (b.t === 'p' || b.t === 'h') walkInline(b.c);
-      else if (b.t === 'list') b.items.forEach((it) => walk(it.blocks));
-      else if (b.t === 'callout') walk(b.blocks);
-      else if (b.t === 'code') code += (b.text.match(/_{3,}/g) ?? []).length;
-    }
-  };
-  walk(q.stem);
-  return inline || code || 1;
+  const k = q.key as { blanks?: string[][] } | null;
+  return k?.blanks?.length || 1;
 }
 
 export function scoreOf(a: Attempt, questions: Question[]): { correct: number; total: number; pct: number } {

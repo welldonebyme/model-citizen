@@ -1,5 +1,6 @@
 // Builds questions.json: real questions transcribed by hand from the book (../dbt-bible), in the
 // converter's schema (converter/SCHEMA.md). Used only until the converter writes src/generated/.
+// Multi-blank fill questions use the converter's form: blanks: N, key: { blanks: [[accepted...], ...] }.
 // Sources: Chapter 7 quiz + answers, Chapter 16 quiz + answers, Mock Exam 1 Q1-Q11 (ch28) + answers (ch29).
 // Run: node src/dev/fixtures/build-fixtures.mjs
 import { writeFileSync } from 'node:fs';
@@ -108,7 +109,7 @@ const questions = [
     explanation: [p('B: ', c('ref()'), ' becomes the relation built for the target of this command (', c('dbt_adnane'), ' in dev, ', c('prod'), ' with ', c('--target prod'), '). Raw tables are read with ', c('source()'), '. dbt finds dependencies from ', c('ref()'), ' and ', c('source()'), ' calls during parsing, not from ', c('from'), ' clauses (that is why hard-coded names are invisible).')],
   },
   {
-    ...chap(7, 16), format: 'domc', formatLabel: DOMC_CH,
+    ...chap(7, 17), format: 'domc', formatLabel: DOMC_CH,
     stem: [p('Statements about lineage in the dbt platform:')],
     options: opts(
       'The Studio IDE shows a Lineage tab for the open model.',
@@ -124,8 +125,8 @@ const questions = [
   {
     ...chap(16, 4), format: 'fill', formatLabel: 'Fill in the blank',
     stem: [p('In ', c('dbt ls -s "tag:finance,config.materialized:table"'), ', the comma between the two methods means ', blank, ': only the nodes that match both are kept.')],
-    key: { accepted: ['intersection', 'and'] }, keyRaw: 'Intersection ("and").',
-    explanation: [p('A space would mean union ("or"); the comma must not be followed by a space.')],
+    key: { accepted: ['Intersection'] }, keyRaw: 'Intersection ("and").', boldKey: ['Intersection'],
+    explanation: [p('("and"). A space would mean union ("or"); the comma must not be followed by a space.')],
   },
   {
     ...chap(16, 5), format: 'match', formatLabel: 'Matching',
@@ -186,7 +187,7 @@ const questions = [
   {
     ...chap(16, 15), format: 'fill', formatLabel: 'Fill in the blank',
     stem: [p('The one-letter short form of ', c('--fail-fast'), ' is ', blank, '.')],
-    key: { accepted: ['-x'] }, keyRaw: '-x',
+    key: { accepted: ['-x'] }, keyRaw: '-x', boldKey: [c('-x')],
     explanation: [p('(', c('dbt build -x'), '). It stops the whole command at the first failure.')],
   },
   {
@@ -248,7 +249,7 @@ const questions = [
       p('Complete the two blanks so that the model reads the raw table ', b('through this source declaration'), ' and compiles to ', c('select * from "practice"."jaffle_shop"."orders"'), '.'),
       code('ch28-c2', 'dbt', "select * from {{ source('_______', '_______') }}"),
     ],
-    key: { accepted: ['shop, orders_raw'] }, keyRaw: '\\code{shop}, \\code{orders\\_raw}',
+    blanks: 2, key: { blanks: [['shop'], ['orders_raw']] }, keyRaw: '\\code{shop}, \\code{orders\\_raw}',
     explanation: [
       p(b('Why.'), ' The full call is ', c("{{ source('shop', 'orders_raw') }}"), '. The first argument is the ', c('name'), ' of the source (', c('shop'), '), not its schema. The second is the ', c('name'), ' of the table in the YAML (', c('orders_raw'), '), not its ', c('identifier'), '. dbt then builds the real address from ', c('database'), ', ', c('schema'), ' and ', c('identifier'), ': ', c('"practice"."jaffle_shop"."orders"'), '. We checked this with ', c('dbt compile'), '.'),
       p(b('Typical wrong answers.')),
@@ -433,6 +434,25 @@ const questions = [
     review: [ref('ch:commands-selection', 'Chapter 16', '/learn/ch16/')],
   },
 ];
+
+// Like the converter, a chapter answer keeps its key in bold at the start of the explanation.
+for (const q of questions) {
+  if (q.source.kind !== 'chapter') continue;
+  const lead = q.boldKey ?? [q.keyRaw];
+  delete q.boldKey;
+  if (q.explanation.length && q.explanation[0].t === 'p') {
+    const [head, ...rest] = q.explanation[0].c;
+    q.explanation[0].c = typeof head === 'string' ? [b(...lead), ' ' + head, ...rest] : [b(...lead), ' ', head, ...rest];
+  }
+  else q.explanation.unshift(p(b(...lead)));
+}
+
+// Like the converter, a mock explanation also keeps the "Why the others are wrong." list of the book.
+for (const q of questions) {
+  if (q.source.kind !== 'mock' || !q.whyWrong) continue;
+  q.explanation.push(p(b('Why the others are wrong.')));
+  q.explanation.push({ t: 'list', kind: 'ul', items: q.whyWrong.map((w) => ({ blocks: [p(b(w.option), ' — ', ...w.c)] })) });
+}
 
 const out = fileURLToPath(new URL('./questions.json', import.meta.url));
 writeFileSync(out, JSON.stringify(questions, null, 1) + '\n');

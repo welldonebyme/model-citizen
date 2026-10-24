@@ -106,7 +106,7 @@ export function pacing(a: Attempt, outcomes: Outcome[]): Pacing {
     paceMs: PACE_MS,
     overPace: outcomes.filter((o) => o.ms > PACE_MS).length,
     checkpoints: cps,
-    slowest: outcomes.slice().sort((x, y) => y.ms - x.ms).slice(0, 5).filter((o) => o.ms > 0),
+    slowest: outcomes.filter((o) => o.ms >= 1000).sort((x, y) => y.ms - x.ms).slice(0, 5),
   };
 }
 

@@ -1,0 +1,37 @@
+---
+// Mock exam simulator: exam mode (timed, no feedback) and practice mode. Results on the same page.
+import Base from '../../../layouts/Base.astro';
+import ExamApp from '../../../components/exam/ExamApp';
+import '../../../components/quiz/quiz.css';
+import '../../../components/exam/exam.css';
+import { mock as getMock, questionSource, MOCK_SIZE } from '../../../lib/questions';
+import { objectiveLinks } from '../../../lib/exam/links';
+import { url } from '../../../lib/url';
+
+export function getStaticPaths() {
+  return [1, 2, 3].map((n) => ({ params: { mock: `mock${n}` }, props: { n } }));
+}
+const { n } = Astro.props as { n: number };
+const m = getMock(n);
+const meta = { n, title: `Mock exam ${n}`, description: m?.description ?? '', durationMin: m?.durationMin ?? 120 };
+---
+<Base title={meta.title} section="exams" chrome="plain" description={`Mock exam ${n}: a timed practice exam in the real formats of the dbt Analytics Engineering Certification.`}>
+  {m ? (
+    <ExamApp client:only="react" mock={meta} questions={m.questions} links={objectiveLinks()}
+      examsHref={url('exams/')} homeHref={url('')} settingsHref={url('settings/')} sample={questionSource.mocks === 'fixtures'} missing={Math.max(0, MOCK_SIZE - m.questions.length)}>
+      <p slot="fallback" class="fallback">Loading the mock exam…</p>
+    </ExamApp>
+  ) : (
+    <div class="missing">
+      <h1>{meta.title}</h1>
+      <p>This mock exam is not available yet: its questions are not converted from the book yet.</p>
+      <p><a href={url('exams/')}>Back to the mock exams</a></p>
+    </div>
+  )}
+  <noscript><p class="fallback">The mock exam needs JavaScript. Turn it on in your browser, then reload the page.</p></noscript>
+</Base>
+
+<style>
+  .fallback, .missing { max-width: 860px; margin: 0 auto; padding: 40px 28px; color: var(--muted); }
+  .missing h1 { margin-bottom: 12px; }
+</style>

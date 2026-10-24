@@ -9,6 +9,7 @@ import { filterBank, pick, EMPTY_FILTER, questionObjectives } from '../../src/li
 import { describeKey, describeResponse, plain } from '../../src/lib/exam/describe';
 import { clock, mss, spoken } from '../../src/lib/exam/time';
 import { grade } from '../../src/lib/scoring';
+import { playableReason } from '../../src/lib/exam/validate';
 import { db } from '../../src/lib/store/db';
 import { answerHistory, errorNoteText, recordMany, recordOutcome, ruleOf, saveRule } from '../../src/lib/exam/learning';
 
@@ -114,7 +115,7 @@ describe('exam attempt', () => {
   it('scores on submit', () => {
     let a = fresh();
     a = setResponse(a, 'm1-q01', { format: 'mc', choice: 'D' });
-    a = setResponse(a, 'm1-q03', { format: 'fill', text: 'shop, orders_raw', parts: ['shop', 'orders_raw'] } as never);
+    a = setResponse(a, 'm1-q03', { format: 'fill', text: 'shop, orders_raw', parts: ['shop', 'orders_raw'] });
     a = setResponse(a, 'm1-q05', { format: 'hotspot', line: 9 });
     let st = fromStored(a.domc['m1-q08'])!;
     for (const id of st.order) st = domcJudge(domcQ, st, rulesEarly, id !== 'B');
@@ -127,7 +128,14 @@ describe('exam attempt', () => {
   it('counts blanks of fill questions', () => {
     expect(blanksOf(byId('m1-q03'))).toBe(2);
     expect(blanksOf(byId('q-ch07-02'))).toBe(1);
-    expect(isComplete(byId('m1-q03'), { format: 'fill', text: 'shop, ', parts: ['shop', ''] } as never, undefined, 2)).toBe(false);
+    expect(isComplete(byId('m1-q03'), { format: 'fill', text: 'shop, ', parts: ['shop', ''] }, undefined, 2)).toBe(false);
+  });
+  it('grades each blank of a multi-blank fill on its own', () => {
+    const q = byId('m1-q03');
+    expect(grade(q, { format: 'fill', text: 'shop, orders_raw', parts: ['shop', ' orders_raw '] }).correct).toBe(true);
+    expect(grade(q, { format: 'fill', text: 'shop, orders', parts: ['shop', 'orders'] }).parts).toEqual({ 1: true, 2: false });
+    expect(grade(q, { format: 'fill', text: 'shop,orders_raw' }).correct).toBe(true); // no parts: split on commas
+    expect(describeKey(q)).toBe('shop, orders_raw');
   });
 });
 
@@ -177,6 +185,16 @@ describe('drill bank', () => {
     expect(filterBank(bank, { ...EMPTY_FILTER, only: 'unseen' }, { seen: new Set(bank.map((q) => q.id).slice(1)), mistakes: new Set() }).length).toBe(1);
     expect(pick(bank, 5, 3)).toEqual(pick(bank, 5, 3));
     expect(pick(bank, 0, 3).length).toBe(bank.length);
+  });
+});
+
+describe('playable questions', () => {
+  it('accepts every fixture and rejects keys the converter could not settle', () => {
+    for (const q of bank) expect(playableReason(q)).toBeNull();
+    expect(playableReason({ ...byId('q-ch07-02'), key: null } as never)).toBe('no answer key yet');
+    expect(playableReason({ ...byId('q-ch07-03'), hotspot: undefined } as never)).toBe('no code line to choose');
+    expect(playableReason({ ...byId('q-ch07-07'), key: ['A', 'B'] } as never)).toMatch(/order/);
+    expect(playableReason({ ...byId('m1-q03'), key: { blanks: [['shop'], []] } } as never)).toMatch(/blank/);
   });
 });
 

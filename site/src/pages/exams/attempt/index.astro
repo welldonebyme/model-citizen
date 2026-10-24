@@ -1,0 +1,27 @@
+---
+// Results of a past mock attempt: /exams/attempt/?id=<attempt id> (attempts are saved in this browser).
+import Base from '../../../layouts/Base.astro';
+import AttemptPage from '../../../components/exam/AttemptPage';
+import '../../../components/quiz/quiz.css';
+import '../../../components/exam/exam.css';
+import { objectiveLinks } from '../../../lib/exam/links';
+import { url } from '../../../lib/url';
+---
+<Base title="Mock exam results" section="exams" description="The results of one of your mock exams: score, topics, objectives, pacing and every question with its explanation.">
+  <div class="attempt-page">
+    <nav class="crumb" aria-label="Breadcrumb"><a href={url('exams/')}>Mock exams</a><span aria-hidden="true">/</span><b>Results</b></nav>
+    <AttemptPage client:only="react" links={objectiveLinks()} dataBase={url('exams/data/')} examsHref={url('exams/')} settingsHref={url('settings/')}>
+      <p slot="fallback" class="fallback">Loading the results…</p>
+    </AttemptPage>
+  </div>
+</Base>
+
+<style>
+  .attempt-page { padding-block: var(--s6) var(--s9); }
+  .crumb { max-width: 860px; margin: 0 auto; padding: 0 28px; display: flex; gap: 8px; font-size: var(--fs-sm); color: var(--muted); }
+  .crumb a { color: var(--muted); }
+  .crumb b { color: var(--ink); }
+  .fallback { max-width: 860px; margin: 0 auto; padding: 24px 28px; color: var(--muted); }
+  .attempt-page :global(.ex-body) { padding-top: var(--s4); }
+  @media (max-width: 860px) { .crumb, .fallback { padding-inline: 16px; } }
+</style>

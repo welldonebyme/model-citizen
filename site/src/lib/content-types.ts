@@ -56,8 +56,12 @@ export type Question = {
   options?: { id: string; c: Inline[] }[];
   match?: { left: { id: string; c: Inline[] }[]; right: { id: string; c: Inline[] }[] };
   hotspot?: { codeId: string; lines: number };
-  key: string | string[] | Record<string, string> | Record<string, boolean> | number | { accepted: string[] };
+  key: string | string[] | Record<string, string> | Record<string, boolean> | number | { accepted: string[] } | { blanks: string[][] };
   keyRaw: string;
+  /** fill in the blank with several blanks: their number (key is { blanks: accepted values per blank }) */
+  blanks?: number;
+  /** converter audit fields: 'ok' when the key was parsed with certainty */
+  keyStatus?: string; keyNote?: string;
   explanation: Block[];
   whyWrong?: { option: string; c: Inline[] }[];
   review?: Inline[];

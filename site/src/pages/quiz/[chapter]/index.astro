@@ -1,0 +1,50 @@
+---
+// Chapter quiz ("Check yourself") in the real exam formats, with instant feedback.
+import Base from '../../../layouts/Base.astro';
+import QuizApp from '../../../components/quiz/QuizApp';
+import '../../../components/quiz/quiz.css';
+import { chapterQuizzes, questionSource } from '../../../lib/questions';
+import { CHAPTER_TITLES } from '../../../lib/exam/objectives';
+import { FORMAT_NAME } from '../../../lib/exam/describe';
+import { url } from '../../../lib/url';
+
+export function getStaticPaths() {
+  return chapterQuizzes().map((c) => ({ params: { chapter: c.id }, props: { id: c.id } }));
+}
+const { id } = Astro.props as { id: string };
+const quiz = chapterQuizzes().find((c) => c.id === id)!;
+const generated = import.meta.glob('../../../generated/chapters/*.json', { eager: true, import: 'default' }) as Record<string, { id: string; title?: string }>;
+const title = Object.values(generated).find((c) => c.id === id)?.title ?? CHAPTER_TITLES[quiz.number] ?? `Chapter ${quiz.number}`;
+const formats = [...new Set(quiz.questions.map((q) => FORMAT_NAME[q.format]))];
+const lessonHref = url(`learn/${id}/`);
+---
+<Base title={`Chapter ${quiz.number} quiz`} section="path" description={`Check yourself: the ${quiz.questions.length} questions of Chapter ${quiz.number} (${title}) in the real exam formats, with feedback.`}>
+  <div class="wrap quiz-page">
+    <nav class="crumb" aria-label="Breadcrumb">
+      <a href={lessonHref}>Chapter {quiz.number}, {title}</a>
+      <span aria-hidden="true">/</span>
+      <b>Check yourself</b>
+    </nav>
+    <header class="quiz-head">
+      <h1>Check yourself: Chapter {quiz.number}</h1>
+      <p>{quiz.questions.length} questions in the real exam formats ({formats.join(', ')}). You get feedback after each answer. Your mistakes go to your error notebook and come back in your reviews.</p>
+      {questionSource.chapters === 'fixtures' && <p class="sample-note">Sample questions: the full question bank is not converted yet.</p>}
+    </header>
+    <QuizApp client:only="react" chapterNumber={quiz.number} chapterTitle={title} questions={quiz.questions} lessonHref={lessonHref}>
+      <p slot="fallback" class="loading">Loading the quiz…</p>
+    </QuizApp>
+    <noscript><p class="loading">The quiz needs JavaScript. Turn it on in your browser to answer the questions.</p></noscript>
+  </div>
+</Base>
+
+<style>
+  .quiz-page { padding-block: var(--s7) var(--s9); }
+  .crumb { display: flex; flex-wrap: wrap; gap: 8px; font-size: var(--fs-sm); color: var(--muted); margin-bottom: var(--s4); }
+  .crumb a { color: var(--muted); }
+  .crumb b { color: var(--ink); }
+  .quiz-head { max-width: 860px; margin-bottom: var(--s6); }
+  .quiz-head h1 { font-size: var(--fs-2xl); margin-bottom: var(--s3); }
+  .quiz-head p { color: var(--text); max-width: 68ch; }
+  .sample-note { display: inline-block; font-size: var(--fs-sm); padding: 4px 10px; border-radius: var(--r-chip); background: var(--warn-bg); color: var(--warn); }
+  .loading { color: var(--muted); }
+</style>

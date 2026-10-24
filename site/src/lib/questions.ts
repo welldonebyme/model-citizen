@@ -6,10 +6,12 @@
 // Islands get their questions as props or from the JSON endpoints (exams/data/, practice/drills/bank.json).
 import type { Question } from './content-types';
 import fixtureQuestions from '../dev/fixtures/questions.json';
+import { playableReason } from './exam/validate';
 
 type Json = unknown;
 const CHAPTER_FILES = import.meta.glob('../generated/questions/*.json', { eager: true, import: 'default' }) as Record<string, Json>;
 const MOCK_FILES = import.meta.glob('../generated/mocks/*.json', { eager: true, import: 'default' }) as Record<string, Json>;
+const COVERAGE_FILE = import.meta.glob('../generated/coverage.json', { eager: true, import: 'default' }) as Record<string, Json>;
 
 export interface MockMeta {
   id: string;            // "mock1"
@@ -28,8 +30,26 @@ function questionsOf(raw: Json): Question[] {
 }
 const numFromPath = (p: string) => Number((p.match(/(\d+)\.json$/) ?? [])[1]);
 
+/** Questions left out because their key cannot be graded yet (shown on the pages as a short notice). */
+export const skipped: { id: string; reason: string }[] = [];
+function playable(list: Question[]): Question[] {
+  return list.filter((q) => {
+    const why = playableReason(q);
+    if (why) skipped.push({ id: q.id, reason: why });
+    return !why;
+  });
+}
+
+/** Chapter questions get their objective from the coverage file (objective -> chapterQuestions) when it lists them. */
+const objectiveOfQuestion = new Map<string, string>();
+{
+  const cov = Object.values(COVERAGE_FILE)[0] as { objectives?: Record<string, { chapterQuestions?: string[] }> } | undefined;
+  for (const [obj, v] of Object.entries(cov?.objectives ?? {})) for (const qid of v?.chapterQuestions ?? []) if (!objectiveOfQuestion.has(qid)) objectiveOfQuestion.set(qid, obj);
+}
+const withObjective = (q: Question): Question => (q.objective || !objectiveOfQuestion.has(q.id) ? q : { ...q, objective: objectiveOfQuestion.get(q.id) });
+
 const fixtures = fixtureQuestions as unknown as Question[];
-const generatedChapters = Object.entries(CHAPTER_FILES).flatMap(([, raw]) => questionsOf(raw));
+const generatedChapters = playable(Object.entries(CHAPTER_FILES).flatMap(([, raw]) => questionsOf(raw))).map(withObjective);
 const generatedMocks = Object.entries(MOCK_FILES).map(([path, raw]) => ({ n: numFromPath(path), raw })).filter((m) => m.n >= 1);
 
 /** Where the questions come from (shown as a small notice while the real bank is not converted yet). */
@@ -37,6 +57,9 @@ export const questionSource = {
   chapters: generatedChapters.length > 0 ? 'generated' : 'fixtures',
   mocks: generatedMocks.length > 0 ? 'generated' : 'fixtures',
 } as const;
+
+/** Number of questions a mock should have (the book's mocks have 65). */
+export const MOCK_SIZE = 65;
 
 const chapterBank: Question[] = (questionSource.chapters === 'generated' ? generatedChapters : fixtures.filter((q) => q.source.kind === 'chapter'))
   .slice()
@@ -62,7 +85,7 @@ function mockMeta(n: number, raw: Json, questions: Question[]): MockMeta {
 }
 
 const mockList: MockMeta[] = questionSource.mocks === 'generated'
-  ? generatedMocks.map(({ n, raw }) => mockMeta(n, raw, questionsOf(raw))).sort((a, b) => a.n - b.n)
+  ? generatedMocks.map(({ n, raw }) => mockMeta(n, raw, playable(questionsOf(raw)))).sort((a, b) => a.n - b.n)
   : [1, 2, 3]
       .map((n) => mockMeta(n, null, fixtures.filter((q) => q.source.kind === 'mock' && q.source.mock === n)))
       .filter((m) => m.questions.length > 0);

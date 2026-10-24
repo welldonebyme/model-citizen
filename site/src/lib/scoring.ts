@@ -5,7 +5,7 @@ import type { Question } from './content-types';
 export type Response =
   | { format: 'mc'; choice: string | null }
   | { format: 'ms'; choices: string[] }
-  | { format: 'fill'; text: string }
+  | { format: 'fill'; text: string; parts?: string[] }          // parts: one value per blank (several blanks)
   | { format: 'match'; pairs: Record<string, string> }       // left id -> right id
   | { format: 'hotspot'; line: number | null }
   | { format: 'order'; order: string[] }
@@ -55,7 +55,15 @@ export function grade(q: Question, r: Response | undefined | null): Grade {
       return { correct: picked.size === key.size && [...picked].every((c) => key.has(c)), answered: true, parts };
     }
     case 'fill': {
-      const accepted = (q.key as { accepted: string[] }).accepted.map(normaliseFill);
+      const k = q.key as { accepted?: string[]; blanks?: string[][] };
+      if (k.blanks) {
+        // several blanks: each one is checked against its own accepted values
+        const values = r.parts ?? r.text.split(',');
+        const parts: Record<string, boolean> = {};
+        k.blanks.forEach((acc, i) => { parts[String(i + 1)] = acc.map(normaliseFill).includes(normaliseFill(values[i] ?? '')); });
+        return { correct: Object.values(parts).every(Boolean), answered: true, parts };
+      }
+      const accepted = (k.accepted ?? []).map(normaliseFill);
       return { correct: accepted.includes(normaliseFill(r.text)), answered: true };
     }
     case 'match': {

@@ -1,0 +1,38 @@
+---
+// Mock exams: the three full mocks of the book, your attempts and the history of your scores.
+import Base from '../../layouts/Base.astro';
+import ExamsIndex from '../../components/exam/ExamsIndex';
+import '../../components/exam/exam.css';
+import { mock as getMock, questionSource } from '../../lib/questions';
+import { url } from '../../lib/url';
+
+const THEMES: Record<number, string> = {
+  1: 'Standard difficulty, close to the real exam. Scenarios use the practice project jaffle_dbt.',
+  2: 'Scenario-heavy: logs, compiled SQL, YAML errors and run results, for the company RideNow.',
+  3: 'The hardest one: edge cases, defaults and precedence, for the company StreamBox.',
+};
+const cards = [1, 2, 3].map((n) => {
+  const m = getMock(n);
+  return { n, title: `Mock exam ${n}`, description: THEMES[n], count: m?.questions.length ?? 0, minutes: m?.durationMin ?? 120, available: !!m, href: url(`exams/mock${n}/`) };
+});
+---
+<Base title="Mock exams" section="exams" description="Three timed mock exams in the real formats of the dbt Analytics Engineering Certification, with results per topic and objective.">
+  <div class="wrap exams-page">
+    <header class="head">
+      <h1>Mock exams</h1>
+      <p>Three full practice exams from the book, in the real formats, with a 120-minute timer. Take them in exam mode: no notes, no help, one question per screen. Then read every explanation, also for the questions you got right.</p>
+      {questionSource.mocks === 'fixtures' && <p class="sample-note">Sample questions: the full question bank is not converted yet.</p>}
+    </header>
+    <ExamsIndex client:only="react" mocks={cards} attemptHref={url('exams/attempt/')}>
+      <p slot="fallback" class="fallback">Loading your attempts…</p>
+    </ExamsIndex>
+  </div>
+</Base>
+
+<style>
+  .exams-page { padding-block: var(--s7) var(--s9); }
+  .head { max-width: 760px; margin-bottom: var(--s6); }
+  .head h1 { margin-bottom: var(--s3); }
+  .sample-note { display: inline-block; font-size: var(--fs-sm); padding: 4px 10px; border-radius: var(--r-chip); background: var(--warn-bg); color: var(--warn); }
+  .fallback { color: var(--muted); }
+</style>

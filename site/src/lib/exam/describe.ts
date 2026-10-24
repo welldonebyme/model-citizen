@@ -66,7 +66,11 @@ export function describeKey(q: Question): string {
   switch (q.format) {
     case 'mc': return String(k);
     case 'ms': return (k as string[]).join(' and ');
-    case 'fill': return (k as { accepted: string[] }).accepted.join(' or ');
+    case 'fill': {
+      const f = k as { accepted?: string[]; blanks?: string[][] };
+      if (f.blanks) return f.blanks.map((acc) => acc.join(' or ')).join(', ');
+      return (f.accepted ?? []).join(' or ');
+    }
     case 'match': return Object.entries(k as Record<string, string>).map(([l, r]) => `${l}-${r}`).join(', ');
     case 'hotspot': return `Line ${k}`;
     case 'order': return (k as string[]).join(', ');

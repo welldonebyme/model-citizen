@@ -5,6 +5,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db, getSettings, saveSettings, today, streakFrom, type Rhythm, type Settings } from '../../lib/store/db';
 import { calendar, mission, readiness, schedule, studyDayIndex, RHYTHMS, STANDARD_WEEKS, type PlanLesson, type MissionItem } from '../../lib/planner';
 import { url } from '../../lib/url';
+import { masteryByObjective, masteryLevel, mocksAt80, quizzesAt80 } from '../../lib/progress-summary';
 
 export interface TodayProps {
   lessons: PlanLesson[];
@@ -37,6 +38,7 @@ export default function TodayApp(p: TodayProps) {
   const activity = useLiveQuery(() => db().activity.toArray(), [], []);
   const answers = useLiveQuery(() => db().answers.toArray(), [], []);
   const attempts = useLiveQuery(() => db().examAttempts.where('status').equals('finished').toArray(), [], []);
+  const quizRows = useLiveQuery(() => db().progress.where('kind').equals('chapter').toArray(), [], []);
   const capstoneDone = useLiveQuery(() => db().progress.where('kind').equals('capstone').count(), [], 0);
   const notes = useLiveQuery(() => db().notes.where('kind').equals('error').count(), [], 0);
 
@@ -55,27 +57,19 @@ export default function TodayApp(p: TodayProps) {
   const week = Math.floor(dayIdx / 6) + 1;
   const day = (dayIdx % 6) + 1;
 
-  // quiz results per chapter: best score in chapter-quiz mode
-  const quizBest = new Map<string, { correct: number; total: number }>();
-  const byQ = new Map<string, boolean>();
-  for (const a of answers) if (a.mode === 'quiz') byQ.set(a.qid, a.correct || (byQ.get(a.qid) ?? false));
-  for (const [qid, ok] of byQ) {
-    const m = qid.match(/^q-(ch\d+)-/);
-    if (!m) continue;
-    const s = quizBest.get(m[1]) ?? { correct: 0, total: 0 };
-    s.total++; if (ok) s.correct++;
-    quizBest.set(m[1], s);
-  }
-  const quizDone = new Set([...quizBest.keys()]);
+  // chapters whose quiz was started (a finished quiz, or any answer given in quiz mode)
+  const quizDone = new Set<string>(quizRows.map((r) => r.ref));
+  for (const a of answers) { const c = a.mode === 'quiz' && a.qid.match(/^q-(ch\d+)-/); if (c) quizDone.add(c[1]); }
   // Reading budget per day = the course's reading time spread over the plan's study days (the book: about 40 of 120 minutes).
   const totalReading = p.lessons.reduce((n, l) => n + l.minutes, 0);
   const readingBudget = Math.max(30, Math.round(totalReading / Math.max(1, days.length) / 5) * 5);
   const m = mission({ days, dayIndex: dayIdx, done: doneLessons, dueCards, lessons: lessonMap, chapterQuiz, quizDone, labTitles, readingBudget });
 
-  const quizzesOk = [...chapterQuiz.entries()].filter(([c, n]) => { const s = quizBest.get(c); return s && s.total >= n && s.correct / n >= 0.8; }).length;
-  const mocksOk = new Set(attempts.filter((a) => a.mode === 'exam' && (a.score?.pct ?? 0) >= 80).map((a) => a.mock)).size;
+  // the same numbers as the dashboard (lib/progress-summary)
+  const quizzes = quizzesAt80(quizRows, answers, chapterQuiz);
+  const mocksOk = mocksAt80(attempts);
   const r = readiness({
-    quizzes: { ok: quizzesOk, total: chapterQuiz.size },
+    quizzes: { ok: quizzes.ok, total: quizzes.total },
     capstone: { ok: capstoneDone, total: p.capstoneMilestones },
     mocks: { ok: Math.min(2, mocksOk), total: 2 },
     notebook: { reread: !!settings.notebookReread, notes },
@@ -84,18 +78,9 @@ export default function TodayApp(p: TodayProps) {
   const streak = streakFrom(activity.filter((a) => a.events > 0).map((a) => a.date));
   const minutesToday = activity.find((a) => a.date === today())?.minutes ?? 0;
 
-  // objective mastery: last 5 answers per objective
-  const perObj = new Map<string, boolean[]>();
-  for (const a of [...answers].sort((x, y) => x.at - y.at)) {
-    const o = p.questionObjectives[a.qid];
-    if (!o) continue;
-    perObj.set(o, [...(perObj.get(o) ?? []), a.correct].slice(-5));
-  }
-  const mastery = (id: string): 0 | 1 | 2 => {
-    const xs = perObj.get(id);
-    if (!xs || !xs.length) return 0;
-    return xs.length >= 3 && xs.filter(Boolean).length / xs.length >= 0.8 ? 2 : 1;
-  };
+  // objective mastery: last try at each question, per objective
+  const perObj = masteryByObjective(answers, p.questionObjectives);
+  const mastery = (id: string) => masteryLevel(perObj.get(id));
 
   let resume: { lesson: string; path: string } | null = null;
   try { resume = JSON.parse(localStorage.getItem('mc:resume') || 'null'); } catch { resume = null; }

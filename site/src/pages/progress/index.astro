@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+import DashboardApp, { type DashChapter, type DashObjective } from '../../components/dashboard/DashboardApp';
+import { chapters, lessons, routes } from '../../lib/content';
+import { chapterQuiz, labChapter, labSteps, labTitles, questionObjectives } from '../../lib/course-facts';
+import { OBJECTIVES, TOPICS } from '../../lib/exam/objectives';
+
+// Exam topics 1 to 7 plus the prerequisites ("topic 0"); the study-plan questions are not an exam objective.
+const topics = [{ n: 0, title: 'Prerequisites', short: 'SQL, Git, the command line, YAML, Jinja' }, ...TOPICS];
+const chapterId = (n: number) => `ch${String(n).padStart(2, '0')}`;
+const objectives: DashObjective[] = OBJECTIVES.filter((o) => o.topic <= 7).map((o) => ({ id: o.id, topic: o.topic, title: o.title, chapters: o.chapters.map(chapterId) }));
+// The course chapters (0 to 27); the mock exam chapters and appendices are followed on their own pages.
+const dashChapters: DashChapter[] = chapters.filter((c) => c.number <= 27 && c.lessons.length > 0).map((c) => ({
+  id: c.id, number: c.number, title: c.title, path: routes.chapter(c),
+  quizPath: c.quiz.length ? routes.quiz(c) : undefined,
+  lessons: c.lessons.map((l) => l.id),
+  labs: Object.keys(labChapter).filter((lab) => labChapter[lab] === c.id && labSteps[lab] > 0),
+}));
+const steps = Object.fromEntries(Object.entries(labSteps).filter(([, n]) => n > 0));
+---
+<Base title="Your progress" section="progress" description="Your Model Citizen progress: readiness for the exam, mastery per objective, study time, mock exams and chapters.">
+  <div class="wrap">
+    <DashboardApp client:only="react" topics={topics} objectives={objectives} questionObjectives={questionObjectives} chapterQuiz={chapterQuiz} chapters={dashChapters} labSteps={steps} labTitles={labTitles} capstoneMilestones={15} totalLessons={lessons.length} />
+  </div>
+</Base>

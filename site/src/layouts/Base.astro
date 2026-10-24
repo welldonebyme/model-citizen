@@ -14,7 +14,7 @@ interface Props {
   title: string;
   description?: string;
   /** Which main-nav item is current. */
-  section?: 'today' | 'path' | 'labs' | 'exams' | 'practice' | 'reference' | 'none';
+  section?: 'today' | 'path' | 'labs' | 'exams' | 'practice' | 'reference' | 'progress' | 'none';
   /** 'plain' hides the site chrome (exam mode). */
   chrome?: 'full' | 'plain';
   wide?: boolean;
@@ -28,6 +28,7 @@ const nav = [
   { id: 'exams', label: 'Mock exams', href: url('exams/') },
   { id: 'practice', label: 'Practice', href: url('practice/') },
   { id: 'reference', label: 'Reference', href: url('reference/') },
+  { id: 'progress', label: 'Progress', href: url('progress/') },
 ];
 ---
 <!doctype html>

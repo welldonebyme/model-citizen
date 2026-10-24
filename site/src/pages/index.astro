@@ -2,9 +2,9 @@
 import Base from '../layouts/Base.astro';
 import CourseDag from '../components/ui/CourseDag.astro';
 import TodayApp from '../components/today/TodayApp';
-import { chapters, lessons, parts, routes } from '../lib/content';
+import { lessons, parts, routes } from '../lib/content';
+import { chapterQuiz, chapterTitles, labTitles, questionObjectives } from '../lib/course-facts';
 import type { PlanLesson } from '../lib/planner';
-import type { Block } from '../lib/content-types';
 import '../styles/today.css';
 
 const OBJ_FILE = import.meta.glob('../generated/objectives.json', { eager: true, import: 'default' }) as Record<string, { id: string; title: string }[]>;
@@ -14,25 +14,12 @@ const objectives = (Array.isArray(objectivesRaw) ? objectivesRaw : FALLBACK_OBJ)
   .filter((o) => /^(CP0-(SQL|GIT)|\d+\.\d+)$/.test(o.id))
   .map((o) => ({ id: o.id, title: o.title }));
 
-const QFILES = import.meta.glob('../generated/questions/*.json', { eager: true, import: 'default' }) as Record<string, { id: string; objective?: string }[]>;
-const MFILES = import.meta.glob('../generated/mocks/*.json', { eager: true, import: 'default' }) as Record<string, { questions?: { id: string; objective?: string }[] }>;
-const questionObjectives: Record<string, string> = {};
-for (const qs of Object.values(QFILES)) for (const q of qs) if (q.objective) questionObjectives[q.id] = q.objective;
-for (const m of Object.values(MFILES)) for (const q of m.questions ?? []) if (q.objective) questionObjectives[q.id] = q.objective;
-
 const planLessons: PlanLesson[] = lessons.map(({ chapter, lesson }) => ({
   id: lesson.id, chapter: chapter.id, minutes: lesson.minutes, labMinutes: lesson.labMinutes, title: lesson.titleText, number: lesson.number, labs: lesson.labs,
   half: chapter.id === 'ch04' ? (Number(lesson.number.split('.')[1]) <= 9 ? 'a' : 'b') : undefined,
 }));
 const lessonPaths = Object.fromEntries(lessons.map(({ chapter, lesson }) => [lesson.id, routes.lesson(lesson, chapter.id)]));
 const labLessons = Object.fromEntries(lessons.flatMap(({ lesson }) => lesson.labs.map((lab) => [lab, lesson.id])));
-const chapterQuiz: [string, number][] = chapters.filter((c) => c.quiz.length && c.number <= 26).map((c) => [c.id, c.quiz.length]);
-const chapterTitles = Object.fromEntries(chapters.map((c) => [c.id, c.title]));
-// Lab titles, from the lab blocks inside each lesson.
-const labTitles: Record<string, string> = {};
-const text = (c: unknown[]): string => c.map((n) => (typeof n === 'string' ? n : (n as { v?: string; c?: unknown[] }).v ?? text((n as { c?: unknown[] }).c ?? []))).join('');
-const walk = (bs: Block[]) => bs.forEach((b) => { if (b.t === 'lab') labTitles[b.id] = text(b.title); if (b.t === 'callout' || b.t === 'lab') walk(b.blocks); if (b.t === 'list') b.items.forEach((it) => walk(it.blocks)); });
-lessons.forEach(({ lesson }) => lesson.steps.forEach((st) => walk(st.blocks)));
 ---
 <Base title="Model Citizen" section="today">
   <div class="wrap today-page">

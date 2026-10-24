@@ -1,0 +1,62 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ReferenceViewer, { type RepoInfo, type TagInfo } from '../../../components/labs/ReferenceViewer';
+import { readdirSync, readFileSync, existsSync } from 'node:fs';
+import { publicPath } from '../../../lib/paths';
+
+const dir = (r: string) => publicPath('reference', r) + '/';
+function tags(r: string): TagInfo[] {
+  if (!existsSync(dir(r))) return [];
+  return readdirSync(dir(r)).filter((f) => /^(ch|m)\d+\.json$/.test(f)).sort()
+    .map((f) => JSON.parse(readFileSync(dir(r) + f, 'utf8')) as { tag: string; prev?: string; tag_message?: string; subject?: string })
+    .map((t) => ({ tag: t.tag, prev: t.prev ?? null, message: (t.tag_message ?? '').split('\n')[0], subject: t.subject ?? '' }));
+}
+const repos: RepoInfo[] = [
+  { id: 'jaffle', name: 'jaffle_dbt', label: 'Practice project', tags: tags('jaffle'), spoiler: false },
+  { id: 'shopflow', name: 'shopflow_dbt', label: 'Capstone (solutions)', tags: tags('shopflow'), spoiler: true },
+].filter((r) => r.tags.length) as RepoInfo[];
+---
+<Base title="Compare with the reference" section="labs">
+  <div class="wrap rvp">
+    <h1>Compare with the reference</h1>
+    <p class="lead">The book's reference project has one git tag per chapter: the state of the project after the chapter's labs. Open a tag to see all its files, or what the chapter changed. Compare it with your own project when something does not work.</p>
+    {repos.length ? <ReferenceViewer client:only="react" repos={repos} /> : <p>The reference exports are not built yet.</p>}
+  </div>
+</Base>
+<style>
+  .rvp { padding-block: 40px 16px; }
+  .lead { color: var(--muted); font-size: var(--fs-lg); max-width: 72ch; }
+  :global(.rv) { margin-top: 22px; display: grid; gap: 14px; }
+  :global(.rv-bar) { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; }
+  :global(.rv-tags) { display: flex; flex-wrap: wrap; gap: 6px; }
+  :global(.rv-tags button) { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 8px; padding: 5px 10px; font: 600 var(--fs-sm) var(--mono); color: var(--muted); }
+  :global(.rv-tags button[aria-pressed="true"]) { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+  :global(.rv-head h2) { font-size: var(--fs-lg); }
+  :global(.rv-head p) { margin: 4px 0 0; color: var(--muted); }
+  :global(.rv-git) { font-size: var(--fs-sm); }
+  :global(.rv-files) { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 18px; align-items: start; }
+  :global(.rv-tree) { list-style: none; margin: 0; padding: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card); max-height: 70vh; overflow: auto; position: sticky; top: calc(var(--header-h) + 12px); }
+  :global(.rv-tree button) { display: block; width: 100%; text-align: left; border: 0; background: none; padding: 5px 8px; border-radius: 6px; font: 400 var(--fs-xs) var(--mono); color: var(--text); overflow-wrap: anywhere; }
+  :global(.rv-tree button:hover) { background: var(--paper); }
+  :global(.rv-tree button[aria-current="true"]) { background: var(--accent-soft); color: var(--ink); font-weight: 600; }
+  :global(.rv-file .mc-code) { margin-top: 0; }
+  :global(.rv-note) { color: var(--muted); }
+  :global(.rv-error) { color: var(--bad); }
+  :global(.rv-spoiler h3) { font-size: var(--fs-lg); margin-bottom: 6px; }
+  :global(.rv-summary) { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 4px; font: 400 var(--fs-sm) var(--mono); }
+  :global(.rv-summary a) { color: var(--text); text-decoration: none; }
+  :global(.rv-st) { display: inline-block; min-width: 4.6em; font: 700 var(--fs-xs) var(--sans); padding: 1px 6px; border-radius: 5px; text-align: center; }
+  :global(.rv-added) { background: var(--ok-bg); color: var(--ok); }
+  :global(.rv-removed), :global(.rv-deleted) { background: var(--bad-bg); color: var(--bad); }
+  :global(.rv-modified), :global(.rv-renamed) { background: var(--why-bg); color: var(--why); }
+  :global(.rv-dfile) { margin-top: 18px; scroll-margin-top: calc(var(--header-h) + 12px); }
+  :global(.rv-dfile h3) { font-size: var(--fs-md); margin-bottom: 6px; display: flex; gap: 8px; align-items: center; }
+  :global(.rv-dfile h3 code) { font: 600 var(--fs-sm) var(--mono); overflow-wrap: anywhere; }
+  :global(.rv-hunk) { margin: 0 0 8px; padding: 10px 0; background: var(--code-bg); border: 1px solid var(--code-line); border-radius: 10px; overflow-x: auto; font: 400 0.8125rem/1.55 var(--mono); }
+  :global(.rv-hunk code) { display: block; min-width: max-content; }
+  :global(.rv-hunk span) { display: block; padding: 0 14px; white-space: pre; }
+  :global(.rv-hh) { color: var(--muted); }
+  :global(.rv-add) { background: var(--ok-bg); color: var(--text); }
+  :global(.rv-del) { background: var(--bad-bg); color: var(--text); }
+  @media (max-width: 860px) { :global(.rv-files) { grid-template-columns: 1fr; } :global(.rv-tree) { position: static; max-height: 240px; } }
+</style>

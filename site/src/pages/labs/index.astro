@@ -4,7 +4,7 @@ import { url } from '../../lib/url';
 import { chapters, routes } from '../../lib/content';
 import type { Block, Inline } from '../../lib/content-types';
 import { existsSync, statSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { publicPath } from '../../lib/paths';
 
 const text = (c: Inline[]): string => c.map((n) => (typeof n === 'string' ? n : 'v' in n ? n.v : 'c' in n ? text(n.c) : '')).join('');
 type LabRow = { id: string; title: string; chapter: number; lessonId: string; lessonNo: string; chapterId: string; objectives: string[] };
@@ -17,7 +17,7 @@ const walk = (bs: Block[], ctx: Omit<LabRow, 'id' | 'title' | 'objectives'>) => 
 for (const c of chapters) for (const l of c.lessons) for (const st of l.steps) walk(st.blocks, { chapter: c.number, lessonId: l.id, lessonNo: l.number, chapterId: c.id });
 const byChapter = chapters.map((c) => ({ c, labs: labs.filter((x) => x.chapterId === c.id) })).filter((g) => g.labs.length);
 
-const pub = (p: string) => fileURLToPath(new URL(`../../../public/${p}`, import.meta.url));
+const pub = (p: string) => publicPath(p);
 const size = (p: string) => (existsSync(pub(p)) ? `${(statSync(pub(p)).size / 1048576).toFixed(1)} MB` : null);
 const kit = size('kits/dbt-course-kit.zip');
 const capKit = size('kits/shopflow-capstone-kit.zip');
@@ -30,6 +30,8 @@ const capKit = size('kits/shopflow-capstone-kit.zip');
     <div class="tools">
       <a class="tool panel" href={url('labs/dbt/')}><h2>dbt terminal in your browser</h2><p>Real dbt-core 1.11.16 with DuckDB, running in this page. Pick a chapter and run <code class="mc-ic">dbt build</code> with nothing installed.</p></a>
       <a class="tool panel" href={url('labs/sql/')}><h2>SQL playground</h2><p>The practice database (jaffle_shop and stripe) in your browser. Every SQL example of Chapter 4, with the book's result to compare.</p></a>
+      <a class="tool panel" href={url('labs/selectors/')}><h2>Node selection and lineage</h2><p>Type <code class="mc-ic">--select</code> expressions on the real DAG of the project and see exactly what <code class="mc-ic">dbt ls</code> prints.</p></a>
+      <a class="tool panel" href={url('labs/reference/')}><h2>Compare with the reference</h2><p>The reference project at every chapter tag, and what each chapter changed. The capstone solutions stay hidden until you ask.</p></a>
       <div class="tool panel kit">
         <h2>Practice kit for your computer</h2>
         <p>Data, setup scripts for macOS, Windows PowerShell and WSL, the nine bug patches, and the reference project with one git tag per chapter.</p>

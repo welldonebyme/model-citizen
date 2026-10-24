@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 357.76 90.28" width="477" height="120" role="img" data-figure="ch01-fig1" font-family="var(--fig-font-sans, 'Fira Sans', 'Helvetica Neue', Arial, sans-serif)" fill="var(--fig-text, #000000)" stroke-miterlimit="10" aria-labelledby="ch01-fig1-title">
+<title id="ch01-fig1-title">Row storage compared with column storage. Left, row storage (OLTP): each of three order rows (id, order_date, status) is stored together as one block (block 1, 2, 3). Right, column storage (OLAP): all ids are stored together, all order dates together, all statuses together; each column is stored (and compressed) together.</title>
+<text fill="var(--fig-ink, #1F2A44)" xml:space="preserve" transform="translate(82.37 9.97)" font-size="9.963" font-weight="600"><tspan x="-61.3" y="4.18">Row </tspan><tspan x="-39.66">storage </tspan><tspan x="-3.08">(OLTP)</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M-8.5 32.6H8.5V46.77H-8.5Z" fill="var(--fig-why-12, #E5ECFD)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(69.99 34.62)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan y="4.18" x="-61.3">1</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M8.5 32.6H56.69V46.77H8.5Z" fill="var(--fig-why-12, #E5ECFD)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(84.51 34.62)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="-61.3" y="4.18">2025-01-05</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M56.69 32.6H102.05V46.77H56.69Z" fill="var(--fig-why-12, #E5ECFD)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(133.29 34.12)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="-61.3" y="4.18">completed</tspan></text>
+<text fill="var(--fig-muted, #6B7280)" xml:space="preserve" transform="translate(179.3 35.26)" font-size="7.97"><tspan x="-61.3" y="4.18">block </tspan><tspan x="-39.7">1</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M-8.5 12.76H8.5V26.93H-8.5Z" fill="var(--fig-why-12, #E5ECFD)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(69.99 54.5)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan y="4.18" x="-61.3">2</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M8.5 12.76H56.69V26.93H8.5Z" fill="var(--fig-why-12, #E5ECFD)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(84.51 54.47)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="-61.3" y="4.18">2025-01-06</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M56.69 12.76H102.05V26.93H56.69Z" fill="var(--fig-why-12, #E5ECFD)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(133.29 53.96)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="-61.3" y="4.18">completed</tspan></text>
+<text fill="var(--fig-muted, #6B7280)" xml:space="preserve" transform="translate(179.3 55.1)" font-size="7.97"><tspan x="-61.3" y="4.18">block </tspan><tspan x="-39.7">2</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M-8.5-7.09H8.5V7.09H-8.5Z" fill="var(--fig-why-12, #E5ECFD)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(69.99 74.31)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan y="4.18" x="-61.3">3</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M8.5-7.09H56.69V7.09H8.5Z" fill="var(--fig-why-12, #E5ECFD)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(84.51 74.31)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="-61.3" y="4.18">2025-01-10</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M56.69-7.09H102.05V7.09H56.69Z" fill="var(--fig-why-12, #E5ECFD)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(133.29 73.8)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="-61.3" y="4.18">completed</tspan></text>
+<text fill="var(--fig-muted, #6B7280)" xml:space="preserve" transform="translate(179.3 74.94)" font-size="7.97"><tspan x="-61.3" y="4.18">block </tspan><tspan x="-39.7">3</tspan></text>
+<text fill="var(--fig-ink, #1F2A44)" xml:space="preserve" transform="translate(275.49 9.97)" font-size="9.963" font-weight="600"><tspan x="-61.3" y="4.18">Column </tspan><tspan x="-24.79">storage </tspan><tspan x="11.78">(OLAP)</tspan></text>
+<text fill="var(--fig-muted, #6B7280)" xml:space="preserve" transform="translate(272.65 22.62)" font-size="7.97"><tspan x="-61.3" y="4.18">id</tspan></text>
+<text fill="var(--fig-muted, #6B7280)" xml:space="preserve" transform="translate(304.75 21.98)" font-size="7.97"><tspan x="-61.3" y="4.18">order_date</tspan></text>
+<text fill="var(--fig-muted, #6B7280)" xml:space="preserve" transform="translate(361.44 22.13)" font-size="7.97"><tspan x="-61.3" y="4.18">status</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M182.84 32.6H225.36V46.77H182.84Z" fill="var(--fig-lab-12, #E1F2ED)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(274.09 34.62)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan y="4.18" x="-61.3">1</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M231.03 32.6H273.55V46.77H231.03Z" fill="var(--fig-idea-15, #F9EBDA)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(304.2 34.62)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="-61.3" y="4.18">2025-01-05</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M279.22 32.6H321.74V46.77H279.22Z" fill="var(--fig-accent-12, #FCEBE8)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(354.4 34.12)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="-61.3" y="4.18">completed</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M182.84 18.43H225.36V32.6H182.84Z" fill="var(--fig-lab-12, #E1F2ED)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(274.09 48.83)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan y="4.18" x="-61.3">2</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M231.03 18.43H273.55V32.6H231.03Z" fill="var(--fig-idea-15, #F9EBDA)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(304.2 48.8)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="-61.3" y="4.18">2025-01-06</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M279.22 18.43H321.74V32.6H279.22Z" fill="var(--fig-accent-12, #FCEBE8)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(354.4 48.29)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="-61.3" y="4.18">completed</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M182.84 4.25H225.36V18.43H182.84Z" fill="var(--fig-lab-12, #E1F2ED)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(274.09 62.97)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan y="4.18" x="-61.3">3</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M231.03 4.25H273.55V18.43H231.03Z" fill="var(--fig-idea-15, #F9EBDA)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(304.2 62.97)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="-61.3" y="4.18">2025-01-10</tspan></text>
+<path transform="matrix(1 0 0 -1 10.7 76.18)" d="M279.22 4.25H321.74V18.43H279.22Z" fill="var(--fig-accent-12, #FCEBE8)" stroke-width=".399" stroke="var(--fig-ink-50, #8F94A2)" />
+<text xml:space="preserve" transform="translate(354.4 62.46)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="-61.3" y="4.18">completed</tspan></text>
+<text fill="var(--fig-muted, #6B7280)" xml:space="preserve" transform="translate(235.13 78.77)" font-size="7.97"><tspan x="-61.3" y="4.18">each </tspan><tspan x="-42.18">column </tspan><tspan x="-13.4">is </tspan><tspan x="-5.37">stored </tspan><tspan x="19.81">(and </tspan><tspan x="38.11">compressed) </tspan><tspan x="86.23">together</tspan></text>
+</svg>

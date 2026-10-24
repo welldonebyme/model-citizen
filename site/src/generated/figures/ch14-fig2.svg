@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 397.28 102.7" width="530" height="137" role="img" data-figure="ch14-fig2" font-family="var(--fig-font-sans, 'Fira Sans', 'Helvetica Neue', Arial, sans-serif)" fill="var(--fig-text, #000000)" stroke-miterlimit="10" aria-labelledby="ch14-fig2-title">
+<title id="ch14-fig2-title">The monthly batches of a microbatch model, from 25-01 (begin: 2025-01-01) to 26-10. A normal run on 2026-10-21 rebuilds only the current batch + lookback=1: 26-09 and 26-10. Late orders of January 2026 (loaded on day 2) are missed; a backfill with --event-time-start 2026-01-01 --event-time-end 2026-02-01 rebuilds the 26-01 batch.</title>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" d="M-11.34-9.92H11.34V9.92H-11.34Z" fill="var(--fig-paper, #FFFFFF)" stroke-width=".399" stroke="var(--fig-ink-60, #797F8F)" />
+<text xml:space="preserve" transform="translate(62.58 74.66)" font-size="7.97"><tspan x="-15.56" y="-20.73">25-01</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" d="M13.61-9.92H36.28V9.92H13.61Z" fill="var(--fig-paper, #FFFFFF)" stroke-width=".399" stroke="var(--fig-ink-60, #797F8F)" />
+<text xml:space="preserve" transform="translate(87.22 74.66)" font-size="7.97"><tspan x="-15.56" y="-20.73">25-02</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" d="M38.55-9.92H61.23V9.92H38.55Z" fill="var(--fig-paper, #FFFFFF)" stroke-width=".399" stroke="var(--fig-ink-60, #797F8F)" />
+<text xml:space="preserve" transform="translate(112.14 74.66)" font-size="7.97"><tspan x="-15.56" y="-20.73">25-03</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" d="M63.5-9.92H86.17V9.92H63.5Z" fill="var(--fig-paper, #FFFFFF)" stroke-width=".399" stroke="var(--fig-ink-60, #797F8F)" />
+<text xml:space="preserve" transform="translate(143.89 72.46)" font-size="7.97"><tspan y="-20.73" x="-15.56">…</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" d="M88.44-9.92H111.12V9.92H88.44Z" fill="var(--fig-paper, #FFFFFF)" stroke-width=".399" stroke="var(--fig-ink-60, #797F8F)" />
+<text xml:space="preserve" transform="translate(163.09 74.66)" font-size="7.97"><tspan x="-15.56" y="-20.73">25-11</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" d="M113.39-9.92H136.07V9.92H113.39Z" fill="var(--fig-paper, #FFFFFF)" stroke-width=".399" stroke="var(--fig-ink-60, #797F8F)" />
+<text xml:space="preserve" transform="translate(187.73 74.66)" font-size="7.97"><tspan x="-15.56" y="-20.73">25-12</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" d="M138.33-9.92H161.01V9.92H138.33Z" fill="var(--fig-trap-15, #FADEDE)" stroke-width=".399" stroke="var(--fig-trap, #DC2626)" />
+<text xml:space="preserve" transform="translate(212.12 74.66)" font-size="7.97"><tspan x="-15.56" y="-20.73">26-01</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" d="M163.28-9.92H185.96V9.92H163.28Z" fill="var(--fig-paper, #FFFFFF)" stroke-width=".399" stroke="var(--fig-ink-60, #797F8F)" />
+<text xml:space="preserve" transform="translate(236.77 74.66)" font-size="7.97"><tspan x="-15.56" y="-20.73">26-02</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" d="M188.22-9.92H210.9V9.92H188.22Z" fill="var(--fig-paper, #FFFFFF)" stroke-width=".399" stroke="var(--fig-ink-60, #797F8F)" />
+<text xml:space="preserve" transform="translate(268.62 72.46)" font-size="7.97"><tspan y="-20.73" x="-15.56">…</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" d="M213.17-9.92H235.85V9.92H213.17Z" fill="var(--fig-paper, #FFFFFF)" stroke-width=".399" stroke="var(--fig-ink-60, #797F8F)" />
+<text xml:space="preserve" transform="translate(286.89 74.66)" font-size="7.97"><tspan x="-15.56" y="-20.73">26-07</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" d="M238.11-9.92H260.79V9.92H238.11Z" fill="var(--fig-paper, #FFFFFF)" stroke-width=".399" stroke="var(--fig-ink-60, #797F8F)" />
+<text xml:space="preserve" transform="translate(311.33 74.66)" font-size="7.97"><tspan x="-15.56" y="-20.73">26-08</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" d="M263.06-9.92H285.74V9.92H263.06Z" fill="var(--fig-lab-25, #C0E5DA)" stroke-width=".399" stroke="var(--fig-lab, #059669)" />
+<text xml:space="preserve" transform="translate(336.42 74.62)" font-size="7.97"><tspan x="-15.56" y="-20.73">26-09</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" d="M288.01-9.92H310.68V9.92H288.01Z" fill="var(--fig-lab-25, #C0E5DA)" stroke-width=".399" stroke="var(--fig-lab, #059669)" />
+<text xml:space="preserve" transform="translate(361.97 74.66)" font-size="7.97"><tspan x="-15.56" y="-20.73">26-10</tspan></text>
+<text xml:space="preserve" transform="translate(23.91 74.94)" font-size="7.97"><tspan x="-15.56" y="-20.73">batches:</tspan></text>
+<text xml:space="preserve" transform="translate(52.97 115.09)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="-6.57" y="-30.95">begin</tspan></text>
+<text xml:space="preserve" transform="translate(52.97 115.09)" font-size="7.97"><tspan x="-15.56" y="-20.73">2025-01-01</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" stroke-width=".797" fill="none" stroke="var(--fig-ink-70, #626A7C)" d="M0-23.85V-14.84" />
+<path transform="matrix(0 -1 -1 0 56.44 68.28)" d="M4.53 0 1.29 1.23 2.37 0 1.29-1.23Z" fill="var(--fig-ink-70, #626A7C)" stroke-width=".797" stroke="var(--fig-ink-70, #626A7C)" />
+<text fill="var(--fig-lab-80-black, #047854)" xml:space="preserve" transform="translate(310.53 42.56)" font-size="7.97"><tspan x="-13.43" y="-30.95">normal </tspan><tspan x="14.38">run </tspan><tspan x="28.74">on </tspan><tspan x="40.12">2026-10-21: </tspan><tspan x="-15.56" y="-20.73">current </tspan><tspan x="12.64">batch </tspan><tspan x="34.86">+</tspan></text>
+<text fill="var(--fig-lab-80-black, #047854)" xml:space="preserve" transform="translate(310.53 42.56)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="40.95" y="-20.73">lookback=1</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" stroke-width=".797" fill="none" stroke="var(--fig-lab, #059669)" d="M286.87 25.51V14.84" />
+<path transform="matrix(0 1 1 0 343.31 34.26)" d="M4.53 0 1.29 1.23 2.37 0 1.29-1.23Z" fill="var(--fig-lab, #059669)" stroke-width=".797" stroke="var(--fig-lab, #059669)" />
+<text fill="var(--fig-trap, #DC2626)" xml:space="preserve" transform="translate(175.34 116.1)" font-size="7.97"><tspan x="-8.12" y="-30.95">late </tspan><tspan x="7.68">orders </tspan><tspan x="33.03">of </tspan><tspan x="42.47">January </tspan><tspan x="-15.56" y="-20.73">(loaded </tspan><tspan x="14.09">on </tspan><tspan x="25.47">day </tspan><tspan x="40.47">2): </tspan><tspan x="51.72">missed</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" stroke-width=".797" fill="none" stroke="var(--fig-trap, #DC2626)" d="M149.67-24.07V-13.62" />
+<path transform="matrix(0 -1 -1 0 206.12 67.06)" d="M4.53 0 1.29 1.23 2.37 0 1.29-1.23Z" fill="var(--fig-trap, #DC2626)" stroke-width=".797" stroke="var(--fig-trap, #DC2626)" />
+<text xml:space="preserve" transform="translate(103.1 42.58)" font-size="7.97"><tspan x="-15.56" y="-30.95">backfill:</tspan></text>
+<text xml:space="preserve" transform="translate(103.1 42.58)" font-size="6.695" font-family="var(--fig-font-mono, 'Fira Mono', Menlo, Consolas, monospace)"><tspan x="15.29" y="-30.95">--event-time-start </tspan><tspan x="91.61">2026-01-01 </tspan><tspan x="3.88" y="-20.73">--event-time-end </tspan><tspan x="72.17">2026-02-01</tspan></text>
+<path transform="matrix(1 0 0 -1 56.44 51.27)" stroke-width=".797" fill="none" stroke="var(--fig-ink-70, #626A7C)" d="M173.77 25.51 152.62 12" />
+<path transform="matrix(-.8427 .5382 .5382 .8427 210.89 38.1)" d="M4.53 0 1.29 1.23 2.37 0 1.29-1.23Z" fill="var(--fig-ink-70, #626A7C)" stroke-width=".797" stroke="var(--fig-ink-70, #626A7C)" />
+</svg>

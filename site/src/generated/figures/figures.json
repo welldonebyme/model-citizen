@@ -1,0 +1,653 @@
+[
+  {
+    "id": "ch00-fig1",
+    "svg": "ch00-fig1.svg",
+    "file": "parts/part0/ch00-start-here.tex",
+    "line": 75,
+    "sha1": "dda0c7df4b20796d3a8aa8408bc9e5408c7dcd71",
+    "width": 560,
+    "height": 138,
+    "alt": "Road map of the book: ten parts in order, from Part 0 (week 1) to Part IX (week 14). The last two parts, the capstone project and the mock exams, are highlighted.",
+    "description": "Ten boxes in two rows, linked by arrows: left to right on the top row, then right to left on the bottom row. Part 0 Start Here, week 1. Part I Foundations, weeks 1–3. Part II Building with dbt, weeks 4–8. Part III Governance, week 9. Part IV Testing, weeks 9–10. Part V Docs and external dependencies, week 10. Part VI Debugging and pipelines, week 11. Part VII State, CI and deploy, week 12. Part VIII Capstone project, week 13. Part IX Mocks and exam, week 14."
+  },
+  {
+    "id": "ch00-fig2",
+    "svg": "ch00-fig2.svg",
+    "file": "parts/part0/ch00-start-here.tex",
+    "line": 195,
+    "sha1": "1ed3bc004896a0137e5df084bf050bf2159d0813",
+    "width": 264,
+    "height": 106,
+    "alt": "The study loop for every chapter, a cycle of four steps: 1. Read (why + idea), 2. Do (every lab), 3. Test (quiz, book closed), 4. Review (error notebook), then back to 1. Read."
+  },
+  {
+    "id": "ch00-fig3",
+    "svg": "ch00-fig3.svg",
+    "file": "parts/part0/ch00-start-here.tex",
+    "line": 503,
+    "sha1": "3a702aaea5e8e3a16e3415048af9a025a0c7fe03",
+    "width": 499,
+    "height": 142,
+    "alt": "Bar chart of the estimated number of exam questions per topic, out of 65: Topic 1: 26, Topic 2: 7, Topic 3: 8, Topic 4: 5, Topic 5: 9, Topic 6: 4, Topic 7: 6. Topic 1 is by far the largest."
+  },
+  {
+    "id": "ch01-fig1",
+    "svg": "ch01-fig1.svg",
+    "file": "parts/part1/ch01-data-world.tex",
+    "line": 118,
+    "sha1": "7244af03b07cb3854d14bdb1a0a202bd8340697a",
+    "width": 477,
+    "height": 120,
+    "alt": "Row storage compared with column storage. Left, row storage (OLTP): each of three order rows (id, order_date, status) is stored together as one block (block 1, 2, 3). Right, column storage (OLAP): all ids are stored together, all order dates together, all statuses together; each column is stored (and compressed) together."
+  },
+  {
+    "id": "ch01-fig2",
+    "svg": "ch01-fig2.svg",
+    "file": "parts/part1/ch01-data-world.tex",
+    "line": 189,
+    "sha1": "149fb48083cf360ce654ccdb787e30e878d330df",
+    "width": 509,
+    "height": 88,
+    "alt": "A data pipeline in five steps: Sources (shop app database, Stripe, CRM, files) → Extract & Load (Fivetran, Airbyte, scripts) → Warehouse (raw tables, an untouched copy) → Transform (dbt, SQL models; highlighted) → Use (BI dashboards, ML, reverse ETL). A brace under the first steps says “E + L: copy data as it is”; a brace under Transform says “T: inside the warehouse”."
+  },
+  {
+    "id": "ch01-fig3",
+    "svg": "ch01-fig3.svg",
+    "file": "parts/part1/ch01-data-world.tex",
+    "line": 358,
+    "sha1": "49465028a4b4619bbdad038610f0aa15e15a9fba",
+    "width": 450,
+    "height": 186,
+    "alt": "A star schema: the fact table fct_order_items in the middle, linked to four dimension tables around it: dim_customers, dim_products, dim_dates and dim_order_status.",
+    "description": "fct_order_items: order_item_id (PK), order_id, customer_id (FK), product_id (FK), order_date (FK), quantity, amount_eur. dim_customers: customer_id (PK), first_name, country, signup_date. dim_products: product_id (PK), name, category, price_eur. dim_dates: date_day (PK), month, quarter, year. dim_order_status: status (PK), is_returned, description."
+  },
+  {
+    "id": "ch01-fig4",
+    "svg": "ch01-fig4.svg",
+    "file": "parts/part1/ch01-data-world.tex",
+    "line": 510,
+    "sha1": "0eee17cf6a5487aff3dd325ed3d21b5fda4d5564",
+    "width": 465,
+    "height": 142,
+    "alt": "A small DAG in four columns: raw sources, staging, marts and an exposure. The sources orders, payments and customers each feed one staging model; the staging models feed the marts fct_orders and dim_customers; both marts feed a dashboard.",
+    "description": "Arrows: orders (source) → stg_orders; payments (source) → stg_payments; customers (source) → stg_customers; stg_orders → fct_orders; stg_payments → fct_orders; stg_customers → dim_customers; fct_orders → dim_customers; fct_orders → dashboard; dim_customers → dashboard."
+  },
+  {
+    "id": "ch02-fig1",
+    "svg": "ch02-fig1.svg",
+    "file": "parts/part1/ch02-command-line.tex",
+    "line": 84,
+    "sha1": "c68b3fe16f7d18d62e73cdb7180e9724cbdd6036",
+    "width": 285,
+    "height": 245,
+    "alt": "A folder tree from the root folder / to the course folders. /Users/mac/ is the home folder (~). It contains Documents/Adnane/dbt-bible/ (this book, with labs/), dbt-course/ (your workspace, Chapter 2 lab) and .dbt/ (hidden: dbt connection settings).",
+    "description": "/ (root) → Users/ → mac/ (home = ~). Inside mac/: Documents/ → Adnane/ → dbt-bible/ (this book, with labs/); dbt-course/ (your workspace for the Chapter 2 lab) with .venv/ and practice/; practice/ contains practice.duckdb, setup.sql and data/; and .dbt/ (hidden: dbt connection settings)."
+  },
+  {
+    "id": "ch03-fig1",
+    "svg": "ch03-fig1.svg",
+    "file": "parts/part1/ch03-git.tex",
+    "line": 91,
+    "sha1": "091ea86ef67e8dcc8d3063303661399f9f7a7ac4",
+    "width": 600,
+    "height": 143,
+    "alt": "The four places of Git and the commands that move changes between them: Working directory (your files) → git add → Staging area (next commit) → git commit → Local repository (.git history) → git push → Remote (GitHub, shared copy).",
+    "description": "Arrows back: git restore --staged moves a change from the staging area back to the working directory; git fetch brings commits from the remote into the local repository. A long arrow from the remote to the working directory says: git pull = git fetch + git merge (updates your files)."
+  },
+  {
+    "id": "ch03-fig2",
+    "svg": "ch03-fig2.svg",
+    "file": "parts/part1/ch03-git.tex",
+    "line": 557,
+    "sha1": "6a9213b39fcf5c7f1a849f5604834b3c737dd39e",
+    "width": 462,
+    "height": 130,
+    "alt": "A fast-forward merge. Before the merge: commits 1a6 → e51 → 979; main points to e51 and the branch feature/revenue-query points to the new commit 979. After git merge: the same three commits, and the main label has simply moved forward to 979, next to the branch label."
+  },
+  {
+    "id": "ch03-fig3",
+    "svg": "ch03-fig3.svg",
+    "file": "parts/part1/ch03-git.tex",
+    "line": 629,
+    "sha1": "94b3e7c2978319d7e8fa8b0ba1c22b7614cca2d2",
+    "width": 321,
+    "height": 147,
+    "alt": "A merge commit. After commit 979, main has a new commit d41 and the branch feature/customer-count has a commit eaa. The merge commit 39d on main has two parents: d41 and eaa."
+  },
+  {
+    "id": "ch03-fig4",
+    "svg": "ch03-fig4.svg",
+    "file": "parts/part1/ch03-git.tex",
+    "line": 1009,
+    "sha1": "59af5164d1f882f3177e617b6ddd8217b5a6f4da",
+    "width": 375,
+    "height": 152,
+    "alt": "The pull request workflow in eight steps: 1. Create branch, 2. Edit, test, commit, 3. Push branch, 4. Open pull request, 5. CI checks + review, 6. Fix if needed (new commits go back to step 5), 7. Merge into main (when approved and green), 8. Pull main, delete branch."
+  },
+  {
+    "id": "ch03-fig5",
+    "svg": "ch03-fig5.svg",
+    "file": "parts/part1/ch03-git.tex",
+    "line": 1121,
+    "sha1": "3f1e1956e414746bb1dcac9319fba8d935f416f3",
+    "width": 517,
+    "height": 99,
+    "alt": "Branching strategy 1, main + feature branches: short branches feature/a and feature/b start from main and are merged back into main. The production job runs on main."
+  },
+  {
+    "id": "ch03-fig6",
+    "svg": "ch03-fig6.svg",
+    "file": "parts/part1/ch03-git.tex",
+    "line": 1133,
+    "sha1": "3b41218b39157988f17e63f60966033a641ebdea",
+    "width": 505,
+    "height": 137,
+    "alt": "Branching strategy 2, promotion branches: feature/a is merged into the long-lived branch qa (QA environment); after QA, qa is merged into main (production) as a release."
+  },
+  {
+    "id": "ch04-fig1",
+    "svg": "ch04-fig1.svg",
+    "file": "parts/part1/ch04-sql-a.tex",
+    "line": 1126,
+    "sha1": "48dbf735281770507c9699e4c6677fde44e2ad38",
+    "width": 582,
+    "height": 134,
+    "alt": "The order in which a SQL query is written compared with the order in which it is evaluated. Written: SELECT, FROM, WHERE, GROUP BY, HAVING, ORDER BY, LIMIT. Evaluated: FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY, LIMIT. SELECT is highlighted: aliases are created there, so they can be used in ORDER BY but not in WHERE (standard SQL)."
+  },
+  {
+    "id": "ch04-fig2",
+    "svg": "ch04-fig2.svg",
+    "file": "parts/part1/ch04-sql-a.tex",
+    "line": 1272,
+    "sha1": "12170d2d2a234755bdc40dfad05579fb1bf294cf",
+    "width": 422,
+    "height": 68,
+    "alt": "Five Venn diagrams of two tables A and B; the shaded part is what each join keeps: inner (only the overlap), left (all of A), right (all of B), full outer (all of A and B), left anti (the part of A that is not in B)."
+  },
+  {
+    "id": "ch04-fig3",
+    "svg": "ch04-fig3.svg",
+    "file": "parts/part1/ch04-sql-a.tex",
+    "line": 1510,
+    "sha1": "c1e18c654994e3c2be77af9cf97fabf4f1f18397",
+    "width": 412,
+    "height": 164,
+    "alt": "Why a join can multiply amounts (fan-out). Order 1 has 2 payments in stripe.payments: 500 and 2520, sum 3020 (30.20). After a join with its 3 item lines (products 8, 10 and 12), each payment appears 3 times: 6 rows, and the sum becomes 9060 (90.60), three times too much."
+  },
+  {
+    "id": "ch04-fig4",
+    "svg": "ch04-fig4.svg",
+    "file": "parts/part1/ch04-sql-b.tex",
+    "line": 478,
+    "sha1": "0a4d7df49fad8c449c2849dd729acb5fe6f0680b",
+    "width": 492,
+    "height": 260,
+    "alt": "GROUP BY compared with a window function, on 6 order rows (ids 111, 181, 185 for user 1; 41, 63, 137 for user 2). count(*) with group by user gives 2 rows: user 1 has 3, user 2 has 3. count(*) over (partition by user) keeps all 6 rows and adds n_orders_of_customer = 3 to each row."
+  },
+  {
+    "id": "ch04-fig5",
+    "svg": "ch04-fig5.svg",
+    "file": "parts/part1/ch04-sql-b.tex",
+    "line": 956,
+    "sha1": "99fff5b2b21782aeb9335a99c7ecbdff39c1f90e",
+    "width": 396,
+    "height": 98,
+    "alt": "Three Venn diagrams of two query results A and B: UNION keeps the rows of A and of B, INTERSECT keeps only the rows that are in both, EXCEPT keeps the rows of A that are not in B."
+  },
+  {
+    "id": "ch04-fig6",
+    "svg": "ch04-fig6.svg",
+    "file": "parts/part1/ch04-sql-b.tex",
+    "line": 1336,
+    "sha1": "b49696bc32c2246c929893327844406974b0228d",
+    "width": 444,
+    "height": 239,
+    "alt": "One dbt model (select ...) can become four things in the warehouse: a view (create view ... as select ...), a table (create table ... as select ...), an incremental table (first run: create table as select; next runs: insert / merge only new rows), or ephemeral (no object at all: the select is pasted as a CTE into the models that use it)."
+  },
+  {
+    "id": "ch05-fig1",
+    "svg": "ch05-fig1.svg",
+    "file": "parts/part1/ch05-yaml-jinja-python.tex",
+    "line": 43,
+    "sha1": "5236eb2d46abdcec22a94f34dcc7890f337e3a5d",
+    "width": 535,
+    "height": 167,
+    "alt": "The three languages of a dbt project. YAML files (dbt_project.yml, _models.yml, sources.yml) describe and configure: they are settings for the models. SQL + Jinja files (stg_orders.sql) transform and become compiled SQL. Python files (my_model.py) also transform, but rarely. The compiled SQL and the Python code go to the data warehouse (DuckDB on your laptop, Snowflake, BigQuery, Databricks…)."
+  },
+  {
+    "id": "ch05-fig2",
+    "svg": "ch05-fig2.svg",
+    "file": "parts/part1/ch05-yaml-jinja-python.tex",
+    "line": 967,
+    "sha1": "85e0b5b5c4ed630d575aecdf7477e9a9f72ad072",
+    "width": 553,
+    "height": 124,
+    "alt": "From a model file to the warehouse in five steps: model file (.sql, SQL + Jinja) → dbt renders Jinja (ref, loops…) → compiled SQL in target/compiled/ (a plain select) → dbt wraps it (create view as…, in target/run/) → the warehouse executes plain SQL. dbt compile stops after the compiled SQL; dbt run does everything."
+  },
+  {
+    "id": "ch06-fig1",
+    "svg": "ch06-fig1.svg",
+    "file": "parts/part2/ch06-first-project.tex",
+    "line": 56,
+    "sha1": "095bef42b0fdbb002792fa5c0f651929af765036",
+    "width": 581,
+    "height": 167,
+    "alt": "What happens when you run a dbt command, in five steps, with the file each step uses or writes: 1. Load project + profile (dbt_project.yml, profiles.yml); 2. Parse: read every file, build the graph (target/manifest.json); 3. Compile: render Jinja into SQL (target/compiled/); 4. Execute: wrap in DDL, send to the warehouse, a DuckDB file (target/run/); 5. Report: write the results (target/run_results.json)."
+  },
+  {
+    "id": "ch06-fig2",
+    "svg": "ch06-fig2.svg",
+    "file": "parts/part2/ch06-first-project.tex",
+    "line": 583,
+    "sha1": "2cce0a92e4be1ea925d3fb64726e62dfe20c002d",
+    "width": 605,
+    "height": 165,
+    "alt": "How dbt finds its connection. dbt_project.yml contains name: 'jaffle_dbt' and profile: 'jaffle_dbt'. The same name is the top key of ~/.dbt/profiles.yml (the profile). It has target: dev (the default target) and outputs with two targets, dev and prod. dev has type: duckdb, path: ../practice/practice.duckdb, schema: dbt_adnane, threads: 4, so dbt builds in practice.duckdb, schema dbt_adnane."
+  },
+  {
+    "id": "ch07-fig1",
+    "svg": "ch07-fig1.svg",
+    "file": "parts/part2/ch07-models-sources-dag.tex",
+    "line": 44,
+    "sha1": "772f061447367239835751266dc95784391d3a3f",
+    "width": 498,
+    "height": 70,
+    "alt": "A model file becomes a warehouse object. The file models/marts/fct_orders.sql (with orders as (…), payments as (…) select … from orders …) becomes, with dbt run, the object \"practice\".\"dbt_adnane\".\"fct_orders\": a view (by default) or a table, in the target database and schema."
+  },
+  {
+    "id": "ch07-fig2",
+    "svg": "ch07-fig2.svg",
+    "file": "parts/part2/ch07-models-sources-dag.tex",
+    "line": 129,
+    "sha1": "651cb6447812d48f9fbcb44778afdd9982a45d52",
+    "width": 538,
+    "height": 78,
+    "alt": "dbt compiles {{ source('jaffle_shop', 'orders') }} into the full table name \"practice\".\"jaffle_shop\".\"orders\": database (the target database), schema (default: the source name) and identifier (default: the table name)."
+  },
+  {
+    "id": "ch07-fig3",
+    "svg": "ch07-fig3.svg",
+    "file": "parts/part2/ch07-models-sources-dag.tex",
+    "line": 369,
+    "sha1": "b6f5739716c1b0f108ca8b76a00f43122f8f3db2",
+    "width": 206,
+    "height": 56,
+    "alt": "The naming convention of a staging model, shown on stg_stripe__payments: stg is the layer, stripe is the source and payments is the entity (plural). A single underscore follows the layer; a double underscore separates the source and the entity."
+  },
+  {
+    "id": "ch07-fig4",
+    "svg": "ch07-fig4.svg",
+    "file": "parts/part2/ch07-models-sources-dag.tex",
+    "line": 733,
+    "sha1": "5b5fb48a8f976fefcd7a50123ad1774e8a8b9bc4",
+    "width": 577,
+    "height": 228,
+    "alt": "The DAG of the practice project at the end of Chapter 7: five sources, five staging models and two marts. Upstream is on the left, downstream on the right.",
+    "description": "Sources: jaffle_shop.customers, jaffle_shop.orders, stripe.payments, jaffle_shop.order_items, jaffle_shop.products. Each feeds its staging model: stg_jaffle_shop__customers, stg_jaffle_shop__orders, stg_stripe__payments, stg_jaffle_shop__order_items, stg_jaffle_shop__products. Marts: stg_jaffle_shop__orders and stg_stripe__payments feed fct_orders; stg_jaffle_shop__customers and fct_orders feed dim_customers. The order_items and products staging models have no children yet."
+  },
+  {
+    "id": "ch08-fig1",
+    "svg": "ch08-fig1.svg",
+    "file": "parts/part2/ch08-materializations.tex",
+    "line": 280,
+    "sha1": "8cf2d83336f350dee71ced152dd6705a00ffd3c3",
+    "width": 575,
+    "height": 100,
+    "alt": "How dbt replaces a view or a table (the swap), in four steps: 1. Build the new object (create … fct_orders__dbt_tmp); 2. Move the old one away (rename fct_orders to …__dbt_backup); 3. Give the real name (rename …__dbt_tmp to fct_orders); 4. Clean up (drop …__dbt_backup). Steps 1–3 are one transaction (BEGIN … COMMIT): if step 1 fails, nothing changes. Step 4 runs after the COMMIT."
+  },
+  {
+    "id": "ch08-fig2",
+    "svg": "ch08-fig2.svg",
+    "file": "parts/part2/ch08-materializations.tex",
+    "line": 460,
+    "sha1": "78da24317e55ca91c3c96ebed55aebd7d4343b84",
+    "width": 602,
+    "height": 91,
+    "alt": "An ephemeral model creates no object in the warehouse. stg_stripe__payments (a view) feeds int_payments__successful (ephemeral, drawn dashed). Its SQL is pasted into fct_orders (a table) as a CTE: with __dbt__cte__int_payments__successful as ( … where status = 'success' ), orders as ( … ), …"
+  },
+  {
+    "id": "ch08-fig3",
+    "svg": "ch08-fig3.svg",
+    "file": "parts/part2/ch08-materializations.tex",
+    "line": 961,
+    "sha1": "9e0f8467189e6f6da35f1a74a1407152cf937e7a",
+    "width": 607,
+    "height": 83,
+    "alt": "One materialization per layer, from left to right: Sources (raw tables loaded by others, not built by dbt) → Staging (rename, cast, light cleaning: view) → Intermediate (reusable steps, joins, re-graining: ephemeral or view) → Marts (business entities read by people: table, later incremental) → Consumers (BI dashboards, notebooks, apps)."
+  },
+  {
+    "id": "ch09-fig1",
+    "svg": "ch09-fig1.svg",
+    "file": "parts/part2/ch09-modularity-refactoring.tex",
+    "line": 97,
+    "sha1": "aa8110b1153a3cea7d36a0519f4c906168ebacde",
+    "width": 599,
+    "height": 228,
+    "alt": "The layers of the practice project, from left to right: sources, staging (views), intermediate and marts (tables).",
+    "description": "Each source feeds one staging model: jaffle_shop.customers → stg_jaffle_shop__customers, jaffle_shop.orders → stg_jaffle_shop__orders, jaffle_shop.order_items → stg_jaffle_shop__order_items, jaffle_shop.products → stg_jaffle_shop__products, stripe.payments → stg_stripe__payments. stg_stripe__payments feeds int_payments__successful (ephemeral). int_payments__successful, stg_jaffle_shop__orders and stg_jaffle_shop__customers feed int_orders__enriched (a view). int_orders__enriched feeds fct_orders and fct_monthly_revenue. fct_orders and stg_jaffle_shop__customers feed dim_customers."
+  },
+  {
+    "id": "ch09-fig2",
+    "svg": "ch09-fig2.svg",
+    "file": "parts/part2/ch09-modularity-refactoring.tex",
+    "line": 297,
+    "sha1": "862c68edf050bd8ff1df9eeadff20acd083c4115",
+    "width": 522,
+    "height": 152,
+    "alt": "Five common DAG problems; the red arrows are the problems. 1. source() in a mart: fct_orders reads raw.payments directly. 2. Staging reads a mart: stg_orders depends on dim_customers. 3. The same logic twice: fct_orders and fct_revenue each sum payments per order from stg_payments. 4. Rejoining upstream concepts: A feeds B (whose only child is C), and A also feeds C directly. 5. Hard-coded names make a root model: legacy_report reads raw tables invisibly, so it has no parents in the DAG and dbt cannot order it."
+  },
+  {
+    "id": "ch10-fig1",
+    "svg": "ch10-fig1.svg",
+    "file": "parts/part2/ch10-configuration.tex",
+    "line": 793,
+    "sha1": "6702244bee258d74a1426009b0a4b03ccd653943",
+    "width": 480,
+    "height": 192,
+    "alt": "Where a config can be set, from the most specific place (it wins) to the least specific: 1. config() in the model file (.sql), or dbt.config() in a Python model; 2. config: in a properties YAML file (models/.../*.yml); 3. dbt_project.yml: file key > sub-folder > folder > project level, and root project > installed package; 4. the dbt default (view, on_schema_change: ignore, severity: error…)."
+  },
+  {
+    "id": "ch10-fig2",
+    "svg": "ch10-fig2.svg",
+    "file": "parts/part2/ch10-configuration.tex",
+    "line": 1248,
+    "sha1": "efd88dcef31899582742699ada27ff8b314ad99d",
+    "width": 545,
+    "height": 95,
+    "alt": "The order of hooks in dbt run: on-run-start (once); then, repeated for every selected model: BEGIN, pre-hooks (project, model), create table or view, post-hooks (project, model), COMMIT, after_commit hooks; finally on-run-end (once). From BEGIN to COMMIT is one transaction per model (on adapters with transactions)."
+  },
+  {
+    "id": "ch11-fig1",
+    "svg": "ch11-fig1.svg",
+    "file": "parts/part2/ch11-jinja-macros-packages.tex",
+    "line": 144,
+    "sha1": "ea3b0c02e26ca27128a7d4dd05449e473bdbf305",
+    "width": 527,
+    "height": 140,
+    "alt": "dbt renders Jinja twice. Project files (.sql and .yml) → 1. parse: renders all Jinja with execute = False (no query is sent: run_query returns nothing) → manifest and DAG (who refs whom) → 2. execute: renders again with execute = True, only for the selected nodes → the warehouse runs the SQL."
+  },
+  {
+    "id": "ch12-fig1",
+    "svg": "ch12-fig1.svg",
+    "file": "parts/part2/ch12-seeds-analyses.tex",
+    "line": 57,
+    "sha1": "5459e40c6b9532bea366b9642f03df2811b22cda",
+    "width": 530,
+    "height": 130,
+    "alt": "A seed compared with a source. The file seeds/country_regions.csv (in Git) becomes, with dbt seed or dbt build, the table dbt_adnane.country_regions, which dim_customers reads with ref('country_regions'). Raw data from an ingestion tool (every day) is read with source() and staging models, which also feed dim_customers."
+  },
+  {
+    "id": "ch13-fig1",
+    "svg": "ch13-fig1.svg",
+    "file": "parts/part2/ch13-snapshots.tex",
+    "line": 82,
+    "sha1": "0adc828e7e2f5fd7b6f4ba1d0d5c5698ea1cb8f3",
+    "width": 530,
+    "height": 150,
+    "alt": "A snapshot timeline for one customer. Version 1 (Morocco) is valid from run 1 (20:53:41) to run 2 (20:54:01); it is closed: dbt_valid_to = run 2. Version 2 (France) starts at run 2 and is current: dbt_valid_to = NULL. There is no gap and no overlap between the versions."
+  },
+  {
+    "id": "ch14-fig1",
+    "svg": "ch14-fig1.svg",
+    "file": "parts/part2/ch14-incremental-microbatch.tex",
+    "line": 134,
+    "sha1": "a6bb771eea063105d95e08e295c41c15552c6e0a",
+    "width": 474,
+    "height": 189,
+    "alt": "The two paths of an incremental model. First run (or --full-refresh): raw orders (300 rows) → model SQL with the filter skipped → create table fct_orders, 300 rows. Later runs (the table exists): raw orders (320 rows) → model SQL + filter, is_incremental(): 33 rows → temporary table fct_orders__dbt_tmp... → schema check (on_schema_change) → strategy SQL (here MERGE) into fct_orders: 320 rows."
+  },
+  {
+    "id": "ch14-fig2",
+    "svg": "ch14-fig2.svg",
+    "file": "parts/part2/ch14-incremental-microbatch.tex",
+    "line": 1498,
+    "sha1": "dc1d9368581f2076119de51d44e35f8d89847623",
+    "width": 530,
+    "height": 137,
+    "alt": "The monthly batches of a microbatch model, from 25-01 (begin: 2025-01-01) to 26-10. A normal run on 2026-10-21 rebuilds only the current batch + lookback=1: 26-09 and 26-10. Late orders of January 2026 (loaded on day 2) are missed; a backfill with --event-time-start 2026-01-01 --event-time-end 2026-02-01 rebuilds the 26-01 batch."
+  },
+  {
+    "id": "ch15-fig1",
+    "svg": "ch15-fig1.svg",
+    "file": "parts/part2/ch15-python-models.tex",
+    "line": 163,
+    "sha1": "d62cec22307f97fc6885d9bce6c6917002ada380",
+    "width": 528,
+    "height": 138,
+    "alt": "How a Python model runs: customer_segments.py (your function) → dbt adds helper code (ref, config, this) → the Python code is sent to the data platform, which runs model(dbt, session) and gets a DataFrame → the platform saves it as the table customer_segments."
+  },
+  {
+    "id": "ch16-fig1",
+    "svg": "ch16-fig1.svg",
+    "file": "parts/part2/ch16-commands-selection.tex",
+    "line": 387,
+    "sha1": "5734f854edc0214f505075d75abb292817d24fab",
+    "width": 610,
+    "height": 263,
+    "alt": "The full DAG of the practice project, used for the selection examples: 5 sources, 5 staging views, intermediate models, a seed and marts. Snapshots (from 2 sources) are not drawn.",
+    "description": "Sources jaffle_shop.customers, jaffle_shop.orders, jaffle_shop.order_items, jaffle_shop.products and stripe.payments each feed their staging model (stg_jaffle_shop__customers, stg_jaffle_shop__orders, stg_jaffle_shop__order_items, stg_jaffle_shop__products, stg_stripe__payments). fct_order_items reads the order_items, orders and products staging models and feeds fct_order_items_daily (microbatch). int_payments__successful (ephemeral) reads stg_stripe__payments and feeds int_orders__enriched and int_orders__payment_methods_pivoted. int_orders__enriched also reads the customers and orders staging models and feeds fct_monthly_revenue and fct_orders (incremental). int_orders__payment_methods_pivoted also feeds fct_orders. dim_customers reads fct_orders, the seed country_regions and stg_jaffle_shop__customers. customer_segments (Python) reads dim_customers. The legend colours mean: source, staging (view), intermediate, marts."
+  },
+  {
+    "id": "ch17-fig1",
+    "svg": "ch17-fig1.svg",
+    "file": "parts/part3/ch17-governance.tex",
+    "line": 85,
+    "sha1": "ccfe73ba425d0009c318ea26c0f935a611720905",
+    "width": 528,
+    "height": 167,
+    "alt": "Groups and access levels in the practice project. Group finance: int_orders__enriched, int_payments__successful and int_orders__payment_methods_pivoted are private; fct_orders and fct_monthly_revenue are public; fct_order_items is protected. Group marketing: dim_customers (versions v1 and v2) is public; customer_segments is protected. Legend: private = same group only; protected (default) = same project; public = any group, any project.",
+    "description": "Arrows: int_orders__enriched → fct_orders; int_orders__enriched → fct_monthly_revenue; fct_orders → dim_customers (across the two groups); dim_customers → customer_segments."
+  },
+  {
+    "id": "ch17-fig2",
+    "svg": "ch17-fig2.svg",
+    "file": "parts/part3/ch17-governance.tex",
+    "line": 428,
+    "sha1": "4f872628d25fe274ad3f5e05394e478da60b920d",
+    "width": 494,
+    "height": 91,
+    "alt": "How dbt enforces a model contract, in four steps: 1. Query shape: the model SQL runs with where false limit 0 and dbt reads its names and types. 2. Contract shape: dbt builds cast(null as <data_type>) for each YAML column and reads the types. 3. Compare: names and types, order ignored; any mismatch is an error and nothing is built. 4. Build: create table with the types and constraints, then insert the rows."
+  },
+  {
+    "id": "ch18-fig1",
+    "svg": "ch18-fig1.svg",
+    "file": "parts/part4/ch18-data-tests.tex",
+    "line": 133,
+    "sha1": "419de40acc2dca5d83f21093a3e6640e6d831b4a",
+    "width": 604,
+    "height": 230,
+    "alt": "The kinds of dbt tests. dbt tests are data tests (real data) or unit tests (logic, fake rows). Data tests are generic tests (attached in YAML) or singular tests (tests/*.sql). Generic tests are built-in (unique, not_null, accepted_values, relationships), from packages (dbt_utils.*, dbt_expectations.*) or custom generic ({% test %} block in tests/generic/). Unit tests are written under unit_tests: in YAML (Chapter 19)."
+  },
+  {
+    "id": "ch18-fig2",
+    "svg": "ch18-fig2.svg",
+    "file": "parts/part4/ch18-data-tests.tex",
+    "line": 1523,
+    "sha1": "f0ca58064278f9e330e9d95d8036fff990a8973e",
+    "width": 569,
+    "height": 128,
+    "alt": "In dbt build, a failing test blocks the nodes after it. stg_jaffle_shop__customers and stg_jaffle_shop__orders are OK. The relationships test on them fails (FAIL 1). int_orders__enriched waits for the test, so it is skipped (SKIP), and so is fct_orders … after it. fct_order_items does not depend on the test and is built (OK)."
+  },
+  {
+    "id": "ch18-fig3",
+    "svg": "ch18-fig3.svg",
+    "file": "parts/part4/ch18-data-tests.tex",
+    "line": 1697,
+    "sha1": "68ec379bdef0ea69a1dc9ed665ef951a5ad94e48",
+    "width": 456,
+    "height": 85,
+    "alt": "Tests in the development workflow. Development: dbt build -s my_model+ after each change, before each commit. Then a pull request goes to CI: dbt build -s state:modified+ on every pull request; a failure blocks the merge. After the merge, the production job: dbt source freshness and dbt build, scheduled, with alerts on failure."
+  },
+  {
+    "id": "ch20-fig1",
+    "svg": "ch20-fig1.svg",
+    "file": "parts/part5/ch20-documentation.tex",
+    "line": 79,
+    "sha1": "13bf753783e806890c7ccd45550e7301dd968f1a",
+    "width": 524,
+    "height": 192,
+    "alt": "How the dbt documentation site is made. Your project (.sql .yml .md: descriptions, doc blocks) → parse + compile → manifest.json. The warehouse (information schema: columns, types, stats) → metadata queries → catalog.json. dbt itself (the website code) → copied → index.html. The three files are in target/ after dbt docs generate; dbt docs serve starts a local web server → your browser."
+  },
+  {
+    "id": "ch20-fig2",
+    "svg": "ch20-fig2.svg",
+    "file": "parts/part5/ch20-documentation.tex",
+    "line": 642,
+    "sha1": "e889e00b30cba24206de8cedbe4e2dbcaf4478d0",
+    "width": 554,
+    "height": 132,
+    "alt": "A sketch of the lineage graph in the dbt docs website. stripe.payments → stg_stripe__payments and jaffle_shop.orders → stg_jaffle_shop__orders; both feed int_orders__enriched, which feeds fct_monthly_revenue and fct_orders; fct_monthly_revenue feeds monthly_revenue_dashboard. The bar at the bottom has resources, packages, tags, a --select box with +fct_monthly_revenue+, an --exclude box and an Update Graph button."
+  },
+  {
+    "id": "ch21-fig1",
+    "svg": "ch21-fig1.svg",
+    "file": "parts/part5/ch21-freshness-exposures.tex",
+    "line": 48,
+    "sha1": "3dab69f38e7498ef2c242863b6d5a4fc1925b315",
+    "width": 588,
+    "height": 87,
+    "alt": "The chain around a dbt project: Web shop, Stripe (source systems) → Loader (Fivetran, Airbyte, a script) → Raw tables = dbt sources → dbt models (staging, marts) → Dashboards, notebooks = dbt exposures. The first two steps are outside dbt. Source freshness asks “did new data arrive?”; exposures answer “who uses my models?”."
+  },
+  {
+    "id": "ch21-fig2",
+    "svg": "ch21-fig2.svg",
+    "file": "parts/part5/ch21-freshness-exposures.tex",
+    "line": 89,
+    "sha1": "9e871f6b4ca9374b8a2446e6bf8dd20ed6cae9ce",
+    "width": 533,
+    "height": 98,
+    "alt": "Source freshness on an age axis, where age = now − max(_loaded_at). From age 0 (just loaded) to warn_after (12 hours) the result is PASS; from 12 hours to error_after (24 hours) it is WARN; after 24 hours it is ERROR STALE."
+  },
+  {
+    "id": "ch22-fig1",
+    "svg": "ch22-fig1.svg",
+    "file": "parts/part6/ch22-debugging.tex",
+    "line": 78,
+    "sha1": "d20ccbd07318f192510ddae11bfd35417cfd8b8b",
+    "width": 582,
+    "height": 183,
+    "alt": "The four phases of a dbt command, the cheapest command that reaches each phase, and its typical errors. 1. Parse (read YAML and files; dbt parse): Parsing Error (YAML), Compilation Error (Jinja syntax, missing ref/source, duplicate names). 2. Compile (render Jinja, link the DAG; dbt compile, dbt ls): Compilation Error (unknown macro, missing var), Found a cycle (a “Dependency Error”). 3. Execute (send SQL to the warehouse; dbt run, dbt show): Runtime Error / Binder Error (DuckDB), Database Error (other warehouses), connection errors. 4. Check (data tests and unit tests; dbt test, dbt build): FAIL / WARN (the data breaks a rule)."
+  },
+  {
+    "id": "ch22-fig2",
+    "svg": "ch22-fig2.svg",
+    "file": "parts/part6/ch22-debugging.tex",
+    "line": 874,
+    "sha1": "b60cbd8dda6f6da9c40447a92fc87166e0a397c0",
+    "width": 443,
+    "height": 318,
+    "alt": "A decision tree to find the cause of an error. Did dbt stop before sending SQL (Parsing / Compilation Error, cycle)? Yes: a dbt problem in the files: fix YAML, Jinja, ref/source names; check with dbt parse and dbt ls. No: copy target/compiled/… into the warehouse console and run it. Does it fail too? Yes: a pure SQL problem: fix the SQL in the model (column, join, syntax); use dbt show to check. No, it works: a dbt problem around the SQL: read target/run and logs/dbt.log (materialization, ;, contract, hooks, permissions on the target schema, incremental filter, on_schema_change…)."
+  },
+  {
+    "id": "ch22-fig3",
+    "svg": "ch22-fig3.svg",
+    "file": "parts/part6/ch22-debugging.tex",
+    "line": 992,
+    "sha1": "4d5e879e719c23cc29a52ac6057abd88dac1a05a",
+    "width": 520,
+    "height": 117,
+    "alt": "The fix workflow in ten steps: 1 Reproduce in dev, 2 Branch (git switch -c), 3 Fix the root cause, 4 Test (dbt build -s m+), 5 Preview (state:modified+), 6 Commit, push, PR, 7 CI runs (slim CI), 8 Review and approve, 9 Merge into main, 10 Production job runs. Steps 4 and 7 are highlighted."
+  },
+  {
+    "id": "ch23-fig1",
+    "svg": "ch23-fig1.svg",
+    "file": "parts/part6/ch23-pipelines-clone.tex",
+    "line": 56,
+    "sha1": "fce43db9ed79f13673623ad926cb671840dedd04",
+    "width": 598,
+    "height": 161,
+    "alt": "The simplified practice DAG with six numbered failure points (red circles): 1 at source: orders (source missing or stale), 2 at int_…_pivoted (model SQL error), 3 at stg_…_orders (test failure), 4 at dim_customers (hook failure), 5 at fct_order_items (the warehouse) and 6 at source: orders again (upstream data change).",
+    "description": "Sources orders, payments and order_items feed stg_…_orders, stg_stripe__payments and stg_…_order_items. stg_…_orders and stg_stripe__payments feed int_orders__enriched; stg_stripe__payments also feeds int_…_pivoted. int_orders__enriched feeds fct_orders and fct_monthly_revenue; int_…_pivoted feeds fct_orders; stg_…_orders and stg_…_order_items feed fct_order_items; fct_orders feeds dim_customers. The meaning of the numbers is given in the table after the figure."
+  },
+  {
+    "id": "ch23-fig2",
+    "svg": "ch23-fig2.svg",
+    "file": "parts/part6/ch23-pipelines-clone.tex",
+    "line": 795,
+    "sha1": "e7c8762d1a6d2c884c88a42cc967bb1892ab685a",
+    "width": 550,
+    "height": 143,
+    "alt": "Two kinds of clone. On Snowflake, Databricks and BigQuery, a zero-copy clone: marts.fct_orders and dbt_adnane.fct_orders point to the same shared storage blocks (no copy); the clone is a real table. On DuckDB, Postgres and others, a pointer view: dbt_adnane.fct_orders is a view (select * from marts.fct_orders, the table), so every query reads production."
+  },
+  {
+    "id": "ch24-fig1",
+    "svg": "ch24-fig1.svg",
+    "file": "parts/part7/ch24-state-defer-retry.tex",
+    "line": 164,
+    "sha1": "8feafc509303252d5695295daac12a16b90fb351",
+    "width": 537,
+    "height": 137,
+    "alt": "How state comparison works. The state (the past: prod-artifacts/manifest.json, the last production build) and the current project (your files, parsed now, on your branch) go into a comparison, node by node, by unique ID. The comparison selects state:new, state:modified and state:old / unmodified."
+  },
+  {
+    "id": "ch24-fig2",
+    "svg": "ch24-fig2.svg",
+    "file": "parts/part7/ch24-state-defer-retry.tex",
+    "line": 810,
+    "sha1": "94768d8f1805a2b27a8dd72ab7abdb09feda85a7",
+    "width": 586,
+    "height": 113,
+    "alt": "Where ref('x') points with --defer --state. Is x selected in this command? Yes: my schema (dbt_ci.x). No: does x exist in my target schema? Yes: my schema (unless --favor-state). No: the state's relation (prod.x)."
+  },
+  {
+    "id": "ch24-fig3",
+    "svg": "ch24-fig3.svg",
+    "file": "parts/part7/ch24-state-defer-retry.tex",
+    "line": 1040,
+    "sha1": "4030bf7f09d0dba36fdbe8cdc4267554f7704bc4",
+    "width": 597,
+    "height": 47,
+    "alt": "How dbt retry works: dbt build ends with 1 error and 11 skipped and writes target/run_results.json; you fix the code; dbt retry reads the file and re-runs the 12 nodes with the same arguments."
+  },
+  {
+    "id": "ch25-fig1",
+    "svg": "ch25-fig1.svg",
+    "file": "parts/part7/ch25-environments-ci.tex",
+    "line": 135,
+    "sha1": "01aa98ad0f7bf64dd7de704d478e0cdf09920fe7",
+    "width": 509,
+    "height": 195,
+    "alt": "The CI/CD workflow in eight steps, with the environment of each: 1. Branch from main; 2. Change + dbt build -s x+ (dev schema); 3. Commit, push, open PR; 4. CI job: slim CI build (CI schema; a red check means fix and push again, back to step 2); 5. Review + green check; 6. Merge into main; 7. Deploy: merge or scheduled job; 8. Production tables + artifacts (production), which are the state for the next CI run."
+  },
+  {
+    "id": "ch26-fig1",
+    "svg": "ch26-fig1.svg",
+    "file": "parts/part8/ch26-capstone.tex",
+    "line": 133,
+    "sha1": "7a14b271b3eeb6f667c50710fbad287373624c9c",
+    "width": 754,
+    "height": 404,
+    "alt": "The ShopFlow capstone DAG at milestone m14 (simplified), in five columns: sources (4 schemas), staging (views), intermediate, marts (tables) in two groups, and two dashboard exposures.",
+    "description": "Sources and their staging models: shopflow_app (customers, addresses, products, orders, order_items) → stg_shopflow_app__customers, __addresses, __products, __orders, __order_items; payments_provider (payments, refunds) → stg_payments_provider__payments, __refunds; web_analytics (events) → stg_web_analytics__events; shipping (shipments) → stg_shipping__shipments. Snapshots products_snapshot and shipments_snapshot read shopflow_app and shipping. Intermediate: the seeds exchange_rates and country_regions and the shopflow_app staging models feed int_order_items__priced; the shopflow_app staging models feed int_orders__enriched; the payments_provider staging models feed int_payments__per_order (ephemeral), which feeds int_orders__enriched. Group finance marts: fct_order_items (from int_order_items__priced), dim_products (from the shopflow_app staging models), fct_orders (incremental) and fct_daily_revenue (both from int_orders__enriched). Group marketing marts: dim_customers v1, v2 (from int_orders__enriched), customer_rfm (Python, from fct_orders and dim_customers), fct_events (microbatch, from stg_web_analytics__events) and fct_sessions (from fct_events). Exposures: weekly_revenue_dashboard (from fct_orders and fct_daily_revenue) and customer_segments_dashboard (from customer_rfm and dim_customers)."
+  },
+  {
+    "id": "ch27-fig1",
+    "svg": "ch27-fig1.svg",
+    "file": "parts/part9/ch27-exam-strategy.tex",
+    "line": 51,
+    "sha1": "7b54679bac9f543ce1319fef1b740c0ee193dc83",
+    "width": 514,
+    "height": 209,
+    "alt": "The four parts of a scenario question and the order to read them. On the page the parts are Scenario, Evidence, Stem, Options. Read them in this order: 1. the Stem (the real question, usually the last sentence, with the question mark): read it first, name the objective, circle the keywords; 2. the Scenario (the story: a team, a project, a problem to solve), with the question already in mind; 3. the Evidence (code, YAML, a log, a command or its output): look for the detail the stem asks about; 4. the Options (one correct answer, sometimes more, and several plausible wrong answers): predict first, then eliminate."
+  },
+  {
+    "id": "ch27-fig2",
+    "svg": "ch27-fig2.svg",
+    "file": "parts/part9/ch27-exam-strategy.tex",
+    "line": 370,
+    "sha1": "ec9a151204f0cc17434ed9aacc37edc6663f65a6",
+    "width": 471,
+    "height": 125,
+    "alt": "How a DOMC question works: the stem is shown (read it twice) → one option appears → you answer YES or NO → if the result is decided, the question ends; if not, the next option appears. There is no way back to an answered option."
+  },
+  {
+    "id": "ch27-fig3",
+    "svg": "ch27-fig3.svg",
+    "file": "parts/part9/ch27-exam-strategy.tex",
+    "line": 449,
+    "sha1": "dfec63860c18665a98e40d17f2b3c8fd16f45ed1",
+    "width": 561,
+    "height": 113,
+    "alt": "Pacing plan for the 120-minute exam. First pass from minute 0 to 75 (answer, guess, mark), second pass from 75 to 105, check from 105 to 120. Target checkpoints: Q22 at minute 25, Q44 at minute 50, Q65 at minute 75. Safety checkpoints (at the latest): Q22 at minute 40, Q44 at minute 80."
+  }
+]

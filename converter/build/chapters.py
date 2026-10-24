@@ -290,8 +290,8 @@ class ChapterBuilder:
         ctx.lesson, ctx.step = None, "quiz"
         title = trim(self.r.inl.render(sec.cmd.args[1].nodes))
         blocks = self.render_seq(sec.pre)
-        qs = {"number": sec.number or "", "title": title, "titleText": plain(title), "blocks": blocks,
-              "ids": [i for b in blocks if b.get("t") == "quiz" for i in b["ids"]]}
+        qs = {"index": sec.index, "number": sec.number or "", "title": title, "titleText": plain(title),
+              "blocks": blocks, "ids": [i for b in blocks if b.get("t") == "quiz" for i in b["ids"]]}
         if sec.label:
             qs["label"] = sec.label
             qs["anchor"] = anchor_of(sec.label)
@@ -311,7 +311,7 @@ class ChapterBuilder:
         attach_mock_answers(self.r, segs, drafts)
         title = trim(self.r.inl.render(sec.cmd.args[1].nodes))
         ids = [f"m{mock}-q{k + 1:02d}" for k in range(len(drafts))]
-        qs = {"number": sec.number or "", "title": title, "titleText": plain(title),
+        qs = {"index": sec.index, "number": sec.number or "", "title": title, "titleText": plain(title),
               "blocks": intro + [{"t": "quiz", "ids": ids}], "ids": ids, "kind": "mock-answers"}
         if sec.label:
             qs["label"] = sec.label

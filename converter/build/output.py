@@ -115,6 +115,55 @@ def block_text(b: dict) -> str:
     return f"[{t}]"
 
 
+def check_mock_tables(res: BuildResult, mocks_json: dict[int, list[dict]]) -> list[str]:
+    """The answer chapters print a score table (topic -> question numbers) and Mock 3 a quick answer key:
+    both must agree with the \\mockkey data."""
+    import re
+    problems = []
+    for r in res.chapters:
+        if r.seg.kind != "mock-answers":
+            continue
+        m = r.seg.mock
+        qs = mocks_json[m]
+        by_topic: dict[int, set] = {}
+        for q in qs:
+            by_topic.setdefault(q.get("topic"), set()).add(q["source"]["n"])
+        tables = [b for l in r.chapter["lessons"] for s in l["steps"] for b in s["blocks"] if b.get("t") == "table"]
+        score = [t for t in tables if t.get("head") and plain(t["head"][0][1]["c"]) == "Questions"]
+        if len(score) != 1:
+            problems.append(f"{r.seg.id}: score table not found")
+        else:
+            for row in score[0]["rows"]:
+                mt = re.match(r"(\d)\.", plain(row[0]["c"]))
+                if not mt:
+                    continue
+                printed = {int(x) for x in re.findall(r"\d+", plain(row[1]["c"]))}
+                topic = int(mt.group(1))
+                if printed != by_topic.get(topic, set()):
+                    problems.append(f"{r.seg.id} score table, topic {topic}: printed {sorted(printed)} "
+                                    f"but \\mockkey objectives give {sorted(by_topic.get(topic, set()))}")
+        quick = [t for t in tables if t.get("head") and plain(t["head"][0][0]["c"]) == "Q"]
+        for t in quick:
+            pairs = []
+            for row in t["rows"]:
+                for i in range(0, len(row) - 1, 2):
+                    n = plain(row[i]["c"]).strip()
+                    if n.isdigit():
+                        pairs.append((int(n), " ".join(plain(row[i + 1]["c"]).split())))
+            for n, printed in pairs:
+                raw = qs[n - 1]["keyRaw"]
+                from ..tex.parser import parse_string
+                from ..render.inline import InlineRenderer
+                tctx = Ctx(chapter_id="x", chapter_number=-1, chapter_label="", labels=res.labels,
+                           objective_ids=all_ids(res.objectives), term_ids={})
+                mine = " ".join(plain(InlineRenderer(tctx).render(parse_string(raw))).split())
+                if mine != printed:
+                    problems.append(f"{r.seg.id} quick answer key Q{n}: printed {printed!r}, \\mockkey says {mine!r}")
+            if len(pairs) != len(qs):
+                problems.append(f"{r.seg.id} quick answer key lists {len(pairs)} answers for {len(qs)} questions")
+    return problems
+
+
 def assemble(res: BuildResult, book: Path, rules: Path, overrides: Path) -> tuple[dict[str, object], dict]:
     files: dict[str, object] = {}
     info: dict = {"todo": [], "overrides": [], "problems": [], "rewrites": []}
@@ -207,6 +256,7 @@ def assemble(res: BuildResult, book: Path, rules: Path, overrides: Path) -> tupl
     info["problems"] += check_coverage_appendix(objs, chapters["appB"].chapter)
     files["objectives.json"] = objs
     files["coverage.json"] = cov
+    info["problems"] += check_mock_tables(res, mocks_json)
     files["traps.json"] = [{k: v for k, v in t.items() if k != "lesson"} for t in res.state.traps]
     files["plan.json"] = build_plan(chapters["ch00"].chapter)
     files["cheatsheets.json"] = build_cheatsheets(chapters["appA"].chapter)

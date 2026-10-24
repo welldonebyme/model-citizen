@@ -6,6 +6,7 @@ import { Inline } from '../../../components/content/Inline';
 import { chapters, partName, routes } from '../../../lib/content';
 import { figuresFor } from '../../../lib/figures';
 import { url } from '../../../lib/url';
+import { labTitles } from '../../../lib/course-facts';
 
 export function getStaticPaths() {
   return chapters.map((c) => ({ params: { chapter: c.id }, props: { id: c.id } }));
@@ -48,7 +49,7 @@ const mock = /^ch(28|30|32)$/.test(c.id) ? { ch28: 1, ch30: 2, ch32: 3 }[c.id as
         {labs.length > 0 && (
           <section class="panel" aria-labelledby="lb-h">
             <h2 id="lb-h">Labs in this chapter</h2>
-            <ul class="labs">{labs.map(({ lab, lesson }) => <li><a href={url(routes.lesson(lesson, c.id)) + '#' + lab}>{lab.replace(/^ch\d+-lab/, 'Lab ')}</a> <span class="min">in lesson {lesson.number}</span></li>)}</ul>
+            <ul class="labs">{labs.map(({ lab, lesson }) => <li><a href={url(routes.lesson(lesson, c.id)) + '#' + lab}>{labTitles[lab] ?? lab.replace(/^ch\d+-lab/, 'Lab ')}</a> <span class="min">in lesson {lesson.number}</span></li>)}</ul>
           </section>
         )}
       </aside>

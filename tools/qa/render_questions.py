@@ -127,4 +127,5 @@ def main(out):
     (out / "keys.json").write_text(json.dumps(keys, indent=1, ensure_ascii=False))
     print(len(chunks), "chunks,", sum(len(c["questions"]) for c in chunks), "questions")
 
-main(sys.argv[1])
+if __name__ == '__main__':
+    main(sys.argv[1])

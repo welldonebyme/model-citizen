@@ -14,10 +14,11 @@ todo:
   stem: In a YAML file, a value that contains Jinja, such as {{ target.schema }}, must be written inside ____.
   blanks: 1
   proposal:
-    accepted: &id001
+    accepted:
     - Quotes
   currentKey:
-    accepted: *id001
+    accepted:
+    - Quotes
   explanation: 'Quotes (single or double): schema: "{{ target.schema }}". Without them, YAML reads { as the start
     of an inline mapping and fails.'
 - id: q-ch06-12
@@ -30,10 +31,11 @@ todo:
   stem: The dbt init flag that creates the project files without asking the profile questions is ____.
   blanks: 1
   proposal:
-    accepted: &id002
+    accepted:
     - --skip-profile-setup
   currentKey:
-    accepted: *id002
+    accepted:
+    - --skip-profile-setup
   explanation: --skip-profile-setup (short form -s).
 - id: q-ch10-20
   where: parts/part2/ch10-configuration.tex:1868
@@ -47,10 +49,11 @@ todo:
     profiles.yml and packages.yml.
   blanks: 1
   proposal:
-    accepted: &id003
+    accepted:
     - DBT_ENV_SECRET_
   currentKey:
-    accepted: *id003
+    accepted:
+    - DBT_ENV_SECRET_
   explanation: 'DBT_ENV_SECRET_ (the docs write it DBT_ENV_SECRET; both answers mean the same prefix). (DBT_ENV_CUSTOM_ENV_
     is the other special prefix: copied into the artifacts'' metadata.)'
 - id: q-ch12-03
@@ -64,10 +67,11 @@ todo:
     the seed table is dbt seed ____.
   blanks: 1
   proposal:
-    accepted: &id004
+    accepted:
     - --full-refresh
   currentKey:
-    accepted: *id004
+    accepted:
+    - --full-refresh
   explanation: --full-refresh (short form -f). It drops and recreates the table (trap T59).
 - id: q-ch14-06
   where: parts/part2/ch14-incremental-microbatch.tex:1971
@@ -79,10 +83,11 @@ todo:
   stem: To drop and rebuild fct_orders from all the data, you run dbt run --select fct_orders ____.
   blanks: 1
   proposal:
-    accepted: &id005
+    accepted:
     - --full-refresh
   currentKey:
-    accepted: *id005
+    accepted:
+    - --full-refresh
   explanation: --full-refresh (or its short form -f). The table is dropped and rebuilt from the full query.
 - id: q-ch17-03
   where: parts/part3/ch17-governance.tex:1740
@@ -111,10 +116,11 @@ todo:
     }}.'
   blanks: 1
   proposal:
-    accepted: &id006
+    accepted:
     - v
   currentKey:
-    accepted: *id006
+    accepted:
+    - v
   explanation: v (version works too). Without it, the ref follows latest_version.
 - id: q-ch22-13
   where: parts/part6/ch22-debugging.tex:1670
@@ -126,10 +132,11 @@ todo:
   stem: To see in the console the SQL statements that dbt sends, you add the flag ____ (or its short form -d).
   blanks: 1
   proposal:
-    accepted: &id007
+    accepted:
     - --debug
   currentKey:
-    accepted: *id007
+    accepted:
+    - --debug
   explanation: --debug (or --log-level debug). -d is the short form of --debug.
 - id: q-ch26-03
   where: parts/part8/ch26-capstone.tex:2009

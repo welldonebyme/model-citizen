@@ -46,7 +46,12 @@ def write_keys_todo(todo: list[dict]) -> None:
             "# certainty. Nothing here is guessed. To resolve one, copy it to overrides/keys.yaml as\n"
             "#   keys:\n#     <id>: {hash: <hash>, key: <structured key>, note: <why>}\n"
             "# (the hash protects against applying a key to a question whose text changed in the book).\n")
-    body = yaml.safe_dump({"todo": todo}, sort_keys=False, allow_unicode=True, width=110) if todo else "todo: []\n"
+    class NoAliases(yaml.SafeDumper):
+        def ignore_aliases(self, data):
+            return True
+
+    body = yaml.dump({"todo": todo}, Dumper=NoAliases, sort_keys=False, allow_unicode=True, width=110) \
+        if todo else "todo: []\n"
     p = OVERRIDES / "keys-todo.yaml"
     OVERRIDES.mkdir(exist_ok=True)
     text = head + body

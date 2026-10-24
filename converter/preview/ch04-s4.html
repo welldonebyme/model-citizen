@@ -1,0 +1,55 @@
+<!doctype html><meta charset=utf-8><title>NULL: the value that is not a value</title><style>
+body{font:16px/1.5 Georgia,serif;max-width:52rem;margin:2rem auto;padding:0 1rem;color:#1F2A44}
+h1,h2,h3,h4{font-family:system-ui,sans-serif}
+code{font:0.88em Menlo,monospace;background:#F6F7F9;padding:0 .2em;border-radius:3px}
+pre{font:13px/1.35 Menlo,monospace;background:#F6F7F9;border:1px solid #D7DBE2;padding:.6em;overflow:auto;white-space:pre}
+pre.bash{background:#1d2333;color:#fff} pre.output{background:#FBFBF5}
+.codetitle{font:12px Menlo,monospace;background:#e3e6ec;padding:.2em .6em;margin-top:1em}
+.callout{border-left:4px solid #888;padding:.2em 1em;margin:1em 0;background:#fafafa}
+.callout>.kind{font:bold 12px system-ui;text-transform:uppercase;color:#555}
+.why{border-color:#2563EB}.idea{border-color:#D97706}.trap{border-color:#DC2626}.tip{border-color:#0891B2}
+.deep{border-color:#6B7280}.dbt{border-color:#E8573F}.analogy{border-color:#b45309}
+.lab{border:2px solid #059669;padding:.5em 1em;margin:1em 0}.lab>.kind{color:#059669;font:bold 13px system-ui}
+.obj{font:11px system-ui;background:#1F2A44;color:#fff;padding:0 .4em;border-radius:3px}
+.term{font-weight:bold}.term small{color:#6B7280;font-weight:normal}
+.blank{display:inline-block;width:5em;border-bottom:1px solid}
+table{border-collapse:collapse;margin:1em 0}td,th{border-top:1px solid #ccc;padding:.2em .5em;vertical-align:top}
+.fig{border:1px dashed #aaa;padding:.5em;color:#666;font:13px system-ui}
+.step{border-top:1px solid #eee;margin-top:2em}.meta{color:#888;font:12px system-ui}
+.key{font:12px Menlo;border:1px solid #bbb;border-radius:3px;padding:0 .3em}
+</style><p class=meta>ch04 — SQL from Zero to Exam Level — reading 10 min, labs 0 min — objectives </p><h1>4.4 NULL: the value that is not a value</h1><div class=step id='ch04-s4-0'><span class=meta>ch04-s4-0</span><p>Five customers have no email address. In the table, their <code>email</code> is <span class=term>NULL <small>(FR: <i>NULL (valeur absente)</i>)</small></span>. NULL means <i>unknown</i> or <i>missing</i>. It is not zero, it is not an empty text <code>''</code>, it is "we do not know".</p><div class='callout analogy'><div class=kind>analogy</div><p>Imagine a form where somebody did not answer the question "What is your age?". You cannot say the age is 0. You cannot say it is equal to the age of another person who also did not answer: you simply do not know either age. SQL reasons exactly like this.</p></div></div><div class=step id='ch04-s4-1'><span class=meta>ch04-s4-1</span><h2>4.4.1 Three-valued logic</h2><p>Because of NULL, a condition in SQL can be <b>true</b>, <b>false</b> or <b>unknown</b> (shown as NULL). Any comparison with NULL is unknown, and <code>where</code> keeps only rows where the condition is <i>true</i>.</p><pre class=sql>select null = null as a, null &lt;&gt; 1 as b, null is null as c, 1 + null as d;</pre><span class=meta>ch04-c27 sql expected=ch04-c28</span><div class=codetitle>Result</div><pre class=output>+------+------+------+------+
+| a    | b    | c    | d    |
++------+------+------+------+
+| NULL | NULL | true | NULL |
++------+------+------+------+
+(1 row)</pre><span class=meta>ch04-c28 output</span><p>Even <code>null = null</code> is not true: two unknown values are not known to be equal. Arithmetic with NULL gives NULL. The only correct test is <code>is null</code> / <code>is not null</code>.</p><p>Here is how <code>and</code> and <code>or</code> behave with unknown:</p><table><tr><th colspan=1>Expression</th><th colspan=1>Result</th><th colspan=1>Why</th></tr><tr><td colspan=1 style='text-align:left'><code>true and null</code></td><td colspan=1 style='text-align:left'>NULL</td><td colspan=1 style='text-align:left'>we need both; one is unknown</td></tr><tr><td colspan=1 style='text-align:left'><code>false and null</code></td><td colspan=1 style='text-align:left'>false</td><td colspan=1 style='text-align:left'>one is already false, so the whole is false</td></tr><tr><td colspan=1 style='text-align:left'><code>true or null</code></td><td colspan=1 style='text-align:left'>true</td><td colspan=1 style='text-align:left'>one is already true, so the whole is true</td></tr><tr><td colspan=1 style='text-align:left'><code>false or null</code></td><td colspan=1 style='text-align:left'>NULL</td><td colspan=1 style='text-align:left'>the answer depends on the unknown one</td></tr><tr><td colspan=1 style='text-align:left'><code>not null</code></td><td colspan=1 style='text-align:left'>NULL</td><td colspan=1 style='text-align:left'>the opposite of unknown is unknown</td></tr></table></div><div class=step id='ch04-s4-2'><span class=meta>ch04-s4-2</span><h2>4.4.2 IS NULL, not = NULL</h2><pre class=sql>select id, first_name, email
+from jaffle_shop.customers
+where email is null;</pre><span class=meta>ch04-c29 sql expected=ch04-c30</span><div class=codetitle>Result</div><pre class=output>+----+------------+-------+
+| id | first_name | email |
++----+------------+-------+
+| 17 | Leo        | NULL  |
+| 34 | Leo        | NULL  |
+| 51 | Lina       | NULL  |
+| 68 | Ben        | NULL  |
+| 85 | Hugo       | NULL  |
++----+------------+-------+
+(5 rows)</pre><span class=meta>ch04-c30 output</span><div class='callout trap'><div class=kind>trap</div><p><code>where email = null</code> runs without any error, and returns <b>zero rows</b>. The comparison is unknown for every row, so no row is kept. A query that is wrong but does not fail is the most dangerous kind of bug. Always write <code>is null</code> or <code>is not null</code>.</p></div></div><div class=step id='ch04-s4-3'><span class=meta>ch04-s4-3</span><h2>4.4.3 The NOT IN trap</h2><p><code>x not in (1, 2, null)</code> means <code>x &lt;&gt; 1 and x &lt;&gt; 2 and x &lt;&gt; null</code>. The last part is unknown for every row, so the whole condition is never true:</p><pre class=sql>select count(*) from jaffle_shop.customers where id not in (1, 2);        -- 98
+select count(*) from jaffle_shop.customers where id not in (1, 2, null);  -- 0 !</pre><span class=meta>ch04-c31 sql</span><p>In real life the NULL does not come from a list you typed, but from a subquery such as <code>where id not in (select user_id from ...)</code>. If one <code>user_id</code> is NULL, the query silently returns nothing. The anti-join pattern of <a href='/learn/ch04/ch04-s8/'>Section 4.8</a> (or <code>not exists</code>, seen in <a href='/learn/ch04/ch04-s10/'>Section 4.10</a>) does not have this problem.</p></div><div class=step id='ch04-s4-4'><span class=meta>ch04-s4-4</span><h2>4.4.4 Replacing NULL: coalesce and nullif</h2><p><code>coalesce(a, b, c, ...)</code> returns the first value that is not NULL. It is the standard way to give a default value:</p><pre class=sql>select id, first_name, coalesce(email, 'no email') as email
+from jaffle_shop.customers
+where id in (15, 17, 34);</pre><span class=meta>ch04-c32 sql expected=ch04-c33</span><div class=codetitle>Result</div><pre class=output>+----+------------+----------------------------+
+| id | first_name | email                      |
++----+------------+----------------------------+
+| 15 | Paul       | paul.bernard15@example.com |
+| 17 | Leo        | no email                   |
+| 34 | Leo        | no email                   |
++----+------------+----------------------------+
+(3 rows)</pre><span class=meta>ch04-c33 output</span><p><code>nullif(a, b)</code> does the reverse: it returns NULL when <code>a = b</code>, otherwise <code>a</code>. The classic use is to avoid division by zero: <code>revenue / nullif(n_orders, 0)</code> returns NULL instead of failing when there are no orders. (Most warehouses raise an error on division by zero. DuckDB returns <code>inf</code> with <code>/</code>, which is not better for a report.)</p></div><div class=step id='ch04-s4-5'><span class=meta>ch04-s4-5</span><h2>4.4.5 count(*) versus count(column)</h2><p>This difference is small, important, and loved by exam writers.</p><ul><li><p><code>count(*)</code> counts <b>rows</b>, whatever they contain.</p></li><li><p><code>count(email)</code> counts rows where <code>email</code> <b>is not NULL</b>.</p></li></ul><pre class=sql>select
+    count(*) as all_rows,
+    count(email) as with_email,
+    count(*) - count(email) as missing
+from jaffle_shop.customers;</pre><span class=meta>ch04-c34 sql expected=ch04-c35</span><div class=codetitle>Result</div><pre class=output>+----------+------------+---------+
+| all_rows | with_email | missing |
++----------+------------+---------+
+|      100 |         95 |       5 |
++----------+------------+---------+
+(1 row)</pre><span class=meta>ch04-c35 output</span><p>The same rule holds for all aggregate functions: <code>sum</code>, <code>avg</code>, <code>min</code>, <code>max</code> <i>ignore</i> NULLs. <code>avg</code> of <code>(10, NULL, 20)</code> is 15, not 10.</p><div class='callout dbt'><div class=kind>dbt</div><p>dbt's built-in <code>not_null</code> data test (Chapter 18) is just a query like <code>select * from my_model where my_column is null</code>. If it returns rows, the test fails, and dbt reports how many rows failed. Understanding NULL is understanding half of dbt testing. When you build the <code>customers</code> model later, you will also use <code>coalesce</code> to turn "no orders" into <code>0</code> instead of NULL.</p></div></div>

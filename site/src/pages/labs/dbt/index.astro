@@ -1,0 +1,57 @@
+---
+// /labs/dbt/: the standalone dbt terminal (real dbt-core in the browser) with a chapter picker and a short guide.
+import Base from '../../../layouts/Base.astro';
+import DbtLabApp from '../../../components/dbt/DbtLabApp';
+import { url } from '../../../lib/url';
+---
+<Base title="dbt in your browser" section="labs" description="Real dbt-core 1.11.16 with DuckDB, running in this page: run the labs of the book with nothing installed.">
+  <div class="wrap dbtp">
+    <header class="dbtp-head">
+      <p class="kicker"><a href={url('labs/')}>Labs</a></p>
+      <h1>dbt in your browser</h1>
+      <p class="lead">The real dbt-core 1.11.16 with dbt-duckdb runs inside this page, on the practice project of the book. Choose a chapter, start, and type the commands of its labs.</p>
+    </header>
+
+    <ol class="dbtp-guide">
+      <li><strong>Choose a chapter</strong> and where to start: the start of its labs (your project as at the end of the chapter before), or the end (the solution).</li>
+      <li><strong>Press "Start dbt in your browser".</strong> The first time, the page downloads the engine once (about 24 MB). Later, it starts from your browser's cache.</li>
+      <li><strong>Type the lab's commands</strong> in the terminal, for example <code class="mc-ic">dbt build</code>. Edit models and YAML files in the Files tab, save, and run dbt again.</li>
+      <li><strong>Your work is saved in this browser</strong>, one workspace per chapter. "Reset to the start of this chapter" starts again.</li>
+    </ol>
+
+    <DbtLabApp client:only="react" />
+    <noscript><p class="dbtp-noscript">dbt in the browser needs JavaScript: it runs Python and dbt inside the page.</p></noscript>
+
+    <section class="dbtp-also" aria-labelledby="dbtp-also-title">
+      <h2 id="dbtp-also-title">Also do the labs on your computer</h2>
+      <p>The exam rewards real experience. git, <code class="mc-ic">dbt deps</code> from the internet, the DuckDB command line and your own editor run on your computer: the lessons give the steps for macOS, Windows PowerShell and WSL, and the <a href={url('labs/')}>practice kit</a> has everything you need.</p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .dbtp { padding-block: 32px 16px; max-width: 1360px; }
+  .dbtp-head { margin-bottom: 18px; }
+  .kicker { margin: 0 0 6px; font-size: var(--fs-sm); font-weight: 700; }
+  .kicker a { color: var(--accent-strong); text-decoration: none; }
+  .lead { color: var(--muted); font-size: var(--fs-lg); max-width: 72ch; margin-top: 8px; }
+  .dbtp-guide { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; list-style: none; counter-reset: g; padding: 0; margin: 0 0 22px; }
+  .dbtp-guide li { counter-increment: g; position: relative; padding: 12px 14px 12px 46px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card); font-size: var(--fs-sm); }
+  .dbtp-guide li::before { content: counter(g); position: absolute; left: 14px; top: 12px; width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; background: var(--lab); color: var(--surface); font-weight: 700; font-size: var(--fs-xs); }
+  .dbtp-also { margin-top: 28px; max-width: 80ch; }
+  .dbtp-also h2 { font-size: var(--fs-lg); margin-bottom: 6px; }
+  .dbtp-noscript { padding: 14px; border: 1px solid var(--line); border-radius: var(--r-ctl); }
+  :global(.dbt-lab) { display: grid; gap: 14px; }
+  :global(.dbt-picker) { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: flex-end; }
+  :global(.dbt-picker-field) { display: grid; gap: 6px; border: 0; margin: 0; padding: 0; min-width: 0; }
+  :global(.dbt-picker-field label), :global(.dbt-picker-field legend) { font-weight: 700; color: var(--ink); font-size: var(--fs-sm); padding: 0; }
+  :global(.dbt-picker select) { min-height: 44px; max-width: min(560px, calc(100vw - 32px)); padding: 8px 12px; border: 1.5px solid var(--line-strong); border-radius: var(--r-ctl); background: var(--surface); color: var(--ink); }
+  :global(.dbt-picker .seg) { flex-wrap: wrap; }
+  :global(.dbt-radio) { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 7px; font-size: var(--fs-sm); font-weight: 600; color: var(--muted); cursor: pointer; }
+  :global(.dbt-radio:has(input:checked)) { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0, 0, 0, .14); }
+  :global(.dbt-radio input) { accent-color: var(--accent); }
+  :global(.dbt-saved h2) { font-size: var(--fs-lg); margin: 10px 0 8px; }
+  :global(.dbt-saved .mc-table) { font-size: var(--fs-sm); }
+  :global(.dbt-muted) { color: var(--muted); }
+  @media (max-width: 640px) { .dbtp { padding-block: 20px 8px; } .lead { font-size: var(--fs-md); } }
+</style>

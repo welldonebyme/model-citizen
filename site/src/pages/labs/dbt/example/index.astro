@@ -1,0 +1,42 @@
+---
+// Example for lesson pages: a lesson column with the book's code blocks, and the dbt workspace in the right column.
+// Not linked from the menus; kept as a living example (and used by the end-to-end tests of the CodeBlock hook).
+//
+//   import DbtWorkspace from '../components/dbt/DbtWorkspace';
+//   <DbtWorkspace client:visible preset="ch07-start" title="Workspace" onMachineHref={url('learn/ch07/...#lab')} />
+import Base from '../../../../layouts/Base.astro';
+import { CodeBlock } from '../../../../components/content/CodeBlock';
+import DbtWorkspace from '../../../../components/dbt/DbtWorkspace';
+import { url } from '../../../../lib/url';
+
+const run = { t: 'code' as const, id: 'example-run', lang: 'bash' as const, text: '$ dbt run\n$ dbt build' };
+const ls = { t: 'code' as const, id: 'example-ls', lang: 'bash' as const, text: '$ dbt ls --select +dim_customers' };
+const git = { t: 'code' as const, id: 'example-git', lang: 'bash' as const, text: '$ git status --short\n$ git add .' };
+---
+<Base title="Example: dbt workspace in a lesson" section="labs" description="How a lesson page shows the dbt workspace next to the text.">
+  <div class="ex" data-pagefind-ignore="all">
+    <article class="ex-lesson">
+      <p class="kicker"><a href={url('labs/dbt/')}>dbt in your browser</a></p>
+      <h1>Example: a lesson with the workspace</h1>
+      <p>This page shows how a lesson uses the workspace on the right. A shell block whose commands start with <code class="mc-ic">dbt</code> gets a button "Try in the browser terminal": it puts the command in the terminal, and you press Enter.</p>
+      <CodeBlock block={run} />
+      <p>Selection works like on your computer:</p>
+      <CodeBlock block={ls} />
+      <p>git runs on your computer only, so this block has no button:</p>
+      <CodeBlock block={git} />
+    </article>
+    <aside class="ex-work" aria-label="Workspace">
+      <DbtWorkspace client:only="react" preset="ch07-start" title="Workspace" onMachineHref={url('labs/')} suggestions={['dbt build', 'dbt ls']} />
+    </aside>
+  </div>
+</Base>
+
+<style>
+  .ex { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 560px); gap: 28px; max-width: 1360px; margin: 0 auto; padding: 32px 24px; }
+  .ex-lesson { max-width: 68ch; }
+  .ex-lesson h1 { font-size: var(--fs-2xl); margin-bottom: 12px; }
+  .kicker { margin: 0 0 6px; font-size: var(--fs-sm); font-weight: 700; }
+  .kicker a { color: var(--accent-strong); text-decoration: none; }
+  .ex-work { position: sticky; top: calc(var(--header-h) + 12px); align-self: start; }
+  @media (max-width: 1100px) { .ex { grid-template-columns: minmax(0, 1fr); padding: 20px 16px; } .ex-work { position: static; } }
+</style>

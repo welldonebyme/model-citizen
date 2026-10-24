@@ -16,6 +16,11 @@ export interface CodeBlockProps {
   hideCopy?: boolean;
 }
 
+/** dbt command lines of a shell block ("$ dbt build", "$ DBT_X=1 dbt run"): offered to the browser terminal. */
+export function dbtCommands(text: string): string[] {
+  return commandsOnly(text).split('\n').map((l) => l.trim()).filter((l) => /^([A-Za-z_][A-Za-z0-9_]*=\S*\s+)*dbt(\s|$)/.test(l));
+}
+
 function lines(block: CodeBlockT, text: string): string[] {
   return highlight(block.lang, text).split('\n');
 }
@@ -32,6 +37,8 @@ export function CodeBlock({ block, runnable, onLine, selectedLine, lineState, hi
     ...(v?.wsl ? [{ os: 'wsl', text: v.wsl }] : []),
   ];
   const multi = panes.length > 1;
+  // Hidden until a dbt workspace is on the page (components/dbt/DbtWorkspace un-hides it and handles the click).
+  const dbtTry = isTerm ? dbtCommands(block.text) : [];
   const first = block.firstLine ?? 1;
   const cls = ['mc-code', `mc-lang-${block.lang}`, isTerm && 'mc-term-block', isOut && 'mc-out', block.small && 'mc-small', block.lineNumbers && 'mc-numbered', onLine && 'mc-hotspot'].filter(Boolean).join(' ');
 
@@ -46,6 +53,7 @@ export function CodeBlock({ block, runnable, onLine, selectedLine, lineState, hi
         </span>
         <span className="mc-code-actions">
           {runnable && <button type="button" className="mc-code-act" data-send-to-workspace={block.id}>Run in workspace</button>}
+          {dbtTry.length > 0 && <button type="button" className="mc-code-act" data-dbt-try={dbtTry.join('\n')} hidden>Try in the browser terminal</button>}
           {!isOut && !hideCopy && <button type="button" className="mc-code-act" data-copy="">{isTerm ? 'Copy commands' : 'Copy'}</button>}
         </span>
       </figcaption>

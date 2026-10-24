@@ -6,7 +6,7 @@ import type { Format, Question } from '../../lib/content-types';
 import { EMPTY_FILTER, difficultyOf, filterBank, pick, questionObjectives, sourceKey, type DrillFilter, type SourceKey } from '../../lib/exam/bank';
 import { answerHistory } from '../../lib/exam/learning';
 import { questionTopic } from '../../lib/exam/results';
-import { OBJECTIVES, TOPICS } from '../../lib/exam/objectives';
+import { OBJECTIVES, TOPICS, topicTitle } from '../../lib/exam/objectives';
 import { FORMAT_NAME } from '../../lib/exam/describe';
 import { PACE_MS } from '../../lib/exam/engine';
 import { getSettings, saveSettings, DEFAULT_SETTINGS } from '../../lib/store/db';
@@ -111,7 +111,7 @@ export default function DrillsApp({ bankUrl }: Props) {
       <div className="dr-grid">
         <fieldset className="dr-box">
           <legend>Topics</legend>
-          {[...TOPICS.map((t) => ({ n: t.n, label: `${t.n}. ${t.title}` })), { n: 0, label: 'Prerequisites (SQL and Git)' }].map((t) => (
+          {[...TOPICS.map((t) => ({ n: t.n, label: `${t.n}. ${t.title}` })), { n: 0, label: topicTitle(0) }, { n: 8, label: topicTitle(8) }].map((t) => (
             <label key={t.n} className="dr-check">
               <input type="checkbox" checked={f.topics.includes(t.n)} onChange={() => toggle('topics', t.n)} />
               <span>{t.label}</span>
@@ -129,7 +129,7 @@ export default function DrillsApp({ bankUrl }: Props) {
               <option value="">All objectives</option>
               {OBJECTIVES.map((o) => <option key={o.id} value={o.id}>{o.id}: {o.title}</option>)}
             </select>
-            <p className="dr-hint">Chapter questions count for the objectives their chapter teaches.</p>
+            <p className="dr-hint">Each question tests one objective. A chapter question with no objective yet counts for the objectives its chapter teaches.</p>
           </fieldset>
 
           <fieldset className="dr-box" disabled={mode === 'domc'}>
@@ -200,7 +200,7 @@ export default function DrillsApp({ bankUrl }: Props) {
         </p>
         {msg && <p className="dr-msg" role="alert">{msg}</p>}
       </div>
-      {bank && f.objectives.length > 0 && <p className="dr-hint">{matching.filter((q) => questionObjectives(q).length > 1).length} of these questions come from chapter quizzes that teach this objective.</p>}
+      {bank && f.objectives.length > 0 && matching.some((q) => questionObjectives(q).length > 1) && <p className="dr-hint">{matching.filter((q) => questionObjectives(q).length > 1).length} of these questions have no objective of their own: they come from chapter quizzes that teach this objective.</p>}
     </form>
   );
 }

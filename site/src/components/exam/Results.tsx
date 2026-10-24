@@ -8,7 +8,7 @@ import { domcOf, responseOf } from '../../lib/exam/engine';
 import { breakdown, outcomesOf, pacing, verdict, weakest, type Outcome } from '../../lib/exam/results';
 import { describeResponse, FORMAT_NAME } from '../../lib/exam/describe';
 import { clock, dateTime, minutes, mss, spoken } from '../../lib/exam/time';
-import { objective as objectiveMeta } from '../../lib/exam/objectives';
+import { objective as objectiveMeta, topicLabel } from '../../lib/exam/objectives';
 import type { ObjectiveLinks } from '../../lib/exam/links-types';
 import { QuestionView } from '../quiz/QuestionView';
 import { Explanation } from '../quiz/Feedback';
@@ -132,7 +132,7 @@ export function Results({ attempt, questions, links, history, title, examsHref }
       <section className="rs-sec" aria-labelledby="rs-topic-h">
         <h2 id="rs-topic-h">By topic</h2>
         <p className="ex-muted ex-small">The 7 official topics. The thin line in each bar is the 65% pass line.</p>
-        <RowBars rows={byTopic} label="Score by topic" idLabel={(r) => (r.topic ? `Topic ${r.topic}` : 'Prerequisites')} />
+        <RowBars rows={byTopic} label="Score by topic" idLabel={(r) => topicLabel(r.topic)} />
       </section>
 
       {byObjective.length > 0 && (

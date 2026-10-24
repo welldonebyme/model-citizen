@@ -17,6 +17,11 @@ export interface Objective { id: string; topic: number; title: string; chapters:
 export const OBJECTIVES: Objective[] = [
   { id: 'CP0-SQL', topic: 0, title: 'SQL: joins, aggregations, CTEs, window functions', chapters: [4] },
   { id: 'CP0-GIT', topic: 0, title: 'Git: branching strategies, basic commands, pull requests', chapters: [3] },
+  { id: 'CP0-DATA', topic: 0, title: 'Data basics: tables, warehouses, ELT', chapters: [1] },
+  { id: 'CP0-CLI', topic: 0, title: 'The command line: folders, commands, environment variables', chapters: [2] },
+  { id: 'CP0-YAML', topic: 0, title: 'YAML: keys, lists, indentation, quotes', chapters: [5] },
+  { id: 'CP0-JINJA', topic: 0, title: 'Jinja: expressions, statements, loops, macros', chapters: [5, 11] },
+  { id: 'CP0-PY', topic: 0, title: 'Just enough Python for dbt', chapters: [5] },
   { id: '1.1', topic: 1, title: 'Identifying and verifying raw object dependencies (sources)', chapters: [7, 21] },
   { id: '1.2', topic: 1, title: 'Understanding core materializations', chapters: [8] },
   { id: '1.3', topic: 1, title: 'Modularity and DRY principles', chapters: [9, 11] },
@@ -48,6 +53,9 @@ export const OBJECTIVES: Objective[] = [
   { id: '6.2', topic: 6, title: 'Source freshness', chapters: [21] },
   { id: '7.1', topic: 7, title: 'Understanding state and state selection', chapters: [24] },
   { id: '7.2', topic: 7, title: 'Using dbt retry', chapters: [24] },
+  { id: 'EXAM', topic: 8, title: 'How the exam works: formats, scoring, timing', chapters: [0, 27] },
+  { id: 'PLAN', topic: 8, title: 'The study plan and how to study', chapters: [0] },
+  { id: 'ALL', topic: 8, title: 'Mixed review of every topic', chapters: [27] },
 ];
 
 const BY_ID = new Map(OBJECTIVES.map((o) => [o.id, o]));
@@ -58,11 +66,14 @@ export function topicOf(objectiveId: string | undefined): number | undefined {
   if (!objectiveId) return undefined;
   const o = BY_ID.get(objectiveId);
   if (o) return o.topic;
+  if (/^CP0-/.test(objectiveId)) return 0;
   const m = objectiveId.match(/^(\d)\./);
   return m ? Number(m[1]) : undefined;
 }
 
-export const topicTitle = (n: number) => (n === 0 ? 'Prerequisites (SQL and Git)' : TOPICS.find((t) => t.n === n)?.title ?? `Topic ${n}`);
+/** 0 = prerequisites, 1..7 = official topics, 8 = the exam itself and the study plan (Part 0, Chapter 27). */
+export const topicTitle = (n: number) => (n === 0 ? 'Prerequisites (SQL, Git, YAML, Jinja, command line)' : n === 8 ? 'The exam and the study plan' : TOPICS.find((t) => t.n === n)?.title ?? `Topic ${n}`);
+export const topicLabel = (n: number) => (n === 0 ? 'Prerequisites' : n === 8 ? 'Exam and plan' : `Topic ${n}`);
 
 /** Objectives taught by a chapter (from the table above). */
 export function objectivesOfChapter(chapter: number): string[] {

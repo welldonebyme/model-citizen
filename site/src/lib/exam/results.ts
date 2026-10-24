@@ -2,7 +2,7 @@
 // time per question and pacing against the book's plan (1 min 50 s per question, checkpoints Q22 / Q44).
 import type { Question } from '../content-types';
 import { grade, PASS_PCT, TARGET_PCT, type Response } from '../scoring';
-import { compareObjectives, objective, objectivesOfChapter, TOPICS, topicOf } from './objectives';
+import { compareObjectives, objective, objectivesOfChapter, topicOf, topicTitle } from './objectives';
 import { PACE_MS, responseOf, type Attempt } from './engine';
 
 export interface Outcome {
@@ -22,7 +22,7 @@ export function outcomesOf(a: Attempt, questions: Question[]): Outcome[] {
 
 /** Topic of a question: its own, or from its objective, or from its chapter's objectives. */
 export function questionTopic(q: Question): number | undefined {
-  if (q.topic) return q.topic;
+  if (typeof q.topic === 'number') return q.topic;
   const t = topicOf(q.objective);
   if (t !== undefined) return t;
   if (q.source.kind === 'chapter') {
@@ -43,7 +43,7 @@ export function breakdown(outcomes: Outcome[]): { byTopic: Row[]; byObjective: R
   for (const o of outcomes) {
     const t = questionTopic(o.q);
     if (t !== undefined) {
-      const title = t === 0 ? 'Prerequisites (SQL and Git)' : TOPICS.find((x) => x.n === t)?.title ?? `Topic ${t}`;
+      const title = topicTitle(t);
       const r = topics.get(t) ?? { id: String(t), title, topic: t, correct: 0, total: 0, pct: 0, wrong: [] };
       r.total++; if (o.correct) r.correct++; else r.wrong.push(o.q);
       topics.set(t, r);

@@ -30,34 +30,42 @@ class ChapterResult:
     ctx: Ctx
 
 
-def round5(x: float) -> int:
-    return max(5, int(5 * math.floor(x / 5 + 0.5)))
+def ceil5(x: float) -> int:
+    """Round UP to the next multiple of 5 minutes (minimum 5)."""
+    return max(5, 5 * math.ceil(x / 5 - 1e-9))
 
 
-def count_words(blocks: list) -> tuple[int, int, int]:
-    words = code_lines = labs = 0
+def count_reading(blocks: list) -> tuple[int, int, int, int]:
+    """(prose words, code lines, output lines, figures). Prose includes callouts, tables, lab text, captions and
+    inline code; code and output listings are counted in lines."""
+    words = code_lines = out_lines = figures = 0
 
     def inl(items):
         nonlocal words
         for it in items:
             if isinstance(it, str):
-                words += len(re.findall(r"[\w'’-]+", it))
+                words += len(re.findall(r"[\w'\u2019-]+", it))
             elif isinstance(it, dict):
-                if it.get("t") == "code":
+                if it.get("t") in ("code", "key"):
                     words += len(it["v"].split())
                 elif it.get("t") == "term":
                     inl(it["en"])
+                elif it.get("t") == "ref":
+                    words += len(it["text"].split())
                 elif isinstance(it.get("c"), list):
                     inl(it["c"])
 
     for b in walk_blocks(blocks):
         t = b.get("t")
         if t == "code":
-            code_lines += len(b["text"].split("\n"))
+            n = len(b["text"].split("\n"))
+            if b["lang"] == "output":
+                out_lines += n
+            else:
+                code_lines += n
         elif t in ("p", "h"):
             inl(b["c"])
         elif t == "lab":
-            labs += 1
             inl(b["title"])
         elif t == "callout" and b.get("title"):
             inl(b["title"])
@@ -71,17 +79,33 @@ def count_words(blocks: list) -> tuple[int, int, int]:
         elif t == "table":
             for row in (b.get("head") or []) + b["rows"]:
                 for c in row:
-                    cc = c["c"]
-                    if not (is_blocks(cc)):
-                        inl(cc)
-        elif t == "figure" and b.get("caption"):
-            inl(b["caption"])
-    return words, code_lines, labs
+                    if not is_blocks(c["c"]):
+                        inl(c["c"])
+            if b.get("caption"):
+                inl(b["caption"])
+        elif t == "figure":
+            figures += 1
+            if b.get("caption"):
+                inl(b["caption"])
+    return words, code_lines, out_lines, figures
 
 
 def minutes_of(blocks: list) -> int:
-    w, c, l = count_words(blocks)
-    return round5(w / 180 + c / 12 + l * 10)
+    """Reading time only (learners read in a second language):
+    words/130 + code lines/8 + output lines/20 + 1 per figure, rounded up to 5 (min 5)."""
+    w, c, o, f = count_reading(blocks)
+    return ceil5(w / 130 + c / 8 + o / 20 + f)
+
+
+def lab_minutes_of(blocks: list) -> int:
+    """Hands-on effort: 10 per lab + 2 per numbered lab step (items of the lab's numbered lists), rounded up to 5;
+    0 when the lesson has no lab."""
+    total = 0
+    for b in walk_blocks(blocks):
+        if b.get("t") == "lab":
+            steps = sum(len(x["items"]) for x in b["blocks"] if x.get("t") == "list" and x["kind"] == "ol")
+            total += 10 + 2 * steps
+    return ceil5(total) if total else 0
 
 
 class ChapterBuilder:
@@ -190,7 +214,7 @@ class ChapterBuilder:
                 "id": f"trap-{n:03d}", "n": n, "topic": self.topic,
                 "confusion": trim(self.r.inl.render(c.args[0].nodes)),
                 "truth": trim(self.r.inl.render(c.args[1].nodes)),
-                "where": where, "chapters": [int(x) for x in re.findall(r"\d+", wtext)],
+                "where": self.where_refs(wtext, c), "chapters": [int(x) for x in re.findall(r"\d+", wtext)],
                 "lesson": ctx.lesson,
             }
             self.state.traps.append(trap)
@@ -204,6 +228,26 @@ class ChapterBuilder:
         ctx.stats["env:enumerate"] += 1
         ctx.stats["traps"] += len(ids)
         return {"t": "traps", "ids": ids}
+
+    def where_refs(self, wtext: str, node) -> list:
+        """'Chapter 4' / 'Chapters 3 and 25' / 'Appendix A' -> ref nodes to those chapters (like \\ref)."""
+        by_number = {(i.kind, i.number): i for i in self.ctx.labels.values() if i.kind in ("ch", "app")}
+        word, rest = wtext.split(" ", 1)
+        kind = "app" if word == "Appendix" else "ch"
+        out: list = []
+        pos = 0
+        for k, m in enumerate(re.finditer(r"\d+|[A-C]\b", rest)):
+            info = by_number.get((kind, m.group(0)))
+            if info is None:
+                self.ctx.error(node, f"trap reference {wtext!r}: no chapter {m.group(0)}")
+            if m.start() > pos:
+                out.append(rest[pos:m.start()])
+            text = f"{word} {m.group(0)}" if k == 0 else m.group(0)
+            out.append({"t": "ref", "label": info.label, "text": text, "href": info.href})
+            pos = m.end()
+        if rest[pos:]:
+            out.append(rest[pos:])
+        return out
 
     # ------------------------------------------------------------------ chapter
     def build(self) -> dict:
@@ -235,7 +279,8 @@ class ChapterBuilder:
         if seg.mock:
             ch["mock"] = seg.mock
         ch["objectives"] = sorted(set(ctx.obj_tags), key=_obj_sort)
-        ch["minutes"] = sum(l["minutes"] for l in lessons) + round5(len(self.drafts) * 1.5) * (1 if self.drafts else 0)
+        ch["minutes"] = sum(l["minutes"] for l in lessons)          # reading only
+        ch["labMinutes"] = sum(l["labMinutes"] for l in lessons)
         return ch
 
     def lesson(self, sec: SectionSeg) -> dict:
@@ -275,7 +320,8 @@ class ChapterBuilder:
             objs.update(r["objectives"])
         lesson = {
             "id": lid, "number": sec.number or "", "title": title, "titleText": plain(title),
-            "anchors": anchors, "steps": steps, "minutes": minutes_of(all_blocks), "labs": labs,
+            "anchors": anchors, "steps": steps, "minutes": minutes_of(all_blocks),
+            "labMinutes": lab_minutes_of(all_blocks), "labs": labs,
             "objectives": sorted(objs, key=_obj_sort), "checkpoints": [],
         }
         if sec.label:

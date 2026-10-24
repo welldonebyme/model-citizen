@@ -264,7 +264,37 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "the YAML does not replace the whole dictionary; the inherited keys stay."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "for a key set at several levels, the most specific level wins, so ",
+      {
+       "t": "code",
+       "v": "tier"
+      },
+      " is 1, not 3."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "the properties YAML has a higher priority than ",
+      {
+       "t": "code",
+       "v": "dbt_project.yml"
+      },
+      "; its keys are added, and they win."
+     ],
+     "option": "C"
+    }
+   ]
   },
   {
    "explanation": [
@@ -471,7 +501,41 @@
      "t": "p"
     }
    ],
-   "topic": 6
+   "topic": 6,
+   "whyWrong": [
+    {
+     "c": [
+      "the filtered rows are ignored by the freshness query, so the void invoice does not count."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "the filter belongs to the freshness check only; models are not changed."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "filter"
+      },
+      " works with ",
+      {
+       "t": "code",
+       "v": "loaded_at_field"
+      },
+      "; it is ",
+      {
+       "t": "code",
+       "v": "loaded_at_query"
+      },
+      " that it does not apply to."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -1243,7 +1307,40 @@
      "t": "p"
     }
    ],
-   "topic": 7
+   "topic": 7,
+   "whyWrong": [
+    {
+     "c": [
+      "macro changes are detected; this is the purpose of ",
+      {
+       "t": "code",
+       "v": "state:modified.macros"
+      },
+      "."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": ".body"
+      },
+      " compares the raw SQL file, not the compiled SQL."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": ".configs"
+      },
+      " looks at configuration values; a macro body is not a config."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -1489,7 +1586,32 @@
      "t": "p"
     }
    ],
-   "topic": 5
+   "topic": 5,
+   "whyWrong": [
+    {
+     "c": [
+      "unit tests never mix real rows with fixtures, so building first changes nothing."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "sources are declared once, in the sources YAML; a unit test only gives rows."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "unit tests can mock sources; ",
+      {
+       "t": "code",
+       "v": "input: source(...)"
+      },
+      " is valid."
+     ],
+     "option": "C"
+    }
+   ]
   },
   {
    "explanation": [
@@ -2221,7 +2343,37 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "the command changes ",
+      {
+       "t": "code",
+       "v": "packages.yml"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "package-lock.yml"
+      },
+      "; this is its purpose."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "a package is listed once; the entry is updated, not duplicated."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "an existing entry is not an error; it is updated."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -2494,7 +2646,32 @@
      "t": "p"
     }
    ],
-   "topic": 4
+   "topic": 4,
+   "whyWrong": [
+    {
+     "c": [
+      "this is the rule for a test with one parent, not for independent parents."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "a failing singular test with error severity does cause skips."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "the order of the ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      " calls in the test plays no role."
+     ],
+     "option": "C"
+    }
+   ]
   },
   {
    "blanks": 1,
@@ -3038,7 +3215,35 @@
      "t": "p"
     }
    ],
-   "topic": 5
+   "topic": 5,
+   "whyWrong": [
+    {
+     "c": [
+      "each column is not unique on its own, so both tests fail on correct data."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "not_null"
+      },
+      " does not look at duplicates."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "accepted_values"
+      },
+      " checks the values, not the grain of the table."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -3406,7 +3611,40 @@
      "t": "p"
     }
    ],
-   "topic": 7
+   "topic": 7,
+   "whyWrong": [
+    {
+     "c": [
+      "this is what would happen without the ",
+      {
+       "t": "code",
+       "v": "dbt compile"
+      },
+      " in between."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "retry"
+      },
+      " re-runs skipped nodes too."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "retry"
+      },
+      " never re-runs nodes that succeeded."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "choose": 2,
@@ -3612,7 +3850,60 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt run"
+      },
+      " only runs models; for a seed it answers \"Nothing to do\"."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--empty"
+      },
+      " exists for ",
+      {
+       "t": "code",
+       "v": "run"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "build"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "compile"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "snapshot"
+      },
+      ", not for ",
+      {
+       "t": "code",
+       "v": "seed"
+      },
+      "."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "a seed is a plain CSV file; it is never rendered with Jinja."
+     ],
+     "option": "E"
+    }
+   ]
   },
   {
    "explanation": [
@@ -3840,7 +4131,34 @@
      "t": "p"
     }
    ],
-   "topic": 3
+   "topic": 3,
+   "whyWrong": [
+    {
+     "c": [
+      "the project file has the ",
+      {
+       "c": [
+        "lowest"
+       ],
+       "t": "i"
+      },
+      " priority of the three."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "dbt does not choose \"safer\" values; it follows a fixed order."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "setting a flag in several places is normal and allowed."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -3880,7 +4198,7 @@
            "t": "code",
            "v": "snapshot"
           },
-          "): \"No such option: –empty\"."
+          "): \"No such option: --empty\"."
          ],
          "t": "p"
         }
@@ -4069,7 +4387,7 @@
      "t": "ref",
      "text": "Chapter 16"
     },
-    " (the –empty flag); ",
+    " (the --empty flag); ",
     {
      "href": "/learn/ch13/",
      "label": "ch:snapshots",
@@ -4280,7 +4598,36 @@
      "t": "p"
     }
    ],
-   "topic": 6
+   "topic": 6,
+   "whyWrong": [
+    {
+     "c": [
+      "in 1.11 it is a deprecation warning, not yet an error."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "dbt never renames an exposure; the node is ",
+      {
+       "t": "code",
+       "v": "exposure:streambox.Weekly KPIs"
+      },
+      "."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "label"
+      },
+      " is optional."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -4484,7 +4831,36 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "it hides the problem, wastes compute, and the DAG would still be wrong."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "a hard-coded name removes the error but breaks lineage, environments and ordering."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "execute"
+      },
+      " is also false at parse time, so the ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      " would still be invisible."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -4670,7 +5046,38 @@
      "t": "p"
     }
    ],
-   "topic": 4
+   "topic": 4,
+   "whyWrong": [
+    {
+     "c": [
+      "new models do not exist in production, so there is nothing to clone for them."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "this rebuilds even more from scratch."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--defer"
+      },
+      " only replaces ",
+      {
+       "c": [
+        "unselected"
+       ],
+       "t": "i"
+      },
+      " parents; the selected incremental model is still built in the empty PR schema, from scratch."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -5160,7 +5567,31 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "dbt does not raise \"undefined\" here; this is why the bug is easy to miss. Read the compiled code."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "Jinja knows nothing about SQL columns; only a quoted string becomes column text."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "decimals"
+      },
+      " has a default value (2), so it may be omitted."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -5325,7 +5756,27 @@
      "t": "p"
     }
    ],
-   "topic": 2
+   "topic": 2,
+   "whyWrong": [
+    {
+     "c": [
+      "Snowflake does not enforce primary keys."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "dbt does not run uniqueness checks for constraints; the platform enforces them or not."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "dbt never changes the data to satisfy a constraint."
+     ],
+     "option": "C"
+    }
+   ]
   },
   {
    "choose": 2,
@@ -5567,7 +6018,46 @@
      "t": "p"
     }
    ],
-   "topic": 7
+   "topic": 7,
+   "whyWrong": [
+    {
+     "c": [
+      "the values of ",
+      {
+       "t": "code",
+       "v": "vars"
+      },
+      " are not compared. The SQL file did not change, so the model is not selected: select it yourself when you change a var (a known limit of state comparison)."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "tags"
+      },
+      " are excluded from the state comparison."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "a description is compared only for ",
+      {
+       "t": "code",
+       "v": "state:modified.persisted_descriptions"
+      },
+      ", and only when ",
+      {
+       "t": "code",
+       "v": "persist_docs"
+      },
+      " is enabled. Without it, a description-only change selects nothing."
+     ],
+     "option": "E"
+    }
+   ]
   },
   {
    "explanation": [
@@ -6204,7 +6694,46 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "this is the behaviour of the legacy ",
+      {
+       "t": "code",
+       "v": "target_schema"
+      },
+      ", not of ",
+      {
+       "t": "code",
+       "v": "schema"
+      },
+      "."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "without any schema config, the snapshot goes to the target schema; here ",
+      {
+       "t": "code",
+       "v": "schema"
+      },
+      " is set."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "target_schema"
+      },
+      " is not required any more (1.9+)."
+     ],
+     "option": "C"
+    }
+   ]
   },
   {
    "explanation": [
@@ -7059,7 +7588,50 @@
      "t": "p"
     }
    ],
-   "topic": 3
+   "topic": 3,
+   "whyWrong": [
+    {
+     "c": [
+      "a deprecation is only a warning; the test is not disabled."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "data_tests"
+      },
+      " is the current key; ",
+      {
+       "t": "code",
+       "v": "tests"
+      },
+      " is the older name."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "config:"
+      },
+      " is for options such as ",
+      {
+       "t": "code",
+       "v": "severity"
+      },
+      " or ",
+      {
+       "t": "code",
+       "v": "where"
+      },
+      ", not for test arguments."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "blanks": 1,
@@ -7761,7 +8333,32 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "only the privileges that the model sets are replaced, not the whole ",
+      {
+       "t": "code",
+       "v": "grants"
+      },
+      " dictionary."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "each privilege keeps its own list of grantees."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "any privilege that the platform knows can be set at any level."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "choose": 2,
@@ -7974,7 +8571,37 @@
      "t": "p"
     }
    ],
-   "topic": 2
+   "topic": 2,
+   "whyWrong": [
+    {
+     "c": [
+      "adding a constraint makes the model stricter, not weaker; it is modified, but not breaking."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "a description is not part of the contract; the model was not even ",
+      {
+       "t": "code",
+       "v": "state:modified"
+      },
+      "."
+     ],
+     "option": "D"
+    },
+    {
+     "c": [
+      "a data test is a separate node; only the new test was ",
+      {
+       "t": "code",
+       "v": "state:modified"
+      },
+      "."
+     ],
+     "option": "E"
+    }
+   ]
   },
   {
    "explanation": [
@@ -8710,7 +9337,47 @@
      "t": "p"
     }
    ],
-   "topic": 4
+   "topic": 4,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "py_device_stats"
+      },
+      " reads the ",
+      {
+       "c": [
+        "source"
+       ],
+       "t": "i"
+      },
+      ", not the failing model, so it is not downstream of the test."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "the snapshot reads the source ",
+      {
+       "t": "code",
+       "v": "app.subscriptions"
+      },
+      "; it does not depend on the failing model."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dim_subscribers"
+      },
+      " is in another branch."
+     ],
+     "option": "E"
+    }
+   ]
   },
   {
    "explanation": [
@@ -8994,7 +9661,42 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "this is ",
+      {
+       "t": "code",
+       "v": "append_new_columns"
+      },
+      ": it adds columns but never removes any."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "this is ",
+      {
+       "t": "code",
+       "v": "fail"
+      },
+      ": \"The source and target schemas on this incremental model are out of sync!\"."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "old rows are only recomputed with ",
+      {
+       "t": "code",
+       "v": "--full-refresh"
+      },
+      "."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -9178,7 +9880,45 @@
      "t": "p"
     }
    ],
-   "topic": 3
+   "topic": 3,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "target/compiled"
+      },
+      " contains only the ",
+      {
+       "t": "code",
+       "v": "select"
+      },
+      ", without DDL and without the error."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--debug"
+      },
+      " only adds debug lines to the terminal; the log file has them already."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "the manifest describes the project; it does not store run errors (see ",
+      {
+       "t": "code",
+       "v": "run_results.json"
+      },
+      " and the log)."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -9568,7 +10308,27 @@
      "t": "p"
     }
    ],
-   "topic": 5
+   "topic": 5,
+   "whyWrong": [
+    {
+     "c": [
+      "unit tests cannot check the result of the merge itself."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "the existing rows are an input of the test, not its output."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "unit tests always compare rows and values."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -9767,7 +10527,37 @@
      "t": "p"
     }
    ],
-   "topic": 2
+   "topic": 2,
+   "whyWrong": [
+    {
+     "c": [
+      "deprecation gives warnings, not errors."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "a pinned ",
+      {
+       "t": "code",
+       "v": "ref(..., v=1)"
+      },
+      " always points to v1; only unpinned refs follow ",
+      {
+       "t": "code",
+       "v": "latest_version"
+      },
+      "."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "dbt keeps building deprecated versions until you remove or disable them."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -10404,7 +11194,31 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt docs generate"
+      },
+      " builds nothing."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "dbt does not guess types from the SQL; they come from the warehouse."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "missing objects are simply absent from the catalog; the command succeeds."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -10775,7 +11589,42 @@
      "t": "p"
     }
    ],
-   "topic": 6
+   "topic": 6,
+   "whyWrong": [
+    {
+     "c": [
+      "without ",
+      {
+       "t": "code",
+       "v": "+"
+      },
+      ", only the exposure is selected; our build printed only ",
+      {
+       "t": "code",
+       "v": "NO-OP exposure weekly_kpis"
+      },
+      "."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "models cannot ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      " an exposure; an exposure is always at the end of the DAG."
+     ],
+     "option": "D"
+    },
+    {
+     "c": [
+      "dbt never creates an object for an exposure; it only describes the dashboard."
+     ],
+     "option": "E"
+    }
+   ]
   },
   {
    "explanation": [
@@ -10938,7 +11787,7 @@
      "t": "ref",
      "text": "Chapter 16"
     },
-    " (–empty)"
+    " (--empty)"
    ],
    "source": {
     "kind": "mock",
@@ -10971,7 +11820,40 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "neither the rendered source nor the hard-coded table is replaced."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": ".render()"
+      },
+      " opts the source out of the empty limit."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt compile"
+      },
+      " accepts ",
+      {
+       "t": "code",
+       "v": "--empty"
+      },
+      "; this is a good way to see the effect."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -11344,7 +12226,27 @@
      "t": "p"
     }
    ],
-   "topic": 2
+   "topic": 2,
+   "whyWrong": [
+    {
+     "c": [
+      "dbt never drops tables of deleted models; and here the command stops first."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "for a versioned model the breaking change is an error, whatever the latest version is."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "deleting, renaming and disabling a contracted model are checked since dbt 1.9."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -11767,7 +12669,41 @@
      "t": "p"
     }
    ],
-   "topic": 5
+   "topic": 5,
+   "whyWrong": [
+    {
+     "c": [
+      "the number 1 is rendered into the SQL as a number; there is no type problem."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "tests/generic/"
+      },
+      " is a valid place for custom generic tests (so is ",
+      {
+       "t": "code",
+       "v": "macros/"
+      },
+      ")."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "the rule is \"zero rows returned = pass\" with the default ",
+      {
+       "t": "code",
+       "v": "fail_calc"
+      },
+      "."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -12206,7 +13142,7 @@
      "t": "ref",
      "text": "Chapter 16"
     },
-    " (–sample)"
+    " (--sample)"
    ],
    "source": {
     "kind": "mock",
@@ -12245,7 +13181,27 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "the filter is stored in the view, so it still applies after the run."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "the window is computed once, at run time; it does not move."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "the view does not expire; it just keeps its sampled definition."
+     ],
+     "option": "C"
+    }
+   ]
   },
   {
    "explanation": [
@@ -12620,7 +13576,27 @@
      "t": "p"
     }
    ],
-   "topic": 2
+   "topic": 2,
+   "whyWrong": [
+    {
+     "c": [
+      "dbt never changes data to satisfy a constraint."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "the old table is replaced only after a successful insert."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "on DuckDB the constraint is real DDL, and the warehouse enforces it."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "choose": 2,
@@ -12789,7 +13765,27 @@
      "t": "p"
     }
    ],
-   "topic": 5
+   "topic": 5,
+   "whyWrong": [
+    {
+     "c": [
+      "unit tests only test SQL models of your project (\"Unable to find model ...\")."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "dbt never creates or alters source tables, so it never applies constraints to them (in our test the YAML was accepted and simply ignored)."
+     ],
+     "option": "D"
+    },
+    {
+     "c": [
+      "contracts are a model feature; on a source, dbt ignores this config and checks nothing."
+     ],
+     "option": "E"
+    }
+   ]
   },
   {
    "explanation": [
@@ -12977,7 +13973,47 @@
      "t": "p"
     }
    ],
-   "topic": 3
+   "topic": 3,
+   "whyWrong": [
+    {
+     "c": [
+      "the model's compiled file contains only the model's ",
+      {
+       "t": "code",
+       "v": "select"
+      },
+      "."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "the ",
+      {
+       "t": "code",
+       "v": "target/run"
+      },
+      " file wraps the query: ",
+      {
+       "t": "code",
+       "v": "select count(*) as failures, count(*) != 0 as should_warn, count(*) != 0 as should_error from (...)"
+      },
+      ". It returns one row of counts, not the duplicated values."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "dbt never writes files into ",
+      {
+       "t": "code",
+       "v": "tests/"
+      },
+      "."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -13202,7 +14238,31 @@
      "t": "p"
     }
    ],
-   "topic": 5
+   "topic": 5,
+   "whyWrong": [
+    {
+     "c": [
+      "with the default mode, the test runs."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "empty"
+      },
+      " adds no test at all; only the selected model runs."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "indirect selection never adds models to the selection."
+     ],
+     "option": "C"
+    }
+   ]
   }
  ],
  "title": "Mock Exam 3",

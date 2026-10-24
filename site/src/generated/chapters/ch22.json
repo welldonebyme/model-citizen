@@ -212,6 +212,7 @@
   }
  ],
  "kind": "chapter",
+ "labMinutes": 40,
  "label": "ch:debugging",
  "lessons": [
   {
@@ -221,9 +222,10 @@
    ],
    "checkpoints": [],
    "id": "ch22-s1",
+   "labMinutes": 0,
    "label": "sec:dbg-method",
    "labs": [],
-   "minutes": 10,
+   "minutes": 15,
    "number": "22.1",
    "objectives": [],
    "steps": [
@@ -1559,11 +1561,12 @@
    ],
    "checkpoints": [],
    "id": "ch22-s2",
+   "labMinutes": 10,
    "label": "sec:dbg-families",
    "labs": [
     "ch22-lab1"
    ],
-   "minutes": 30,
+   "minutes": 25,
    "number": "22.2",
    "objectives": [
     "CP0-GIT",
@@ -4352,11 +4355,12 @@
    ],
    "checkpoints": [],
    "id": "ch22-s3",
+   "labMinutes": 10,
    "label": "sec:dbg-where",
    "labs": [
     "ch22-lab2"
    ],
-   "minutes": 30,
+   "minutes": 25,
    "number": "22.3",
    "objectives": [
     "3.1",
@@ -6094,11 +6098,12 @@
    ],
    "checkpoints": [],
    "id": "ch22-s4",
+   "labMinutes": 10,
    "label": "sec:dbg-fix",
    "labs": [
     "ch22-lab3"
    ],
-   "minutes": 20,
+   "minutes": 15,
    "number": "22.4",
    "objectives": [
     "CP0-GIT",
@@ -6972,6 +6977,7 @@
    ],
    "checkpoints": [],
    "id": "ch22-s5",
+   "labMinutes": 10,
    "label": "sec:dbg-flags",
    "labs": [
     "ch22-lab4"
@@ -10145,7 +10151,7 @@
    "titleText": "Flags: changing how dbt runs"
   }
  ],
- "minutes": 150,
+ "minutes": 110,
  "number": 22,
  "objectives": [
   "CP0-GIT",

@@ -26,6 +26,12 @@ def latex_to_text(raw: str, ctx: Ctx) -> str:
     return plain(trim(InlineRenderer(ctx).render(parse_string(raw, "<glossary>"))))
 
 
+def python_text(raw: str, ctx: Ctx) -> str:
+    """Strings of the book's Python tools (make_coverage.OBJECTIVES): resolve LaTeX escapes such as \\_ but apply
+    no TeX ligature (they are plain text, e.g. "--empty")."""
+    return plain(trim(InlineRenderer(ctx).render(parse_string(raw, "<make_coverage.py>"), mono=True)))
+
+
 def build_glossary(occurrences: list[dict], ctx: Ctx) -> list[dict]:
     """Same logic as dbt-bible/tools/make_glossary.py: first definition wins, chapter of first appearance."""
     terms: dict[str, dict] = {}
@@ -100,7 +106,7 @@ def build_coverage(results, objectives: list[tuple[str, str]], mock_questions: d
     objs = []
     cov = {}
     for oid, title in objectives:
-        entry = {"id": oid, "kind": kind_of(oid), "topic": topic_of(oid), "title": latex_to_text(title, title_ctx),
+        entry = {"id": oid, "kind": kind_of(oid), "topic": topic_of(oid), "title": python_text(title, title_ctx),
                  "chapters": sorted(chapters[oid]), "labs": labs[oid], "mockQuestions": mocks[oid]}
         objs.append(entry)
         cov[oid] = {"chapters": sorted(chapters[oid]), "lessons": lessons[oid], "labs": labs[oid],

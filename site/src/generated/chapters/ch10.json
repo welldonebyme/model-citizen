@@ -315,6 +315,7 @@
   }
  ],
  "kind": "chapter",
+ "labMinutes": 160,
  "label": "ch:configuration",
  "lessons": [
   {
@@ -323,9 +324,10 @@
    ],
    "checkpoints": [],
    "id": "ch10-s1",
+   "labMinutes": 0,
    "label": "sec:config-vs-properties",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "10.1",
    "objectives": [],
    "steps": [
@@ -932,9 +934,10 @@
    ],
    "checkpoints": [],
    "id": "ch10-s2",
+   "labMinutes": 0,
    "label": "sec:config-project-file",
    "labs": [],
-   "minutes": 15,
+   "minutes": 20,
    "number": "10.2",
    "objectives": [],
    "steps": [
@@ -1924,6 +1927,7 @@
    ],
    "checkpoints": [],
    "id": "ch10-s3",
+   "labMinutes": 0,
    "label": "sec:config-plus",
    "labs": [],
    "minutes": 5,
@@ -2329,11 +2333,12 @@
    ],
    "checkpoints": [],
    "id": "ch10-s4",
+   "labMinutes": 30,
    "label": "sec:config-schemas",
    "labs": [
     "ch10-lab1"
    ],
-   "minutes": 25,
+   "minutes": 20,
    "number": "10.4",
    "objectives": [
     "1.6"
@@ -3486,11 +3491,12 @@
    ],
    "checkpoints": [],
    "id": "ch10-s5",
+   "labMinutes": 20,
    "label": "sec:config-tags-meta",
    "labs": [
     "ch10-lab2"
    ],
-   "minutes": 20,
+   "minutes": 15,
    "number": "10.5",
    "objectives": [
     "1.6"
@@ -3954,6 +3960,7 @@
    ],
    "checkpoints": [],
    "id": "ch10-s6",
+   "labMinutes": 20,
    "label": "sec:config-precedence",
    "labs": [
     "ch10-lab3"
@@ -4994,11 +5001,12 @@
    ],
    "checkpoints": [],
    "id": "ch10-s7",
+   "labMinutes": 25,
    "label": "sec:config-target-vars",
    "labs": [
     "ch10-lab4"
    ],
-   "minutes": 25,
+   "minutes": 20,
    "number": "10.7",
    "objectives": [
     "1.6"
@@ -5740,9 +5748,9 @@
      "id": "ch10-s7-2",
      "number": "10.7.2",
      "title": [
-      "Project variables: var() and –vars"
+      "Project variables: var() and --vars"
      ],
-     "titleText": "Project variables: var() and –vars"
+     "titleText": "Project variables: var() and --vars"
     },
     {
      "blocks": [
@@ -6368,11 +6376,12 @@
    ],
    "checkpoints": [],
    "id": "ch10-s8",
+   "labMinutes": 25,
    "label": "sec:config-hooks",
    "labs": [
     "ch10-lab5"
    ],
-   "minutes": 20,
+   "minutes": 15,
    "number": "10.8",
    "objectives": [
     "1.6"
@@ -7579,11 +7588,12 @@
    ],
    "checkpoints": [],
    "id": "ch10-s9",
+   "labMinutes": 20,
    "label": "sec:config-grants",
    "labs": [
     "ch10-lab6"
    ],
-   "minutes": 15,
+   "minutes": 10,
    "number": "10.9",
    "objectives": [
     "1.9"
@@ -8359,6 +8369,7 @@
    ],
    "checkpoints": [],
    "id": "ch10-s10",
+   "labMinutes": 0,
    "label": "sec:config-other",
    "labs": [],
    "minutes": 5,
@@ -8834,6 +8845,7 @@
    ],
    "checkpoints": [],
    "id": "ch10-s11",
+   "labMinutes": 0,
    "label": "sec:config-platform",
    "labs": [],
    "minutes": 5,
@@ -9192,11 +9204,12 @@
    ],
    "checkpoints": [],
    "id": "ch10-s12",
+   "labMinutes": 20,
    "label": "sec:config-finish",
    "labs": [
     "ch10-lab7"
    ],
-   "minutes": 10,
+   "minutes": 5,
    "number": "10.12",
    "objectives": [
     "CP0-GIT",
@@ -9447,7 +9460,7 @@
    "titleText": "Finish the chapter: build, commit, compare"
   }
  ],
- "minutes": 195,
+ "minutes": 145,
  "number": 10,
  "objectives": [
   "CP0-YAML",

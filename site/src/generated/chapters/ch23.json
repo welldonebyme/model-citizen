@@ -230,6 +230,7 @@
   }
  ],
  "kind": "chapter",
+ "labMinutes": 40,
  "label": "ch:pipelines-clone",
  "lessons": [
   {
@@ -238,6 +239,7 @@
    ],
    "checkpoints": [],
    "id": "ch23-s1",
+   "labMinutes": 0,
    "label": "sec:pip-points",
    "labs": [],
    "minutes": 5,
@@ -598,12 +600,13 @@
    ],
    "checkpoints": [],
    "id": "ch23-s2",
+   "labMinutes": 20,
    "label": "sec:pip-failures",
    "labs": [
     "ch23-lab1",
     "ch23-lab2"
    ],
-   "minutes": 45,
+   "minutes": 30,
    "number": "23.2",
    "objectives": [
     "3.1",
@@ -2833,9 +2836,10 @@
    ],
    "checkpoints": [],
    "id": "ch23-s3",
+   "labMinutes": 0,
    "label": "sec:pip-results",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "23.3",
    "objectives": [],
    "steps": [
@@ -3811,11 +3815,12 @@
    ],
    "checkpoints": [],
    "id": "ch23-s4",
+   "labMinutes": 10,
    "label": "sec:pip-prod",
    "labs": [
     "ch23-lab3"
    ],
-   "minutes": 15,
+   "minutes": 10,
    "number": "23.4",
    "objectives": [
     "1.4",
@@ -4431,11 +4436,12 @@
    ],
    "checkpoints": [],
    "id": "ch23-s5",
+   "labMinutes": 10,
    "label": "sec:pip-clone",
    "labs": [
     "ch23-lab4"
    ],
-   "minutes": 30,
+   "minutes": 25,
    "number": "23.5",
    "objectives": [
     "1.6",
@@ -6214,7 +6220,7 @@
    "titleText": "dbt clone"
   }
  ],
- "minutes": 125,
+ "minutes": 80,
  "number": 23,
  "objectives": [
   "1.4",

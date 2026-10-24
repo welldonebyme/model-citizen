@@ -306,6 +306,7 @@
   }
  ],
  "kind": "chapter",
+ "labMinutes": 140,
  "label": "ch:incremental-microbatch",
  "lessons": [
   {
@@ -314,6 +315,7 @@
    ],
    "checkpoints": [],
    "id": "ch14-s1",
+   "labMinutes": 0,
    "label": "sec:inc-why",
    "labs": [],
    "minutes": 5,
@@ -751,9 +753,10 @@
    ],
    "checkpoints": [],
    "id": "ch14-s2",
+   "labMinutes": 0,
    "label": "sec:inc-runs",
    "labs": [],
-   "minutes": 5,
+   "minutes": 15,
    "number": "14.2",
    "objectives": [],
    "steps": [
@@ -1568,11 +1571,12 @@
    ],
    "checkpoints": [],
    "id": "ch14-s3",
+   "labMinutes": 30,
    "label": "sec:inc-filter",
    "labs": [
     "ch14-lab1"
    ],
-   "minutes": 30,
+   "minutes": 25,
    "number": "14.3",
    "objectives": [
     "1.2",
@@ -2583,11 +2587,12 @@
    ],
    "checkpoints": [],
    "id": "ch14-s4",
+   "labMinutes": 20,
    "label": "sec:inc-unique-key",
    "labs": [
     "ch14-lab2"
    ],
-   "minutes": 20,
+   "minutes": 10,
    "number": "14.4",
    "objectives": [
     "1.11"
@@ -3282,9 +3287,10 @@
    ],
    "checkpoints": [],
    "id": "ch14-s5",
+   "labMinutes": 0,
    "label": "sec:inc-strategies",
    "labs": [],
-   "minutes": 10,
+   "minutes": 15,
    "number": "14.5",
    "objectives": [],
    "steps": [
@@ -4817,6 +4823,7 @@
    ],
    "checkpoints": [],
    "id": "ch14-s6",
+   "labMinutes": 0,
    "label": "sec:inc-choose",
    "labs": [],
    "minutes": 5,
@@ -5195,9 +5202,10 @@
    ],
    "checkpoints": [],
    "id": "ch14-s7",
+   "labMinutes": 0,
    "label": "sec:inc-schema-change",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "14.7",
    "objectives": [],
    "steps": [
@@ -5898,6 +5906,7 @@
    ],
    "checkpoints": [],
    "id": "ch14-s8",
+   "labMinutes": 0,
    "label": "sec:inc-full-refresh",
    "labs": [],
    "minutes": 5,
@@ -6359,6 +6368,7 @@
    ],
    "checkpoints": [],
    "id": "ch14-s9",
+   "labMinutes": 25,
    "label": "sec:inc-microbatch",
    "labs": [
     "ch14-lab3"
@@ -7787,6 +7797,7 @@
    ],
    "checkpoints": [],
    "id": "ch14-s10",
+   "labMinutes": 25,
    "label": "sec:inc-backfill",
    "labs": [
     "ch14-lab4"
@@ -8566,11 +8577,12 @@
    ],
    "checkpoints": [],
    "id": "ch14-s11",
+   "labMinutes": 20,
    "label": "sec:inc-retry",
    "labs": [
     "ch14-lab5"
    ],
-   "minutes": 15,
+   "minutes": 10,
    "number": "14.11",
    "objectives": [
     "1.14",
@@ -8984,11 +8996,12 @@
    ],
    "checkpoints": [],
    "id": "ch14-s12",
+   "labMinutes": 20,
    "label": "sec:inc-platform",
    "labs": [
     "ch14-lab6"
    ],
-   "minutes": 15,
+   "minutes": 10,
    "number": "14.12",
    "objectives": [
     "1.2",
@@ -9585,7 +9598,7 @@
    "titleText": "In the dbt platform, and finishing the chapter"
   }
  ],
- "minutes": 195,
+ "minutes": 160,
  "number": 14,
  "objectives": [
   "1.2",

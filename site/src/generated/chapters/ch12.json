@@ -244,6 +244,7 @@
   }
  ],
  "kind": "chapter",
+ "labMinutes": 30,
  "label": "ch:seeds-analyses",
  "lessons": [
   {
@@ -252,6 +253,7 @@
    ],
    "checkpoints": [],
    "id": "ch12-s1",
+   "labMinutes": 0,
    "label": "sec:sa-seeds-what",
    "labs": [],
    "minutes": 5,
@@ -489,6 +491,7 @@
    ],
    "checkpoints": [],
    "id": "ch12-s2",
+   "labMinutes": 0,
    "label": "sec:sa-csv",
    "labs": [],
    "minutes": 5,
@@ -747,11 +750,12 @@
    ],
    "checkpoints": [],
    "id": "ch12-s3",
+   "labMinutes": 10,
    "label": "sec:sa-dbt-seed",
    "labs": [
     "ch12-lab1"
    ],
-   "minutes": 20,
+   "minutes": 10,
    "number": "12.3",
    "objectives": [
     "1.4",
@@ -1461,9 +1465,10 @@
    ],
    "checkpoints": [],
    "id": "ch12-s4",
+   "labMinutes": 0,
    "label": "sec:sa-configs",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "12.4",
    "objectives": [],
    "steps": [
@@ -2069,6 +2074,7 @@
    ],
    "checkpoints": [],
    "id": "ch12-s5",
+   "labMinutes": 0,
    "label": "sec:sa-full-refresh",
    "labs": [],
    "minutes": 5,
@@ -2379,6 +2385,7 @@
    ],
    "checkpoints": [],
    "id": "ch12-s6",
+   "labMinutes": 0,
    "label": "sec:sa-properties",
    "labs": [],
    "minutes": 5,
@@ -2529,11 +2536,12 @@
    ],
    "checkpoints": [],
    "id": "ch12-s7",
+   "labMinutes": 10,
    "label": "sec:sa-dag",
    "labs": [
     "ch12-lab2"
    ],
-   "minutes": 20,
+   "minutes": 10,
    "number": "12.7",
    "objectives": [
     "1.4",
@@ -3073,9 +3081,10 @@
    ],
    "checkpoints": [],
    "id": "ch12-s8",
+   "labMinutes": 0,
    "label": "sec:sa-analyses",
    "labs": [],
-   "minutes": 10,
+   "minutes": 15,
    "number": "12.8",
    "objectives": [],
    "steps": [
@@ -3628,11 +3637,12 @@
    ],
    "checkpoints": [],
    "id": "ch12-s9",
+   "labMinutes": 10,
    "label": "sec:sa-compare",
    "labs": [
     "ch12-lab3"
    ],
-   "minutes": 15,
+   "minutes": 10,
    "number": "12.9",
    "objectives": [
     "CP0-GIT",
@@ -4294,7 +4304,7 @@
    "titleText": "Analyses, singular tests, models and seeds compared"
   }
  ],
- "minutes": 115,
+ "minutes": 75,
  "number": 12,
  "objectives": [
   "1.4",

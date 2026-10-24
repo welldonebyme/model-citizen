@@ -108,6 +108,7 @@
   }
  ],
  "kind": "chapter",
+ "labMinutes": 40,
  "label": "ch:data-world",
  "lessons": [
   {
@@ -116,6 +117,7 @@
    ],
    "checkpoints": [],
    "id": "ch01-s1",
+   "labMinutes": 0,
    "label": "sec:dw-tables",
    "labs": [],
    "minutes": 5,
@@ -483,6 +485,7 @@
    ],
    "checkpoints": [],
    "id": "ch01-s2",
+   "labMinutes": 0,
    "label": "sec:dw-oltp-olap",
    "labs": [],
    "minutes": 5,
@@ -865,6 +868,7 @@
    ],
    "checkpoints": [],
    "id": "ch01-s3",
+   "labMinutes": 0,
    "label": "sec:dw-pipeline",
    "labs": [],
    "minutes": 5,
@@ -1267,6 +1271,7 @@
    ],
    "checkpoints": [],
    "id": "ch01-s4",
+   "labMinutes": 0,
    "label": "sec:dw-roles",
    "labs": [],
    "minutes": 5,
@@ -1394,6 +1399,7 @@
    ],
    "checkpoints": [],
    "id": "ch01-s5",
+   "labMinutes": 0,
    "label": "sec:dw-dbt",
    "labs": [],
    "minutes": 5,
@@ -1836,11 +1842,12 @@
    ],
    "checkpoints": [],
    "id": "ch01-s6",
+   "labMinutes": 20,
    "label": "sec:dw-modeling",
    "labs": [
     "ch01-lab1"
    ],
-   "minutes": 15,
+   "minutes": 10,
    "number": "1.6",
    "objectives": [
     "CP0-DATA"
@@ -2707,6 +2714,7 @@
    ],
    "checkpoints": [],
    "id": "ch01-s7",
+   "labMinutes": 0,
    "label": "sec:dw-viewpoint",
    "labs": [],
    "minutes": 5,
@@ -3097,11 +3105,12 @@
    ],
    "checkpoints": [],
    "id": "ch01-s8",
+   "labMinutes": 20,
    "label": "sec:dw-vocabulary",
    "labs": [
     "ch01-lab2"
    ],
-   "minutes": 15,
+   "minutes": 5,
    "number": "1.8",
    "objectives": [
     "CP0-DATA",
@@ -3713,7 +3722,7 @@
    "titleText": "Your dbt vocabulary map"
   }
  ],
- "minutes": 80,
+ "minutes": 45,
  "number": 1,
  "objectives": [
   "CP0-DATA",

@@ -32,7 +32,12 @@
    " = 95."
   ],
   "where": [
-   "Chapter 4"
+   {
+    "href": "/learn/ch04/",
+    "label": "ch:sql",
+    "t": "ref",
+    "text": "Chapter 4"
+   }
   ]
  },
  {
@@ -64,7 +69,12 @@
    "."
   ],
   "where": [
-   "Chapter 4"
+   {
+    "href": "/learn/ch04/",
+    "label": "ch:sql",
+    "t": "ref",
+    "text": "Chapter 4"
+   }
   ]
  },
  {
@@ -86,7 +96,12 @@
    " clause."
   ],
   "where": [
-   "Chapter 4"
+   {
+    "href": "/learn/ch04/",
+    "label": "ch:sql",
+    "t": "ref",
+    "text": "Chapter 4"
+   }
   ]
  },
  {
@@ -115,7 +130,12 @@
    " grouping and cannot use aggregates. Use HAVING to filter groups (and QUALIFY, where supported, to filter on window functions)."
   ],
   "where": [
-   "Chapter 4"
+   {
+    "href": "/learn/ch04/",
+    "label": "ch:sql",
+    "t": "ref",
+    "text": "Chapter 4"
+   }
   ]
  },
  {
@@ -162,7 +182,12 @@
    " 1,2,2,3."
   ],
   "where": [
-   "Chapter 4"
+   {
+    "href": "/learn/ch04/",
+    "label": "ch:sql",
+    "t": "ref",
+    "text": "Chapter 4"
+   }
   ]
  },
  {
@@ -179,7 +204,12 @@
    "A window function keeps every row and adds a computed column. GROUP BY collapses rows into groups."
   ],
   "where": [
-   "Chapter 4"
+   {
+    "href": "/learn/ch04/",
+    "label": "ch:sql",
+    "t": "ref",
+    "text": "Chapter 4"
+   }
   ]
  },
  {
@@ -196,7 +226,12 @@
    "UNION removes duplicate rows (extra work); UNION ALL keeps all rows. Use UNION ALL when you do not need deduplication."
   ],
   "where": [
-   "Chapter 4"
+   {
+    "href": "/learn/ch04/",
+    "label": "ch:sql",
+    "t": "ref",
+    "text": "Chapter 4"
+   }
   ]
  },
  {
@@ -219,7 +254,19 @@
    ") is a named subquery that exists only during the statement. dbt's ephemeral models are injected as CTEs."
   ],
   "where": [
-   "Chapters 4 and 8"
+   {
+    "href": "/learn/ch04/",
+    "label": "ch:sql",
+    "t": "ref",
+    "text": "Chapters 4"
+   },
+   " and ",
+   {
+    "href": "/learn/ch08/",
+    "label": "ch:materializations",
+    "t": "ref",
+    "text": "8"
+   }
   ]
  },
  {
@@ -246,7 +293,12 @@
    " for integer division); Postgres returns 3 for two integers. Cast explicitly when it matters."
   ],
   "where": [
-   "Chapter 4"
+   {
+    "href": "/learn/ch04/",
+    "label": "ch:sql",
+    "t": "ref",
+    "text": "Chapter 4"
+   }
   ]
  },
  {
@@ -273,7 +325,12 @@
    " sends your commits to the remote."
   ],
   "where": [
-   "Chapter 3"
+   {
+    "href": "/learn/ch03/",
+    "label": "ch:git",
+    "t": "ref",
+    "text": "Chapter 3"
+   }
   ]
  },
  {
@@ -304,7 +361,12 @@
    " = fetch + merge (or rebase, if configured)."
   ],
   "where": [
-   "Chapter 3"
+   {
+    "href": "/learn/ch03/",
+    "label": "ch:git",
+    "t": "ref",
+    "text": "Chapter 3"
+   }
   ]
  },
  {
@@ -340,7 +402,12 @@
    ", then committed."
   ],
   "where": [
-   "Chapter 3"
+   {
+    "href": "/learn/ch03/",
+    "label": "ch:git",
+    "t": "ref",
+    "text": "Chapter 3"
+   }
   ]
  },
  {
@@ -363,7 +430,19 @@
    "Create a feature branch, commit, push, open a pull request, let reviewers and CI check it, then merge. In the dbt platform Studio IDE, the primary branch is protected: you commit your changes to a new branch."
   ],
   "where": [
-   "Chapters 3 and 25"
+   {
+    "href": "/learn/ch03/",
+    "label": "ch:git",
+    "t": "ref",
+    "text": "Chapters 3"
+   },
+   " and ",
+   {
+    "href": "/learn/ch25/",
+    "label": "ch:environments-ci",
+    "t": "ref",
+    "text": "25"
+   }
   ]
  },
  {
@@ -401,7 +480,12 @@
    " moves the branch and throws away changes."
   ],
   "where": [
-   "Chapter 3"
+   {
+    "href": "/learn/ch03/",
+    "label": "ch:git",
+    "t": "ref",
+    "text": "Chapter 3"
+   }
   ]
  },
  {
@@ -444,7 +528,12 @@
    " shows the staged ones."
   ],
   "where": [
-   "Chapter 3"
+   {
+    "href": "/learn/ch03/",
+    "label": "ch:git",
+    "t": "ref",
+    "text": "Chapter 3"
+   }
   ]
  },
  {
@@ -481,7 +570,12 @@
    " it and commit: nothing is lost."
   ],
   "where": [
-   "Chapter 3"
+   {
+    "href": "/learn/ch03/",
+    "label": "ch:git",
+    "t": "ref",
+    "text": "Chapter 3"
+   }
   ]
  },
  {
@@ -505,7 +599,12 @@
    ", for example \"found character that cannot start any token\" or \"found a tab character that violates indentation\"."
   ],
   "where": [
-   "Chapter 5"
+   {
+    "href": "/learn/ch05/",
+    "label": "ch:yaml-jinja-python",
+    "t": "ref",
+    "text": "Chapter 5"
+   }
   ]
  },
  {
@@ -548,7 +647,19 @@
    "."
   ],
   "where": [
-   "Chapters 5 and 18"
+   {
+    "href": "/learn/ch05/",
+    "label": "ch:yaml-jinja-python",
+    "t": "ref",
+    "text": "Chapters 5"
+   },
+   " and ",
+   {
+    "href": "/learn/ch18/",
+    "label": "ch:data-tests",
+    "t": "ref",
+    "text": "18"
+   }
   ]
  },
  {
@@ -581,7 +692,19 @@
    "."
   ],
   "where": [
-   "Chapters 5 and 20"
+   {
+    "href": "/learn/ch05/",
+    "label": "ch:yaml-jinja-python",
+    "t": "ref",
+    "text": "Chapters 5"
+   },
+   " and ",
+   {
+    "href": "/learn/ch20/",
+    "label": "ch:documentation",
+    "t": "ref",
+    "text": "20"
+   }
   ]
  },
  {
@@ -603,7 +726,12 @@
    "A colon followed by a space inside an unquoted value breaks parsing (\"mapping values are not allowed\"). Quote the whole text."
   ],
   "where": [
-   "Chapter 5"
+   {
+    "href": "/learn/ch05/",
+    "label": "ch:yaml-jinja-python",
+    "t": "ref",
+    "text": "Chapter 5"
+   }
   ]
  },
  {
@@ -661,7 +789,12 @@
    "."
   ],
   "where": [
-   "Chapter 5"
+   {
+    "href": "/learn/ch05/",
+    "label": "ch:yaml-jinja-python",
+    "t": "ref",
+    "text": "Chapter 5"
+   }
   ]
  },
  {
@@ -722,7 +855,12 @@
    " is a comment."
   ],
   "where": [
-   "Chapter 5"
+   {
+    "href": "/learn/ch05/",
+    "label": "ch:yaml-jinja-python",
+    "t": "ref",
+    "text": "Chapter 5"
+   }
   ]
  },
  {
@@ -760,7 +898,19 @@
    " instead."
   ],
   "where": [
-   "Chapters 5 and 11"
+   {
+    "href": "/learn/ch05/",
+    "label": "ch:yaml-jinja-python",
+    "t": "ref",
+    "text": "Chapters 5"
+   },
+   " and ",
+   {
+    "href": "/learn/ch11/",
+    "label": "ch:jinja-macros-packages",
+    "t": "ref",
+    "text": "11"
+   }
   ]
  },
  {
@@ -783,7 +933,19 @@
    "."
   ],
   "where": [
-   "Chapters 5 and 22"
+   {
+    "href": "/learn/ch05/",
+    "label": "ch:yaml-jinja-python",
+    "t": "ref",
+    "text": "Chapters 5"
+   },
+   " and ",
+   {
+    "href": "/learn/ch22/",
+    "label": "ch:debugging",
+    "t": "ref",
+    "text": "22"
+   }
   ]
  },
  {
@@ -820,7 +982,12 @@
    "."
   ],
   "where": [
-   "Chapter 11"
+   {
+    "href": "/learn/ch11/",
+    "label": "ch:jinja-macros-packages",
+    "t": "ref",
+    "text": "Chapter 11"
+   }
   ]
  },
  {
@@ -847,7 +1014,12 @@
    "."
   ],
   "where": [
-   "Chapter 11"
+   {
+    "href": "/learn/ch11/",
+    "label": "ch:jinja-macros-packages",
+    "t": "ref",
+    "text": "Chapter 11"
+   }
   ]
  },
  {
@@ -869,7 +1041,12 @@
    "."
   ],
   "where": [
-   "Chapter 11"
+   {
+    "href": "/learn/ch11/",
+    "label": "ch:jinja-macros-packages",
+    "t": "ref",
+    "text": "Chapter 11"
+   }
   ]
  },
  {
@@ -912,7 +1089,12 @@
    " runs seeds, snapshots, models and their tests together, in DAG order."
   ],
   "where": [
-   "Chapter 16"
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "Chapter 16"
+   }
   ]
  },
  {
@@ -955,7 +1137,26 @@
    "."
   ],
   "where": [
-   "Chapters 12, 13 and 16"
+   {
+    "href": "/learn/ch12/",
+    "label": "ch:seeds-analyses",
+    "t": "ref",
+    "text": "Chapters 12"
+   },
+   ", ",
+   {
+    "href": "/learn/ch13/",
+    "label": "ch:snapshots",
+    "t": "ref",
+    "text": "13"
+   },
+   " and ",
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "16"
+   }
   ]
  },
  {
@@ -993,7 +1194,19 @@
    ", the build continues."
   ],
   "where": [
-   "Chapters 16 and 18"
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "Chapters 16"
+   },
+   " and ",
+   {
+    "href": "/learn/ch18/",
+    "label": "ch:data-tests",
+    "t": "ref",
+    "text": "18"
+   }
   ]
  },
  {
@@ -1039,7 +1252,12 @@
    "."
   ],
   "where": [
-   "Chapter 16"
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "Chapter 16"
+   }
   ]
  },
  {
@@ -1075,7 +1293,12 @@
    " previews any SQL. Nothing is saved."
   ],
   "where": [
-   "Chapter 16"
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "Chapter 16"
+   }
   ]
  },
  {
@@ -1112,7 +1335,12 @@
    ". They are never materialized."
   ],
   "where": [
-   "Chapter 12"
+   {
+    "href": "/learn/ch12/",
+    "label": "ch:seeds-analyses",
+    "t": "ref",
+    "text": "Chapter 12"
+   }
   ]
  },
  {
@@ -1154,7 +1382,12 @@
    " again after it."
   ],
   "where": [
-   "Chapter 11"
+   {
+    "href": "/learn/ch11/",
+    "label": "ch:jinja-macros-packages",
+    "t": "ref",
+    "text": "Chapter 11"
+   }
   ]
  },
  {
@@ -1202,7 +1435,12 @@
    " (for example a private Git token)."
   ],
   "where": [
-   "Chapter 11"
+   {
+    "href": "/learn/ch11/",
+    "label": "ch:jinja-macros-packages",
+    "t": "ref",
+    "text": "Chapter 11"
+   }
   ]
  },
  {
@@ -1249,7 +1487,12 @@
    " starts a local web server to look at them."
   ],
   "where": [
-   "Chapter 20"
+   {
+    "href": "/learn/ch20/",
+    "label": "ch:documentation",
+    "t": "ref",
+    "text": "Chapter 20"
+   }
   ]
  },
  {
@@ -1285,7 +1528,12 @@
    " points to a model, seed or snapshot. Both create edges in the DAG; a hard-coded table name creates none."
   ],
   "where": [
-   "Chapter 7"
+   {
+    "href": "/learn/ch07/",
+    "label": "ch:models-sources-dag",
+    "t": "ref",
+    "text": "Chapter 7"
+   }
   ]
  },
  {
@@ -1326,7 +1574,12 @@
    " for versions."
   ],
   "where": [
-   "Chapter 7"
+   {
+    "href": "/learn/ch07/",
+    "label": "ch:models-sources-dag",
+    "t": "ref",
+    "text": "Chapter 7"
+   }
   ]
  },
  {
@@ -1375,7 +1628,12 @@
    "."
   ],
   "where": [
-   "Chapter 7"
+   {
+    "href": "/learn/ch07/",
+    "label": "ch:models-sources-dag",
+    "t": "ref",
+    "text": "Chapter 7"
+   }
   ]
  },
  {
@@ -1393,7 +1651,19 @@
    "dbt allows it, but it breaks the recommended structure: only staging models select from sources (one staging model per source table); marts select from staging and intermediate models."
   ],
   "where": [
-   "Chapters 7 and 9"
+   {
+    "href": "/learn/ch07/",
+    "label": "ch:models-sources-dag",
+    "t": "ref",
+    "text": "Chapters 7"
+   },
+   " and ",
+   {
+    "href": "/learn/ch09/",
+    "label": "ch:modularity-refactoring",
+    "t": "ref",
+    "text": "9"
+   }
   ]
  },
  {
@@ -1411,7 +1681,19 @@
    "The DAG must have no cycle. dbt refuses to run and prints \"Found a cycle\" with the two node names."
   ],
   "where": [
-   "Chapters 7 and 22"
+   {
+    "href": "/learn/ch07/",
+    "label": "ch:models-sources-dag",
+    "t": "ref",
+    "text": "Chapters 7"
+   },
+   " and ",
+   {
+    "href": "/learn/ch22/",
+    "label": "ch:debugging",
+    "t": "ref",
+    "text": "22"
+   }
   ]
  },
  {
@@ -1433,7 +1715,12 @@
    "."
   ],
   "where": [
-   "Chapter 8"
+   {
+    "href": "/learn/ch08/",
+    "label": "ch:materializations",
+    "t": "ref",
+    "text": "Chapter 8"
+   }
   ]
  },
  {
@@ -1470,7 +1757,12 @@
    " can still preview it)."
   ],
   "where": [
-   "Chapter 8"
+   {
+    "href": "/learn/ch08/",
+    "label": "ch:materializations",
+    "t": "ref",
+    "text": "Chapter 8"
+   }
   ]
  },
  {
@@ -1487,7 +1779,12 @@
    "A view stores only the query and recomputes it at every read: cheap to build, slower to query. A table stores the result and is rebuilt completely at each run."
   ],
   "where": [
-   "Chapter 8"
+   {
+    "href": "/learn/ch08/",
+    "label": "ch:materializations",
+    "t": "ref",
+    "text": "Chapter 8"
+   }
   ]
  },
  {
@@ -1509,7 +1806,12 @@
    "Materialized views exist only on platforms that support them, and their options are platform-specific."
   ],
   "where": [
-   "Chapter 8"
+   {
+    "href": "/learn/ch08/",
+    "label": "ch:materializations",
+    "t": "ref",
+    "text": "Chapter 8"
+   }
   ]
  },
  {
@@ -1546,7 +1848,12 @@
    " (where the deepest folder wins). We checked all three levels."
   ],
   "where": [
-   "Chapter 10"
+   {
+    "href": "/learn/ch10/",
+    "label": "ch:configuration",
+    "t": "ref",
+    "text": "Chapter 10"
+   }
   ]
  },
  {
@@ -1595,7 +1902,12 @@
    "…) are replaced."
   ],
   "where": [
-   "Chapter 10"
+   {
+    "href": "/learn/ch10/",
+    "label": "ch:configuration",
+    "t": "ref",
+    "text": "Chapter 10"
+   }
   ]
  },
  {
@@ -1642,7 +1954,12 @@
    " in prod. Override the macro to change this."
   ],
   "where": [
-   "Chapter 10"
+   {
+    "href": "/learn/ch10/",
+    "label": "ch:configuration",
+    "t": "ref",
+    "text": "Chapter 10"
+   }
   ]
  },
  {
@@ -1706,7 +2023,12 @@
    ") means \"add to the list\". Two different meanings."
   ],
   "where": [
-   "Chapter 10"
+   {
+    "href": "/learn/ch10/",
+    "label": "ch:configuration",
+    "t": "ref",
+    "text": "Chapter 10"
+   }
   ]
  },
  {
@@ -1753,7 +2075,12 @@
    " overrides the project value."
   ],
   "where": [
-   "Chapter 10"
+   {
+    "href": "/learn/ch10/",
+    "label": "ch:configuration",
+    "t": "ref",
+    "text": "Chapter 10"
+   }
   ]
  },
  {
@@ -1790,7 +2117,12 @@
    "."
   ],
   "where": [
-   "Chapter 10"
+   {
+    "href": "/learn/ch10/",
+    "label": "ch:configuration",
+    "t": "ref",
+    "text": "Chapter 10"
+   }
   ]
  },
  {
@@ -1836,7 +2168,12 @@
    "."
   ],
   "where": [
-   "Chapter 10"
+   {
+    "href": "/learn/ch10/",
+    "label": "ch:configuration",
+    "t": "ref",
+    "text": "Chapter 10"
+   }
   ]
  },
  {
@@ -1889,7 +2226,12 @@
    ") run once at the start / end of the command."
   ],
   "where": [
-   "Chapter 10"
+   {
+    "href": "/learn/ch10/",
+    "label": "ch:configuration",
+    "t": "ref",
+    "text": "Chapter 10"
+   }
   ]
  },
  {
@@ -1933,7 +2275,12 @@
    "), which adds to it."
   ],
   "where": [
-   "Chapter 10"
+   {
+    "href": "/learn/ch10/",
+    "label": "ch:configuration",
+    "t": "ref",
+    "text": "Chapter 10"
+   }
   ]
  },
  {
@@ -1965,7 +2312,12 @@
    "."
   ],
   "where": [
-   "Chapter 10"
+   {
+    "href": "/learn/ch10/",
+    "label": "ch:configuration",
+    "t": "ref",
+    "text": "Chapter 10"
+   }
   ]
  },
  {
@@ -1982,7 +2334,12 @@
    "DRY (Don't Repeat Yourself) means one place for each piece of logic: macros for repeated SQL, intermediate models for shared steps, packages for common utilities, staging models as the single entry point for each source."
   ],
   "where": [
-   "Chapter 9"
+   {
+    "href": "/learn/ch09/",
+    "label": "ch:modularity-refactoring",
+    "t": "ref",
+    "text": "Chapter 9"
+   }
   ]
  },
  {
@@ -2009,7 +2366,12 @@
    " for its tests."
   ],
   "where": [
-   "Chapter 11"
+   {
+    "href": "/learn/ch11/",
+    "label": "ch:jinja-macros-packages",
+    "t": "ref",
+    "text": "Chapter 11"
+   }
   ]
  },
  {
@@ -2026,7 +2388,12 @@
    "Seeds are for small, static CSV files that belong in version control (lookup tables, mappings). Raw and large data is loaded by an ingestion tool and declared as a source."
   ],
   "where": [
-   "Chapter 12"
+   {
+    "href": "/learn/ch12/",
+    "label": "ch:seeds-analyses",
+    "t": "ref",
+    "text": "Chapter 12"
+   }
   ]
  },
  {
@@ -2058,7 +2425,12 @@
    " drops and recreates the table."
   ],
   "where": [
-   "Chapter 12"
+   {
+    "href": "/learn/ch12/",
+    "label": "ch:seeds-analyses",
+    "t": "ref",
+    "text": "Chapter 12"
+   }
   ]
  },
  {
@@ -2095,7 +2467,12 @@
    "."
   ],
   "where": [
-   "Chapter 13"
+   {
+    "href": "/learn/ch13/",
+    "label": "ch:snapshots",
+    "t": "ref",
+    "text": "Chapter 13"
+   }
   ]
  },
  {
@@ -2142,7 +2519,12 @@
    "). A missing one stops parsing with a clear message."
   ],
   "where": [
-   "Chapter 13"
+   {
+    "href": "/learn/ch13/",
+    "label": "ch:snapshots",
+    "t": "ref",
+    "text": "Chapter 13"
+   }
   ]
  },
  {
@@ -2179,7 +2561,12 @@
    "."
   ],
   "where": [
-   "Chapter 13"
+   {
+    "href": "/learn/ch13/",
+    "label": "ch:snapshots",
+    "t": "ref",
+    "text": "Chapter 13"
+   }
   ]
  },
  {
@@ -2226,7 +2613,12 @@
    " snapshot, dbt uses that column instead of the run time.)"
   ],
   "where": [
-   "Chapter 13"
+   {
+    "href": "/learn/ch13/",
+    "label": "ch:snapshots",
+    "t": "ref",
+    "text": "Chapter 13"
+   }
   ]
  },
  {
@@ -2305,7 +2697,12 @@
    ")."
   ],
   "where": [
-   "Chapter 13"
+   {
+    "href": "/learn/ch13/",
+    "label": "ch:snapshots",
+    "t": "ref",
+    "text": "Chapter 13"
+   }
   ]
  },
  {
@@ -2369,7 +2766,12 @@
    " set the exact schema."
   ],
   "where": [
-   "Chapter 13"
+   {
+    "href": "/learn/ch13/",
+    "label": "ch:snapshots",
+    "t": "ref",
+    "text": "Chapter 13"
+   }
   ]
  },
  {
@@ -2400,7 +2802,12 @@
    " flag. A snapshot's history cannot be recreated from the source, which is the whole point of snapshots."
   ],
   "where": [
-   "Chapter 13"
+   {
+    "href": "/learn/ch13/",
+    "label": "ch:snapshots",
+    "t": "ref",
+    "text": "Chapter 13"
+   }
   ]
  },
  {
@@ -2422,7 +2829,12 @@
    "), with almost no transformation, so the history does not depend on business logic that changes."
   ],
   "where": [
-   "Chapter 13"
+   {
+    "href": "/learn/ch13/",
+    "label": "ch:snapshots",
+    "t": "ref",
+    "text": "Chapter 13"
+   }
   ]
  },
  {
@@ -2471,7 +2883,12 @@
    " comment at the top of the model."
   ],
   "where": [
-   "Chapter 14"
+   {
+    "href": "/learn/ch14/",
+    "label": "ch:incremental-microbatch",
+    "t": "ref",
+    "text": "Chapter 14"
+   }
   ]
  },
  {
@@ -2517,7 +2934,12 @@
    " to update rows by key."
   ],
   "where": [
-   "Chapter 14"
+   {
+    "href": "/learn/ch14/",
+    "label": "ch:incremental-microbatch",
+    "t": "ref",
+    "text": "Chapter 14"
+   }
   ]
  },
  {
@@ -2559,7 +2981,12 @@
    " stops the run."
   ],
   "where": [
-   "Chapter 14"
+   {
+    "href": "/learn/ch14/",
+    "label": "ch:incremental-microbatch",
+    "t": "ref",
+    "text": "Chapter 14"
+   }
   ]
  },
  {
@@ -2591,7 +3018,12 @@
    " to recompute them."
   ],
   "where": [
-   "Chapter 14"
+   {
+    "href": "/learn/ch14/",
+    "label": "ch:incremental-microbatch",
+    "t": "ref",
+    "text": "Chapter 14"
+   }
   ]
  },
  {
@@ -2628,7 +3060,12 @@
    " explicitly when it matters."
   ],
   "where": [
-   "Chapter 14"
+   {
+    "href": "/learn/ch14/",
+    "label": "ch:incremental-microbatch",
+    "t": "ref",
+    "text": "Chapter 14"
+   }
   ]
  },
  {
@@ -2655,7 +3092,12 @@
    " makes dbt ignore the flag for that model (to protect a huge table)."
   ],
   "where": [
-   "Chapter 14"
+   {
+    "href": "/learn/ch14/",
+    "label": "ch:incremental-microbatch",
+    "t": "ref",
+    "text": "Chapter 14"
+   }
   ]
  },
  {
@@ -2677,7 +3119,12 @@
    "Rows with a NULL key cannot match, which creates duplicates or failures. Make the key not null, or build a surrogate key."
   ],
   "where": [
-   "Chapter 14"
+   {
+    "href": "/learn/ch14/",
+    "label": "ch:incremental-microbatch",
+    "t": "ref",
+    "text": "Chapter 14"
+   }
   ]
  },
  {
@@ -2714,7 +3161,12 @@
    "."
   ],
   "where": [
-   "Chapter 14"
+   {
+    "href": "/learn/ch14/",
+    "label": "ch:incremental-microbatch",
+    "t": "ref",
+    "text": "Chapter 14"
+   }
   ]
  },
  {
@@ -2753,7 +3205,12 @@
    " does dbt warn that \"no filtering can be applied\"."
   ],
   "where": [
-   "Chapter 14"
+   {
+    "href": "/learn/ch14/",
+    "label": "ch:incremental-microbatch",
+    "t": "ref",
+    "text": "Chapter 14"
+   }
   ]
  },
  {
@@ -2819,7 +3276,12 @@
    " is optional and defaults to 1."
   ],
   "where": [
-   "Chapter 14"
+   {
+    "href": "/learn/ch14/",
+    "label": "ch:incremental-microbatch",
+    "t": "ref",
+    "text": "Chapter 14"
+   }
   ]
  },
  {
@@ -2850,7 +3312,12 @@
    " must be given together (dbt raises an error otherwise). The end is exclusive: start 2025-12-30 and end 2026-01-01 ran the batches of 30 and 31 December."
   ],
   "where": [
-   "Chapter 14"
+   {
+    "href": "/learn/ch14/",
+    "label": "ch:incremental-microbatch",
+    "t": "ref",
+    "text": "Chapter 14"
+   }
   ]
  },
  {
@@ -2873,7 +3340,19 @@
    " reprocesses only the failed batches."
   ],
   "where": [
-   "Chapters 14 and 24"
+   {
+    "href": "/learn/ch14/",
+    "label": "ch:incremental-microbatch",
+    "t": "ref",
+    "text": "Chapters 14"
+   },
+   " and ",
+   {
+    "href": "/learn/ch24/",
+    "label": "ch:state-defer-retry",
+    "t": "ref",
+    "text": "24"
+   }
   ]
  },
  {
@@ -2900,7 +3379,12 @@
    "."
   ],
   "where": [
-   "Chapter 15"
+   {
+    "href": "/learn/ch15/",
+    "label": "ch:python-models",
+    "t": "ref",
+    "text": "Chapter 15"
+   }
   ]
  },
  {
@@ -2947,7 +3431,12 @@
    ", and return one DataFrame."
   ],
   "where": [
-   "Chapter 15"
+   {
+    "href": "/learn/ch15/",
+    "label": "ch:python-models",
+    "t": "ref",
+    "text": "Chapter 15"
+   }
   ]
  },
  {
@@ -2969,7 +3458,12 @@
    "It cannot: the parent must exist as a relation in the warehouse."
   ],
   "where": [
-   "Chapter 15"
+   {
+    "href": "/learn/ch15/",
+    "label": "ch:python-models",
+    "t": "ref",
+    "text": "Chapter 15"
+   }
   ]
  },
  {
@@ -3010,7 +3504,12 @@
    "). Objects are created empty, and warehouse errors (bad column, wrong type) still appear."
   ],
   "where": [
-   "Chapter 16"
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "Chapter 16"
+   }
   ]
  },
  {
@@ -3077,7 +3576,12 @@
    "."
   ],
   "where": [
-   "Chapter 16"
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "Chapter 16"
+   }
   ]
  },
  {
@@ -3130,7 +3634,19 @@
    "."
   ],
   "where": [
-   "Chapters 14 and 16"
+   {
+    "href": "/learn/ch14/",
+    "label": "ch:incremental-microbatch",
+    "t": "ref",
+    "text": "Chapters 14"
+   },
+   " and ",
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "16"
+   }
   ]
  },
  {
@@ -3181,7 +3697,12 @@
    "."
   ],
   "where": [
-   "Chapter 16"
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "Chapter 16"
+   }
   ]
  },
  {
@@ -3232,7 +3753,12 @@
    " selects descendants."
   ],
   "where": [
-   "Chapter 16"
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "Chapter 16"
+   }
   ]
  },
  {
@@ -3269,7 +3795,12 @@
    " goes up two levels."
   ],
   "where": [
-   "Chapter 16"
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "Chapter 16"
+   }
   ]
  },
  {
@@ -3312,7 +3843,12 @@
    " is used only as a prefix."
   ],
   "where": [
-   "Chapter 16"
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "Chapter 16"
+   }
   ]
  },
  {
@@ -3346,7 +3882,12 @@
    " removes nodes."
   ],
   "where": [
-   "Chapter 16"
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "Chapter 16"
+   }
   ]
  },
  {
@@ -3403,7 +3944,12 @@
    " select fewer tests."
   ],
   "where": [
-   "Chapter 16"
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "Chapter 16"
+   }
   ]
  },
  {
@@ -3430,7 +3976,12 @@
    " to keep only models."
   ],
   "where": [
-   "Chapter 16"
+   {
+    "href": "/learn/ch16/",
+    "label": "ch:commands-selection",
+    "t": "ref",
+    "text": "Chapter 16"
+   }
   ]
  },
  {
@@ -3462,7 +4013,12 @@
    ". A missing type gives \"Contracted models require data_type to be defined for each column\"; an extra column in the SQL fails with \"missing in contract\"."
   ],
   "where": [
-   "Chapter 17"
+   {
+    "href": "/learn/ch17/",
+    "label": "ch:governance",
+    "t": "ref",
+    "text": "Chapter 17"
+   }
   ]
  },
  {
@@ -3479,7 +4035,12 @@
    "The pre-flight check ignores the order. dbt then creates the table with the columns in the order of the YAML contract."
   ],
   "where": [
-   "Chapter 17"
+   {
+    "href": "/learn/ch17/",
+    "label": "ch:governance",
+    "t": "ref",
+    "text": "Chapter 17"
+   }
   ]
  },
  {
@@ -3516,7 +4077,12 @@
    ", materialized views and Python models."
   ],
   "where": [
-   "Chapter 17"
+   {
+    "href": "/learn/ch17/",
+    "label": "ch:governance",
+    "t": "ref",
+    "text": "Chapter 17"
+   }
   ]
  },
  {
@@ -3559,7 +4125,19 @@
    " raises an error."
   ],
   "where": [
-   "Chapters 14 and 17"
+   {
+    "href": "/learn/ch14/",
+    "label": "ch:incremental-microbatch",
+    "t": "ref",
+    "text": "Chapters 14"
+   },
+   " and ",
+   {
+    "href": "/learn/ch17/",
+    "label": "ch:governance",
+    "t": "ref",
+    "text": "17"
+   }
   ]
  },
  {
@@ -3581,7 +4159,12 @@
    " was silently ignored). On views they are ignored with a warning."
   ],
   "where": [
-   "Chapter 17"
+   {
+    "href": "/learn/ch17/",
+    "label": "ch:governance",
+    "t": "ref",
+    "text": "Chapter 17"
+   }
   ]
  },
  {
@@ -3625,7 +4208,12 @@
    " is metadata on Snowflake and Redshift and not supported on BigQuery and Databricks. Keep your data tests."
   ],
   "where": [
-   "Chapter 17"
+   {
+    "href": "/learn/ch17/",
+    "label": "ch:governance",
+    "t": "ref",
+    "text": "Chapter 17"
+   }
   ]
  },
  {
@@ -3657,7 +4245,19 @@
    " the build and reports failures; it works on every platform and every materialization (even ephemeral models)."
   ],
   "where": [
-   "Chapters 17 and 18"
+   {
+    "href": "/learn/ch17/",
+    "label": "ch:governance",
+    "t": "ref",
+    "text": "Chapters 17"
+   },
+   " and ",
+   {
+    "href": "/learn/ch18/",
+    "label": "ch:data-tests",
+    "t": "ref",
+    "text": "18"
+   }
   ]
  },
  {
@@ -3694,7 +4294,12 @@
    "."
   ],
   "where": [
-   "Chapter 17"
+   {
+    "href": "/learn/ch17/",
+    "label": "ch:governance",
+    "t": "ref",
+    "text": "Chapter 17"
+   }
   ]
  },
  {
@@ -3721,7 +4326,12 @@
    " to it is flagged). Removing the version is your job."
   ],
   "where": [
-   "Chapter 17"
+   {
+    "href": "/learn/ch17/",
+    "label": "ch:governance",
+    "t": "ref",
+    "text": "Chapter 17"
+   }
   ]
  },
  {
@@ -3758,7 +4368,12 @@
    " to point to another file."
   ],
   "where": [
-   "Chapter 17"
+   {
+    "href": "/learn/ch17/",
+    "label": "ch:governance",
+    "t": "ref",
+    "text": "Chapter 17"
+   }
   ]
  },
  {
@@ -3800,7 +4415,12 @@
    ": also other projects (dbt Mesh)."
   ],
   "where": [
-   "Chapter 17"
+   {
+    "href": "/learn/ch17/",
+    "label": "ch:governance",
+    "t": "ref",
+    "text": "Chapter 17"
+   }
   ]
  },
  {
@@ -3827,7 +4447,12 @@
    " config."
   ],
   "where": [
-   "Chapter 17"
+   {
+    "href": "/learn/ch17/",
+    "label": "ch:governance",
+    "t": "ref",
+    "text": "Chapter 17"
+   }
   ]
  },
  {
@@ -3872,7 +4497,12 @@
    ")."
   ],
   "where": [
-   "Chapter 22"
+   {
+    "href": "/learn/ch22/",
+    "label": "ch:debugging",
+    "t": "ref",
+    "text": "Chapter 22"
+   }
   ]
  },
  {
@@ -3923,7 +4553,12 @@
    "…)."
   ],
   "where": [
-   "Chapter 22"
+   {
+    "href": "/learn/ch22/",
+    "label": "ch:debugging",
+    "t": "ref",
+    "text": "Chapter 22"
+   }
   ]
  },
  {
@@ -3954,7 +4589,12 @@
    ") shows them in the console."
   ],
   "where": [
-   "Chapter 22"
+   {
+    "href": "/learn/ch22/",
+    "label": "ch:debugging",
+    "t": "ref",
+    "text": "Chapter 22"
+   }
   ]
  },
  {
@@ -3978,7 +4618,12 @@
    ", even for unrelated models."
   ],
   "where": [
-   "Chapter 22"
+   {
+    "href": "/learn/ch22/",
+    "label": "ch:debugging",
+    "t": "ref",
+    "text": "Chapter 22"
+   }
   ]
  },
  {
@@ -4047,7 +4692,12 @@
    " warning into an error."
   ],
   "where": [
-   "Chapter 22"
+   {
+    "href": "/learn/ch22/",
+    "label": "ch:debugging",
+    "t": "ref",
+    "text": "Chapter 22"
+   }
   ]
  },
  {
@@ -4089,7 +4739,12 @@
    "."
   ],
   "where": [
-   "Chapter 22"
+   {
+    "href": "/learn/ch22/",
+    "label": "ch:debugging",
+    "t": "ref",
+    "text": "Chapter 22"
+   }
   ]
  },
  {
@@ -4112,7 +4767,19 @@
    "), open a pull request, let CI run, then merge."
   ],
   "where": [
-   "Chapters 22 and 25"
+   {
+    "href": "/learn/ch22/",
+    "label": "ch:debugging",
+    "t": "ref",
+    "text": "Chapters 22"
+   },
+   " and ",
+   {
+    "href": "/learn/ch25/",
+    "label": "ch:environments-ci",
+    "t": "ref",
+    "text": "25"
+   }
   ]
  },
  {
@@ -4144,7 +4811,19 @@
    ") stops the whole command at the first failure."
   ],
   "where": [
-   "Chapters 22 and 23"
+   {
+    "href": "/learn/ch22/",
+    "label": "ch:debugging",
+    "t": "ref",
+    "text": "Chapters 22"
+   },
+   " and ",
+   {
+    "href": "/learn/ch23/",
+    "label": "ch:pipelines-clone",
+    "t": "ref",
+    "text": "23"
+   }
   ]
  },
  {
@@ -4171,7 +4850,12 @@
    " to stop everything."
   ],
   "where": [
-   "Chapter 23"
+   {
+    "href": "/learn/ch23/",
+    "label": "ch:pipelines-clone",
+    "t": "ref",
+    "text": "Chapter 23"
+   }
   ]
  },
  {
@@ -4188,7 +4872,12 @@
    "Threads set how many nodes run in parallel. Dependencies are always respected."
   ],
   "where": [
-   "Chapter 23"
+   {
+    "href": "/learn/ch23/",
+    "label": "ch:pipelines-clone",
+    "t": "ref",
+    "text": "Chapter 23"
+   }
   ]
  },
  {
@@ -4210,7 +4899,12 @@
    "It makes a zero-copy clone where the platform supports it (Snowflake, Databricks, BigQuery) for tables; otherwise it creates a view that selects from the source object. On DuckDB we got views."
   ],
   "where": [
-   "Chapter 23"
+   {
+    "href": "/learn/ch23/",
+    "label": "ch:pipelines-clone",
+    "t": "ref",
+    "text": "Chapter 23"
+   }
   ]
  },
  {
@@ -4239,7 +4933,7 @@
     "t": "code",
     "v": "manifest.json"
    },
-   "), otherwise: \"–state or –defer-state are required\". Existing relations are not recreated unless you add ",
+   "), otherwise: \"--state or --defer-state are required\". Existing relations are not recreated unless you add ",
    {
     "t": "code",
     "v": "--full-refresh"
@@ -4247,7 +4941,12 @@
    "."
   ],
   "where": [
-   "Chapter 23"
+   {
+    "href": "/learn/ch23/",
+    "label": "ch:pipelines-clone",
+    "t": "ref",
+    "text": "Chapter 23"
+   }
   ]
  },
  {
@@ -4279,7 +4978,19 @@
    " creates real objects in your schema, usable from a BI tool or as a starting point for incremental models in CI."
   ],
   "where": [
-   "Chapters 23 and 24"
+   {
+    "href": "/learn/ch23/",
+    "label": "ch:pipelines-clone",
+    "t": "ref",
+    "text": "Chapters 23"
+   },
+   " and ",
+   {
+    "href": "/learn/ch24/",
+    "label": "ch:state-defer-retry",
+    "t": "ref",
+    "text": "24"
+   }
   ]
  },
  {
@@ -4316,7 +5027,12 @@
    ". Others come from packages (such as dbt_utils) or from your own custom generic tests."
   ],
   "where": [
-   "Chapter 18"
+   {
+    "href": "/learn/ch18/",
+    "label": "ch:data-tests",
+    "t": "ref",
+    "text": "Chapter 18"
+   }
   ]
  },
  {
@@ -4355,7 +5071,12 @@
    "."
   ],
   "where": [
-   "Chapter 18"
+   {
+    "href": "/learn/ch18/",
+    "label": "ch:data-tests",
+    "t": "ref",
+    "text": "Chapter 18"
+   }
   ]
  },
  {
@@ -4402,7 +5123,12 @@
    "."
   ],
   "where": [
-   "Chapter 18"
+   {
+    "href": "/learn/ch18/",
+    "label": "ch:data-tests",
+    "t": "ref",
+    "text": "Chapter 18"
+   }
   ]
  },
  {
@@ -4459,7 +5185,12 @@
    " is ignored."
   ],
   "where": [
-   "Chapter 18"
+   {
+    "href": "/learn/ch18/",
+    "label": "ch:data-tests",
+    "t": "ref",
+    "text": "Chapter 18"
+   }
   ]
  },
  {
@@ -4485,7 +5216,12 @@
    " only filters the rows that the test checks; the model is not changed."
   ],
   "where": [
-   "Chapter 18"
+   {
+    "href": "/learn/ch18/",
+    "label": "ch:data-tests",
+    "t": "ref",
+    "text": "Chapter 18"
+   }
   ]
  },
  {
@@ -4532,7 +5268,12 @@
    " in prod)."
   ],
   "where": [
-   "Chapter 18"
+   {
+    "href": "/learn/ch18/",
+    "label": "ch:data-tests",
+    "t": "ref",
+    "text": "Chapter 18"
+   }
   ]
  },
  {
@@ -4564,7 +5305,12 @@
    ". It fails on orphans, like order 159 of the practice data."
   ],
   "where": [
-   "Chapter 18"
+   {
+    "href": "/learn/ch18/",
+    "label": "ch:data-tests",
+    "t": "ref",
+    "text": "Chapter 18"
+   }
   ]
  },
  {
@@ -4601,7 +5347,12 @@
    "."
   ],
   "where": [
-   "Chapter 18"
+   {
+    "href": "/learn/ch18/",
+    "label": "ch:data-tests",
+    "t": "ref",
+    "text": "Chapter 18"
+   }
   ]
  },
  {
@@ -4647,7 +5398,12 @@
    " the model is built, its data tests after."
   ],
   "where": [
-   "Chapter 19"
+   {
+    "href": "/learn/ch19/",
+    "label": "ch:unit-tests",
+    "t": "ref",
+    "text": "Chapter 19"
+   }
   ]
  },
  {
@@ -4684,7 +5440,12 @@
    "."
   ],
   "where": [
-   "Chapter 19"
+   {
+    "href": "/learn/ch19/",
+    "label": "ch:unit-tests",
+    "t": "ref",
+    "text": "Chapter 19"
+   }
   ]
  },
  {
@@ -4701,7 +5462,12 @@
    "Only SQL models of the current project (not Python models, not materialized views)."
   ],
   "where": [
-   "Chapter 19"
+   {
+    "href": "/learn/ch19/",
+    "label": "ch:unit-tests",
+    "t": "ref",
+    "text": "Chapter 19"
+   }
   ]
  },
  {
@@ -4733,7 +5499,12 @@
    " (the rows already in the table)."
   ],
   "where": [
-   "Chapter 19"
+   {
+    "href": "/learn/ch19/",
+    "label": "ch:unit-tests",
+    "t": "ref",
+    "text": "Chapter 19"
+   }
   ]
  },
  {
@@ -4772,7 +5543,12 @@
    " selects only unit tests."
   ],
   "where": [
-   "Chapter 19"
+   {
+    "href": "/learn/ch19/",
+    "label": "ch:unit-tests",
+    "t": "ref",
+    "text": "Chapter 19"
+   }
   ]
  },
  {
@@ -4789,7 +5565,12 @@
    "Test assumptions where they enter: primary keys and accepted values on sources and staging models, business rules on marts. A problem caught at the source does not spread to every child."
   ],
   "where": [
-   "Chapter 18"
+   {
+    "href": "/learn/ch18/",
+    "label": "ch:data-tests",
+    "t": "ref",
+    "text": "Chapter 18"
+   }
   ]
  },
  {
@@ -4821,7 +5602,12 @@
    "."
   ],
   "where": [
-   "Chapter 21"
+   {
+    "href": "/learn/ch21/",
+    "label": "ch:freshness-exposures",
+    "t": "ref",
+    "text": "Chapter 21"
+   }
   ]
  },
  {
@@ -4883,7 +5669,12 @@
    ")."
   ],
   "where": [
-   "Chapter 21"
+   {
+    "href": "/learn/ch21/",
+    "label": "ch:freshness-exposures",
+    "t": "ref",
+    "text": "Chapter 21"
+   }
   ]
  },
  {
@@ -4915,7 +5706,12 @@
    " switches the check off for one table."
   ],
   "where": [
-   "Chapter 21"
+   {
+    "href": "/learn/ch21/",
+    "label": "ch:freshness-exposures",
+    "t": "ref",
+    "text": "Chapter 21"
+   }
   ]
  },
  {
@@ -4961,7 +5757,12 @@
    " column does not exist in that table."
   ],
   "where": [
-   "Chapter 21"
+   {
+    "href": "/learn/ch21/",
+    "label": "ch:freshness-exposures",
+    "t": "ref",
+    "text": "Chapter 21"
+   }
   ]
  },
  {
@@ -4995,7 +5796,12 @@
    " of raw tables that dbt does not control. Models stay fresh because your jobs run them, and data tests check their content."
   ],
   "where": [
-   "Chapter 21"
+   {
+    "href": "/learn/ch21/",
+    "label": "ch:freshness-exposures",
+    "t": "ref",
+    "text": "Chapter 21"
+   }
   ]
  },
  {
@@ -5057,7 +5863,12 @@
    "."
   ],
   "where": [
-   "Chapter 21"
+   {
+    "href": "/learn/ch21/",
+    "label": "ch:freshness-exposures",
+    "t": "ref",
+    "text": "Chapter 21"
+   }
   ]
  },
  {
@@ -5098,7 +5909,12 @@
    " is rejected)."
   ],
   "where": [
-   "Chapter 21"
+   {
+    "href": "/learn/ch21/",
+    "label": "ch:freshness-exposures",
+    "t": "ref",
+    "text": "Chapter 21"
+   }
   ]
  },
  {
@@ -5136,7 +5952,12 @@
    " selects only the new ones."
   ],
   "where": [
-   "Chapter 24"
+   {
+    "href": "/learn/ch24/",
+    "label": "ch:state-defer-retry",
+    "t": "ref",
+    "text": "Chapter 24"
+   }
   ]
  },
  {
@@ -5163,7 +5984,12 @@
    "."
   ],
   "where": [
-   "Chapter 24"
+   {
+    "href": "/learn/ch24/",
+    "label": "ch:state-defer-retry",
+    "t": "ref",
+    "text": "Chapter 24"
+   }
   ]
  },
  {
@@ -5199,7 +6025,12 @@
    " uses production even when the node exists in dev."
   ],
   "where": [
-   "Chapter 24"
+   {
+    "href": "/learn/ch24/",
+    "label": "ch:state-defer-retry",
+    "t": "ref",
+    "text": "Chapter 24"
+   }
   ]
  },
  {
@@ -5241,7 +6072,12 @@
    " in between even made the retry crash."
   ],
   "where": [
-   "Chapter 24"
+   {
+    "href": "/learn/ch24/",
+    "label": "ch:state-defer-retry",
+    "t": "ref",
+    "text": "Chapter 24"
+   }
   ]
  },
  {
@@ -5263,7 +6099,12 @@
    "Retry runs the same code again. Fix the cause first (code, permissions, a missing table), then retry."
   ],
   "where": [
-   "Chapter 24"
+   {
+    "href": "/learn/ch24/",
+    "label": "ch:state-defer-retry",
+    "t": "ref",
+    "text": "Chapter 24"
+   }
   ]
  },
  {
@@ -5314,7 +6155,12 @@
    " from the previous and the current freshness runs."
   ],
   "where": [
-   "Chapter 24"
+   {
+    "href": "/learn/ch24/",
+    "label": "ch:state-defer-retry",
+    "t": "ref",
+    "text": "Chapter 24"
+   }
   ]
  },
  {
@@ -5337,7 +6183,19 @@
    "."
   ],
   "where": [
-   "Chapters 24 and 25"
+   {
+    "href": "/learn/ch24/",
+    "label": "ch:state-defer-retry",
+    "t": "ref",
+    "text": "Chapters 24"
+   },
+   " and ",
+   {
+    "href": "/learn/ch25/",
+    "label": "ch:environments-ci",
+    "t": "ref",
+    "text": "25"
+   }
   ]
  }
 ]

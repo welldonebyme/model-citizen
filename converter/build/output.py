@@ -164,6 +164,17 @@ def check_mock_tables(res: BuildResult, mocks_json: dict[int, list[dict]]) -> li
     return problems
 
 
+def _refs(obj):
+    if isinstance(obj, dict):
+        if obj.get("t") == "ref":
+            yield obj
+        for v in obj.values():
+            yield from _refs(v)
+    elif isinstance(obj, list):
+        for v in obj:
+            yield from _refs(v)
+
+
 def assemble(res: BuildResult, book: Path, rules: Path, overrides: Path) -> tuple[dict[str, object], dict]:
     files: dict[str, object] = {}
     info: dict = {"todo": [], "overrides": [], "problems": [], "rewrites": []}
@@ -225,8 +236,10 @@ def assemble(res: BuildResult, book: Path, rules: Path, overrides: Path) -> tupl
         files[f"chapters/{r.seg.id}.json"] = ch
         summary = {"id": ch["id"], "number": ch["number"], "printed": ch["printed"], "kind": ch["kind"],
                    "title": ch["title"], "label": ch["label"], "minutes": ch["minutes"],
+                   "labMinutes": ch["labMinutes"],
                    "lessons": [{"id": l["id"], "number": l["number"], "title": l["titleText"], "label": l.get("label"),
-                                "minutes": l["minutes"], "steps": len(l["steps"]), "labs": len(l["labs"])}
+                                "minutes": l["minutes"], "labMinutes": l["labMinutes"], "steps": len(l["steps"]),
+                                "labs": len(l["labs"])}
                                for l in ch["lessons"]],
                    "quizQuestions": len(ch["quiz"]), "labs": len(r.ctx.lab_records), "objectives": ch["objectives"]}
         if ch.get("mock"):
@@ -260,6 +273,15 @@ def assemble(res: BuildResult, book: Path, rules: Path, overrides: Path) -> tupl
     files["traps.json"] = [{k: v for k, v in t.items() if k != "lesson"} for t in res.state.traps]
     files["plan.json"] = build_plan(chapters["ch00"].chapter)
     files["cheatsheets.json"] = build_cheatsheets(chapters["appA"].chapter)
+
+    # labels inside a labbox: tcolorbox does not number labs, so \\ref{lab:..} prints an unrelated counter in the
+    # PDF (e.g. "Lab 22.2.6"); the web prints the lab's position in its chapter
+    info["labRefs"] = []
+    for k in sorted(files):
+        for ref in _refs(files[k]):
+            if ref["label"].startswith("lab:"):
+                info["labRefs"].append(f"{k}: \\ref{{{ref['label']}}} prints a number that is not a lab number in "
+                                       f"the PDF (\\label inside labbox); website text: {ref['text']!r}")
 
     # ------------------------------------------------------------------ private keys out, path rewrites
     files = {k: strip_private(v) for k, v in files.items()}

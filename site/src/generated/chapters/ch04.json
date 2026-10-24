@@ -137,6 +137,7 @@
   }
  ],
  "kind": "chapter",
+ "labMinutes": 210,
  "label": "ch:sql",
  "lessons": [
   {
@@ -145,9 +146,10 @@
    ],
    "checkpoints": [],
    "id": "ch04-s1",
+   "labMinutes": 0,
    "label": "sec:sql-duckdb",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "4.1",
    "objectives": [],
    "steps": [
@@ -1104,9 +1106,10 @@
    ],
    "checkpoints": [],
    "id": "ch04-s2",
+   "labMinutes": 0,
    "label": "sec:sql-select",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "4.2",
    "objectives": [],
    "steps": [
@@ -1592,11 +1595,12 @@
    ],
    "checkpoints": [],
    "id": "ch04-s3",
+   "labMinutes": 20,
    "label": "sec:sql-where",
    "labs": [
     "ch04-lab1"
    ],
-   "minutes": 15,
+   "minutes": 10,
    "number": "4.3",
    "objectives": [
     "CP0-SQL"
@@ -2267,9 +2271,10 @@
    ],
    "checkpoints": [],
    "id": "ch04-s4",
+   "labMinutes": 0,
    "label": "sec:sql-null",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "4.4",
    "objectives": [],
    "steps": [
@@ -2923,6 +2928,7 @@
    ],
    "checkpoints": [],
    "id": "ch04-s5",
+   "labMinutes": 0,
    "label": "sec:sql-order",
    "labs": [],
    "minutes": 5,
@@ -3287,11 +3293,12 @@
    ],
    "checkpoints": [],
    "id": "ch04-s6",
+   "labMinutes": 20,
    "label": "sec:sql-functions",
    "labs": [
     "ch04-lab2"
    ],
-   "minutes": 25,
+   "minutes": 15,
    "number": "4.6",
    "objectives": [
     "CP0-SQL"
@@ -4141,11 +4148,12 @@
    ],
    "checkpoints": [],
    "id": "ch04-s7",
+   "labMinutes": 20,
    "label": "sec:sql-aggregation",
    "labs": [
     "ch04-lab3"
    ],
-   "minutes": 20,
+   "minutes": 15,
    "number": "4.7",
    "objectives": [
     "CP0-SQL"
@@ -4853,6 +4861,7 @@
    ],
    "checkpoints": [],
    "id": "ch04-s8",
+   "labMinutes": 20,
    "label": "sec:sql-joins",
    "labs": [
     "ch04-lab4"
@@ -6012,9 +6021,10 @@
    ],
    "checkpoints": [],
    "id": "ch04-s10",
+   "labMinutes": 0,
    "label": "sec:sql-subqueries",
    "labs": [],
-   "minutes": 15,
+   "minutes": 20,
    "number": "4.10",
    "objectives": [],
    "steps": [
@@ -6802,11 +6812,12 @@
    ],
    "checkpoints": [],
    "id": "ch04-s11",
+   "labMinutes": 20,
    "label": "sec:sql-ctes",
    "labs": [
     "ch04-lab5"
    ],
-   "minutes": 20,
+   "minutes": 15,
    "number": "4.11",
    "objectives": [
     "CP0-SQL"
@@ -7437,6 +7448,7 @@
    ],
    "checkpoints": [],
    "id": "ch04-s12",
+   "labMinutes": 20,
    "label": "sec:sql-windows",
    "labs": [
     "ch04-lab6"
@@ -8649,9 +8661,10 @@
    ],
    "checkpoints": [],
    "id": "ch04-s13",
+   "labMinutes": 0,
    "label": "sec:sql-setops",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "4.13",
    "objectives": [],
    "steps": [
@@ -8900,11 +8913,12 @@
    ],
    "checkpoints": [],
    "id": "ch04-s14",
+   "labMinutes": 25,
    "label": "sec:sql-ddl",
    "labs": [
     "ch04-lab7"
    ],
-   "minutes": 20,
+   "minutes": 15,
    "number": "4.14",
    "objectives": [
     "CP0-SQL",
@@ -9752,11 +9766,12 @@
    ],
    "checkpoints": [],
    "id": "ch04-s15",
+   "labMinutes": 20,
    "label": "sec:sql-views-tables",
    "labs": [
     "ch04-lab8"
    ],
-   "minutes": 15,
+   "minutes": 10,
    "number": "4.15",
    "objectives": [
     "CP0-SQL",
@@ -10234,9 +10249,10 @@
    ],
    "checkpoints": [],
    "id": "ch04-s16",
+   "labMinutes": 0,
    "label": "sec:sql-style",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "4.16",
    "objectives": [],
    "steps": [
@@ -10774,6 +10790,7 @@
    ],
    "checkpoints": [],
    "id": "ch04-s17",
+   "labMinutes": 25,
    "label": "sec:sql-refactoring",
    "labs": [
     "ch04-lab9"
@@ -11374,11 +11391,12 @@
    ],
    "checkpoints": [],
    "id": "ch04-s18",
+   "labMinutes": 20,
    "label": "sec:sql-final-lab",
    "labs": [
     "ch04-lab10"
    ],
-   "minutes": 25,
+   "minutes": 20,
    "number": "4.18",
    "objectives": [
     "CP0-SQL",
@@ -11913,7 +11931,7 @@
    "titleText": "Final lab: the customer orders report"
   }
  ],
- "minutes": 315,
+ "minutes": 260,
  "number": 4,
  "objectives": [
   "CP0-SQL",

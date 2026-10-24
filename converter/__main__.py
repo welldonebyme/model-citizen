@@ -87,6 +87,7 @@ def build() -> int:
                         for t in info["todo"]],
         "overridesApplied": info["overrides"],
         "bookConsistency": info["problems"],
+        "bookErrors": [e for r in res.chapters for e in r.ctx.book_errors] + info["labRefs"],
         "figures": [f for r in res.chapters for f in r.ctx.figures],
         "pathRewrites": {"rules": "converter/rules/paths.yaml", "bookOccurrences": info["pathOccurrences"],
                          "applied": info["rewrites"],

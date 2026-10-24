@@ -13,7 +13,7 @@ class ConvertError(Exception):
     """Hard error: the converter refuses to guess. The message always names file:line."""
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class Source:
     path: str   # path relative to the book root, e.g. "parts/part2/ch07-models-sources-dag.tex"
     text: str
@@ -31,8 +31,11 @@ class Source:
     def where(self, pos: int) -> str:
         return f"{self.path}:{self.line(pos)}"
 
+    def __repr__(self) -> str:
+        return f"<Source {self.path}>"
 
-@dataclass(eq=False)
+
+@dataclass(eq=False, repr=False)
 class Node:
     src: Source
     pos: int
@@ -41,31 +44,34 @@ class Node:
     def where(self) -> str:
         return self.src.where(self.pos)
 
+    def __repr__(self) -> str:          # short: nodes hold the whole source file
+        return f"<{type(self).__name__} {self.where()}>"
+
     def raw(self) -> str:
         return self.src.text[self.pos:self.end]
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class Text(Node):
     s: str = ""
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class Space(Node):
     pass
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class Par(Node):
     """Paragraph break: a blank line (or two consecutive newlines) in the source."""
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class Special(Node):
     ch: str = ""          # "&" (column separator) or "~" (no-break space)
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class Arg:
     kind: str             # "o" optional [..] / "m" mandatory {..}
     nodes: list | None    # parsed content (None when raw)
@@ -74,7 +80,7 @@ class Arg:
     present: bool = True
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class Cmd(Node):
     name: str = ""
     star: bool = False
@@ -84,17 +90,17 @@ class Cmd(Node):
         return self.args[i]
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class Group(Node):
     children: list = field(default_factory=list)
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class Math(Node):
     children: list = field(default_factory=list)
 
 
-@dataclass(eq=False)
+@dataclass(eq=False, repr=False)
 class Env(Node):
     name: str = ""
     args: list[Arg] = field(default_factory=list)

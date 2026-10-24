@@ -262,6 +262,7 @@
   }
  ],
  "kind": "chapter",
+ "labMinutes": 95,
  "label": "ch:first-project",
  "lessons": [
   {
@@ -270,9 +271,10 @@
    ],
    "checkpoints": [],
    "id": "ch06-s1",
+   "labMinutes": 0,
    "label": "sec:fp-what-dbt-does",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "6.1",
    "objectives": [],
    "steps": [
@@ -1091,6 +1093,7 @@
    ],
    "checkpoints": [],
    "id": "ch06-s2",
+   "labMinutes": 0,
    "label": "sec:fp-workspace",
    "labs": [],
    "minutes": 5,
@@ -1213,11 +1216,12 @@
    ],
    "checkpoints": [],
    "id": "ch06-s3",
+   "labMinutes": 20,
    "label": "sec:fp-init",
    "labs": [
     "ch06-lab1"
    ],
-   "minutes": 15,
+   "minutes": 10,
    "number": "6.3",
    "objectives": [
     "CP0-CLI",
@@ -1715,9 +1719,10 @@
    ],
    "checkpoints": [],
    "id": "ch06-s4",
+   "labMinutes": 0,
    "label": "sec:fp-anatomy",
    "labs": [],
-   "minutes": 5,
+   "minutes": 15,
    "number": "6.4",
    "objectives": [],
    "steps": [
@@ -2325,9 +2330,10 @@
    ],
    "checkpoints": [],
    "id": "ch06-s5",
+   "labMinutes": 0,
    "label": "sec:fp-project-yml",
    "labs": [],
-   "minutes": 10,
+   "minutes": 15,
    "number": "6.5",
    "objectives": [],
    "steps": [
@@ -3268,9 +3274,10 @@
    ],
    "checkpoints": [],
    "id": "ch06-s6",
+   "labMinutes": 0,
    "label": "sec:fp-profiles",
    "labs": [],
-   "minutes": 10,
+   "minutes": 15,
    "number": "6.6",
    "objectives": [],
    "steps": [
@@ -4229,11 +4236,12 @@
    ],
    "checkpoints": [],
    "id": "ch06-s7",
+   "labMinutes": 20,
    "label": "sec:fp-debug",
    "labs": [
     "ch06-lab2"
    ],
-   "minutes": 15,
+   "minutes": 10,
    "number": "6.7",
    "objectives": [
     "CP0-CLI",
@@ -4854,9 +4862,10 @@
    ],
    "checkpoints": [],
    "id": "ch06-s8",
+   "labMinutes": 0,
    "label": "sec:fp-first-run",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "6.8",
    "objectives": [],
    "steps": [
@@ -5319,11 +5328,12 @@
    ],
    "checkpoints": [],
    "id": "ch06-s9",
+   "labMinutes": 25,
    "label": "sec:fp-target",
    "labs": [
     "ch06-lab3"
    ],
-   "minutes": 20,
+   "minutes": 15,
    "number": "6.9",
    "objectives": [
     "1.4",
@@ -6278,6 +6288,7 @@
    ],
    "checkpoints": [],
    "id": "ch06-s10",
+   "labMinutes": 0,
    "label": "sec:fp-duckdb-lock",
    "labs": [],
    "minutes": 5,
@@ -6483,6 +6494,7 @@
    ],
    "checkpoints": [],
    "id": "ch06-s11",
+   "labMinutes": 0,
    "label": "sec:fp-clean-examples",
    "labs": [],
    "minutes": 5,
@@ -6673,11 +6685,12 @@
    ],
    "checkpoints": [],
    "id": "ch06-s12",
+   "labMinutes": 30,
    "label": "sec:fp-git",
    "labs": [
     "ch06-lab4"
    ],
-   "minutes": 20,
+   "minutes": 15,
    "number": "6.12",
    "objectives": [
     "CP0-GIT",
@@ -7278,9 +7291,10 @@
    ],
    "checkpoints": [],
    "id": "ch06-s13",
+   "labMinutes": 0,
    "label": "sec:fp-platform",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "6.13",
    "objectives": [],
    "steps": [
@@ -8109,7 +8123,7 @@
    "titleText": "The dbt platform path"
   }
  ],
- "minutes": 150,
+ "minutes": 140,
  "number": 6,
  "objectives": [
   "CP0-CLI",

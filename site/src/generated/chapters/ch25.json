@@ -115,6 +115,7 @@
   }
  ],
  "kind": "chapter",
+ "labMinutes": 30,
  "label": "ch:environments-ci",
  "lessons": [
   {
@@ -123,9 +124,10 @@
    ],
    "checkpoints": [],
    "id": "ch25-s1",
+   "labMinutes": 0,
    "label": "sec:envci-environments",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "25.1",
    "objectives": [],
    "steps": [
@@ -633,6 +635,7 @@
    ],
    "checkpoints": [],
    "id": "ch25-s2",
+   "labMinutes": 0,
    "label": "sec:envci-workflow",
    "labs": [],
    "minutes": 5,
@@ -777,9 +780,10 @@
    ],
    "checkpoints": [],
    "id": "ch25-s3",
+   "labMinutes": 0,
    "label": "sec:envci-platform",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "25.3",
    "objectives": [],
    "steps": [
@@ -1966,13 +1970,14 @@
    ],
    "checkpoints": [],
    "id": "ch25-s4",
+   "labMinutes": 30,
    "label": "sec:envci-gha",
    "labs": [
     "ch25-lab1",
     "ch25-lab2",
     "ch25-lab3"
    ],
-   "minutes": 55,
+   "minutes": 35,
    "number": "25.4",
    "objectives": [
     "CP0-GIT",
@@ -3690,6 +3695,7 @@
    ],
    "checkpoints": [],
    "id": "ch25-s5",
+   "labMinutes": 0,
    "label": "sec:envci-pr",
    "labs": [],
    "minutes": 5,
@@ -3832,6 +3838,7 @@
    ],
    "checkpoints": [],
    "id": "ch25-s6",
+   "labMinutes": 0,
    "label": "sec:envci-tests",
    "labs": [],
    "minutes": 5,
@@ -4217,9 +4224,10 @@
    ],
    "checkpoints": [],
    "id": "ch25-s7",
+   "labMinutes": 0,
    "label": "sec:envci-prod",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "25.7",
    "objectives": [],
    "steps": [
@@ -4761,7 +4769,7 @@
    "titleText": "Designing the production job"
   }
  ],
- "minutes": 110,
+ "minutes": 80,
  "number": 25,
  "objectives": [
   "CP0-GIT",

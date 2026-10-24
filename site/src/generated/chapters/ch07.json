@@ -229,6 +229,7 @@
   }
  ],
  "kind": "chapter",
+ "labMinutes": 95,
  "label": "ch:models-sources-dag",
  "lessons": [
   {
@@ -237,6 +238,7 @@
    ],
    "checkpoints": [],
    "id": "ch07-s1",
+   "labMinutes": 0,
    "label": "sec:msd-model",
    "labs": [],
    "minutes": 5,
@@ -481,11 +483,12 @@
    ],
    "checkpoints": [],
    "id": "ch07-s2",
+   "labMinutes": 20,
    "label": "sec:msd-sources",
    "labs": [
     "ch07-lab1"
    ],
-   "minutes": 20,
+   "minutes": 15,
    "number": "7.2",
    "objectives": [
     "CP0-YAML",
@@ -1609,6 +1612,7 @@
    ],
    "checkpoints": [],
    "id": "ch07-s3",
+   "labMinutes": 0,
    "label": "sec:msd-verify",
    "labs": [],
    "minutes": 5,
@@ -2104,6 +2108,7 @@
    ],
    "checkpoints": [],
    "id": "ch07-s4",
+   "labMinutes": 25,
    "label": "sec:msd-staging",
    "labs": [
     "ch07-lab2"
@@ -2903,9 +2908,10 @@
    ],
    "checkpoints": [],
    "id": "ch07-s5",
+   "labMinutes": 0,
    "label": "sec:msd-dag",
    "labs": [],
-   "minutes": 10,
+   "minutes": 15,
    "number": "7.5",
    "objectives": [],
    "steps": [
@@ -3702,11 +3708,12 @@
    ],
    "checkpoints": [],
    "id": "ch07-s6",
+   "labMinutes": 20,
    "label": "sec:msd-marts",
    "labs": [
     "ch07-lab3"
    ],
-   "minutes": 25,
+   "minutes": 20,
    "number": "7.6",
    "objectives": [
     "CP0-SQL",
@@ -4171,6 +4178,7 @@
    ],
    "checkpoints": [],
    "id": "ch07-s7",
+   "labMinutes": 0,
    "label": "sec:msd-commands",
    "labs": [],
    "minutes": 5,
@@ -4522,6 +4530,7 @@
    ],
    "checkpoints": [],
    "id": "ch07-s8",
+   "labMinutes": 0,
    "label": "sec:msd-lineage",
    "labs": [],
    "minutes": 5,
@@ -4695,9 +4704,10 @@
    ],
    "checkpoints": [],
    "id": "ch07-s9",
+   "labMinutes": 0,
    "label": "sec:msd-hardcoded",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "7.9",
    "objectives": [],
    "steps": [
@@ -5096,11 +5106,12 @@
    ],
    "checkpoints": [],
    "id": "ch07-s10",
+   "labMinutes": 30,
    "label": "sec:msd-errors",
    "labs": [
     "ch07-lab4"
    ],
-   "minutes": 15,
+   "minutes": 10,
    "number": "7.10",
    "objectives": [
     "1.1",
@@ -6139,6 +6150,7 @@
    ],
    "checkpoints": [],
    "id": "ch07-s11",
+   "labMinutes": 0,
    "label": "sec:msd-platform",
    "labs": [],
    "minutes": 5,
@@ -6327,7 +6339,7 @@
    "titleText": "The same work in the dbt platform"
   }
  ],
- "minutes": 160,
+ "minutes": 130,
  "number": 7,
  "objectives": [
   "1.1",

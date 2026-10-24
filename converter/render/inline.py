@@ -15,10 +15,16 @@ NBSP = " "
 _LIGS = [("---", "—"), ("--", "–"), ("``", '"'), ("''", '"'), ("`", "'")]
 
 
+# A CLI flag typed in prose ("--empty" outside \code) is turned into an en dash by TeX ("–empty"): a
+# typesetting error of the book. The web keeps the two hyphens; every occurrence is reported (book errors).
+FLAG_IN_PROSE = re.compile(r"(?:^|(?<=[\s(\[{'\"`/]))--(?=[A-Za-z])")
+
+
 def lig(s: str) -> str:
+    s = FLAG_IN_PROSE.sub("\x00", s)
     for a, b in _LIGS:
         s = s.replace(a, b)
-    return s
+    return s.replace("\x00", "--")
 
 
 def glossary_key(raw_en: str) -> str:
@@ -174,6 +180,11 @@ class InlineRenderer:
     def node(self, n, out: list, mono: bool) -> None:
         ctx = self.ctx
         if isinstance(n, Text):
+            if not mono and FLAG_IN_PROSE.search(n.s):
+                for m in FLAG_IN_PROSE.finditer(n.s):
+                    flag = re.match(r"--[A-Za-z][\w-]*", n.s[m.start():]).group(0)
+                    ctx.book_errors.append(f"{n.where()}: {flag!r} is written outside \\code, so the PDF prints an "
+                                           f"en dash ('\u2013{flag[2:]}'); the website keeps '{flag}'")
             append(out, n.s if mono else lig(n.s))
         elif isinstance(n, Space):
             append(out, " ")

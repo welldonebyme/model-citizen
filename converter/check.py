@@ -258,8 +258,34 @@ def run_checks(files: dict[str, object], inventory: dict, book: Path = BOOK) -> 
     check_refs(files, chapters, R)
     # raw LaTeX
     check_raw_latex(files, R)
+    check_ligature_artefacts(files, R)
     check_escape_accounting(files, chapters, book, R)
     return R
+
+
+# en dash directly before a letter after a space/quote/bracket: "--empty" typeset as "\u2013empty"
+EN_DASH_FLAG = re.compile(r"(?:^|(?<=[\s(\[{/'\"]))\u2013[A-Za-z]")
+QUOTE_ARTEFACT = re.compile(r"``|''|\u2018\u2018|\u2019\u2019")
+
+
+def check_ligature_artefacts(files, R: Results):
+    """TeX ligatures must not leak where they are wrong: an en dash glued to a word (a CLI flag written in prose or a
+    plain-text string run through TeX rules) and doubled quote marks in prose. Code keeps its characters as typed."""
+    hits = []
+    for name, doc in files.items():
+        if name == "report.json":
+            continue
+        strings: list = []
+        prose_strings(doc, strings, name)
+        for path, s in strings:
+            is_code = path.endswith(".v") or path.endswith(".title")
+            for m in EN_DASH_FLAG.finditer(s):
+                hits.append(f"{path}: {s[max(0, m.start() - 20):m.end() + 15]!r}")
+            if not is_code:
+                for m in QUOTE_ARTEFACT.finditer(s):
+                    hits.append(f"{path}: {s[max(0, m.start() - 20):m.end() + 15]!r}")
+    R.add("no TeX ligature artefacts (en dash glued to a word, doubled quotes) in rendered text", not hits,
+          "; ".join(hits[:20]))
 
 
 def check_refs(files, chapters, R: Results):
@@ -376,10 +402,39 @@ def check_escape_accounting(files, chapters, book: Path, R: Results):
     R.add("braces / $ / backslash all come from escapes", not bad, "; ".join(bad[:20]))
 
 
+def pdf_checks(R: Results) -> None:
+    """With pdftotext available: (1) every parsed key equals the answer printed in the PDF (hard check);
+    (2) text parity per chapter (informational: lists runs of PDF words missing from the JSON for human review)."""
+    import contextlib
+    import io
+    import shutil
+    if not shutil.which("pdftotext"):
+        R.add("PDF checks", True, "skipped: pdftotext not installed")
+        return
+    from .tools import pdf_parity, verify_keys_pdf
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        rc = verify_keys_pdf.main()
+    lines = buf.getvalue().strip().split("\n")
+    R.add("keys equal the answers printed in the PDF", rc == 0, lines[-1] + ("; " + "; ".join(lines[:-1][:10])
+                                                                          if rc else ""))
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(io.StringIO()):
+        pdf_parity.main([])
+    out = buf.getvalue().strip().split("\n")
+    chapters = [l for l in out if l.startswith("== ")]
+    pct = [float(re.search(r"\(([\d.]+)% of pdf\)", l).group(1)) for l in chapters]
+    R.add("PDF text parity (informational)", True,
+          f"{len(chapters)} chapters, words matched {min(pct):.1f}%..{max(pct):.1f}% of the PDF text; {out[-1]} "
+          f"(remaining runs are figure labels, running heads, box titles, FR translations and table/column order; "
+          f"run `python -m converter.tools.pdf_parity` for the list)")
+
+
 def main(out_dir: Path = OUT) -> int:
     files = load_out(out_dir)
     inventory = json.loads(INVENTORY.read_text())
     R = run_checks(files, inventory)
+    pdf_checks(R)
     for i in R.items:
         print(("PASS " if i["ok"] else "FAIL ") + i["check"] + (f"  -- {i['detail']}" if i["detail"] else ""))
     print("ALL PASS" if R.ok else "SOME CHECKS FAILED")

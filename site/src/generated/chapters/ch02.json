@@ -116,6 +116,7 @@
   }
  ],
  "kind": "chapter",
+ "labMinutes": 55,
  "label": "ch:cli",
  "lessons": [
   {
@@ -124,6 +125,7 @@
    ],
    "checkpoints": [],
    "id": "ch02-s1",
+   "labMinutes": 0,
    "label": "sec:cli-basics",
    "labs": [],
    "minutes": 5,
@@ -436,9 +438,10 @@
    ],
    "checkpoints": [],
    "id": "ch02-s2",
+   "labMinutes": 0,
    "label": "sec:cli-paths",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "2.2",
    "objectives": [],
    "steps": [
@@ -779,6 +782,7 @@
    ],
    "checkpoints": [],
    "id": "ch02-s3",
+   "labMinutes": 0,
    "label": "sec:cli-files",
    "labs": [],
    "minutes": 5,
@@ -1116,11 +1120,12 @@
    ],
    "checkpoints": [],
    "id": "ch02-s4",
+   "labMinutes": 20,
    "label": "sec:cli-pipes",
    "labs": [
     "ch02-lab1"
    ],
-   "minutes": 15,
+   "minutes": 5,
    "number": "2.4",
    "objectives": [
     "CP0-CLI"
@@ -1649,6 +1654,7 @@
    ],
    "checkpoints": [],
    "id": "ch02-s5",
+   "labMinutes": 0,
    "label": "sec:cli-hidden",
    "labs": [],
    "minutes": 5,
@@ -1889,6 +1895,7 @@
    ],
    "checkpoints": [],
    "id": "ch02-s6",
+   "labMinutes": 0,
    "label": "sec:cli-env",
    "labs": [],
    "minutes": 5,
@@ -2090,6 +2097,7 @@
    ],
    "checkpoints": [],
    "id": "ch02-s7",
+   "labMinutes": 0,
    "label": "sec:cli-help",
    "labs": [],
    "minutes": 5,
@@ -2247,9 +2255,10 @@
    ],
    "checkpoints": [],
    "id": "ch02-s8",
+   "labMinutes": 0,
    "label": "sec:cli-python",
    "labs": [],
-   "minutes": 5,
+   "minutes": 10,
    "number": "2.8",
    "objectives": [],
    "steps": [
@@ -2846,11 +2855,12 @@
    ],
    "checkpoints": [],
    "id": "ch02-s9",
+   "labMinutes": 35,
    "label": "sec:cli-mainlab",
    "labs": [
     "ch02-lab2"
    ],
-   "minutes": 15,
+   "minutes": 10,
    "number": "2.9",
    "objectives": [
     "CP0-CLI"
@@ -3631,7 +3641,7 @@
    "titleText": "Main lab: build your study workspace"
   }
  ],
- "minutes": 85,
+ "minutes": 60,
  "number": 2,
  "objectives": [
   "CP0-CLI",

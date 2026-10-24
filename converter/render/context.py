@@ -52,6 +52,7 @@ class Ctx:
     figure_alts: dict = field(default_factory=dict)
     obj_tags: list[str] = field(default_factory=list)      # every \objective{..} rendered (in order)
     lab_records: list[dict] = field(default_factory=list)
+    book_errors: list[str] = field(default_factory=list)
 
     def error(self, node: Node | None, msg: str) -> None:
         where = node.where() if node is not None else self.chapter_id

@@ -234,7 +234,41 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--full-refresh"
+      },
+      " is for models (incremental) and seeds; a snapshot records changes on every normal ",
+      {
+       "t": "code",
+       "v": "dbt snapshot"
+      },
+      "."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "a snapshot is an ordinary table that only dbt updates; the warehouse does not refresh it."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "freshness rules never decide which nodes ",
+      {
+       "t": "code",
+       "v": "dbt run"
+      },
+      " executes."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -927,7 +961,61 @@
      "t": "p"
     }
    ],
-   "topic": 7
+   "topic": 7,
+   "whyWrong": [
+    {
+     "c": [
+      "unchanged tests are not \"modified\"; the comparison is about code and config, not results."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "state:modified"
+      },
+      " reads ",
+      {
+       "t": "code",
+       "v": "manifest.json"
+      },
+      " only; test results are used by ",
+      {
+       "t": "code",
+       "v": "result:"
+      },
+      " selectors."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "there is no implied ",
+      {
+       "t": "code",
+       "v": "+"
+      },
+      ". With ",
+      {
+       "t": "code",
+       "v": "state:modified+"
+      },
+      " you would also see ",
+      {
+       "t": "code",
+       "v": "int_trips__with_fares"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "fct_trips"
+      },
+      ", etc."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "choose": 2,
@@ -1203,7 +1291,32 @@
      "t": "p"
     }
    ],
-   "topic": 2
+   "topic": 2,
+   "whyWrong": [
+    {
+     "c": [
+      "adding a column is additive: existing consumers still find all their columns. The model was simply ",
+      {
+       "t": "code",
+       "v": "state:modified"
+      },
+      "."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "a description is documentation, not part of the contract."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "a data test is a separate node; it does not change the shape of the model."
+     ],
+     "option": "E"
+    }
+   ]
   },
   {
    "explanation": [
@@ -1658,7 +1771,37 @@
      "t": "p"
     }
    ],
-   "topic": 6
+   "topic": 6,
+   "whyWrong": [
+    {
+     "c": [
+      "the checkbox never blocks the other steps; only an explicit command step does."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "freshness results never change which models ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      " selects. To build only what has new data, you would use ",
+      {
+       "t": "code",
+       "v": "source_status:fresher+"
+      },
+      " with a state folder."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "the checkbox runs freshness first, not last. Putting the check at the end is useful only to report, not to protect the models."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "blanks": 1,
@@ -2031,7 +2174,42 @@
      "t": "p"
     }
    ],
-   "topic": 4
+   "topic": 4,
+   "whyWrong": [
+    {
+     "c": [
+      "skipped nodes have their own counter, ",
+      {
+       "t": "code",
+       "v": "SKIP=1"
+      },
+      "."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "the WARN is counted in ",
+      {
+       "t": "code",
+       "v": "WARN=1"
+      },
+      "; a warning is never an error (unless you use ",
+      {
+       "t": "code",
+       "v": "--warn-error"
+      },
+      ")."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "every line that was cut is a PASS or OK line, and the four counters already add up to 18."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -2431,7 +2609,66 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "append"
+      },
+      " ignores ",
+      {
+       "t": "code",
+       "v": "unique_key"
+      },
+      ": we got two rows for trip 5 (",
+      {
+       "t": "code",
+       "v": "completed"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "cancelled"
+      },
+      ")."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "delete+insert"
+      },
+      " deletes the old row and inserts the new one, so ",
+      {
+       "t": "code",
+       "v": "first_seen_at"
+      },
+      " is the new load time again (we checked)."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "on_schema_change"
+      },
+      " is about added or removed ",
+      {
+       "c": [
+        "columns"
+       ],
+       "t": "i"
+      },
+      ", not about the values of existing rows."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -2941,7 +3178,37 @@
      "t": "p"
     }
    ],
-   "topic": 5
+   "topic": 5,
+   "whyWrong": [
+    {
+     "c": [
+      "reads the arrow backwards."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "unit tests use only the ",
+      {
+       "t": "code",
+       "v": "given"
+      },
+      " rows, never the real table."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "with ",
+      {
+       "t": "code",
+       "v": "dict"
+      },
+      " rows you list only the columns the logic needs."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -3340,7 +3607,35 @@
      "t": "p"
     }
    ],
-   "topic": 2
+   "topic": 2,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "include: all"
+      },
+      " brings the top-level columns into the version."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "a version can change its columns; that is the reason to create v2."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "exclude"
+      },
+      " really removes the column from the contract of v2, so returning it breaks the contract."
+     ],
+     "option": "C"
+    }
+   ]
   },
   {
    "blanks": 1,
@@ -3627,7 +3922,42 @@
      "t": "p"
     }
    ],
-   "topic": 3
+   "topic": 3,
+   "whyWrong": [
+    {
+     "c": [
+      "an unknown ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      " fails at compile time with \"depends on a node named ... which was not found\"."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "YAML problems stop ",
+      {
+       "t": "code",
+       "v": "dbt parse"
+      },
+      " before any model runs."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "the message even suggests ",
+      {
+       "t": "code",
+       "v": "prod.fct_driver_payouts"
+      },
+      ": production is fine."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -4107,7 +4437,32 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "dbt revokes only on nodes that still have a ",
+      {
+       "t": "code",
+       "v": "grants"
+      },
+      " config."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "an empty list is not ignored: it means \"nobody\", so dbt revokes."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "an empty list is valid; it is the documented way to revoke all grants."
+     ],
+     "option": "C"
+    }
+   ]
   },
   {
    "explanation": [
@@ -4590,7 +4945,49 @@
      "t": "p"
     }
    ],
-   "topic": 7
+   "topic": 7,
+   "whyWrong": [
+    {
+     "c": [
+      "WARN results are not retried."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "that would be running ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      " again; ",
+      {
+       "t": "code",
+       "v": "retry"
+      },
+      " starts from the point of failure."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "failed ",
+      {
+       "c": [
+        "tests"
+       ],
+       "t": "i"
+      },
+      " are retried too. A second ",
+      {
+       "t": "code",
+       "v": "dbt retry"
+      },
+      " answered \"Nothing to do\"."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "choose": 2,
@@ -4826,7 +5223,62 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "packages are installed into ",
+      {
+       "t": "code",
+       "v": "dbt_packages/"
+      },
+      " (the ",
+      {
+       "t": "code",
+       "v": "packages-install-path"
+      },
+      ")."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "package macros need their namespace: ",
+      {
+       "t": "code",
+       "v": "dbt_utils.generate_surrogate_key(...)"
+      },
+      ". Without it, dbt said ",
+      {
+       "t": "code",
+       "v": "'generate_surrogate_key' is undefined"
+      },
+      "."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "dbt v1 does not render Jinja in ",
+      {
+       "t": "code",
+       "v": "dependencies.yml"
+      },
+      "; private packages with an ",
+      {
+       "t": "code",
+       "v": "env_var"
+      },
+      " token go in ",
+      {
+       "t": "code",
+       "v": "packages.yml"
+      },
+      "."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -5048,7 +5500,44 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "invalidate"
+      },
+      " only closes the row; no new row exists."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "ignore"
+      },
+      " (the default) does nothing: the deleted driver stays \"current\"."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "invalidate_hard_deletes"
+      },
+      " is the old setting, equal to ",
+      {
+       "t": "code",
+       "v": "invalidate"
+      },
+      "; it never adds a row."
+     ],
+     "option": "C"
+    }
+   ]
   },
   {
    "explanation": [
@@ -5383,7 +5872,49 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "\"1 day\""
+      },
+      " means the 24 hours before the run time (21 October), not 19 October."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--event-time-start"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "--event-time-end"
+      },
+      " are for microbatch models. On this table model we ran them and nothing was filtered."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--empty"
+      },
+      " gives ",
+      {
+       "t": "code",
+       "v": "where false limit 0"
+      },
+      ", so zero rows."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -5711,7 +6242,35 @@
      "t": "p"
     }
    ],
-   "topic": 4
+   "topic": 4,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--defer"
+      },
+      " only changes the SQL that dbt compiles; the BI tool sees nothing in the CI schema."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "it gives the objects, but recomputes the whole project: the most expensive option."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "retry"
+      },
+      " re-runs failed nodes of the previous command; it does not create missing objects."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -6167,7 +6726,46 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "the temporary view was renamed; no ",
+      {
+       "t": "code",
+       "v": "__dbt_tmp"
+      },
+      " object stays."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--full-refresh"
+      },
+      " is not needed to change a table into a view on DuckDB and most adapters (dbt-bigquery is an exception: it stops with a \"wrong type\" error unless you add ",
+      {
+       "t": "code",
+       "v": "--full-refresh"
+      },
+      ")."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "the view is created in the same run (the log says ",
+      {
+       "t": "code",
+       "v": "OK created sql view model"
+      },
+      ")."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "blanks": 2,
@@ -6886,7 +7484,41 @@
      "t": "p"
     }
    ],
-   "topic": 2
+   "topic": 2,
+   "whyWrong": [
+    {
+     "c": [
+      "under a column, ",
+      {
+       "t": "code",
+       "v": "columns:"
+      },
+      " is ignored: dbt wrote ",
+      {
+       "t": "code",
+       "v": "driver_id integer primary key"
+      },
+      ", and the build failed on DuckDB with a duplicate key, because a driver has many days."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "unique_key"
+      },
+      " is for incremental models and snapshots; it creates no constraint."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "data tests do not create constraints, and each column alone is not unique."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "choose": 2,
@@ -7096,7 +7728,32 @@
      "t": "p"
     }
    ],
-   "topic": 5
+   "topic": 5,
+   "whyWrong": [
+    {
+     "c": [
+      "singular tests run automatically; they are not declared in YAML."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "generic tests in ",
+      {
+       "t": "code",
+       "v": "tests/generic/"
+      },
+      " are found automatically."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "hand-written expected rows are the idea of unit tests; data tests run on the real data."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -7331,7 +7988,49 @@
      "t": "p"
     }
    ],
-   "topic": 7
+   "topic": 7,
+   "whyWrong": [
+    {
+     "c": [
+      "this is what ",
+      {
+       "t": "code",
+       "v": "--favor-state"
+      },
+      " does (we checked: both refs then pointed to ",
+      {
+       "t": "code",
+       "v": "prod"
+      },
+      ")."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "the logic is reversed."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "that is the run ",
+      {
+       "c": [
+        "without"
+       ],
+       "t": "i"
+      },
+      " ",
+      {
+       "t": "code",
+       "v": "--defer"
+      },
+      " (Q17)."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -7684,7 +8383,46 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "Python models support ",
+      {
+       "t": "code",
+       "v": "table"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "incremental"
+      },
+      "."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt.this"
+      },
+      " is the model's own table, not a parent."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "there is no ",
+      {
+       "t": "code",
+       "v": "where"
+      },
+      " config for model filters; the filter belongs in the Python code."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -8197,7 +8935,41 @@
      "t": "p"
     }
    ],
-   "topic": 5
+   "topic": 5,
+   "whyWrong": [
+    {
+     "c": [
+      "dbt did not count 3, and ",
+      {
+       "t": "code",
+       "v": "error_if"
+      },
+      " is checked first: with 3 results the test would have failed."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "error_if"
+      },
+      " applies with the default severity (error)."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "there is no default ",
+      {
+       "t": "code",
+       "v": "limit"
+      },
+      "."
+     ],
+     "option": "C"
+    }
+   ]
   },
   {
    "explanation": [
@@ -8534,7 +9306,37 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "successful batches are kept; this is a main benefit of microbatch."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "batches do not depend on each other (two of them even ran at the same time in the first full run)."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "the summary counted the model as ",
+      {
+       "t": "code",
+       "v": "ERROR=1"
+      },
+      ", and ",
+      {
+       "t": "code",
+       "v": "run_results.json"
+      },
+      " kept the list of failed batches, so there is something to retry."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "blanks": 1,
@@ -8907,7 +9709,40 @@
      "t": "p"
     }
    ],
-   "topic": 3
+   "topic": 3,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "data_tests"
+      },
+      " is the current name; ",
+      {
+       "t": "code",
+       "v": "tests"
+      },
+      " still works but is not the problem."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "version: 2"
+      },
+      " has not been required since dbt 1.5."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "quoting does not turn a mapping into a list."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -9405,7 +10240,42 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "the SQL ",
+      {
+       "t": "code",
+       "v": "config()"
+      },
+      " beats the YAML for ",
+      {
+       "t": "code",
+       "v": "materialized"
+      },
+      ", and tags are merged."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "the YAML ",
+      {
+       "t": "code",
+       "v": "schema"
+      },
+      " beats the project; tags are merged."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "the project file has the lowest priority, and custom schemas are prefixed by default."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "choose": 2,
@@ -9637,7 +10507,58 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      " also builds the model and runs its data test."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt run"
+      },
+      " runs no tests at all (\"Nothing to do\")."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "it runs the unit test ",
+      {
+       "c": [
+        "and"
+       ],
+       "t": "i"
+      },
+      " the ",
+      {
+       "t": "code",
+       "v": "not_null"
+      },
+      " data test."
+     ],
+     "option": "D"
+    },
+    {
+     "c": [
+      "it runs every unit test of the project, also the one of ",
+      {
+       "t": "code",
+       "v": "fct_trips"
+      },
+      "."
+     ],
+     "option": "E"
+    }
+   ]
   },
   {
    "explanation": [
@@ -9843,7 +10764,40 @@
      "t": "p"
     }
    ],
-   "topic": 5
+   "topic": 5,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt run"
+      },
+      " runs no tests, so ",
+      {
+       "t": "code",
+       "v": "--fail-fast"
+      },
+      " has nothing to stop on."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "a warning does not stop anything either; the bad data would still flow."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--store-failures"
+      },
+      " keeps the bad rows for analysis, but the marts are already rebuilt."
+     ],
+     "option": "C"
+    }
+   ]
   },
   {
    "explanation": [
@@ -10295,7 +11249,48 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "fct_driver_payouts+"
+      },
+      " means the model and its ",
+      {
+       "c": [
+        "children"
+       ],
+       "t": "i"
+      },
+      "; there are no sources downstream, so it printed nothing."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "it lists all six sources of the project, also those that ",
+      {
+       "t": "code",
+       "v": "fct_driver_payouts"
+      },
+      " does not use."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "the compiled SQL shows only the direct parent, ",
+      {
+       "t": "code",
+       "v": "\"ridenow\".\"dbt_sara\".\"fct_trips\""
+      },
+      ", not the raw tables behind it."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -10656,7 +11651,41 @@
      "t": "p"
     }
    ],
-   "topic": 2
+   "topic": 2,
+   "whyWrong": [
+    {
+     "c": [
+      "the strategy does not matter; the error is about ",
+      {
+       "t": "code",
+       "v": "on_schema_change"
+      },
+      "."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "sync_all_columns"
+      },
+      " is not one of the two allowed values."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "contracted models can have a ",
+      {
+       "t": "code",
+       "v": "unique_key"
+      },
+      "."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "blanks": 1,
@@ -10964,7 +11993,31 @@
      "t": "p"
     }
    ],
-   "topic": 5
+   "topic": 5,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "failures"
+      },
+      " holds only the number of rows (1), not the rows."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "the rows are in the warehouse, as the log shows."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "dbt never changes the model being tested."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -11327,7 +12380,45 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt_packages/"
+      },
+      " is rebuilt by every ",
+      {
+       "t": "code",
+       "v": "dbt deps"
+      },
+      ", so the file comes back (and the folder is not in Git)."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "package models can be disabled like any model."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt_packages/"
+      },
+      " is normally in ",
+      {
+       "t": "code",
+       "v": ".gitignore"
+      },
+      " already; Git does not decide what dbt builds."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "explanation": [
@@ -11849,7 +12940,40 @@
      "t": "p"
     }
    ],
-   "topic": 2
+   "topic": 2,
+   "whyWrong": [
+    {
+     "c": [
+      "enforcement depends on the platform. Snowflake, BigQuery, Databricks and Redshift accept a foreign key but do not check it; Postgres (and DuckDB: \"Violates foreign key constraint\") check it."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "to:"
+      },
+      " names the parent table. Without it, dbt wrote ",
+      {
+       "t": "code",
+       "v": "references None"
+      },
+      " in the DDL, and the database refused it."
+     ],
+     "option": "D"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "check"
+      },
+      " support differs: Postgres and Databricks enforce it; Snowflake, BigQuery and Redshift do not support it."
+     ],
+     "option": "E"
+    }
+   ]
   },
   {
    "explanation": [
@@ -12028,7 +13152,40 @@
      "t": "p"
     }
    ],
-   "topic": 4
+   "topic": 4,
+   "whyWrong": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "fct_trips"
+      },
+      " and many others do not depend on riders; only ",
+      {
+       "t": "code",
+       "v": "--fail-fast"
+      },
+      " explains their skip."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "a WARN never skips anything."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--fail-fast"
+      },
+      " does not retry anything."
+     ],
+     "option": "C"
+    }
+   ]
   },
   {
    "explanation": [
@@ -12550,7 +13707,32 @@
      "t": "p"
     }
    ],
-   "topic": 1
+   "topic": 1,
+   "whyWrong": [
+    {
+     "c": [
+      "the project value is used only when no ",
+      {
+       "t": "code",
+       "v": "--vars"
+      },
+      " value is given."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "the default is the last fallback."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      "having a default and a project value is normal; the command line simply wins."
+     ],
+     "option": "C"
+    }
+   ]
   },
   {
    "choose": 2,
@@ -12779,7 +13961,66 @@
      "t": "p"
     }
    ],
-   "topic": 6
+   "topic": 6,
+   "whyWrong": [
+    {
+     "c": [
+      "an exposure with only ",
+      {
+       "t": "code",
+       "v": "name"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "type"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "owner"
+      },
+      " parsed without error (it is just less useful)."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt run"
+      },
+      " never runs tests; our ",
+      {
+       "t": "code",
+       "v": "dbt run --select +exposure:weekly_ops_dashboard"
+      },
+      " built 7 models and nothing else. Use ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      " to also test them."
+     ],
+     "option": "C"
+    },
+    {
+     "c": [
+      "like other properties, exposures can be in any ",
+      {
+       "t": "code",
+       "v": ".yml"
+      },
+      " file of the model paths; we moved it to ",
+      {
+       "t": "code",
+       "v": "models/marts/_ops_dashboards.yml"
+      },
+      " and it worked."
+     ],
+     "option": "D"
+    }
+   ]
   },
   {
    "blanks": 1,
@@ -13455,7 +14696,51 @@
      "t": "p"
     }
    ],
-   "topic": 5
+   "topic": 5,
+   "whyWrong": [
+    {
+     "c": [
+      "an ephemeral model is never built in the warehouse, not even with ",
+      {
+       "t": "code",
+       "v": "--empty"
+      },
+      ": ",
+      {
+       "t": "code",
+       "v": "dbt run --select int_trips__with_fares"
+      },
+      " builds nothing."
+     ],
+     "option": "A"
+    },
+    {
+     "c": [
+      "every ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      " of the tested model needs an input in the unit test."
+     ],
+     "option": "B"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "csv"
+      },
+      " has the same problem as ",
+      {
+       "t": "code",
+       "v": "dict"
+      },
+      ": the columns are read from the relation."
+     ],
+     "option": "D"
+    }
+   ]
   }
  ],
  "title": "Mock Exam 2",

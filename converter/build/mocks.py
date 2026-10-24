@@ -26,8 +26,27 @@ def split_mockkeys(nodes: list, ctx) -> tuple[list, list[tuple[Cmd, list]]]:
     return before, segs
 
 
-def why_wrong(blocks: list) -> list | None:
-    """Lift the 'Why the others are wrong.' list into [{option, c}] (the explanation keeps the full text)."""
+def why_wrong(blocks: list, wrong: set | None = None) -> list | None:
+    """Lift the "why the others are wrong" items into [{option, c}] (the explanation keeps the full text).
+    Mock 1: a 'Why the others are wrong.' paragraph + items '\\textbf{A} --- text'.
+    Mocks 2-3: a list whose items all start with 'A: text', exactly the wrong options of an mc/ms question."""
+    if wrong:
+        for b in blocks:
+            if b.get("t") != "list":
+                continue
+            out = []
+            for it in b["items"]:
+                bl = it["blocks"]
+                if len(bl) != 1 or bl[0]["t"] != "p" or not bl[0]["c"] or not isinstance(bl[0]["c"][0], str):
+                    out = None
+                    break
+                m = re.match(r"^([A-Z]):\s+", bl[0]["c"][0])
+                if not m:
+                    out = None
+                    break
+                out.append({"option": m.group(1), "c": trim([bl[0]["c"][0][m.end():]] + bl[0]["c"][1:])})
+            if out and {x["option"] for x in out} == wrong and len(out) == len(wrong):
+                return out
     for i, b in enumerate(blocks):
         if b.get("t") == "p" and WHY_WRONG.match(K.norm(plain(b["c"]))) and i + 1 < len(blocks) \
                 and blocks[i + 1].get("t") == "list":
@@ -73,12 +92,16 @@ def attach_mock_answers(renderer: BlockRenderer, segs: list[tuple[Cmd, list]], d
             ctx.error(tail[0], "content after \\mockreview (it would be lost)")
         d.review = trim(renderer.inl.render(content[r].args[0].nodes))
         d.explanation = renderer.render(content[:r])
-        ww = why_wrong(d.explanation)
-        if ww:
-            d.why_wrong = ww
         key_inl = trim(renderer.inl.render(mk.args[2].nodes))
         d.key_raw = mk.args[2].raw
         parse_mock_key(d, key_inl)
+        wrong = None
+        if d.format in ("mc", "ms") and d.key_status == "ok" and d.options:
+            right = {d.key} if isinstance(d.key, str) else set(d.key)
+            wrong = {o["id"] for o in d.options} - right
+        ww = why_wrong(d.explanation, wrong)
+        if ww:
+            d.why_wrong = ww
 
 
 def parse_mock_key(d: Draft, key_inl: list) -> None:

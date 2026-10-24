@@ -257,11 +257,16 @@
   },
   {
    "check": "every ref resolves",
-   "detail": "922 refs; ",
+   "detail": "1086 refs; ",
    "ok": true
   },
   {
    "check": "no \\command left in rendered prose",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "no TeX ligature artefacts (en dash glued to a word, doubled quotes) in rendered text",
    "detail": "",
    "ok": true
   },
@@ -272,6 +277,24 @@
   }
  ],
  "bookConsistency": [],
+ "bookErrors": [
+  "parts/part2/ch10-configuration.tex:1009: '--vars' is written outside \\code, so the PDF prints an en dash ('–vars'); the website keeps '--vars'",
+  "parts/part9/ch27-exam-strategy.tex:953: '--state' is written outside \\code, so the PDF prints an en dash ('–state'); the website keeps '--state'",
+  "parts/part9/ch27-exam-strategy.tex:953: '--defer-state' is written outside \\code, so the PDF prints an en dash ('–defer-state'); the website keeps '--defer-state'",
+  "parts/part9/ch33-mock3-answers.tex:353: '--empty' is written outside \\code, so the PDF prints an en dash ('–empty'); the website keeps '--empty'",
+  "parts/part9/ch33-mock3-answers.tex:344: '--empty' is written outside \\code, so the PDF prints an en dash ('–empty'); the website keeps '--empty'",
+  "parts/part9/ch33-mock3-answers.tex:776: '--empty' is written outside \\code, so the PDF prints an en dash ('–empty'); the website keeps '--empty'",
+  "parts/part9/ch33-mock3-answers.tex:861: '--sample' is written outside \\code, so the PDF prints an en dash ('–sample'); the website keeps '--sample'",
+  "appendices/coverage.tex:29: '--empty' is written outside \\code, so the PDF prints an en dash ('–empty'); the website keeps '--empty'",
+  "appendices/coverage.tex:30: '--sample' is written outside \\code, so the PDF prints an en dash ('–sample'); the website keeps '--sample'",
+  "appendices/coverage.tex:38: '--defer' is written outside \\code, so the PDF prints an en dash ('–defer'); the website keeps '--defer'",
+  "appendices/coverage.tex:47: '--defer' is written outside \\code, so the PDF prints an en dash ('–defer'); the website keeps '--defer'",
+  "chapters/ch22.json: \\ref{lab:dbg-bugs} prints a number that is not a lab number in the PDF (\\label inside labbox); website text: 'Lab 22.1'",
+  "chapters/ch22.json: \\ref{lab:dbg-bugs} prints a number that is not a lab number in the PDF (\\label inside labbox); website text: 'Lab 22.1'",
+  "chapters/ch22.json: \\ref{lab:dbg-flags} prints a number that is not a lab number in the PDF (\\label inside labbox); website text: 'Lab 22.4'",
+  "chapters/ch23.json: \\ref{lab:pip-break} prints a number that is not a lab number in the PDF (\\label inside labbox); website text: 'Lab 23.1'",
+  "chapters/ch23.json: \\ref{lab:pip-break} prints a number that is not a lab number in the PDF (\\label inside labbox); website text: 'Lab 23.1'"
+ ],
  "figures": [
   {
    "chapter": 0,

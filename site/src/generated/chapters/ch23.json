@@ -1435,7 +1435,10 @@
        "id": "ch23-c8",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show -s accepted_values_stg_jaffle_shop__orders_status__\\\nplaced__shipped__completed__return_pending__returned"
+       "text": "$ dbt show -s accepted_values_stg_jaffle_shop__orders_status__\\\nplaced__shipped__completed__return_pending__returned",
+       "variants": {
+        "win": "PS> dbt show -s accepted_values_stg_jaffle_shop__orders_status__placed__shipped__completed__return_pending__returned"
+       }
       },
       {
        "c": [
@@ -2208,7 +2211,10 @@
          "id": "ch23-c16",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # nothing printed = clean"
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # nothing printed = clean",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> ..\\.venv\\Scripts\\Activate.ps1\nPS> git status --short          # nothing printed = clean"
+         }
         },
         {
          "c": [
@@ -2281,7 +2287,10 @@
          "id": "ch23-c18",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt run; echo \"exit code: $?\""
+         "text": "$ dbt run; echo \"exit code: $?\"",
+         "variants": {
+          "win": "PS> dbt run; echo \"exit code: $LASTEXITCODE\""
+         }
         },
         {
          "c": [
@@ -2473,7 +2482,10 @@
          "id": "ch23-c22",
          "lang": "bash",
          "t": "code",
-         "text": "$ git restore models/intermediate/int_orders__payment_methods_pivoted.sql\n$ dbt build -q; echo \"exit code: $?\""
+         "text": "$ git restore models/intermediate/int_orders__payment_methods_pivoted.sql\n$ dbt build -q; echo \"exit code: $?\"",
+         "variants": {
+          "win": "PS> git restore models/intermediate/int_orders__payment_methods_pivoted.sql\nPS> dbt build -q; echo \"exit code: $LASTEXITCODE\""
+         }
         },
         {
          "c": [
@@ -2601,7 +2613,10 @@
          "id": "ch23-c23",
          "lang": "bash",
          "t": "code",
-         "text": "$ duckdb ../practice/practice.duckdb -c \"insert into jaffle_shop.orders values (999, 1, date '2026-10-20', 'cancelled', current_timestamp)\"\n$ dbt build -s stg_jaffle_shop__orders+\n$ dbt show -s accepted_values_stg_jaffle_shop__orders_status__\\\nplaced__shipped__completed__return_pending__returned"
+         "text": "$ duckdb ../practice/practice.duckdb -c \"insert into jaffle_shop.orders values (999, 1, date '2026-10-20', 'cancelled', current_timestamp)\"\n$ dbt build -s stg_jaffle_shop__orders+\n$ dbt show -s accepted_values_stg_jaffle_shop__orders_status__\\\nplaced__shipped__completed__return_pending__returned",
+         "variants": {
+          "win": "PS> duckdb ../practice/practice.duckdb -c \"insert into jaffle_shop.orders values (999, 1, date '2026-10-20', 'cancelled', current_timestamp)\"\nPS> dbt build -s stg_jaffle_shop__orders+\nPS> dbt show -s accepted_values_stg_jaffle_shop__orders_status__placed__shipped__completed__return_pending__returned"
+         }
         },
         {
          "c": [
@@ -4083,7 +4098,10 @@
        "id": "ch23-c36",
        "lang": "bash",
        "t": "code",
-       "text": "$ mkdir -p prod-artifacts && cp target/manifest.json target/run_results.json prod-artifacts/\n$ python -c \"import json, collections; r=json.load(open('prod-artifacts/run_results.json')); print(r['args']['target'], collections.Counter(x['status'] for x in r['results']))\""
+       "text": "$ mkdir -p prod-artifacts && cp target/manifest.json target/run_results.json prod-artifacts/\n$ python -c \"import json, collections; r=json.load(open('prod-artifacts/run_results.json')); print(r['args']['target'], collections.Counter(x['status'] for x in r['results']))\"",
+       "variants": {
+        "win": "PS> New-Item -ItemType Directory -Force prod-artifacts\nPS> Copy-Item target\\manifest.json, target\\run_results.json prod-artifacts\\\nPS> python -c \"import json, collections; r=json.load(open('prod-artifacts/run_results.json')); print(r['args']['target'], collections.Counter(x['status'] for x in r['results']))\""
+       }
       },
       {
        "id": "ch23-c37",
@@ -4244,7 +4262,10 @@
          "id": "ch23-c39",
          "lang": "bash",
          "t": "code",
-         "text": "$ cat .gitignore"
+         "text": "$ cat .gitignore",
+         "variants": {
+          "win": "PS> Get-Content .gitignore"
+         }
         },
         {
          "c": [
@@ -4341,7 +4362,10 @@
          "id": "ch23-c41",
          "lang": "bash",
          "t": "code",
-         "text": "$ mkdir -p prod-artifacts && cp target/manifest.json target/run_results.json prod-artifacts/\n$ ls prod-artifacts\n$ python -c \"import json, collections; r=json.load(open('prod-artifacts/run_results.json')); print(r['args']['target'], collections.Counter(x['status'] for x in r['results']))\"\n$ git status --short"
+         "text": "$ mkdir -p prod-artifacts && cp target/manifest.json target/run_results.json prod-artifacts/\n$ ls prod-artifacts\n$ python -c \"import json, collections; r=json.load(open('prod-artifacts/run_results.json')); print(r['args']['target'], collections.Counter(x['status'] for x in r['results']))\"\n$ git status --short",
+         "variants": {
+          "win": "PS> New-Item -ItemType Directory -Force prod-artifacts\nPS> Copy-Item target\\manifest.json, target\\run_results.json prod-artifacts\\\nPS> Get-ChildItem -Name prod-artifacts\nPS> python -c \"import json, collections; r=json.load(open('prod-artifacts/run_results.json')); print(r['args']['target'], collections.Counter(x['status'] for x in r['results']))\"\nPS> git status --short"
+         }
         },
         {
          "c": [
@@ -4979,7 +5003,10 @@
        "id": "ch23-c50",
        "lang": "bash",
        "t": "code",
-       "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select sql from duckdb_views() where schema_name = 'dbt_adnane' and view_name = 'fct_monthly_revenue'\"\n$ cat target/run/jaffle_dbt/models/marts/fct_monthly_revenue.sql"
+       "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select sql from duckdb_views() where schema_name = 'dbt_adnane' and view_name = 'fct_monthly_revenue'\"\n$ cat target/run/jaffle_dbt/models/marts/fct_monthly_revenue.sql",
+       "variants": {
+        "win": "PS> duckdb -readonly ../practice/practice.duckdb -c \"select sql from duckdb_views() where schema_name = 'dbt_adnane' and view_name = 'fct_monthly_revenue'\"\nPS> Get-Content target\\run\\jaffle_dbt\\models\\marts\\fct_monthly_revenue.sql"
+       }
       },
       {
        "id": "ch23-c51",
@@ -5935,7 +5962,10 @@
          "id": "ch23-c59",
          "lang": "bash",
          "t": "code",
-         "text": "$ grep -n 'analyze \"practice\"\\|ROLLBACK' logs/dbt.log | tail -3"
+         "text": "$ grep -n 'analyze \"practice\"\\|ROLLBACK' logs/dbt.log | tail -3",
+         "variants": {
+          "win": "PS> Select-String -CaseSensitive 'analyze \"practice\"|ROLLBACK' logs\\dbt.log | ForEach-Object { \"$($_.LineNumber):$($_.Line)\" } | Select-Object -Last 3"
+         }
         },
         {
          "c": [
@@ -6088,7 +6118,10 @@
          "id": "ch23-c63",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt run -s fct_orders fct_monthly_revenue\n$ dbt build -q; echo \"exit code: $?\""
+         "text": "$ dbt run -s fct_orders fct_monthly_revenue\n$ dbt build -q; echo \"exit code: $?\"",
+         "variants": {
+          "win": "PS> dbt run -s fct_orders fct_monthly_revenue\nPS> dbt build -q; echo \"exit code: $LASTEXITCODE\""
+         }
         },
         {
          "c": [
@@ -6133,7 +6166,10 @@
          "id": "ch23-c64",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --target prod --exclude-resource-type unit_test -q; echo \"exit code: $?\"\n$ cp target/manifest.json target/run_results.json prod-artifacts/"
+         "text": "$ dbt build --target prod --exclude-resource-type unit_test -q; echo \"exit code: $?\"\n$ cp target/manifest.json target/run_results.json prod-artifacts/",
+         "variants": {
+          "win": "PS> dbt build --target prod --exclude-resource-type unit_test -q; echo \"exit code: $LASTEXITCODE\"\nPS> Copy-Item target\\manifest.json, target\\run_results.json prod-artifacts\\"
+         }
         },
         {
          "c": [

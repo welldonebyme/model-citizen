@@ -639,3 +639,243 @@ scan:
     output redirection >: 5
     append redirection >>: 4
   non_dbt_lines_not_covered_by_a_rule: []
+transforms:
+- rule: env-prefix
+  fn: env_prefix
+  match: (?P<assigns>(?:[A-Za-z_][A-Za-z0-9_]*=(?:\"[^\"]*\"|'[^']*'|\S*)\s+)+)(?P<rest>\S.*)
+- rule: shell-var
+  fn: assign
+  match: (?P<name>[A-Za-z_][A-Za-z0-9_]*)=(?P<value>\S*)
+- rule: export
+  fn: export
+  match: export (?P<assigns>[A-Za-z_].*)
+- rule: unset
+  match: unset (?P<name>[A-Za-z_]\w*)
+  win: Remove-Item Env:{{name}}
+- rule: comment
+  match: echo 'setopt interactivecomments' >> ~/\.zshrc
+  win: '# nothing to do on Windows: PowerShell always accepts # comments'
+- rule: echo-var
+  match: echo \$SHELL
+  win: 'echo $PSVersionTable.PSVersion   # PowerShell has no $SHELL'
+- rule: echo
+  fn: echo
+  match: 'echo(?P<text>(?: [^<>|]*)?)'
+- rule: venv-activate
+  fn: source
+  match: source (?P<venv>\S+)/bin/activate
+- rule: python-venv-classic
+  match: python3\.12 -m venv (?P<p>\S+)
+  win: py -3.12 -m venv {{p}}
+- rule: which
+  match: which python3
+  win: '(Get-Command python).Source   # Windows: python, not python3'
+- rule: which
+  match: which (?P<c>\S+)
+  win: (Get-Command {{c}}).Source
+- rule: cd
+  match: cd
+  win: cd $HOME
+- rule: cd
+  match: cd (?P<p>\S+)
+  win: cd {{path:p}}
+- rule: ls-la
+  match: ls -la?
+  win: Get-ChildItem -Force
+- rule: ls-la
+  match: ls -la? (?P<p>.+)
+  win: Get-ChildItem -Force {{paths:p}}
+- rule: ls
+  match: ls
+  win: Get-ChildItem -Name
+- rule: ls
+  match: ls (?P<p>[^-].*)
+  win: Get-ChildItem -Name {{paths:p}}
+- rule: mkdir-p
+  match: mkdir -p (?P<p>.+)
+  win: New-Item -ItemType Directory -Force {{paths:p}}
+- rule: mkdir-p
+  match: mkdir (?P<p>[^-].*)
+  win: New-Item -ItemType Directory {{paths:p}}
+- rule: cp-R
+  match: cp -[rR] (?P<src>.+) (?P<dst>\S+)
+  win: Copy-Item -Recurse {{paths:src}} {{path:dst}}
+- rule: cp
+  match: cp (?P<src>[^-].*) (?P<dst>\S+)
+  win: Copy-Item {{paths:src}} {{path:dst}}
+- rule: tmp
+  match: mv (?P<src>\S+) /tmp/
+  win: Move-Item {{path:src}} $env:TEMP\
+- rule: tmp
+  match: mv /tmp/(?P<f>\S+) (?P<dst>\S+)
+  win: Move-Item $env:TEMP\{{f}} {{path:dst}}
+- rule: mv
+  match: mv (?P<src>\S+) (?P<dst>\S+)
+  win: Move-Item {{path:src}} {{path:dst}}
+- rule: rm-r
+  match: rm -(?:rf|fr|r|R) (?P<p>.+)
+  win: Remove-Item -Recurse -Force {{paths:p}}
+- rule: rm
+  match: rm (?P<p>[^-].*)
+  win: Remove-Item {{paths:p}}
+- rule: cat-n-sed
+  match: cat -n (?P<p>\S+)
+  win: Get-Content {{path:p}}
+- rule: cat
+  match: cat (?P<p>[^-].*)
+  win: Get-Content {{paths:p}}
+- rule: head
+  match: head -(?P<n>\d+) (?P<p>\S+)
+  win: Get-Content {{path:p}} -TotalCount {{n}}
+- rule: tail
+  match: tail -(?P<n>\d+) (?P<p>.+)
+  win: Get-Content {{paths:p}} -Tail {{n}}
+- rule: wc-l
+  match: wc -l (?P<p>.+)
+  win: Get-ChildItem {{paths:p}} | ForEach-Object { "{0,7} {1}" -f (Get-Content $_.FullName).Count, $_.Name }
+- rule: grep
+  fn: grep
+  match: grep (?P<opts>(?:-[A-Za-z0-9]+ )*)(?P<pat>\"[^\"]*\"|'[^']*'|[^\s-]\S*) (?P<files>.+)
+- rule: sed-n
+  fn: sed
+  match: sed -n '?(?P<a>\d+),(?P<b>\d+)p'? (?P<file>\S+)
+- rule: find
+  match: find (?P<p>\S+) -path '(?P<pp>[^']+)' -name '(?P<n>[^']+)'
+  win: Get-ChildItem {{path:p}} -Recurse -Filter {{n}} | Where-Object FullName -like '{{pp}}' | ForEach-Object FullName
+- rule: find
+  match: find (?P<p>\S+)
+  win: Get-ChildItem -Recurse -Name {{path:p}}
+- rule: diff
+  match: diff (?P<a>\S+) (?P<b>\S+)
+  win: git diff --no-index {{a}} {{b}}
+- rule: man
+  match: man ls
+  win: Get-Help Get-ChildItem
+- rule: man
+  match: man (?P<c>\S+)
+  win: Get-Help {{c}}
+- rule: brew-version
+  match: brew --version
+  win: winget --version
+- rule: brew-uv
+  match: brew install uv
+  win: winget install --id=astral-sh.uv -e
+- rule: brew-duckdb
+  match: brew install duckdb
+  win: winget install DuckDB.cli
+- rule: gh
+  match: brew install gh
+  win: winget install --id GitHub.cli -e
+- rule: brew-vscode
+  match: brew install --cask visual-studio-code
+  win: winget install --id Microsoft.VisualStudioCode -e
+- rule: brew-python
+  match: brew install python@3\.12
+  win: winget install --id Python.Python.3.12 -e
+- rule: git-install
+  match: xcode-select --install
+  win: winget install --id Git.Git -e
+pipe_transforms:
+- rule: pipe-head-tail
+  match: head -(?P<n>\d+)
+  win: Select-Object -First {{n}}
+- rule: pipe-head-tail
+  match: tail -(?P<n>\d+)
+  win: Select-Object -Last {{n}}
+- rule: wc-l
+  match: wc -l
+  win: Measure-Object | ForEach-Object Count
+- rule: sort
+  match: sort
+  win: Sort-Object
+- rule: grep
+  fn: grep_pipe
+  match: grep (?P<opts>(?:-[A-Za-z0-9]+ )*)(?P<pat>\"[^\"]*\"|'[^']*'|[^\s-]\S*)
+- rule: sed-n
+  fn: sed
+  match: sed -n '?(?P<a>\d+),(?P<b>\d+)p'?
+- rule: tr
+  match: tr -d ' '
+  win: ForEach-Object { $_ -replace ' ', '' }
+wsl_transforms:
+- rule: brew-uv
+  match: brew install uv\s*(#.*)?
+  wsl: 'curl -LsSf https://astral.sh/uv/install.sh | sh   # then open a new terminal'
+- rule: brew-duckdb
+  match: brew install duckdb\s*(#.*)?
+  wsl: 'curl https://install.duckdb.org | sh   # the DuckDB CLI (or download it from duckdb.org)'
+- rule: brew-version
+  match: brew --version\s*(#.*)?
+  wsl: 'apt --version   # Ubuntu''s package manager (no Homebrew needed)'
+- rule: gh
+  match: brew install gh\s*(#.*)?
+  wsl: sudo apt install gh
+- rule: brew-vscode
+  match: brew install --cask visual-studio-code\s*(#.*)?
+  wsl: '# install VS Code on Windows (with its WSL extension); then `code .` works in Ubuntu'
+- rule: brew-python
+  match: brew install python@3\.12\s*(#.*)?
+  wsl: sudo apt install python3.12 python3.12-venv
+- rule: git-install
+  match: xcode-select --install\s*(#.*)?
+  wsl: sudo apt install git
+- rule: comment
+  match: echo 'setopt interactivecomments' >> ~/\.zshrc\s*(#.*)?
+  wsl: '# nothing to do: bash (WSL) accepts # comments by default'
+lines:
+- block: ch10-c51
+  rule: jq
+  book: 'dbt --quiet ls -s fct_orders --output json --output-keys config | jq -c ''.config | {grants, hooks: [.["post-hook"][].sql]}'''
+  win: dbt --quiet ls -s fct_orders --output json --output-keys config | ConvertFrom-Json | ForEach-Object { [ordered]@{grants
+    = $_.config.grants; hooks = @($_.config.'post-hook'.sql)} | ConvertTo-Json -Compress }
+  why: the jq program contains double quotes, which Windows PowerShell 5.1 removes when it calls jq
+- block: ch02-c14
+  rule: and-chain
+  book: dbt build && echo "All good, ready to deploy"
+  win: 'dbt build; if ($?) { echo "All good, ready to deploy" }   # PowerShell 7 also accepts &&'
+  why: 'the block teaches that && runs the second command only on success: keep that meaning in PowerShell 5.1'
+- block: ch02-c2
+  rule: cd
+  book: 'cd -                     # go back to the previous folder'
+  win: 'cd -                     # go back to the previous folder (PowerShell 7; not in Windows PowerShell 5.1)'
+  why: Set-Location - exists only from PowerShell 6.2
+- block: ch11-c80
+  rule: json-arg
+  book: dbt show --inline "{{ dbt_utils.date_spine(datepart='month', start_date=\"cast('2025-01-01' as date)\", end_date=\"cast('2025-05-01'
+    as date)\") }}"
+  win: 'dbt show --inline "{{ dbt_utils.date_spine(datepart=''month'', start_date=`"cast(''2025-01-01'' as date)`", end_date=`"cast(''2025-05-01''
+    as date)`") }}"   # needs PowerShell 7 (5.1 drops the inner quotes)'
+  why: an argument with inner double quotes reaches dbt intact only from PowerShell 7.3
+blocks:
+- block: ch02-c13
+  rule: exit-code
+  sha1: 513d7300c042
+  win: 'PS> Get-ChildItem -Name data
+
+    customers.csv
+
+    order_items.csv
+
+    orders.csv
+
+    payments.csv
+
+    products.csv
+
+    PS> $?
+
+    True
+
+    PS> Get-ChildItem -Name nofolder
+
+    Get-ChildItem: Cannot find path ''C:\Users\you\dbt-course\practice\nofolder'' because it does not exist.
+
+    PS> $?
+
+    False
+
+    PS> dbt --version > $null; $LASTEXITCODE     # programs (dbt, git, python) put their number in $LASTEXITCODE
+
+    0'
+  why: 'PowerShell: $? is True/False for the last command; the exit code of a program is $LASTEXITCODE (Get-ChildItem is not
+    a program and sets no exit code)'

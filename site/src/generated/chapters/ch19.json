@@ -1153,7 +1153,10 @@
          "id": "ch19-c8",
          "lang": "bash",
          "t": "code",
-         "text": "$ find target/compiled -path '*unit_tests*' -name '*.sql'"
+         "text": "$ find target/compiled -path '*unit_tests*' -name '*.sql'",
+         "variants": {
+          "win": "PS> Get-ChildItem target\\compiled -Recurse -Filter *.sql | Where-Object FullName -like '*unit_tests*' | ForEach-Object FullName"
+         }
         },
         {
          "c": [
@@ -3561,7 +3564,10 @@
          "id": "ch19-c36",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/practice\n$ mkdir fresh\n$ duckdb fresh/practice.duckdb < setup.sql\n$ cd ~/dbt-course/jaffle_dbt\n$ export DBT_DUCKDB_PATH=../practice/fresh/practice.duckdb"
+         "text": "$ cd ~/dbt-course/practice\n$ mkdir fresh\n$ duckdb fresh/practice.duckdb < setup.sql\n$ cd ~/dbt-course/jaffle_dbt\n$ export DBT_DUCKDB_PATH=../practice/fresh/practice.duckdb",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\practice\nPS> New-Item -ItemType Directory fresh\nPS> duckdb fresh/practice.duckdb -c \".read setup.sql\"\nPS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> $env:DBT_DUCKDB_PATH = \"../practice/fresh/practice.duckdb\""
+         }
         },
         {
          "c": [
@@ -3767,7 +3773,10 @@
          "id": "ch19-c37",
          "lang": "bash",
          "t": "code",
-         "text": "$ unset DBT_DUCKDB_PATH\n$ rm -r ../practice/fresh"
+         "text": "$ unset DBT_DUCKDB_PATH\n$ rm -r ../practice/fresh",
+         "variants": {
+          "win": "PS> Remove-Item Env:DBT_DUCKDB_PATH\nPS> Remove-Item -Recurse -Force ..\\practice\\fresh"
+         }
         }
        ],
        "id": "ch19-lab4",
@@ -3954,7 +3963,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt -q ls --select +fct_orders --resource-type unit_test model      # without the variable (10 lines)\n...\nunit_test:jaffle_dbt.test_fct_orders_full_refresh_keeps_all_rows\nunit_test:jaffle_dbt.test_fct_orders_incremental_keeps_only_new_rows\nunit_test:jaffle_dbt.test_stg_stripe__payments_cents_to_dollars\n$ DBT_ENGINE_EXCLUDE_RESOURCE_TYPES=unit_test dbt -q ls --select +fct_orders --resource-type unit_test model\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments"
+       "text": "$ dbt -q ls --select +fct_orders --resource-type unit_test model      # without the variable (10 lines)\n...\nunit_test:jaffle_dbt.test_fct_orders_full_refresh_keeps_all_rows\nunit_test:jaffle_dbt.test_fct_orders_incremental_keeps_only_new_rows\nunit_test:jaffle_dbt.test_stg_stripe__payments_cents_to_dollars\n$ DBT_ENGINE_EXCLUDE_RESOURCE_TYPES=unit_test dbt -q ls --select +fct_orders --resource-type unit_test model\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments",
+       "variants": {
+        "win": "PS> dbt -q ls --select +fct_orders --resource-type unit_test model      # without the variable (10 lines)\n...\nunit_test:jaffle_dbt.test_fct_orders_full_refresh_keeps_all_rows\nunit_test:jaffle_dbt.test_fct_orders_incremental_keeps_only_new_rows\nunit_test:jaffle_dbt.test_stg_stripe__payments_cents_to_dollars\nPS> $env:DBT_ENGINE_EXCLUDE_RESOURCE_TYPES = \"unit_test\"; dbt -q ls --select +fct_orders --resource-type unit_test model; Remove-Item Env:DBT_ENGINE_EXCLUDE_RESOURCE_TYPES\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments"
+       }
       },
       {
        "blocks": [

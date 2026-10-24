@@ -2517,7 +2517,10 @@
          "id": "ch05-c22",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/practice\n$ source ../.venv/bin/activate"
+         "text": "$ cd ~/dbt-course/practice\n$ source ../.venv/bin/activate",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\practice\nPS> ..\\.venv\\Scripts\\Activate.ps1"
+         }
         },
         {
          "c": [
@@ -4870,7 +4873,10 @@
          "id": "ch05-c48",
          "lang": "bash",
          "t": "code",
-         "text": "$ python render.py pivot.sql > pivot_compiled.sql\n$ cat pivot_compiled.sql"
+         "text": "$ python render.py pivot.sql > pivot_compiled.sql\n$ cat pivot_compiled.sql",
+         "variants": {
+          "win": "PS> python render.py pivot.sql | Set-Content pivot_compiled.sql\nPS> Get-Content pivot_compiled.sql"
+         }
         },
         {
          "c": [
@@ -4906,7 +4912,10 @@
          "id": "ch05-c49",
          "lang": "bash",
          "t": "code",
-         "text": "$ duckdb practice.duckdb < pivot_compiled.sql"
+         "text": "$ duckdb practice.duckdb < pivot_compiled.sql",
+         "variants": {
+          "win": "PS> duckdb practice.duckdb -c \".read pivot_compiled.sql\""
+         }
         },
         {
          "c": [

@@ -5211,7 +5211,10 @@
          "id": "ch17-c36",
          "lang": "bash",
          "t": "code",
-         "text": "$ head -60 target/run/jaffle_dbt/models/marts/dim_customers.sql"
+         "text": "$ head -60 target/run/jaffle_dbt/models/marts/dim_customers.sql",
+         "variants": {
+          "win": "PS> Get-Content target\\run\\jaffle_dbt\\models\\marts\\dim_customers.sql -TotalCount 60"
+         }
         },
         {
          "c": [
@@ -5258,7 +5261,10 @@
          "lang": "bash",
          "t": "code",
          "text": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select constraint_type, constraint_text from duckdb_constraints() where schema_name = 'dbt_adnane' and table_name = 'dim_customers' order by 1, 2\"",
-         "textBook": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select constraint_type, constraint_text from duckdb_constraints() where schema_name = 'dbt_adnane' and table_name = 'dim_customers' order by 1, 2\""
+         "textBook": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select constraint_type, constraint_text from duckdb_constraints() where schema_name = 'dbt_adnane' and table_name = 'dim_customers' order by 1, 2\"",
+         "variants": {
+          "win": "PS> python -I $HOME\\dbt-course\\kit\\tools\\run_sql.py --db ../practice/practice.duckdb \"select constraint_type, constraint_text from duckdb_constraints() where schema_name = 'dbt_adnane' and table_name = 'dim_customers' order by 1, 2\""
+         }
         },
         {
          "c": [
@@ -7418,7 +7424,10 @@
          "id": "ch17-c56",
          "lang": "bash",
          "t": "code",
-         "text": "$ cp models/marts/dim_customers.sql models/marts/dim_customers_v2.sql"
+         "text": "$ cp models/marts/dim_customers.sql models/marts/dim_customers_v2.sql",
+         "variants": {
+          "win": "PS> Copy-Item models\\marts\\dim_customers.sql models\\marts\\dim_customers_v2.sql"
+         }
         },
         {
          "c": [
@@ -7445,7 +7454,10 @@
          "id": "ch17-c57",
          "lang": "bash",
          "t": "code",
-         "text": "$ diff models/marts/dim_customers.sql models/marts/dim_customers_v2.sql"
+         "text": "$ diff models/marts/dim_customers.sql models/marts/dim_customers_v2.sql",
+         "variants": {
+          "win": "PS> git diff --no-index models/marts/dim_customers.sql models/marts/dim_customers_v2.sql"
+         }
         },
         {
          "c": [
@@ -7848,7 +7860,10 @@
          "lang": "bash",
          "t": "code",
          "text": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.demo_uses_v1\"\n$ dbt parse",
-         "textBook": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.demo_uses_v1\"\n$ dbt parse"
+         "textBook": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.demo_uses_v1\"\n$ dbt parse",
+         "variants": {
+          "win": "PS> python -I $HOME\\dbt-course\\kit\\tools\\run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.demo_uses_v1\"\nPS> dbt parse"
+         }
         },
         {
          "c": [
@@ -7872,7 +7887,10 @@
          "lang": "bash",
          "t": "code",
          "text": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select table_name from information_schema.tables where table_schema = 'dbt_adnane' and table_name like 'dim_customers%' order by 1\"\n$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.dim_customers\"",
-         "textBook": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select table_name from information_schema.tables where table_schema = 'dbt_adnane' and table_name like 'dim_customers%' order by 1\"\n$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.dim_customers\""
+         "textBook": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select table_name from information_schema.tables where table_schema = 'dbt_adnane' and table_name like 'dim_customers%' order by 1\"\n$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.dim_customers\"",
+         "variants": {
+          "win": "PS> python -I $HOME\\dbt-course\\kit\\tools\\run_sql.py --db ../practice/practice.duckdb \"select table_name from information_schema.tables where table_schema = 'dbt_adnane' and table_name like 'dim_customers%' order by 1\"\nPS> python -I $HOME\\dbt-course\\kit\\tools\\run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.dim_customers\""
+         }
         },
         {
          "c": [
@@ -7909,7 +7927,10 @@
          "lang": "bash",
          "t": "code",
          "text": "$ dbt build\n$ git add .\n$ git commit -m \"Governance: groups, access, contract and constraints on dim_customers, versions v1/v2\"\n$ git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle   # once only\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch17 --stat",
-         "textBook": "$ dbt build\n$ git add .\n$ git commit -m \"Governance: groups, access, contract and constraints on dim_customers, versions v1/v2\"\n$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # once only\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch17 --stat"
+         "textBook": "$ dbt build\n$ git add .\n$ git commit -m \"Governance: groups, access, contract and constraints on dim_customers, versions v1/v2\"\n$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # once only\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch17 --stat",
+         "variants": {
+          "win": "PS> dbt build\nPS> git add .\nPS> git commit -m \"Governance: groups, access, contract and constraints on dim_customers, versions v1/v2\"\nPS> git remote add reference $HOME\\dbt-course\\kit\\jaffle_dbt.bundle   # once only\nPS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nPS> git diff ref-ch17 --stat"
+         }
         },
         {
          "c": [
@@ -8369,7 +8390,10 @@
          "id": "ch17-c77",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt parse\n$ mkdir -p ../state-ch17 && cp target/manifest.json ../state-ch17/"
+         "text": "$ dbt parse\n$ mkdir -p ../state-ch17 && cp target/manifest.json ../state-ch17/",
+         "variants": {
+          "win": "PS> dbt parse\nPS> New-Item -ItemType Directory -Force ..\\state-ch17\nPS> Copy-Item target\\manifest.json ..\\state-ch17\\"
+         }
         },
         {
          "c": [

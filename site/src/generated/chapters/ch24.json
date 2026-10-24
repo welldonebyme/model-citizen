@@ -272,7 +272,10 @@
        "id": "ch24-c1",
        "lang": "bash",
        "t": "code",
-       "text": "$ cd ~/dbt-course/jaffle_dbt\n$ dbt build -s fct_monthly_revenue -q\n$ ls target\ncompiled\ngraph.gpickle\ngraph_summary.json\nmanifest.json\npartial_parse.msgpack\nrun\nrun_results.json\nsemantic_manifest.json"
+       "text": "$ cd ~/dbt-course/jaffle_dbt\n$ dbt build -s fct_monthly_revenue -q\n$ ls target\ncompiled\ngraph.gpickle\ngraph_summary.json\nmanifest.json\npartial_parse.msgpack\nrun\nrun_results.json\nsemantic_manifest.json",
+       "variants": {
+        "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> dbt build -s fct_monthly_revenue -q\nPS> Get-ChildItem -Name target\ncompiled\ngraph.gpickle\ngraph_summary.json\nmanifest.json\npartial_parse.msgpack\nrun\nrun_results.json\nsemantic_manifest.json"
+       }
       },
       {
        "c": [
@@ -867,7 +870,10 @@
        "id": "ch24-c5",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt parse --target-path target-ci -q\n$ ls target-ci\nmanifest.json\npartial_parse.msgpack\nperf_info.json\nsemantic_manifest.json"
+       "text": "$ dbt parse --target-path target-ci -q\n$ ls target-ci\nmanifest.json\npartial_parse.msgpack\nperf_info.json\nsemantic_manifest.json",
+       "variants": {
+        "win": "PS> dbt parse --target-path target-ci -q\nPS> Get-ChildItem -Name target-ci\nmanifest.json\npartial_parse.msgpack\nperf_info.json\nsemantic_manifest.json"
+       }
       },
       {
        "c": [
@@ -1169,7 +1175,10 @@
        "id": "ch24-c8",
        "lang": "bash",
        "t": "code",
-       "text": "$ DBT_ENGINE_STATE=prod-artifacts dbt ls -s state:modified"
+       "text": "$ DBT_ENGINE_STATE=prod-artifacts dbt ls -s state:modified",
+       "variants": {
+        "win": "PS> $env:DBT_ENGINE_STATE = \"prod-artifacts\"; dbt ls -s state:modified; Remove-Item Env:DBT_ENGINE_STATE"
+       }
       },
       {
        "id": "ch24-c9",
@@ -1248,7 +1257,10 @@
          "id": "ch24-c10",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ ls prod-artifacts\nmanifest.json\nrun_results.json"
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ ls prod-artifacts\nmanifest.json\nrun_results.json",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> ..\\.venv\\Scripts\\Activate.ps1\nPS> Get-ChildItem -Name prod-artifacts\nmanifest.json\nrun_results.json"
+         }
         },
         {
          "c": [
@@ -3792,7 +3804,10 @@
        "id": "ch24-c29",
        "lang": "bash",
        "t": "code",
-       "text": "$ mkdir -p ../last_run && cp target/run_results.json target/manifest.json ../last_run/\n$ dbt ls --select result:error --state ../last_run\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products\njaffle_dbt.staging.jaffle_shop.is_positive_stg_jaffle_shop__products_price\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__products_product_id\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__products_product_id\n$ dbt ls --select result:error+ --state ../last_run --resource-type model\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products\n$ dbt ls --select result:skipped --state ../last_run --resource-type model\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily"
+       "text": "$ mkdir -p ../last_run && cp target/run_results.json target/manifest.json ../last_run/\n$ dbt ls --select result:error --state ../last_run\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products\njaffle_dbt.staging.jaffle_shop.is_positive_stg_jaffle_shop__products_price\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__products_product_id\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__products_product_id\n$ dbt ls --select result:error+ --state ../last_run --resource-type model\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products\n$ dbt ls --select result:skipped --state ../last_run --resource-type model\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily",
+       "variants": {
+        "win": "PS> New-Item -ItemType Directory -Force ..\\last_run\nPS> Copy-Item target\\run_results.json, target\\manifest.json ..\\last_run\\\nPS> dbt ls --select result:error --state ../last_run\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products\njaffle_dbt.staging.jaffle_shop.is_positive_stg_jaffle_shop__products_price\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__products_product_id\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__products_product_id\nPS> dbt ls --select result:error+ --state ../last_run --resource-type model\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products\nPS> dbt ls --select result:skipped --state ../last_run --resource-type model\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily"
+       }
       },
       {
        "c": [
@@ -4764,7 +4779,10 @@
        "id": "ch24-c38",
        "lang": "bash",
        "t": "code",
-       "text": "$ DBT_ENGINE_DEFER=true DBT_ENGINE_STATE=prod-artifacts DBT_ENGINE_FAVOR_STATE=true \\\n    dbt compile -s fct_monthly_revenue -q | grep -m1 'from \"practice\"'\n    select * from \"practice\".\"prod\".\"int_orders__enriched\"\n$ dbt compile -s fct_monthly_revenue --state prod-artifacts --favor-state -q | grep -m1 'from \"practice\"'\n    select * from \"practice\".\"dbt_adnane\".\"int_orders__enriched\""
+       "text": "$ DBT_ENGINE_DEFER=true DBT_ENGINE_STATE=prod-artifacts DBT_ENGINE_FAVOR_STATE=true \\\n    dbt compile -s fct_monthly_revenue -q | grep -m1 'from \"practice\"'\n    select * from \"practice\".\"prod\".\"int_orders__enriched\"\n$ dbt compile -s fct_monthly_revenue --state prod-artifacts --favor-state -q | grep -m1 'from \"practice\"'\n    select * from \"practice\".\"dbt_adnane\".\"int_orders__enriched\"",
+       "variants": {
+        "win": "PS> $env:DBT_ENGINE_DEFER = \"true\"; $env:DBT_ENGINE_STATE = \"prod-artifacts\"; $env:DBT_ENGINE_FAVOR_STATE = \"true\"; dbt compile -s fct_monthly_revenue -q | Select-String -CaseSensitive 'from \"practice\"' | Select-Object -First 1 | ForEach-Object Line; Remove-Item Env:DBT_ENGINE_DEFER, Env:DBT_ENGINE_STATE, Env:DBT_ENGINE_FAVOR_STATE\n    select * from \"practice\".\"prod\".\"int_orders__enriched\"\nPS> dbt compile -s fct_monthly_revenue --state prod-artifacts --favor-state -q | Select-String -CaseSensitive 'from \"practice\"' | Select-Object -First 1 | ForEach-Object Line\n    select * from \"practice\".\"dbt_adnane\".\"int_orders__enriched\""
+       }
       },
       {
        "blocks": [
@@ -4847,7 +4865,10 @@
          "id": "ch24-c41",
          "lang": "bash",
          "t": "code",
-         "text": "$ sed -n '1,8p' target/compiled/jaffle_dbt/models/marts/fct_monthly_revenue.sql\n$ dbt show --inline \"select table_schema, table_name, table_type from information_schema.tables where table_schema = 'dbt_ci'\" -q"
+         "text": "$ sed -n '1,8p' target/compiled/jaffle_dbt/models/marts/fct_monthly_revenue.sql\n$ dbt show --inline \"select table_schema, table_name, table_type from information_schema.tables where table_schema = 'dbt_ci'\" -q",
+         "variants": {
+          "win": "PS> Get-Content target\\compiled\\jaffle_dbt\\models\\marts\\fct_monthly_revenue.sql | Select-Object -First 8\nPS> dbt show --inline \"select table_schema, table_name, table_type from information_schema.tables where table_schema = 'dbt_ci'\" -q"
+         }
         },
         {
          "c": [
@@ -4875,7 +4896,10 @@
          "id": "ch24-c42",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt compile --select fct_monthly_revenue --defer --state prod-artifacts | grep -m1 'from \"practice\"'\n$ dbt compile --select fct_monthly_revenue --defer --state prod-artifacts --favor-state | grep -m1 'from \"practice\"'"
+         "text": "$ dbt compile --select fct_monthly_revenue --defer --state prod-artifacts | grep -m1 'from \"practice\"'\n$ dbt compile --select fct_monthly_revenue --defer --state prod-artifacts --favor-state | grep -m1 'from \"practice\"'",
+         "variants": {
+          "win": "PS> dbt compile --select fct_monthly_revenue --defer --state prod-artifacts | Select-String -CaseSensitive 'from \"practice\"' | Select-Object -First 1 | ForEach-Object Line\nPS> dbt compile --select fct_monthly_revenue --defer --state prod-artifacts --favor-state | Select-String -CaseSensitive 'from \"practice\"' | Select-Object -First 1 | ForEach-Object Line"
+         }
         },
         {
          "c": [
@@ -6972,7 +6996,10 @@
          "id": "ch24-c65",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --target prod --exclude-resource-type unit_test -q; echo \"exit code: $?\"\n$ cp target/manifest.json target/run_results.json prod-artifacts/\n$ dbt ls --select state:modified --state prod-artifacts"
+         "text": "$ dbt build --target prod --exclude-resource-type unit_test -q; echo \"exit code: $?\"\n$ cp target/manifest.json target/run_results.json prod-artifacts/\n$ dbt ls --select state:modified --state prod-artifacts",
+         "variants": {
+          "win": "PS> dbt build --target prod --exclude-resource-type unit_test -q; echo \"exit code: $LASTEXITCODE\"\nPS> Copy-Item target\\manifest.json, target\\run_results.json prod-artifacts\\\nPS> dbt ls --select state:modified --state prod-artifacts"
+         }
         },
         {
          "c": [

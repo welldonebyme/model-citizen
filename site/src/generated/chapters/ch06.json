@@ -1120,7 +1120,10 @@
        "id": "ch06-c2",
        "lang": "bash",
        "t": "code",
-       "text": "$ cd ~/dbt-course\n$ source .venv/bin/activate\n(.venv) $ dbt --version\nCore:\n  - installed: 1.11.16\n  - latest:    1.12.6  - Update available!\n  ...\nPlugins:\n  - duckdb: 1.11.0 - Up to date!\n(.venv) $ ls practice/practice.duckdb\npractice/practice.duckdb"
+       "text": "$ cd ~/dbt-course\n$ source .venv/bin/activate\n(.venv) $ dbt --version\nCore:\n  - installed: 1.11.16\n  - latest:    1.12.6  - Update available!\n  ...\nPlugins:\n  - duckdb: 1.11.0 - Up to date!\n(.venv) $ ls practice/practice.duckdb\npractice/practice.duckdb",
+       "variants": {
+        "win": "PS> cd $HOME\\dbt-course\nPS> .venv\\Scripts\\Activate.ps1\n(.venv) PS> dbt --version\nCore:\n  - installed: 1.11.16\n  - latest:    1.12.6  - Update available!\n  ...\nPlugins:\n  - duckdb: 1.11.0 - Up to date!\n(.venv) PS> Get-ChildItem -Name practice\\practice.duckdb\npractice/practice.duckdb"
+       }
       },
       {
        "c": [
@@ -1529,7 +1532,10 @@
              "id": "ch06-c4",
              "lang": "bash",
              "t": "code",
-             "text": "$ cd ~/dbt-course\n$ source .venv/bin/activate"
+             "text": "$ cd ~/dbt-course\n$ source .venv/bin/activate",
+             "variants": {
+              "win": "PS> cd $HOME\\dbt-course\nPS> .venv\\Scripts\\Activate.ps1"
+             }
             }
            ]
           },
@@ -1618,7 +1624,10 @@
              "id": "ch06-c7",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ find jaffle_dbt | sort"
+             "text": "(.venv) $ find jaffle_dbt | sort",
+             "variants": {
+              "win": "(.venv) PS> Get-ChildItem -Recurse -Name jaffle_dbt | Sort-Object"
+             }
             },
             {
              "id": "ch06-c8",
@@ -4298,7 +4307,10 @@
              "id": "ch06-c24",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ mkdir -p ~/.dbt\n(.venv) $ code ~/.dbt/profiles.yml"
+             "text": "(.venv) $ mkdir -p ~/.dbt\n(.venv) $ code ~/.dbt/profiles.yml",
+             "variants": {
+              "win": "(.venv) PS> New-Item -ItemType Directory -Force $HOME\\.dbt\n(.venv) PS> code $HOME\\.dbt\\profiles.yml"
+             }
             },
             {
              "c": [
@@ -4337,7 +4349,10 @@
              "id": "ch06-c25",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ cd ~/dbt-course/jaffle_dbt\n(.venv) $ dbt debug"
+             "text": "(.venv) $ cd ~/dbt-course/jaffle_dbt\n(.venv) $ dbt debug",
+             "variants": {
+              "win": "(.venv) PS> cd $HOME\\dbt-course\\jaffle_dbt\n(.venv) PS> dbt debug"
+             }
             }
            ]
           }
@@ -6834,7 +6849,10 @@
              "id": "ch06-c48",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ rm -r models/example\n(.venv) $ dbt run"
+             "text": "(.venv) $ rm -r models/example\n(.venv) $ dbt run",
+             "variants": {
+              "win": "(.venv) PS> Remove-Item -Recurse -Force models\\example\n(.venv) PS> dbt run"
+             }
             },
             {
              "c": [
@@ -7159,7 +7177,10 @@
              "lang": "bash",
              "t": "code",
              "text": "(.venv) $ git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle\n(.venv) $ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nFrom /Users/you/dbt-course/kit/jaffle_dbt.bundle\n * [new tag]         ch06       -> ref-ch06\n * [new tag]         ch07       -> ref-ch07\n ...\n(.venv) $ git diff ref-ch06 --stat",
-             "textBook": "(.venv) $ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt\n(.venv) $ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nFrom /Users/mac/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt\n * [new tag]         ch06       -> ref-ch06\n * [new tag]         ch07       -> ref-ch07\n ...\n(.venv) $ git diff ref-ch06 --stat"
+             "textBook": "(.venv) $ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt\n(.venv) $ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nFrom /Users/mac/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt\n * [new tag]         ch06       -> ref-ch06\n * [new tag]         ch07       -> ref-ch07\n ...\n(.venv) $ git diff ref-ch06 --stat",
+             "variants": {
+              "win": "(.venv) PS> git remote add reference $HOME\\dbt-course\\kit\\jaffle_dbt.bundle\n(.venv) PS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nFrom /Users/you/dbt-course/kit/jaffle_dbt.bundle\n * [new tag]         ch06       -> ref-ch06\n * [new tag]         ch07       -> ref-ch07\n ...\n(.venv) PS> git diff ref-ch06 --stat"
+             }
             },
             {
              "c": [

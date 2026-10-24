@@ -330,4 +330,45 @@ def assemble(res: BuildResult, book: Path, rules: Path, overrides: Path) -> tupl
         files[k] = rw.tree(files[k], log, k)
     info["rewrites"] = log
     info["pathOccurrences"] = scan_book(book, rules / "paths.yaml")
+    info["osVariants"] = add_os_variants(files, overrides / "os-commands.yaml")
     return files, info
+
+
+def bash_blocks(obj):
+    """Every shell code block of a document, in document order."""
+    if isinstance(obj, dict):
+        if obj.get("t") == "code" and obj.get("lang") == "bash" and "text" in obj:
+            yield obj
+            return
+        for v in obj.values():
+            yield from bash_blocks(v)
+    elif isinstance(obj, list):
+        for v in obj:
+            yield from bash_blocks(v)
+
+
+def add_os_variants(files: dict, yaml_path: Path) -> dict:
+    """Windows / WSL variants of every shell block of the chapters (converter/build/oscmd.py). Quiz and mock
+    questions keep the book's commands (they test them as written)."""
+    from .oscmd import Ctx as OsCtx, OsCommands
+    eng = OsCommands(yaml_path)
+    rep = {"rules": "converter/overrides/os-commands.yaml", "bashBlocks": 0, "withWin": 0, "withWsl": 0,
+           "byRule": Counter(), "unhandled": []}
+    for name in sorted(k for k in files if k.startswith("chapters/")):
+        ctx = OsCtx()
+        for b in bash_blocks(files[name]):
+            rep["bashBlocks"] += 1
+            win, wsl, log = eng.block(b["text"], b["id"], ctx)
+            v = {}
+            if win is not None:
+                v["win"] = win
+            if wsl is not None:
+                v["wsl"] = wsl
+            if v:
+                b["variants"] = v
+            rep["withWin"] += win is not None
+            rep["withWsl"] += wsl is not None
+            rep["byRule"].update(log["rules"])
+            rep["unhandled"] += [{"block": b["id"], "command": u} for u in log["unhandled"]]
+    rep["byRule"] = dict(sorted(rep["byRule"].items()))
+    return rep

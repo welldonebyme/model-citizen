@@ -3899,7 +3899,10 @@
          "lang": "bash",
          "t": "code",
          "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # nothing printed = clean\n$ B=~/dbt-course/kit/bugs\n$ ls $B",
-         "textBook": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # nothing printed = clean\n$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs\n$ ls $B"
+         "textBook": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # nothing printed = clean\n$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs\n$ ls $B",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> ..\\.venv\\Scripts\\Activate.ps1\nPS> git status --short          # nothing printed = clean\nPS> $B = \"$HOME\\dbt-course\\kit\\bugs\"\nPS> Get-ChildItem -Name $B"
+         }
         },
         {
          "c": [
@@ -4293,7 +4296,10 @@
          "id": "ch22-c21",
          "lang": "bash",
          "t": "code",
-         "text": "$ git status --short\n$ dbt build -q; echo \"exit code: $?\""
+         "text": "$ git status --short\n$ dbt build -q; echo \"exit code: $?\"",
+         "variants": {
+          "win": "PS> git status --short\nPS> dbt build -q; echo \"exit code: $LASTEXITCODE\""
+         }
         },
         {
          "c": [
@@ -4461,7 +4467,10 @@
        "id": "ch22-c22",
        "lang": "bash",
        "t": "code",
-       "text": "$ grep -n \"Binder Error\" logs/dbt.log | tail -3"
+       "text": "$ grep -n \"Binder Error\" logs/dbt.log | tail -3",
+       "variants": {
+        "win": "PS> Select-String -CaseSensitive 'Binder Error' logs\\dbt.log | ForEach-Object { \"$($_.LineNumber):$($_.Line)\" } | Select-Object -Last 3"
+       }
       },
       {
        "id": "ch22-c23",
@@ -4785,7 +4794,10 @@
        "id": "ch22-c25",
        "lang": "bash",
        "t": "code",
-       "text": "$ cat -n target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__customers.sql | sed -n 11,16p"
+       "text": "$ cat -n target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__customers.sql | sed -n 11,16p",
+       "variants": {
+        "win": "PS> Get-Content target\\compiled\\jaffle_dbt\\models\\staging\\jaffle_shop\\stg_jaffle_shop__customers.sql | Select-Object -Skip 10 -First 6"
+       }
       },
       {
        "id": "ch22-c26",
@@ -4813,7 +4825,10 @@
        "id": "ch22-c27",
        "lang": "bash",
        "t": "code",
-       "text": "$ cat -n target/run/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__customers.sql | sed -n 1,4p\n$ cat -n target/run/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__customers.sql | sed -n 14,19p"
+       "text": "$ cat -n target/run/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__customers.sql | sed -n 1,4p\n$ cat -n target/run/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__customers.sql | sed -n 14,19p",
+       "variants": {
+        "win": "PS> Get-Content target\\run\\jaffle_dbt\\models\\staging\\jaffle_shop\\stg_jaffle_shop__customers.sql | Select-Object -First 4\nPS> Get-Content target\\run\\jaffle_dbt\\models\\staging\\jaffle_shop\\stg_jaffle_shop__customers.sql | Select-Object -Skip 13 -First 6"
+       }
       },
       {
        "id": "ch22-c28",
@@ -5511,7 +5526,10 @@
        "id": "ch22-c34",
        "lang": "bash",
        "t": "code",
-       "text": "$ duckdb -readonly ../practice/practice.duckdb < target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__customers.sql"
+       "text": "$ duckdb -readonly ../practice/practice.duckdb < target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__customers.sql",
+       "variants": {
+        "win": "PS> duckdb -readonly ../practice/practice.duckdb -c \".read target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__customers.sql\""
+       }
       },
       {
        "c": [
@@ -5825,7 +5843,10 @@
          "lang": "bash",
          "t": "code",
          "text": "$ B=~/dbt-course/kit/bugs\n$ git apply $B/03-database-error-bad-column.patch\n$ dbt run -s stg_jaffle_shop__customers",
-         "textBook": "$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs\n$ git apply $B/03-database-error-bad-column.patch\n$ dbt run -s stg_jaffle_shop__customers"
+         "textBook": "$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs\n$ git apply $B/03-database-error-bad-column.patch\n$ dbt run -s stg_jaffle_shop__customers",
+         "variants": {
+          "win": "PS> $B = \"$HOME\\dbt-course\\kit\\bugs\"\nPS> git apply $B/03-database-error-bad-column.patch\nPS> dbt run -s stg_jaffle_shop__customers"
+         }
         },
         {
          "c": [
@@ -5938,7 +5959,10 @@
          "id": "ch22-c37",
          "lang": "bash",
          "t": "code",
-         "text": "$ grep -n \"Binder Error\" logs/dbt.log | tail -3\n$ grep -n \"ROLLBACK\" logs/dbt.log | tail -1"
+         "text": "$ grep -n \"Binder Error\" logs/dbt.log | tail -3\n$ grep -n \"ROLLBACK\" logs/dbt.log | tail -1",
+         "variants": {
+          "win": "PS> Select-String -CaseSensitive 'Binder Error' logs\\dbt.log | ForEach-Object { \"$($_.LineNumber):$($_.Line)\" } | Select-Object -Last 3\nPS> Select-String -CaseSensitive 'ROLLBACK' logs\\dbt.log | ForEach-Object { \"$($_.LineNumber):$($_.Line)\" } | Select-Object -Last 1"
+         }
         },
         {
          "c": [
@@ -5978,7 +6002,10 @@
          "id": "ch22-c38",
          "lang": "bash",
          "t": "code",
-         "text": "$ duckdb -readonly ../practice/practice.duckdb < target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__customers.sql"
+         "text": "$ duckdb -readonly ../practice/practice.duckdb < target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__customers.sql",
+         "variants": {
+          "win": "PS> duckdb -readonly ../practice/practice.duckdb -c \".read target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__customers.sql\""
+         }
         },
         {
          "c": [
@@ -6643,7 +6670,10 @@
          "id": "ch22-c40",
          "lang": "bash",
          "t": "code",
-         "text": "$ git switch main\n$ dbt parse -q\n$ mkdir -p ../main-state && cp target/manifest.json ../main-state/"
+         "text": "$ git switch main\n$ dbt parse -q\n$ mkdir -p ../main-state && cp target/manifest.json ../main-state/",
+         "variants": {
+          "win": "PS> git switch main\nPS> dbt parse -q\nPS> New-Item -ItemType Directory -Force ..\\main-state\nPS> Copy-Item target\\manifest.json ..\\main-state\\"
+         }
         },
         {
          "c": [
@@ -6680,7 +6710,10 @@
          "lang": "bash",
          "t": "code",
          "text": "$ git switch -c fix/products-semicolon\n$ B=~/dbt-course/kit/bugs\n$ git apply $B/08-semicolon-at-end.patch\n$ git status --short",
-         "textBook": "$ git switch -c fix/products-semicolon\n$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs\n$ git apply $B/08-semicolon-at-end.patch\n$ git status --short"
+         "textBook": "$ git switch -c fix/products-semicolon\n$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs\n$ git apply $B/08-semicolon-at-end.patch\n$ git status --short",
+         "variants": {
+          "win": "PS> git switch -c fix/products-semicolon\nPS> $B = \"$HOME\\dbt-course\\kit\\bugs\"\nPS> git apply $B/08-semicolon-at-end.patch\nPS> git status --short"
+         }
         },
         {
          "c": [
@@ -7209,7 +7242,10 @@
        "id": "ch22-c49",
        "lang": "bash",
        "t": "code",
-       "text": "$ export DBT_ENGINE_FAIL_FAST=true     # every following dbt command stops at the first failure\n$ DBT_WARN_ERROR=true dbt test         # only this command (old-style name, still works)"
+       "text": "$ export DBT_ENGINE_FAIL_FAST=true     # every following dbt command stops at the first failure\n$ DBT_WARN_ERROR=true dbt test         # only this command (old-style name, still works)",
+       "variants": {
+        "win": "PS> $env:DBT_ENGINE_FAIL_FAST = \"true\"     # every following dbt command stops at the first failure\nPS> $env:DBT_WARN_ERROR = \"true\"; dbt test; Remove-Item Env:DBT_WARN_ERROR         # only this command (old-style name, still works)"
+       }
       },
       {
        "c": [
@@ -7373,7 +7409,10 @@
        "id": "ch22-c53",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt --debug parse | grep printer_width                              # 'printer_width': '60'\n$ DBT_ENGINE_PRINTER_WIDTH=70 dbt --debug parse | grep printer_width  # 'printer_width': '70'\n$ DBT_ENGINE_PRINTER_WIDTH=70 dbt --debug parse --printer-width 90    # 'printer_width': '90'"
+       "text": "$ dbt --debug parse | grep printer_width                              # 'printer_width': '60'\n$ DBT_ENGINE_PRINTER_WIDTH=70 dbt --debug parse | grep printer_width  # 'printer_width': '70'\n$ DBT_ENGINE_PRINTER_WIDTH=70 dbt --debug parse --printer-width 90    # 'printer_width': '90'",
+       "variants": {
+        "win": "PS> dbt --debug parse | Select-String -CaseSensitive printer_width | ForEach-Object Line                              # 'printer_width': '60'\nPS> $env:DBT_ENGINE_PRINTER_WIDTH = \"70\"; dbt --debug parse | Select-String -CaseSensitive printer_width | ForEach-Object Line; Remove-Item Env:DBT_ENGINE_PRINTER_WIDTH  # 'printer_width': '70'\nPS> $env:DBT_ENGINE_PRINTER_WIDTH = \"70\"; dbt --debug parse --printer-width 90; Remove-Item Env:DBT_ENGINE_PRINTER_WIDTH    # 'printer_width': '90'"
+       }
       },
       {
        "c": [
@@ -9895,7 +9934,10 @@
          "id": "ch22-c66",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt parse --no-partial-parse\n$ dbt --debug parse | grep -o \"'send_anonymous_usage_stats': '[A-Za-z]*'\""
+         "text": "$ dbt parse --no-partial-parse\n$ dbt --debug parse | grep -o \"'send_anonymous_usage_stats': '[A-Za-z]*'\"",
+         "variants": {
+          "win": "PS> dbt parse --no-partial-parse\nPS> dbt --debug parse | Select-String -CaseSensitive -AllMatches '''send_anonymous_usage_stats'': ''[A-Za-z]*''' | ForEach-Object { $_.Matches.Value }"
+         }
         },
         {
          "c": [
@@ -9971,7 +10013,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ T=relationships_stg_jaffle_shop__orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_\n$ dbt test -s $T; echo \"exit code: $?\"\n$ dbt test -s $T --warn-error; echo \"exit code: $?\"\n$ DBT_WARN_ERROR=true dbt test -s $T; echo \"exit code: $?\""
+         "text": "$ T=relationships_stg_jaffle_shop__orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_\n$ dbt test -s $T; echo \"exit code: $?\"\n$ dbt test -s $T --warn-error; echo \"exit code: $?\"\n$ DBT_WARN_ERROR=true dbt test -s $T; echo \"exit code: $?\"",
+         "variants": {
+          "win": "PS> $T = \"relationships_stg_jaffle_shop__orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_\"\nPS> dbt test -s $T; echo \"exit code: $LASTEXITCODE\"\nPS> dbt test -s $T --warn-error; echo \"exit code: $LASTEXITCODE\"\nPS> $env:DBT_WARN_ERROR = \"true\"; dbt test -s $T; Remove-Item Env:DBT_WARN_ERROR; echo \"exit code: $LASTEXITCODE\""
+         }
         },
         {
          "c": [
@@ -10026,7 +10071,10 @@
          "id": "ch22-c69",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls -s does_not_exist; echo \"exit code: $?\"\n$ dbt ls -s does_not_exist --warn-error-options '{\"error\": [\"NoNodesForSelectionCriteria\"]}'; echo \"exit code: $?\"\n$ dbt ls -s does_not_exist --warn-error-options '{\"silence\": [\"NoNodesForSelectionCriteria\"]}'; echo \"exit code: $?\"\n$ dbt ls -s does_not_exist --warn-error-options '{\"include\": [\"NoNodesForSelectionCriteria\"]}'; echo \"exit code: $?\""
+         "text": "$ dbt ls -s does_not_exist; echo \"exit code: $?\"\n$ dbt ls -s does_not_exist --warn-error-options '{\"error\": [\"NoNodesForSelectionCriteria\"]}'; echo \"exit code: $?\"\n$ dbt ls -s does_not_exist --warn-error-options '{\"silence\": [\"NoNodesForSelectionCriteria\"]}'; echo \"exit code: $?\"\n$ dbt ls -s does_not_exist --warn-error-options '{\"include\": [\"NoNodesForSelectionCriteria\"]}'; echo \"exit code: $?\"",
+         "variants": {
+          "win": "PS> dbt ls -s does_not_exist; echo \"exit code: $LASTEXITCODE\"\nPS> dbt ls -s does_not_exist --warn-error-options '{\"error\": [\"NoNodesForSelectionCriteria\"]}'; echo \"exit code: $LASTEXITCODE\"\nPS> dbt ls -s does_not_exist --warn-error-options '{\"silence\": [\"NoNodesForSelectionCriteria\"]}'; echo \"exit code: $LASTEXITCODE\"\nPS> dbt ls -s does_not_exist --warn-error-options '{\"include\": [\"NoNodesForSelectionCriteria\"]}'; echo \"exit code: $LASTEXITCODE\""
+         }
         },
         {
          "c": [

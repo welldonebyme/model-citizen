@@ -2146,7 +2146,10 @@
              "id": "ch14-c13",
              "lang": "bash",
              "t": "code",
-             "text": "$ cd ~/dbt-course/practice\n$ duckdb practice.duckdb < setup.sql"
+             "text": "$ cd ~/dbt-course/practice\n$ duckdb practice.duckdb < setup.sql",
+             "variants": {
+              "win": "PS> cd $HOME\\dbt-course\\practice\nPS> duckdb practice.duckdb -c \".read setup.sql\""
+             }
             },
             {
              "c": [
@@ -2226,7 +2229,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ cd ~/dbt-course/jaffle_dbt\n$ dbt run --exclude fct_orders\n...\n20:56:47  Done. PASS=10 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=10"
+             "text": "$ cd ~/dbt-course/jaffle_dbt\n$ dbt run --exclude fct_orders\n...\n20:56:47  Done. PASS=10 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=10",
+             "variants": {
+              "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> dbt run --exclude fct_orders\n...\n20:56:47  Done. PASS=10 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=10"
+             }
             }
            ]
           },
@@ -3211,7 +3217,10 @@
              "id": "ch14-c29",
              "lang": "bash",
              "t": "code",
-             "text": "$ rm -r models/playground\n$ duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.toy_append; drop table dbt_adnane.toy_dup_merge; drop table dbt_adnane.toy_dup_del_ins; drop table dbt_adnane.toy_null_key;\""
+             "text": "$ rm -r models/playground\n$ duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.toy_append; drop table dbt_adnane.toy_dup_merge; drop table dbt_adnane.toy_dup_del_ins; drop table dbt_adnane.toy_null_key;\"",
+             "variants": {
+              "win": "PS> Remove-Item -Recurse -Force models\\playground\nPS> duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.toy_append; drop table dbt_adnane.toy_dup_merge; drop table dbt_adnane.toy_dup_del_ins; drop table dbt_adnane.toy_null_key;\""
+             }
             }
            ]
           }
@@ -6304,7 +6313,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt run --select fct_orders --full-refresh\n...\n22:10:14  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\n$ head -4 target/run/jaffle_dbt/models/marts/fct_orders.sql\n\n\n    MERGE INTO \"practice\".\"dbt_adnane\".\"fct_orders\" AS DBT_INTERNAL_DEST\n        USING \"fct_orders__dbt_tmp20261021221013971855\" AS DBT_INTERNAL_SOURCE"
+       "text": "$ dbt run --select fct_orders --full-refresh\n...\n22:10:14  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\n$ head -4 target/run/jaffle_dbt/models/marts/fct_orders.sql\n\n\n    MERGE INTO \"practice\".\"dbt_adnane\".\"fct_orders\" AS DBT_INTERNAL_DEST\n        USING \"fct_orders__dbt_tmp20261021221013971855\" AS DBT_INTERNAL_SOURCE",
+       "variants": {
+        "win": "PS> dbt run --select fct_orders --full-refresh\n...\n22:10:14  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\nPS> Get-Content target\\run\\jaffle_dbt\\models\\marts\\fct_orders.sql -TotalCount 4\n\n\n    MERGE INTO \"practice\".\"dbt_adnane\".\"fct_orders\" AS DBT_INTERNAL_DEST\n        USING \"fct_orders__dbt_tmp20261021221013971855\" AS DBT_INTERNAL_SOURCE"
+       }
       },
       {
        "c": [
@@ -7735,7 +7747,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt show --inline \"select count(*) as n_rows, min(order_date) as first_day, max(order_date) as last_day, sum(quantity) as quantity, sum(revenue) as revenue from {{ ref('fct_order_items_daily') }}\"\n...\n| n_rows |  first_day |   last_day | quantity | revenue |\n| ------ | ---------- | ---------- | -------- | ------- |\n|    564 | 2025-01-05 | 2025-12-31 |     1021 | 5,255.6 |\n$ ls target/compiled/jaffle_dbt/models/marts/fct_order_items_daily/ | head -3\nfct_order_items_daily_2025-01.sql\nfct_order_items_daily_2025-02.sql\nfct_order_items_daily_2025-03.sql"
+             "text": "$ dbt show --inline \"select count(*) as n_rows, min(order_date) as first_day, max(order_date) as last_day, sum(quantity) as quantity, sum(revenue) as revenue from {{ ref('fct_order_items_daily') }}\"\n...\n| n_rows |  first_day |   last_day | quantity | revenue |\n| ------ | ---------- | ---------- | -------- | ------- |\n|    564 | 2025-01-05 | 2025-12-31 |     1021 | 5,255.6 |\n$ ls target/compiled/jaffle_dbt/models/marts/fct_order_items_daily/ | head -3\nfct_order_items_daily_2025-01.sql\nfct_order_items_daily_2025-02.sql\nfct_order_items_daily_2025-03.sql",
+             "variants": {
+              "win": "PS> dbt show --inline \"select count(*) as n_rows, min(order_date) as first_day, max(order_date) as last_day, sum(quantity) as quantity, sum(revenue) as revenue from {{ ref('fct_order_items_daily') }}\"\n...\n| n_rows |  first_day |   last_day | quantity | revenue |\n| ------ | ---------- | ---------- | -------- | ------- |\n|    564 | 2025-01-05 | 2025-12-31 |     1021 | 5,255.6 |\nPS> Get-ChildItem -Name target\\compiled\\jaffle_dbt\\models\\marts\\fct_order_items_daily\\ | Select-Object -First 3\nfct_order_items_daily_2025-01.sql\nfct_order_items_daily_2025-02.sql\nfct_order_items_daily_2025-03.sql"
+             }
             },
             {
              "c": [
@@ -8347,7 +8362,10 @@
              "id": "ch14-c66",
              "lang": "bash",
              "t": "code",
-             "text": "$ cd ~/dbt-course/practice\n$ duckdb practice.duckdb < updates/day2.sql"
+             "text": "$ cd ~/dbt-course/practice\n$ duckdb practice.duckdb < updates/day2.sql",
+             "variants": {
+              "win": "PS> cd $HOME\\dbt-course\\practice\nPS> duckdb practice.duckdb -c \".read updates/day2.sql\""
+             }
             },
             {
              "c": [
@@ -8392,7 +8410,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ cd ~/dbt-course/jaffle_dbt\n$ dbt show --inline \"select count(*) as rows_to_process from {{ ref('int_orders__enriched') }} where loaded_at > (select coalesce(max(loaded_at), '1900-01-01') from {{ ref('fct_orders') }})\"\n...\n| rows_to_process |\n| --------------- |\n|              33 |\n$ dbt show --inline \"select count(*) filter (where order_id <= 300) as changed_orders, count(*) filter (where order_id > 300) as new_orders from {{ ref('int_orders__enriched') }} where loaded_at > '2025-12-31 16:22:00'\"\n...\n| changed_orders | new_orders |\n| -------------- | ---------- |\n|             13 |         20 |"
+             "text": "$ cd ~/dbt-course/jaffle_dbt\n$ dbt show --inline \"select count(*) as rows_to_process from {{ ref('int_orders__enriched') }} where loaded_at > (select coalesce(max(loaded_at), '1900-01-01') from {{ ref('fct_orders') }})\"\n...\n| rows_to_process |\n| --------------- |\n|              33 |\n$ dbt show --inline \"select count(*) filter (where order_id <= 300) as changed_orders, count(*) filter (where order_id > 300) as new_orders from {{ ref('int_orders__enriched') }} where loaded_at > '2025-12-31 16:22:00'\"\n...\n| changed_orders | new_orders |\n| -------------- | ---------- |\n|             13 |         20 |",
+             "variants": {
+              "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> dbt show --inline \"select count(*) as rows_to_process from {{ ref('int_orders__enriched') }} where loaded_at > (select coalesce(max(loaded_at), '1900-01-01') from {{ ref('fct_orders') }})\"\n...\n| rows_to_process |\n| --------------- |\n|              33 |\nPS> dbt show --inline \"select count(*) filter (where order_id <= 300) as changed_orders, count(*) filter (where order_id > 300) as new_orders from {{ ref('int_orders__enriched') }} where loaded_at > '2025-12-31 16:22:00'\"\n...\n| changed_orders | new_orders |\n| -------------- | ---------- |\n|             13 |         20 |"
+             }
             },
             {
              "c": [

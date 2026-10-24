@@ -3,6 +3,8 @@
     .venv-verify/.venv/bin/python -I converter/reference/os_commands.py      (needs pwsh and zsh on the PATH)
 
 1. scans every command line of the book's bashcode blocks (scan_shell_commands.py) -> `scan` section
+   (+ the machine sections `transforms`, `pipe_transforms`, `wsl_transforms`, `lines` from os_transforms.py,
+   applied by converter/build/oscmd.py; `--transforms-only` rewrites only those, without the pwsh tests)
 2. for every rule, counts the book lines it covers (count_re) and TESTS the PowerShell form under pwsh in a
    fixture folder (copies of labs/data, a small git repo, a log file, JSON lines...). When the test has a zsh
    side, the zsh output and the PowerShell output must be equal (after normalising line endings / trailing
@@ -26,6 +28,7 @@ from pathlib import Path
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import os_transforms as OT  # noqa: E402
 import scan_shell_commands as S  # noqa: E402
 import transcripts as T  # noqa: E402
 
@@ -302,6 +305,20 @@ RULES = [
          untested="winget is Windows-only"),
     dict(id="brew-vscode", category="install", zsh="brew install --cask visual-studio-code",
          powershell="winget install Microsoft.VisualStudioCode", count_re=r"visual-studio-code", untested="winget is Windows-only"),
+    dict(id="brew-python", category="install", zsh="brew install python@3.12",
+         powershell="winget install --id Python.Python.3.12 -e", count_re=r"brew install python",
+         untested="winget is Windows-only"),
+    dict(id="tr", category="search", zsh="... | tr -d ' '", powershell="... | ForEach-Object { $_ -replace ' ', '' }",
+         count_re=r"\|\s*tr ", test={"pwsh": "'  36 ' | ForEach-Object { $_ -replace ' ', '' }",
+                                     "zsh": "echo '  36 ' | tr -d ' '", "compare": "equal"}),
+    dict(id="ps-quoting", category="dbt", zsh="dbt ls -s test_type:generic,staging.stripe / dbt ls -s @int_orders__enriched",
+         powershell='dbt ls -s "test_type:generic,staging.stripe" / dbt ls -s "@int_orders__enriched"',
+         count_re=r"(^|\s)(@|[^\s\"']*,)[^\s\"']*", notes="Unquoted, PowerShell splits a,b into two arguments (dbt then "
+         "builds a UNION instead of an intersection) and reads @name as splatting: quote such arguments (and { } ( )). "
+         "The quoted form works in zsh too.",
+         test={"pwsh": 'python3 -c "import sys; print(sys.argv[1:])" "test_type:generic,staging.stripe" "@int_orders__enriched"',
+               "zsh": "python3 -c \"import sys; print(sys.argv[1:])\" test_type:generic,staging.stripe @int_orders__enriched",
+               "compare": "equal"}),
     dict(id="git-install", category="install", zsh="xcode-select --install (Git comes with the command line tools)",
          powershell="winget install --id Git.Git -e", count_re=r"xcode-select",
          notes="Then once: `git config --global core.autocrlf true` (Windows line endings in files, LF in the repository).",
@@ -420,7 +437,35 @@ def book_lines() -> list[str]:
     return [t["command"] for t in T.all_book()]
 
 
+def machine_sections() -> dict:
+    """The transforms of os_transforms.py, as written into the YAML (without the examples)."""
+    ids = {r["id"] for r in RULES} | {"line-override"}
+    out = {}
+    for key, items in (("transforms", OT.TRANSFORMS), ("pipe_transforms", OT.PIPE_TRANSFORMS),
+                       ("wsl_transforms", OT.WSL_TRANSFORMS), ("lines", OT.LINES), ("blocks", OT.BLOCKS)):
+        rows = []
+        for t in items:
+            if t["rule"] not in ids:
+                raise SystemExit(f"{key}: rule {t['rule']!r} is not a rule id of os_commands.RULES")
+            rows.append({k: v for k, v in t.items() if k != "examples"})
+        out[key] = rows
+    return out
+
+
+def transforms_only() -> int:
+    """Rewrite only the machine sections of the existing YAML (no pwsh tests)."""
+    doc = yaml.safe_load(OUT.read_text())
+    doc.update(machine_sections())
+    text = yaml.safe_dump(doc, sort_keys=False, allow_unicode=True, width=120)
+    if OUT.read_text() != text:
+        OUT.write_text(text)
+    print(f"{OUT}: machine sections updated")
+    return 0
+
+
 def main() -> int:
+    if "--transforms-only" in sys.argv:
+        return transforms_only()
     if not shutil.which("pwsh") or not shutil.which("zsh"):
         print("pwsh and zsh are needed", file=sys.stderr)
         return 1
@@ -479,6 +524,7 @@ def main() -> int:
             "failed": failures,
         },
         "rules": results,
+        **machine_sections(),
         "scan": {
             "source": scan["source"],
             "command_lines": scan["command_lines"],

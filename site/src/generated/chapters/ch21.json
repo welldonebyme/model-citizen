@@ -1568,7 +1568,10 @@
          "id": "ch21-c12",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt source freshness\n$ echo $?"
+         "text": "$ dbt source freshness\n$ echo $?",
+         "variants": {
+          "win": "PS> dbt source freshness\nPS> echo $LASTEXITCODE"
+         }
         },
         {
          "c": [
@@ -1652,7 +1655,10 @@
          "id": "ch21-c16",
          "lang": "bash",
          "t": "code",
-         "text": "$ grep -n -B4 -A8 'max(_loaded_at) as max_loaded_at' logs/dbt.log | tail -26"
+         "text": "$ grep -n -B4 -A8 'max(_loaded_at) as max_loaded_at' logs/dbt.log | tail -26",
+         "variants": {
+          "win": "PS> Select-String -CaseSensitive -Context 4,8 'max(_loaded_at) as max_loaded_at' logs\\dbt.log | Select-Object -Last 26"
+         }
         },
         {
          "c": [
@@ -1710,7 +1716,10 @@
          "id": "ch21-c18",
          "lang": "bash",
          "t": "code",
-         "text": "$ mkdir -p ../state_freshness && cp target/sources.json ../state_freshness/"
+         "text": "$ mkdir -p ../state_freshness && cp target/sources.json ../state_freshness/",
+         "variants": {
+          "win": "PS> New-Item -ItemType Directory -Force ..\\state_freshness\nPS> Copy-Item target\\sources.json ..\\state_freshness\\"
+         }
         }
        ],
        "id": "ch21-lab1",
@@ -2679,7 +2688,10 @@
          "id": "ch21-c22",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/practice\n$ sed -n '1,25p' updates/fresh_load.sql"
+         "text": "$ cd ~/dbt-course/practice\n$ sed -n '1,25p' updates/fresh_load.sql",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\practice\nPS> Get-Content updates\\fresh_load.sql | Select-Object -First 25"
+         }
         },
         {
          "id": "ch21-c23",
@@ -2703,7 +2715,10 @@
          "id": "ch21-c24",
          "lang": "bash",
          "t": "code",
-         "text": "$ duckdb practice.duckdb < updates/fresh_load.sql\n$ cd ~/dbt-course/jaffle_dbt\n$ dbt source freshness"
+         "text": "$ duckdb practice.duckdb < updates/fresh_load.sql\n$ cd ~/dbt-course/jaffle_dbt\n$ dbt source freshness",
+         "variants": {
+          "win": "PS> duckdb practice.duckdb -c \".read updates/fresh_load.sql\"\nPS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> dbt source freshness"
+         }
         },
         {
          "c": [
@@ -2885,7 +2900,10 @@
          "id": "ch21-c29",
          "lang": "bash",
          "t": "code",
-         "text": "$ rm -r ../state_freshness\n$ dbt source freshness -q; mkdir -p ../state_freshness && cp target/sources.json ../state_freshness/\n$ cd ~/dbt-course/practice && duckdb practice.duckdb < updates/fresh_load.sql && cd ~/dbt-course/jaffle_dbt\n$ dbt source freshness\n$ dbt ls --select source_status:fresher+ --state ../state_freshness --resource-type model"
+         "text": "$ rm -r ../state_freshness\n$ dbt source freshness -q; mkdir -p ../state_freshness && cp target/sources.json ../state_freshness/\n$ cd ~/dbt-course/practice && duckdb practice.duckdb < updates/fresh_load.sql && cd ~/dbt-course/jaffle_dbt\n$ dbt source freshness\n$ dbt ls --select source_status:fresher+ --state ../state_freshness --resource-type model",
+         "variants": {
+          "win": "PS> Remove-Item -Recurse -Force ..\\state_freshness\nPS> dbt source freshness -q; New-Item -ItemType Directory -Force ..\\state_freshness\nPS> Copy-Item target\\sources.json ..\\state_freshness\\\nPS> cd $HOME\\dbt-course\\practice\nPS> duckdb practice.duckdb -c \".read updates/fresh_load.sql\"\nPS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> dbt source freshness\nPS> dbt ls --select source_status:fresher+ --state ../state_freshness --resource-type model"
+         }
         },
         {
          "c": [
@@ -2936,7 +2954,10 @@
          "id": "ch21-c31",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select source_status:fresher+ --state ../state_freshness --exclude-resource-type test --exclude-resource-type unit_test\n$ rm -r ../state_freshness"
+         "text": "$ dbt build --select source_status:fresher+ --state ../state_freshness --exclude-resource-type test --exclude-resource-type unit_test\n$ rm -r ../state_freshness",
+         "variants": {
+          "win": "PS> dbt build --select source_status:fresher+ --state ../state_freshness --exclude-resource-type test --exclude-resource-type unit_test\nPS> Remove-Item -Recurse -Force ..\\state_freshness"
+         }
         },
         {
          "c": [

@@ -97,6 +97,7 @@ def build() -> int:
         "pathRewrites": {"rules": "converter/rules/paths.yaml", "bookOccurrences": info["pathOccurrences"],
                          "applied": info["rewrites"],
                          "appliedByRule": dict(sorted(Counter(x for a in info["rewrites"] for x in a["rules"]).items()))},
+        "osVariants": info["osVariants"],
         "warnings": [w for r in res.chapters for w in r.ctx.warnings],
         "stats": stats,
     }

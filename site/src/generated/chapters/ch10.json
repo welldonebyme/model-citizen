@@ -1673,7 +1673,10 @@
        "id": "ch10-c13",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt --quiet ls --resource-type source --output json --output-keys fqn | jq -c '.fqn' | tail -1"
+       "text": "$ dbt --quiet ls --resource-type source --output json --output-keys fqn | jq -c '.fqn' | tail -1",
+       "variants": {
+        "win": "PS> dbt --quiet ls --resource-type source --output json --output-keys fqn | jq -c '.fqn' | Select-Object -Last 1"
+       }
       },
       {
        "id": "ch10-c14",
@@ -3823,7 +3826,10 @@
              "id": "ch10-c48",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt ls --select tag:finance\n$ dbt ls --select tag:finance tag:marketing\n$ dbt ls --select tag:marts,tag:finance\n$ dbt ls --select tag:staging,tag:marts"
+             "text": "$ dbt ls --select tag:finance\n$ dbt ls --select tag:finance tag:marketing\n$ dbt ls --select tag:marts,tag:finance\n$ dbt ls --select tag:staging,tag:marts",
+             "variants": {
+              "win": "PS> dbt ls --select tag:finance\nPS> dbt ls --select tag:finance tag:marketing\nPS> dbt ls --select \"tag:marts,tag:finance\"\nPS> dbt ls --select \"tag:staging,tag:marts\""
+             }
             },
             {
              "id": "ch10-c49",
@@ -4571,7 +4577,10 @@
        "id": "ch10-c51",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt --quiet ls -s fct_orders --output json --output-keys config | jq -c '.config | {meta, docs, persist_docs}'\n$ dbt --quiet ls -s fct_orders --output json --output-keys config | jq -c '.config | {grants, hooks: [.[\"post-hook\"][].sql]}'\n$ dbt --quiet ls -s dim_customers --output json --output-keys config | jq -c '.config | {grants}'"
+       "text": "$ dbt --quiet ls -s fct_orders --output json --output-keys config | jq -c '.config | {meta, docs, persist_docs}'\n$ dbt --quiet ls -s fct_orders --output json --output-keys config | jq -c '.config | {grants, hooks: [.[\"post-hook\"][].sql]}'\n$ dbt --quiet ls -s dim_customers --output json --output-keys config | jq -c '.config | {grants}'",
+       "variants": {
+        "win": "PS> dbt --quiet ls -s fct_orders --output json --output-keys config | jq -c '.config | {meta, docs, persist_docs}'\nPS> dbt --quiet ls -s fct_orders --output json --output-keys config | ConvertFrom-Json | ForEach-Object { [ordered]@{grants = $_.config.grants; hooks = @($_.config.'post-hook'.sql)} | ConvertTo-Json -Compress }\nPS> dbt --quiet ls -s dim_customers --output json --output-keys config | jq -c '.config | {grants}'"
+       }
       },
       {
        "id": "ch10-c52",
@@ -5972,7 +5981,10 @@
        "id": "ch10-c68",
        "lang": "bash",
        "t": "code",
-       "text": "$ DBT_ENV_SECRET_TOKEN=abc123 dbt compile --inline \"select '{{ env_var('DBT_ENV_SECRET_TOKEN') }}' as t\""
+       "text": "$ DBT_ENV_SECRET_TOKEN=abc123 dbt compile --inline \"select '{{ env_var('DBT_ENV_SECRET_TOKEN') }}' as t\"",
+       "variants": {
+        "win": "PS> $env:DBT_ENV_SECRET_TOKEN = \"abc123\"; dbt compile --inline \"select '{{ env_var('DBT_ENV_SECRET_TOKEN') }}' as t\"; Remove-Item Env:DBT_ENV_SECRET_TOKEN"
+       }
       },
       {
        "id": "ch10-c69",
@@ -6022,7 +6034,10 @@
        "id": "ch10-c71",
        "lang": "bash",
        "t": "code",
-       "text": "$ DBT_THREADS=2 dbt run -s stg_jaffle_shop__orders"
+       "text": "$ DBT_THREADS=2 dbt run -s stg_jaffle_shop__orders",
+       "variants": {
+        "win": "PS> $env:DBT_THREADS = \"2\"; dbt run -s stg_jaffle_shop__orders; Remove-Item Env:DBT_THREADS"
+       }
       },
       {
        "id": "ch10-c72",
@@ -6287,7 +6302,10 @@
              "id": "ch10-c81",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt debug | grep -E 'path:|Connection test|All checks'\n$ cp ../practice/practice.duckdb ../practice/practice_copy.duckdb\n$ DBT_DUCKDB_PATH=../practice/practice_copy.duckdb dbt debug | grep -E 'database:|path:|Connection test|All checks'\n$ rm ../practice/practice_copy.duckdb"
+             "text": "$ dbt debug | grep -E 'path:|Connection test|All checks'\n$ cp ../practice/practice.duckdb ../practice/practice_copy.duckdb\n$ DBT_DUCKDB_PATH=../practice/practice_copy.duckdb dbt debug | grep -E 'database:|path:|Connection test|All checks'\n$ rm ../practice/practice_copy.duckdb",
+             "variants": {
+              "win": "PS> dbt debug | Select-String -CaseSensitive 'path:|Connection test|All checks' | ForEach-Object Line\nPS> Copy-Item ..\\practice\\practice.duckdb ..\\practice\\practice_copy.duckdb\nPS> $env:DBT_DUCKDB_PATH = \"../practice/practice_copy.duckdb\"; dbt debug | Select-String -CaseSensitive 'database:|path:|Connection test|All checks' | ForEach-Object Line; Remove-Item Env:DBT_DUCKDB_PATH\nPS> Remove-Item ..\\practice\\practice_copy.duckdb"
+             }
             },
             {
              "id": "ch10-c82",
@@ -7403,7 +7421,10 @@
              "id": "ch10-c92",
              "lang": "bash",
              "t": "code",
-             "text": "$ grep -n \"analyze\" logs/dbt.log | tail -3"
+             "text": "$ grep -n \"analyze\" logs/dbt.log | tail -3",
+             "variants": {
+              "win": "PS> Select-String -CaseSensitive 'analyze' logs\\dbt.log | ForEach-Object { \"$($_.LineNumber):$($_.Line)\" } | Select-Object -Last 3"
+             }
             },
             {
              "id": "ch10-c93",
@@ -8240,7 +8261,10 @@
              "id": "ch10-c105",
              "lang": "bash",
              "t": "code",
-             "text": "$ grep -ic 'grant ' logs/dbt.log"
+             "text": "$ grep -ic 'grant ' logs/dbt.log",
+             "variants": {
+              "win": "PS> (Select-String 'grant ' logs\\dbt.log).Count"
+             }
             },
             {
              "id": "ch10-c106",
@@ -9402,7 +9426,10 @@
              "lang": "bash",
              "t": "code",
              "text": "$ git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle   # skip if done in Ch. 6\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch10 --stat",
-             "textBook": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # skip if done in Ch. 6\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch10 --stat"
+             "textBook": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # skip if done in Ch. 6\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch10 --stat",
+             "variants": {
+              "win": "PS> git remote add reference $HOME\\dbt-course\\kit\\jaffle_dbt.bundle   # skip if done in Ch. 6\nPS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nPS> git diff ref-ch10 --stat"
+             }
             },
             {
              "c": [

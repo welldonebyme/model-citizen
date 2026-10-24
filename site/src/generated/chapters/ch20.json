@@ -2198,7 +2198,10 @@
        "id": "ch20-c20",
        "lang": "bash",
        "t": "code",
-       "text": "$ ls -la target/index.html target/manifest.json target/catalog.json"
+       "text": "$ ls -la target/index.html target/manifest.json target/catalog.json",
+       "variants": {
+        "win": "PS> Get-ChildItem -Force target\\index.html, target\\manifest.json, target\\catalog.json"
+       }
       },
       {
        "id": "ch20-c21",
@@ -4124,7 +4127,10 @@
          "id": "ch20-c35",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt docs generate --static && ls -la target/static_index.html"
+         "text": "$ dbt docs generate --static && ls -la target/static_index.html",
+         "variants": {
+          "win": "PS> dbt docs generate --static\nPS> Get-ChildItem -Force target\\static_index.html"
+         }
         },
         {
          "c": [
@@ -4809,7 +4815,10 @@
        "id": "ch20-c39",
        "lang": "bash",
        "t": "code",
-       "text": "$ grep -n -i 'comment on' logs/dbt.log | tail -4"
+       "text": "$ grep -n -i 'comment on' logs/dbt.log | tail -4",
+       "variants": {
+        "win": "PS> Select-String 'comment on' logs\\dbt.log | ForEach-Object { \"$($_.LineNumber):$($_.Line)\" } | Select-Object -Last 4"
+       }
       },
       {
        "id": "ch20-c40",
@@ -5283,7 +5292,10 @@
          "lang": "bash",
          "t": "code",
          "text": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\"",
-         "textBook": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\""
+         "textBook": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\"",
+         "variants": {
+          "win": "PS> python -I $HOME\\dbt-course\\kit\\tools\\run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\""
+         }
         },
         {
          "c": [
@@ -5362,7 +5374,10 @@
          "lang": "bash",
          "t": "code",
          "text": "$ dbt run --select fct_order_items_daily --full-refresh\n$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\"",
-         "textBook": "$ dbt run --select fct_order_items_daily --full-refresh\n$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\""
+         "textBook": "$ dbt run --select fct_order_items_daily --full-refresh\n$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\"",
+         "variants": {
+          "win": "PS> dbt run --select fct_order_items_daily --full-refresh\nPS> python -I $HOME\\dbt-course\\kit\\tools\\run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\""
+         }
         },
         {
          "c": [
@@ -5456,7 +5471,10 @@
          "lang": "bash",
          "t": "code",
          "text": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select table_name, left(comment, 60) as comment from duckdb_tables() where schema_name = 'dbt_adnane' and table_name like 'fct_%' order by 1\"\n$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select column_name, left(comment, 60) as comment from duckdb_columns() where schema_name = 'dbt_adnane' and table_name = 'fct_orders' order by column_index\" --max 20\n$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select view_name, comment from duckdb_views() where schema_name = 'dbt_adnane' and not internal order by 1\"",
-         "textBook": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select table_name, left(comment, 60) as comment from duckdb_tables() where schema_name = 'dbt_adnane' and table_name like 'fct_%' order by 1\"\n$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select column_name, left(comment, 60) as comment from duckdb_columns() where schema_name = 'dbt_adnane' and table_name = 'fct_orders' order by column_index\" --max 20\n$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select view_name, comment from duckdb_views() where schema_name = 'dbt_adnane' and not internal order by 1\""
+         "textBook": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select table_name, left(comment, 60) as comment from duckdb_tables() where schema_name = 'dbt_adnane' and table_name like 'fct_%' order by 1\"\n$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select column_name, left(comment, 60) as comment from duckdb_columns() where schema_name = 'dbt_adnane' and table_name = 'fct_orders' order by column_index\" --max 20\n$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select view_name, comment from duckdb_views() where schema_name = 'dbt_adnane' and not internal order by 1\"",
+         "variants": {
+          "win": "PS> python -I $HOME\\dbt-course\\kit\\tools\\run_sql.py --db ../practice/practice.duckdb \"select table_name, left(comment, 60) as comment from duckdb_tables() where schema_name = 'dbt_adnane' and table_name like 'fct_%' order by 1\"\nPS> python -I $HOME\\dbt-course\\kit\\tools\\run_sql.py --db ../practice/practice.duckdb \"select column_name, left(comment, 60) as comment from duckdb_columns() where schema_name = 'dbt_adnane' and table_name = 'fct_orders' order by column_index\" --max 20\nPS> python -I $HOME\\dbt-course\\kit\\tools\\run_sql.py --db ../practice/practice.duckdb \"select view_name, comment from duckdb_views() where schema_name = 'dbt_adnane' and not internal order by 1\""
+         }
         },
         {
          "c": [

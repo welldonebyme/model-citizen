@@ -262,7 +262,31 @@ def run_checks(files: dict[str, object], inventory: dict, book: Path = BOOK) -> 
     check_escape_accounting(files, chapters, book, R)
     check_paths(files, book, R)
     check_question_map(files, R)
+    check_os_variants(files, R)
     return R
+
+
+def check_os_variants(files, R: Results, path: Path = OVERRIDES / "os-commands.yaml") -> None:
+    """Every shell block of the chapters: its Windows/WSL variants are exactly what os-commands.yaml produces, and
+    no command line is left without a rule (`unhandled`)."""
+    from .build.oscmd import Ctx as OsCtx, OsCommands
+    from .build.output import bash_blocks
+    eng = OsCommands(path)
+    stale, unhandled = [], []
+    n = nwin = 0
+    for name in sorted(k for k in files if k.startswith("chapters/")):
+        ctx = OsCtx()
+        for b in bash_blocks(files[name]):
+            n += 1
+            win, wsl, log = eng.block(b["text"], b["id"], ctx)
+            want = {k: v for k, v in (("win", win), ("wsl", wsl)) if v is not None}
+            if (b.get("variants") or {}) != want:
+                stale.append(b["id"])
+            nwin += win is not None
+            unhandled += [f"{b['id']}: {u}" for u in log["unhandled"]]
+    R.add("Windows/WSL variants of shell blocks = os-commands.yaml", not stale,
+          f"{n} shell blocks, {nwin} with a Windows variant; stale: " + ", ".join(stale[:20]))
+    R.add("every shell command line has an OS rule (no unhandled line)", not unhandled, "; ".join(unhandled[:20]))
 
 
 def check_question_map(files, R: Results, path: Path = OVERRIDES / "question-map.yaml") -> None:

@@ -620,7 +620,10 @@
        "lang": "bash",
        "t": "code",
        "text": "$ pwd                      # print working directory: where am I?\n/Users/you\n$ cd dbt-course            # change directory (relative path)\n$ pwd\n/Users/you/dbt-course\n$ cd ..                    # go up one level\n$ cd ~/dbt-course/practice # absolute path using ~\n$ cd -                     # go back to the previous folder\n~\n$ cd                       # cd alone = go home",
-       "textBook": "$ pwd                      # print working directory: where am I?\n/Users/mac\n$ cd dbt-course            # change directory (relative path)\n$ pwd\n/Users/mac/dbt-course\n$ cd ..                    # go up one level\n$ cd ~/dbt-course/practice # absolute path using ~\n$ cd -                     # go back to the previous folder\n~\n$ cd                       # cd alone = go home"
+       "textBook": "$ pwd                      # print working directory: where am I?\n/Users/mac\n$ cd dbt-course            # change directory (relative path)\n$ pwd\n/Users/mac/dbt-course\n$ cd ..                    # go up one level\n$ cd ~/dbt-course/practice # absolute path using ~\n$ cd -                     # go back to the previous folder\n~\n$ cd                       # cd alone = go home",
+       "variants": {
+        "win": "PS> pwd                      # print working directory: where am I?\n/Users/you\nPS> cd dbt-course            # change directory (relative path)\nPS> pwd\n/Users/you/dbt-course\nPS> cd ..                    # go up one level\nPS> cd $HOME\\dbt-course\\practice # absolute path using ~\nPS> cd -                     # go back to the previous folder (PowerShell 7; not in Windows PowerShell 5.1)\n~\nPS> cd $HOME                       # cd alone = go home"
+       }
       },
       {
        "c": [
@@ -637,7 +640,10 @@
        "id": "ch02-c3",
        "lang": "bash",
        "t": "code",
-       "text": "$ cd ~/dbt-course\n$ ls\nnotes.txt  practice\n$ ls -la\ntotal 0\ndrwxr-xr-x@  5 mac  staff  160 Oct 21 19:40 .\ndrwxr-x---+ 42 mac  staff 1344 Oct 21 19:40 ..\ndrwxr-xr-x@  7 mac  staff  224 Oct 21 19:40 .venv\n-rw-r--r--@  1 mac  staff    0 Oct 21 19:40 notes.txt\ndrwxr-xr-x@  5 mac  staff  160 Oct 21 19:40 practice"
+       "text": "$ cd ~/dbt-course\n$ ls\nnotes.txt  practice\n$ ls -la\ntotal 0\ndrwxr-xr-x@  5 mac  staff  160 Oct 21 19:40 .\ndrwxr-x---+ 42 mac  staff 1344 Oct 21 19:40 ..\ndrwxr-xr-x@  7 mac  staff  224 Oct 21 19:40 .venv\n-rw-r--r--@  1 mac  staff    0 Oct 21 19:40 notes.txt\ndrwxr-xr-x@  5 mac  staff  160 Oct 21 19:40 practice",
+       "variants": {
+        "win": "PS> cd $HOME\\dbt-course\nPS> Get-ChildItem -Name\nnotes.txt  practice\nPS> Get-ChildItem -Force\ntotal 0\ndrwxr-xr-x@  5 mac  staff  160 Oct 21 19:40 .\ndrwxr-x---+ 42 mac  staff 1344 Oct 21 19:40 ..\ndrwxr-xr-x@  7 mac  staff  224 Oct 21 19:40 .venv\n-rw-r--r--@  1 mac  staff    0 Oct 21 19:40 notes.txt\ndrwxr-xr-x@  5 mac  staff  160 Oct 21 19:40 practice"
+       }
       },
       {
        "c": [
@@ -743,7 +749,11 @@
          "id": "ch02-c4",
          "lang": "bash",
          "t": "code",
-         "text": "$ echo 'setopt interactivecomments' >> ~/.zshrc"
+         "text": "$ echo 'setopt interactivecomments' >> ~/.zshrc",
+         "variants": {
+          "win": "PS> # nothing to do on Windows: PowerShell always accepts # comments",
+          "wsl": "$ # nothing to do: bash (WSL) accepts # comments by default"
+         }
         },
         {
          "c": [
@@ -1066,7 +1076,10 @@
        "id": "ch02-c5",
        "lang": "bash",
        "t": "code",
-       "text": "$ cd ~/dbt-course/practice\n$ ls data\ncustomers.csv  order_items.csv  orders.csv  payments.csv  products.csv\n$ head -3 data/orders.csv\nid,user_id,order_date,status,_loaded_at\n1,51,2025-01-05,completed,2025-01-06 02:51:00\n2,85,2025-01-06,completed,2025-01-06 23:55:00\n$ tail -2 data/customers.csv\n99,Olivia,Brown,OLIVIA.BROWN99@EXAMPLE.COM,Morocco,2024-02-27\n100,Mehdi,Bernard,mehdi.bernard100@example.com,Morocco,2024-05-05\n$ wc -l data/*.csv\n     101 data/customers.csv\n     607 data/order_items.csv\n     301 data/orders.csv\n     342 data/payments.csv\n      13 data/products.csv\n    1364 total"
+       "text": "$ cd ~/dbt-course/practice\n$ ls data\ncustomers.csv  order_items.csv  orders.csv  payments.csv  products.csv\n$ head -3 data/orders.csv\nid,user_id,order_date,status,_loaded_at\n1,51,2025-01-05,completed,2025-01-06 02:51:00\n2,85,2025-01-06,completed,2025-01-06 23:55:00\n$ tail -2 data/customers.csv\n99,Olivia,Brown,OLIVIA.BROWN99@EXAMPLE.COM,Morocco,2024-02-27\n100,Mehdi,Bernard,mehdi.bernard100@example.com,Morocco,2024-05-05\n$ wc -l data/*.csv\n     101 data/customers.csv\n     607 data/order_items.csv\n     301 data/orders.csv\n     342 data/payments.csv\n      13 data/products.csv\n    1364 total",
+       "variants": {
+        "win": "PS> cd $HOME\\dbt-course\\practice\nPS> Get-ChildItem -Name data\ncustomers.csv  order_items.csv  orders.csv  payments.csv  products.csv\nPS> Get-Content data\\orders.csv -TotalCount 3\nid,user_id,order_date,status,_loaded_at\n1,51,2025-01-05,completed,2025-01-06 02:51:00\n2,85,2025-01-06,completed,2025-01-06 23:55:00\nPS> Get-Content data\\customers.csv -Tail 2\n99,Olivia,Brown,OLIVIA.BROWN99@EXAMPLE.COM,Morocco,2024-02-27\n100,Mehdi,Bernard,mehdi.bernard100@example.com,Morocco,2024-05-05\nPS> Get-ChildItem data\\*.csv | ForEach-Object { \"{0,7} {1}\" -f (Get-Content $_.FullName).Count, $_.Name }\n     101 data/customers.csv\n     607 data/order_items.csv\n     301 data/orders.csv\n     342 data/payments.csv\n      13 data/products.csv\n    1364 total"
+       }
       },
       {
        "c": [
@@ -1146,7 +1159,10 @@
        "id": "ch02-c6",
        "lang": "bash",
        "t": "code",
-       "text": "$ grep -c \"placed\" data/orders.csv      # -c = count the matching lines\n10\n$ grep \"coffee\" data/products.csv\n1,Espresso,coffee,250\n2,Cappuccino,coffee,380\n3,Flat White,coffee,400\n4,Cold Brew,coffee,450"
+       "text": "$ grep -c \"placed\" data/orders.csv      # -c = count the matching lines\n10\n$ grep \"coffee\" data/products.csv\n1,Espresso,coffee,250\n2,Cappuccino,coffee,380\n3,Flat White,coffee,400\n4,Cold Brew,coffee,450",
+       "variants": {
+        "win": "PS> (Select-String -CaseSensitive 'placed' data\\orders.csv).Count      # -c = count the matching lines\n10\nPS> Select-String -CaseSensitive 'coffee' data\\products.csv | ForEach-Object Line\n1,Espresso,coffee,250\n2,Cappuccino,coffee,380\n3,Flat White,coffee,400\n4,Cold Brew,coffee,450"
+       }
       }
      ],
      "id": "ch02-s4-1",
@@ -1173,7 +1189,10 @@
        "id": "ch02-c7",
        "lang": "bash",
        "t": "code",
-       "text": "$ ls data/p*          # every name in data/ that starts with p\ndata/payments.csv  data/products.csv"
+       "text": "$ ls data/p*          # every name in data/ that starts with p\ndata/payments.csv  data/products.csv",
+       "variants": {
+        "win": "PS> Get-ChildItem -Name data\\p*          # every name in data/ that starts with p\ndata/payments.csv  data/products.csv"
+       }
       }
      ],
      "id": "ch02-s4-2",
@@ -1261,7 +1280,10 @@
        "id": "ch02-c8",
        "lang": "bash",
        "t": "code",
-       "text": "$ grep \"placed\" data/orders.csv | head -3\n288,24,2025-12-21,placed,2025-12-21 22:15:00\n289,70,2025-12-21,placed,2025-12-22 02:25:00\n290,72,2025-12-21,placed,2025-12-21 15:10:00\n$ echo \"first line\" > notes.txt\n$ echo \"second line\" >> notes.txt\n$ cat notes.txt\nfirst line\nsecond line"
+       "text": "$ grep \"placed\" data/orders.csv | head -3\n288,24,2025-12-21,placed,2025-12-21 22:15:00\n289,70,2025-12-21,placed,2025-12-22 02:25:00\n290,72,2025-12-21,placed,2025-12-21 15:10:00\n$ echo \"first line\" > notes.txt\n$ echo \"second line\" >> notes.txt\n$ cat notes.txt\nfirst line\nsecond line",
+       "variants": {
+        "win": "PS> Select-String -CaseSensitive 'placed' data\\orders.csv | ForEach-Object Line | Select-Object -First 3\n288,24,2025-12-21,placed,2025-12-21 22:15:00\n289,70,2025-12-21,placed,2025-12-22 02:25:00\n290,72,2025-12-21,placed,2025-12-21 15:10:00\nPS> Set-Content notes.txt \"first line\"\nPS> Add-Content notes.txt \"second line\"\nPS> Get-Content notes.txt\nfirst line\nsecond line"
+       }
       },
       {
        "blocks": [
@@ -1937,7 +1959,10 @@
        "lang": "bash",
        "t": "code",
        "text": "$ echo $HOME\n/Users/you\n$ echo $SHELL\n/bin/zsh",
-       "textBook": "$ echo $HOME\n/Users/mac\n$ echo $SHELL\n/bin/zsh"
+       "textBook": "$ echo $HOME\n/Users/mac\n$ echo $SHELL\n/bin/zsh",
+       "variants": {
+        "win": "PS> echo $HOME\n/Users/you\nPS> echo $PSVersionTable.PSVersion   # PowerShell has no $SHELL\n/bin/zsh"
+       }
       },
       {
        "c": [
@@ -1954,7 +1979,10 @@
        "id": "ch02-c10",
        "lang": "bash",
        "t": "code",
-       "text": "$ export DBT_DEMO_SECRET=\"abc123\"\n$ echo \"My secret is $DBT_DEMO_SECRET\"\nMy secret is abc123"
+       "text": "$ export DBT_DEMO_SECRET=\"abc123\"\n$ echo \"My secret is $DBT_DEMO_SECRET\"\nMy secret is abc123",
+       "variants": {
+        "win": "PS> $env:DBT_DEMO_SECRET = \"abc123\"\nPS> echo \"My secret is $env:DBT_DEMO_SECRET\"\nMy secret is abc123"
+       }
       }
      ],
      "id": "ch02-s6-0",
@@ -1990,7 +2018,10 @@
        "id": "ch02-c11",
        "lang": "bash",
        "t": "code",
-       "text": "$ which git\n/usr/bin/git\n$ which python3\n/opt/homebrew/bin/python3"
+       "text": "$ which git\n/usr/bin/git\n$ which python3\n/opt/homebrew/bin/python3",
+       "variants": {
+        "win": "PS> (Get-Command git).Source\n/usr/bin/git\nPS> (Get-Command python).Source   # Windows: python, not python3\n/opt/homebrew/bin/python3"
+       }
       },
       {
        "c": [
@@ -2133,7 +2164,10 @@
        "id": "ch02-c12",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt --help             # list of dbt sub-commands and global options\n$ dbt run --help         # options of one sub-command\n$ man ls                 # the manual page of ls (q to quit)"
+       "text": "$ dbt --help             # list of dbt sub-commands and global options\n$ dbt run --help         # options of one sub-command\n$ man ls                 # the manual page of ls (q to quit)",
+       "variants": {
+        "win": "PS> dbt --help             # list of dbt sub-commands and global options\nPS> dbt run --help         # options of one sub-command\nPS> Get-Help Get-ChildItem                 # the manual page of ls (q to quit)"
+       }
       }
      ],
      "id": "ch02-s7-1",
@@ -2176,7 +2210,10 @@
        "id": "ch02-c13",
        "lang": "bash",
        "t": "code",
-       "text": "$ ls data\ncustomers.csv  order_items.csv  orders.csv  payments.csv  products.csv\n$ echo $?\n0\n$ ls nofolder\nls: nofolder: No such file or directory\n$ echo $?\n1"
+       "text": "$ ls data\ncustomers.csv  order_items.csv  orders.csv  payments.csv  products.csv\n$ echo $?\n0\n$ ls nofolder\nls: nofolder: No such file or directory\n$ echo $?\n1",
+       "variants": {
+        "win": "PS> Get-ChildItem -Name data\ncustomers.csv\norder_items.csv\norders.csv\npayments.csv\nproducts.csv\nPS> $?\nTrue\nPS> Get-ChildItem -Name nofolder\nGet-ChildItem: Cannot find path 'C:\\Users\\you\\dbt-course\\practice\\nofolder' because it does not exist.\nPS> $?\nFalse\nPS> dbt --version > $null; $LASTEXITCODE     # programs (dbt, git, python) put their number in $LASTEXITCODE\n0"
+       }
       },
       {
        "c": [
@@ -2193,7 +2230,10 @@
        "id": "ch02-c14",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt build && echo \"All good, ready to deploy\""
+       "text": "$ dbt build && echo \"All good, ready to deploy\"",
+       "variants": {
+        "win": "PS> dbt build; if ($?) { echo \"All good, ready to deploy\" }   # PowerShell 7 also accepts &&"
+       }
       },
       {
        "blocks": [
@@ -2307,7 +2347,11 @@
        "id": "ch02-c15",
        "lang": "bash",
        "t": "code",
-       "text": "$ brew --version            # is Homebrew installed?\n$ brew install duckdb       # the DuckDB command-line tool\n$ brew install uv           # only if \"uv --version\" does not work\n$ duckdb --version"
+       "text": "$ brew --version            # is Homebrew installed?\n$ brew install duckdb       # the DuckDB command-line tool\n$ brew install uv           # only if \"uv --version\" does not work\n$ duckdb --version",
+       "variants": {
+        "win": "PS> winget --version            # is Homebrew installed?\nPS> winget install DuckDB.cli       # the DuckDB command-line tool\nPS> winget install --id=astral-sh.uv -e           # only if \"uv --version\" does not work\nPS> duckdb --version",
+        "wsl": "$ apt --version   # Ubuntu's package manager (no Homebrew needed)\n$ curl https://install.duckdb.org | sh   # the DuckDB CLI (or download it from duckdb.org)\n$ curl -LsSf https://astral.sh/uv/install.sh | sh   # then open a new terminal\n$ duckdb --version"
+       }
       },
       {
        "c": [
@@ -2401,7 +2445,10 @@
        "lang": "bash",
        "t": "code",
        "text": "$ cd ~/dbt-course\n$ uv venv --python 3.12 .venv\nUsing CPython 3.12.13\nCreating virtual environment at: .venv\nActivate with: source .venv/bin/activate\n$ source .venv/bin/activate\n(.venv) $ which python\n/Users/you/dbt-course/.venv/bin/python",
-       "textBook": "$ cd ~/dbt-course\n$ uv venv --python 3.12 .venv\nUsing CPython 3.12.13\nCreating virtual environment at: .venv\nActivate with: source .venv/bin/activate\n$ source .venv/bin/activate\n(.venv) $ which python\n/Users/mac/dbt-course/.venv/bin/python"
+       "textBook": "$ cd ~/dbt-course\n$ uv venv --python 3.12 .venv\nUsing CPython 3.12.13\nCreating virtual environment at: .venv\nActivate with: source .venv/bin/activate\n$ source .venv/bin/activate\n(.venv) $ which python\n/Users/mac/dbt-course/.venv/bin/python",
+       "variants": {
+        "win": "PS> cd $HOME\\dbt-course\nPS> uv venv --python 3.12 .venv\nUsing CPython 3.12.13\nCreating virtual environment at: .venv\nActivate with: source .venv/bin/activate\nPS> .venv\\Scripts\\Activate.ps1\n(.venv) PS> (Get-Command python).Source\n/Users/you/dbt-course/.venv/bin/python"
+       }
       },
       {
        "c": [
@@ -2746,7 +2793,10 @@
          "id": "ch02-c19",
          "lang": "bash",
          "t": "code",
-         "text": "$ python3.12 -m venv .venv\n$ source .venv/bin/activate\n(.venv) $ python -m pip install \"dbt-core~=1.11.0\" \"dbt-duckdb~=1.11.0\""
+         "text": "$ python3.12 -m venv .venv\n$ source .venv/bin/activate\n(.venv) $ python -m pip install \"dbt-core~=1.11.0\" \"dbt-duckdb~=1.11.0\"",
+         "variants": {
+          "win": "PS> py -3.12 -m venv .venv\nPS> .venv\\Scripts\\Activate.ps1\n(.venv) PS> python -m pip install \"dbt-core~=1.11.0\" \"dbt-duckdb~=1.11.0\""
+         }
         },
         {
          "c": [
@@ -3039,7 +3089,10 @@
              "id": "ch02-c20",
              "lang": "bash",
              "t": "code",
-             "text": "$ mkdir -p ~/dbt-course/practice\n$ cd ~/dbt-course"
+             "text": "$ mkdir -p ~/dbt-course/practice\n$ cd ~/dbt-course",
+             "variants": {
+              "win": "PS> New-Item -ItemType Directory -Force $HOME\\dbt-course\\practice\nPS> cd $HOME\\dbt-course"
+             }
             }
            ]
           },
@@ -3060,7 +3113,10 @@
              "id": "ch02-c21",
              "lang": "bash",
              "t": "code",
-             "text": "$ uv venv --python 3.12 .venv\n$ source .venv/bin/activate"
+             "text": "$ uv venv --python 3.12 .venv\n$ source .venv/bin/activate",
+             "variants": {
+              "win": "PS> uv venv --python 3.12 .venv\nPS> .venv\\Scripts\\Activate.ps1"
+             }
             },
             {
              "c": [
@@ -3169,7 +3225,10 @@
              "lang": "bash",
              "t": "code",
              "text": "(.venv) $ cp -R ~/dbt-course/kit/data ~/dbt-course/practice/\n(.venv) $ cp ~/dbt-course/kit/setup.sql ~/dbt-course/practice/\n(.venv) $ cd ~/dbt-course/practice\n(.venv) $ ls\ndata      setup.sql",
-             "textBook": "(.venv) $ cp -R ~/Documents/Adnane/dbt-bible/labs/data ~/dbt-course/practice/\n(.venv) $ cp ~/Documents/Adnane/dbt-bible/labs/setup.sql ~/dbt-course/practice/\n(.venv) $ cd ~/dbt-course/practice\n(.venv) $ ls\ndata      setup.sql"
+             "textBook": "(.venv) $ cp -R ~/Documents/Adnane/dbt-bible/labs/data ~/dbt-course/practice/\n(.venv) $ cp ~/Documents/Adnane/dbt-bible/labs/setup.sql ~/dbt-course/practice/\n(.venv) $ cd ~/dbt-course/practice\n(.venv) $ ls\ndata      setup.sql",
+             "variants": {
+              "win": "(.venv) PS> Copy-Item -Recurse $HOME\\dbt-course\\kit\\data $HOME\\dbt-course\\practice\\\n(.venv) PS> Copy-Item $HOME\\dbt-course\\kit\\setup.sql $HOME\\dbt-course\\practice\\\n(.venv) PS> cd $HOME\\dbt-course\\practice\n(.venv) PS> Get-ChildItem -Name\ndata      setup.sql"
+             }
             }
            ]
           },
@@ -3206,7 +3265,10 @@
              "id": "ch02-c24",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ duckdb practice.duckdb < setup.sql"
+             "text": "(.venv) $ duckdb practice.duckdb < setup.sql",
+             "variants": {
+              "win": "(.venv) PS> duckdb practice.duckdb -c \".read setup.sql\""
+             }
             },
             {
              "c": [
@@ -3303,7 +3365,10 @@
              "id": "ch02-c27",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ cd ~/dbt-course\n(.venv) $ dbt --version > notes.txt\n(.venv) $ duckdb --version >> notes.txt\n(.venv) $ cat notes.txt"
+             "text": "(.venv) $ cd ~/dbt-course\n(.venv) $ dbt --version > notes.txt\n(.venv) $ duckdb --version >> notes.txt\n(.venv) $ cat notes.txt",
+             "variants": {
+              "win": "(.venv) PS> cd $HOME\\dbt-course\n(.venv) PS> dbt --version | Set-Content notes.txt\n(.venv) PS> duckdb --version | Add-Content notes.txt\n(.venv) PS> Get-Content notes.txt"
+             }
             }
            ]
           }

@@ -12,6 +12,7 @@
    "status": "created_by_lab_step",
    "by": "Chapter 6: dbt init creates ~/.dbt; the learner writes profiles.yml (section \"profiles.yml: how dbt connects\")",
    "forms": [
+    "$HOME\\.dbt",
     "/Users/you/.dbt",
     "~/.dbt",
     "~/.dbt/"
@@ -36,6 +37,7 @@
    "status": "created_by_lab_step",
    "by": "Chapter 6: dbt init creates ~/.dbt; the learner writes profiles.yml (section \"profiles.yml: how dbt connects\")",
    "forms": [
+    "$HOME\\.dbt\\profiles.yml",
     "/Users/you/.dbt/profiles.yml",
     "~/.dbt/profiles.yml",
     "~/.dbt/profiles.yml."
@@ -127,6 +129,7 @@
    "path": "~/dbt-course",
    "status": "exists",
    "forms": [
+    "$HOME\\dbt-course",
     "/Users/you/dbt-course",
     "~/dbt-course",
     "~/dbt-course/"
@@ -190,6 +193,7 @@
    "status": "created_by_lab_step",
    "by": "Chapter 25: the local simulation of the CI workflow (mkdir -p ~/dbt-course/ci_run, git clone ... workspace)",
    "forms": [
+    "$HOME\\dbt-course\\ci_run",
     "~/dbt-course/ci_run"
    ],
    "used_in": [
@@ -230,6 +234,7 @@
    "status": "created_by_lab_step",
    "by": "Chapter 6, section \"Creating a project with dbt init\" (dbt init jaffle_dbt); every later chapter adds files",
    "forms": [
+    "$HOME\\dbt-course\\jaffle_dbt",
     "/Users/you/dbt-course/jaffle_dbt",
     "~/dbt-course/jaffle_dbt"
    ],
@@ -401,6 +406,7 @@
    "path": "~/dbt-course/kit/bugs",
    "status": "exists",
    "forms": [
+    "$HOME\\dbt-course\\kit\\bugs",
     "~/dbt-course/kit/bugs",
     "~/dbt-course/kit/bugs/"
    ],
@@ -442,6 +448,7 @@
    "path": "~/dbt-course/kit/capstone/shopflow_dbt.bundle",
    "status": "exists",
    "forms": [
+    "$HOME\\dbt-course\\kit\\capstone\\shopflow_dbt.bundle",
     "/Users/you/dbt-course/kit/capstone/shopflow_dbt.bundle",
     "~/dbt-course/kit/capstone/shopflow_dbt.bundle"
    ],
@@ -456,6 +463,7 @@
    "path": "~/dbt-course/kit/data",
    "status": "exists",
    "forms": [
+    "$HOME\\dbt-course\\kit\\data",
     "~/dbt-course/kit/data",
     "~/dbt-course/kit/data/"
    ],
@@ -470,6 +478,7 @@
    "path": "~/dbt-course/kit/data/*.csv",
    "status": "exists",
    "forms": [
+    "$HOME\\dbt-course\\kit\\data\\*.csv",
     "~/dbt-course/kit/data/*.csv"
    ],
    "used_in": [
@@ -482,6 +491,7 @@
    "path": "~/dbt-course/kit/jaffle_dbt.bundle",
    "status": "exists",
    "forms": [
+    "$HOME\\dbt-course\\kit\\jaffle_dbt.bundle",
     "/Users/you/dbt-course/kit/jaffle_dbt.bundle",
     "~/dbt-course/kit/jaffle_dbt.bundle"
    ],
@@ -501,6 +511,7 @@
    "path": "~/dbt-course/kit/setup.sql",
    "status": "exists",
    "forms": [
+    "$HOME\\dbt-course\\kit\\setup.sql",
     "~/dbt-course/kit/setup.sql"
    ],
    "used_in": [
@@ -514,6 +525,7 @@
    "path": "~/dbt-course/kit/tools/run_sql.py",
    "status": "exists",
    "forms": [
+    "$HOME\\dbt-course\\kit\\tools\\run_sql.py",
     "~/dbt-course/kit/tools/run_sql.py"
    ],
    "used_in": [
@@ -531,6 +543,7 @@
    "path": "~/dbt-course/kit/updates",
    "status": "exists",
    "forms": [
+    "$HOME\\dbt-course\\kit\\updates",
     "~/dbt-course/kit/updates"
    ],
    "used_in": [
@@ -570,6 +583,8 @@
    "path": "~/dbt-course/practice",
    "status": "exists",
    "forms": [
+    "$HOME\\dbt-course\\practice",
+    "$HOME\\dbt-course\\practice\\",
     "/Users/you/dbt-course/practice",
     "~/dbt-course/practice",
     "~/dbt-course/practice/"
@@ -649,6 +664,7 @@
    "path": "~/dbt-course/practice/updates",
    "status": "exists",
    "forms": [
+    "$HOME\\dbt-course\\practice\\updates",
     "~/dbt-course/practice/updates",
     "~/dbt-course/practice/updates/"
    ],
@@ -689,6 +705,7 @@
    "status": "created_by_lab_step",
    "by": "Chapter 26, milestone m00 (dbt init shopflow_dbt)",
    "forms": [
+    "$HOME\\dbt-course\\shopflow_dbt",
     "~/dbt-course/shopflow_dbt"
    ],
    "used_in": [
@@ -728,6 +745,8 @@
    "status": "created_by_lab_step",
    "by": "Chapter 13: mkdir -p ~/dbt-course/throwaway (a copy for the snapshot demos)",
    "forms": [
+    "$HOME\\dbt-course\\throwaway",
+    "$HOME\\dbt-course\\throwaway\\",
     "~/dbt-course/throwaway",
     "~/dbt-course/throwaway/"
    ],
@@ -743,6 +762,7 @@
    "status": "created_by_lab_step",
    "by": "Chapter 13: mkdir -p ~/dbt-course/throwaway (a copy for the snapshot demos)",
    "forms": [
+    "$HOME\\dbt-course\\throwaway\\jaffle_dbt",
     "~/dbt-course/throwaway/jaffle_dbt"
    ],
    "used_in": [

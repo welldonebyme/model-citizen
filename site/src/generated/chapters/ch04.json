@@ -215,7 +215,10 @@
        "id": "ch04-c1",
        "lang": "bash",
        "t": "code",
-       "text": "$ cd ~/dbt-course/practice\n$ duckdb practice.duckdb"
+       "text": "$ cd ~/dbt-course/practice\n$ duckdb practice.duckdb",
+       "variants": {
+        "win": "PS> cd $HOME\\dbt-course\\practice\nPS> duckdb practice.duckdb"
+       }
       },
       {
        "c": [

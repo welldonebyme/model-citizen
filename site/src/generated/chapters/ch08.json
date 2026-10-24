@@ -1063,7 +1063,10 @@
          "id": "ch08-c6",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # nothing printed: everything is committed"
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # nothing printed: everything is committed",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> ..\\.venv\\Scripts\\Activate.ps1\nPS> git status --short          # nothing printed: everything is committed"
+         }
         },
         {
          "c": [
@@ -1270,7 +1273,10 @@
          "id": "ch08-c11",
          "lang": "bash",
          "t": "code",
-         "text": "$ grep -E \"fct_orders__dbt_(tmp|backup)\" logs/dbt.log | tail -4"
+         "text": "$ grep -E \"fct_orders__dbt_(tmp|backup)\" logs/dbt.log | tail -4",
+         "variants": {
+          "win": "PS> Select-String -CaseSensitive 'fct_orders__dbt_(tmp|backup)' logs\\dbt.log | ForEach-Object Line | Select-Object -Last 4"
+         }
         },
         {
          "c": [
@@ -2943,7 +2949,10 @@
          "id": "ch08-c28",
          "lang": "bash",
          "t": "code",
-         "text": "$ mkdir models/intermediate\n$ code models/intermediate/int_payments__successful.sql"
+         "text": "$ mkdir models/intermediate\n$ code models/intermediate/int_payments__successful.sql",
+         "variants": {
+          "win": "PS> New-Item -ItemType Directory models\\intermediate\nPS> code models/intermediate/int_payments__successful.sql"
+         }
         },
         {
          "c": [
@@ -3080,7 +3089,10 @@
          "id": "ch08-c33",
          "lang": "bash",
          "t": "code",
-         "text": "$ ls target/compiled/jaffle_dbt/models/intermediate/\nint_payments__successful.sql\n$ ls target/run/jaffle_dbt/models/\nexample   marts     staging"
+         "text": "$ ls target/compiled/jaffle_dbt/models/intermediate/\nint_payments__successful.sql\n$ ls target/run/jaffle_dbt/models/\nexample   marts     staging",
+         "variants": {
+          "win": "PS> Get-ChildItem -Name target\\compiled\\jaffle_dbt\\models\\intermediate\\\nint_payments__successful.sql\nPS> Get-ChildItem -Name target\\run\\jaffle_dbt\\models\\\nexample   marts     staging"
+         }
         },
         {
          "c": [

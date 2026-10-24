@@ -3459,7 +3459,10 @@
        "id": "ch16-c13",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt -q ls -s +int_orders__enriched+ --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments\n\n$ dbt -q ls -s @int_orders__enriched --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments"
+       "text": "$ dbt -q ls -s +int_orders__enriched+ --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments\n\n$ dbt -q ls -s @int_orders__enriched --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments",
+       "variants": {
+        "win": "PS> dbt -q ls -s +int_orders__enriched+ --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments\n\nPS> dbt -q ls -s \"@int_orders__enriched\" --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments"
+       }
       },
       {
        "c": [
@@ -3535,7 +3538,10 @@
        "id": "ch16-c14",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls -s +1fct_orders --resource-type model\n...\n22:09:56  The selection criterion '+1fct_orders' does not match any enabled nodes\n22:09:56  No nodes selected!\n\n$ dbt ls -s @int_orders__enriched+ --resource-type model\n...\n22:10:00  Encountered an error:\nRuntime Error\n  Invalid node spec @int_orders__enriched+ - \"@\" prefix and \"+\" suffix are incompatible"
+       "text": "$ dbt ls -s +1fct_orders --resource-type model\n...\n22:09:56  The selection criterion '+1fct_orders' does not match any enabled nodes\n22:09:56  No nodes selected!\n\n$ dbt ls -s @int_orders__enriched+ --resource-type model\n...\n22:10:00  Encountered an error:\nRuntime Error\n  Invalid node spec @int_orders__enriched+ - \"@\" prefix and \"+\" suffix are incompatible",
+       "variants": {
+        "win": "PS> dbt ls -s +1fct_orders --resource-type model\n...\n22:09:56  The selection criterion '+1fct_orders' does not match any enabled nodes\n22:09:56  No nodes selected!\n\nPS> dbt ls -s \"@int_orders__enriched+\" --resource-type model\n...\n22:10:00  Encountered an error:\nRuntime Error\n  Invalid node spec @int_orders__enriched+ - \"@\" prefix and \"+\" suffix are incompatible"
+       }
       },
       {
        "c": [
@@ -5087,7 +5093,10 @@
        "id": "ch16-c22",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt -q ls -s test_name:not_null\njaffle_dbt.not_null_country_regions_country\njaffle_dbt.marts.not_null_customer_segments_customer_id\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id\n...\n\n$ dbt -q ls -s test_type:generic,staging.stripe\njaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id\njaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id\n\n$ dbt ls -s test_type:singular\n...\n22:29:01  The selection criterion 'test_type:singular' does not match any enabled nodes\n22:29:01  No nodes selected!"
+       "text": "$ dbt -q ls -s test_name:not_null\njaffle_dbt.not_null_country_regions_country\njaffle_dbt.marts.not_null_customer_segments_customer_id\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id\n...\n\n$ dbt -q ls -s test_type:generic,staging.stripe\njaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id\njaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id\n\n$ dbt ls -s test_type:singular\n...\n22:29:01  The selection criterion 'test_type:singular' does not match any enabled nodes\n22:29:01  No nodes selected!",
+       "variants": {
+        "win": "PS> dbt -q ls -s test_name:not_null\njaffle_dbt.not_null_country_regions_country\njaffle_dbt.marts.not_null_customer_segments_customer_id\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id\n...\n\nPS> dbt -q ls -s \"test_type:generic,staging.stripe\"\njaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id\njaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id\n\nPS> dbt ls -s test_type:singular\n...\n22:29:01  The selection criterion 'test_type:singular' does not match any enabled nodes\n22:29:01  No nodes selected!"
+       }
       },
       {
        "c": [
@@ -5639,7 +5648,10 @@
          "id": "ch16-c28",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ dbt -q ls -s fct_orders\njaffle_dbt.marts.fct_orders"
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ dbt -q ls -s fct_orders\njaffle_dbt.marts.fct_orders",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> ..\\.venv\\Scripts\\Activate.ps1\nPS> dbt -q ls -s fct_orders\njaffle_dbt.marts.fct_orders"
+         }
         },
         {
          "c": [
@@ -6541,7 +6553,10 @@
        "id": "ch16-c33",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls\n...\n22:13:04  Using default selector dev_default\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\n\n$ dbt -q ls -s dim_customers\njaffle_dbt.marts.dim_customers\n\n$ dbt -q ls --target prod | wc -l\n      36"
+       "text": "$ dbt ls\n...\n22:13:04  Using default selector dev_default\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\n\n$ dbt -q ls -s dim_customers\njaffle_dbt.marts.dim_customers\n\n$ dbt -q ls --target prod | wc -l\n      36",
+       "variants": {
+        "win": "PS> dbt ls\n...\n22:13:04  Using default selector dev_default\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\n\nPS> dbt -q ls -s dim_customers\njaffle_dbt.marts.dim_customers\n\nPS> dbt -q ls --target prod | Measure-Object | ForEach-Object Count\n      36"
+       }
       },
       {
        "c": [
@@ -7834,7 +7849,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt show --inline \"select status, count(*) as n from {{ ref('fct_orders') }} group by status order by n desc\" --limit -1\n...\nPreviewing inline node:\n| status         |   n |\n| -------------- | --- |\n| completed      | 252 |\n| shipped        |  38 |\n| returned       |  18 |\n| return_pending |  12 |\n\n$ dbt -q show --inline \"select order_id from {{ ref('stg_jaffle_shop__orders') }}\" --limit -1 | wc -l\n     323"
+       "text": "$ dbt show --inline \"select status, count(*) as n from {{ ref('fct_orders') }} group by status order by n desc\" --limit -1\n...\nPreviewing inline node:\n| status         |   n |\n| -------------- | --- |\n| completed      | 252 |\n| shipped        |  38 |\n| returned       |  18 |\n| return_pending |  12 |\n\n$ dbt -q show --inline \"select order_id from {{ ref('stg_jaffle_shop__orders') }}\" --limit -1 | wc -l\n     323",
+       "variants": {
+        "win": "PS> dbt show --inline \"select status, count(*) as n from {{ ref('fct_orders') }} group by status order by n desc\" --limit -1\n...\nPreviewing inline node:\n| status         |   n |\n| -------------- | --- |\n| completed      | 252 |\n| shipped        |  38 |\n| returned       |  18 |\n| return_pending |  12 |\n\nPS> dbt -q show --inline \"select order_id from {{ ref('stg_jaffle_shop__orders') }}\" --limit -1 | Measure-Object | ForEach-Object Count\n     323"
+       }
       },
       {
        "c": [
@@ -9254,7 +9272,10 @@
          "id": "ch16-c51",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/practice && duckdb empty_check.duckdb < setup.sql\n$ cd ~/dbt-course/jaffle_dbt"
+         "text": "$ cd ~/dbt-course/practice && duckdb empty_check.duckdb < setup.sql\n$ cd ~/dbt-course/jaffle_dbt",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\practice\nPS> duckdb empty_check.duckdb -c \".read setup.sql\"\nPS> cd $HOME\\dbt-course\\jaffle_dbt"
+         }
         },
         {
          "c": [
@@ -9278,7 +9299,10 @@
          "id": "ch16-c52",
          "lang": "bash",
          "t": "code",
-         "text": "$ DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt build --empty"
+         "text": "$ DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt build --empty",
+         "variants": {
+          "win": "PS> $env:DBT_DUCKDB_PATH = \"../practice/empty_check.duckdb\"; dbt build --empty; Remove-Item Env:DBT_DUCKDB_PATH"
+         }
         },
         {
          "c": [
@@ -9375,7 +9399,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt build --empty --select customer_segments+"
+         "text": "$ DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt build --empty --select customer_segments+",
+         "variants": {
+          "win": "PS> $env:DBT_DUCKDB_PATH = \"../practice/empty_check.duckdb\"; dbt build --empty --select customer_segments+; Remove-Item Env:DBT_DUCKDB_PATH"
+         }
         },
         {
          "id": "ch16-c56",
@@ -9405,7 +9432,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt show --inline \"select (select count(*) from {{ source('jaffle_shop', 'orders') }}) as raw_orders, (select count(*) from {{ ref('stg_jaffle_shop__orders') }}) as stg_orders, (select count(*) from {{ ref('fct_orders') }}) as fct_orders, (select count(*) from {{ ref('country_regions') }}) as seed_rows\"\n$ DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt show -q --limit -1 --inline \"select table_type, count(*) as n from information_schema.tables where table_schema = 'dbt_adnane' group by 1 order by 1\""
+         "text": "$ DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt show --inline \"select (select count(*) from {{ source('jaffle_shop', 'orders') }}) as raw_orders, (select count(*) from {{ ref('stg_jaffle_shop__orders') }}) as stg_orders, (select count(*) from {{ ref('fct_orders') }}) as fct_orders, (select count(*) from {{ ref('country_regions') }}) as seed_rows\"\n$ DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt show -q --limit -1 --inline \"select table_type, count(*) as n from information_schema.tables where table_schema = 'dbt_adnane' group by 1 order by 1\"",
+         "variants": {
+          "win": "PS> $env:DBT_DUCKDB_PATH = \"../practice/empty_check.duckdb\"; dbt show --inline \"select (select count(*) from {{ source('jaffle_shop', 'orders') }}) as raw_orders, (select count(*) from {{ ref('stg_jaffle_shop__orders') }}) as stg_orders, (select count(*) from {{ ref('fct_orders') }}) as fct_orders, (select count(*) from {{ ref('country_regions') }}) as seed_rows\"; Remove-Item Env:DBT_DUCKDB_PATH\nPS> $env:DBT_DUCKDB_PATH = \"../practice/empty_check.duckdb\"; dbt show -q --limit -1 --inline \"select table_type, count(*) as n from information_schema.tables where table_schema = 'dbt_adnane' group by 1 order by 1\"; Remove-Item Env:DBT_DUCKDB_PATH"
+         }
         },
         {
          "id": "ch16-c58",
@@ -9453,7 +9483,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt run -q -s +fct_orders\n$ DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt show -q --inline \"select count(*) as fct_orders_rows from {{ ref('fct_orders') }}\""
+         "text": "$ DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt run -q -s +fct_orders\n$ DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt show -q --inline \"select count(*) as fct_orders_rows from {{ ref('fct_orders') }}\"",
+         "variants": {
+          "win": "PS> $env:DBT_DUCKDB_PATH = \"../practice/empty_check.duckdb\"; dbt run -q -s +fct_orders; Remove-Item Env:DBT_DUCKDB_PATH\nPS> $env:DBT_DUCKDB_PATH = \"../practice/empty_check.duckdb\"; dbt show -q --inline \"select count(*) as fct_orders_rows from {{ ref('fct_orders') }}\"; Remove-Item Env:DBT_DUCKDB_PATH"
+         }
         },
         {
          "id": "ch16-c60",
@@ -9477,7 +9510,10 @@
          "id": "ch16-c61",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select customer_segments+\n$ rm ../practice/empty_check.duckdb"
+         "text": "$ dbt build --select customer_segments+\n$ rm ../practice/empty_check.duckdb",
+         "variants": {
+          "win": "PS> dbt build --select customer_segments+\nPS> Remove-Item ..\\practice\\empty_check.duckdb"
+         }
         },
         {
          "c": [
@@ -10005,7 +10041,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ sed -n '1,8p' target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__orders.sql\nwith\n\nsource as (\n\n    select * from (select * from \"practice\".\"jaffle_shop\".\"orders\" where order_date >= '2026-01-01 00:00:00+00:00' and order_date < '2026-01-05 00:00:00+00:00')\n\n),"
+       "text": "$ sed -n '1,8p' target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__orders.sql\nwith\n\nsource as (\n\n    select * from (select * from \"practice\".\"jaffle_shop\".\"orders\" where order_date >= '2026-01-01 00:00:00+00:00' and order_date < '2026-01-05 00:00:00+00:00')\n\n),",
+       "variants": {
+        "win": "PS> Get-Content target\\compiled\\jaffle_dbt\\models\\staging\\jaffle_shop\\stg_jaffle_shop__orders.sql | Select-Object -First 8\nwith\n\nsource as (\n\n    select * from (select * from \"practice\".\"jaffle_shop\".\"orders\" where order_date >= '2026-01-01 00:00:00+00:00' and order_date < '2026-01-05 00:00:00+00:00')\n\n),"
+       }
       },
       {
        "c": [
@@ -10281,7 +10320,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ mkdir -p ../practice/sample_copy && cp ../practice/practice.duckdb ../practice/sample_copy/practice.duckdb"
+         "text": "$ mkdir -p ../practice/sample_copy && cp ../practice/practice.duckdb ../practice/sample_copy/practice.duckdb",
+         "variants": {
+          "win": "PS> New-Item -ItemType Directory -Force ..\\practice\\sample_copy\nPS> Copy-Item ..\\practice\\practice.duckdb ..\\practice\\sample_copy\\practice.duckdb"
+         }
         },
         {
          "c": [
@@ -10332,7 +10374,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ export DBT_DUCKDB_PATH=../practice/sample_copy/practice.duckdb\n$ dbt run --select stg_jaffle_shop__orders int_orders__enriched fct_order_items --sample=\"{'start': '2026-01-01', 'end': '2026-01-05'}\""
+         "text": "$ export DBT_DUCKDB_PATH=../practice/sample_copy/practice.duckdb\n$ dbt run --select stg_jaffle_shop__orders int_orders__enriched fct_order_items --sample=\"{'start': '2026-01-01', 'end': '2026-01-05'}\"",
+         "variants": {
+          "win": "PS> $env:DBT_DUCKDB_PATH = \"../practice/sample_copy/practice.duckdb\"\nPS> dbt run --select stg_jaffle_shop__orders int_orders__enriched fct_order_items \"--sample=\"{'start': '2026-01-01', 'end': '2026-01-05'}\"\""
+         }
         },
         {
          "id": "ch16-c68",
@@ -10449,7 +10494,10 @@
          "id": "ch16-c72",
          "lang": "bash",
          "t": "code",
-         "text": "$ unset DBT_DUCKDB_PATH\n$ rm -r ../practice/sample_copy"
+         "text": "$ unset DBT_DUCKDB_PATH\n$ rm -r ../practice/sample_copy",
+         "variants": {
+          "win": "PS> Remove-Item Env:DBT_DUCKDB_PATH\nPS> Remove-Item -Recurse -Force ..\\practice\\sample_copy"
+         }
         }
        ],
        "id": "ch16-lab4",
@@ -11115,7 +11163,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt run --select stg_jaffle_shop__orders --vars '{dev_start_date: \"2026-01-01\"}' -q && dbt show -q --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\"\n| n_orders | first_date |\n| -------- | ---------- |\n|       20 | 2026-01-01 |\n\n$ dbt run --select stg_jaffle_shop__orders -q && dbt show -q --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\"\n| n_orders | first_date |\n| -------- | ---------- |\n|      320 | 2025-01-05 |"
+       "text": "$ dbt run --select stg_jaffle_shop__orders --vars '{dev_start_date: \"2026-01-01\"}' -q && dbt show -q --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\"\n| n_orders | first_date |\n| -------- | ---------- |\n|       20 | 2026-01-01 |\n\n$ dbt run --select stg_jaffle_shop__orders -q && dbt show -q --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\"\n| n_orders | first_date |\n| -------- | ---------- |\n|      320 | 2025-01-05 |",
+       "variants": {
+        "win": "PS> dbt run --select stg_jaffle_shop__orders --vars '{dev_start_date: \"2026-01-01\"}' -q\nPS> dbt show -q --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\"\n| n_orders | first_date |\n| -------- | ---------- |\n|       20 | 2026-01-01 |\n\nPS> dbt run --select stg_jaffle_shop__orders -q\nPS> dbt show -q --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\"\n| n_orders | first_date |\n| -------- | ---------- |\n|      320 | 2025-01-05 |"
+       }
       },
       {
        "c": [
@@ -11665,7 +11716,10 @@
          "id": "ch16-c83",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt parse\n$ ls target\n$ dbt clean\n$ dbt ls --select fct_orders      # fails: packages missing\n$ dbt deps\n$ dbt -q ls --select fct_orders   # works again"
+         "text": "$ dbt parse\n$ ls target\n$ dbt clean\n$ dbt ls --select fct_orders      # fails: packages missing\n$ dbt deps\n$ dbt -q ls --select fct_orders   # works again",
+         "variants": {
+          "win": "PS> dbt parse\nPS> Get-ChildItem -Name target\nPS> dbt clean\nPS> dbt ls --select fct_orders      # fails: packages missing\nPS> dbt deps\nPS> dbt -q ls --select fct_orders   # works again"
+         }
         },
         {
          "c": [
@@ -11758,7 +11812,10 @@
          "lang": "bash",
          "t": "code",
          "text": "$ git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle   # skip if done in Ch. 6\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch16 --stat",
-         "textBook": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # skip if done in Ch. 6\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch16 --stat"
+         "textBook": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # skip if done in Ch. 6\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch16 --stat",
+         "variants": {
+          "win": "PS> git remote add reference $HOME\\dbt-course\\kit\\jaffle_dbt.bundle   # skip if done in Ch. 6\nPS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nPS> git diff ref-ch16 --stat"
+         }
         },
         {
          "c": [
@@ -11916,7 +11973,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt parse -q && mkdir -p ../state_ch16 && cp target/manifest.json ../state_ch16/\n$ echo '-- comment added for the state demo' >> models/staging/stripe/stg_stripe__payments.sql\n$ dbt -q ls --select state:modified --state ../state_ch16\njaffle_dbt.staging.stripe.stg_stripe__payments\njaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id\njaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id\n$ dbt -q ls --select state:modified+ --state ../state_ch16 --resource-type model | wc -l\n       8"
+       "text": "$ dbt parse -q && mkdir -p ../state_ch16 && cp target/manifest.json ../state_ch16/\n$ echo '-- comment added for the state demo' >> models/staging/stripe/stg_stripe__payments.sql\n$ dbt -q ls --select state:modified --state ../state_ch16\njaffle_dbt.staging.stripe.stg_stripe__payments\njaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id\njaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id\n$ dbt -q ls --select state:modified+ --state ../state_ch16 --resource-type model | wc -l\n       8",
+       "variants": {
+        "win": "PS> dbt parse -q\nPS> New-Item -ItemType Directory -Force ..\\state_ch16\nPS> Copy-Item target\\manifest.json ..\\state_ch16\\\nPS> Add-Content models\\staging\\stripe\\stg_stripe__payments.sql '-- comment added for the state demo'\nPS> dbt -q ls --select state:modified --state ../state_ch16\njaffle_dbt.staging.stripe.stg_stripe__payments\njaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id\njaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id\nPS> dbt -q ls --select state:modified+ --state ../state_ch16 --resource-type model | Measure-Object | ForEach-Object Count\n       8"
+       }
       },
       {
        "c": [

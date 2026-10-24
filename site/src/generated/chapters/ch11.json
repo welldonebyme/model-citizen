@@ -2033,7 +2033,10 @@
        "id": "ch11-c25",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --inline \"-- printed: {{ printed_list() | length }} items / returned: {{ returned_list() | length }} items\n{% for m in returned_list() %}select '{{ m }}' as method{% if not loop.last %} union all {% endif %}{% endfor %}\""
+       "text": "$ dbt compile --inline \"-- printed: {{ printed_list() | length }} items / returned: {{ returned_list() | length }} items\n{% for m in returned_list() %}select '{{ m }}' as method{% if not loop.last %} union all {% endif %}{% endfor %}\"",
+       "variants": {
+        "win": "PS> dbt compile --inline \"-- printed: {{ printed_list() | length }} items / returned: {{ returned_list() | length }} items\n{% for m in returned_list() %}select '{{ m }}' as method{% if not loop.last %} union all {% endif %}{% endfor %}\""
+       }
       },
       {
        "id": "ch11-c26",
@@ -2186,7 +2189,10 @@
          "id": "ch11-c28",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # should print nothing\n$ dbt build                   # Done. PASS=19 ... at the end of Chapter 10"
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # should print nothing\n$ dbt build                   # Done. PASS=19 ... at the end of Chapter 10",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> ..\\.venv\\Scripts\\Activate.ps1\nPS> git status --short          # should print nothing\nPS> dbt build                   # Done. PASS=19 ... at the end of Chapter 10"
+         }
         },
         {
          "c": [
@@ -2211,7 +2217,10 @@
          "id": "ch11-c29",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt compile --select stg_stripe__payments stg_jaffle_shop__products\n$ mkdir -p ../before_macro\n$ cp target/compiled/jaffle_dbt/models/staging/stripe/stg_stripe__payments.sql ../before_macro/\n$ cp target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__products.sql ../before_macro/"
+         "text": "$ dbt compile --select stg_stripe__payments stg_jaffle_shop__products\n$ mkdir -p ../before_macro\n$ cp target/compiled/jaffle_dbt/models/staging/stripe/stg_stripe__payments.sql ../before_macro/\n$ cp target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__products.sql ../before_macro/",
+         "variants": {
+          "win": "PS> dbt compile --select stg_stripe__payments stg_jaffle_shop__products\nPS> New-Item -ItemType Directory -Force ..\\before_macro\nPS> Copy-Item target\\compiled\\jaffle_dbt\\models\\staging\\stripe\\stg_stripe__payments.sql ..\\before_macro\\\nPS> Copy-Item target\\compiled\\jaffle_dbt\\models\\staging\\jaffle_shop\\stg_jaffle_shop__products.sql ..\\before_macro\\"
+         }
         },
         {
          "c": [
@@ -2288,7 +2297,10 @@
          "id": "ch11-c30",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt compile --select stg_stripe__payments stg_jaffle_shop__products\n$ diff ../before_macro/stg_stripe__payments.sql target/compiled/jaffle_dbt/models/staging/stripe/stg_stripe__payments.sql\n$ diff ../before_macro/stg_jaffle_shop__products.sql target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__products.sql"
+         "text": "$ dbt compile --select stg_stripe__payments stg_jaffle_shop__products\n$ diff ../before_macro/stg_stripe__payments.sql target/compiled/jaffle_dbt/models/staging/stripe/stg_stripe__payments.sql\n$ diff ../before_macro/stg_jaffle_shop__products.sql target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__products.sql",
+         "variants": {
+          "win": "PS> dbt compile --select stg_stripe__payments stg_jaffle_shop__products\nPS> git diff --no-index ../before_macro/stg_stripe__payments.sql target/compiled/jaffle_dbt/models/staging/stripe/stg_stripe__payments.sql\nPS> git diff --no-index ../before_macro/stg_jaffle_shop__products.sql target/compiled/jaffle_dbt/models/staging/jaffle_shop/stg_jaffle_shop__products.sql"
+         }
         },
         {
          "c": [
@@ -4637,7 +4649,10 @@
        "id": "ch11-c56",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt deps --add-package dbt-labs/codegen@0.13.1"
+       "text": "$ dbt deps --add-package dbt-labs/codegen@0.13.1",
+       "variants": {
+        "win": "PS> dbt deps --add-package \"dbt-labs/codegen@0.13.1\""
+       }
       },
       {
        "id": "ch11-c57",
@@ -5035,7 +5050,10 @@
          "id": "ch11-c65",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt deps\n$ cat package-lock.yml\n$ ls dbt_packages\n$ git status --short"
+         "text": "$ dbt deps\n$ cat package-lock.yml\n$ ls dbt_packages\n$ git status --short",
+         "variants": {
+          "win": "PS> dbt deps\nPS> Get-Content package-lock.yml\nPS> Get-ChildItem -Name dbt_packages\nPS> git status --short"
+         }
         },
         {
          "c": [
@@ -5662,7 +5680,10 @@
        "id": "ch11-c80",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --inline \"{{ dbt_utils.date_spine(datepart='month', start_date=\\\"cast('2025-01-01' as date)\\\", end_date=\\\"cast('2025-05-01' as date)\\\") }}\""
+       "text": "$ dbt show --inline \"{{ dbt_utils.date_spine(datepart='month', start_date=\\\"cast('2025-01-01' as date)\\\", end_date=\\\"cast('2025-05-01' as date)\\\") }}\"",
+       "variants": {
+        "win": "PS> dbt show --inline \"{{ dbt_utils.date_spine(datepart='month', start_date=`\"cast('2025-01-01' as date)`\", end_date=`\"cast('2025-05-01' as date)`\") }}\"   # needs PowerShell 7 (5.1 drops the inner quotes)"
+       }
       },
       {
        "id": "ch11-c81",
@@ -7203,7 +7224,10 @@
          "lang": "bash",
          "t": "code",
          "text": "$ git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle   # skip if done in Ch. 6\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch11 --stat\n$ git diff ref-ch10 ref-ch11 --stat      # what the reference changed in this chapter",
-         "textBook": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # skip if done in Ch. 6\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch11 --stat\n$ git diff ref-ch10 ref-ch11 --stat      # what the reference changed in this chapter"
+         "textBook": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # skip if done in Ch. 6\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch11 --stat\n$ git diff ref-ch10 ref-ch11 --stat      # what the reference changed in this chapter",
+         "variants": {
+          "win": "PS> git remote add reference $HOME\\dbt-course\\kit\\jaffle_dbt.bundle   # skip if done in Ch. 6\nPS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nPS> git diff ref-ch11 --stat\nPS> git diff ref-ch10 ref-ch11 --stat      # what the reference changed in this chapter"
+         }
         },
         {
          "c": [
@@ -7221,7 +7245,10 @@
          "id": "ch11-c103",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt deps --add-package dbt-labs/codegen@0.13.1\n$ dbt run-operation generate_base_model --args '{source_name: stripe, table_name: payments}'\n$ dbt run-operation generate_source --args '{schema_name: stripe}'     # fails on DuckDB"
+         "text": "$ dbt deps --add-package dbt-labs/codegen@0.13.1\n$ dbt run-operation generate_base_model --args '{source_name: stripe, table_name: payments}'\n$ dbt run-operation generate_source --args '{schema_name: stripe}'     # fails on DuckDB",
+         "variants": {
+          "win": "PS> dbt deps --add-package \"dbt-labs/codegen@0.13.1\"\nPS> dbt run-operation generate_base_model --args '{source_name: stripe, table_name: payments}'\nPS> dbt run-operation generate_source --args '{schema_name: stripe}'     # fails on DuckDB"
+         }
         },
         {
          "c": [
@@ -7255,7 +7282,10 @@
          "id": "ch11-c104",
          "lang": "bash",
          "t": "code",
-         "text": "$ rm macros/duckdb__get_tables_by_pattern_sql.sql\n$ git checkout packages.yml package-lock.yml\n$ dbt deps\n$ git status --short          # should print nothing"
+         "text": "$ rm macros/duckdb__get_tables_by_pattern_sql.sql\n$ git checkout packages.yml package-lock.yml\n$ dbt deps\n$ git status --short          # should print nothing",
+         "variants": {
+          "win": "PS> Remove-Item macros\\duckdb__get_tables_by_pattern_sql.sql\nPS> git checkout packages.yml package-lock.yml\nPS> dbt deps\nPS> git status --short          # should print nothing"
+         }
         },
         {
          "c": [

@@ -1910,7 +1910,10 @@
          "id": "ch18-c15",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # nothing printed = clean"
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # nothing printed = clean",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> ..\\.venv\\Scripts\\Activate.ps1\nPS> git status --short          # nothing printed = clean"
+         }
         },
         {
          "c": [
@@ -7343,7 +7346,10 @@
          "id": "ch18-c85",
          "lang": "bash",
          "t": "code",
-         "text": "$ mv macros/generate_schema_name.sql /tmp/\n$ dbt test --select customer_email_is_known --store-failures\n$ mv /tmp/generate_schema_name.sql macros/"
+         "text": "$ mv macros/generate_schema_name.sql /tmp/\n$ dbt test --select customer_email_is_known --store-failures\n$ mv /tmp/generate_schema_name.sql macros/",
+         "variants": {
+          "win": "PS> Move-Item macros\\generate_schema_name.sql $env:TEMP\\\nPS> dbt test --select customer_email_is_known --store-failures\nPS> Move-Item $env:TEMP\\generate_schema_name.sql macros\\"
+         }
         },
         {
          "c": [

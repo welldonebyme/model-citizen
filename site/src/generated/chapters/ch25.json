@@ -3126,7 +3126,10 @@
          "lang": "bash",
          "t": "code",
          "text": "$ cd ~/dbt-course/jaffle_dbt\n$ mkdir -p .github/workflows ci/raw/data\n$ cp ~/dbt-course/kit/setup.sql ci/raw/\n$ cp ~/dbt-course/kit/data/*.csv ci/raw/data/\n$ ls ci/raw ci/raw/data",
-         "textBook": "$ cd ~/dbt-course/jaffle_dbt\n$ mkdir -p .github/workflows ci/raw/data\n$ cp ~/Documents/Adnane/dbt-bible/labs/setup.sql ci/raw/\n$ cp ~/Documents/Adnane/dbt-bible/labs/data/*.csv ci/raw/data/\n$ ls ci/raw ci/raw/data"
+         "textBook": "$ cd ~/dbt-course/jaffle_dbt\n$ mkdir -p .github/workflows ci/raw/data\n$ cp ~/Documents/Adnane/dbt-bible/labs/setup.sql ci/raw/\n$ cp ~/Documents/Adnane/dbt-bible/labs/data/*.csv ci/raw/data/\n$ ls ci/raw ci/raw/data",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> New-Item -ItemType Directory -Force .github\\workflows, ci\\raw\\data\nPS> Copy-Item $HOME\\dbt-course\\kit\\setup.sql ci\\raw\\\nPS> Copy-Item $HOME\\dbt-course\\kit\\data\\*.csv ci\\raw\\data\\\nPS> Get-ChildItem -Name ci\\raw, ci\\raw\\data"
+         }
         },
         {
          "c": [
@@ -3188,7 +3191,10 @@
          "id": "ch25-c12",
          "lang": "bash",
          "t": "code",
-         "text": "$ python -c \"import yaml; d=yaml.safe_load(open('.github/workflows/ci.yml')); print('top-level keys:', list(d.keys())); job=d['jobs']['slim-ci']; print('runs-on:', job['runs-on']); [print('step:', s.get('name'), '|', 'uses' if 'uses' in s else 'run') for s in job['steps']]\"\n$ tail -3 .gitignore && dbt parse --no-partial-parse"
+         "text": "$ python -c \"import yaml; d=yaml.safe_load(open('.github/workflows/ci.yml')); print('top-level keys:', list(d.keys())); job=d['jobs']['slim-ci']; print('runs-on:', job['runs-on']); [print('step:', s.get('name'), '|', 'uses' if 'uses' in s else 'run') for s in job['steps']]\"\n$ tail -3 .gitignore && dbt parse --no-partial-parse",
+         "variants": {
+          "win": "PS> python -c \"import yaml; d=yaml.safe_load(open('.github/workflows/ci.yml')); print('top-level keys:', list(d.keys())); job=d['jobs']['slim-ci']; print('runs-on:', job['runs-on']); [print('step:', s.get('name'), '|', 'uses' if 'uses' in s else 'run') for s in job['steps']]\"\nPS> Get-Content .gitignore -Tail 3\nPS> dbt parse --no-partial-parse"
+         }
         },
         {
          "c": [
@@ -3361,7 +3367,10 @@
          "id": "ch25-c15",
          "lang": "bash",
          "t": "code",
-         "text": "$ mkdir -p ~/dbt-course/ci_run && cd ~/dbt-course/ci_run\n$ git clone -q ~/dbt-course/jaffle_dbt workspace && cd workspace\n$ git checkout -q -b feature/is-paid\n$ git branch -a"
+         "text": "$ mkdir -p ~/dbt-course/ci_run && cd ~/dbt-course/ci_run\n$ git clone -q ~/dbt-course/jaffle_dbt workspace && cd workspace\n$ git checkout -q -b feature/is-paid\n$ git branch -a",
+         "variants": {
+          "win": "PS> New-Item -ItemType Directory -Force $HOME\\dbt-course\\ci_run\nPS> cd $HOME\\dbt-course\\ci_run\nPS> git clone -q $HOME\\dbt-course\\jaffle_dbt workspace\nPS> cd workspace\nPS> git checkout -q -b feature/is-paid\nPS> git branch -a"
+         }
         },
         {
          "c": [
@@ -3413,7 +3422,10 @@
          "id": "ch25-c18",
          "lang": "bash",
          "t": "code",
-         "text": "$ export GITHUB_WORKSPACE=$PWD\n$ export DBT_PROFILES_DIR=$PWD/ci\n$ export DBT_DUCKDB_PATH=$PWD/ci_db/practice.duckdb"
+         "text": "$ export GITHUB_WORKSPACE=$PWD\n$ export DBT_PROFILES_DIR=$PWD/ci\n$ export DBT_DUCKDB_PATH=$PWD/ci_db/practice.duckdb",
+         "variants": {
+          "win": "PS> $env:GITHUB_WORKSPACE = \"$PWD\"\nPS> $env:DBT_PROFILES_DIR = \"$PWD\\ci\"\nPS> $env:DBT_DUCKDB_PATH = \"$PWD\\ci_db\\practice.duckdb\""
+         }
         },
         {
          "c": [
@@ -3431,7 +3443,10 @@
          "id": "ch25-c19",
          "lang": "bash",
          "t": "code",
-         "text": "$ python ci/load_raw.py \"$DBT_DUCKDB_PATH\"\n$ git worktree add ../main origin/main\n$ cd ../main && dbt deps && dbt build --target prod --exclude-resource-type unit_test\n$ mkdir -p \"$GITHUB_WORKSPACE/prod-artifacts\" && cp target/manifest.json \"$GITHUB_WORKSPACE/prod-artifacts/\"\n$ cd \"$GITHUB_WORKSPACE\"\n$ dbt deps\n$ dbt ls --select state:modified+ --state prod-artifacts --target ci\n$ dbt run --select state:modified+ --defer --state prod-artifacts --target ci --empty\n$ dbt build --select state:modified+ --defer --state prod-artifacts --target ci"
+         "text": "$ python ci/load_raw.py \"$DBT_DUCKDB_PATH\"\n$ git worktree add ../main origin/main\n$ cd ../main && dbt deps && dbt build --target prod --exclude-resource-type unit_test\n$ mkdir -p \"$GITHUB_WORKSPACE/prod-artifacts\" && cp target/manifest.json \"$GITHUB_WORKSPACE/prod-artifacts/\"\n$ cd \"$GITHUB_WORKSPACE\"\n$ dbt deps\n$ dbt ls --select state:modified+ --state prod-artifacts --target ci\n$ dbt run --select state:modified+ --defer --state prod-artifacts --target ci --empty\n$ dbt build --select state:modified+ --defer --state prod-artifacts --target ci",
+         "variants": {
+          "win": "PS> python ci/load_raw.py \"$env:DBT_DUCKDB_PATH\"\nPS> git worktree add ../main origin/main\nPS> cd ..\\main\nPS> dbt deps\nPS> dbt build --target prod --exclude-resource-type unit_test\nPS> New-Item -ItemType Directory -Force \"$env:GITHUB_WORKSPACE\\prod-artifacts\"\nPS> Copy-Item target\\manifest.json \"$env:GITHUB_WORKSPACE\\prod-artifacts\\\"\nPS> cd \"$env:GITHUB_WORKSPACE\"\nPS> dbt deps\nPS> dbt ls --select state:modified+ --state prod-artifacts --target ci\nPS> dbt run --select state:modified+ --defer --state prod-artifacts --target ci --empty\nPS> dbt build --select state:modified+ --defer --state prod-artifacts --target ci"
+         }
         },
         {
          "c": [
@@ -3464,7 +3479,10 @@
          "id": "ch25-c20",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt show --inline \"select is_paid, count(*) as n from {{ ref('fct_orders') }} group by 1 order by 1\" --target ci -q\n$ cd ~/dbt-course && rm -rf ci_run"
+         "text": "$ dbt show --inline \"select is_paid, count(*) as n from {{ ref('fct_orders') }} group by 1 order by 1\" --target ci -q\n$ cd ~/dbt-course && rm -rf ci_run",
+         "variants": {
+          "win": "PS> dbt show --inline \"select is_paid, count(*) as n from {{ ref('fct_orders') }} group by 1 order by 1\" --target ci -q\nPS> cd $HOME\\dbt-course\nPS> Remove-Item -Recurse -Force ci_run"
+         }
         },
         {
          "c": [

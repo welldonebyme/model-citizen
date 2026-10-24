@@ -1501,7 +1501,10 @@
              "id": "ch07-c7",
              "lang": "bash",
              "t": "code",
-             "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n(.venv) $ mkdir -p models/staging/jaffle_shop models/staging/stripe models/marts"
+             "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n(.venv) $ mkdir -p models/staging/jaffle_shop models/staging/stripe models/marts",
+             "variants": {
+              "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> ..\\.venv\\Scripts\\Activate.ps1\n(.venv) PS> New-Item -ItemType Directory -Force models\\staging\\jaffle_shop, models\\staging\\stripe, models\\marts"
+             }
             }
            ]
           },

@@ -686,7 +686,10 @@
        "lang": "bash",
        "t": "code",
        "text": "$ cd ~/dbt-course/practice\n$ git init\nInitialized empty Git repository in /Users/you/dbt-course/practice/.git/\n$ git status\nOn branch main\n\nNo commits yet\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n    data/\n    practice.duckdb\n    setup.sql\n\nnothing added to commit but untracked files present (use \"git add\" to track)",
-       "textBook": "$ cd ~/dbt-course/practice\n$ git init\nInitialized empty Git repository in /Users/mac/dbt-course/practice/.git/\n$ git status\nOn branch main\n\nNo commits yet\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n    data/\n    practice.duckdb\n    setup.sql\n\nnothing added to commit but untracked files present (use \"git add\" to track)"
+       "textBook": "$ cd ~/dbt-course/practice\n$ git init\nInitialized empty Git repository in /Users/mac/dbt-course/practice/.git/\n$ git status\nOn branch main\n\nNo commits yet\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n    data/\n    practice.duckdb\n    setup.sql\n\nnothing added to commit but untracked files present (use \"git add\" to track)",
+       "variants": {
+        "win": "PS> cd $HOME\\dbt-course\\practice\nPS> git init\nInitialized empty Git repository in /Users/you/dbt-course/practice/.git/\nPS> git status\nOn branch main\n\nNo commits yet\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n    data/\n    practice.duckdb\n    setup.sql\n\nnothing added to commit but untracked files present (use \"git add\" to track)"
+       }
       },
       {
        "c": [
@@ -1411,7 +1414,10 @@
        "id": "ch03-c10",
        "lang": "bash",
        "t": "code",
-       "text": "$ mkdir queries\n$ git add queries/orders_by_status.sql\n$ git commit -m \"Add orders by status query\""
+       "text": "$ mkdir queries\n$ git add queries/orders_by_status.sql\n$ git commit -m \"Add orders by status query\"",
+       "variants": {
+        "win": "PS> New-Item -ItemType Directory queries\nPS> git add queries/orders_by_status.sql\nPS> git commit -m \"Add orders by status query\""
+       }
       },
       {
        "c": [
@@ -2012,7 +2018,10 @@
        "id": "ch03-c18",
        "lang": "bash",
        "t": "code",
-       "text": "$ git switch main\nSwitched to branch 'main'\n$ ls queries\norders_by_status.sql\n$ git merge feature/revenue-query\nUpdating e51091f..9793973\nFast-forward\n queries/revenue_by_method.sql | 8 ++++++++\n 1 file changed, 8 insertions(+)\n create mode 100644 queries/revenue_by_method.sql\n$ git log --oneline --graph --all\n* 9793973 (HEAD -> main, feature/revenue-query) Add revenue by payment method query\n* e51091f Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script\n$ git branch -d feature/revenue-query\nDeleted branch feature/revenue-query (was 9793973)."
+       "text": "$ git switch main\nSwitched to branch 'main'\n$ ls queries\norders_by_status.sql\n$ git merge feature/revenue-query\nUpdating e51091f..9793973\nFast-forward\n queries/revenue_by_method.sql | 8 ++++++++\n 1 file changed, 8 insertions(+)\n create mode 100644 queries/revenue_by_method.sql\n$ git log --oneline --graph --all\n* 9793973 (HEAD -> main, feature/revenue-query) Add revenue by payment method query\n* e51091f Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script\n$ git branch -d feature/revenue-query\nDeleted branch feature/revenue-query (was 9793973).",
+       "variants": {
+        "win": "PS> git switch main\nSwitched to branch 'main'\nPS> Get-ChildItem -Name queries\norders_by_status.sql\nPS> git merge feature/revenue-query\nUpdating e51091f..9793973\nFast-forward\n queries/revenue_by_method.sql | 8 ++++++++\n 1 file changed, 8 insertions(+)\n create mode 100644 queries/revenue_by_method.sql\nPS> git log --oneline --graph --all\n* 9793973 (HEAD -> main, feature/revenue-query) Add revenue by payment method query\n* e51091f Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script\nPS> git branch -d feature/revenue-query\nDeleted branch feature/revenue-query (was 9793973)."
+       }
       },
       {
        "c": [
@@ -3286,7 +3295,11 @@
            "id": "ch03-c28",
            "lang": "bash",
            "t": "code",
-           "text": "$ brew install gh\n$ gh auth login"
+           "text": "$ brew install gh\n$ gh auth login",
+           "variants": {
+            "win": "PS> winget install --id GitHub.cli -e\nPS> gh auth login",
+            "wsl": "$ sudo apt install gh\n$ gh auth login"
+           }
           },
           {
            "c": [

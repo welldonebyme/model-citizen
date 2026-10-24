@@ -1196,7 +1196,10 @@
        "lang": "bash",
        "t": "code",
        "text": "$ cd ~/dbt-course/shopflow_dbt\n$ git remote add --no-tags solution ~/dbt-course/kit/capstone/shopflow_dbt.bundle\n$ git fetch --no-tags solution 'refs/tags/*:refs/tags/solution/*'",
-       "textBook": "$ cd ~/dbt-course/shopflow_dbt\n$ git remote add --no-tags solution ~/Documents/Adnane/dbt-bible/labs/capstone/shopflow_dbt\n$ git fetch --no-tags solution 'refs/tags/*:refs/tags/solution/*'"
+       "textBook": "$ cd ~/dbt-course/shopflow_dbt\n$ git remote add --no-tags solution ~/Documents/Adnane/dbt-bible/labs/capstone/shopflow_dbt\n$ git fetch --no-tags solution 'refs/tags/*:refs/tags/solution/*'",
+       "variants": {
+        "win": "PS> cd $HOME\\dbt-course\\shopflow_dbt\nPS> git remote add --no-tags solution $HOME\\dbt-course\\kit\\capstone\\shopflow_dbt.bundle\nPS> git fetch --no-tags solution 'refs/tags/*:refs/tags/solution/*'"
+       }
       },
       {
        "id": "ch26-c3",
@@ -2564,7 +2567,10 @@
        "id": "ch26-c15",
        "lang": "bash",
        "t": "code",
-       "text": "$ cd ../shopflow-data && duckdb shopflow.duckdb < updates/fresh_load.sql && cd ../shopflow_dbt\n$ dbt source freshness"
+       "text": "$ cd ../shopflow-data && duckdb shopflow.duckdb < updates/fresh_load.sql && cd ../shopflow_dbt\n$ dbt source freshness",
+       "variants": {
+        "win": "PS> cd ..\\shopflow-data\nPS> duckdb shopflow.duckdb -c \".read updates/fresh_load.sql\"\nPS> cd ..\\shopflow_dbt\nPS> dbt source freshness"
+       }
       },
       {
        "id": "ch26-c16",
@@ -10968,7 +10974,10 @@
            "id": "ch26-c79",
            "lang": "bash",
            "t": "code",
-           "text": "$ gh release create ci-state ../shopflow-data/shopflow.duckdb \\\n    prod-artifacts/manifest.json \\\n    --title \"CI state\" --notes \"Production DB and manifest for slim CI\""
+           "text": "$ gh release create ci-state ../shopflow-data/shopflow.duckdb \\\n    prod-artifacts/manifest.json \\\n    --title \"CI state\" --notes \"Production DB and manifest for slim CI\"",
+           "variants": {
+            "win": "PS> gh release create ci-state ../shopflow-data/shopflow.duckdb prod-artifacts/manifest.json --title \"CI state\" --notes \"Production DB and manifest for slim CI\""
+           }
           },
           {
            "c": [

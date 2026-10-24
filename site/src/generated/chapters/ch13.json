@@ -3407,7 +3407,10 @@
          "id": "ch13-c16",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course && source .venv/bin/activate\n$ cd jaffle_dbt && git status --short     # nothing: Chapter 12 is committed"
+         "text": "$ cd ~/dbt-course && source .venv/bin/activate\n$ cd jaffle_dbt && git status --short     # nothing: Chapter 12 is committed",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\nPS> .venv\\Scripts\\Activate.ps1\nPS> cd jaffle_dbt\nPS> git status --short     # nothing: Chapter 12 is committed"
+         }
         },
         {
          "c": [
@@ -3919,7 +3922,10 @@
          "lang": "bash",
          "t": "code",
          "text": "$ cp -r ~/dbt-course/kit/updates ~/dbt-course/practice/\n$ ls ~/dbt-course/practice/updates\nREADME.md      day2.sql       fresh_load.sql",
-         "textBook": "$ cp -r ~/Documents/Adnane/dbt-bible/labs/updates ~/dbt-course/practice/\n$ ls ~/dbt-course/practice/updates\nREADME.md      day2.sql       fresh_load.sql"
+         "textBook": "$ cp -r ~/Documents/Adnane/dbt-bible/labs/updates ~/dbt-course/practice/\n$ ls ~/dbt-course/practice/updates\nREADME.md      day2.sql       fresh_load.sql",
+         "variants": {
+          "win": "PS> Copy-Item -Recurse $HOME\\dbt-course\\kit\\updates $HOME\\dbt-course\\practice\\\nPS> Get-ChildItem -Name $HOME\\dbt-course\\practice\\updates\nREADME.md      day2.sql       fresh_load.sql"
+         }
         },
         {
          "c": [
@@ -3937,7 +3943,10 @@
          "id": "ch13-c28",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/practice\n$ duckdb practice.duckdb < updates/day2.sql"
+         "text": "$ cd ~/dbt-course/practice\n$ duckdb practice.duckdb < updates/day2.sql",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\practice\nPS> duckdb practice.duckdb -c \".read updates/day2.sql\""
+         }
         },
         {
          "c": [
@@ -3967,7 +3976,10 @@
          "id": "ch13-c30",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ dbt snapshot"
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ dbt snapshot",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> dbt snapshot"
+         }
         },
         {
          "id": "ch13-c31",
@@ -4786,7 +4798,10 @@
          "id": "ch13-c47",
          "lang": "bash",
          "t": "code",
-         "text": "$ mkdir -p ~/dbt-course/throwaway\n$ cp -R ~/dbt-course/practice ~/dbt-course/jaffle_dbt ~/dbt-course/throwaway/\n$ cd ~/dbt-course/throwaway/jaffle_dbt"
+         "text": "$ mkdir -p ~/dbt-course/throwaway\n$ cp -R ~/dbt-course/practice ~/dbt-course/jaffle_dbt ~/dbt-course/throwaway/\n$ cd ~/dbt-course/throwaway/jaffle_dbt",
+         "variants": {
+          "win": "PS> New-Item -ItemType Directory -Force $HOME\\dbt-course\\throwaway\nPS> Copy-Item -Recurse $HOME\\dbt-course\\practice, $HOME\\dbt-course\\jaffle_dbt $HOME\\dbt-course\\throwaway\\\nPS> cd $HOME\\dbt-course\\throwaway\\jaffle_dbt"
+         }
         },
         {
          "c": [
@@ -7257,7 +7272,10 @@
          "id": "ch13-c65",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ git status --short\n?? snapshots/snapshots.yml\n$ git add snapshots/snapshots.yml\n$ git commit -m \"Chapter 13: snapshots in YAML (customers_snapshot, orders_snapshot)\"\n[main 03574f2] Chapter 13: snapshots in YAML (customers_snapshot, orders_snapshot)\n 1 file changed, 20 insertions(+)\n create mode 100644 snapshots/snapshots.yml"
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ git status --short\n?? snapshots/snapshots.yml\n$ git add snapshots/snapshots.yml\n$ git commit -m \"Chapter 13: snapshots in YAML (customers_snapshot, orders_snapshot)\"\n[main 03574f2] Chapter 13: snapshots in YAML (customers_snapshot, orders_snapshot)\n 1 file changed, 20 insertions(+)\n create mode 100644 snapshots/snapshots.yml",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> git status --short\n?? snapshots/snapshots.yml\nPS> git add snapshots/snapshots.yml\nPS> git commit -m \"Chapter 13: snapshots in YAML (customers_snapshot, orders_snapshot)\"\n[main 03574f2] Chapter 13: snapshots in YAML (customers_snapshot, orders_snapshot)\n 1 file changed, 20 insertions(+)\n create mode 100644 snapshots/snapshots.yml"
+         }
         },
         {
          "c": [

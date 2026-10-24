@@ -3112,7 +3112,10 @@
          "id": "ch09-c20",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ mkdir models/legacy\n$ code models/legacy/legacy_monthly_revenue.sql"
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ mkdir models/legacy\n$ code models/legacy/legacy_monthly_revenue.sql",
+         "variants": {
+          "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> ..\\.venv\\Scripts\\Activate.ps1\nPS> New-Item -ItemType Directory models\\legacy\nPS> code models/legacy/legacy_monthly_revenue.sql"
+         }
         },
         {
          "c": [

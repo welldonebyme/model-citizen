@@ -3301,7 +3301,10 @@
        "id": "ch12-c45",
        "lang": "bash",
        "t": "code",
-       "text": "$ ls target/compiled/jaffle_dbt/analyses/"
+       "text": "$ ls target/compiled/jaffle_dbt/analyses/",
+       "variants": {
+        "win": "PS> Get-ChildItem -Name target\\compiled\\jaffle_dbt\\analyses\\"
+       }
       },
       {
        "id": "ch12-c46",
@@ -4104,7 +4107,10 @@
          "id": "ch12-c55",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt compile -s revenue_by_region\n$ ls target/compiled/jaffle_dbt/analyses/\n$ dbt run -s revenue_by_region\n$ dbt show -s revenue_by_region"
+         "text": "$ dbt compile -s revenue_by_region\n$ ls target/compiled/jaffle_dbt/analyses/\n$ dbt run -s revenue_by_region\n$ dbt show -s revenue_by_region",
+         "variants": {
+          "win": "PS> dbt compile -s revenue_by_region\nPS> Get-ChildItem -Name target\\compiled\\jaffle_dbt\\analyses\\\nPS> dbt run -s revenue_by_region\nPS> dbt show -s revenue_by_region"
+         }
         },
         {
          "c": [
@@ -4137,7 +4143,10 @@
          "id": "ch12-c56",
          "lang": "bash",
          "t": "code",
-         "text": "$ cp seeds/country_regions.csv ../country_regions_backup.csv\n$ dbt seed                      # after editing the CSV: read the error\n$ dbt seed --full-refresh"
+         "text": "$ cp seeds/country_regions.csv ../country_regions_backup.csv\n$ dbt seed                      # after editing the CSV: read the error\n$ dbt seed --full-refresh",
+         "variants": {
+          "win": "PS> Copy-Item seeds\\country_regions.csv ..\\country_regions_backup.csv\nPS> dbt seed                      # after editing the CSV: read the error\nPS> dbt seed --full-refresh"
+         }
         },
         {
          "c": [
@@ -4155,7 +4164,10 @@
          "id": "ch12-c57",
          "lang": "bash",
          "t": "code",
-         "text": "$ cp ../country_regions_backup.csv seeds/country_regions.csv\n$ dbt seed --full-refresh\n$ dbt build"
+         "text": "$ cp ../country_regions_backup.csv seeds/country_regions.csv\n$ dbt seed --full-refresh\n$ dbt build",
+         "variants": {
+          "win": "PS> Copy-Item ..\\country_regions_backup.csv seeds\\country_regions.csv\nPS> dbt seed --full-refresh\nPS> dbt build"
+         }
         },
         {
          "c": [

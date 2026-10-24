@@ -1,6 +1,7 @@
 # 12 — Status (2026-10-24, end of the build and of the review fixes)
 
-Nothing is published and no remote exists: the site, the kits and the git history are only on this Mac.
+The code is in a public repository, https://github.com/welldonebyme/model-citizen (commits under the GitHub
+account `welldonebyme`, with its no-reply email). The site itself is not published yet (GitHub Pages is off).
 Quality-gate results are in `13-qa-report.md`; decisions in `10-decisions.md`; book corrections in
 `11-book-errata.md` (originals saved in `reference/book-snapshot-2026-10-24/`).
 
@@ -26,9 +27,8 @@ Quality-gate results are in `13-qa-report.md`; decisions in `10-decisions.md`; b
 - **Settings**: plan and dates, OS, theme, text size, progress file export/import, offline copy (opt-in).
 
 ## Needs Adnane's explicit OK (not done on purpose)
-1. **Publishing** the site (GitHub Pages) and creating any repository, public or private.
-2. **A repository for the Windows CI job** (`converter/reference/ci/kit-matrix.yml`): the only way to run the
-   kits and the PowerShell replay on a real `windows-latest` machine before the friend does.
+1. **Publishing** the site (turning on GitHub Pages) and sharing its link.
+2. (Done 2026-10-24: public repository created; the Windows CI job `.github/workflows/kit-matrix.yml` runs there.)
 3. **Shipping the book PDF** with the site: it has Adnane's name and local paths. Build with
    `MC_INCLUDE_PDF=1` to include it; without it the Reference page simply does not offer the PDF.
 

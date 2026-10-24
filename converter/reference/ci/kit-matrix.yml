@@ -1,7 +1,8 @@
 # kit-matrix: proves that the practice kit works on Windows, macOS and Linux, the way a learner uses it.
 #
-# NOT ACTIVE YET (no repository exists): when the repository is created, copy this file to
-# .github/workflows/kit-matrix.yml. It expects the built kits in site/public/kits/ (converter/reference/build_kits.py).
+# Active copy: .github/workflows/kit-matrix.yml (keep both the same). It expects the built kits in site/public/kits/
+# (converter/reference/build_kits.py). Run it by hand from the Actions tab, or it runs on pull requests that touch
+# the kits, the OS rules or the generated chapters.
 #
 # What it checks, on windows-latest, macos-latest and ubuntu-latest:
 #   1. uv + Python 3.12 + dbt-core 1.11 + dbt-duckdb 1.11 + duckdb 1.5.6 through the kit's own setup script

@@ -104,7 +104,8 @@ jobs:
           grep -q 'exists: kept' second-run.log
 
       # The website's "Get the course files" box (lesson 1.6, block ch01-kit-c1): its Windows commands under Windows
-      # PowerShell 5.1, twice (no nested folder, 30 files), then setup.ps1 started from $HOME\dbt-course\kit.
+      # PowerShell 5.1, twice (every file of the zip in place, no nested folder), then setup.ps1 started from
+      # $HOME\dbt-course\kit.
       - name: Lesson 1.6 box commands + setup.ps1 from the kit folder (Windows PowerShell 5.1)
         if: runner.os == 'Windows'
         shell: powershell
@@ -124,8 +125,14 @@ jobs:
           $code = Find-Code (Get-Content site\src\generated\chapters\ch01.json -Raw | ConvertFrom-Json)
           $cmds = $code.variants.win -split "`n" | Where-Object { $_ -like 'PS> *' } | ForEach-Object { $_.Substring(4) }
           foreach ($round in 1, 2) { foreach ($c in $cmds) { Write-Output "PS> $c"; Invoke-Expression $c } }
-          $n = (Get-ChildItem -Recurse -File $HOME\dbt-course\kit | Where-Object { $_.FullName -notlike '*\capstone\*' }).Count
-          if ($n -ne 30 -or (Test-Path $HOME\dbt-course\kit\dbt-course-kit)) { throw "kit folder: $n files" }
+          # every file of the zip is in the kit folder, and there is no nested dbt-course-kit folder (the setup
+          # run by the steps before may have added its own files there, such as Python's __pycache__)
+          $src = "$HOME\Downloads\dbt-course-kit"
+          $files = Get-ChildItem -Recurse -File $src | ForEach-Object { $_.FullName.Substring($src.Length + 1) }
+          $missing = @($files | Where-Object { -not (Test-Path (Join-Path "$HOME\dbt-course\kit" $_)) })
+          $extra = Get-ChildItem -Recurse -File $HOME\dbt-course\kit | Where-Object { $_.FullName -notlike '*\capstone\*' } | ForEach-Object { $_.FullName.Substring("$HOME\dbt-course\kit".Length + 1) } | Where-Object { $files -notcontains $_ }
+          Write-Output "zip files: $($files.Count); in the kit folder but not in the zip: $($extra -join ', ')"
+          if ($files.Count -lt 30 -or $missing.Count -gt 0 -or (Test-Path $HOME\dbt-course\kit\dbt-course-kit)) { throw "kit folder: missing $($missing -join ', ')" }
           $out = powershell -ExecutionPolicy Bypass -File $HOME\dbt-course\kit\setup.ps1 *>&1 | Out-String
           Write-Output $out
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

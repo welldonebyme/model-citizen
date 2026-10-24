@@ -41,8 +41,11 @@ export interface SqlWorkspaceProps {
   description?: string;
   /** handle [data-send-to-workspace] clicks and 'mc:workspace-run' events (default true; one workspace per page) */
   listen?: boolean;
-  /** start the engine when the workspace is mounted (default true, except with Data Saver on) */
-  autostart?: boolean;
+  /**
+   * When to download and start the engine: 'visible' (default) = when the workspace scrolls into view or at the
+   * first Run; true = at once; false = only at the first Run. Never at once with Data Saver on.
+   */
+  autostart?: boolean | 'visible';
   /** element id (default "workspace") */
   id?: string;
 }
@@ -177,13 +180,21 @@ export default function SqlWorkspace(props: SqlWorkspaceProps) {
   useEffect(() => {
     const off = onEngineProgress((p) => { setProgress(p); if (p.phase === 'ready') setReady(true); });
     const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
-    if (engineStarted() || (props.autostart ?? true) && !saveData) start();
+    const mode = props.autostart ?? 'visible';
+    let io: IntersectionObserver | null = null;
+    if (engineStarted() || (mode === true && !saveData)) start();
+    else if (mode === 'visible' && !saveData && root.current && typeof IntersectionObserver !== 'undefined') {
+      io = new IntersectionObserver((entries) => {
+        if (entries.some((e) => e.isIntersecting)) { io?.disconnect(); start(); }
+      });
+      io.observe(root.current);
+    }
     const offData = onDataChange(async (why) => {
       const e = await getEngine();
       setDataState({ ...e.state });
       if (why === 'restart') setModelsReady(null);
     });
-    return () => { off(); offData(); };
+    return () => { off(); offData(); io?.disconnect(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

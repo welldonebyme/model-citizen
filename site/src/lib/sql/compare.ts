@@ -318,8 +318,8 @@ export function compareResults(expected: Expected, actual: Actual, opts: Compare
   if (expected.kind === 'error') {
     if (actual.kind !== 'error') {
       push({ kind: 'expectedErrorGotTable', severity: 'error', detail: `expected "${expected.errorType}: ${expected.message}" but the query succeeded`,
-        plain: `The book shows an error (${expected.errorType}), but your query ran without an error.` });
-      return done('The book shows an error here.');
+        plain: `The book's error: ${expected.errorType}: ${expected.message}` });
+      return done('Your query ran without an error, but the book shows an error here.');
     }
     const a = parseActualError(actual.message);
     if (a.type !== expected.errorType) {

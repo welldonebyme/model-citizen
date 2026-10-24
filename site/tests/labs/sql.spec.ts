@@ -57,7 +57,7 @@ test.describe('SQL engine and workspace', () => {
     await page.keyboard.press('ControlOrMeta+Enter');
     await expect(ws.getByTestId('match-status')).toHaveAttribute('data-match', 'false');
     await expect(ws.getByTestId('match-status')).toContainText('Differs from the book');
-    await expect(ws.getByTestId('match-status')).toContainText('The book shows an error');
+    await expect(ws.getByTestId('match-status')).toContainText('but the book shows an error here');
     await ws.getByTestId('restore').click();
     expect(await getEditor(page, 'sql-editor')).toBe('select status, user_id, count(*)\nfrom jaffle_shop.orders\ngroup by status;');
     await ws.getByTestId('toggle-expected').click();

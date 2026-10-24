@@ -26,7 +26,8 @@
     "labs:build": "node scripts/labs/sync-data.mjs && astro build --config tests/labs/astro.labs.config.mjs",
     "labs:sizes": "node scripts/labs/sizes.mjs",
     "e2e:labs": "playwright test -c tests/labs/playwright.config.ts --grep-invert @long",
-    "e2e:labs:long": "playwright test -c tests/labs/playwright.config.ts --grep @long --grep-invert @measure"
+    "e2e:labs:long": "playwright test -c tests/labs/playwright.config.ts --grep @long --grep-invert @measure",
+    "labs:typecheck": "tsc -p tests/labs/tsconfig.check.json"
   },
   "dependencies": {
     "@astrojs/react": "7.0.1",

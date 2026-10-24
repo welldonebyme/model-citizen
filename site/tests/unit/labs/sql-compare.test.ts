@@ -88,7 +88,7 @@ describe('plain-English differences', () => {
   });
   test('errors', () => {
     const e = parseBookOutput('Binder Error: column "x" not found');
-    expect(compareResults(e, { kind: 'table', columns: ['a'], rows: [] }).diffs[0].plain).toMatch(/ran without an error/);
+    expect(compareResults(e, { kind: 'table', columns: ['a'], rows: [] }).summary).toMatch(/ran without an error/);
     const ok = compareResults(e, { kind: 'error', message: 'Binder Error: column "x" not found\n\nLINE 1: select x\n               ^' });
     expect(ok.match).toBe(true);
     expect(ok.diffs[0].severity).toBe('warning');

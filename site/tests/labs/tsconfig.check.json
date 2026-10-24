@@ -1,0 +1,12 @@
+{
+  "$comment": "Type check of the labs code only (astro check runs out of memory on the whole site): npm run labs:typecheck",
+  "extends": "../../tsconfig.json",
+  "compilerOptions": { "noEmit": true, "types": ["vite/client"] },
+  "include": [
+    "../../.astro/types.d.ts", "../../src/lib/sql/**/*", "../../src/lib/py/**/*", "../../src/components/labs/CodeEditor.tsx",
+    "../../src/components/labs/ResultGrid.tsx", "../../src/components/labs/SqlWorkspace.tsx", "../../src/components/labs/SqlExamplesRunner.tsx",
+    "../../src/components/labs/YamlPlayground.tsx", "../../src/components/labs/JinjaPlayground.tsx", "../../src/components/labs/jinja-mode.ts",
+    "../../scripts/labs/*.ts", "./**/*.ts", "../unit/labs/**/*.ts"
+  ],
+  "exclude": []
+}

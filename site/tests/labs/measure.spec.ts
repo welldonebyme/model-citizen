@@ -14,7 +14,7 @@ const SLOW = 'http://127.0.0.1:4411/model-citizen/';
 async function sqlVisit(page: Page, base = '') {
   await page.goto(base + 'labs/sql/');
   await sqlReady(page);
-  const ready = await page.evaluate(() => (globalThis as Record<string, number>).__mcSqlReadyAt);
+  const ready = await page.evaluate(() => (globalThis as unknown as Record<string, number>).__mcSqlReadyAt);
   await page.getByTestId('run').click();
   await page.getByTestId('result-grid').waitFor();
   const first = await page.evaluate(() => performance.now());

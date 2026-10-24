@@ -17,6 +17,7 @@ set -euo pipefail
 
 KIT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COURSE="${DBT_COURSE_DIR:-$HOME/dbt-course}"
+mkdir -p "$COURSE" && COURSE="$(cd "$COURSE" && pwd)"   # absolute path
 PY="$COURSE/.venv/bin/python"
 
 step() { printf '\n==> %s\n' "$*"; }

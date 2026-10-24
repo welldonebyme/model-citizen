@@ -1,0 +1,217 @@
+# kit-matrix: proves that the practice kit works on Windows, macOS and Linux, the way a learner uses it.
+#
+# NOT ACTIVE YET (no repository exists): when the repository is created, copy this file to
+# .github/workflows/kit-matrix.yml. It expects the built kits in site/public/kits/ (converter/reference/build_kits.py).
+#
+# What it checks, on windows-latest, macos-latest and ubuntu-latest:
+#   1. uv + Python 3.12 + dbt-core 1.11 + dbt-duckdb 1.11 + duckdb 1.5.6 through the kit's own setup script
+#      (Windows: setup.ps1 under Windows PowerShell 5.1 = the friend's exact command, then again under pwsh 7)
+#   2. the practice database is built and `dbt debug` passes (inside the setup script)
+#   3. the DuckDB CLI 1.5.6 runs the README's data-script command (Windows: duckdb practice.duckdb -c ".read ...")
+#   4. tag ch07 of the reference project: `dbt build` prints the summary of reference/builder-logs/ch07.md
+#   5. the 9 bug patches apply at ch21 (Windows: real CRLF working tree with Git for Windows)
+#   6. tag ch25 on a fresh database: dbt deps, pandas, the fresh-database rule of Chapter 19, final summary
+# Status: written and reviewed on macOS; never executed on GitHub (the same steps were run locally on macOS
+# with bash and with pwsh 7.6, see converter/reference/test_kits.sh and test_kits_pwsh.ps1).
+name: kit-matrix
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "site/public/kits/**"
+      - "converter/reference/kit/**"
+      - "converter/reference/build_kits.py"
+      - ".github/workflows/kit-matrix.yml"
+
+jobs:
+  kit:
+    name: practice kit on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    env:
+      DBT_SEND_ANONYMOUS_USAGE_STATS: "false"
+      DBT_USE_COLORS: "false"
+      DUCKDB_VERSION: "1.5.6"
+      CH07_SUMMARY: "Done. PASS=17 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=17"
+      CH25_SUMMARY: "Done. PASS=66 WARN=1 ERROR=0 SKIP=0 NO-OP=2 TOTAL=69"
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      # ------------------------------------------------------------------ 1. uv
+      # The friend installs uv with winget; GitHub's Windows runners have no winget, so the official installer is used.
+      - name: Install uv (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          irm https://astral.sh/uv/install.ps1 | iex
+          Add-Content -Path $env:GITHUB_PATH -Value "$HOME\.local\bin" -Encoding ascii
+      - name: Install uv (macOS, Linux)
+        if: runner.os != 'Windows'
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      # ------------------------------------------------------------------ the kit, as a learner gets it
+      - name: Unzip the kit (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: Expand-Archive -Path site\public\kits\dbt-course-kit.zip -DestinationPath $env:RUNNER_TEMP
+      - name: Unzip the kit (macOS, Linux)
+        if: runner.os != 'Windows'
+        run: unzip -q site/public/kits/dbt-course-kit.zip -d "$RUNNER_TEMP"
+
+      # ------------------------------------------------------------------ 2. setup + dbt debug
+      - name: setup.ps1 under Windows PowerShell 5.1 (the README's command)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          git config --global core.autocrlf true
+          cd $env:RUNNER_TEMP\dbt-course-kit
+          powershell -ExecutionPolicy Bypass -File .\setup.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: setup.ps1 again under PowerShell 7 (must keep everything)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          cd $env:RUNNER_TEMP\dbt-course-kit
+          $out = pwsh -ExecutionPolicy Bypass -File .\setup.ps1 *>&1 | Out-String
+          Write-Output $out
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ($out -notmatch 'existing venv kept' -or $out -notmatch 'exists: kept') { throw 'second run did not keep the venv and the database' }
+      - name: setup.sh
+        if: runner.os != 'Windows'
+        run: |
+          bash "$RUNNER_TEMP/dbt-course-kit/setup.sh"
+          bash "$RUNNER_TEMP/dbt-course-kit/setup.sh" | tee second-run.log
+          grep -q 'existing venv kept' second-run.log
+          grep -q 'exists: kept' second-run.log
+
+      - name: Versions in the venv
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          & "$HOME\dbt-course\.venv\Scripts\dbt.exe" --version
+          $lib = (& "$HOME\dbt-course\.venv\Scripts\python.exe" -c "import duckdb; print(duckdb.__version__)").Trim()
+          if ($lib -ne $env:DUCKDB_VERSION) { throw "duckdb library $lib" }
+      - name: Versions in the venv (macOS, Linux)
+        if: runner.os != 'Windows'
+        run: |
+          ~/dbt-course/.venv/bin/dbt --version | tee version.txt
+          grep -q 'installed: 1.11.' version.txt
+          test "$(~/dbt-course/.venv/bin/python -c 'import duckdb; print(duckdb.__version__)')" = "$DUCKDB_VERSION"
+
+      # ------------------------------------------------------------------ 3. DuckDB CLI (optional for learners)
+      - name: DuckDB CLI 1.5.6 (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $zip = Join-Path $env:RUNNER_TEMP 'duckdb_cli.zip'
+          Invoke-WebRequest "https://github.com/duckdb/duckdb/releases/download/v$env:DUCKDB_VERSION/duckdb_cli-windows-amd64.zip" -OutFile $zip
+          Expand-Archive $zip -DestinationPath (Join-Path $env:RUNNER_TEMP 'duckdb-cli')
+          Add-Content -Path $env:GITHUB_PATH -Value (Join-Path $env:RUNNER_TEMP 'duckdb-cli') -Encoding ascii
+      - name: DuckDB CLI 1.5.6 (macOS, Linux)
+        if: runner.os != 'Windows'
+        run: |
+          if [ "$RUNNER_OS" = macOS ]; then asset=duckdb_cli-osx-universal.zip; else asset=duckdb_cli-linux-amd64.zip; fi
+          curl -fsSL -o "$RUNNER_TEMP/duckdb_cli.zip" "https://github.com/duckdb/duckdb/releases/download/v$DUCKDB_VERSION/$asset"
+          unzip -q "$RUNNER_TEMP/duckdb_cli.zip" -d "$RUNNER_TEMP/duckdb-cli"
+          echo "$RUNNER_TEMP/duckdb-cli" >> "$GITHUB_PATH"
+      - name: README data-script command with the CLI (Windows, on a copy)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          duckdb --version
+          $copy = Join-Path $env:RUNNER_TEMP 'cli-check\practice'
+          New-Item -ItemType Directory -Force $copy | Out-Null
+          Copy-Item -Recurse "$HOME\dbt-course\practice\*" $copy
+          cd $copy
+          $out = duckdb practice.duckdb -c ".read updates/day2.sql" | Out-String
+          Write-Output $out
+          if ($out -notmatch '320') { throw 'day2.sql did not give 320 orders' }
+      - name: README data-script command with the CLI (macOS, Linux, on a copy)
+        if: runner.os != 'Windows'
+        run: |
+          duckdb --version
+          mkdir -p "$RUNNER_TEMP/cli-check" && cp -R ~/dbt-course/practice "$RUNNER_TEMP/cli-check/"
+          cd "$RUNNER_TEMP/cli-check/practice"
+          duckdb practice.duckdb < updates/day2.sql | tee day2.txt
+          grep -q 320 day2.txt
+
+      # ------------------------------------------------------------------ 4. reference project at ch07
+      - name: dbt build at ch07 (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          cd $HOME\dbt-course\reference\jaffle_dbt
+          git checkout -q ch07
+          $out = & "$HOME\dbt-course\.venv\Scripts\dbt.exe" build 2>&1 | Out-String
+          Write-Output $out
+          if (-not $out.Contains($env:CH07_SUMMARY)) { throw "expected: $env:CH07_SUMMARY" }
+      - name: dbt build at ch07 (macOS, Linux)
+        if: runner.os != 'Windows'
+        run: |
+          cd ~/dbt-course/reference/jaffle_dbt
+          git checkout -q ch07
+          ~/dbt-course/.venv/bin/dbt build | tee "$RUNNER_TEMP/ch07.log"
+          grep -qF "$CH07_SUMMARY" "$RUNNER_TEMP/ch07.log"
+
+      # ------------------------------------------------------------------ 5. bug patches (Chapter 22)
+      - name: Bug patches apply at ch21 (Windows, CRLF working tree)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          cd $HOME\dbt-course\reference\jaffle_dbt
+          git checkout -q ch21
+          Get-ChildItem "$HOME\dbt-course\kit\bugs\*.patch" | ForEach-Object {
+            git apply --check $_.FullName
+            if ($LASTEXITCODE -ne 0) { throw "git apply failed: $($_.Name)" }
+            Write-Output "OK $($_.Name)"
+          }
+      - name: Bug patches apply at ch21 (macOS, Linux)
+        if: runner.os != 'Windows'
+        run: |
+          cd ~/dbt-course/reference/jaffle_dbt
+          git checkout -q ch21
+          for p in ~/dbt-course/kit/bugs/*.patch; do git apply --check "$p" && echo "OK $(basename "$p")"; done
+
+      # ------------------------------------------------------------------ 6. ch25 on a fresh database
+      - name: ch25 on a fresh database (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $py = "$HOME\dbt-course\.venv\Scripts\python.exe"
+          $dbt = "$HOME\dbt-course\.venv\Scripts\dbt.exe"
+          cd $HOME\dbt-course\reference\practice
+          & $py ..\..\kit\tools\duck.py practice.duckdb -f setup.sql
+          & $py ..\..\kit\tools\duck.py practice.duckdb -f updates\day2.sql
+          cd ..\jaffle_dbt
+          git checkout -q ch25
+          & $dbt deps
+          uv pip install --python $py pandas
+          & $dbt build --exclude-resource-type unit_test
+          $out = & $dbt build 2>&1 | Out-String
+          Write-Output $out
+          if (-not $out.Contains($env:CH25_SUMMARY)) { throw "expected: $env:CH25_SUMMARY" }
+      - name: ch25 on a fresh database (macOS, Linux)
+        if: runner.os != 'Windows'
+        run: |
+          PY=~/dbt-course/.venv/bin/python
+          DBT=~/dbt-course/.venv/bin/dbt
+          cd ~/dbt-course/reference/practice
+          $PY ../../kit/tools/duck.py practice.duckdb -f setup.sql
+          $PY ../../kit/tools/duck.py practice.duckdb -f updates/day2.sql
+          cd ../jaffle_dbt
+          git checkout -q ch25
+          $DBT deps
+          uv pip install --python "$PY" pandas
+          $DBT build --exclude-resource-type unit_test || true
+          $DBT build | tee "$RUNNER_TEMP/ch25.log"
+          grep -qF "$CH25_SUMMARY" "$RUNNER_TEMP/ch25.log"

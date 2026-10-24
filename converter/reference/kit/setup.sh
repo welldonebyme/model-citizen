@@ -21,6 +21,7 @@ set -euo pipefail
 
 KIT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COURSE="${DBT_COURSE_DIR:-$HOME/dbt-course}"
+mkdir -p "$COURSE" && COURSE="$(cd "$COURSE" && pwd)"   # absolute path
 DUCKDB_VERSION="${DUCKDB_VERSION:-1.5.6}"
 PY_VERSION="3.12"
 DBT_CORE_SPEC="dbt-core~=1.11.0"

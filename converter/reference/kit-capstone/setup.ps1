@@ -20,6 +20,8 @@ param(
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2.0
+# absolute path (a relative -CourseDir is read from the current folder)
+$CourseDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($CourseDir)
 $KitDir = $PSScriptRoot
 $OnWindows = $true
 if ($PSVersionTable.PSEdition -eq 'Core' -and -not $IsWindows) { $OnWindows = $false }

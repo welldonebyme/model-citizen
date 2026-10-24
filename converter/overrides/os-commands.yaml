@@ -550,7 +550,8 @@ rules:
     (tested); the Windows PowerShell 5.1 quote stripping is documented, not tested'
   notes: 'Windows PowerShell 5.1 removes the double quotes inside a single-quoted argument passed to a program, so dbt receives
     invalid JSON: escape them as \" there. PowerShell 7.3+ passes them correctly. Alternative on every shell: the YAML form
-    `--warn-error-options "{error: [NoNodesForSelectionCriteria]}"`.'
+    `--warn-error-options "{error: [NoNodesForSelectionCriteria]}"` (checked with dbt 1.11.16 on macOS: same Compilation Error
+    as the JSON form).'
 scan:
   source: dbt-bible/parts/**/*.tex, bashcode blocks, lines starting with '$ ' or '(.venv) $ '
   command_lines: 1096

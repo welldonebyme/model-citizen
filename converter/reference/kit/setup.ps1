@@ -30,6 +30,8 @@ param(
 
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version 2.0
+# absolute path (a relative -CourseDir is read from the current folder)
+$CourseDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($CourseDir)
 
 $KitDir = $PSScriptRoot
 $PyVersion = '3.12'

@@ -334,7 +334,8 @@ RULES = [
          count_re=r"'\{\"", notes="Windows PowerShell 5.1 removes the double quotes inside a single-quoted argument passed to "
                                    "a program, so dbt receives invalid JSON: escape them as \\\" there. PowerShell 7.3+ "
                                    "passes them correctly. Alternative on every shell: the YAML form `--warn-error-options "
-                                   "\"{error: [NoNodesForSelectionCriteria]}\"`.",
+                                   "\"{error: [NoNodesForSelectionCriteria]}\"` (checked with dbt 1.11.16 on macOS: "
+                                   "same Compilation Error as the JSON form).",
          test={"pwsh": "python3 -c \"import sys; print(sys.argv[1])\" '{\"error\": [\"NoNodesForSelectionCriteria\"]}'",
                "zsh": "python3 -c \"import sys; print(sys.argv[1])\" '{\"error\": [\"NoNodesForSelectionCriteria\"]}'",
                "compare": "equal"},

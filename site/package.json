@@ -13,14 +13,20 @@
     "check": "astro check",
     "test": "vitest run",
     "e2e": "playwright test",
-    "build:fast": "node scripts/sync-assets.mjs && node scripts/dbt/build-engine.mjs --quiet && astro build",
-    "prebuild": "node scripts/sync-assets.mjs && node scripts/dbt/build-engine.mjs --quiet",
+    "build:fast": "node scripts/sync-assets.mjs && node scripts/dbt/build-engine.mjs --quiet && node scripts/labs/sync-data.mjs && node scripts/labs/py-lock.mjs --check && astro build",
+    "prebuild": "node scripts/sync-assets.mjs && node scripts/dbt/build-engine.mjs --quiet && node scripts/labs/sync-data.mjs && node scripts/labs/py-lock.mjs --check",
     "dbt:engine": "node scripts/dbt/build-engine.mjs",
     "dbt:presets": "node scripts/dbt/build-presets.mjs",
     "dbt:verify-presets": "node scripts/dbt/verify-presets.mjs",
     "e2e:dbt": "playwright test -c tests/dbt/playwright.config.ts --grep-invert @long",
     "e2e:dbt:long": "playwright test -c tests/dbt/playwright.config.ts --grep @long",
-    "test:selector": "vitest run --config tests/selector/vitest.config.ts"
+    "test:selector": "vitest run --config tests/selector/vitest.config.ts",
+    "labs:data": "node scripts/labs/sync-data.mjs",
+    "labs:extract": "node scripts/labs/extract-sql.ts && node scripts/labs/build-py-cases.ts && node scripts/labs/py-lock.mjs",
+    "labs:build": "node scripts/labs/sync-data.mjs && astro build --config tests/labs/astro.labs.config.mjs",
+    "labs:sizes": "node scripts/labs/sizes.mjs",
+    "e2e:labs": "playwright test -c tests/labs/playwright.config.ts --grep-invert @long",
+    "e2e:labs:long": "playwright test -c tests/labs/playwright.config.ts --grep @long --grep-invert @measure"
   },
   "dependencies": {
     "@astrojs/react": "7.0.1",

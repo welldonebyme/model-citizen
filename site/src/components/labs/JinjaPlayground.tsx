@@ -177,7 +177,9 @@ export default function JinjaPlayground() {
     setShowSolution(false);
     setShowBook(false);
     setNotice(null);
-    document.getElementById('jinja-tool')?.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    const tool = document.getElementById('jinja-tool');
+    const top = tool?.getBoundingClientRect().top ?? 0;
+    if (tool && (top < 0 || top > window.innerHeight * 0.6)) tool.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }
 
   const err = out?.status === 'error' || out?.status === 'timeout' ? out.error : null;

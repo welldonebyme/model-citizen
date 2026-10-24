@@ -66,6 +66,8 @@ export default function YamlPlayground() {
   const [showSolution, setShowSolution] = useState(false);
   const [solved, setSolved] = useState<Set<string>>(() => new Set());
   const [fatal, setFatal] = useState<string | null>(null);
+  /** bumped by open(): "Start again" on the same text must validate again */
+  const [nonce, setNonce] = useState(0);
   const solutionData = useRef(new Map<string, string>());
   const seq = useRef(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -135,7 +137,7 @@ export default function YamlPlayground() {
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(() => { void validate(text, engine, filePath, exercise, bookCase); }, 300);
     return () => { if (timer.current) clearTimeout(timer.current); };
-  }, [text, engine, filePath, exercise, bookCase, validate, py.phase]);
+  }, [text, engine, filePath, exercise, bookCase, validate, py.phase, nonce]);
 
   function open(ex: Exercise | null, bc: YamlCase | null) {
     const t = ex?.start ?? bc?.text ?? '';
@@ -151,7 +153,10 @@ export default function YamlPlayground() {
     setChecks(null);
     setGraded(null);
     setRes(null);
-    document.getElementById('yaml-tool')?.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    setNonce((n) => n + 1);
+    const tool = document.getElementById('yaml-tool');
+    const top = tool?.getBoundingClientRect().top ?? 0;
+    if (tool && (top < 0 || top > window.innerHeight * 0.6)) tool.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
     editor.current?.focus();
   }
 

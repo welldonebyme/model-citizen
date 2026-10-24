@@ -54,7 +54,7 @@ test.describe('YAML playground', () => {
     for (const ex of exercises.exercises) {
       await page.locator(`[data-exercise="${ex.id}"]`).click();
       const check = page.getByTestId('exercise-check');
-      await expect(check).toHaveAttribute('data-solved', 'false');
+      await expect(check, `${ex.id} (start)`).toHaveAttribute('data-solved', 'false');
       await setEditor(page, 'yaml-editor', ex.solution);
       await expect(check, ex.id).toHaveAttribute('data-solved', 'true');
       rows.push({ id: ex.id, start: 'not solved', solution: 'solved' });

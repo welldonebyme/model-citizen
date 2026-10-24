@@ -165,6 +165,25 @@
             " You will type every command yourself on a free local setup (dbt Core + DuckDB on your Mac), then build a full capstone project from scratch."
            ],
            "t": "p"
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "The same free setup works on Windows: dbt Core and DuckDB run in PowerShell (or in WSL). Choose your system with the switch at the top of the page: every terminal command is then shown in its Windows form."
+             ],
+             "t": "p"
+            }
+           ],
+           "kind": "tip",
+           "os": [
+            "win"
+           ],
+           "osNote": "win-ch00-setup",
+           "t": "callout",
+           "title": [
+            "On Windows"
+           ]
           }
          ]
         },

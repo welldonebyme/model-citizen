@@ -313,9 +313,10 @@ RULES = [
                                      "zsh": "echo '  36 ' | tr -d ' '", "compare": "equal"}),
     dict(id="ps-quoting", category="dbt", zsh="dbt ls -s test_type:generic,staging.stripe / dbt ls -s @int_orders__enriched",
          powershell='dbt ls -s "test_type:generic,staging.stripe" / dbt ls -s "@int_orders__enriched"',
-         count_re=r"(^|\s)(@|[^\s\"']*,)[^\s\"']*", notes="Unquoted, PowerShell splits a,b into two arguments (dbt then "
-         "builds a UNION instead of an intersection) and reads @name as splatting: quote such arguments (and { } ( )). "
-         "The quoted form works in zsh too.",
+         count_re=r"(^|\s)(@|[^\s\"']*,)[^\s\"']*", notes="PowerShell reads an unquoted @name as splatting: the argument "
+         "silently disappears (checked in pwsh 7.6: dbt then receives -s without a value). An unquoted a,b is an array "
+         "expression for PowerShell: pwsh 7.6 still passes 'a,b' as one argument (checked), Windows PowerShell 5.1 is "
+         "untested. { } ( ) start script blocks / expressions. Quote such arguments: the quoted form works in zsh too.",
          test={"pwsh": 'python3 -c "import sys; print(sys.argv[1:])" "test_type:generic,staging.stripe" "@int_orders__enriched"',
                "zsh": "python3 -c \"import sys; print(sys.argv[1:])\" test_type:generic,staging.stripe @int_orders__enriched",
                "compare": "equal"}),

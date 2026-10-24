@@ -5,10 +5,10 @@ description: macOS/zsh -> Windows PowerShell rules for the shell commands of the
 tested_with: 'pwsh 7.6.8 (Homebrew, macOS) and zsh in a fixture folder; Windows PowerShell 5.1 and Windows itself: untested
   (see converter/reference/ci/kit-matrix.yml)'
 summary:
-  rules: 65
-  tested_ok: 46
+  rules: 68
+  tested_ok: 48
   tested_partly: 8
-  untested: 11
+  untested: 12
   failed: 0
 rules:
 - id: venv-activate
@@ -494,6 +494,29 @@ rules:
   wsl: same as macOS/zsh (bash in Ubuntu)
   book_lines: 0
   tested: 'untested: winget is Windows-only'
+- id: brew-python
+  category: install
+  zsh: brew install python@3.12
+  powershell: winget install --id Python.Python.3.12 -e
+  wsl: same as macOS/zsh (bash in Ubuntu)
+  book_lines: 0
+  tested: 'untested: winget is Windows-only'
+- id: tr
+  category: search
+  zsh: '... | tr -d '' '''
+  powershell: '... | ForEach-Object { $_ -replace '' '', '''' }'
+  wsl: same as macOS/zsh (bash in Ubuntu)
+  book_lines: 0
+  tested: 'pwsh 7.6.8 on macOS: output equals zsh output (1 line(s))'
+- id: ps-quoting
+  category: dbt
+  zsh: dbt ls -s test_type:generic,staging.stripe / dbt ls -s @int_orders__enriched
+  powershell: dbt ls -s "test_type:generic,staging.stripe" / dbt ls -s "@int_orders__enriched"
+  wsl: same as macOS/zsh (bash in Ubuntu)
+  book_lines: 106
+  tested: 'pwsh 7.6.8 on macOS: output equals zsh output (1 line(s))'
+  notes: 'Unquoted, PowerShell splits a,b into two arguments (dbt then builds a UNION instead of an intersection) and reads
+    @name as splatting: quote such arguments (and { } ( )). The quoted form works in zsh too.'
 - id: git-install
   category: install
   zsh: xcode-select --install (Git comes with the command line tools)
@@ -552,93 +575,6 @@ rules:
     invalid JSON: escape them as \" there. PowerShell 7.3+ passes them correctly. Alternative on every shell: the YAML form
     `--warn-error-options "{error: [NoNodesForSelectionCriteria]}"` (checked with dbt 1.11.16 on macOS: same Compilation Error
     as the JSON form).'
-scan:
-  source: dbt-bible/parts/**/*.tex, bashcode blocks, lines starting with '$ ' or '(.venv) $ '
-  command_lines: 1096
-  non_dbt_commands:
-    git: 245
-    cd: 55
-    duckdb: 38
-    python: 36
-    echo: 25
-    ls: 25
-    cp: 24
-    grep: 21
-    mkdir: 21
-    source: 16
-    tail: 11
-    rm: 10
-    cat: 9
-    jq: 9
-    export: 7
-    sed: 6
-    uv: 6
-    head: 5
-    brew: 4
-    wc: 4
-    code: 3
-    diff: 3
-    pwd: 3
-    which: 3
-    find: 2
-    gh: 2
-    mv: 2
-    unset: 2
-    man: 1
-    python3.12: 1
-    sort: 1
-  subcommands:
-    git status: 45
-    git commit: 33
-    git diff: 31
-    git add: 27
-    python -c: 21
-    git switch: 17
-    git fetch: 16
-    git log: 11
-    git remote: 10
-    source ../.venv/bin/activate: 10
-    python -I: 9
-    git branch: 6
-    git merge: 6
-    git restore: 6
-    source .venv/bin/activate: 6
-    git apply: 5
-    git checkout: 5
-    git config: 5
-    git push: 5
-    uv pip install: 4
-    brew install: 3
-    git pull: 3
-    git stash: 3
-    git init: 2
-    git rm: 2
-    git show: 2
-    python render.py: 2
-    uv venv 3.12: 2
-    brew: 1
-    gh auth login: 1
-    gh release create: 1
-    git: 1
-    git clone: 1
-    git reset: 1
-    git revert: 1
-    git worktree: 1
-    python -m: 1
-    python basics.py: 1
-    python ci/load_raw.py: 1
-    python explore.py: 1
-  shell_features:
-    glob or quoted * (selection): 74
-    home ~: 72
-    pipe |: 38
-    and-chain &&: 24
-    VAR=value prefix: 18
-    exit code $?: 16
-    input redirection <: 14
-    output redirection >: 5
-    append redirection >>: 4
-  non_dbt_lines_not_covered_by_a_rule: []
 transforms:
 - rule: env-prefix
   fn: env_prefix
@@ -879,3 +815,90 @@ blocks:
     0'
   why: 'PowerShell: $? is True/False for the last command; the exit code of a program is $LASTEXITCODE (Get-ChildItem is not
     a program and sets no exit code)'
+scan:
+  source: dbt-bible/parts/**/*.tex, bashcode blocks, lines starting with '$ ' or '(.venv) $ '
+  command_lines: 1096
+  non_dbt_commands:
+    git: 245
+    cd: 55
+    duckdb: 38
+    python: 36
+    echo: 25
+    ls: 25
+    cp: 24
+    grep: 21
+    mkdir: 21
+    source: 16
+    tail: 11
+    rm: 10
+    cat: 9
+    jq: 9
+    export: 7
+    sed: 6
+    uv: 6
+    head: 5
+    brew: 4
+    wc: 4
+    code: 3
+    diff: 3
+    pwd: 3
+    which: 3
+    find: 2
+    gh: 2
+    mv: 2
+    unset: 2
+    man: 1
+    python3.12: 1
+    sort: 1
+  subcommands:
+    git status: 45
+    git commit: 33
+    git diff: 31
+    git add: 27
+    python -c: 21
+    git switch: 17
+    git fetch: 16
+    git log: 11
+    git remote: 10
+    source ../.venv/bin/activate: 10
+    python -I: 9
+    git branch: 6
+    git merge: 6
+    git restore: 6
+    source .venv/bin/activate: 6
+    git apply: 5
+    git checkout: 5
+    git config: 5
+    git push: 5
+    uv pip install: 4
+    brew install: 3
+    git pull: 3
+    git stash: 3
+    git init: 2
+    git rm: 2
+    git show: 2
+    python render.py: 2
+    uv venv 3.12: 2
+    brew: 1
+    gh auth login: 1
+    gh release create: 1
+    git: 1
+    git clone: 1
+    git reset: 1
+    git revert: 1
+    git worktree: 1
+    python -m: 1
+    python basics.py: 1
+    python ci/load_raw.py: 1
+    python explore.py: 1
+  shell_features:
+    glob or quoted * (selection): 74
+    home ~: 72
+    pipe |: 38
+    and-chain &&: 24
+    VAR=value prefix: 18
+    exit code $?: 16
+    input redirection <: 14
+    output redirection >: 5
+    append redirection >>: 4
+  non_dbt_lines_not_covered_by_a_rule: []

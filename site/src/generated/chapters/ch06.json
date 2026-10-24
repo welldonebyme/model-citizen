@@ -1320,6 +1320,40 @@
        "t": "p"
       },
       {
+       "blocks": [
+        {
+         "c": [
+          "On Windows dbt prints Windows paths, for example ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\you\\.dbt"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": "/Users/you/.dbt"
+          },
+          ". The rest of the messages is the same. Your profile is ",
+          {
+           "t": "code",
+           "v": "$HOME\\.dbt\\profiles.yml"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch06-paths",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
        "c": [
         "What happened:"
        ],

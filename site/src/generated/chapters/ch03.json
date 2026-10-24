@@ -432,6 +432,69 @@
        "t": "p"
       },
       {
+       "blocks": [
+        {
+         "c": [
+          "Windows has no Git by default. Install it with ",
+          {
+           "t": "code",
+           "v": "winget install --id Git.Git -e"
+          },
+          ", open a new PowerShell window, check ",
+          {
+           "t": "code",
+           "v": "git --version"
+          },
+          ", then run once ",
+          {
+           "t": "code",
+           "v": "git config --global core.autocrlf true"
+          },
+          " (your files get Windows line endings, the repository keeps Unix ones, so your commits look like the book's)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch03-git",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "In Ubuntu: ",
+          {
+           "t": "code",
+           "v": "sudo apt install git"
+          },
+          ", then ",
+          {
+           "t": "code",
+           "v": "git --version"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "wsl"
+       ],
+       "osNote": "wsl-ch03-git",
+       "t": "callout",
+       "title": [
+        "In WSL"
+       ]
+      },
+      {
        "id": "ch03-c1",
        "lang": "bash",
        "t": "code",
@@ -3290,6 +3353,35 @@
             " tool or a token. The easiest way on a Mac:"
            ],
            "t": "p"
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Install the GitHub CLI with ",
+              {
+               "t": "code",
+               "v": "winget install --id GitHub.cli -e"
+              },
+              ", open a new PowerShell window, then run ",
+              {
+               "t": "code",
+               "v": "gh auth login"
+              },
+              " (the same questions as on a Mac)."
+             ],
+             "t": "p"
+            }
+           ],
+           "kind": "tip",
+           "os": [
+            "win"
+           ],
+           "osNote": "win-ch03-gh",
+           "t": "callout",
+           "title": [
+            "On Windows"
+           ]
           },
           {
            "id": "ch03-c28",

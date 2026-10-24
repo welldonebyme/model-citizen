@@ -1542,6 +1542,40 @@
              "t": "p"
             },
             {
+             "blocks": [
+              {
+               "c": [
+                "PowerShell does not expand ",
+                {
+                 "t": "code",
+                 "v": "*"
+                },
+                " for dbt, but keep the quotes anyway: the same command then works everywhere. Also quote a selection that starts with ",
+                {
+                 "t": "code",
+                 "v": "@"
+                },
+                " (",
+                {
+                 "t": "code",
+                 "v": "dbt ls -s \"@my_model\""
+                },
+                "): without quotes PowerShell drops it."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "win-ch07-quotes",
+             "t": "callout",
+             "title": [
+              "On Windows"
+             ]
+            },
+            {
              "id": "ch07-c8",
              "lang": "bash",
              "t": "code",

@@ -331,6 +331,8 @@ def assemble(res: BuildResult, book: Path, rules: Path, overrides: Path) -> tupl
     info["rewrites"] = log
     info["pathOccurrences"] = scan_book(book, rules / "paths.yaml")
     info["osVariants"] = add_os_variants(files, overrides / "os-commands.yaml")
+    from . import osnotes
+    info["osNotes"] = osnotes.apply(files, overrides / "os-notes.yaml")
     return files, info
 
 

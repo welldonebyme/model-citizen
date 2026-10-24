@@ -26,18 +26,20 @@ export function CalloutIcon({ kind }: { kind: CalloutKind }) {
   return <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" dangerouslySetInnerHTML={{ __html: ICON[kind] }} />;
 }
 
-export function Callout({ kind, title, children }: { kind: CalloutKind; title?: InlineT[]; children: ReactNode }) {
+export function Callout({ kind, title, children, os }: { kind: CalloutKind; title?: InlineT[]; children: ReactNode; os?: string[] }) {
   const head = title && title.length ? <Inline c={title} /> : CALLOUT_TITLE[kind];
+  // OS notes are shown only for their OS (content.css hides [data-os-only] for the other ones)
+  const osOnly = os && os.length ? os.join(' ') : undefined;
   if (kind === 'deep') {
     return (
-      <details className={`mc-callout mc-k-${kind}`}>
+      <details className={`mc-callout mc-k-${kind}`} data-os-only={osOnly}>
         <summary className="mc-callout-title"><CalloutIcon kind={kind} />{head}<span className="mc-chev" aria-hidden="true" /></summary>
         <div className="mc-callout-body">{children}</div>
       </details>
     );
   }
   return (
-    <aside className={`mc-callout mc-k-${kind}`} aria-label={CALLOUT_TITLE[kind]}>
+    <aside className={`mc-callout mc-k-${kind}`} aria-label={CALLOUT_TITLE[kind]} data-os-only={osOnly}>
       <p className="mc-callout-title"><CalloutIcon kind={kind} />{head}</p>
       <div className="mc-callout-body">{children}</div>
     </aside>

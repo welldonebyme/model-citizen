@@ -29,7 +29,9 @@ export type Block =
   | { t: 'h'; level: 3 | 4; c: Inline[]; anchor?: string }
   | { t: 'list'; kind: 'ul' | 'ol' | 'dl'; items: { term?: Inline[]; blocks: Block[] }[]; start?: number }
   | CodeBlock
-  | { t: 'callout'; kind: CalloutKind; title?: Inline[]; blocks: Block[] }
+  | { t: 'callout'; kind: CalloutKind; title?: Inline[]; blocks: Block[];
+      /** OS note (converter/overrides/os-notes.yaml): shown only when the OS switch is one of these */
+      os?: ('mac' | 'win' | 'wsl')[]; osNote?: string }
   | { t: 'lab'; id: string; title: Inline[]; objectives: string[]; blocks: Block[] }
   | { t: 'objectives'; items: { id: string; c: Inline[] }[] }
   | { t: 'table'; head?: Cell[][]; rows: Cell[][]; groupRows?: number[]; caption?: Inline[] }

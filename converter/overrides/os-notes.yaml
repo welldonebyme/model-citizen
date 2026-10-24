@@ -1,0 +1,277 @@
+# OS notes: short callouts that the website shows only for one OS (the OS switch), where the book's PROSE is
+# written for macOS. Commands inside code blocks get their own Windows / WSL versions (os-commands.yaml); these notes
+# cover the sentences around them. Format and rules: converter/build/osnotes.py. `hash` = sha1 (12 hex) of the
+# anchor paragraph or table as the website shows it: when the book text changes, the build stops and asks to re-check.
+# Simple English, one idea per note. `...` = inline code.
+notes:
+  # ------------------------------------------------------------------ Chapter 0
+  - id: win-ch00-setup
+    os: [win]
+    step: ch00-s1-1
+    starts: "Practical."
+    hash: 0103ea8e5a6a
+    title: On Windows
+    text: "The same free setup works on Windows: dbt Core and DuckDB run in PowerShell (or in WSL). Choose your
+      system with the switch at the top of the page: every terminal command is then shown in its Windows form."
+  # ------------------------------------------------------------------ Chapter 2: terminal, shell, tools
+  - id: win-ch02-terminal
+    os: [win]
+    step: ch02-s1-0
+    starts: "The terminal is the window application."
+    hash: 373be883820e
+    title: On Windows
+    text: "Press the Windows key, type `PowerShell` (or `Terminal`) and press Enter. Use PowerShell for this course,
+      not the old Command Prompt (`cmd`). The terminal inside VS Code works too."
+  - id: win-ch02-shell
+    os: [win]
+    step: ch02-s1-0
+    starts: "The shell is the program"
+    hash: 92146fc2b27a
+    title: On Windows
+    text: "On Windows the shell is PowerShell. Windows PowerShell 5.1 is built in; PowerShell 7 is the newer version
+      (install it once with `winget install --id Microsoft.PowerShell -e`, then open \"PowerShell 7\"). Both work for
+      this course; the few commands that need version 7 say so. Where this book shows a zsh command, the Windows
+      version shows the PowerShell command that does the same thing."
+  - id: wsl-ch02-shell
+    os: [wsl]
+    step: ch02-s1-0
+    starts: "The shell is the program"
+    hash: 92146fc2b27a
+    title: In WSL
+    text: "In WSL (Ubuntu) the shell is bash. Every command of this book works the same in bash."
+  - id: win-ch02-comment
+    os: [win]
+    step: ch02-s2-1
+    starts: "The # sign starts a comment"
+    hash: a0a6241537fe
+    title: On Windows
+    text: "PowerShell always treats `#` as the start of a comment, even when you type it. This zsh trap does not exist
+      on Windows: you have nothing to change."
+  - id: wsl-ch02-comment
+    os: [wsl]
+    step: ch02-s2-1
+    starts: "The # sign starts a comment"
+    hash: a0a6241537fe
+    title: In WSL
+    text: "bash accepts `#` comments by default: this zsh trap does not exist in WSL."
+  - id: win-ch02-keys
+    os: [win]
+    step: ch02-s4-4
+    starts: "Key / command Effect"
+    hash: aebf9247b9b2
+    title: On Windows
+    text: "Tab, the arrow keys, `history` and Ctrl+C work the same in PowerShell. Use Home / End to jump to the start /
+      end of the line, and `cls` (or `clear`) to clean the screen. To paste in the terminal: Ctrl+V or a right-click."
+  - id: win-ch02-hidden
+    os: [win]
+    step: ch02-s5-0
+    starts: "Files whose name starts with a dot"
+    hash: 10001c383d68
+    title: On Windows
+    text: "Windows does not hide files because of a leading dot. In PowerShell, `Get-ChildItem -Force` lists every file.
+      In File Explorer, View > Show > Hidden items shows the hidden ones. PowerShell has no `.zshrc`: its settings
+      file is the one in `$PROFILE`."
+  - id: win-ch02-keep-variable
+    os: [win]
+    step: ch02-s6-2
+    starts: "To keep a variable for every new terminal"
+    hash: 92166ab2ae23
+    title: On Windows
+    text: "`$env:NAME = \"value\"` lasts until you close the window. To keep a variable for every new window, run once
+      `[Environment]::SetEnvironmentVariable(\"NAME\", \"value\", \"User\")` and open a new PowerShell window."
+  - id: win-ch02-homebrew
+    os: [win]
+    step: ch02-s8-1
+    starts: "Homebrew is the package manager of macOS"
+    hash: 07c142dec185
+    title: On Windows
+    text: "On Windows the package manager is winget (included in Windows 10 and 11): `winget install <name>`. The first
+      time, it asks you to accept its terms. After an install, close PowerShell and open a new window so that the new
+      tool is found."
+  - id: wsl-ch02-homebrew
+    os: [wsl]
+    step: ch02-s8-1
+    starts: "Homebrew is the package manager of macOS"
+    hash: 07c142dec185
+    title: In WSL
+    text: "In WSL (Ubuntu) use `sudo apt install <name>` or the official installer of each tool (the WSL version of
+      the commands below shows them)."
+  - id: win-ch02-no-winget
+    os: [win]
+    step: ch02-s8-1
+    starts: "If brew itself is missing"
+    hash: 3377b9e86053
+    title: On Windows
+    text: "If `winget` is missing, install \"App Installer\" from the Microsoft Store, or use the installer from each
+      tool's website (uv: `powershell -ExecutionPolicy ByPass -c \"irm https://astral.sh/uv/install.ps1 | iex\"`; Git:
+      git-scm.com; DuckDB: duckdb.org)."
+  - id: win-ch02-python
+    os: [win]
+    step: ch02-s8-2
+    starts: "On a Mac, outside a virtual environment"
+    hash: 758c9871f887
+    title: On Windows
+    text: "On Windows the command is `python` (typing `python3` may open the Microsoft Store). Activate the venv with
+      `.venv\\Scripts\\Activate.ps1`; the prompt then starts with `(.venv)`. If PowerShell says that running scripts is
+      disabled, run once `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, then activate again."
+  - id: win-ch02-duckdb-twice
+    os: [win]
+    step: ch02-s8-4
+    starts: "You now have DuckDB twice"
+    hash: 2588b131cd0b
+    title: On Windows
+    text: "On Windows the DuckDB command-line tool comes from `winget install DuckDB.cli` (it installs the newest
+      version). The rule is the same: `duckdb --version` must equal the library in the venv. The course kit's setup
+      (`setup.ps1`) warns you when they differ."
+  - id: win-ch02-upgrade
+    os: [win]
+    step: ch02-s8-4
+    starts: "If you ever see"
+    hash: cebe17bca73a
+    title: On Windows
+    text: "On Windows the CLI changes with `winget upgrade DuckDB.cli`: after an upgrade, align the venv again with
+      `uv pip install \"duckdb==X.Y.Z\"`."
+  - id: win-ch02-vscode
+    os: [win]
+    step: ch02-s8-5
+    starts: "You can write SQL and YAML"
+    hash: bbff95b9849b
+    title: On Windows
+    text: "Install VS Code with `winget install --id Microsoft.VisualStudioCode -e`. The installer adds the `code`
+      command for you. The command palette is Ctrl+Shift+P."
+  - id: win-ch02-windows-tip
+    os: [win]
+    step: ch02-s8-5
+    starts: "Windows users:"
+    hash: 346fed6c7204
+    title: On this website
+    text: "You can follow the whole course in PowerShell: with the switch on Windows, every terminal block shows the
+      PowerShell version of its commands (dbt commands stay the same). WSL is a good choice too: choose WSL in the
+      switch and follow the Ubuntu commands."
+  - id: win-ch02-check-tools
+    os: [win]
+    step: ch02-s9-0
+    starts: "Check the tools."
+    hash: adc8f6750a0c
+    title: On Windows
+    text: "Run `winget --version`, `uv --version` and `git --version`. If uv is missing: `winget install
+      --id=astral-sh.uv -e`. If Git is missing: `winget install --id Git.Git -e`, then `git config --global
+      core.autocrlf true`. Close and reopen PowerShell after each install. Shortcut: the course kit's `setup.ps1`
+      does this whole lab for you (see the kit's README-windows.md)."
+  - id: win-ch02-install-duckdb
+    os: [win]
+    step: ch02-s9-0
+    starts: "Install DuckDB:"
+    hash: 7f93dbed9232
+    title: On Windows
+    text: "`winget install DuckDB.cli`, then open a new PowerShell window and run `duckdb --version`. Without the CLI
+      you can still do every lab: the kit's `tools\\duck.py` runs SQL files with the DuckDB library of the venv."
+  - id: win-ch02-duckdb-quit
+    os: [win]
+    step: ch02-s9-0
+    starts: "The prompt D is DuckDB"
+    hash: 24ae3532ed61
+    title: On Windows
+    text: "Leave the DuckDB prompt with `.quit` (Ctrl+D is the macOS / Linux key)."
+  - id: win-ch02-troubleshooting
+    os: [win]
+    step: ch02-s9-1
+    starts: "Message or symptom Likely cause and fix"
+    hash: 8f6b21b13a62
+    title: On Windows
+    text: "`dbt : The term 'dbt' is not recognized` = the venv is not active: `cd $HOME\\dbt-course`, then
+      `.venv\\Scripts\\Activate.ps1`. `running scripts is disabled on this system` = run once `Set-ExecutionPolicy
+      -Scope CurrentUser RemoteSigned`. A tool \"is not recognized\" right after `winget install` = open a new
+      PowerShell window. `Could not set lock on file` = close the DuckDB CLI (or DBeaver) first."
+  # ------------------------------------------------------------------ Chapter 3: Git
+  - id: win-ch03-git
+    os: [win]
+    step: ch03-s2-0
+    starts: "macOS already contains Git"
+    hash: bb395ffa1209
+    title: On Windows
+    text: "Windows has no Git by default. Install it with `winget install --id Git.Git -e`, open a new PowerShell
+      window, check `git --version`, then run once `git config --global core.autocrlf true` (your files get Windows
+      line endings, the repository keeps Unix ones, so your commits look like the book's)."
+  - id: wsl-ch03-git
+    os: [wsl]
+    step: ch03-s2-0
+    starts: "macOS already contains Git"
+    hash: bb395ffa1209
+    title: In WSL
+    text: "In Ubuntu: `sudo apt install git`, then `git --version`."
+  - id: win-ch03-gh
+    os: [win]
+    step: ch03-s7-2
+    starts: "Authenticate your terminal."
+    hash: c2034aeb03d8
+    title: On Windows
+    text: "Install the GitHub CLI with `winget install --id GitHub.cli -e`, open a new PowerShell window, then run
+      `gh auth login` (the same questions as on a Mac)."
+  # ------------------------------------------------------------------ Chapter 6 onward
+  - id: win-ch06-paths
+    os: [win]
+    step: ch06-s3-1
+    starts: "The paths in these outputs"
+    hash: 567d34abf039
+    title: On Windows
+    text: "On Windows dbt prints Windows paths, for example `C:\\Users\\you\\.dbt` instead of `/Users/you/.dbt`. The
+      rest of the messages is the same. Your profile is `$HOME\\.dbt\\profiles.yml`."
+  - id: win-ch07-quotes
+    os: [win]
+    step: ch07-s2-5
+    starts: "List the sources that dbt found."
+    hash: 2b32fcdb27c0
+    title: On Windows
+    text: "PowerShell does not expand `*` for dbt, but keep the quotes anyway: the same command then works everywhere.
+      Also quote a selection that starts with `@` (`dbt ls -s \"@my_model\"`): without quotes PowerShell drops it."
+  - id: win-ch11-args
+    os: [win]
+    step: ch11-s4-0
+    starts: "The keys of --args"
+    hash: aad183ab12f3
+    title: On Windows
+    text: "Single quotes work the same way in PowerShell: `--args '{model_name: fct_orders, limit: 5}'`. Avoid double
+      quotes inside the single quotes: Windows PowerShell 5.1 removes them before dbt sees the text (the YAML form
+      without inner quotes, as here, is always safe)."
+  - id: win-ch16-stars
+    os: [win]
+    step: ch16-s3-3
+    starts: "The shell eats your stars."
+    hash: 04158398e89d
+    title: On Windows
+    text: "PowerShell on Windows passes `*` to dbt unchanged, so this error does not happen there. PowerShell has its
+      own trap: an unquoted selection that starts with `@` disappears (`@` means \"splatting\" in PowerShell). Quote
+      selections with `*`, `@` or a comma, and the same command works in every shell."
+  - id: wsl-ch16-stars
+    os: [wsl]
+    step: ch16-s3-3
+    starts: "The shell eats your stars."
+    hash: 04158398e89d
+    title: In WSL
+    text: "bash passes a `*` that matches no file to dbt unchanged, so you may not see this error in WSL. Quote anyway:
+      if a file in the folder matches, bash replaces the pattern with its name."
+  - id: win-ch16-lab-mistake
+    os: [win]
+    step: ch16-s7-0
+    starts: "Step 4. Make the zsh mistake"
+    hash: f6a709f4e242
+    title: On Windows
+    text: "In PowerShell, make the PowerShell mistake instead: `dbt ls -s @int_orders__enriched` without quotes (dbt
+      receives `-s` with no value), then `dbt ls -s \"@int_orders__enriched\"`."
+  - id: win-ch18-quotes
+    os: [win]
+    step: ch18-s4-1
+    starts: "Quote your selectors in zsh."
+    hash: 5fc68c7c1de6
+    title: On Windows
+    text: "PowerShell does not need the quotes for `*`, but they do no harm: write `\"source:*\"` the same way on every
+      system."
+  - id: win-ch20-finder
+    os: [win]
+    step: ch20-s5-2
+    starts: "Double-click target/static_index.html"
+    hash: bd936bf045ff
+    title: On Windows
+    text: "Double-click `target\\static_index.html` in File Explorer, or run `start target\\static_index.html` in
+      PowerShell."

@@ -173,6 +173,40 @@
             ". (Other terminal apps exist, like iTerm2 or the terminal inside VS Code; they all work the same way.)"
            ],
            "t": "p"
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Press the Windows key, type ",
+              {
+               "t": "code",
+               "v": "PowerShell"
+              },
+              " (or ",
+              {
+               "t": "code",
+               "v": "Terminal"
+              },
+              ") and press Enter. Use PowerShell for this course, not the old Command Prompt (",
+              {
+               "t": "code",
+               "v": "cmd"
+              },
+              "). The terminal inside VS Code works too."
+             ],
+             "t": "p"
+            }
+           ],
+           "kind": "tip",
+           "os": [
+            "win"
+           ],
+           "osNote": "win-ch02-terminal",
+           "t": "callout",
+           "title": [
+            "On Windows"
+           ]
           }
          ]
         },
@@ -206,6 +240,49 @@
             ". For everything in this book they behave the same."
            ],
            "t": "p"
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "On Windows the shell is PowerShell. Windows PowerShell 5.1 is built in; PowerShell 7 is the newer version (install it once with ",
+              {
+               "t": "code",
+               "v": "winget install --id Microsoft.PowerShell -e"
+              },
+              ", then open \"PowerShell 7\"). Both work for this course; the few commands that need version 7 say so. Where this book shows a zsh command, the Windows version shows the PowerShell command that does the same thing."
+             ],
+             "t": "p"
+            }
+           ],
+           "kind": "tip",
+           "os": [
+            "win"
+           ],
+           "osNote": "win-ch02-shell",
+           "t": "callout",
+           "title": [
+            "On Windows"
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "In WSL (Ubuntu) the shell is bash. Every command of this book works the same in bash."
+             ],
+             "t": "p"
+            }
+           ],
+           "kind": "tip",
+           "os": [
+            "wsl"
+           ],
+           "osNote": "wsl-ch02-shell",
+           "t": "callout",
+           "title": [
+            "In WSL"
+           ]
           }
          ]
         },
@@ -744,6 +821,54 @@
           ", zsh gives an error. To make zsh accept these comments, run this once, then open a new terminal:"
          ],
          "t": "p"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "PowerShell always treats ",
+            {
+             "t": "code",
+             "v": "#"
+            },
+            " as the start of a comment, even when you type it. This zsh trap does not exist on Windows: you have nothing to change."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch02-comment",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "bash accepts ",
+            {
+             "t": "code",
+             "v": "#"
+            },
+            " comments by default: this zsh trap does not exist in WSL."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "wsl"
+         ],
+         "osNote": "wsl-ch02-comment",
+         "t": "callout",
+         "title": [
+          "In WSL"
+         ]
         },
         {
          "id": "ch02-c4",
@@ -1483,6 +1608,40 @@
        "blocks": [
         {
          "c": [
+          "Tab, the arrow keys, ",
+          {
+           "t": "code",
+           "v": "history"
+          },
+          " and Ctrl+C work the same in PowerShell. Use Home / End to jump to the start / end of the line, and ",
+          {
+           "t": "code",
+           "v": "cls"
+          },
+          " (or ",
+          {
+           "t": "code",
+           "v": "clear"
+          },
+          ") to clean the screen. To paste in the terminal: Ctrl+V or a right-click."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-keys",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
           {
            "c": [
             "Goal:"
@@ -1711,6 +1870,40 @@
         " shows them). Tools use them for settings. You will meet these:"
        ],
        "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Windows does not hide files because of a leading dot. In PowerShell, ",
+          {
+           "t": "code",
+           "v": "Get-ChildItem -Force"
+          },
+          " lists every file. In File Explorer, View > Show > Hidden items shows the hidden ones. PowerShell has no ",
+          {
+           "t": "code",
+           "v": ".zshrc"
+          },
+          ": its settings file is the one in ",
+          {
+           "t": "code",
+           "v": "$PROFILE"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-hidden",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "head": [
@@ -2116,6 +2309,34 @@
           " and open a new terminal. Do this for harmless settings only; for real passwords prefer a password manager or your company's secret tool."
          ],
          "t": "p"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "$env:NAME = \"value\""
+            },
+            " lasts until you close the window. To keep a variable for every new window, run once ",
+            {
+             "t": "code",
+             "v": "[Environment]::SetEnvironmentVariable(\"NAME\", \"value\", \"User\")"
+            },
+            " and open a new PowerShell window."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch02-keep-variable",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
         }
        ],
        "kind": "tip",
@@ -2344,6 +2565,54 @@
        "t": "p"
       },
       {
+       "blocks": [
+        {
+         "c": [
+          "On Windows the package manager is winget (included in Windows 10 and 11): ",
+          {
+           "t": "code",
+           "v": "winget install <name>"
+          },
+          ". The first time, it asks you to accept its terms. After an install, close PowerShell and open a new window so that the new tool is found."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-homebrew",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "In WSL (Ubuntu) use ",
+          {
+           "t": "code",
+           "v": "sudo apt install <name>"
+          },
+          " or the official installer of each tool (the WSL version of the commands below shows them)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "wsl"
+       ],
+       "osNote": "wsl-ch02-homebrew",
+       "t": "callout",
+       "title": [
+        "In WSL"
+       ]
+      },
+      {
        "id": "ch02-c15",
        "lang": "bash",
        "t": "code",
@@ -2385,6 +2654,35 @@
         "), then open a new terminal."
        ],
        "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "If ",
+          {
+           "t": "code",
+           "v": "winget"
+          },
+          " is missing, install \"App Installer\" from the Microsoft Store, or use the installer from each tool's website (uv: ",
+          {
+           "t": "code",
+           "v": "powershell -ExecutionPolicy ByPass -c \"irm https://astral.sh/uv/install.ps1 | iex\""
+          },
+          "; Git: git-scm.com; DuckDB: duckdb.org)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-no-winget",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       }
      ],
      "id": "ch02-s8-1",
@@ -2530,6 +2828,50 @@
           "."
          ],
          "t": "p"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "On Windows the command is ",
+            {
+             "t": "code",
+             "v": "python"
+            },
+            " (typing ",
+            {
+             "t": "code",
+             "v": "python3"
+            },
+            " may open the Microsoft Store). Activate the venv with ",
+            {
+             "t": "code",
+             "v": ".venv\\Scripts\\Activate.ps1"
+            },
+            "; the prompt then starts with ",
+            {
+             "t": "code",
+             "v": "(.venv)"
+            },
+            ". If PowerShell says that running scripts is disabled, run once ",
+            {
+             "t": "code",
+             "v": "Set-ExecutionPolicy -Scope CurrentUser RemoteSigned"
+            },
+            ", then activate again."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch02-python",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
         }
        ],
        "kind": "trap",
@@ -2708,6 +3050,40 @@
        "t": "p"
       },
       {
+       "blocks": [
+        {
+         "c": [
+          "On Windows the DuckDB command-line tool comes from ",
+          {
+           "t": "code",
+           "v": "winget install DuckDB.cli"
+          },
+          " (it installs the newest version). The rule is the same: ",
+          {
+           "t": "code",
+           "v": "duckdb --version"
+          },
+          " must equal the library in the venv. The course kit's setup (",
+          {
+           "t": "code",
+           "v": "setup.ps1"
+          },
+          ") warns you when they differ."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-duckdb-twice",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
        "id": "ch02-c18",
        "lang": "bash",
        "t": "code",
@@ -2756,6 +3132,35 @@
           " step with the CLI's number."
          ],
          "t": "p"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "On Windows the CLI changes with ",
+            {
+             "t": "code",
+             "v": "winget upgrade DuckDB.cli"
+            },
+            ": after an upgrade, align the venv again with ",
+            {
+             "t": "code",
+             "v": "uv pip install \"duckdb==X.Y.Z\""
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch02-upgrade",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
         }
        ],
        "kind": "tip",
@@ -2876,6 +3281,35 @@
        "blocks": [
         {
          "c": [
+          "Install VS Code with ",
+          {
+           "t": "code",
+           "v": "winget install --id Microsoft.VisualStudioCode -e"
+          },
+          ". The installer adds the ",
+          {
+           "t": "code",
+           "v": "code"
+          },
+          " command for you. The command palette is Ctrl+Shift+P."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-vscode",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
           {
            "c": [
             "Windows users:"
@@ -2900,6 +3334,25 @@
           ")."
          ],
          "t": "p"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "You can follow the whole course in PowerShell: with the switch on Windows, every terminal block shows the PowerShell version of its commands (dbt commands stay the same). WSL is a good choice too: choose WSL in the switch and follow the Ubuntu commands."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch02-windows-tip",
+         "t": "callout",
+         "title": [
+          "On this website"
+         ]
         }
        ],
        "kind": "tip",
@@ -3038,6 +3491,60 @@
               ", accept and wait for the end of the installation, then run it again."
              ],
              "t": "p"
+            },
+            {
+             "blocks": [
+              {
+               "c": [
+                "Run ",
+                {
+                 "t": "code",
+                 "v": "winget --version"
+                },
+                ", ",
+                {
+                 "t": "code",
+                 "v": "uv --version"
+                },
+                " and ",
+                {
+                 "t": "code",
+                 "v": "git --version"
+                },
+                ". If uv is missing: ",
+                {
+                 "t": "code",
+                 "v": "winget install --id=astral-sh.uv -e"
+                },
+                ". If Git is missing: ",
+                {
+                 "t": "code",
+                 "v": "winget install --id Git.Git -e"
+                },
+                ", then ",
+                {
+                 "t": "code",
+                 "v": "git config --global core.autocrlf true"
+                },
+                ". Close and reopen PowerShell after each install. Shortcut: the course kit's ",
+                {
+                 "t": "code",
+                 "v": "setup.ps1"
+                },
+                " does this whole lab for you (see the kit's README-windows.md)."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "win-ch02-check-tools",
+             "t": "callout",
+             "title": [
+              "On Windows"
+             ]
             }
            ]
           },
@@ -3069,6 +3576,39 @@
               " (1.5 or newer is fine)."
              ],
              "t": "p"
+            },
+            {
+             "blocks": [
+              {
+               "c": [
+                {
+                 "t": "code",
+                 "v": "winget install DuckDB.cli"
+                },
+                ", then open a new PowerShell window and run ",
+                {
+                 "t": "code",
+                 "v": "duckdb --version"
+                },
+                ". Without the CLI you can still do every lab: the kit's ",
+                {
+                 "t": "code",
+                 "v": "tools\\duck.py"
+                },
+                " runs SQL files with the DuckDB library of the venv."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "win-ch02-install-duckdb",
+             "t": "callout",
+             "title": [
+              "On Windows"
+             ]
             }
            ]
           },
@@ -3339,6 +3879,30 @@
               "."
              ],
              "t": "p"
+            },
+            {
+             "blocks": [
+              {
+               "c": [
+                "Leave the DuckDB prompt with ",
+                {
+                 "t": "code",
+                 "v": ".quit"
+                },
+                " (Ctrl+D is the macOS / Linux key)."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "win-ch02-duckdb-quit",
+             "t": "callout",
+             "title": [
+              "On Windows"
+             ]
             }
            ]
           },
@@ -3712,6 +4276,59 @@
         ]
        ],
        "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "dbt : The term 'dbt' is not recognized"
+          },
+          " = the venv is not active: ",
+          {
+           "t": "code",
+           "v": "cd $HOME\\dbt-course"
+          },
+          ", then ",
+          {
+           "t": "code",
+           "v": ".venv\\Scripts\\Activate.ps1"
+          },
+          ". ",
+          {
+           "t": "code",
+           "v": "running scripts is disabled on this system"
+          },
+          " = run once ",
+          {
+           "t": "code",
+           "v": "Set-ExecutionPolicy -Scope CurrentUser RemoteSigned"
+          },
+          ". A tool \"is not recognized\" right after ",
+          {
+           "t": "code",
+           "v": "winget install"
+          },
+          " = open a new PowerShell window. ",
+          {
+           "t": "code",
+           "v": "Could not set lock on file"
+          },
+          " = close the DuckDB CLI (or DBeaver) first."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-troubleshooting",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       }
      ],
      "id": "ch02-s9-1",

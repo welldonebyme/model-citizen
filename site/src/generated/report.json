@@ -329,6 +329,11 @@
    "check": "every shell command line has an OS rule (no unhandled line)",
    "detail": "",
    "ok": true
+  },
+  {
+   "check": "every OS note (os-notes.yaml) appears once, after its anchor",
+   "detail": "32 notes (27 Windows, 5 WSL); problems: ",
+   "ok": true
   }
  ],
  "bookConsistency": [],
@@ -912,6 +917,12 @@
   }
  ],
  "flaggedKeys": [],
+ "osNotes": {
+  "file": "converter/overrides/os-notes.yaml",
+  "notes": 32,
+  "win": 27,
+  "wsl": 5
+ },
  "osVariants": {
   "bashBlocks": 572,
   "byRule": {

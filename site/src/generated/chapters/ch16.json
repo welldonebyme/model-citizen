@@ -2972,6 +2972,74 @@
          "t": "p"
         },
         {
+         "blocks": [
+          {
+           "c": [
+            "PowerShell on Windows passes ",
+            {
+             "t": "code",
+             "v": "*"
+            },
+            " to dbt unchanged, so this error does not happen there. PowerShell has its own trap: an unquoted selection that starts with ",
+            {
+             "t": "code",
+             "v": "@"
+            },
+            " disappears (",
+            {
+             "t": "code",
+             "v": "@"
+            },
+            " means \"splatting\" in PowerShell). Quote selections with ",
+            {
+             "t": "code",
+             "v": "*"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "@"
+            },
+            " or a comma, and the same command works in every shell."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch16-stars",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "bash passes a ",
+            {
+             "t": "code",
+             "v": "*"
+            },
+            " that matches no file to dbt unchanged, so you may not see this error in WSL. Quote anyway: if a file in the folder matches, bash replaces the pattern with its name."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "wsl"
+         ],
+         "osNote": "wsl-ch16-stars",
+         "t": "callout",
+         "title": [
+          "In WSL"
+         ]
+        },
+        {
          "id": "ch16-c10",
          "lang": "bash",
          "t": "code",
@@ -5821,6 +5889,40 @@
           ". Read the message, then fix it with quotes."
          ],
          "t": "p"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "In PowerShell, make the PowerShell mistake instead: ",
+            {
+             "t": "code",
+             "v": "dbt ls -s @int_orders__enriched"
+            },
+            " without quotes (dbt receives ",
+            {
+             "t": "code",
+             "v": "-s"
+            },
+            " with no value), then ",
+            {
+             "t": "code",
+             "v": "dbt ls -s \"@int_orders__enriched\""
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch16-lab-mistake",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
         },
         {
          "c": [

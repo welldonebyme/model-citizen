@@ -3174,6 +3174,30 @@
        "blocks": [
         {
          "c": [
+          "Single quotes work the same way in PowerShell: ",
+          {
+           "t": "code",
+           "v": "--args '{model_name: fct_orders, limit: 5}'"
+          },
+          ". Avoid double quotes inside the single quotes: Windows PowerShell 5.1 removes them before dbt sees the text (the YAML form without inner quotes, as here, is always safe)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch11-args",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
           {
            "c": [
             {

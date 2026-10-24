@@ -98,6 +98,7 @@ def build() -> int:
                          "applied": info["rewrites"],
                          "appliedByRule": dict(sorted(Counter(x for a in info["rewrites"] for x in a["rules"]).items()))},
         "osVariants": info["osVariants"],
+        "osNotes": info["osNotes"],
         "warnings": [w for r in res.chapters for w in r.ctx.warnings],
         "stats": stats,
     }

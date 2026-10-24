@@ -3510,6 +3510,35 @@
           ". This is a shell rule, not a dbt rule, but it costs beginners a lot of time."
          ],
          "t": "p"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "PowerShell does not need the quotes for ",
+            {
+             "t": "code",
+             "v": "*"
+            },
+            ", but they do no harm: write ",
+            {
+             "t": "code",
+             "v": "\"source:*\""
+            },
+            " the same way on every system."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch18-quotes",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
         }
        ],
        "kind": "trap",

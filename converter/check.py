@@ -105,8 +105,19 @@ def chapter_of_id(i: str) -> str:
 
 
 # ---------------------------------------------------------------------------------------------- checks
+def without_os_notes(obj):
+    """A copy without the callouts of overrides/os-notes.yaml (site-only content, not book text)."""
+    if isinstance(obj, dict):
+        return {k: without_os_notes(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [without_os_notes(v) for v in obj if not (isinstance(v, dict) and v.get("osNote"))]
+    return obj
+
+
 def run_checks(files: dict[str, object], inventory: dict, book: Path = BOOK) -> Results:
     R = Results()
+    site_files = files
+    files = {k: without_os_notes(v) if k.startswith("chapters/") else v for k, v in files.items()}
     chapters = {k.split("/")[1][:-5]: v for k, v in files.items() if k.startswith("chapters/")}
     questions = {k.split("/")[1][:-5]: v for k, v in files.items() if k.startswith("questions/")}
     mocks = {int(k.split("/")[1][4:-5]): v for k, v in files.items() if k.startswith("mocks/")}
@@ -262,7 +273,7 @@ def run_checks(files: dict[str, object], inventory: dict, book: Path = BOOK) -> 
     check_escape_accounting(files, chapters, book, R)
     check_paths(files, book, R)
     check_question_map(files, R)
-    check_os_variants(files, R)
+    check_os_variants(site_files, R)
     return R
 
 
@@ -287,6 +298,14 @@ def check_os_variants(files, R: Results, path: Path = OVERRIDES / "os-commands.y
     R.add("Windows/WSL variants of shell blocks = os-commands.yaml", not stale,
           f"{n} shell blocks, {nwin} with a Windows variant; stale: " + ", ".join(stale[:20]))
     R.add("every shell command line has an OS rule (no unhandled line)", not unhandled, "; ".join(unhandled[:20]))
+    import yaml
+    notes = (yaml.safe_load((OVERRIDES / "os-notes.yaml").read_text()) or {}).get("notes") or []
+    found = Counter(c.get("osNote") for k, v in files.items() if k.startswith("chapters/")
+                    for c in nodes_of(v, "callout") if c.get("os"))
+    bad = [n["id"] for n in notes if found.get(n["id"]) != 1] + [k for k in found if k not in {n["id"] for n in notes}]
+    R.add("every OS note (os-notes.yaml) appears once, after its anchor", not bad,
+          f"{len(notes)} notes ({sum(1 for n in notes if 'win' in n['os'])} Windows, "
+          f"{sum(1 for n in notes if 'wsl' in n['os'])} WSL); problems: " + ", ".join(map(str, bad[:20])))
 
 
 def check_question_map(files, R: Results, path: Path = OVERRIDES / "question-map.yaml") -> None:

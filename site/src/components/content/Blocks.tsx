@@ -65,7 +65,7 @@ function BlockNode({ b, inLab, labId, runnable }: { b: Block; inLab?: boolean; l
         ? <ol className="mc-ol" start={b.start}>{b.items.map((it, i) => <li key={i}><Blocks blocks={it.blocks} /></li>)}</ol>
         : <ul className="mc-ul">{b.items.map((it, i) => <li key={i}><Blocks blocks={it.blocks} /></li>)}</ul>;
     case 'code': return <CodeBlock block={b} runnable={runnable} />;
-    case 'callout': return <Callout kind={b.kind} title={b.title}><Blocks blocks={b.blocks} /></Callout>;
+    case 'callout': return <Callout kind={b.kind} title={b.title} os={b.os}><Blocks blocks={b.blocks} /></Callout>;
     case 'lab':
       return (
         <section className="mc-lab" id={b.id} data-lab={b.id} aria-labelledby={`${b.id}-t`}>

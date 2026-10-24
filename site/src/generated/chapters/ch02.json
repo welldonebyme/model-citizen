@@ -481,8 +481,8 @@
        "t": "p"
       },
       {
-       "alt": "A folder tree from the root folder / to the course folders. /Users/you/ is the home folder (~). It contains Documents/Adnane/dbt-bible/ (this book, with labs/), dbt-course/ (your workspace, Chapter 2 lab) and .dbt/ (hidden: dbt connection settings).",
-       "description": "/ (root) → Users/ → mac/ (home = ~). Inside mac/: Documents/ → Adnane/ → dbt-bible/ (this book, with labs/); dbt-course/ (your workspace for the Chapter 2 lab) with .venv/ and practice/; practice/ contains practice.duckdb, setup.sql and data/; and .dbt/ (hidden: dbt connection settings).",
+       "alt": "A folder tree from the root folder / to the course folders. /Users/you/ is the home folder (~). It contains dbt-course/ (your course folder, made by the kit's setup) and .dbt/ (hidden: dbt connection settings). On Windows the home folder is C:\\Users\\you.",
+       "description": "/ (root) → Users/ → you/ (home = ~). Inside you/: dbt-course/ (your course folder, made by the kit's setup) with .venv/ (Python 3.12 + dbt 1.11), practice/ (your workspace for the Chapter 2 lab: practice.duckdb, setup.sql and data/), kit/ (the practice kit: data/, updates/, bugs/, tools/ ...) and reference/ (the finished project, to compare); and .dbt/ (hidden: dbt connection settings). On Windows the same tree starts at C:\\Users\\you (written $HOME in PowerShell): C:\\Users\\you\\dbt-course\\practice, C:\\Users\\you\\.dbt.",
        "id": "ch02-fig1",
        "src": "figures/ch02-fig1.svg",
        "t": "figure"
@@ -1476,7 +1476,7 @@
           {
            "t": "code",
            "textBook": "~/Documents/Adnane/dbt-bible/labs",
-           "v": "~/dbt-course/kit/labs"
+           "v": "~/dbt-course/kit"
           },
           "."
          ],
@@ -3138,7 +3138,7 @@
                ],
                "t": "b"
               },
-              " from the bible folder into your workspace:"
+              " from the kit folder into your workspace:"
              ],
              "t": "p"
             },
@@ -3146,7 +3146,7 @@
              "id": "ch02-c23",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ cp -R ~/dbt-course/kit/labs/data ~/dbt-course/practice/\n(.venv) $ cp ~/dbt-course/kit/labs/setup.sql ~/dbt-course/practice/\n(.venv) $ cd ~/dbt-course/practice\n(.venv) $ ls\ndata      setup.sql",
+             "text": "(.venv) $ cp -R ~/dbt-course/kit/data ~/dbt-course/practice/\n(.venv) $ cp ~/dbt-course/kit/setup.sql ~/dbt-course/practice/\n(.venv) $ cd ~/dbt-course/practice\n(.venv) $ ls\ndata      setup.sql",
              "textBook": "(.venv) $ cp -R ~/Documents/Adnane/dbt-bible/labs/data ~/dbt-course/practice/\n(.venv) $ cp ~/Documents/Adnane/dbt-bible/labs/setup.sql ~/dbt-course/practice/\n(.venv) $ cd ~/dbt-course/practice\n(.venv) $ ls\ndata      setup.sql"
             }
            ]

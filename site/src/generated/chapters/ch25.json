@@ -3107,7 +3107,7 @@
          "id": "ch25-c11",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ mkdir -p .github/workflows ci/raw/data\n$ cp ~/dbt-course/kit/labs/setup.sql ci/raw/\n$ cp ~/dbt-course/kit/labs/data/*.csv ci/raw/data/\n$ ls ci/raw ci/raw/data",
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ mkdir -p .github/workflows ci/raw/data\n$ cp ~/dbt-course/kit/setup.sql ci/raw/\n$ cp ~/dbt-course/kit/data/*.csv ci/raw/data/\n$ ls ci/raw ci/raw/data",
          "textBook": "$ cd ~/dbt-course/jaffle_dbt\n$ mkdir -p .github/workflows ci/raw/data\n$ cp ~/Documents/Adnane/dbt-bible/labs/setup.sql ci/raw/\n$ cp ~/Documents/Adnane/dbt-bible/labs/data/*.csv ci/raw/data/\n$ ls ci/raw ci/raw/data"
         },
         {

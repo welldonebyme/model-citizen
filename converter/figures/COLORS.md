@@ -59,7 +59,7 @@ dark: the dark base palette above. Tints adjusted for contrast (light mode):
 
 ## Text contrast of this build (`contrast.py`: every text span against the shape under it, or the paper)
 
-965 text spans. Minimum **dark 4.54:1**, **light 4.61:1**. White text on solid accent badges (16 spans): light 6.07:1, dark 5.60:1.
+968 text spans. Minimum **dark 4.54:1**, **light 4.61:1**. White text on solid accent badges (16 spans): light 6.07:1, dark 5.60:1.
 
 - Lowest in dark mode:
   - 4.54:1 ch20-fig2 “monthly_revenue_dashboard” (`--fig-text` on `--fig-orange-60`)

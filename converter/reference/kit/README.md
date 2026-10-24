@@ -64,7 +64,9 @@ Options: `DBT_COURSE_DIR=/other/folder bash setup.sh` (another folder), `REBUILD
   .venv/                    Python 3.12 + dbt-core 1.11 + dbt-duckdb 1.11 + duckdb 1.5.6
   practice/                 YOUR raw database (Chapter 2)
     data/  setup.sql  updates/  practice.duckdb
-  kit/                      this kit: README files, bugs/, jaffle_dbt.bundle, profiles/, tools/
+  kit/                      this kit = the book's "labs" folder (see section 6)
+    data/  setup.sql  updates/  bugs/  jaffle_dbt.bundle  tools/  profiles/  check/  README files
+    capstone/               added by the capstone kit (Chapter 26)
   reference/                the reference project, separate from your work
     jaffle_dbt/             git clone of the bundle (+ a profiles.yml that git ignores)
     practice/               its own copy of the raw database
@@ -101,16 +103,20 @@ align the venv with your CLI: `DUCKDB_VERSION=1.5.7 bash setup.sh` (use YOUR CLI
 
 ## 6. The book's paths on your machine
 
-The book was written on the author's Mac. Replace its paths like this:
+The book was written on the author's Mac, with its files in a folder of the book. The website already shows
+these paths rewritten for the kit; the PDF still shows the author's paths. The kit folder `~/dbt-course/kit`
+plays the role of the book's `labs` folder:
 
-| In the book | With the kit |
+| In the book (PDF) | With the kit (and on the website) |
 |---|---|
-| `~/Documents/Adnane/dbt-bible/labs/data` and `labs/setup.sql` | already copied to `~/dbt-course/practice/` by the setup |
-| `~/Documents/Adnane/dbt-bible/labs/updates` | already copied to `~/dbt-course/practice/updates/` |
-| `~/Documents/Adnane/dbt-bible/labs/practice-project/bugs/` | `~/dbt-course/kit/bugs/` |
-| `~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt` | `~/dbt-course/kit/jaffle_dbt.bundle` (as a git remote) or the clone `~/dbt-course/reference/jaffle_dbt` |
+| `~/Documents/Adnane/dbt-bible/labs/data`, `labs/setup.sql`, `labs/updates` | `~/dbt-course/kit/data`, `~/dbt-course/kit/setup.sql`, `~/dbt-course/kit/updates` (the setup also copied them to `~/dbt-course/practice/`) |
+| `~/Documents/Adnane/dbt-bible/labs/practice-project/bugs` | `~/dbt-course/kit/bugs` |
+| `~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt` | `~/dbt-course/kit/jaffle_dbt.bundle` (a git remote; a clone is in `~/dbt-course/reference/jaffle_dbt`) |
+| `~/Documents/Adnane/dbt-bible/labs/capstone` | `~/dbt-course/kit/capstone` (capstone kit) |
+| `~/Documents/Adnane/dbt-bible/labs/capstone/shopflow_dbt` | `~/dbt-course/kit/capstone/shopflow_dbt.bundle` |
 | `~/Documents/Adnane/dbt-bible/tools/run_sql.py` | `~/dbt-course/kit/tools/run_sql.py` |
-| `/Users/mac/...` in outputs | your own home folder |
+| `~/Documents/Adnane/dbt-bible` (the "bible folder") | `~/dbt-course/kit` (the kit folder) |
+| `/Users/mac/...` in outputs | your own home folder (`/Users/<you>/...`) |
 
 The book's schema is `dbt_adnane`. You may keep it or use your own name (`dbt_<yourname>`): only the
 names in the outputs change.

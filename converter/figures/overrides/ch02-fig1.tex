@@ -1,0 +1,35 @@
+% Site version of ch02-fig1 (Chapter 2, "Files, folders and paths"): the book draws the author's own folders
+% (/Users/mac/Documents/Adnane/dbt-bible). The website shows the layout that the practice kit's setup creates
+% (converter/rules/paths.yaml header), with the neutral home folder /Users/you (Windows: C:\Users\you).
+% The figure build uses this source instead of the book's while the book figure still has this sha1:
+% book-sha1: c68b3fe16f7d18d62e73cdb7180e9724cbdd6036
+\begin{tikzpicture}[
+  f/.style={font=\ttfamily\scriptsize,anchor=west,inner sep=1.5pt},
+  d/.style={f,text=ink,font=\ttfamily\scriptsize\bfseries},
+  c/.style={font=\sffamily\scriptsize,anchor=west,inner sep=1pt},
+  ln/.style={draw=ink!50,thin}]
+  \node[d] (n0)  at (0.00, 0.0) {/};
+  \node[c,text=muted] at (n0.east) {\ (root)};
+  \node[d] (n1)  at (0.55,-0.5) {Users/};
+  \node[d] (n2)  at (1.10,-1.0) {you/};
+  \node[c,text=accent] at (n2.east) {\ home = \textasciitilde};
+  \node[d] (n3)  at (1.65,-1.5) {dbt-course/};
+  \node[c,text=accent] at (n3.east) {\ your course folder (made by the kit's setup)};
+  \node[d] (n4)  at (2.20,-2.0) {.venv/};
+  \node[c,text=muted] at (n4.east) {\ Python 3.12 + dbt 1.11};
+  \node[d] (n5)  at (2.20,-2.5) {practice/};
+  \node[c,text=accent] at (n5.east) {\ your workspace (Chapter 2 lab)};
+  \node[f] (n6)  at (2.75,-3.0) {practice.duckdb};
+  \node[f] (n7)  at (2.75,-3.5) {setup.sql};
+  \node[d] (n8)  at (2.75,-4.0) {data/};
+  \node[d] (n9)  at (2.20,-4.5) {kit/};
+  \node[c,text=muted] at (n9.east) {\ the practice kit: data/, updates/, bugs/, tools/ ...};
+  \node[d] (n10) at (2.20,-5.0) {reference/};
+  \node[c,text=muted] at (n10.east) {\ the finished project, to compare};
+  \node[d] (n11) at (1.65,-5.5) {.dbt/};
+  \node[c,text=muted] at (n11.east) {\ hidden: dbt connection settings};
+  \node[c,text=muted] at (0.00,-6.2) {On Windows the home folder is C:\textbackslash Users\textbackslash you};
+  \foreach \p/\c in {0/1,1/2,2/3,3/4,3/5,5/6,5/7,5/8,3/9,3/10,2/11}{
+    \draw[ln] ($(n\p.south west)+(0.12,0)$) |- (n\c.west);
+  }
+\end{tikzpicture}

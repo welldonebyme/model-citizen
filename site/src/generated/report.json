@@ -274,6 +274,21 @@
    "check": "braces / $ / backslash all come from escapes",
    "detail": "",
    "ok": true
+  },
+  {
+   "check": "every book path occurrence is mapped (rules/paths.yaml)",
+   "detail": "108 occurrences, 1 allowed; ",
+   "ok": true
+  },
+  {
+   "check": "every path rule is used by the book",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "no generated text names the author's folders",
+   "detail": "",
+   "ok": true
   }
  ],
  "bookConsistency": [],
@@ -876,17 +891,9 @@
     "before": "~/Documents/Adnane/dbt-bible/labs/data/",
     "field": "inline code",
     "rules": [
-     "kit-home"
+     "kit-labs"
     ],
     "where": "chapters/ch01.json"
-   },
-   {
-    "before": "A folder tree from the root folder / to the course folders. /Users/mac/ is the home folder (~). It contains Documents/Adnane/dbt-bible/ (this book, with labs/), dbt-course/ (your workspace, Chapter 2 lab) and .dbt/ (hidden: dbt connection settings).",
-    "field": "text",
-    "rules": [
-     "home-absolute"
-    ],
-    "where": "chapters/ch02.json"
    },
    {
     "before": "/Users/mac/dbt-course/practice",
@@ -931,7 +938,7 @@
     "before": "~/Documents/Adnane/dbt-bible/labs",
     "field": "inline code",
     "rules": [
-     "kit-home"
+     "kit-labs"
     ],
     "where": "chapters/ch02.json"
    },
@@ -950,9 +957,17 @@
     "where": "chapters/ch02.json#ch02-c16"
    },
    {
+    "before": " from the bible folder into your workspace:",
     "field": "text",
     "rules": [
-     "kit-home"
+     "prose-copy-from"
+    ],
+    "where": "chapters/ch02.json"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-labs"
     ],
     "where": "chapters/ch02.json#ch02-c23"
    },
@@ -1081,10 +1096,18 @@
     "where": "chapters/ch06.json#ch06-c51"
    },
    {
+    "before": " The bible contains the finished project, with one Git tag per chapter. Connect it as a second remote and fetch its tags under the prefix ",
     "field": "text",
     "rules": [
-     "kit-home",
-     "kit-absolute"
+     "prose-finished-project"
+    ],
+    "where": "chapters/ch06.json"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-reference-repo",
+     "home-absolute"
     ],
     "where": "chapters/ch06.json#ch06-c56"
    },
@@ -1094,6 +1117,14 @@
      "home-absolute"
     ],
     "where": "chapters/ch07.json#ch07-c43"
+   },
+   {
+    "before": " remote is the bible's read-only copy.",
+    "field": "text",
+    "rules": [
+     "prose-read-only-copy"
+    ],
+    "where": "chapters/ch07.json"
    },
    {
     "field": "text",
@@ -1112,7 +1143,7 @@
    {
     "field": "text",
     "rules": [
-     "kit-home"
+     "kit-reference-repo"
     ],
     "where": "chapters/ch10.json#ch10-c112"
    },
@@ -1140,7 +1171,7 @@
    {
     "field": "text",
     "rules": [
-     "kit-home"
+     "kit-reference-repo"
     ],
     "where": "chapters/ch11.json#ch11-c102"
    },
@@ -1152,9 +1183,25 @@
     "where": "chapters/ch12.json#ch12-c24"
    },
    {
+    "before": "labs/updates/day2.sql",
+    "field": "inline code",
+    "rules": [
+     "rel-updates"
+    ],
+    "where": "chapters/ch13.json"
+   },
+   {
+    "before": " in your bible folder simulates the next loading day (its README lists every change): 5 customers change (customers 5, 12 and 40 move to another country; customer 17 gets an email instead of NULL; customer 11 has their email rewritten in lower case), 13 orders change status with a new ",
     "field": "text",
     "rules": [
-     "kit-home"
+     "prose-your-folder"
+    ],
+    "where": "chapters/ch13.json"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-labs"
     ],
     "where": "chapters/ch13.json#ch13-c27"
    },
@@ -1162,7 +1209,7 @@
     "before": "git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt",
     "field": "inline code",
     "rules": [
-     "kit-home"
+     "kit-reference-repo"
     ],
     "where": "chapters/ch13.json"
    },
@@ -1197,37 +1244,53 @@
    {
     "field": "text",
     "rules": [
-     "kit-home"
+     "kit-reference-repo"
     ],
     "where": "chapters/ch16.json#ch16-c85"
    },
    {
+    "before": " Ask DuckDB which constraints exist on the table (the helper of the bible; you can also use ",
     "field": "text",
     "rules": [
-     "kit-home"
+     "prose-helper"
+    ],
+    "where": "chapters/ch17.json"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-tools"
     ],
     "where": "chapters/ch17.json#ch17-c38"
    },
    {
     "field": "text",
     "rules": [
-     "kit-home"
+     "kit-tools"
     ],
     "where": "chapters/ch17.json#ch17-c71"
    },
    {
     "field": "text",
     "rules": [
-     "kit-home"
+     "kit-tools"
     ],
     "where": "chapters/ch17.json#ch17-c72"
    },
    {
     "field": "text",
     "rules": [
-     "kit-home"
+     "kit-reference-repo"
     ],
     "where": "chapters/ch17.json#ch17-c74"
+   },
+   {
+    "before": "labs/updates/day2.sql",
+    "field": "inline code",
+    "rules": [
+     "rel-updates"
+    ],
+    "where": "chapters/ch18.json"
    },
    {
     "field": "text",
@@ -1260,21 +1323,21 @@
    {
     "field": "text",
     "rules": [
-     "kit-home"
+     "kit-tools"
     ],
     "where": "chapters/ch20.json#ch20-c48"
    },
    {
     "field": "text",
     "rules": [
-     "kit-home"
+     "kit-tools"
     ],
     "where": "chapters/ch20.json#ch20-c50"
    },
    {
     "field": "text",
     "rules": [
-     "kit-home"
+     "kit-tools"
     ],
     "where": "chapters/ch20.json#ch20-c54"
    },
@@ -1282,7 +1345,7 @@
     "before": "git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt",
     "field": "inline code",
     "rules": [
-     "kit-home"
+     "kit-reference-repo"
     ],
     "where": "chapters/ch20.json"
    },
@@ -1290,9 +1353,25 @@
     "before": "cp -r ~/Documents/Adnane/dbt-bible/labs/updates ~/dbt-course/practice/",
     "field": "inline code",
     "rules": [
-     "kit-home"
+     "kit-labs"
     ],
     "where": "chapters/ch21.json"
+   },
+   {
+    "before": "labs/practice-project/bugs/",
+    "field": "inline code",
+    "rules": [
+     "rel-bugs"
+    ],
+    "where": "chapters/ch22.json"
+   },
+   {
+    "before": " of the bible (",
+    "field": "text",
+    "rules": [
+     "prose-of-the-bible"
+    ],
+    "where": "chapters/ch22.json"
    },
    {
     "before": "~/Documents/Adnane/dbt-bible",
@@ -1326,7 +1405,7 @@
    {
     "field": "text",
     "rules": [
-     "kit-home"
+     "kit-bugs"
     ],
     "where": "chapters/ch22.json#ch22-c19"
    },
@@ -1340,14 +1419,14 @@
    {
     "field": "text",
     "rules": [
-     "kit-home"
+     "kit-bugs"
     ],
     "where": "chapters/ch22.json#ch22-c36"
    },
    {
     "field": "text",
     "rules": [
-     "kit-home"
+     "kit-bugs"
     ],
     "where": "chapters/ch22.json#ch22-c41"
    },
@@ -1368,7 +1447,7 @@
    {
     "field": "text",
     "rules": [
-     "kit-home"
+     "kit-labs"
     ],
     "where": "chapters/ch25.json#ch25-c11"
    },
@@ -1388,18 +1467,59 @@
     "where": "chapters/ch25.json"
    },
    {
+    "before": "The bible folder contains everything you need in ",
     "field": "text",
     "rules": [
-     "kit-home"
+     "prose-capstone-folder"
+    ],
+    "where": "chapters/ch26.json"
+   },
+   {
+    "before": "labs/capstone/",
+    "field": "inline code",
+    "rules": [
+     "rel-capstone"
+    ],
+    "where": "chapters/ch26.json"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-capstone-solution"
     ],
     "where": "chapters/ch26.json#ch26-c2"
    },
    {
     "field": "text",
     "rules": [
-     "kit-absolute"
+     "kit-capstone-solution",
+     "home-absolute"
     ],
     "where": "chapters/ch26.json#ch26-c3"
+   },
+   {
+    "before": " the bible folder: it would write ",
+    "field": "text",
+    "rules": [
+     "prose-run-inside"
+    ],
+    "where": "chapters/ch26.json"
+   },
+   {
+    "before": "labs/capstone",
+    "field": "inline code",
+    "rules": [
+     "rel-capstone"
+    ],
+    "where": "chapters/ch26.json"
+   },
+   {
+    "before": "labs/capstone/seeds/",
+    "field": "inline code",
+    "rules": [
+     "rel-capstone"
+    ],
+    "where": "chapters/ch26.json"
    },
    {
     "before": "/Users/mac/dbt-course",
@@ -1419,19 +1539,43 @@
    }
   ],
   "appliedByRule": {
-   "home-absolute": 50,
-   "kit-absolute": 2,
-   "kit-home": 24
+   "home-absolute": 51,
+   "kit-bugs": 3,
+   "kit-capstone-solution": 2,
+   "kit-home": 1,
+   "kit-labs": 6,
+   "kit-reference-repo": 7,
+   "kit-tools": 6,
+   "prose-capstone-folder": 1,
+   "prose-copy-from": 1,
+   "prose-finished-project": 1,
+   "prose-helper": 1,
+   "prose-of-the-bible": 1,
+   "prose-read-only-copy": 1,
+   "prose-run-inside": 1,
+   "prose-your-folder": 1,
+   "rel-bugs": 1,
+   "rel-capstone": 3,
+   "rel-updates": 2
   },
   "bookOccurrences": [
    {
+    "after": "\\item Open the five CSV files in \\code{~/dbt-course/kit/data/} with any text",
     "rules": [
-     "kit-home"
+     "kit-labs"
     ],
     "text": "\\item Open the five CSV files in \\code{\\textasciitilde/Documents/Adnane/dbt-bible/labs/data/} with any text",
     "where": "parts/part1/ch01-data-world.tex:457"
    },
    {
+    "allowed": "ch02-fig1 (TikZ tree of the author's folders): replaced by a site figure (converter/figures/overrides/ch02-fig1.tex)",
+    "rules": [],
+    "text": "\\node[d] (n5)  at (2.75,-2.5) {dbt-bible/};",
+    "unmapped": "dbt-bible",
+    "where": "parts/part1/ch02-command-line.tex:96"
+   },
+   {
+    "after": "\\item An \\textbf{absolute path} starts from the root \\code{/}: \\code{/Users/you/dbt-course/practice}.",
     "rules": [
      "home-absolute"
     ],
@@ -1439,6 +1583,7 @@
     "where": "parts/part1/ch02-command-line.tex:116"
    },
    {
+    "after": "\\item A \\textbf{relative path} starts from where you are now: if you are in \\code{/Users/you/dbt-course},",
     "rules": [
      "home-absolute"
     ],
@@ -1446,6 +1591,7 @@
     "where": "parts/part1/ch02-command-line.tex:118"
    },
    {
+    "after": "then \\code{practice/setup.sql} means \\code{/Users/you/dbt-course/practice/setup.sql}.",
     "rules": [
      "home-absolute"
     ],
@@ -1453,6 +1599,7 @@
     "where": "parts/part1/ch02-command-line.tex:119"
    },
    {
+    "after": "\\item Special names: \\code{~} = your home folder (\\code{/Users/you}), \\code{.} = the current folder,",
     "rules": [
      "home-absolute"
     ],
@@ -1460,6 +1607,7 @@
     "where": "parts/part1/ch02-command-line.tex:120"
    },
    {
+    "after": "/Users/you",
     "rules": [
      "home-absolute"
     ],
@@ -1467,6 +1615,7 @@
     "where": "parts/part1/ch02-command-line.tex:127"
    },
    {
+    "after": "/Users/you/dbt-course",
     "rules": [
      "home-absolute"
     ],
@@ -1474,13 +1623,15 @@
     "where": "parts/part1/ch02-command-line.tex:130"
    },
    {
+    "after": "(Section~\\ref{sec:cli-mainlab}), or directly in \\code{~/dbt-course/kit}.",
     "rules": [
-     "kit-home"
+     "kit-labs"
     ],
     "text": "(Section~\\ref{sec:cli-mainlab}), or directly in \\code{\\textasciitilde/Documents/Adnane/dbt-bible/labs}.",
     "where": "parts/part1/ch02-command-line.tex:296"
    },
    {
+    "after": "/Users/you",
     "rules": [
      "home-absolute"
     ],
@@ -1488,6 +1639,7 @@
     "where": "parts/part1/ch02-command-line.tex:346"
    },
    {
+    "after": "/Users/you/dbt-course/.venv/bin/python",
     "rules": [
      "home-absolute"
     ],
@@ -1495,20 +1647,31 @@
     "where": "parts/part1/ch02-command-line.tex:478"
    },
    {
+    "after": "\\item \\textbf{Copy the practice data} from the kit folder into your workspace:",
     "rules": [
-     "kit-home"
+     "prose-copy-from"
+    ],
+    "text": "\\item \\textbf{Copy the practice data} from the bible folder into your workspace:",
+    "where": "parts/part1/ch02-command-line.tex:607"
+   },
+   {
+    "after": "(.venv) $ cp -R ~/dbt-course/kit/data ~/dbt-course/practice/",
+    "rules": [
+     "kit-labs"
     ],
     "text": "(.venv) $ cp -R ~/Documents/Adnane/dbt-bible/labs/data ~/dbt-course/practice/",
     "where": "parts/part1/ch02-command-line.tex:609"
    },
    {
+    "after": "(.venv) $ cp ~/dbt-course/kit/setup.sql ~/dbt-course/practice/",
     "rules": [
-     "kit-home"
+     "kit-labs"
     ],
     "text": "(.venv) $ cp ~/Documents/Adnane/dbt-bible/labs/setup.sql ~/dbt-course/practice/",
     "where": "parts/part1/ch02-command-line.tex:610"
    },
    {
+    "after": "\\item {[Multiple choice]} You are in \\code{/Users/you/dbt-course}. Which command moves you to",
     "rules": [
      "home-absolute"
     ],
@@ -1516,6 +1679,7 @@
     "where": "parts/part1/ch02-command-line.tex:682"
    },
    {
+    "after": "\\code{/Users/you/dbt-course/practice}?",
     "rules": [
      "home-absolute"
     ],
@@ -1523,6 +1687,7 @@
     "where": "parts/part1/ch02-command-line.tex:683"
    },
    {
+    "after": "Initialized empty Git repository in /Users/you/dbt-course/practice/.git/",
     "rules": [
      "home-absolute"
     ],
@@ -1530,6 +1695,7 @@
     "where": "parts/part1/ch03-git.tex:165"
    },
    {
+    "after": "22:05:35  Creating dbt configuration folder at /Users/you/.dbt",
     "rules": [
      "home-absolute"
     ],
@@ -1537,6 +1703,7 @@
     "where": "parts/part2/ch06-first-project.tex:179"
    },
    {
+    "after": "22:05:35  Profile demo_project written to /Users/you/.dbt/profiles.yml using target's sample configuration. Once updated, you'll be able to start developing with dbt.",
     "rules": [
      "home-absolute"
     ],
@@ -1544,6 +1711,7 @@
     "where": "parts/part2/ch06-first-project.tex:192"
    },
    {
+    "after": "{\\small\\color{muted} The paths in these outputs use the home folder \\code{/Users/you}; on your Mac you see your own home folder.}",
     "rules": [
      "home-absolute"
     ],
@@ -1551,6 +1719,7 @@
     "where": "parts/part2/ch06-first-project.tex:194"
    },
    {
+    "after": "\\code{Creating dbt configuration folder at /Users/you/.dbt}, right after \\code{Running with dbt=1.11.16}",
     "rules": [
      "home-absolute"
     ],
@@ -1558,6 +1727,7 @@
     "where": "parts/part2/ch06-first-project.tex:255"
    },
    {
+    "after": "/Users/you/dbt-course/jaffle_dbt",
     "rules": [
      "home-absolute"
     ],
@@ -1565,6 +1735,7 @@
     "where": "parts/part2/ch06-first-project.tex:287"
    },
    {
+    "after": "Error encountered in /Users/you/dbt-course/jaffle_dbt/dbt_project.yml",
     "rules": [
      "home-absolute"
     ],
@@ -1572,6 +1743,7 @@
     "where": "parts/part2/ch06-first-project.tex:468"
    },
    {
+    "after": "\\begin{outputcode}[title={Result: DBT_PROFILES_DIR=/Users/you/altprofiles dbt debug (extract)},listing options={language={},basicstyle=\\ttfamily\\scriptsize}]",
     "rules": [
      "home-absolute"
     ],
@@ -1579,6 +1751,7 @@
     "where": "parts/part2/ch06-first-project.tex:690"
    },
    {
+    "after": "22:07:35  Using profiles dir at /Users/you/altprofiles",
     "rules": [
      "home-absolute"
     ],
@@ -1586,6 +1759,7 @@
     "where": "parts/part2/ch06-first-project.tex:691"
    },
    {
+    "after": "22:07:35  Using profiles.yml file at /Users/you/altprofiles/profiles.yml",
     "rules": [
      "home-absolute"
     ],
@@ -1593,6 +1767,7 @@
     "where": "parts/part2/ch06-first-project.tex:692"
    },
    {
+    "after": "20:35:32  python path: /Users/you/dbt-course/.venv/bin/python",
     "rules": [
      "home-absolute"
     ],
@@ -1600,6 +1775,7 @@
     "where": "parts/part2/ch06-first-project.tex:773"
    },
    {
+    "after": "20:35:32  Using profiles dir at /Users/you/.dbt",
     "rules": [
      "home-absolute"
     ],
@@ -1607,6 +1783,7 @@
     "where": "parts/part2/ch06-first-project.tex:775"
    },
    {
+    "after": "20:35:32  Using profiles.yml file at /Users/you/.dbt/profiles.yml",
     "rules": [
      "home-absolute"
     ],
@@ -1614,6 +1791,7 @@
     "where": "parts/part2/ch06-first-project.tex:776"
    },
    {
+    "after": "20:35:32  Using dbt_project.yml file at /Users/you/dbt-course/jaffle_dbt/dbt_project.yml",
     "rules": [
      "home-absolute"
     ],
@@ -1621,6 +1799,7 @@
     "where": "parts/part2/ch06-first-project.tex:777"
    },
    {
+    "after": "Run from \\code{~/dbt-course} (not inside the project) & \\code{dbt_project.yml file [ERROR not found]}, then \\code{project path </Users/you/dbt-course/dbt_project.yml> not found}, and the connection fa",
     "rules": [
      "home-absolute"
     ],
@@ -1628,6 +1807,7 @@
     "where": "parts/part2/ch06-first-project.tex:818"
    },
    {
+    "after": "No dbt_project.yml found at expected path /Users/you/dbt-course/dbt_project.yml",
     "rules": [
      "home-absolute"
     ],
@@ -1635,6 +1815,7 @@
     "where": "parts/part2/ch06-first-project.tex:833"
    },
    {
+    "after": "\\code{open /Users/you/.dbt}, and stops.",
     "rules": [
      "home-absolute"
     ],
@@ -1642,6 +1823,7 @@
     "where": "parts/part2/ch06-first-project.tex:850"
    },
    {
+    "after": "22:09:30  Checking /Users/you/dbt-course/jaffle_dbt/target/*",
     "rules": [
      "home-absolute"
     ],
@@ -1649,6 +1831,7 @@
     "where": "parts/part2/ch06-first-project.tex:1152"
    },
    {
+    "after": "22:09:30  Cleaned /Users/you/dbt-course/jaffle_dbt/target/*",
     "rules": [
      "home-absolute"
     ],
@@ -1656,6 +1839,7 @@
     "where": "parts/part2/ch06-first-project.tex:1153"
    },
    {
+    "after": "22:09:30  Checking /Users/you/dbt-course/jaffle_dbt/dbt_packages/*",
     "rules": [
      "home-absolute"
     ],
@@ -1663,6 +1847,7 @@
     "where": "parts/part2/ch06-first-project.tex:1154"
    },
    {
+    "after": "22:09:30  Cleaned /Users/you/dbt-course/jaffle_dbt/dbt_packages/*",
     "rules": [
      "home-absolute"
     ],
@@ -1670,6 +1855,7 @@
     "where": "parts/part2/ch06-first-project.tex:1155"
    },
    {
+    "after": "IO Error: Could not set lock on file \"/Users/you/dbt-course/practice/practice.duckdb\": Conflicting lock is held in <program path> (PID 34108) by user <user>. See also https://duckdb.org/docs/stable/co",
     "rules": [
      "home-absolute"
     ],
@@ -1677,6 +1863,7 @@
     "where": "parts/part2/ch06-first-project.tex:1200"
    },
    {
+    "after": "IO Error: Could not set lock on file \"/Users/you/dbt-course/practice/practice.duckdb\": Conflicting lock is held in <program path> (PID 34205) by user <user>. However, you would be able to open this da",
     "rules": [
      "home-absolute"
     ],
@@ -1684,6 +1871,7 @@
     "where": "parts/part2/ch06-first-project.tex:1214"
    },
    {
+    "after": "Initialized empty Git repository in /Users/you/dbt-course/jaffle_dbt/.git/",
     "rules": [
      "home-absolute"
     ],
@@ -1691,20 +1879,32 @@
     "where": "parts/part2/ch06-first-project.tex:1340"
    },
    {
+    "after": "\\item \\textbf{Compare with the reference.} The practice kit contains the finished project, with one Git tag per chapter. Connect it as a second",
     "rules": [
-     "kit-home"
+     "prose-finished-project"
+    ],
+    "text": "\\item \\textbf{Compare with the reference.} The bible contains the finished project, with one Git tag per chapter. Connect it as a second",
+    "where": "parts/part2/ch06-first-project.tex:1392"
+   },
+   {
+    "after": "(.venv) $ git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle",
+    "rules": [
+     "kit-reference-repo"
     ],
     "text": "(.venv) $ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt",
     "where": "parts/part2/ch06-first-project.tex:1395"
    },
    {
+    "after": "From /Users/you/dbt-course/kit/jaffle_dbt.bundle",
     "rules": [
-     "kit-absolute"
+     "kit-reference-repo",
+     "home-absolute"
     ],
     "text": "From /Users/mac/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt",
     "where": "parts/part2/ch06-first-project.tex:1397"
    },
    {
+    "after": "20:39:21  Catalog written to /Users/you/dbt-course/jaffle_dbt/target/catalog.json",
     "rules": [
      "home-absolute"
     ],
@@ -1712,6 +1912,15 @@
     "where": "parts/part2/ch07-models-sources-dag.tex:1137"
    },
    {
+    "after": "do \\textbf{not} follow that advice, the \\code{reference} remote is the kit's read-only copy.",
+    "rules": [
+     "prose-read-only-copy"
+    ],
+    "text": "do \\textbf{not} follow that advice, the \\code{reference} remote is the bible's read-only copy.",
+    "where": "parts/part2/ch07-models-sources-dag.tex:1377"
+   },
+   {
+    "after": "Error encountered in /Users/you/dbt-course/jaffle_dbt/dbt_project.yml",
     "rules": [
      "home-absolute"
     ],
@@ -1719,6 +1928,7 @@
     "where": "parts/part2/ch10-configuration.tex:244"
    },
    {
+    "after": "20:49:07  Catalog written to /Users/you/dbt-course/jaffle_dbt/target/catalog.json",
     "rules": [
      "home-absolute"
     ],
@@ -1726,13 +1936,15 @@
     "where": "parts/part2/ch10-configuration.tex:1660"
    },
    {
+    "after": "$ git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle   # skip if done in Ch. 6",
     "rules": [
-     "kit-home"
+     "kit-reference-repo"
     ],
     "text": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # skip if done in Ch. 6",
     "where": "parts/part2/ch10-configuration.tex:1675"
    },
    {
+    "after": "20:50:02  Updating lock file in file path: /Users/you/dbt-course/jaffle_dbt/package-lock.yml",
     "rules": [
      "home-absolute"
     ],
@@ -1740,6 +1952,7 @@
     "where": "parts/part2/ch11-jinja-macros-packages.tex:875"
    },
    {
+    "after": "22:10:19  Added new package dbt-labs/codegen@0.13.1 to /Users/you/dbt-course/jaffle_dbt/packages.yml",
     "rules": [
      "home-absolute"
     ],
@@ -1747,6 +1960,7 @@
     "where": "parts/part2/ch11-jinja-macros-packages.tex:946"
    },
    {
+    "after": "22:10:20  Updating lock file in file path: /Users/you/dbt-course/jaffle_dbt/package-lock.yml",
     "rules": [
      "home-absolute"
     ],
@@ -1754,6 +1968,7 @@
     "where": "parts/part2/ch11-jinja-macros-packages.tex:947"
    },
    {
+    "after": "22:12:11  Checking /Users/you/dbt-course/jaffle_dbt/target/*",
     "rules": [
      "home-absolute"
     ],
@@ -1761,6 +1976,7 @@
     "where": "parts/part2/ch11-jinja-macros-packages.tex:983"
    },
    {
+    "after": "22:12:11  Cleaned /Users/you/dbt-course/jaffle_dbt/target/*",
     "rules": [
      "home-absolute"
     ],
@@ -1768,6 +1984,7 @@
     "where": "parts/part2/ch11-jinja-macros-packages.tex:984"
    },
    {
+    "after": "22:12:11  Checking /Users/you/dbt-course/jaffle_dbt/dbt_packages/*",
     "rules": [
      "home-absolute"
     ],
@@ -1775,6 +1992,7 @@
     "where": "parts/part2/ch11-jinja-macros-packages.tex:985"
    },
    {
+    "after": "22:12:11  Cleaned /Users/you/dbt-course/jaffle_dbt/dbt_packages/*",
     "rules": [
      "home-absolute"
     ],
@@ -1782,13 +2000,15 @@
     "where": "parts/part2/ch11-jinja-macros-packages.tex:986"
    },
    {
+    "after": "$ git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle   # skip if done in Ch. 6",
     "rules": [
-     "kit-home"
+     "kit-reference-repo"
     ],
     "text": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # skip if done in Ch. 6",
     "where": "parts/part2/ch11-jinja-macros-packages.tex:1667"
    },
    {
+    "after": "Invalid Input Error: Error when sniffing file \"/Users/you/dbt-course/jaffle_dbt/seeds/country_regions.csv\".",
     "rules": [
      "home-absolute"
     ],
@@ -1796,20 +2016,32 @@
     "where": "parts/part2/ch12-seeds-analyses.tex:472"
    },
    {
+    "after": "{\\raggedright The script \\code{updates/day2.sql} in your kit folder simulates the next loading day (its README lists every change):",
     "rules": [
-     "kit-home"
+     "rel-updates",
+     "prose-your-folder"
+    ],
+    "text": "{\\raggedright The script \\code{labs/updates/day2.sql} in your bible folder simulates the next loading day (its README lists every change):",
+    "where": "parts/part2/ch13-snapshots.tex:722"
+   },
+   {
+    "after": "$ cp -r ~/dbt-course/kit/updates ~/dbt-course/practice/",
+    "rules": [
+     "kit-labs"
     ],
     "text": "$ cp -r ~/Documents/Adnane/dbt-bible/labs/updates ~/dbt-course/practice/",
     "where": "parts/part2/ch13-snapshots.tex:734"
    },
    {
+    "after": "\\code{git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle}, then",
     "rules": [
-     "kit-home"
+     "kit-reference-repo"
     ],
     "text": "\\code{git remote add reference \\textasciitilde/Documents/Adnane/dbt-bible/labs/practice-project/jaffle\\_dbt}, then",
     "where": "parts/part2/ch13-snapshots.tex:1414"
    },
    {
+    "after": "File \"/Users/you/dbt-course/.venv/lib/python3.12/site-packages/dbt/adapters/duckdb/environments/__init__.py\", line 278, in run_python_job",
     "rules": [
      "home-absolute"
     ],
@@ -1817,6 +2049,7 @@
     "where": "parts/part2/ch15-python-models.tex:350"
    },
    {
+    "after": "22:22:06  Performance info: /Users/you/dbt-course/jaffle_dbt/target/perf_info.json",
     "rules": [
      "home-absolute"
     ],
@@ -1824,6 +2057,7 @@
     "where": "parts/part2/ch16-commands-selection.tex:2084"
    },
    {
+    "after": "22:22:10  Checking /Users/you/dbt-course/jaffle_dbt/target/*",
     "rules": [
      "home-absolute"
     ],
@@ -1831,6 +2065,7 @@
     "where": "parts/part2/ch16-commands-selection.tex:2096"
    },
    {
+    "after": "22:22:10  Cleaned /Users/you/dbt-course/jaffle_dbt/target/*",
     "rules": [
      "home-absolute"
     ],
@@ -1838,6 +2073,7 @@
     "where": "parts/part2/ch16-commands-selection.tex:2097"
    },
    {
+    "after": "22:22:10  Checking /Users/you/dbt-course/jaffle_dbt/dbt_packages/*",
     "rules": [
      "home-absolute"
     ],
@@ -1845,6 +2081,7 @@
     "where": "parts/part2/ch16-commands-selection.tex:2098"
    },
    {
+    "after": "22:22:10  Cleaned /Users/you/dbt-course/jaffle_dbt/dbt_packages/*",
     "rules": [
      "home-absolute"
     ],
@@ -1852,6 +2089,7 @@
     "where": "parts/part2/ch16-commands-selection.tex:2099"
    },
    {
+    "after": "22:16:57  Using profiles.yml file at /Users/you/.dbt/profiles.yml",
     "rules": [
      "home-absolute"
     ],
@@ -1859,6 +2097,7 @@
     "where": "parts/part2/ch16-commands-selection.tex:2131"
    },
    {
+    "after": "22:16:57  Using dbt_project.yml file at /Users/you/dbt-course/jaffle_dbt/dbt_project.yml",
     "rules": [
      "home-absolute"
     ],
@@ -1866,48 +2105,71 @@
     "where": "parts/part2/ch16-commands-selection.tex:2132"
    },
    {
+    "after": "$ git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle   # skip if done in Ch. 6",
     "rules": [
-     "kit-home"
+     "kit-reference-repo"
     ],
     "text": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # skip if done in Ch. 6",
     "where": "parts/part2/ch16-commands-selection.tex:2190"
    },
    {
+    "after": "\\textbf{Step 4.} Ask DuckDB which constraints exist on the table (the helper of the kit; you can also use \\code{duckdb -readonly},",
     "rules": [
-     "kit-home"
+     "prose-helper"
+    ],
+    "text": "\\textbf{Step 4.} Ask DuckDB which constraints exist on the table (the helper of the bible; you can also use \\code{duckdb -readonly},",
+    "where": "parts/part3/ch17-governance.tex:964"
+   },
+   {
+    "after": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select constraint_type, constraint_text from duckdb_constraints() where schema_name = 'dbt_adnane' and table_name = 'dim",
+    "rules": [
+     "kit-tools"
     ],
     "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select constraint_type, constraint_text from duckdb_constraints() where schema_name = 'dbt_adnane' and table",
     "where": "parts/part3/ch17-governance.tex:967"
    },
    {
+    "after": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.demo_uses_v1\"",
     "rules": [
-     "kit-home"
+     "kit-tools"
     ],
     "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.demo_uses_v1\"",
     "where": "parts/part3/ch17-governance.tex:1485"
    },
    {
+    "after": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select table_name from information_schema.tables where table_schema = 'dbt_adnane' and table_name like 'dim_customers%' ",
     "rules": [
-     "kit-home"
+     "kit-tools"
     ],
     "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select table_name from information_schema.tables where table_schema = 'dbt_adnane' and table_name like 'dim_",
     "where": "parts/part3/ch17-governance.tex:1491"
    },
    {
+    "after": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.dim_customers\"",
     "rules": [
-     "kit-home"
+     "kit-tools"
     ],
     "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.dim_customers\"",
     "where": "parts/part3/ch17-governance.tex:1492"
    },
    {
+    "after": "$ git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle   # once only",
     "rules": [
-     "kit-home"
+     "kit-reference-repo"
     ],
     "text": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # once only",
     "where": "parts/part3/ch17-governance.tex:1511"
    },
    {
+    "after": "\\textbf{Which data are you testing?} Your raw data is in the \\emph{day~2} state: you applied \\code{updates/day2.sql} in",
+    "rules": [
+     "rel-updates"
+    ],
+    "text": "\\textbf{Which data are you testing?} Your raw data is in the \\emph{day~2} state: you applied \\code{labs/updates/day2.sql} in",
+    "where": "parts/part4/ch18-data-tests.tex:62"
+   },
+   {
+    "after": "22:09:27  Performance info: /Users/you/dbt-course/jaffle_dbt/target/perf_info.json",
     "rules": [
      "home-absolute"
     ],
@@ -1915,6 +2177,7 @@
     "where": "parts/part4/ch18-data-tests.tex:433"
    },
    {
+    "after": "21:19:59  Catalog written to /Users/you/dbt-course/jaffle_dbt/target/catalog.json",
     "rules": [
      "home-absolute"
     ],
@@ -1922,6 +2185,7 @@
     "where": "parts/part5/ch20-documentation.tex:438"
    },
    {
+    "after": "22:19:23  Catalog written to /Users/you/dbt-course/jaffle_dbt/target/catalog.json",
     "rules": [
      "home-absolute"
     ],
@@ -1929,6 +2193,7 @@
     "where": "parts/part5/ch20-documentation.tex:541"
    },
    {
+    "after": "21:20:03  Catalog written to /Users/you/dbt-course/jaffle_dbt/target/catalog.json",
     "rules": [
      "home-absolute"
     ],
@@ -1936,55 +2201,72 @@
     "where": "parts/part5/ch20-documentation.tex:735"
    },
    {
+    "after": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\"",
     "rules": [
-     "kit-home"
+     "kit-tools"
     ],
     "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\"",
     "where": "parts/part5/ch20-documentation.tex:974"
    },
    {
+    "after": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\"",
     "rules": [
-     "kit-home"
+     "kit-tools"
     ],
     "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\"",
     "where": "parts/part5/ch20-documentation.tex:993"
    },
    {
+    "after": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select table_name, left(comment, 60) as comment from duckdb_tables() where schema_name = 'dbt_adnane' and table_name lik",
     "rules": [
-     "kit-home"
+     "kit-tools"
     ],
     "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select table_name, left(comment, 60) as comment from duckdb_tables() where schema_name = 'dbt_adnane' and ta",
     "where": "parts/part5/ch20-documentation.tex:1031"
    },
    {
+    "after": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select column_name, left(comment, 60) as comment from duckdb_columns() where schema_name = 'dbt_adnane' and table_name =",
     "rules": [
-     "kit-home"
+     "kit-tools"
     ],
     "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select column_name, left(comment, 60) as comment from duckdb_columns() where schema_name = 'dbt_adnane' and ",
     "where": "parts/part5/ch20-documentation.tex:1032"
    },
    {
+    "after": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select view_name, comment from duckdb_views() where schema_name = 'dbt_adnane' and not internal order by 1\"",
     "rules": [
-     "kit-home"
+     "kit-tools"
     ],
     "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select view_name, comment from duckdb_views() where schema_name = 'dbt_adnane' and not internal order by 1\"",
     "where": "parts/part5/ch20-documentation.tex:1033"
    },
    {
+    "after": "\\code{git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle}. Your commit adds",
     "rules": [
-     "kit-home"
+     "kit-reference-repo"
     ],
     "text": "\\code{git remote add reference \\textasciitilde/Documents/Adnane/dbt-bible/labs/practice-project/jaffle\\_dbt}. Your commit adds",
     "where": "parts/part5/ch20-documentation.tex:1089"
    },
    {
+    "after": "\\code{cp -r ~/dbt-course/kit/updates ~/dbt-course/practice/}.",
     "rules": [
-     "kit-home"
+     "kit-labs"
     ],
     "text": "\\code{cp -r \\textasciitilde/Documents/Adnane/dbt-bible/labs/updates \\textasciitilde/dbt-course/practice/}.",
     "where": "parts/part5/ch21-freshness-exposures.tex:492"
    },
    {
+    "after": "The reference project comes with nine \\emph{bug files}, in the folder \\code{~/dbt-course/kit/bugs/} of the practice kit",
+    "rules": [
+     "rel-bugs",
+     "prose-of-the-bible"
+    ],
+    "text": "The reference project comes with nine \\emph{bug files}, in the folder \\code{labs/practice-project/bugs/} of the bible",
+    "where": "parts/part6/ch22-debugging.tex:230"
+   },
+   {
+    "after": "(\\code{~/dbt-course/kit}).",
     "rules": [
      "kit-home"
     ],
@@ -1992,6 +2274,7 @@
     "where": "parts/part6/ch22-debugging.tex:231"
    },
    {
+    "after": "22:17:48  Performance info: /Users/you/dbt-course/jaffle_dbt/target/perf_info.json",
     "rules": [
      "home-absolute"
     ],
@@ -1999,6 +2282,7 @@
     "where": "parts/part6/ch22-debugging.tex:399"
    },
    {
+    "after": "22:18:57  Performance info: /Users/you/dbt-course/jaffle_dbt/target/perf_info.json",
     "rules": [
      "home-absolute"
     ],
@@ -2006,6 +2290,7 @@
     "where": "parts/part6/ch22-debugging.tex:520"
    },
    {
+    "after": "21:30:47  Performance info: /Users/you/dbt-course/jaffle_dbt/target/perf_info.json",
     "rules": [
      "home-absolute"
     ],
@@ -2013,13 +2298,15 @@
     "where": "parts/part6/ch22-debugging.tex:540"
    },
    {
+    "after": "$ B=~/dbt-course/kit/bugs",
     "rules": [
-     "kit-home"
+     "kit-bugs"
     ],
     "text": "$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs",
     "where": "parts/part6/ch22-debugging.tex:593"
    },
    {
+    "after": ">IO Error: Cannot open file \"/Users/you/dbt-course/practise/practice.duckdb\": No such file or directory",
     "rules": [
      "home-absolute"
     ],
@@ -2027,20 +2314,23 @@
     "where": "parts/part6/ch22-debugging.tex:843"
    },
    {
+    "after": "$ B=~/dbt-course/kit/bugs",
     "rules": [
-     "kit-home"
+     "kit-bugs"
     ],
     "text": "$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs",
     "where": "parts/part6/ch22-debugging.tex:937"
    },
    {
+    "after": "$ B=~/dbt-course/kit/bugs",
     "rules": [
-     "kit-home"
+     "kit-bugs"
     ],
     "text": "$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs",
     "where": "parts/part6/ch22-debugging.tex:1073"
    },
    {
+    "after": "21:31:58  running dbt with arguments {'use_experimental_parser': 'False', 'debug': 'True', 'fail_fast': 'False', ... 'warn_error': 'None', ... 'log_format': 'default', 'profiles_dir': '/Users/you/.dbt",
     "rules": [
      "home-absolute"
     ],
@@ -2048,6 +2338,7 @@
     "where": "parts/part6/ch22-debugging.tex:1382"
    },
    {
+    "after": "IO Error: Could not set lock on file \"/Users/you/dbt-course/practice/practice.duckdb\": Conflicting lock is held in <program path> (PID 16838) by user <user>. See also https://duckdb.org/docs/stable/co",
     "rules": [
      "home-absolute"
     ],
@@ -2055,20 +2346,23 @@
     "where": "parts/part6/ch23-pipelines-clone.tex:409"
    },
    {
+    "after": "$ cp ~/dbt-course/kit/setup.sql ci/raw/",
     "rules": [
-     "kit-home"
+     "kit-labs"
     ],
     "text": "$ cp ~/Documents/Adnane/dbt-bible/labs/setup.sql ci/raw/",
     "where": "parts/part7/ch25-environments-ci.tex:560"
    },
    {
+    "after": "$ cp ~/dbt-course/kit/data/*.csv ci/raw/data/",
     "rules": [
-     "kit-home"
+     "kit-labs"
     ],
     "text": "$ cp ~/Documents/Adnane/dbt-bible/labs/data/*.csv ci/raw/data/",
     "where": "parts/part7/ch25-environments-ci.tex:561"
    },
    {
+    "after": "21:43:38  Performance info: /Users/you/dbt-course/jaffle_dbt/target/perf_info.json",
     "rules": [
      "home-absolute"
     ],
@@ -2076,6 +2370,7 @@
     "where": "parts/part7/ch25-environments-ci.tex:601"
    },
    {
+    "after": "and \\code{remotes/origin/main}. The loader prints \\code{raw data loaded into /Users/you/dbt-course/ci_run/workspace/ci_db/practice.duckdb}.",
     "rules": [
      "home-absolute"
     ],
@@ -2083,18 +2378,54 @@
     "where": "parts/part7/ch25-environments-ci.tex:660"
    },
    {
+    "after": "The capstone kit contains everything you need in \\code{~/dbt-course/kit/capstone/}: the CSV files, \\code{setup.sql},",
     "rules": [
-     "kit-home"
+     "rel-capstone",
+     "prose-capstone-folder"
+    ],
+    "text": "The bible folder contains everything you need in \\code{labs/capstone/}: the CSV files, \\code{setup.sql},",
+    "where": "parts/part8/ch26-capstone.tex:230"
+   },
+   {
+    "after": "$ git remote add --no-tags solution ~/dbt-course/kit/capstone/shopflow_dbt.bundle",
+    "rules": [
+     "kit-capstone-solution"
     ],
     "text": "$ git remote add --no-tags solution ~/Documents/Adnane/dbt-bible/labs/capstone/shopflow_dbt",
     "where": "parts/part8/ch26-capstone.tex:260"
    },
    {
+    "after": "From /Users/you/dbt-course/kit/capstone/shopflow_dbt.bundle",
     "rules": [
-     "kit-absolute"
+     "kit-capstone-solution",
+     "home-absolute"
     ],
     "text": "From /Users/mac/Documents/Adnane/dbt-bible/labs/capstone/shopflow_dbt",
     "where": "parts/part8/ch26-capstone.tex:264"
+   },
+   {
+    "after": "Never run dbt \\emph{inside} the kit folder: it would write \\code{target/} and \\code{logs/} there. If you want to",
+    "rules": [
+     "prose-run-inside"
+    ],
+    "text": "Never run dbt \\emph{inside} the bible folder: it would write \\code{target/} and \\code{logs/} there. If you want to",
+    "where": "parts/part8/ch26-capstone.tex:287"
+   },
+   {
+    "after": "\\item Copy \\code{data/}, \\code{updates/} and \\code{setup.sql} from \\code{~/dbt-course/kit/capstone} into \\code{~/dbt-course/shopflow-data}",
+    "rules": [
+     "rel-capstone"
+    ],
+    "text": "\\item Copy \\code{data/}, \\code{updates/} and \\code{setup.sql} from \\code{labs/capstone} into \\code{\\textasciitilde/dbt-course/shopflow-data}",
+    "where": "parts/part8/ch26-capstone.tex:312"
+   },
+   {
+    "after": "\\item Copy \\code{exchange_rates.csv} and \\code{country_regions.csv} from \\code{~/dbt-course/kit/capstone/seeds/} into your \\code{seeds/} folder.",
+    "rules": [
+     "rel-capstone"
+    ],
+    "text": "\\item Copy \\code{exchange\\_rates.csv} and \\code{country\\_regions.csv} from \\code{labs/capstone/seeds/} into your \\code{seeds/} folder.",
+    "where": "parts/part8/ch26-capstone.tex:627"
    }
   ],
   "rules": "converter/rules/paths.yaml"

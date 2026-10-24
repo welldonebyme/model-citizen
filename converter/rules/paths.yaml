@@ -1,22 +1,147 @@
 # Path rewrites for the website (docs/05-content-pipeline.md section 6).
 #
-# The book is Adnane's personal edition: its labs point to the book folder on his Mac. On the website the
-# practice kit is downloaded to ~/dbt-course/kit and keeps the book's folder layout below it
-# (kit/labs/data, kit/labs/practice-project, kit/tools/run_sql.py ...), so only the prefix changes.
+# The book is Adnane's personal edition: its labs point to the book folder on his Mac
+# (~/Documents/Adnane/dbt-bible, with labs/ and tools/ inside). On the website the learner uses the practice
+# kit (site/public/kits/dbt-course-kit.zip), whose setup installs this layout (converter/reference/kit):
 #
-# Rules are regular expressions applied in order to every generated string (code blocks, inline code, titles,
-# prose). Keys, ids, hrefs and keyRaw are never rewritten. When a code block or inline code changes, the original
-# text is kept in textBook (titleBook for code titles). Every rewrite is listed in report.json.
+#   ~/dbt-course/.venv/                         Python 3.12 + dbt 1.11 (Chapter 2)
+#   ~/dbt-course/practice/                      data/ setup.sql updates/ practice.duckdb (Chapter 2, YOUR database)
+#   ~/dbt-course/kit/                           = the book's labs/ folder (+ tools/):
+#       data/ setup.sql updates/                  labs/data, labs/setup.sql, labs/updates
+#       bugs/                                     labs/practice-project/bugs
+#       jaffle_dbt.bundle                         labs/practice-project/jaffle_dbt (git bundle, usable as a remote)
+#       tools/run_sql.py tools/duck.py            tools/run_sql.py (+ a DuckDB helper)
+#       capstone/                                 labs/capstone (capstone kit): data/ seeds/ setup.sql updates/
+#           shopflow_dbt.bundle shopflow.duckdb   labs/capstone/shopflow_dbt, labs/capstone/shopflow.duckdb
+#   ~/dbt-course/reference/jaffle_dbt/          a clone of the bundle with its own practice/ database
+#   ~/dbt-course/shopflow-data/                 capstone raw data (milestone m00)
+#
+# Rules are regular expressions (Python re) applied in this order to every generated string (code blocks,
+# inline code, titles, prose). Keys, ids, hrefs and keyRaw are never rewritten. When a code block or inline
+# code changes, the original text is kept in textBook (titleBook for code titles). Every rewrite is listed in
+# report.json (pathRewrites.applied), every book occurrence in pathRewrites.bookOccurrences. `check` fails
+# when a rule is never used, when a book path is left unmapped, or when generated text still contains the
+# author's folders. Tests: converter/tests/test_paths.py. The existence of every rewritten path in an installed
+# kit is checked by converter/tools/check_kit_paths.py (with the paths created by lab steps listed below).
 rules:
+  # ---------------------------------------------------------------- the book folder -> the kit folder
+  - id: kit-reference-repo
+    pattern: '(~|/Users/mac)/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt(?![\w-]|\.\w)'
+    replace: '\1/dbt-course/kit/jaffle_dbt.bundle'
+    note: the reference project (a git repository in the book) is a git bundle in the kit
+  - id: kit-bugs
+    pattern: '(~|/Users/mac)/Documents/Adnane/dbt-bible/labs/practice-project/bugs(?![\w-]|\.\w)'
+    replace: '\1/dbt-course/kit/bugs'
+    note: the nine bug patches of Chapter 22
+  - id: kit-capstone-solution
+    pattern: '(~|/Users/mac)/Documents/Adnane/dbt-bible/labs/capstone/shopflow_dbt(?![\w-]|\.\w)'
+    replace: '\1/dbt-course/kit/capstone/shopflow_dbt.bundle'
+    note: the capstone solution repository is a git bundle in the capstone kit
+  - id: kit-labs
+    pattern: '(~|/Users/mac)/Documents/Adnane/dbt-bible/labs(?![\w-]|\.\w)'
+    replace: '\1/dbt-course/kit'
+    note: labs/data, labs/setup.sql, labs/updates, labs/capstone and labs itself
+  - id: kit-tools
+    pattern: '(~|/Users/mac)/Documents/Adnane/dbt-bible/tools(?![\w-]|\.\w)'
+    replace: '\1/dbt-course/kit/tools'
+    note: tools/run_sql.py
   - id: kit-home
-    pattern: '~/Documents/Adnane/dbt-bible(?=/|\b|$)'
-    replace: '~/dbt-course/kit'
-    note: the book folder -> the downloaded practice kit
-  - id: kit-absolute
-    pattern: '/Users/mac/Documents/Adnane/dbt-bible(?=/|\b|$)'
-    replace: '/Users/you/dbt-course/kit'
-    note: the same folder printed as an absolute path in command outputs
+    pattern: '(~|/Users/mac)/Documents/Adnane/dbt-bible(?![\w-]|\.\w)'
+    replace: '\1/dbt-course/kit'
+    note: the book folder itself
+  # ---------------------------------------------------------------- relative labs/... paths in the prose
+  - id: rel-updates
+    pattern: '(?<![\w/.~-])labs/updates/'
+    replace: 'updates/'
+    note: '"you applied labs/updates/day2.sql" = the copy in ~/dbt-course/practice/updates (also in the kit folder)'
+  - id: rel-bugs
+    pattern: '(?<![\w/.~-])labs/practice-project/bugs(?![\w-]|\.\w)'
+    replace: '~/dbt-course/kit/bugs'
+  - id: rel-capstone
+    pattern: '(?<![\w/.~-])labs/capstone(?![\w-]|\.\w)'
+    replace: '~/dbt-course/kit/capstone'
+  # ---------------------------------------------------------------- the words "bible folder" in the prose
+  - id: prose-copy-from
+    pattern: 'from the bible folder into your workspace'
+    replace: 'from the kit folder into your workspace'
+  - id: prose-your-folder
+    pattern: 'in your bible folder'
+    replace: 'in your kit folder'
+  - id: prose-of-the-bible
+    pattern: ' of the bible(?=\s*(\(|$))'
+    replace: ' of the practice kit'
+  - id: prose-finished-project
+    pattern: 'The bible contains the finished project'
+    replace: 'The practice kit contains the finished project'
+  - id: prose-read-only-copy
+    pattern: "the bible's read-only copy"
+    replace: "the kit's read-only copy"
+  - id: prose-helper
+    pattern: 'the helper of the bible'
+    replace: 'the helper of the kit'
+  - id: prose-capstone-folder
+    pattern: 'The bible folder contains everything you need in '
+    replace: 'The capstone kit contains everything you need in '
+  - id: prose-run-inside
+    pattern: ' the bible folder: it would write'
+    replace: ' the kit folder: it would write'
+  # ---------------------------------------------------------------- the author's home folder
   - id: home-absolute
     pattern: '/Users/mac(?=[/''"<>\s,;:)}\]]|$)'
     replace: '/Users/you'
-    note: the author's macOS home folder in command outputs and prose
+    note: the author's macOS home folder in command outputs and prose (Windows readers see C:\Users\<you> in the OS notes)
+
+# Book text that names the author's folders but is not rewritten by a rule above (each one is handled elsewhere).
+unmapped_allowed:
+  - where: 'parts/part1/ch02-command-line\.tex:(8[4-9]|9[0-9]|10[0-9]|110)$'
+    why: 'ch02-fig1 (TikZ tree of the author''s folders): replaced by a site figure (converter/figures/overrides/ch02-fig1.tex)'
+
+# Paths that appear (after rewriting) in the generated content but do not exist right after the kit setup:
+# they are created by a lab step of the book, by the learner, or they are wrong on purpose. Used by
+# converter/tools/check_kit_paths.py (patterns are fnmatch globs on the path with ~ = the learner's home).
+created_by_labs:
+  - path: '~/dbt-course/jaffle_dbt'
+    also: ['~/dbt-course/jaffle_dbt/*']
+    by: 'Chapter 6, section "Creating a project with dbt init" (dbt init jaffle_dbt); every later chapter adds files'
+  - path: '~/.dbt'
+    also: ['~/.dbt/profiles.yml']
+    by: 'Chapter 6: dbt init creates ~/.dbt; the learner writes profiles.yml (section "profiles.yml: how dbt connects")'
+  - path: '~/altprofiles'
+    also: ['~/altprofiles/profiles.yml']
+    by: 'Chapter 6 deep box: output of the DBT_PROFILES_DIR demo (a folder the author created for the test)'
+  - path: '~/dbt-course/notes.txt'
+    by: 'Chapter 2 main lab, step 11 (dbt --version > notes.txt)'
+  - path: '~/dbt-course/practice/.git'
+    also: ['~/dbt-course/practice/.git/*']
+    by: 'Chapter 3 (git init in ~/dbt-course/practice)'
+  - path: '~/dbt-course/dbt_project.yml'
+    by: 'Chapter 6 troubleshooting table: the error printed when dbt runs OUTSIDE the project (the file must not exist)'
+  - path: '~/dbt-course/practise/practice.duckdb'
+    by: 'Chapter 22: a misspelt path on purpose (practise), the error shows that it does not exist'
+  - path: '~/dbt-course/ci_run'
+    also: ['~/dbt-course/ci_run/*']
+    by: 'Chapter 25: the local simulation of the CI workflow (mkdir -p ~/dbt-course/ci_run, git clone ... workspace)'
+  - path: '~/practice/practice.duckdb'
+    by: 'Chapter 6: the error printed when dbt runs from the wrong folder (the relative path then points here; must not exist)'
+  - path: '~/.zshrc'
+    by: 'Chapter 2 trap box (macOS zsh): echo ''setopt interactivecomments'' >> ~/.zshrc creates it'
+  - path: '~/.gitconfig'
+    by: 'Chapter 3: git config --global user.name / user.email write it'
+  - path: '~/dbt-course/logs'
+    also: ['~/dbt-course/logs/*']
+    by: 'Chapter 6: dbt init, run from ~/dbt-course, writes its log there'
+  - path: '~/dbt-course/practice/render.py'
+    by: 'Chapter 5 lab: the learner creates render.py'
+  - path: '~/dbt-course/state-ch17'
+    also: ['~/dbt-course/state-ch17/*']
+    by: 'Chapter 17: mkdir -p ../state-ch17 && cp target/manifest.json ../state-ch17/'
+  - path: '~/dbt-course/throwaway'
+    also: ['~/dbt-course/throwaway/*']
+    by: 'Chapter 13: mkdir -p ~/dbt-course/throwaway (a copy for the snapshot demos)'
+  - path: '~/.dbt/user_settings.yml'
+    by: 'Chapter 22: only named (a file of the dbt platform CLI, lowest-priority settings); the course never needs it'
+  - path: '~/dbt-course/shopflow_dbt'
+    also: ['~/dbt-course/shopflow_dbt/*']
+    by: 'Chapter 26, milestone m00 (dbt init shopflow_dbt)'
+  - path: '~/dbt-course/shopflow_solution'
+    by: 'Chapter 26: optional clone of the solution bundle (git clone ... ~/dbt-course/shopflow_solution)'

@@ -78,10 +78,12 @@
     "file": "parts/part1/ch02-command-line.tex",
     "line": 84,
     "sha1": "c68b3fe16f7d18d62e73cdb7180e9724cbdd6036",
-    "width": 285,
-    "height": 245,
-    "alt": "A folder tree from the root folder / to the course folders. /Users/mac/ is the home folder (~). It contains Documents/Adnane/dbt-bible/ (this book, with labs/), dbt-course/ (your workspace, Chapter 2 lab) and .dbt/ (hidden: dbt connection settings).",
-    "description": "/ (root) → Users/ → mac/ (home = ~). Inside mac/: Documents/ → Adnane/ → dbt-bible/ (this book, with labs/); dbt-course/ (your workspace for the Chapter 2 lab) with .venv/ and practice/; practice/ contains practice.duckdb, setup.sql and data/; and .dbt/ (hidden: dbt connection settings)."
+    "width": 350,
+    "height": 253,
+    "alt": "A folder tree from the root folder / to the course folders. /Users/you/ is the home folder (~). It contains dbt-course/ (your course folder, made by the kit's setup) and .dbt/ (hidden: dbt connection settings). On Windows the home folder is C:\\Users\\you.",
+    "description": "/ (root) → Users/ → you/ (home = ~). Inside you/: dbt-course/ (your course folder, made by the kit's setup) with .venv/ (Python 3.12 + dbt 1.11), practice/ (your workspace for the Chapter 2 lab: practice.duckdb, setup.sql and data/), kit/ (the practice kit: data/, updates/, bugs/, tools/ ...) and reference/ (the finished project, to compare); and .dbt/ (hidden: dbt connection settings). On Windows the same tree starts at C:\\Users\\you (written $HOME in PowerShell): C:\\Users\\you\\dbt-course\\practice, C:\\Users\\you\\.dbt.",
+    "override": "converter/figures/overrides/ch02-fig1.tex",
+    "overrideSha1": "79368f329e2f786c3b835e3c7c568bf65a934732"
   },
   {
     "id": "ch03-fig1",

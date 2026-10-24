@@ -15,7 +15,8 @@
  What it does (Chapter 2 of the book, plus the reference project):
    $HOME\dbt-course\.venv          Python 3.12 + dbt-core 1.11.x + dbt-duckdb 1.11.x + duckdb (pinned)
    $HOME\dbt-course\practice\      data\ setup.sql updates\ practice.duckdb      <- YOUR database
-   $HOME\dbt-course\kit\           READMEs, bugs\, jaffle_dbt.bundle, profiles\, tools\duck.py, check\
+   $HOME\dbt-course\kit\           the whole kit (= the book's labs folder): data\ setup.sql updates\ bugs\
+                                   jaffle_dbt.bundle tools\ profiles\ check\ READMEs
    $HOME\dbt-course\reference\     jaffle_dbt\ (clone of the bundle) + its own practice\ database
  and finally runs `dbt debug`. "-ExecutionPolicy Bypass" applies to this one command only.
 ============================================================================
@@ -153,14 +154,14 @@ try {
         $setupTarget = Join-Path $target 'setup.sql'
         if (-not (Test-Path $setupTarget)) { Copy-Item -LiteralPath (Join-Path $KitDir 'setup.sql') -Destination $setupTarget }
     }
-    foreach ($item in @('bugs', 'tools', 'check', 'profiles')) {
+    foreach ($item in @('data', 'updates', 'bugs', 'tools', 'check', 'profiles')) {
         Copy-Missing (Join-Path $KitDir $item) (Join-Path $Kit $item)
     }
-    foreach ($item in @('README.md', 'README-windows.md', 'jaffle_dbt.bundle')) {
+    foreach ($item in @('README.md', 'README-windows.md', 'KIT-VERSION.txt', 'setup.sql', 'jaffle_dbt.bundle')) {
         $t = Join-Path $Kit $item
         if (-not (Test-Path $t)) { Copy-Item -LiteralPath (Join-Path $KitDir $item) -Destination $t }
     }
-    Ok 'practice\ (data, setup.sql, updates), kit\ and reference\practice\ are in place'
+    Ok 'kit\ (data, setup.sql, updates, bugs, jaffle_dbt.bundle, tools ...), practice\ and reference\practice\ are in place'
 
     # ------------------------------------------------------------ 3. venv + dbt
     $Venv = Join-Path $CourseDir '.venv'

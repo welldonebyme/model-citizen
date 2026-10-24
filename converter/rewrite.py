@@ -20,10 +20,18 @@ class Rule:
     replace: str
 
 
+# Anything in the book that names the author's folders (checked after the rules: what is left is "unmapped").
+DETECT = re.compile(r"Documents/Adnane|dbt-bible|/Users/mac(?![\w-])|(?<![\w/.~-])labs/(?:updates|practice-project|capstone"
+                    r"|data|setup\.sql)|bible folder|of the bible(?=\s*(?:\(|$))|bible's read-only|helper of the bible"
+                    r"|The bible contains")
+
+
 class PathRewriter:
     def __init__(self, rules_file: Path):
         data = yaml.safe_load(rules_file.read_text())
         self.rules = [Rule(r["id"], re.compile(r["pattern"]), r["replace"]) for r in data["rules"]]
+        self.allowed = [(re.compile(a["where"]), a["why"]) for a in data.get("unmapped_allowed", [])]
+        self.created = data.get("created_by_labs", [])
 
     def apply(self, s: str) -> tuple[str, list[str]]:
         used = []
@@ -73,14 +81,26 @@ class PathRewriter:
 
 
 def scan_book(book: Path, rules_file: Path) -> list[dict]:
-    """Every occurrence of a rewritten path in the book sources (file:line), for the report."""
+    """Every occurrence of the author's folders in the book sources (file:line), for the report: the rules that
+    rewrite it, the text after the rules, and `unmapped` (+ `allowed`) when something is left."""
     rw = PathRewriter(rules_file)
     out = []
     files = sorted(list((book / "parts").glob("*/*.tex")) + list((book / "appendices").glob("*.tex")))
     for f in files:
         for i, line in enumerate(f.read_text().splitlines(), 1):
             norm = line.replace("\\textasciitilde{}", "~").replace("\\textasciitilde", "~").replace("\\_", "_")
-            _, used = rw.apply(norm)
+            if not DETECT.search(norm):
+                continue
+            new, used = rw.apply(norm)
+            where = f"{f.relative_to(book)}:{i}"
+            occ = {"where": where, "rules": used, "text": line.strip()[:200]}
             if used:
-                out.append({"where": f"{f.relative_to(book)}:{i}", "rules": used, "text": line.strip()[:200]})
+                occ["after"] = new.strip()[:200]
+            left = DETECT.search(new)
+            if left:
+                occ["unmapped"] = left.group(0)
+                why = next((w for rx, w in rw.allowed if rx.search(where)), None)
+                if why:
+                    occ["allowed"] = why
+            out.append(occ)
     return out

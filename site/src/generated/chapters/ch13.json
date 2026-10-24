@@ -3853,9 +3853,10 @@
         "The script ",
         {
          "t": "code",
-         "v": "labs/updates/day2.sql"
+         "textBook": "labs/updates/day2.sql",
+         "v": "updates/day2.sql"
         },
-        " in your bible folder simulates the next loading day (its README lists every change): 5 customers change (customers 5, 12 and 40 move to another country; customer 17 gets an email instead of NULL; customer 11 has their email rewritten in lower case), 13 orders change status with a new ",
+        " in your kit folder simulates the next loading day (its README lists every change): 5 customers change (customers 5, 12 and 40 move to another country; customer 17 gets an email instead of NULL; customer 11 has their email rewritten in lower case), 13 orders change status with a new ",
         {
          "t": "code",
          "v": "_loaded_at"
@@ -3904,7 +3905,7 @@
          "id": "ch13-c27",
          "lang": "bash",
          "t": "code",
-         "text": "$ cp -r ~/dbt-course/kit/labs/updates ~/dbt-course/practice/\n$ ls ~/dbt-course/practice/updates\nREADME.md      day2.sql       fresh_load.sql",
+         "text": "$ cp -r ~/dbt-course/kit/updates ~/dbt-course/practice/\n$ ls ~/dbt-course/practice/updates\nREADME.md      day2.sql       fresh_load.sql",
          "textBook": "$ cp -r ~/Documents/Adnane/dbt-bible/labs/updates ~/dbt-course/practice/\n$ ls ~/dbt-course/practice/updates\nREADME.md      day2.sql       fresh_load.sql"
         },
         {
@@ -7305,7 +7306,7 @@
           {
            "t": "code",
            "textBook": "git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt",
-           "v": "git remote add reference ~/dbt-course/kit/labs/practice-project/jaffle_dbt"
+           "v": "git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle"
           },
           ", then ",
           {

@@ -1,0 +1,768 @@
+{
+ "summary": {
+  "paths": 51,
+  "exists": 20,
+  "created_by_lab_step": 31,
+  "missing": 0
+ },
+ "kit_layout": "converter/rules/paths.yaml (header)",
+ "paths": [
+  {
+   "path": "~/.dbt",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6: dbt init creates ~/.dbt; the learner writes profiles.yml (section \"profiles.yml: how dbt connects\")",
+   "forms": [
+    "/Users/you/.dbt",
+    "~/.dbt",
+    "~/.dbt/"
+   ],
+   "used_in": [
+    "chapters/ch02",
+    "chapters/ch03",
+    "chapters/ch06",
+    "chapters/ch06#ch06-c24",
+    "chapters/ch06#ch06-c26",
+    "chapters/ch06#ch06-c3",
+    "chapters/ch10",
+    "chapters/ch22#ch22-c61",
+    "chapters/ch25",
+    "questions/ch06"
+   ],
+   "uses": 10,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/.dbt/profiles.yml",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6: dbt init creates ~/.dbt; the learner writes profiles.yml (section \"profiles.yml: how dbt connects\")",
+   "forms": [
+    "/Users/you/.dbt/profiles.yml",
+    "~/.dbt/profiles.yml",
+    "~/.dbt/profiles.yml."
+   ],
+   "used_in": [
+    "chapters/ch05",
+    "chapters/ch05#ch05-c21",
+    "chapters/ch06",
+    "chapters/ch06#ch06-c19",
+    "chapters/ch06#ch06-c24",
+    "chapters/ch06#ch06-c26",
+    "chapters/ch06#ch06-c3",
+    "chapters/ch10",
+    "chapters/ch10#ch10-c80",
+    "chapters/ch16#ch16-c80",
+    "chapters/ch24",
+    "chapters/ch24#ch24-c11"
+   ],
+   "uses": 19,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/.dbt/user_settings.yml",
+   "status": "created_by_lab_step",
+   "by": "Chapter 22: only named (a file of the dbt platform CLI, lowest-priority settings); the course never needs it",
+   "forms": [
+    "~/.dbt/user_settings.yml"
+   ],
+   "used_in": [
+    "chapters/ch22"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/.gitconfig",
+   "status": "created_by_lab_step",
+   "by": "Chapter 3: git config --global user.name / user.email write it",
+   "forms": [
+    "~/.gitconfig"
+   ],
+   "used_in": [
+    "chapters/ch03"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/.zshrc",
+   "status": "created_by_lab_step",
+   "by": "Chapter 2 trap box (macOS zsh): echo 'setopt interactivecomments' >> ~/.zshrc creates it",
+   "forms": [
+    "~/.zshrc"
+   ],
+   "used_in": [
+    "chapters/ch02",
+    "chapters/ch02#ch02-c4"
+   ],
+   "uses": 2,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/altprofiles",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6 deep box: output of the DBT_PROFILES_DIR demo (a folder the author created for the test)",
+   "forms": [
+    "/Users/you/altprofiles"
+   ],
+   "used_in": [
+    "chapters/ch06#ch06-c21"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/altprofiles/profiles.yml",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6 deep box: output of the DBT_PROFILES_DIR demo (a folder the author created for the test)",
+   "forms": [
+    "/Users/you/altprofiles/profiles.yml"
+   ],
+   "used_in": [
+    "chapters/ch06#ch06-c21"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course",
+   "status": "exists",
+   "forms": [
+    "/Users/you/dbt-course",
+    "~/dbt-course",
+    "~/dbt-course/"
+   ],
+   "used_in": [
+    "chapters/ch02",
+    "chapters/ch02#ch02-c16",
+    "chapters/ch02#ch02-c2",
+    "chapters/ch02#ch02-c20",
+    "chapters/ch02#ch02-c27",
+    "chapters/ch02#ch02-c3",
+    "chapters/ch06",
+    "chapters/ch06#ch06-c2",
+    "chapters/ch06#ch06-c4",
+    "chapters/ch13#ch13-c16",
+    "chapters/ch15",
+    "chapters/ch25#ch25-c20"
+   ],
+   "uses": 15,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/.venv",
+   "status": "exists",
+   "forms": [
+    "~/dbt-course/.venv"
+   ],
+   "used_in": [
+    "chapters/ch03"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/.venv/bin/python",
+   "status": "exists",
+   "forms": [
+    "/Users/you/dbt-course/.venv/bin/python"
+   ],
+   "used_in": [
+    "chapters/ch02#ch02-c16",
+    "chapters/ch06#ch06-c26"
+   ],
+   "uses": 2,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/.venv/lib/python3.12/site-packages/dbt/adapters/duckdb/environments/__init__.py",
+   "status": "exists",
+   "forms": [
+    "/Users/you/dbt-course/.venv/lib/python3.12/site-packages/dbt/adapters/duckdb/environments/__init__.py"
+   ],
+   "used_in": [
+    "chapters/ch15#ch15-c12"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/ci_run",
+   "status": "created_by_lab_step",
+   "by": "Chapter 25: the local simulation of the CI workflow (mkdir -p ~/dbt-course/ci_run, git clone ... workspace)",
+   "forms": [
+    "~/dbt-course/ci_run"
+   ],
+   "used_in": [
+    "chapters/ch25#ch25-c15"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/ci_run/workspace/ci_db/practice.duckdb",
+   "status": "created_by_lab_step",
+   "by": "Chapter 25: the local simulation of the CI workflow (mkdir -p ~/dbt-course/ci_run, git clone ... workspace)",
+   "forms": [
+    "/Users/you/dbt-course/ci_run/workspace/ci_db/practice.duckdb"
+   ],
+   "used_in": [
+    "chapters/ch25"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/dbt_project.yml",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6 troubleshooting table: the error printed when dbt runs OUTSIDE the project (the file must not exist)",
+   "forms": [
+    "/Users/you/dbt-course/dbt_project.yml"
+   ],
+   "used_in": [
+    "chapters/ch06",
+    "chapters/ch06#ch06-c27"
+   ],
+   "uses": 2,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/jaffle_dbt",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6, section \"Creating a project with dbt init\" (dbt init jaffle_dbt); every later chapter adds files",
+   "forms": [
+    "/Users/you/dbt-course/jaffle_dbt",
+    "~/dbt-course/jaffle_dbt"
+   ],
+   "used_in": [
+    "chapters/ch06",
+    "chapters/ch06#ch06-c10",
+    "chapters/ch06#ch06-c25",
+    "chapters/ch06#ch06-c9",
+    "chapters/ch07#ch07-c7",
+    "chapters/ch08#ch08-c6",
+    "chapters/ch09#ch09-c20",
+    "chapters/ch10",
+    "chapters/ch11",
+    "chapters/ch11#ch11-c28",
+    "chapters/ch12",
+    "chapters/ch13"
+   ],
+   "uses": 34,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/jaffle_dbt/.git",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6, section \"Creating a project with dbt init\" (dbt init jaffle_dbt); every later chapter adds files",
+   "forms": [
+    "/Users/you/dbt-course/jaffle_dbt/.git/"
+   ],
+   "used_in": [
+    "chapters/ch06#ch06-c51"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/jaffle_dbt/dbt_packages",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6, section \"Creating a project with dbt init\" (dbt init jaffle_dbt); every later chapter adds files",
+   "forms": [
+    "/Users/you/dbt-course/jaffle_dbt/dbt_packages/*"
+   ],
+   "used_in": [
+    "chapters/ch06#ch06-c41",
+    "chapters/ch11#ch11-c61",
+    "chapters/ch16#ch16-c79"
+   ],
+   "uses": 3,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/jaffle_dbt/dbt_project.yml",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6, section \"Creating a project with dbt init\" (dbt init jaffle_dbt); every later chapter adds files",
+   "forms": [
+    "/Users/you/dbt-course/jaffle_dbt/dbt_project.yml"
+   ],
+   "used_in": [
+    "chapters/ch06#ch06-c15",
+    "chapters/ch06#ch06-c26",
+    "chapters/ch10#ch10-c7",
+    "chapters/ch16#ch16-c80"
+   ],
+   "uses": 4,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/jaffle_dbt/package-lock.yml",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6, section \"Creating a project with dbt init\" (dbt init jaffle_dbt); every later chapter adds files",
+   "forms": [
+    "/Users/you/dbt-course/jaffle_dbt/package-lock.yml"
+   ],
+   "used_in": [
+    "chapters/ch11#ch11-c54",
+    "chapters/ch11#ch11-c57"
+   ],
+   "uses": 2,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/jaffle_dbt/packages.yml",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6, section \"Creating a project with dbt init\" (dbt init jaffle_dbt); every later chapter adds files",
+   "forms": [
+    "/Users/you/dbt-course/jaffle_dbt/packages.yml"
+   ],
+   "used_in": [
+    "chapters/ch11#ch11-c57"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/jaffle_dbt/seeds/country_regions.csv",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6, section \"Creating a project with dbt init\" (dbt init jaffle_dbt); every later chapter adds files",
+   "forms": [
+    "/Users/you/dbt-course/jaffle_dbt/seeds/country_regions.csv"
+   ],
+   "used_in": [
+    "chapters/ch12#ch12-c24"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/jaffle_dbt/target",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6, section \"Creating a project with dbt init\" (dbt init jaffle_dbt); every later chapter adds files",
+   "forms": [
+    "/Users/you/dbt-course/jaffle_dbt/target/*"
+   ],
+   "used_in": [
+    "chapters/ch06#ch06-c41",
+    "chapters/ch11#ch11-c61",
+    "chapters/ch16#ch16-c79"
+   ],
+   "uses": 3,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/jaffle_dbt/target/catalog.json",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6, section \"Creating a project with dbt init\" (dbt init jaffle_dbt); every later chapter adds files",
+   "forms": [
+    "/Users/you/dbt-course/jaffle_dbt/target/catalog.json"
+   ],
+   "used_in": [
+    "chapters/ch07#ch07-c43",
+    "chapters/ch10#ch10-c110",
+    "chapters/ch20#ch20-c19",
+    "chapters/ch20#ch20-c29",
+    "chapters/ch20#ch20-c36"
+   ],
+   "uses": 5,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/jaffle_dbt/target/perf_info.json",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6, section \"Creating a project with dbt init\" (dbt init jaffle_dbt); every later chapter adds files",
+   "forms": [
+    "/Users/you/dbt-course/jaffle_dbt/target/perf_info.json"
+   ],
+   "used_in": [
+    "chapters/ch16#ch16-c78",
+    "chapters/ch18#ch18-c19",
+    "chapters/ch22#ch22-c16",
+    "chapters/ch22#ch22-c18",
+    "chapters/ch22#ch22-c8",
+    "chapters/ch25#ch25-c14"
+   ],
+   "uses": 6,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/kit",
+   "status": "exists",
+   "forms": [
+    "~/dbt-course/kit"
+   ],
+   "used_in": [
+    "chapters/ch02",
+    "chapters/ch22"
+   ],
+   "uses": 2,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/kit/bugs",
+   "status": "exists",
+   "forms": [
+    "~/dbt-course/kit/bugs",
+    "~/dbt-course/kit/bugs/"
+   ],
+   "used_in": [
+    "chapters/ch22",
+    "chapters/ch22#ch22-c19",
+    "chapters/ch22#ch22-c36",
+    "chapters/ch22#ch22-c41"
+   ],
+   "uses": 4,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/kit/capstone",
+   "status": "exists",
+   "forms": [
+    "~/dbt-course/kit/capstone",
+    "~/dbt-course/kit/capstone/"
+   ],
+   "used_in": [
+    "chapters/ch26"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/kit/capstone/seeds",
+   "status": "exists",
+   "forms": [
+    "~/dbt-course/kit/capstone/seeds/"
+   ],
+   "used_in": [
+    "chapters/ch26"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/kit/capstone/shopflow_dbt.bundle",
+   "status": "exists",
+   "forms": [
+    "/Users/you/dbt-course/kit/capstone/shopflow_dbt.bundle",
+    "~/dbt-course/kit/capstone/shopflow_dbt.bundle"
+   ],
+   "used_in": [
+    "chapters/ch26#ch26-c2",
+    "chapters/ch26#ch26-c3"
+   ],
+   "uses": 2,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/kit/data",
+   "status": "exists",
+   "forms": [
+    "~/dbt-course/kit/data",
+    "~/dbt-course/kit/data/"
+   ],
+   "used_in": [
+    "chapters/ch01",
+    "chapters/ch02#ch02-c23"
+   ],
+   "uses": 2,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/kit/data/*.csv",
+   "status": "exists",
+   "forms": [
+    "~/dbt-course/kit/data/*.csv"
+   ],
+   "used_in": [
+    "chapters/ch25#ch25-c11"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/kit/jaffle_dbt.bundle",
+   "status": "exists",
+   "forms": [
+    "/Users/you/dbt-course/kit/jaffle_dbt.bundle",
+    "~/dbt-course/kit/jaffle_dbt.bundle"
+   ],
+   "used_in": [
+    "chapters/ch06#ch06-c56",
+    "chapters/ch10#ch10-c112",
+    "chapters/ch11#ch11-c102",
+    "chapters/ch13",
+    "chapters/ch16#ch16-c85",
+    "chapters/ch17#ch17-c74",
+    "chapters/ch20"
+   ],
+   "uses": 7,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/kit/setup.sql",
+   "status": "exists",
+   "forms": [
+    "~/dbt-course/kit/setup.sql"
+   ],
+   "used_in": [
+    "chapters/ch02#ch02-c23",
+    "chapters/ch25#ch25-c11"
+   ],
+   "uses": 2,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/kit/tools/run_sql.py",
+   "status": "exists",
+   "forms": [
+    "~/dbt-course/kit/tools/run_sql.py"
+   ],
+   "used_in": [
+    "chapters/ch17#ch17-c38",
+    "chapters/ch17#ch17-c71",
+    "chapters/ch17#ch17-c72",
+    "chapters/ch20#ch20-c48",
+    "chapters/ch20#ch20-c50",
+    "chapters/ch20#ch20-c54"
+   ],
+   "uses": 6,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/kit/updates",
+   "status": "exists",
+   "forms": [
+    "~/dbt-course/kit/updates"
+   ],
+   "used_in": [
+    "chapters/ch13#ch13-c27",
+    "chapters/ch21"
+   ],
+   "uses": 2,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/logs",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6: dbt init, run from ~/dbt-course, writes its log there",
+   "forms": [
+    "~/dbt-course/logs"
+   ],
+   "used_in": [
+    "chapters/ch06"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/notes.txt",
+   "status": "created_by_lab_step",
+   "by": "Chapter 2 main lab, step 11 (dbt --version > notes.txt)",
+   "forms": [
+    "~/dbt-course/notes.txt"
+   ],
+   "used_in": [
+    "chapters/ch02"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/practice",
+   "status": "exists",
+   "forms": [
+    "/Users/you/dbt-course/practice",
+    "~/dbt-course/practice",
+    "~/dbt-course/practice/"
+   ],
+   "used_in": [
+    "chapters/ch02",
+    "chapters/ch02#ch02-c2",
+    "chapters/ch02#ch02-c20",
+    "chapters/ch02#ch02-c23",
+    "chapters/ch02#ch02-c5",
+    "chapters/ch03",
+    "chapters/ch03#ch03-c3",
+    "chapters/ch04",
+    "chapters/ch04#ch04-c1",
+    "chapters/ch05",
+    "chapters/ch05#ch05-c22",
+    "chapters/ch13#ch13-c27"
+   ],
+   "uses": 22,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/practice/.git",
+   "status": "created_by_lab_step",
+   "by": "Chapter 3 (git init in ~/dbt-course/practice)",
+   "forms": [
+    "/Users/you/dbt-course/practice/.git/"
+   ],
+   "used_in": [
+    "chapters/ch03#ch03-c3"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/practice/practice.duckdb",
+   "status": "exists",
+   "forms": [
+    "/Users/you/dbt-course/practice/practice.duckdb",
+    "~/dbt-course/practice/practice.duckdb"
+   ],
+   "used_in": [
+    "chapters/ch06",
+    "chapters/ch06#ch06-c42",
+    "chapters/ch06#ch06-c43",
+    "chapters/ch23#ch23-c15"
+   ],
+   "uses": 4,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/practice/render.py",
+   "status": "created_by_lab_step",
+   "by": "Chapter 5 lab: the learner creates render.py",
+   "forms": [
+    "~/dbt-course/practice/render.py"
+   ],
+   "used_in": [
+    "chapters/ch05#ch05-c46"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/practice/setup.sql",
+   "status": "exists",
+   "forms": [
+    "/Users/you/dbt-course/practice/setup.sql"
+   ],
+   "used_in": [
+    "chapters/ch02"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/practice/updates",
+   "status": "exists",
+   "forms": [
+    "~/dbt-course/practice/updates",
+    "~/dbt-course/practice/updates/"
+   ],
+   "used_in": [
+    "chapters/ch13#ch13-c27",
+    "chapters/ch21"
+   ],
+   "uses": 2,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/practise/practice.duckdb",
+   "status": "created_by_lab_step",
+   "by": "Chapter 22: a misspelt path on purpose (practise), the error shows that it does not exist",
+   "forms": [
+    "/Users/you/dbt-course/practise/practice.duckdb"
+   ],
+   "used_in": [
+    "chapters/ch22#ch22-c33"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/shopflow-data",
+   "status": "exists",
+   "forms": [
+    "~/dbt-course/shopflow-data"
+   ],
+   "used_in": [
+    "chapters/ch26"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/shopflow_dbt",
+   "status": "created_by_lab_step",
+   "by": "Chapter 26, milestone m00 (dbt init shopflow_dbt)",
+   "forms": [
+    "~/dbt-course/shopflow_dbt"
+   ],
+   "used_in": [
+    "chapters/ch26#ch26-c2"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/shopflow_solution",
+   "status": "created_by_lab_step",
+   "by": "Chapter 26: optional clone of the solution bundle (git clone ... ~/dbt-course/shopflow_solution)",
+   "forms": [
+    "~/dbt-course/shopflow_solution"
+   ],
+   "used_in": [
+    "chapters/ch26"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/state-ch17",
+   "status": "created_by_lab_step",
+   "by": "Chapter 17: mkdir -p ../state-ch17 && cp target/manifest.json ../state-ch17/",
+   "forms": [
+    "~/dbt-course/state-ch17"
+   ],
+   "used_in": [
+    "chapters/ch17"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/throwaway",
+   "status": "created_by_lab_step",
+   "by": "Chapter 13: mkdir -p ~/dbt-course/throwaway (a copy for the snapshot demos)",
+   "forms": [
+    "~/dbt-course/throwaway",
+    "~/dbt-course/throwaway/"
+   ],
+   "used_in": [
+    "chapters/ch13",
+    "chapters/ch13#ch13-c47"
+   ],
+   "uses": 2,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/dbt-course/throwaway/jaffle_dbt",
+   "status": "created_by_lab_step",
+   "by": "Chapter 13: mkdir -p ~/dbt-course/throwaway (a copy for the snapshot demos)",
+   "forms": [
+    "~/dbt-course/throwaway/jaffle_dbt"
+   ],
+   "used_in": [
+    "chapters/ch13#ch13-c47"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  },
+  {
+   "path": "~/practice/practice.duckdb",
+   "status": "created_by_lab_step",
+   "by": "Chapter 6: the error printed when dbt runs from the wrong folder (the relative path then points here; must not exist)",
+   "forms": [
+    "/Users/you/practice/practice.duckdb"
+   ],
+   "used_in": [
+    "chapters/ch06"
+   ],
+   "uses": 1,
+   "only_in_os_variants": false
+  }
+ ]
+}

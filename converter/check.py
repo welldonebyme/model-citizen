@@ -11,7 +11,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from .build import keys as K
-from .config import BOOK, INVENTORY, OUT
+from .config import BOOK, INVENTORY, OUT, RULES
 from .tex.macros import CODE_ENVS
 from .tex.nodes import Cmd, Env, walk
 from .tex.parser import Parser
@@ -260,7 +260,45 @@ def run_checks(files: dict[str, object], inventory: dict, book: Path = BOOK) -> 
     check_raw_latex(files, R)
     check_ligature_artefacts(files, R)
     check_escape_accounting(files, chapters, book, R)
+    check_paths(files, book, R)
     return R
+
+
+AUDIT_FIELDS = {"textBook", "titleBook", "keyRaw"}
+
+
+def check_paths(files, book: Path, R: Results, rules: Path = RULES / "paths.yaml") -> None:
+    """Book paths (rules/paths.yaml): every occurrence is mapped (or explicitly allowed), every rule is used, and no
+    generated text (prose, inline code, code blocks, titles, OS variants, alt texts) still names the author's folders."""
+    from .rewrite import DETECT, scan_book
+    occ = scan_book(book, rules)
+    unmapped = [f"{o['where']}: {o['unmapped']!r}" for o in occ if o.get("unmapped") and not o.get("allowed")]
+    R.add("every book path occurrence is mapped (rules/paths.yaml)", not unmapped,
+          f"{len(occ)} occurrences, {sum(1 for o in occ if o.get('allowed'))} allowed; " + "; ".join(unmapped[:20]))
+    import yaml
+    rule_ids = [r["id"] for r in yaml.safe_load(rules.read_text())["rules"]]
+    used = {r for o in occ for r in o["rules"]}
+    unused = [r for r in rule_ids if r not in used]
+    R.add("every path rule is used by the book", not unused, ", ".join(unused))
+    left: list[str] = []
+
+    def visit(o, path):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if k not in AUDIT_FIELDS:
+                    visit(v, f"{path}.{k}")
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                visit(v, f"{path}[{i}]")
+        elif isinstance(o, str):
+            m = DETECT.search(o)
+            if m:
+                left.append(f"{path}: {m.group(0)!r}")
+
+    for name in sorted(files):
+        if name != "report.json":
+            visit(files[name], name)
+    R.add("no generated text names the author's folders", not left, "; ".join(left[:20]))
 
 
 # en dash directly before a letter after a space/quote/bracket: "--empty" typeset as "\u2013empty"

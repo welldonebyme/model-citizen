@@ -9372,7 +9372,7 @@
              "id": "ch10-c112",
              "lang": "bash",
              "t": "code",
-             "text": "$ git remote add reference ~/dbt-course/kit/labs/practice-project/jaffle_dbt   # skip if done in Ch. 6\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch10 --stat",
+             "text": "$ git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle   # skip if done in Ch. 6\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch10 --stat",
              "textBook": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # skip if done in Ch. 6\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch10 --stat"
             },
             {

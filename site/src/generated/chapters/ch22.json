@@ -1588,9 +1588,10 @@
         ", in the folder ",
         {
          "t": "code",
-         "v": "labs/practice-project/bugs/"
+         "textBook": "labs/practice-project/bugs/",
+         "v": "~/dbt-course/kit/bugs/"
         },
-        " of the bible (",
+        " of the practice kit (",
         {
          "t": "code",
          "textBook": "~/Documents/Adnane/dbt-bible",
@@ -3887,7 +3888,7 @@
          "id": "ch22-c19",
          "lang": "bash",
          "t": "code",
-         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # nothing printed = clean\n$ B=~/dbt-course/kit/labs/practice-project/bugs\n$ ls $B",
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # nothing printed = clean\n$ B=~/dbt-course/kit/bugs\n$ ls $B",
          "textBook": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # nothing printed = clean\n$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs\n$ ls $B"
         },
         {
@@ -5807,7 +5808,7 @@
          "id": "ch22-c36",
          "lang": "bash",
          "t": "code",
-         "text": "$ B=~/dbt-course/kit/labs/practice-project/bugs\n$ git apply $B/03-database-error-bad-column.patch\n$ dbt run -s stg_jaffle_shop__customers",
+         "text": "$ B=~/dbt-course/kit/bugs\n$ git apply $B/03-database-error-bad-column.patch\n$ dbt run -s stg_jaffle_shop__customers",
          "textBook": "$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs\n$ git apply $B/03-database-error-bad-column.patch\n$ dbt run -s stg_jaffle_shop__customers"
         },
         {
@@ -6660,7 +6661,7 @@
          "id": "ch22-c41",
          "lang": "bash",
          "t": "code",
-         "text": "$ git switch -c fix/products-semicolon\n$ B=~/dbt-course/kit/labs/practice-project/bugs\n$ git apply $B/08-semicolon-at-end.patch\n$ git status --short",
+         "text": "$ git switch -c fix/products-semicolon\n$ B=~/dbt-course/kit/bugs\n$ git apply $B/08-semicolon-at-end.patch\n$ git status --short",
          "textBook": "$ git switch -c fix/products-semicolon\n$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs\n$ git apply $B/08-semicolon-at-end.patch\n$ git status --short"
         },
         {

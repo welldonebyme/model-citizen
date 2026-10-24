@@ -9,8 +9,9 @@
 #    DBT_COURSE_DIR=/some/folder   another course folder (default: ~/dbt-course)
 #    REBUILD_DB=1                  rebuild shopflow.duckdb even if it exists (= reset the raw data to day 1)
 #
-#  Creates ~/dbt-course/shopflow-data (data/ updates/ setup.sql shopflow.duckdb) and
-#  ~/dbt-course/kit/capstone (shopflow_dbt.bundle = THE SOLUTION, seeds/, profiles/, README.md).
+#  Installs the kit in ~/dbt-course/kit/capstone (= the book's labs/capstone folder: data/ seeds/ setup.sql
+#  updates/ shopflow_dbt.bundle = THE SOLUTION, profiles/, README.md, and a ready-made shopflow.duckdb), then does
+#  the first step of milestone m00: ~/dbt-course/shopflow-data (data/ updates/ setup.sql shopflow.duckdb).
 #  It does not clone the solution.
 # ============================================================================
 set -euo pipefail
@@ -37,29 +38,33 @@ copy_tree() {  # copy files that are missing (never overwrite your changes)
   done
 }
 
-DATA="$COURSE/shopflow-data"
-step "Raw data folder: $DATA"
-copy_tree "$KIT_DIR/data" "$DATA/data"
-copy_tree "$KIT_DIR/updates" "$DATA/updates"
-[ -e "$DATA/setup.sql" ] || cp "$KIT_DIR/setup.sql" "$DATA/setup.sql"
-ok "data/, updates/ and setup.sql are in place"
+build_db() {  # build_db <folder>: shopflow.duckdb from setup.sql in that folder
+  local dir="$1"
+  if [ -e "$dir/shopflow.duckdb" ] && [ "${REBUILD_DB:-0}" != 1 ]; then
+    ok "$dir/shopflow.duckdb exists: kept (REBUILD_DB=1 to reset it to day 1)"
+  else
+    (cd "$dir" && "$PY" "$COURSE/kit/tools/duck.py" shopflow.duckdb -f setup.sql)
+    ok "built $dir/shopflow.duckdb with DuckDB $("$PY" -c 'import duckdb; print(duckdb.__version__)')"
+  fi
+}
 
-step "shopflow.duckdb (= duckdb shopflow.duckdb < setup.sql)"
-if [ -e "$DATA/shopflow.duckdb" ] && [ "${REBUILD_DB:-0}" != 1 ]; then
-  ok "exists: kept (REBUILD_DB=1 to reset it to day 1)"
-else
-  (cd "$DATA" && "$PY" "$KIT_DIR/tools/duck.py" shopflow.duckdb -f setup.sql)
-  ok "built $DATA/shopflow.duckdb with DuckDB $("$PY" -c 'import duckdb; print(duckdb.__version__)')"
-fi
-
-step "Kit files: $COURSE/kit/capstone"
-copy_tree "$KIT_DIR/seeds" "$COURSE/kit/capstone/seeds"
-copy_tree "$KIT_DIR/profiles" "$COURSE/kit/capstone/profiles"
+CAP="$COURSE/kit/capstone"
+step "Kit folder: $CAP"
+for d in data seeds updates profiles; do copy_tree "$KIT_DIR/$d" "$CAP/$d"; done
 copy_tree "$KIT_DIR/tools" "$COURSE/kit/tools"
-for f in shopflow_dbt.bundle README.md; do
-  [ -e "$COURSE/kit/capstone/$f" ] || cp "$KIT_DIR/$f" "$COURSE/kit/capstone/$f"
+for f in setup.sql shopflow_dbt.bundle README.md KIT-VERSION.txt; do
+  [ -e "$CAP/$f" ] || cp "$KIT_DIR/$f" "$CAP/$f"
 done
-ok "shopflow_dbt.bundle (the SOLUTION: look only after your own attempt), seeds/, profiles/"
+ok "data/ seeds/ setup.sql updates/ profiles/ README.md and shopflow_dbt.bundle (the SOLUTION: look only after your own attempt)"
+step "Ready-made raw database in the kit folder"
+build_db "$CAP"
+
+DATA="$COURSE/shopflow-data"
+step "Milestone m00, first step: $DATA (= copy data/, updates/, setup.sql from the kit, then duckdb shopflow.duckdb < setup.sql)"
+copy_tree "$CAP/data" "$DATA/data"
+copy_tree "$CAP/updates" "$DATA/updates"
+[ -e "$DATA/setup.sql" ] || cp "$CAP/setup.sql" "$DATA/setup.sql"
+build_db "$DATA"
 
 cat <<EOF
 

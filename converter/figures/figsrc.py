@@ -44,6 +44,8 @@ class Figure:
     source: str        # exact text from \begin{tikzpicture} to \end{tikzpicture} inclusive
     sha1: str
     context: list[str] = field(default_factory=list)  # enclosing environments (outermost first)
+    override: str | None = None        # site source used instead of the book's (overrides/<id>.tex), if any
+    override_sha1: str | None = None   # SHA-1 of that site source
 
 
 BEGIN = re.compile(r"\\begin\{tikzpicture\}")
@@ -112,12 +114,43 @@ def figures() -> list[Figure]:
                 context=_enclosing_envs(masked, b.start()),
             ))
             pos = e.end()
+    apply_overrides(figs)
     return figs
+
+
+OVERRIDES_DIR = HERE / "overrides"
+BOOK_SHA1 = re.compile(r"^% book-sha1: ([0-9a-f]{40})\s*$", re.M)
+
+
+def apply_overrides(figs: list[Figure]) -> None:
+    """overrides/<id>.tex = a site-specific TikZ source (e.g. ch02-fig1: the kit's folders instead of the
+    author's). Used only while the book figure still has the `% book-sha1:` written in the file; `sha1` stays
+    the book's (alt texts and the converter check it against the book)."""
+    by_id = {f.id: f for f in figs}
+    for p in sorted(OVERRIDES_DIR.glob("*.tex")):
+        f = by_id.get(p.stem)
+        if f is None:
+            raise SystemExit(f"{p}: no figure {p.stem} in the book")
+        text = p.read_text()
+        m = BOOK_SHA1.search(text)
+        if not m:
+            raise SystemExit(f"{p}: missing '% book-sha1: <sha1 of the book figure>' line")
+        if m.group(1) != f.sha1:
+            raise SystemExit(f"{p}: the book figure changed (sha1 {f.sha1} != {m.group(1)}): update the site "
+                             f"version from {f.file}:{f.line}, then its book-sha1 line")
+        b = BEGIN.search(text)
+        e = END.search(text, b.end()) if b else None
+        if not b or not e:
+            raise SystemExit(f"{p}: no tikzpicture")
+        f.source = text[b.start(): e.end()]
+        f.override = str(p.relative_to(ACADEMY))
+        f.override_sha1 = hashlib.sha1(f.source.encode("utf-8")).hexdigest()
 
 
 if __name__ == "__main__":
     import sys
     figs = figures()
     for fg in figs:
-        print(f"{fg.id:12s} {fg.file}:{fg.line}-{fg.end_line} {fg.sha1[:10]} ctx={'/'.join(fg.context)}")
+        print(f"{fg.id:12s} {fg.file}:{fg.line}-{fg.end_line} {fg.sha1[:10]} ctx={'/'.join(fg.context)}"
+              + (f" override={fg.override}" if fg.override else ""))
     print(len(figs), "figures", file=sys.stderr)

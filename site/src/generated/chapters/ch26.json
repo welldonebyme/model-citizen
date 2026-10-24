@@ -979,10 +979,11 @@
       },
       {
        "c": [
-        "The bible folder contains everything you need in ",
+        "The capstone kit contains everything you need in ",
         {
          "t": "code",
-         "v": "labs/capstone/"
+         "textBook": "labs/capstone/",
+         "v": "~/dbt-course/kit/capstone/"
         },
         ": the CSV files, ",
         {
@@ -1194,14 +1195,14 @@
        "id": "ch26-c2",
        "lang": "bash",
        "t": "code",
-       "text": "$ cd ~/dbt-course/shopflow_dbt\n$ git remote add --no-tags solution ~/dbt-course/kit/labs/capstone/shopflow_dbt\n$ git fetch --no-tags solution 'refs/tags/*:refs/tags/solution/*'",
+       "text": "$ cd ~/dbt-course/shopflow_dbt\n$ git remote add --no-tags solution ~/dbt-course/kit/capstone/shopflow_dbt.bundle\n$ git fetch --no-tags solution 'refs/tags/*:refs/tags/solution/*'",
        "textBook": "$ cd ~/dbt-course/shopflow_dbt\n$ git remote add --no-tags solution ~/Documents/Adnane/dbt-bible/labs/capstone/shopflow_dbt\n$ git fetch --no-tags solution 'refs/tags/*:refs/tags/solution/*'"
       },
       {
        "id": "ch26-c3",
        "lang": "output",
        "t": "code",
-       "text": "From /Users/you/dbt-course/kit/labs/capstone/shopflow_dbt\n * [new tag]         m00        -> solution/m00\n * [new tag]         m01        -> solution/m01\n * [new tag]         m02        -> solution/m02\n ...",
+       "text": "From /Users/you/dbt-course/kit/capstone/shopflow_dbt.bundle\n * [new tag]         m00        -> solution/m00\n * [new tag]         m01        -> solution/m01\n * [new tag]         m02        -> solution/m02\n ...",
        "textBook": "From /Users/mac/Documents/Adnane/dbt-bible/labs/capstone/shopflow_dbt\n * [new tag]         m00        -> solution/m00\n * [new tag]         m01        -> solution/m01\n * [new tag]         m02        -> solution/m02\n ..."
       },
       {
@@ -1265,7 +1266,7 @@
            ],
            "t": "i"
           },
-          " the bible folder: it would write ",
+          " the kit folder: it would write ",
           {
            "t": "code",
            "v": "target/"
@@ -1491,7 +1492,8 @@
               " from ",
               {
                "t": "code",
-               "v": "labs/capstone"
+               "textBook": "labs/capstone",
+               "v": "~/dbt-course/kit/capstone"
               },
               " into ",
               {
@@ -3497,7 +3499,8 @@
               " from ",
               {
                "t": "code",
-               "v": "labs/capstone/seeds/"
+               "textBook": "labs/capstone/seeds/",
+               "v": "~/dbt-course/kit/capstone/seeds/"
               },
               " into your ",
               {

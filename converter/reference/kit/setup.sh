@@ -13,7 +13,8 @@
 #  What it does (Chapter 2 of the book, plus the reference project):
 #    ~/dbt-course/.venv            Python 3.12 + dbt-core 1.11.x + dbt-duckdb 1.11.x + duckdb (pinned)
 #    ~/dbt-course/practice/        data/ setup.sql updates/ practice.duckdb      <- YOUR database
-#    ~/dbt-course/kit/             READMEs, bugs/, jaffle_dbt.bundle, profiles/, tools/duck.py, check/
+#    ~/dbt-course/kit/             the whole kit (= the book's labs folder): data/ setup.sql updates/ bugs/
+#                                  jaffle_dbt.bundle tools/ profiles/ check/ READMEs
 #    ~/dbt-course/reference/       jaffle_dbt/ (clone of the bundle) + its own practice/ database
 #  and finally runs `dbt debug`.
 # ============================================================================
@@ -111,10 +112,10 @@ for target in "$COURSE/practice" "$COURSE/reference/practice"; do
   copy_tree "$KIT_DIR/updates" "$target/updates"
   [ -e "$target/setup.sql" ] || cp "$KIT_DIR/setup.sql" "$target/setup.sql"
 done
-for item in README.md README-windows.md bugs tools check profiles jaffle_dbt.bundle; do
+for item in README.md README-windows.md KIT-VERSION.txt data setup.sql updates bugs tools check profiles jaffle_dbt.bundle; do
   if [ -d "$KIT_DIR/$item" ]; then copy_tree "$KIT_DIR/$item" "$COURSE/kit/$item"; else cp "$KIT_DIR/$item" "$COURSE/kit/$item"; fi
 done
-ok "practice/ (data, setup.sql, updates), kit/ and reference/practice/ are in place"
+ok "kit/ (data, setup.sql, updates, bugs, jaffle_dbt.bundle, tools ...), practice/ and reference/practice/ are in place"
 
 # ---------------------------------------------------------------- 3. venv + dbt
 step "Python $PY_VERSION virtual environment: $COURSE/.venv"

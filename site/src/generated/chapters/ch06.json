@@ -7120,7 +7120,7 @@
                ],
                "t": "b"
               },
-              " The bible contains the finished project, with one Git tag per chapter. Connect it as a second remote and fetch its tags under the prefix ",
+              " The practice kit contains the finished project, with one Git tag per chapter. Connect it as a second remote and fetch its tags under the prefix ",
               {
                "t": "code",
                "v": "ref-"
@@ -7133,7 +7133,7 @@
              "id": "ch06-c56",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ git remote add reference ~/dbt-course/kit/labs/practice-project/jaffle_dbt\n(.venv) $ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nFrom /Users/you/dbt-course/kit/labs/practice-project/jaffle_dbt\n * [new tag]         ch06       -> ref-ch06\n * [new tag]         ch07       -> ref-ch07\n ...\n(.venv) $ git diff ref-ch06 --stat",
+             "text": "(.venv) $ git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle\n(.venv) $ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nFrom /Users/you/dbt-course/kit/jaffle_dbt.bundle\n * [new tag]         ch06       -> ref-ch06\n * [new tag]         ch07       -> ref-ch07\n ...\n(.venv) $ git diff ref-ch06 --stat",
              "textBook": "(.venv) $ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt\n(.venv) $ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nFrom /Users/mac/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt\n * [new tag]         ch06       -> ref-ch06\n * [new tag]         ch07       -> ref-ch07\n ...\n(.venv) $ git diff ref-ch06 --stat"
             },
             {

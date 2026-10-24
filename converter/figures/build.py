@@ -217,6 +217,9 @@ def main(argv=None) -> int:
                  "width": w, "height": h, "alt": a.get("alt", "")}
         if a.get("description"):
             entry["description"] = " ".join(a["description"].split())
+        if f.override:
+            entry["override"] = f.override
+            entry["overrideSha1"] = f.override_sha1
         meta.append(entry)
     # remove SVGs of figures that no longer exist
     keep = {f"{f.id}.svg" for f in figs}

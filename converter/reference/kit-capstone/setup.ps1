@@ -7,8 +7,9 @@
  Needs the course folder of the practice kit ($HOME\dbt-course\.venv, Chapter 2).
  Options: -CourseDir C:\some\folder   -RebuildDb (reset the raw data to day 1)
 
- Creates $HOME\dbt-course\shopflow-data (data\ updates\ setup.sql shopflow.duckdb) and
- $HOME\dbt-course\kit\capstone (shopflow_dbt.bundle = THE SOLUTION, seeds\, profiles\, README.md).
+ Installs the kit in $HOME\dbt-course\kit\capstone (= the book's labs/capstone folder: data\ seeds\
+ setup.sql updates\ shopflow_dbt.bundle = THE SOLUTION, profiles\, README.md, a ready-made shopflow.duckdb),
+ then does the first step of milestone m00: $HOME\dbt-course\shopflow-data (data\ updates\ setup.sql shopflow.duckdb).
  It does not clone the solution.
 ============================================================================
 #>
@@ -54,40 +55,40 @@ try {
     else { $Py = Join-Path (Join-Path $Venv 'bin') 'python' }
     if (-not (Test-Path $Py)) { Fail "$Venv not found. Run the practice kit's setup.ps1 first (dbt-course-kit.zip)." }
 
-    $Data = Join-Path $CourseDir 'shopflow-data'
-    Step "Raw data folder: $Data"
-    Copy-Missing (Join-Path $KitDir 'data') (Join-Path $Data 'data')
-    Copy-Missing (Join-Path $KitDir 'updates') (Join-Path $Data 'updates')
-    if (-not (Test-Path (Join-Path $Data 'setup.sql'))) { Copy-Item -LiteralPath (Join-Path $KitDir 'setup.sql') -Destination (Join-Path $Data 'setup.sql') }
-    Ok 'data, updates and setup.sql are in place'
-
-    Step 'shopflow.duckdb (= duckdb shopflow.duckdb -c ".read setup.sql")'
-    if ((Test-Path (Join-Path $Data 'shopflow.duckdb')) -and -not $RebuildDb) {
-        Ok 'exists: kept (-RebuildDb to reset it to day 1)'
-    } else {
-        Push-Location $Data
+    function Build-Db([string]$Dir) {
+        $db = Join-Path $Dir 'shopflow.duckdb'
+        if ((Test-Path $db) -and -not $RebuildDb) { Ok "$db exists: kept (-RebuildDb to reset it to day 1)"; return }
+        Push-Location $Dir
         try {
             $old = $ErrorActionPreference; $ErrorActionPreference = 'Continue'
-            & $Py (Join-Path (Join-Path $KitDir 'tools') 'duck.py') 'shopflow.duckdb' '-f' 'setup.sql'
+            & $Py (Join-Path (Join-Path (Join-Path $CourseDir 'kit') 'tools') 'duck.py') 'shopflow.duckdb' '-f' 'setup.sql'
             $code = $LASTEXITCODE
             $ErrorActionPreference = $old
-            if ($code -ne 0) { Fail "building shopflow.duckdb failed (exit code $code). Is another program using it?" }
+            if ($code -ne 0) { Fail "building $db failed (exit code $code). Is another program using it?" }
         } finally {
             Pop-Location
         }
-        Ok "built $(Join-Path $Data 'shopflow.duckdb')"
+        Ok "built $db"
     }
 
     $Cap = Join-Path (Join-Path $CourseDir 'kit') 'capstone'
-    Step "Kit files: $Cap"
-    Copy-Missing (Join-Path $KitDir 'seeds') (Join-Path $Cap 'seeds')
-    Copy-Missing (Join-Path $KitDir 'profiles') (Join-Path $Cap 'profiles')
+    Step "Kit folder: $Cap"
+    foreach ($d in @('data', 'seeds', 'updates', 'profiles')) { Copy-Missing (Join-Path $KitDir $d) (Join-Path $Cap $d) }
     Copy-Missing (Join-Path $KitDir 'tools') (Join-Path (Join-Path $CourseDir 'kit') 'tools')
-    foreach ($f in @('shopflow_dbt.bundle', 'README.md')) {
+    foreach ($f in @('setup.sql', 'shopflow_dbt.bundle', 'README.md', 'KIT-VERSION.txt')) {
         $t = Join-Path $Cap $f
         if (-not (Test-Path $t)) { Copy-Item -LiteralPath (Join-Path $KitDir $f) -Destination $t }
     }
-    Ok 'shopflow_dbt.bundle (the SOLUTION: look only after your own attempt), seeds, profiles'
+    Ok 'data, seeds, setup.sql, updates, profiles, README.md and shopflow_dbt.bundle (the SOLUTION: look only after your own attempt)'
+    Step 'Ready-made raw database in the kit folder'
+    Build-Db $Cap
+
+    $Data = Join-Path $CourseDir 'shopflow-data'
+    Step "Milestone m00, first step: $Data (= copy data, updates, setup.sql from the kit, then duckdb shopflow.duckdb -c `".read setup.sql`")"
+    Copy-Missing (Join-Path $Cap 'data') (Join-Path $Data 'data')
+    Copy-Missing (Join-Path $Cap 'updates') (Join-Path $Data 'updates')
+    if (-not (Test-Path (Join-Path $Data 'setup.sql'))) { Copy-Item -LiteralPath (Join-Path $Cap 'setup.sql') -Destination (Join-Path $Data 'setup.sql') }
+    Build-Db $Data
     Write-Host ''
     Write-Host " Done. Next (milestone m00): cd $CourseDir; dbt init shopflow_dbt --skip-profile-setup"
     Write-Host " and add the 'shopflow' profile to $HOME\.dbt\profiles.yml (Chapter 26)."

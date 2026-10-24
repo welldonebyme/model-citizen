@@ -19,7 +19,7 @@ Everything you need to build the **ShopFlow** capstone project of Chapter 26 on 
 | `shopflow_dbt.bundle` | **The solution** (tags `m00` ... `m14`) |
 | `profiles/profiles.yml` | The solution's `shopflow` profile (dev, ci, prod) |
 | `tools/duck.py` | Runs SQL with the DuckDB library of your venv (no DuckDB CLI needed) |
-| `setup.sh` / `setup.ps1` | Builds `~/dbt-course/shopflow-data` (milestone m00, first step) |
+| `setup.sh` / `setup.ps1` | Installs the kit in `~/dbt-course/kit/capstone` and builds `~/dbt-course/shopflow-data` (milestone m00, first step) |
 
 You need the course folder of the practice kit first (`~/dbt-course` with its `.venv`, Chapter 2).
 
@@ -39,10 +39,11 @@ cd $HOME\Downloads\shopflow-capstone-kit
 powershell -ExecutionPolicy Bypass -File .\setup.ps1
 ```
 
-The setup copies `data/`, `updates/` and `setup.sql` into `~/dbt-course/shopflow-data`, builds
-`shopflow.duckdb` there with the venv's DuckDB library (same result as `duckdb shopflow.duckdb < setup.sql`)
-and copies the bundle, the seeds and the profile into `~/dbt-course/kit/capstone`. It does **not** clone
-the solution. Expected row counts (day 1): customers 504, addresses 637, products 33, orders 3000,
+The setup installs the kit in `~/dbt-course/kit/capstone` (the book's `labs/capstone` folder: `data/`, `seeds/`,
+`setup.sql`, `updates/`, `shopflow_dbt.bundle`, `profiles/`, this README and a ready-made `shopflow.duckdb`), then
+does the first step of milestone m00 for you: it copies `data/`, `updates/` and `setup.sql` into
+`~/dbt-course/shopflow-data` and builds `shopflow.duckdb` there with the venv's DuckDB library (same result as
+`duckdb shopflow.duckdb < setup.sql`). It does **not** clone the solution. Expected row counts (day 1): customers 504, addresses 637, products 33, orders 3000,
 order_items 5883, payments 3170, refunds 196, events 25444, shipments 2646.
 
 ```text
@@ -51,7 +52,7 @@ order_items 5883, payments 3170, refunds 196, events 25444, shipments 2646.
   practice/            raw data of jaffle_dbt
   shopflow-data/       NEW: data/  updates/  setup.sql  shopflow.duckdb
   shopflow_dbt/        your capstone project: you create it in m00 with dbt init
-  kit/capstone/        shopflow_dbt.bundle, seeds/, profiles/, README.md
+  kit/capstone/        the capstone kit: data/ seeds/ setup.sql updates/ shopflow_dbt.bundle profiles/ README.md shopflow.duckdb
 ```
 
 ## 3. Update scripts (apply each one ONCE, only when a milestone says so)

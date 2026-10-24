@@ -5229,7 +5229,7 @@
            ],
            "t": "b"
           },
-          " Ask DuckDB which constraints exist on the table (the helper of the bible; you can also use ",
+          " Ask DuckDB which constraints exist on the table (the helper of the kit; you can also use ",
           {
            "t": "code",
            "v": "duckdb -readonly"
@@ -7887,7 +7887,7 @@
          "id": "ch17-c74",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build\n$ git add .\n$ git commit -m \"Governance: groups, access, contract and constraints on dim_customers, versions v1/v2\"\n$ git remote add reference ~/dbt-course/kit/labs/practice-project/jaffle_dbt   # once only\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch17 --stat",
+         "text": "$ dbt build\n$ git add .\n$ git commit -m \"Governance: groups, access, contract and constraints on dim_customers, versions v1/v2\"\n$ git remote add reference ~/dbt-course/kit/jaffle_dbt.bundle   # once only\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch17 --stat",
          "textBook": "$ dbt build\n$ git add .\n$ git commit -m \"Governance: groups, access, contract and constraints on dim_customers, versions v1/v2\"\n$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # once only\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch17 --stat"
         },
         {

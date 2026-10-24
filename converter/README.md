@@ -91,16 +91,26 @@ the PDF (`check`, with pdftotext).
 
 ## Paths for the web
 
-`rules/paths.yaml` (tested in `tests/test_paths.py`): `~/Documents/Adnane/dbt-bible` -> `~/dbt-course/kit` (the practice
-kit keeps the book's layout below it: `kit/labs/...`, `kit/tools/run_sql.py`), `/Users/mac/Documents/Adnane/dbt-bible`
--> `/Users/you/dbt-course/kit`, `/Users/mac` -> `/Users/you`. The book text is kept in `textBook` / `titleBook`.
-`report.json.pathRewrites` lists every occurrence in the book sources and every rewrite applied.
+`rules/paths.yaml` (tested in `tests/test_paths.py`) maps every path of the author's Mac to the layout that the
+practice kit's setup installs (header of the file): the book folder `~/Documents/Adnane/dbt-bible` and its `labs/`
+folder become the kit folder `~/dbt-course/kit` (`labs/data` -> `kit/data`, `labs/practice-project/bugs` ->
+`kit/bugs`, `labs/practice-project/jaffle_dbt` -> `kit/jaffle_dbt.bundle`, `labs/capstone` -> `kit/capstone`,
+`labs/capstone/shopflow_dbt` -> `kit/capstone/shopflow_dbt.bundle`, `tools/run_sql.py` -> `kit/tools/run_sql.py`),
+relative `labs/...` paths and the words "bible folder" in the prose follow, and `/Users/mac` -> `/Users/you`.
+The book text is kept in `textBook` / `titleBook`. `report.json.pathRewrites` lists every occurrence in the book
+(`bookOccurrences`, with the text after the rules) and every rewrite applied. `check` fails if an occurrence is
+left unmapped (except `unmapped_allowed`: the TikZ source of ch02-fig1, replaced by a site figure), if a rule is
+never used, or if any generated text still names the author's folders.
+`python -m converter.tools.check_kit_paths` installs both kits (their `setup.sh`) in a temporary HOME and checks
+that every home path shown on the site exists there, or is listed in `created_by_labs` with the lab step that
+creates it (result: `converter/golden/kit-paths.json`).
 
 ## Overrides
 
 | File | Owner | Purpose |
 |---|---|---|
 | `overrides/figures.yaml` | figure agent | alt text + description per figure, keyed by id + sha1 |
+| `figures/overrides/<id>.tex` | converter | site version of a figure's TikZ source (ch02-fig1: the kit's folders), used while the book figure keeps its `% book-sha1` |
 | `overrides/keys.yaml` | reviewers | resolved answer keys (hash-protected); absent = none |
 | `overrides/keys-todo.yaml` | generated | keys the converter could not parse with certainty |
 

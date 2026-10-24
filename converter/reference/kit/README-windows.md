@@ -75,12 +75,16 @@ C:\Users\<you>\dbt-course\           (= $HOME\dbt-course)
   .venv\                    Python 3.12 + dbt-core 1.11 + dbt-duckdb 1.11 + duckdb 1.5.6
   practice\                 YOUR raw database (Chapter 2)
     data\  setup.sql  updates\  practice.duckdb
-  kit\                      this kit: README files, bugs\, jaffle_dbt.bundle, profiles\, tools\
+  kit\                      this kit = the book's "labs" folder
+    data\  setup.sql  updates\  bugs\  jaffle_dbt.bundle  tools\  profiles\  check\  README files
+    capstone\               added by the capstone kit (Chapter 26)
   reference\                the reference project, separate from your work
     jaffle_dbt\             git clone of the bundle (+ a profiles.yml that git ignores)
     practice\               its own copy of the raw database
 ```
 
+The book's folder `~/Documents/Adnane/dbt-bible/labs` (the "bible folder") is the kit folder
+`$HOME\dbt-course\kit` (the website already shows the paths rewritten; README.md section 6 has the full table).
 When the book says `~/dbt-course`, use `$HOME\dbt-course`. When it says `~/.dbt/profiles.yml`, use
 `$HOME\.dbt\profiles.yml` (you create it in Chapter 6; the setup never touches it).
 

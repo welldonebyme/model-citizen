@@ -173,6 +173,9 @@ def ps_arg(w: str, ctx: "Ctx") -> str:
     if w[0] == '"' and w[-1] == '"':
         inner = w[1:-1].replace('\\"', '`"')
         return '"' + ps_vars(inner, ctx) + '"'
+    if any(q in w[1:] for q in "'\""):
+        # --opt="text" / --opt='text': PowerShell joins the parts like zsh does; keep the word as it is
+        return ps_vars(w, ctx) if "$" in w else w
     if w.startswith("~/") or w == "~":
         return winpath(w)
     if "$" in w:

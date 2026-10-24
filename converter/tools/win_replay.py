@@ -58,10 +58,12 @@ SKIP = [
 
 # known, explained differences between zsh and PowerShell results (block id, book command prefix) -> reason
 EXPECTED = {
-    ("ch16-c4", "dbt ls -s stg_jaffle_shop__*"): "zsh's glob error does not exist in PowerShell (it passes * to dbt): "
+    ("ch16-c10", "dbt ls -s stg_jaffle_shop__*"): "zsh's glob error does not exist in PowerShell (it passes * to dbt): "
                                                  "the OS note of this section says so",
     ("ch02-c11", "which python3"): "outside the venv, the sandbox has python3 but no `python` on macOS "
                                    "(on Windows `python` is the command)",
+    ("ch10-c105", "grep -ic 'grant ' logs/dbt.log"): "grep -c exits with 1 when it counts 0 lines; PowerShell's "
+                                                     "(Select-String ...).Count prints the same 0 and succeeds",
 }
 
 
@@ -435,6 +437,11 @@ def judge(blocks, mac: dict, win: dict) -> list[dict]:
                 row["status"] = "not_reached"
                 st_items.append(row)
                 continue
+            # `prog; echo "exit code: $?"`: zsh reports echo's status; PowerShell keeps the program's $LASTEXITCODE
+            # after echo (a cmdlet), so for such lines only PowerShell errors count
+            for x, line in zip(w, it["win_run"]):
+                if re.search(r";\s*echo\b[^;]*$", line) and not x.get("exception") and not x.get("ps_errors"):
+                    x["ok"] = True
             m_ok, w_ok = all(x["ok"] for x in m), all(x["ok"] for x in w)
             # a PowerShell syntax error is always a translation problem; a missing command or a bad parameter is one
             # only when the book's command worked
@@ -473,8 +480,35 @@ def judge(blocks, mac: dict, win: dict) -> list[dict]:
     return rows
 
 
+def summarize(chapters: dict, platform: str, version: str, extra: dict) -> dict:
+    summary = {"pwsh": version, "platform": platform, **extra, "variant_blocks": {}, "commands": {}}
+    for c in chapters.values():
+        for k, v in c["variant_blocks_by_status"].items():
+            summary["variant_blocks"][k] = summary["variant_blocks"].get(k, 0) + v
+        for k, v in c["commands"].items():
+            summary["commands"][k] = summary["commands"].get(k, 0) + v
+    summary["variant_blocks"] = dict(sorted(summary["variant_blocks"].items()))
+    return summary
+
+
+def merge(paths: list[str], out: Path) -> int:
+    """Merge the reports of parallel runs (--out of each) into one."""
+    chapters, summary = {}, None
+    for p in paths:
+        d = json.loads(Path(p).read_text())
+        chapters.update(d["chapters"])
+        summary = d["summary"]
+    extra = {k: v for k, v in summary.items() if k not in ("pwsh", "platform", "variant_blocks", "commands")}
+    s = summarize(chapters, summary["platform"], summary["pwsh"], extra)
+    out.write_text(json.dumps({"summary": s, "chapters": dict(sorted(chapters.items()))}, indent=1,
+                              ensure_ascii=False) + "\n")
+    print(json.dumps(s))
+    return 0
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
+    ap.add_argument("--merge", default=None, help="comma list of reports to merge into --out (or win-replay.json)")
     ap.add_argument("--work", default=None)
     ap.add_argument("--chapters", default=None, help="comma list (default: every chapter with a Windows variant)")
     ap.add_argument("--no-install", action="store_true")
@@ -487,6 +521,8 @@ def main(argv=None) -> int:
     ap.add_argument("--out", default=None)
     ap.add_argument("--fail-on-differs", action="store_true", help="exit 1 when a block differs (CI)")
     a = ap.parse_args(argv)
+    if a.merge:
+        return merge(a.merge.split(","), Path(a.out) if a.out else REPORT)
     global REAL_DUCKDB
     REAL_DUCKDB = a.real_duckdb
     work = Path(a.work) if a.work else Path(tempfile.mkdtemp(prefix="mc-win-replay-"))
@@ -539,14 +575,9 @@ def main(argv=None) -> int:
               flush=True)
     platform = ("Windows (no adaptation)" if os.name == "nt" else
                 "macOS (pwsh from Homebrew) with the adaptations of the module doc")
-    summary = {"pwsh": version, "platform": platform, "duckdb": "CLI" if REAL_DUCKDB else "duck.py substitute",
-               "baseline": "macOS zsh results of converter/golden/win-replay.json" if a.win_only else "zsh, same run",
-               "variant_blocks": {}, "commands": {}}
-    for c in chapters.values():
-        for k, v in c["variant_blocks_by_status"].items():
-            summary["variant_blocks"][k] = summary["variant_blocks"].get(k, 0) + v
-        for k, v in c["commands"].items():
-            summary["commands"][k] = summary["commands"].get(k, 0) + v
+    summary = summarize(chapters, platform, version, {
+        "duckdb": "CLI" if REAL_DUCKDB else "duck.py substitute",
+        "baseline": "macOS zsh results of converter/golden/win-replay.json" if a.win_only else "zsh, same run"})
     report_path.write_text(json.dumps({"summary": summary, "chapters": dict(sorted(chapters.items()))},
                                       indent=1, ensure_ascii=False) + "\n")
     print(json.dumps(summary))

@@ -10478,7 +10478,7 @@
          "t": "code",
          "text": "$ export DBT_DUCKDB_PATH=../practice/sample_copy/practice.duckdb\n$ dbt run --select stg_jaffle_shop__orders int_orders__enriched fct_order_items --sample=\"{'start': '2026-01-01', 'end': '2026-01-05'}\"",
          "variants": {
-          "win": "PS> $env:DBT_DUCKDB_PATH = \"../practice/sample_copy/practice.duckdb\"\nPS> dbt run --select stg_jaffle_shop__orders int_orders__enriched fct_order_items \"--sample=\"{'start': '2026-01-01', 'end': '2026-01-05'}\"\""
+          "win": "PS> $env:DBT_DUCKDB_PATH = \"../practice/sample_copy/practice.duckdb\"\nPS> dbt run --select stg_jaffle_shop__orders int_orders__enriched fct_order_items --sample=\"{'start': '2026-01-01', 'end': '2026-01-05'}\""
          }
         },
         {

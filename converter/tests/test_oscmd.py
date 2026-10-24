@@ -92,3 +92,8 @@ def test_unknown_command_is_reported():
 def test_block_override_is_hash_protected():
     with pytest.raises(ValueError, match="changed in the book"):
         ENG.block("$ ls data\nchanged", "ch02-c13", Ctx())
+
+
+def test_option_with_quoted_value_is_kept():
+    c = "dbt run --select a --sample=\"{'start': '2026-01-01', 'end': '2026-01-05'}\""
+    assert ENG.command(c, Ctx()) == c

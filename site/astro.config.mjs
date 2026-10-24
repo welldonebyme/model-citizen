@@ -10,9 +10,11 @@ const base = process.env.SITE_BASE ?? '/model-citizen/';
 // author's own folder before it became /Users/you). The site never shows it, so it is removed from every
 // generated JSON file before anything reads it, and cannot end up in a page or an island's props.
 const BOOK_ONLY = new Set(['textBook', 'titleBook']);
+/** @type {import('vite').Plugin} */
 const stripBookText = {
   name: 'mc-strip-book-text',
   enforce: 'pre',
+  /** @param {string} code @param {string} id */
   transform(code, id) {
     if (!/\/src\/generated\/.*\.json$/.test(id.split('?')[0])) return null;
     return { code: JSON.stringify(JSON.parse(code, (k, v) => (BOOK_ONLY.has(k) ? undefined : v))), map: null };

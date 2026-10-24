@@ -1,4 +1,5 @@
 ---
+import ExplainBack from '../../../components/delight/ExplainBack.astro';
 import Base from '../../../layouts/Base.astro';
 import { StaticBlocks } from '../../../components/content/StaticBlocks';
 import { Inline } from '../../../components/content/Inline';
@@ -58,6 +59,7 @@ const mock = /^ch(28|30|32)$/.test(c.id) ? { ch28: 1, ch30: 2, ch32: 3 }[c.id as
         <StaticBlocks blocks={c.summary} figures={figuresFor(c.summary)} />
       </section>
     )}
+    <ExplainBack chapter={c} />
 
     <nav class="pager" aria-label="Chapters">
       {prev ? <a href={url(routes.chapter(prev))}><span>Previous chapter</span><b>{prev.number}. {prev.title}</b></a> : <span />}

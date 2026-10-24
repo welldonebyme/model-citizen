@@ -5,6 +5,8 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db, getSettings, saveSettings, today, streakFrom, type Rhythm, type Settings } from '../../lib/store/db';
 import { calendar, mission, readiness, schedule, studyDayIndex, RHYTHMS, STANDARD_WEEKS, type PlanLesson, type MissionItem } from '../../lib/planner';
 import { url } from '../../lib/url';
+import XpBadgesPanel from '../delight/XpBadgesPanel';
+import RememberMission from '../delight/RememberMission';
 import { capstoneDone, masteryByObjective, masteryLevel, mocksAt80, quizzesAt80 } from '../../lib/progress-summary';
 
 export interface TodayProps {
@@ -92,6 +94,11 @@ export default function TodayApp(p: TodayProps) {
   const daysToExam = settings.examDate ? Math.ceil((new Date(settings.examDate + 'T09:00:00').getTime() - Date.now()) / 86400000) : null;
   const planWeek = STANDARD_WEEKS[Math.min(13, (calendar(rhythm)[week - 1]?.planWeeks ?? [1]).at(-1)! - 1)];
   const total = m.items.reduce((n, i) => n + i.minutes, 0);
+  const missionHref = (it: MissionItem) => it.kind === 'read' && it.refs ? url(p.lessonPaths[it.refs[0]])
+    : it.kind === 'lab' && it.refs ? url(p.lessonPaths[p.labLessons[it.refs[0]]] ?? '') + '#' + it.refs[0]
+    : it.kind === 'quiz' && it.refs ? url(`quiz/${it.refs[0]}/`)
+    : it.kind === 'review' ? url('practice/flashcards/')
+    : it.kind === 'rest' ? url('practice/') : undefined;
 
   return (
     <div className="t">
@@ -113,11 +120,7 @@ export default function TodayApp(p: TodayProps) {
           <div className="t-title"><h2 id="mis-h">Today's mission</h2>{m.behind > 0 && <span className="t-behind">{m.behind} {m.behind === 1 ? 'lesson' : 'lessons'} to catch up</span>}</div>
           <ol className="t-mission">
             {m.items.map((it, i) => {
-              const href = it.kind === 'read' && it.refs ? url(p.lessonPaths[it.refs[0]])
-                : it.kind === 'lab' && it.refs ? url(p.lessonPaths[p.labLessons[it.refs[0]]] ?? '') + '#' + it.refs[0]
-                : it.kind === 'quiz' && it.refs ? url(`quiz/${it.refs[0]}/`)
-                : it.kind === 'review' ? url('practice/flashcards/')
-                : it.kind === 'rest' ? url('practice/') : undefined;
+              const href = missionHref(it);
               const done = it.kind === 'read' && it.refs?.every((id) => doneLessons.has(id));
               return (
                 <li key={i} className={done ? 'done' : i === 0 ? 'now' : undefined}>
@@ -134,6 +137,7 @@ export default function TodayApp(p: TodayProps) {
               );
             })}
           </ol>
+          <RememberMission items={m.items.map((it) => ({ title: it.title, minutes: it.minutes, kind: it.kind, href: missionHref(it) }))} />
         </section>
 
         <aside className="t-side">
@@ -142,8 +146,8 @@ export default function TodayApp(p: TodayProps) {
             <p className="t-note">The book's rule: all four conditions must be true.</p>
             <ul className="t-gate">
               <Gate ok={r.quizzes.total > 0 && r.quizzes.ok >= r.quizzes.total} label="Every chapter quiz at 80% or more" value={`${r.quizzes.ok} of ${r.quizzes.total}`} />
-              <Gate ok={r.capstone.total > 0 && r.capstone.ok >= r.capstone.total} label="Capstone builds without errors" value={`${r.capstone.ok} of ${r.capstone.total}`} />
-              <Gate ok={r.mocks.ok >= 2} label="Two timed mocks at 80% or more" value={`${r.mocks.ok} of 2`} />
+              <Gate ok={r.capstone.total > 0 && r.capstone.ok >= r.capstone.total} label="The capstone project finished" value={`${r.capstone.ok} of ${r.capstone.total}`} />
+              <Gate ok={r.mocks.ok >= 2} label="Two different timed mocks at 80% or more" value={`${r.mocks.ok} of 2`} />
               <Gate ok={r.notebook.reread} label="Error notebook re-read" value={`${r.notebook.notes} ${r.notebook.notes === 1 ? 'note' : 'notes'}`} />
             </ul>
           </section>
@@ -152,6 +156,8 @@ export default function TodayApp(p: TodayProps) {
             <h2 id="str-h">{streak === 0 ? 'Start a streak today' : `${streak}-day streak`}</h2>
             <Week activity={activity.map((a) => a.date)} />
           </section>
+
+          <XpBadgesPanel variant="compact" id="xp" headingLevel={2} />
 
           <section className="panel" aria-labelledby="ex-h">
             <h2 id="ex-h">Exam date</h2>

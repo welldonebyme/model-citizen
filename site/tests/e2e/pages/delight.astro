@@ -1,10 +1,9 @@
 ---
 // Test page (e2e build only): the delight islands mounted the way the lead will mount them
-// (Today: compact panel; dashboard: full panel; chapter page: Explain it back; Base: DelightChrome).
+// (Today: compact panel; dashboard: full panel; chapter page: Explain it back). Base.astro mounts DelightChrome.
 import Base from '../../../src/layouts/Base.astro';
 import XpBadgesPanel from '../../../src/components/delight/XpBadgesPanel';
 import ExplainBack from '../../../src/components/delight/ExplainBack.astro';
-import DelightChrome from '../../../src/components/delight/DelightChrome.astro';
 import { chapters } from '../../../src/lib/content';
 
 const ch = chapters.find((c) => c.id === 'ch07') ?? chapters[0];
@@ -27,7 +26,6 @@ const steps = ['First step', 'Second step', 'Third step'];
     </div>
     <ExplainBack chapter={ch} />
   </div>
-  <DelightChrome badgesHref="#badges" />
 </Base>
 <style>
   @media (max-width: 900px) { .t-demo { grid-template-columns: 1fr !important; } }

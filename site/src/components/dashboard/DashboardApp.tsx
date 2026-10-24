@@ -9,6 +9,7 @@ import { capstoneDone, labsDone, lessonsDone, masteryByObjective, minutesByDay, 
 import { HistoryChart } from '../exam/charts';
 import type { Attempt } from '../../lib/exam/engine';
 import { url } from '../../lib/url';
+import XpBadgesPanel from '../delight/XpBadgesPanel';
 import '../exam/exam.css';
 import './dashboard.css';
 
@@ -131,6 +132,8 @@ export default function DashboardApp(p: DashboardProps) {
           <Tile label="Review cards due" value={`${dueCards}`} note={cards ? `${plural(cards, 'card')} in your deck` : 'Cards come from your mistakes'} href={dueCards ? url('practice/flashcards/') : undefined} />
         </dl>
       </section>
+
+      <XpBadgesPanel variant="full" id="badges" headingLevel={2} />
 
       <section className="panel db-panel" aria-labelledby="mastery-h">
         <div className="db-panel-head">

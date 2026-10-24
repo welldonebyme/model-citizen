@@ -114,7 +114,7 @@ for (const scheme of ['light', 'dark'] as const) {
     // the Today page reads the same numbers
     await page.goto('');
     const todayGate = (label: string) => page.locator('li').filter({ hasText: label }).locator('.t-val');
-    await expect(todayGate('Two timed mocks at 80% or more')).toHaveText('1 of 2');
+    await expect(todayGate('Two different timed mocks at 80% or more')).toHaveText('1 of 2');
     await expect(todayGate('Every chapter quiz at 80% or more')).toHaveText(`2 of ${QUIZ_FILES.filter((f) => Number(f.slice(2, 4)) <= 26).length}`);
     expect(errors).toEqual([]);
   });

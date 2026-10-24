@@ -5,6 +5,8 @@ import { listAttempts } from '../../lib/exam/persist';
 import { clock, dateTime, spoken } from '../../lib/exam/time';
 import { remainingMs } from '../../lib/exam/engine';
 import { HistoryChart } from './charts';
+import { mocksAt80 } from '../../lib/progress-summary';
+import { url } from '../../lib/url';
 
 export interface MockCard { n: number; title: string; description: string; count: number; minutes: number; available: boolean; href: string }
 
@@ -16,7 +18,8 @@ export default function ExamsIndex({ mocks, attemptHref }: Props) {
   useEffect(() => { listAttempts().then(setAttempts).catch(() => { setError(true); setAttempts([]); }); }, []);
 
   const finished = (attempts ?? []).filter((a) => a.status === 'finished' && a.score && a.mock >= 1);
-  const timed80 = finished.filter((a) => a.mode === 'exam' && a.score!.pct >= 80).length;
+  // distinct mocks, like the dashboard (passing Mock 1 twice is still one mock)
+  const timed80 = mocksAt80(finished);
   const best = (n: number) => finished.filter((a) => a.mock === n).reduce<number | null>((m, a) => Math.max(m ?? 0, a.score!.pct), null);
   const active = (n: number) => (attempts ?? []).filter((a) => a.mock === n && a.status === 'active').sort((a, b) => b.startedAt - a.startedAt)[0];
 
@@ -25,8 +28,9 @@ export default function ExamsIndex({ mocks, attemptHref }: Props) {
       <section className="xi-gate" aria-labelledby="xi-gate-h" data-ready={timed80 >= 2 || undefined}>
         <h2 id="xi-gate-h">Ready to book the exam?</h2>
         <p>
-          The book's rule: book the real exam after <b>two timed mock exams at 80% or more</b>.
-          {' '}{attempts === null ? '' : timed80 >= 2 ? 'You have done it. Well done: you can book the exam.' : `You have ${timed80} of 2.`}
+          One of the book's four conditions before booking the real exam: <b>two different mock exams at 80% or more, in timed exam mode</b>.
+          {' '}{attempts === null ? '' : timed80 >= 2 ? 'You have done it.' : `You have ${Math.min(2, timed80)} of 2.`}
+          {' '}<a href={url('progress/')}>See all four conditions</a> · <a href={url('exams/exam-day/')}>Exam day: the last 7 days</a>
         </p>
         <div className="xi-gate-bar" aria-hidden="true"><span style={{ width: `${Math.min(2, timed80) * 50}%` }} /></div>
       </section>

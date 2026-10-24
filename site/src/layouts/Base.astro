@@ -13,6 +13,8 @@ import { url } from '../lib/url';
 // The two text weights used above the fold, preloaded so the first paint already has the right font (no reflow).
 import font400 from '@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-400-normal.woff2?url';
 import font800 from '@fontsource/atkinson-hyperlegible-next/files/atkinson-hyperlegible-next-latin-800-normal.woff2?url';
+// inline code is set in the mono font: without it the first paint wraps lines differently (layout shift)
+import fontMono from '@fontsource/atkinson-hyperlegible-mono/files/atkinson-hyperlegible-mono-latin-400-normal.woff2?url';
 
 interface Props {
   title: string;
@@ -45,6 +47,7 @@ const nav = [
   <meta name="color-scheme" content="light dark" />
   <link rel="preload" as="font" type="font/woff2" href={font400} crossorigin />
   <link rel="preload" as="font" type="font/woff2" href={font800} crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href={fontMono} crossorigin />
   <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
   <script is:inline>
     // Apply saved reader preferences before first paint (per-browser conveniences only).

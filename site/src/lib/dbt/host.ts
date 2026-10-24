@@ -46,6 +46,23 @@ export function createBridge(py: PyodideLike, mc: any, opts: { loadPandas: (io: 
   };
 }
 
+/**
+ * Unpack the precompiled bytecode (engines/dbt/<id>/dbt-bytecode.zip, scripts/dbt/bytecode.mjs) next to the sources
+ * in site-packages, before the first import of dbt. Unchecked-hash .pyc files: Python uses them without compiling.
+ */
+export async function installBytecode(py: PyodideLike, zip: Uint8Array): Promise<number> {
+  py.FS.writeFile('/tmp/dbt-bytecode.zip', zip);
+  const n = await py.runPythonAsync(`
+import os, sys, zipfile
+_sp = [p for p in sys.path if p.endswith('site-packages')][0]
+with zipfile.ZipFile('/tmp/dbt-bytecode.zip') as _z:
+    _names = _z.namelist()
+    _z.extractall(_sp)
+os.remove('/tmp/dbt-bytecode.zip')
+len(_names)`);
+  return Number(n);
+}
+
 /** Packages of the dbt lock that are loaded at boot (pandas and numpy only for Python models). */
 export function bootPackages(lock: { packages: Record<string, unknown> }): string[] {
   return Object.keys(lock.packages).filter((n) => n !== 'pandas' && n !== 'numpy');

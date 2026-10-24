@@ -39,7 +39,7 @@ const STEPS: { phase: Progress['phase']; label: string }[] = [
   { phase: 'python', label: 'Start Python' },
   { phase: 'packages', label: 'Install dbt-core, dbt-duckdb and their packages' },
   { phase: 'dbt', label: 'Start dbt' },
-  { phase: 'prepare', label: 'Prepare the chapter (real commands)' },
+  { phase: 'prepare', label: 'Prepare the workspace (real commands)' },
 ];
 const ORDER: Progress['phase'][] = ['download', 'python', 'packages', 'dbt', 'workspace', 'prepare', 'ready'];
 
@@ -105,6 +105,8 @@ export default function DbtWorkspace({ preset: presetId, workspace, layout = 'co
   const preset: Preset | undefined = index?.presets.find((p) => p.id === presetId);
   const project = preset && index ? index.projects[preset.project] : undefined;
   const chapterId = presetId.split('-')[0];
+  const unit = presetId.startsWith('m') ? 'milestone' : 'chapter';
+  const unitLabel = preset?.label ?? (unit === 'milestone' ? `Capstone ${chapterId}` : `Chapter ${Number(chapterId.slice(2))}`);
 
   useEffect(() => {
     loadManifest().then(setManifest).catch((e) => setError(e.message));
@@ -175,14 +177,14 @@ export default function DbtWorkspace({ preset: presetId, workspace, layout = 'co
     });
     if (group) model.end(group, r.ok ? 0 : 1);
     if (r.busy) {
-      setError('This chapter\'s workspace is open in another tab or window. Close it there, then try again.');
+      setError('This workspace is open in another tab or window. Close it there, then try again.');
       setPhase('error');
       return;
     }
     setNoPersist(r.persist === false);
     if (r.restored) {
-      sys(`Your saved workspace for Chapter ${p.chapter} is back (saved ${when(r.meta!.updatedAt)}). It started from: ${index.presets.find((x) => x.id === r.meta!.preset)?.title ?? r.meta!.preset}.`);
-      if (r.presetChanged) note('The starting files of this chapter were updated on the site since you started. Use "Reset to the start of this chapter" to get them (your changes would be replaced).', 'warn');
+      sys(`Your saved workspace for ${p.label} is back (saved ${when(r.meta!.updatedAt)}). It started from: ${index.presets.find((x) => x.id === r.meta!.preset)?.title ?? r.meta!.preset}.`);
+      if (r.presetChanged) note(`The starting files of this ${p.project === 'shopflow' ? 'milestone' : 'chapter'} were updated on the site since you started. Use "Reset" in the Workspace menu to get them (your changes would be replaced).`, 'warn');
     } else if (r.ok) {
       sys(`Ready: ${p.title}${p.chapterTitle ? ` (${p.chapterTitle})` : ''}. Prepared in ${((r.prepareMs ?? 0) / 1000).toFixed(1)} s.`);
       for (const s of p.summary) sys(`  ${s}`);
@@ -388,8 +390,8 @@ export default function DbtWorkspace({ preset: presetId, workspace, layout = 'co
             <button type="button" className="btn btn-small btn-quiet" aria-expanded={menu} aria-controls={`${ws}-menu`} onClick={() => setMenu((m) => !m)}>Workspace</button>
             {menu && (
               <div className="dbt-menu" id={`${ws}-menu`} role="group" aria-label="Workspace actions">
-                <button type="button" onClick={() => { setMenu(false); setConfirm('start'); }}>Reset to the start of this chapter</button>
-                <button type="button" onClick={() => { setMenu(false); setConfirm('end'); }}>Load the end of this chapter (the solution)</button>
+                <button type="button" onClick={() => { setMenu(false); setConfirm('start'); }}>Reset to the start of this {unit}</button>
+                <button type="button" onClick={() => { setMenu(false); setConfirm('end'); }}>Load the end of this {unit} (the solution)</button>
                 <button type="button" onClick={exportZip}>Export the project (.zip)</button>
                 {running && <button type="button" onClick={() => { setMenu(false); void stop(); }}>Stop the running command</button>}
               </div>
@@ -403,8 +405,8 @@ export default function DbtWorkspace({ preset: presetId, workspace, layout = 'co
         <div className="dbt-confirm" role="alertdialog" aria-labelledby={`${ws}-confirm`}>
           <p id={`${ws}-confirm`}>
             {confirm === 'start'
-              ? `Reset Chapter ${preset?.chapter ?? ''} to the start of its labs? Your files and database in this workspace are replaced.`
-              : `Load the end of Chapter ${preset?.chapter ?? ''} (the reference project at the chapter's tag)? Your files and database in this workspace are replaced.`}
+              ? `Reset ${unitLabel} to its start? Your files and database in this workspace are replaced.`
+              : `Load the end of ${unitLabel} (the reference project at its git tag)? Your files and database in this workspace are replaced.`}
           </p>
           <div className="dbt-confirm-actions">
             <button type="button" className="btn btn-small btn-primary" onClick={() => doReset(confirm)} autoFocus>{confirm === 'start' ? 'Reset' : 'Load the end'}</button>
@@ -446,7 +448,7 @@ export default function DbtWorkspace({ preset: presetId, workspace, layout = 'co
         <div className="dbt-start">
           <p className="dbt-error" role="alert">{error}</p>
           <button type="button" className="btn btn-primary" onClick={() => openWorkspace('continue', presetId).catch((e) => setError(e.message))}>Try again</button>
-          <button type="button" className="btn btn-quiet" onClick={() => setConfirm('start')}>Reset to the start of this chapter</button>
+          <button type="button" className="btn btn-quiet" onClick={() => setConfirm('start')}>Reset to the start of this {unit}</button>
         </div>
       )}
 
@@ -526,11 +528,19 @@ function ProgressView({ progress }: { progress: Progress | null }) {
   const p = progress;
   const at = p ? ORDER.indexOf(p.phase) : 0;
   const bytes = p?.total ? `${mb(p.loaded ?? 0)} of ${mb(p.total)} MB` : '';
-  const pct = p?.phase === 'download' && p.total ? (p.loaded ?? 0) / p.total
-    : p?.phase === 'prepare' && p.steps ? (p.step ?? 0) / p.steps : null;
+  // one honest bar for the whole start: bytes while downloading, then the remaining steps
+  const dl = p?.total ? (p.loaded ?? 0) / p.total : 0;
+  const pct = !p ? 0
+    : p.phase === 'download' ? 0.55 * dl
+    : p.phase === 'python' ? 0.55 + 0.05 * dl
+    : p.phase === 'packages' ? 0.6 + 0.1 * dl
+    : p.phase === 'dbt' ? 0.75
+    : p.phase === 'workspace' ? 0.9
+    : p.phase === 'prepare' && p.steps ? 0.8 + 0.2 * ((p.step ?? 1) - 1) / p.steps
+    : 1;
   return (
     <div className="dbt-prog">
-      <progress max={1} value={pct ?? undefined} aria-label={p ? `${p.label}${bytes ? ', ' + bytes : ''}` : 'Starting'} />
+      <progress max={100} value={Math.round(pct * 100)} aria-label={p ? `${p.label}${bytes ? ', ' + bytes : ''}` : 'Starting'} />
       <p className="dbt-prog-now">
         {p ? (p.phase === 'prepare' ? `Step ${p.step} of ${p.steps}: ${p.label}` : p.label) : 'Starting'}
         {p?.phase === 'download' && bytes ? ` (${bytes})` : ''}

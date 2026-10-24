@@ -3,7 +3,9 @@
 The TypeScript session (src/lib/dbt/session.ts) calls these functions. Everything they print goes to the terminal.
 Each function returns an exit code like the real program would (0 = success).
 """
+import contextlib
 import gc
+import io
 import os
 import sys
 import traceback
@@ -166,7 +168,11 @@ def _run_sql(con, text, width, bail):
         try:
             rel = con.sql(st.query)
             if rel is not None:
-                rel.show(max_width=max(40, int(width)), max_rows=40)
+                # the same "duckbox" renderer as the DuckDB CLI; captured to drop the blank lines around the table
+                buf = io.StringIO()
+                with contextlib.redirect_stdout(buf):
+                    rel.show(max_width=max(40, int(width)), max_rows=40)
+                print(buf.getvalue().strip("\n"))
         except Exception as e:
             _print_error(e)
             errors += 1

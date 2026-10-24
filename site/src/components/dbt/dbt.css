@@ -62,7 +62,7 @@
 
 .dbt-wide { display: grid; grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.4fr); gap: 14px; min-height: 560px; }
 .dbt-side, .dbt-main { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
-@media (max-width: 1000px) { .dbt-wide { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 1000px) { .dbt-wide { grid-template-columns: minmax(0, 1fr); min-height: 0; } .dbt-main { order: -1; } }
 
 .dbt-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: var(--fs-xs); color: var(--muted); }
 .dbt-chips-label { font-weight: 600; }
@@ -76,14 +76,17 @@
 .t-btn { border: 0; background: transparent; color: #F6A6D3; font: 700 var(--fs-xs)/1 var(--sans); padding: 7px 8px; border-radius: 6px; }
 .t-btn:hover { background: rgba(255, 255, 255, .08); }
 .t-btn-stop { color: #FFB4A8; border: 1px solid rgba(255, 180, 168, .5); }
-.t-screen { height: var(--dbt-term-h, 440px); overflow: auto; padding: 10px 12px 12px; font: 400 0.8125rem/1.5 var(--mono); cursor: text; overscroll-behavior: contain; }
+.t-screen { height: var(--dbt-term-h, 440px); overflow: auto; padding: 10px 12px 12px; font: 400 0.8125rem/1.4 var(--mono); cursor: text; overscroll-behavior: contain; container-type: inline-size; }
 .dbt-ws-wide .t-screen { --dbt-term-h: 560px; }
 .t-log:focus-visible { outline: 2px solid var(--term-prompt); outline-offset: 2px; }
 .t-log { min-width: max-content; }
-.t-line { white-space: pre-wrap; overflow-wrap: anywhere; min-height: 1.5em; }
-.t-out, .t-cmdline, .t-sub, .t-sys { white-space: pre; overflow-wrap: normal; }
-.t-note { max-width: min(100%, 92ch); }
-.t-box { white-space: pre; overflow-wrap: normal; font-family: ui-monospace, "SF Mono", Menlo, "Cascadia Mono", Consolas, "Liberation Mono", monospace; }
+.t-line { white-space: pre-wrap; overflow-wrap: anywhere; min-height: 1.4em; }
+.t-out, .t-cmdline, .t-sub { white-space: pre; overflow-wrap: normal; }
+.t-note { max-width: min(92ch, calc(100cqi - 4px)); position: sticky; left: 0; }
+.t-sys { white-space: pre-wrap; max-width: calc(100cqi - 4px); position: sticky; left: 0; }
+/* DuckDB tables: box-drawing characters are not in the design-system mono font, so the whole line uses a system
+   mono font that has them (same width for every character), with a tight line height so the borders join */
+.t-box { white-space: pre; overflow-wrap: normal; line-height: 1.18; min-height: 1.18em; font-family: ui-monospace, "SF Mono", Menlo, "Cascadia Mono", Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace; }
 .t-cmdline { margin-top: 6px; color: #FFFFFF; }
 .t-block:first-child .t-cmdline { margin-top: 0; }
 .t-prompt { color: var(--term-prompt); font-weight: 600; user-select: none; }
@@ -128,7 +131,7 @@
 .f-column { grid-template-columns: minmax(0, 1fr); }
 .f-wide { grid-template-rows: auto 1fr; }
 .f-tree { border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); max-height: 260px; overflow: auto; padding: 4px 0; font-size: var(--fs-sm); }
-.f-wide .f-tree { max-height: 230px; }
+.f-wide .f-tree { max-height: 290px; }
 .f-tree-head { padding: 4px 10px; color: var(--muted); font-size: var(--fs-xs); font-weight: 700; }
 .f-list { list-style: none; margin: 0; padding: 0; }
 .f-item { display: flex; align-items: center; gap: 6px; width: 100%; border: 0; background: transparent; text-align: left; padding-top: 3px; padding-bottom: 3px; padding-right: 8px; font-family: var(--mono); font-size: 0.8125rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

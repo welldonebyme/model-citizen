@@ -28,10 +28,14 @@ export default function DbtLabApp() {
     return () => clearInterval(t);
   }, []);
 
-  const chapters = useMemo(() => {
-    const m = new Map<number, string>();
-    for (const p of index?.presets ?? []) m.set(p.chapter, p.chapterTitle);
-    return [...m.entries()].sort((a, b) => a[0] - b[0]);
+  // one entry per chapter (ch06..ch25) and per capstone milestone (m00..m14)
+  const units = useMemo(() => {
+    const m = new Map<string, { id: string; label: string; title: string; project: string }>();
+    for (const p of index?.presets ?? []) {
+      const id = p.id.split('-')[0];
+      if (!m.has(id)) m.set(id, { id, label: p.label, title: p.chapterTitle, project: p.project });
+    }
+    return [...m.values()];
   }, [index]);
 
   const [chapter, state] = preset.split('-');
@@ -45,18 +49,22 @@ export default function DbtLabApp() {
     <div className="dbt-lab">
       <form className="dbt-picker" onSubmit={(e) => e.preventDefault()} aria-label="Choose the lab">
         <div className="dbt-picker-field">
-          <label htmlFor="dbt-chapter">Chapter</label>
+          <label htmlFor="dbt-chapter">Chapter or capstone milestone</label>
           <select id="dbt-chapter" value={chapter} onChange={(e) => choose(`${e.target.value}-${state}`)}>
-            {chapters.map(([n, t]) => {
-              const id = `ch${String(n).padStart(2, '0')}`;
-              return <option key={id} value={id}>{`Chapter ${n}: ${t}`}</option>;
-            })}
+            <optgroup label="Practice project jaffle_dbt (Chapters 6 to 25)">
+              {units.filter((u) => u.project === 'jaffle').map((u) => <option key={u.id} value={u.id}>{`${u.label}: ${u.title}`}</option>)}
+            </optgroup>
+            {units.some((u) => u.project === 'shopflow') && (
+              <optgroup label="Capstone ShopFlow (Chapter 26)">
+                {units.filter((u) => u.project === 'shopflow').map((u) => <option key={u.id} value={u.id}>{`${u.label}: ${u.title}`}</option>)}
+              </optgroup>
+            )}
           </select>
         </div>
         <fieldset className="dbt-picker-field">
           <legend>Start from</legend>
           <div className="seg" role="radiogroup" aria-label="Start from">
-            <label className="dbt-radio"><input type="radio" name="dbt-state" value="start" checked={state === 'start'} onChange={() => choose(`${chapter}-start`)} /> the start of the labs</label>
+            <label className="dbt-radio"><input type="radio" name="dbt-state" value="start" checked={state === 'start'} onChange={() => choose(`${chapter}-start`)} /> the start</label>
             <label className="dbt-radio"><input type="radio" name="dbt-state" value="end" checked={state === 'end'} onChange={() => choose(`${chapter}-end`)} /> the end (the solution)</label>
           </div>
         </fieldset>
@@ -66,12 +74,12 @@ export default function DbtLabApp() {
       {saved.length > 0 && (
         <section className="dbt-saved" aria-labelledby="dbt-saved-title">
           <h2 id="dbt-saved-title">Saved in this browser</h2>
-          <table className="mc-table">
+          <div className="mc-table-wrap"><table className="mc-table">
             <thead><tr><th scope="col">Workspace</th><th scope="col">Started from</th><th scope="col">Saved</th><th scope="col">Size</th><th scope="col"><span className="visually-hidden">Actions</span></th></tr></thead>
             <tbody>
               {saved.sort((a, b) => (a.ws < b.ws ? -1 : 1)).map((m) => (
                 <tr key={m.ws}>
-                  <td>{m.ws.replace(/^jaffle-ch0?/, 'Chapter ')}</td>
+                  <td>{m.ws.startsWith('shopflow-') ? `Capstone ${m.ws.slice(9)}` : m.ws.replace(/^jaffle-ch0?/, 'Chapter ')}</td>
                   <td>{index?.presets.find((p) => p.id === m.preset)?.title ?? m.preset}</td>
                   <td>{new Date(m.updatedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}</td>
                   <td>{(m.bytes / 1e6).toFixed(1)} MB</td>
@@ -87,7 +95,7 @@ export default function DbtLabApp() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </section>
       )}
     </div>

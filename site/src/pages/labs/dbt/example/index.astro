@@ -25,8 +25,8 @@ const git = { t: 'code' as const, id: 'example-git', lang: 'bash' as const, text
       <p>git runs on your computer only, so this block has no button:</p>
       <CodeBlock block={git} />
     </article>
-    <aside class="ex-work" aria-label="Workspace">
-      <DbtWorkspace client:only="react" preset="ch07-start" title="Workspace" onMachineHref={url('labs/')} suggestions={['dbt build', 'dbt ls']} />
+    <aside class="ex-work" aria-label="Lab workspace">
+      <DbtWorkspace client:visible preset="ch07-start" title="Workspace" onMachineHref={url('labs/')} suggestions={['dbt build', 'dbt ls']} />
     </aside>
   </div>
 </Base>

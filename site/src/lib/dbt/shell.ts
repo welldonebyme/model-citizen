@@ -176,6 +176,57 @@ export function parseLine(line: string, ctx: ExpandContext): ParseResult {
   return { ok: true, items };
 }
 
+/**
+ * Split a line at its top-level && || ; (outside quotes), keeping each part as text. Like bash, the session expands
+ * variables of each part just before running it, so `export A=1 && echo $A` prints 1.
+ */
+export function splitList(line: string): { ok: true; items: { op: ListItem['op']; text: string }[] } | { ok: false; error: string } {
+  const s = stripPrompt(line);
+  const items: { op: ListItem['op']; text: string }[] = [];
+  let op: ListItem['op'] = null;
+  let start = 0;
+  let i = 0;
+  let wordStart = true;
+  const push = (end: number, next: ListItem['op'], width: number) => {
+    const text = s.slice(start, end);
+    if (!text.trim()) {
+      if (next === ';' && !items.length) { start = end + width; return true; }
+      return false;
+    }
+    items.push({ op, text });
+    op = next;
+    start = end + width;
+    return true;
+  };
+  while (i < s.length) {
+    const c = s[i];
+    if (c === "'") { const e = s.indexOf("'", i + 1); if (e < 0) return { ok: false, error: "Missing closing quote (')." }; i = e + 1; wordStart = false; continue; }
+    if (c === '"') {
+      i++;
+      while (i < s.length && s[i] !== '"') i += s[i] === '\\' || s[i] === '`' ? 2 : 1;
+      if (i >= s.length) return { ok: false, error: 'Missing closing quote (").' };
+      i++; wordStart = false; continue;
+    }
+    if (c === '\\') { i += 2; wordStart = false; continue; }
+    if (c === '#' && wordStart) break;
+    const two = s.slice(i, i + 2);
+    if (two === '&&' || two === '||') {
+      if (!push(i, two as ListItem['op'], 2)) return { ok: false, error: `A command is missing before ${two}` };
+      i += 2; wordStart = true; continue;
+    }
+    if (c === ';') {
+      if (!push(i, ';', 1)) return { ok: false, error: 'A command is missing before ;' };
+      i++; wordStart = true; continue;
+    }
+    wordStart = c === ' ' || c === '\t' || c === '|' || c === '(' || c === '>' || c === '<';
+    i++;
+  }
+  const rest = s.slice(start, i);
+  if (rest.trim()) items.push({ op, text: rest });
+  else if (op === '&&' || op === '||') return { ok: false, error: `A command is missing after ${op}` };
+  return { ok: true, items };
+}
+
 /** PowerShell `$env:NAME = "value"` (the book's Windows form of `export NAME=value`). */
 export function parsePowerShellEnv(line: string): { name: string; value: string } | null {
   const m = stripPrompt(line).match(/^\s*\$env:([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*;?\s*$/);

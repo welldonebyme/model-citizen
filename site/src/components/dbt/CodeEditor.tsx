@@ -32,11 +32,17 @@ const theme = EditorView.theme({
   '.cm-selectionBackground, &.cm-focused .cm-selectionBackground, ::selection': { backgroundColor: 'var(--accent-soft) !important' },
   '.cm-cursor': { borderLeftColor: 'var(--ink)' },
   '.cm-jinja': { color: 'var(--tok-jinja)', fontWeight: '600' },
+  '.cm-jinja-comment, .cm-jinja-comment *': { color: 'var(--tok-cmt) !important', fontStyle: 'italic', fontWeight: '400 !important' },
   '.cm-matchingBracket': { outline: '1px solid var(--line-strong)' },
 });
 
 // Jinja blocks ({{ }}, {% %}, {# #}) drawn over the SQL highlighting
-const jinjaMarks = new MatchDecorator({ regexp: /\{\{[\s\S]*?\}\}|\{%[\s\S]*?%\}|\{#[\s\S]*?#\}/g, decoration: Decoration.mark({ class: 'cm-jinja' }) });
+const jinjaMark = Decoration.mark({ class: 'cm-jinja' });
+const jinjaComment = Decoration.mark({ class: 'cm-jinja-comment' });
+const jinjaMarks = new MatchDecorator({
+  regexp: /\{\{[\s\S]*?\}\}|\{%[\s\S]*?%\}|\{#[\s\S]*?#\}/g,
+  decoration: (m) => (m[0].startsWith('{#') ? jinjaComment : jinjaMark),
+});
 const jinja = ViewPlugin.fromClass(class {
   decorations: DecorationSet;
   constructor(view: EditorView) { this.decorations = jinjaMarks.createDeco(view); }
@@ -79,7 +85,8 @@ export default function CodeEditor({ path, text, readOnly, onChange, onSave, lab
           indentUnit.of('  '), EditorState.tabSize.of(2),
           keymap.of([{ key: 'Mod-s', preventDefault: true, run: () => { cb.current.onSave(); return true; } }, ...defaultKeymap, ...historyKeymap, indentWithTab]),
           syntaxHighlighting(highlight), theme, lang.current.of(languageFor(path)), ro.current.of(EditorState.readOnly.of(!!readOnly)),
-          EditorView.contentAttributes.of({ 'aria-label': label, spellcheck: 'false', autocorrect: 'off', autocapitalize: 'off' }),
+          // tabindex: the editable area is already in the tab order; saying it lets axe see the scroller is reachable
+          EditorView.contentAttributes.of({ 'aria-label': label, spellcheck: 'false', autocorrect: 'off', autocapitalize: 'off', tabindex: '0' }),
           EditorView.updateListener.of((u) => { if (u.docChanged) cb.current.onChange(u.state.doc.toString()); }),
         ],
       }),

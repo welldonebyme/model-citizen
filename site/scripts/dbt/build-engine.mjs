@@ -19,6 +19,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 import { readZip, writeZip } from './zip.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -157,15 +158,6 @@ async function main() {
     lock.packages[pkg.name] = { ...pkg.lock, file_name: pkg.shared ? `../../${sharedRel}${pkg.file}` : pkg.file, sha256: sha256(data) };
   }
   const lockBuf = Buffer.from(JSON.stringify(lock, null, 1) + '\n');
-  const fingerprint = sha256(Buffer.from(JSON.stringify([
-    ...files.map((f) => [f.rel, sha256(f.data)]),
-    ...dbtFiles.map((f) => [f.file, sha256(f.data)]),
-    ['dbt-lock.json', sha256(lockBuf)],
-  ])));
-  const id = `dbt-${SOURCES.versions.dbtCore}-${fingerprint.slice(0, 10)}`;
-  const dbtRel = `dbt/${id}/`;
-  for (const f of dbtFiles) files.push({ rel: dbtRel + f.file, data: f.data, group: f.group });
-  files.push({ rel: dbtRel + 'dbt-lock.json', data: lockBuf, group: 'boot' });
 
   // 1. shared Pyodide folder: write what is missing or different; never delete files we do not own
   let wroteShared = 0;
@@ -178,6 +170,43 @@ async function main() {
   const sharedLock = { info: official.info, packages: Object.fromEntries(Object.entries(official.packages).filter(([, v]) => present.has(v.file_name))) };
   if (await writeIfChanged(path.join(sharedDir, 'pyodide-lock.json'), Buffer.from(JSON.stringify(sharedLock, null, 1) + '\n'))) wroteShared++;
   log(wroteShared ? `shared Pyodide folder: ${wroteShared} file(s) written` : 'shared Pyodide folder up to date', `(engines/${sharedRel})`);
+
+  // 2. precompiled bytecode of the modules dbt imports (scripts/dbt/bytecode.mjs): a faster start. It depends only on
+  //    the engine (wheels, lock, Pyodide core) and on the runtime module, so it is cached by those inputs.
+  const runtimeSrc = fs.readFileSync(path.join(SITE, 'src/lib/dbt/runtime/mc_dbt.py'));
+  const bcKey = sha256(Buffer.from(JSON.stringify([
+    ...files.map((f) => [f.rel, sha256(f.data)]), ...dbtFiles.map((f) => [f.file, sha256(f.data)]),
+    sha256(lockBuf), sha256(runtimeSrc), sha256(fs.readFileSync(path.join(HERE, 'bytecode.mjs'))),
+  ]))).slice(0, 16);
+  const bcCache = path.join(CACHE, `bytecode-${bcKey}.zip`);
+  if (!fs.existsSync(bcCache) && !process.argv.includes('--no-bytecode')) {
+    const tmp = path.join(ENGINES, 'dbt', `.tmp-bytecode-${process.pid}`); // same depth as the real folder (lock paths)
+    fs.rmSync(tmp, { recursive: true, force: true });
+    fs.mkdirSync(tmp, { recursive: true });
+    for (const f of dbtFiles) fs.writeFileSync(path.join(tmp, f.file), f.data);
+    fs.writeFileSync(path.join(tmp, 'dbt-lock.json'), lockBuf);
+    log('compiling the bytecode of dbt (once per engine version, about 1 to 2 minutes)...');
+    const run = (args) => execFileSync(process.execPath, [path.join(HERE, 'bytecode.mjs'), ...args], { stdio: QUIET ? 'pipe' : 'inherit' });
+    try {
+      run(['list', sharedDir, path.join(tmp, 'dbt-lock.json'), path.join(tmp, 'modules.json')]);
+      run(['compile', sharedDir, path.join(tmp, 'dbt-lock.json'), path.join(tmp, 'modules.json'), path.join(tmp, 'bytecode.zip')]);
+      fs.copyFileSync(path.join(tmp, 'bytecode.zip'), bcCache);
+    } finally {
+      fs.rmSync(tmp, { recursive: true, force: true });
+    }
+  }
+  // group "bytecode": not part of the first download; the page fetches it in the background after the first start
+  if (fs.existsSync(bcCache)) dbtFiles.push({ file: 'dbt-bytecode.zip', data: fs.readFileSync(bcCache), group: 'bytecode' });
+
+  const fingerprint = sha256(Buffer.from(JSON.stringify([
+    ...files.map((f) => [f.rel, sha256(f.data)]),
+    ...dbtFiles.map((f) => [f.file, sha256(f.data)]),
+    ['dbt-lock.json', sha256(lockBuf)],
+  ])));
+  const id = `dbt-${SOURCES.versions.dbtCore}-${fingerprint.slice(0, 10)}`;
+  const dbtRel = `dbt/${id}/`;
+  for (const f of dbtFiles) files.push({ rel: dbtRel + f.file, data: f.data, group: f.group });
+  files.push({ rel: dbtRel + 'dbt-lock.json', data: lockBuf, group: 'boot' });
 
   // gzip sizes are only for the "about N MB to download" label; cache them by content hash.
   const gzCachePath = path.join(CACHE, 'gzip-sizes.json');
@@ -235,7 +264,8 @@ async function main() {
   await writeIfChanged(path.join(ENGINES, 'dbt', 'current.json'), manifestBuf);
   const mb = (n) => (n / 1e6).toFixed(1) + ' MB';
   log(`engine ${id}: boot+core ${mb(groups.boot.size + groups.core.size)} (gzip ~${mb(groups.boot.gzip + groups.core.gzip)}),`
-    + ` pandas ${mb(groups.pandas.size)} (gzip ~${mb(groups.pandas.gzip)}), ${files.length} files, ${Date.now() - t0} ms`);
+    + ` pandas ${mb(groups.pandas.size)} (gzip ~${mb(groups.pandas.gzip)}),`
+    + ` bytecode ${groups.bytecode ? mb(groups.bytecode.size) + ' (zip ' + mb(groups.bytecode.gzip) + ')' : 'none'}, ${files.length} files, ${Date.now() - t0} ms`);
 }
 
 main().catch((e) => {

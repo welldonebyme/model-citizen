@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Session } from '../../src/lib/dbt/session.ts';
-import { PY_ENV, bootPackages, createBridge, installRuntime } from '../../src/lib/dbt/host.ts';
+import { PY_ENV, bootPackages, createBridge, installBytecode, installRuntime } from '../../src/lib/dbt/host.ts';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const SITE = path.resolve(HERE, '..', '..');
@@ -31,6 +31,8 @@ export async function bootNodeEngine({ print = console.log } = {}) {
   py.setStdin({ stdin: () => null }); // no keyboard input: prompts get end-of-file, like a closed terminal
   const lock = JSON.parse(fs.readFileSync(path.join(ENGINES, manifest.lockPath), 'utf8'));
   await py.loadPackage(bootPackages(lock), { messageCallback: () => {} });
+  const bc = manifest.files.find((f) => f.path.endsWith('/dbt-bytecode.zip'));
+  if (bc && !process.env.DBT_NO_BYTECODE) await installBytecode(py, fs.readFileSync(path.join(ENGINES, bc.path)));
   const tPackages = performance.now();
   const mc = await installRuntime(py, fs.readFileSync(path.join(SITE, 'src', 'lib', 'dbt', 'runtime', 'mc_dbt.py'), 'utf8'));
   const tDbt = performance.now();

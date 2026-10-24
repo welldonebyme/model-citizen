@@ -27,6 +27,14 @@ const COUNTS = {
   'jaffle_shop.orders': 'select count(*) from jaffle_shop.orders',
   'marts.fct_orders': 'select count(*) from marts.fct_orders',
   'prod.customer_segments': 'select count(*) from marts.customer_segments',
+  // capstone
+  'shop.orders': 'select count(*) from shopflow_app.orders',
+  'shop.fct_orders': 'select count(*) from dbt_adnane.fct_orders',
+  'shop.fct_events': 'select count(*) from dbt_adnane.fct_events',
+  'shop.products_snapshot': 'select count(*) from dbt_adnane.products_snapshot',
+  'shop.shipments_snapshot': 'select count(*) from dbt_adnane.shipments_snapshot',
+  'shop.customer_rfm': 'select count(*) from dbt_adnane.customer_rfm',
+  'shop.prod_fct_orders': 'select count(*) from prod.fct_orders',
 };
 
 let failed = 0;
@@ -36,7 +44,8 @@ for (const p of presets) {
   const r = await session.applyPreset(p, index.projects[p.project], io, { cols: 100 });
   const ms = Math.round(performance.now() - t);
   const dones = lines.filter((l) => /Done\. PASS=|Nothing to do|ERROR=|Completed with/.test(l.replace(/\x1b\[[0-9;]*m/g, ''))).map((l) => l.replace(/\x1b\[[0-9;]*m/g, '').replace(/^\d\d:\d\d:\d\d  /, ''));
-  const db = session.course + '/practice/practice.duckdb';
+  const proj = index.projects[p.project];
+  const db = session.course + '/' + proj.practiceDir + '/' + proj.database;
   const counts = {};
   for (const [k, sql] of Object.entries(COUNTS)) {
     try {

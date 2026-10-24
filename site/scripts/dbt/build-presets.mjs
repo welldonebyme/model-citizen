@@ -27,6 +27,8 @@ const BIBLE = process.env.DBT_BIBLE || path.resolve(ACADEMY, '..', 'dbt-bible');
 const LABS = path.join(BIBLE, 'labs');
 const JAFFLE_REPO = path.join(LABS, 'practice-project', 'jaffle_dbt');
 const GOLDEN = path.join(ACADEMY, 'reference', 'builder-logs');
+const CAPSTONE = path.join(LABS, 'capstone');
+const SHOP_REPO = path.join(CAPSTONE, 'shopflow_dbt');
 const OUT = path.join(SITE, 'public', 'presets', 'dbt');
 const CACHE = path.join(SITE, '.cache', 'dbt-presets');
 
@@ -148,49 +150,96 @@ function jaffleSteps(filesN, data, prod, hasPackages) {
   return steps;
 }
 
+// ---- the ShopFlow capstone (Chapter 26, milestones m00..m14) ----------------------------------------------------------
+// Data timeline (reference/capstone-logs/README.md): fresh_load in m01, day2 in m08 (snapshots before and after),
+// day3 in m09, fresh_load again in m14. Production is built in m13 from main BEFORE the feature (code of m12) with
+// --selector nightly, and its artifacts are saved in prod-artifacts/.
+const mtag = (n) => `m${String(n).padStart(2, '0')}`;
+const CD_DATA = 'cd ~/dbt-course/shopflow-data';
+const CD_SHOP = 'cd ~/dbt-course/shopflow_dbt';
+const SHOP_SETUP = 'duckdb shopflow.duckdb < setup.sql';
+const shopData_ = (n, state) => {
+  const end = state === 'end';
+  return { fresh1: (end && n >= 1) || n >= 2, day2: (end && n >= 8) || n >= 9, day3: (end && n >= 9) || n >= 10, fresh2: end && n >= 14 };
+};
+const shopProd = (n, state) => (state === 'end' ? n >= 13 : n >= 14);
+
+function shopSteps(filesN, data, prod, info) {
+  const steps = [{ run: CD_DATA }, { run: SHOP_SETUP }];
+  if (data.fresh1) steps.push({ run: 'duckdb shopflow.duckdb < updates/fresh_load.sql' });
+  if (filesN == null) return steps;
+  // with production, the history is built on the code of m12 ("main before the feature"), then the files move on
+  const histN = prod ? 12 : filesN;
+  const hist = info[mtag(histN)];
+  const buildFor = (t) => (t.unitTests ? 'dbt build --exclude-resource-type unit_test' : 'dbt build');
+  steps.push({ checkout: mtag(histN), bundle: `shopflow/files-${mtag(histN)}.json` }, { run: CD_SHOP });
+  if (hist.packages) steps.push({ run: 'dbt deps' });
+  if (data.day2 && hist.snapshots) steps.push({ run: 'dbt snapshot' }); // day 1 version
+  if (data.day2) steps.push({ run: CD_DATA }, { run: 'duckdb shopflow.duckdb < updates/day2.sql' }, { run: CD_SHOP });
+  if (data.day3 && hist.snapshots) steps.push({ run: 'dbt snapshot' }); // day 2 version
+  if (data.day3) steps.push({ run: CD_DATA }, { run: 'duckdb shopflow.duckdb < updates/day3.sql' }, { run: CD_SHOP });
+  if (prod) {
+    steps.push({ run: 'dbt build --target prod --selector nightly' }, { run: 'mkdir -p prod-artifacts' },
+      { run: 'cp target/manifest.json target/run_results.json prod-artifacts/' });
+    if (filesN !== histN) {
+      steps.push({ checkout: mtag(filesN), bundle: `shopflow/files-${mtag(filesN)}.json` });
+      if (info[mtag(filesN)].packages && !hist.packages) steps.push({ run: 'dbt deps' });
+    }
+  }
+  // m14's fresh load comes after the production build of m13
+  if (data.fresh2) steps.push({ run: CD_DATA }, { run: 'duckdb shopflow.duckdb < updates/fresh_load.sql' }, { run: CD_SHOP });
+  steps.push({ run: buildFor(info[mtag(filesN)]) });
+  return steps;
+}
+
+function tagFacts(entries) {
+  const names = entries.map((e) => e.name);
+  return {
+    files: names.length,
+    packages: names.includes('packages.yml'),
+    python: names.some((n) => n.startsWith('models/') && n.endsWith('.py')),
+    snapshots: names.some((n) => n.startsWith('snapshots/') && /\.(yml|sql)$/.test(n)),
+    unitTests: entries.some((e) => /\.ya?ml$/.test(e.name) && /^unit_tests:/m.test(e.data.toString('utf8'))),
+  };
+}
+
+function finishPreset(preset, extra) {
+  preset.hash = sha256(Buffer.from(JSON.stringify([preset, ...extra]))).slice(0, 12);
+  return preset;
+}
+
 async function main() {
   if (!fs.existsSync(JAFFLE_REPO)) throw new Error(`reference repository not found: ${JAFFLE_REPO} (set DBT_BIBLE)`);
   const titles = chapterTitles();
 
-  // practice kit (what the learner has in ~/dbt-course/practice)
-  const practice = [{ name: 'setup.sql', data: fs.readFileSync(path.join(LABS, 'setup.sql')) }];
-  for (const f of fs.readdirSync(path.join(LABS, 'data')).filter((f) => f.endsWith('.csv'))) practice.push({ name: 'data/' + f, data: fs.readFileSync(path.join(LABS, 'data', f)) });
-  for (const f of fs.readdirSync(path.join(LABS, 'updates')).filter((f) => /\.(sql|md)$/.test(f))) practice.push({ name: 'updates/' + f, data: fs.readFileSync(path.join(LABS, 'updates', f)) });
-  const practiceBundle = writeJson('jaffle/practice.json', { files: encodeFiles(practice) });
-
-  // dbt packages, pre-installed (dbt deps cannot reach hub.getdbt.com from a web page: no CORS)
+  // dbt packages, pre-installed (dbt deps cannot reach hub.getdbt.com from a web page: no CORS); shared by both projects
   const pkgFiles = [];
   for (const p of PACKAGES) {
     const entries = readTar(await pinnedDownload(p), { gzip: true });
     for (const e of entries) pkgFiles.push({ name: p.name + '/' + e.name.split('/').slice(1).join('/'), data: e.data });
   }
-  const packagesBundle = writeJson('jaffle/packages.json', {
+  const packagesBundle = writeJson('packages.json', {
     packages: PACKAGES.map(({ name, package: pkg, version }) => ({ name, package: pkg, version })),
     files: encodeFiles(pkgFiles),
   });
+  const pkgList = PACKAGES.map(({ name, package: pkg, version }) => ({ name, package: pkg, version }));
 
-  // profiles, exactly as the book shows them
+  // ---- jaffle_dbt ----
+  const practice = [{ name: 'setup.sql', data: fs.readFileSync(path.join(LABS, 'setup.sql')) }];
+  for (const f of fs.readdirSync(path.join(LABS, 'data')).filter((f) => f.endsWith('.csv'))) practice.push({ name: 'data/' + f, data: fs.readFileSync(path.join(LABS, 'data', f)) });
+  for (const f of fs.readdirSync(path.join(LABS, 'updates')).filter((f) => /\.(sql|md)$/.test(f))) practice.push({ name: 'updates/' + f, data: fs.readFileSync(path.join(LABS, 'updates', f)) });
+  const practiceBundle = writeJson('jaffle/practice.json', { files: encodeFiles(practice) });
   const profiles = {
     ch06: goldenOutput('ch06.md', 'cat ~/.dbt/profiles.yml'),
     ch10: goldenOutput('ch10.md', 'cat ~/.dbt/profiles.yml'),
     ch24: goldenOutput('ch24.md', 'cat ~/.dbt/profiles.yml'),
   };
-
-  // project files per tag
   const tags = execFileSync('git', ['-C', JAFFLE_REPO, 'tag', '--list', 'ch*'], { encoding: 'utf8' }).split('\n').filter(Boolean).sort();
   const tagInfo = {};
   for (const t of tags) {
     const entries = gitTagFiles(JAFFLE_REPO, t);
-    const names = entries.map((e) => e.name);
-    tagInfo[t] = {
-      bundle: writeJson(`jaffle/files-${t}.json`, { tag: t, files: encodeFiles(entries) }),
-      files: names.length,
-      packages: names.includes('packages.yml'),
-      python: names.some((n) => n.startsWith('models/') && n.endsWith('.py')),
-      snapshots: names.some((n) => n.startsWith('snapshots/') && /\.(yml|sql)$/.test(n)),
-    };
+    tagInfo[t] = { bundle: writeJson(`jaffle/files-${t}.json`, { tag: t, files: encodeFiles(entries) }), ...tagFacts(entries) };
   }
-
   const presets = [];
   for (let n = 6; n <= 25; n++) {
     for (const state of ['start', 'end']) {
@@ -207,48 +256,87 @@ async function main() {
       if (t) summary.push(`Models already built with ${build(filesN)}${info.packages ? ' (packages installed from a saved copy)' : ''}.`);
       if (prod) summary.push('Production built (--target prod) and its artifacts saved in prod-artifacts/.');
       summary.push(`Profile ~/.dbt/profiles.yml as in Chapter ${Number(profileAt(n, state).slice(2))}.`);
-      const preset = {
-        id: `${tag(n)}-${state}`,
-        project: 'jaffle',
-        chapter: n,
-        state,
-        title: `Chapter ${n}, ${state === 'start' ? 'start' : 'end'} of the labs`,
-        chapterTitle: titles[n] ?? '',
-        filesTag: t,
-        filesBundle: info ? info.bundle.path : null,
-        profile: profileAt(n, state),
-        packages: !!info?.packages,
-        python: !!info?.python,
-        cwd: t ? '~/dbt-course/jaffle_dbt' : '~/dbt-course',
-        summary,
-        steps,
-      };
-      preset.hash = sha256(Buffer.from(JSON.stringify([preset, info?.bundle.sha256, practiceBundle.sha256, packagesBundle.sha256, profiles[preset.profile]]))).slice(0, 12);
-      presets.push(preset);
+      presets.push(finishPreset({
+        id: `${tag(n)}-${state}`, project: 'jaffle', chapter: n, label: `Chapter ${n}`, state,
+        title: `Chapter ${n}, ${state} of the labs`, chapterTitle: titles[n] ?? '',
+        filesTag: t, filesBundle: info ? info.bundle.path : null, profile: profileAt(n, state),
+        packages: !!info?.packages, python: !!info?.python, cwd: t ? '~/dbt-course/jaffle_dbt' : '~/dbt-course',
+        summary, steps,
+      }, [info?.bundle.sha256, practiceBundle.sha256, packagesBundle.sha256, profiles[profileAt(n, state)]]));
     }
   }
 
-  const index = {
-    $comment: 'Generated by scripts/dbt/build-presets.mjs. Do not edit by hand.',
-    schema: 1,
-    projects: {
-      jaffle: {
-        title: 'jaffle_dbt, the practice project of Chapters 6 to 25',
-        dir: 'jaffle_dbt',
-        practiceDir: 'practice',
-        database: 'practice.duckdb',
-        practiceBundle: practiceBundle.path,
-        packagesBundle: packagesBundle.path,
-        packages: PACKAGES.map(({ name, package: pkg, version }) => ({ name, package: pkg, version })),
-        profiles,
-        onMachine: 'The reference repository has one git tag per chapter (ch06 to ch25).',
-      },
+  // ---- ShopFlow capstone ----
+  const projects = {
+    jaffle: {
+      title: 'jaffle_dbt, the practice project of Chapters 6 to 25', dir: 'jaffle_dbt', practiceDir: 'practice', database: 'practice.duckdb',
+      practiceBundle: practiceBundle.path, packagesBundle: packagesBundle.path, packages: pkgList, profiles,
+      onMachine: 'The reference repository has one git tag per chapter (ch06 to ch25).',
     },
-    presets,
   };
-  writeJson('index.json', index);
-  const total = fs.readdirSync(path.join(OUT, 'jaffle')).reduce((s, f) => s + fs.statSync(path.join(OUT, 'jaffle', f)).size, 0);
-  log(`${presets.length} presets, ${tags.length} tags, bundles ${(total / 1e6).toFixed(2)} MB (before gzip)`);
+  if (fs.existsSync(SHOP_REPO)) {
+    const shopData = [{ name: 'setup.sql', data: fs.readFileSync(path.join(CAPSTONE, 'setup.sql')) }];
+    for (const f of fs.readdirSync(path.join(CAPSTONE, 'data')).filter((f) => f.endsWith('.csv'))) shopData.push({ name: 'data/' + f, data: fs.readFileSync(path.join(CAPSTONE, 'data', f)) });
+    for (const f of fs.readdirSync(path.join(CAPSTONE, 'updates')).filter((f) => f.endsWith('.sql'))) shopData.push({ name: 'updates/' + f, data: fs.readFileSync(path.join(CAPSTONE, 'updates', f)) });
+    const dataBundle = writeJson('shopflow/data.json', { files: encodeFiles(shopData) });
+    const mtags = execFileSync('git', ['-C', SHOP_REPO, 'tag', '--list', 'm*'], { encoding: 'utf8' }).split('\n').filter(Boolean).sort();
+    const minfo = {};
+    const shopProfiles = {};
+    const subject = {};
+    for (const t of mtags) {
+      const entries = gitTagFiles(SHOP_REPO, t);
+      minfo[t] = { bundle: writeJson(`shopflow/files-${t}.json`, { tag: t, files: encodeFiles(entries) }), ...tagFacts(entries) };
+      // ~/.dbt/profiles.yml = the jaffle_dbt profile (Chapter 24) + the shopflow block of profiles.example.yml at this tag
+      const example = entries.find((e) => e.name === 'profiles.example.yml')?.data.toString('utf8') ?? '';
+      const block = example.slice(Math.max(0, example.search(/^shopflow:/m)));
+      const text = profiles.ch24.replace(/\n*$/, '\n\n') + block;
+      const key = Object.keys(shopProfiles).find((k) => shopProfiles[k] === text) ?? t;
+      shopProfiles[key] = text;
+      minfo[t].profile = key;
+      subject[t] = execFileSync('git', ['-C', SHOP_REPO, 'log', '-1', '--format=%s', t], { encoding: 'utf8' }).trim().replace(/^m\d\d:\s*/, '');
+    }
+    for (let n = 0; n <= 14; n++) {
+      for (const state of ['start', 'end']) {
+        const filesN = state === 'start' ? (n === 0 ? null : n - 1) : n;
+        const t = filesN == null ? null : mtag(filesN);
+        const info = t ? minfo[t] : null;
+        const data = shopData_(n, state);
+        const prod = shopProd(n, state) && filesN != null;
+        const steps = shopSteps(filesN, data, prod, minfo);
+        const dataText = ['Raw data of day 1 (setup.sql)'];
+        if (data.fresh1) dataText.push('fresh_load.sql (m01)');
+        if (data.day2) dataText.push('day2.sql (m08)');
+        if (data.day3) dataText.push('day3.sql (m09)');
+        if (data.fresh2) dataText.push('fresh_load.sql again (m14)');
+        const summary = [
+          t ? `Project files: the reference solution at tag ${t}${state === 'start' ? ` (the end of milestone ${t})` : ''}.` : 'No project yet: you create it with dbt init shopflow_dbt --skip-profile-setup.',
+          `${dataText.join(', then ')}.${data.day2 && (prod ? minfo.m12 : info)?.snapshots ? ' Snapshots have their history.' : ''}`,
+        ];
+        if (t) summary.push(`Models already built with ${info.unitTests ? 'dbt build --exclude-resource-type unit_test' : 'dbt build'}${info.packages ? ' (dbt_utils installed from a saved copy)' : ''}.`);
+        if (prod) summary.push('Production built from the code of m12 (main before the feature) with --selector nightly, artifacts in prod-artifacts/.');
+        const profileKey = (info ?? minfo.m00).profile;
+        presets.push(finishPreset({
+          id: `${mtag(n)}-${state}`, project: 'shopflow', chapter: 26, milestone: mtag(n), label: `Capstone ${mtag(n)}`, state,
+          title: `Capstone milestone ${mtag(n)}, ${state}`, chapterTitle: subject[mtag(n)] ?? '',
+          filesTag: t, filesBundle: info ? info.bundle.path : null, profile: profileKey,
+          packages: !!info?.packages, python: !!info?.python || (prod && minfo.m12.python), cwd: t ? '~/dbt-course/shopflow_dbt' : '~/dbt-course',
+          summary, steps,
+        }, [info?.bundle.sha256, dataBundle.sha256, packagesBundle.sha256, shopProfiles[profileKey]]));
+      }
+    }
+    projects.shopflow = {
+      title: 'shopflow_dbt, the capstone of Chapter 26', dir: 'shopflow_dbt', practiceDir: 'shopflow-data', database: 'shopflow.duckdb',
+      practiceBundle: dataBundle.path, packagesBundle: packagesBundle.path, packages: pkgList, profiles: shopProfiles,
+      onMachine: 'The reference solution has one git tag per milestone (m00 to m14).',
+    };
+  } else {
+    log('capstone repository not found, skipped:', SHOP_REPO);
+  }
+
+  writeJson('index.json', { $comment: 'Generated by scripts/dbt/build-presets.mjs. Do not edit by hand.', schema: 1, projects, presets });
+  let total = 0;
+  for (const d of ['jaffle', 'shopflow']) if (fs.existsSync(path.join(OUT, d))) for (const f of fs.readdirSync(path.join(OUT, d))) total += fs.statSync(path.join(OUT, d, f)).size;
+  log(`${presets.length} presets, bundles ${(total / 1e6).toFixed(2)} MB + packages (before gzip)`);
 }
 
 main().catch((e) => {

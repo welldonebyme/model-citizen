@@ -1,6 +1,6 @@
 // The terminal session: a small shell around real dbt and the duckdb module, on Pyodide's virtual file system.
 // No browser API here, so the same code runs in the Web Worker and in Node (preset checks, golden tests).
-import { globToRegExp, parseLine, parsePowerShellEnv, quoteWord, type Pipeline, type SimpleCommand } from './shell.ts';
+import { globToRegExp, parseLine, parsePowerShellEnv, quoteWord, splitList, type Pipeline, type SimpleCommand } from './shell.ts';
 import type { Bundle, ExecContext, FileEntry, Io, Preset, ProjectInfo } from './types.ts';
 
 /** The part of Emscripten's FS used here (Pyodide exposes it as pyodide.FS). */
@@ -241,23 +241,35 @@ export class Session {
 
   /** Run one line typed by the learner. Returns the exit code ($?). */
   async exec(line: string, io: Io, ctx: ExecContext): Promise<number> {
-    const ps = parsePowerShellEnv(line);
-    if (ps) {
-      this.env[ps.name] = ps.value;
-      return (this.lastExit = 0);
-    }
-    const parsed = parseLine(line, { home: this.home, vars: (n) => this.lookup(n) });
-    if (!parsed.ok) {
-      io.err(parsed.error);
+    const list = splitList(line);
+    if (!list.ok) {
+      io.err(list.error);
       return (this.lastExit = 2);
     }
     let code = this.lastExit;
-    for (const item of parsed.items) {
+    for (const item of list.items) {
       if (item.op === '&&' && code !== 0) continue;
       if (item.op === '||' && code === 0) continue;
-      code = await this.runPipeline(item.pipeline, io, ctx);
+      code = await this.execOne(item.text, io, ctx);
       this.lastExit = code;
     }
+    return code;
+  }
+
+  /** One part of a list: variables are expanded now (after the previous parts ran). */
+  private async execOne(text: string, io: Io, ctx: ExecContext): Promise<number> {
+    const ps = parsePowerShellEnv(text);
+    if (ps) {
+      this.env[ps.name] = ps.value;
+      return 0;
+    }
+    const parsed = parseLine(text, { home: this.home, vars: (n) => this.lookup(n) });
+    if (!parsed.ok) {
+      io.err(parsed.error);
+      return 2;
+    }
+    let code = 0;
+    for (const item of parsed.items) code = await this.runPipeline(item.pipeline, io, ctx);
     return code;
   }
 
@@ -424,6 +436,9 @@ export class Session {
       code = this.py.runDbt(args, env, this.cwd);
     } finally {
       this.sink = prev;
+    }
+    if (args.includes('--version') || args.includes('-v') || args[0] === 'version') {
+      io.note({ tone: 'info', text: 'dbt --version cannot ask pypi.org for newer versions from a web page, so it prints "could not be determined". The installed versions above are the real ones.' });
     }
     if (sawGitError) {
       io.note({ tone: 'info', text: 'About "git [ERROR]": a web page cannot start programs, so dbt debug cannot find git here. On your computer git is installed (Chapter 3) and this check passes. The other checks are real.' });

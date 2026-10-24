@@ -8,7 +8,9 @@ Import this module BEFORE importing dbt.
      with real worker threads (dbt's hidden --single-threaded mode is NOT usable: it fails natively too with
      "Connection Error: Connection already closed!" on dbt-duckdb 1.11.0).
   3. concurrent.futures executor used by dbt-adapters (relation cache, catalog) -> same synchronous scheme.
-  4. env default: no anonymous usage stats (no network in the sandbox).
+  4. no processes: optional fake `git --help` for dbt debug (off by default).
+  5. YAML: libyaml 0.1.7 (Pyodide) -> fall back to the pure-Python parser where libyaml 0.2.5 would succeed.
+  6. env default: no anonymous usage stats (no network in the sandbox).
 """
 import contextvars
 import os
@@ -208,7 +210,60 @@ def _run_cmd(cwd, cmd, env=None):
 
 _system.run_cmd = _run_cmd
 
-# ---- 5. environment defaults ------------------------------------------------------------------------
+# ---- 5. YAML: Pyodide's PyYAML is linked with libyaml 0.1.7, dbt users get libyaml 0.2.5 -------------------------
+# dbt parses YAML with yaml.CSafeLoader (libyaml). libyaml 0.1.7 rejects some documents that 0.2.5 accepts, for
+# example a colon inside a plain scalar of a flow mapping ({order_at: 2025-07-15 10:00:00}, the capstone's unit
+# tests), and it misspells one message ("violate indentation"). So: libyaml first, exactly like dbt on a computer;
+# if libyaml 0.1.7 fails but the pure-Python parser of the same PyYAML (same rules as libyaml 0.2.5 for these cases)
+# reads the text, use that result; if both fail, keep libyaml's error, so dbt prints the same messages as on a
+# computer ("mapping values are not allowed in this context", ...).
+import yaml  # noqa: E402
+
+_C_LOADERS = tuple(c for c in (getattr(yaml, "CSafeLoader", None), getattr(yaml, "CLoader", None), getattr(yaml, "CBaseLoader", None)) if c)
+_pure_cache = {}
+
+
+def _pure_twin(loader):
+    """The same loader class (constructors, resolvers, dbt's CheckedLoader overrides) on the pure-Python parser."""
+    if not isinstance(loader, type) or not issubclass(loader, _C_LOADERS):
+        return None
+    twin = _pure_cache.get(loader)
+    if twin is None:
+        def __init__(self, stream):  # what yaml.SafeLoader.__init__ does
+            yaml.reader.Reader.__init__(self, stream)
+            yaml.scanner.Scanner.__init__(self)
+            yaml.parser.Parser.__init__(self)
+            yaml.composer.Composer.__init__(self)
+            yaml.constructor.BaseConstructor.__init__(self)
+            yaml.resolver.BaseResolver.__init__(self)
+        bases = (yaml.reader.Reader, yaml.scanner.Scanner, yaml.parser.Parser, yaml.composer.Composer, loader)
+        twin = type(loader.__name__ + "PurePython", bases, {"__init__": __init__})
+        _pure_cache[loader] = twin
+    return twin
+
+
+_real_yaml_load = yaml.load
+
+
+def _yaml_load(stream, Loader=None, **kwargs):  # noqa: N803 (PyYAML's own argument name)
+    try:
+        return _real_yaml_load(stream, Loader, **kwargs)
+    except yaml.MarkedYAMLError as err:
+        twin = _pure_twin(Loader) if isinstance(stream, (str, bytes)) else None
+        if twin is not None:
+            try:
+                return _real_yaml_load(stream, twin, **kwargs)
+            except yaml.YAMLError:
+                pass
+        if isinstance(getattr(err, "problem", None), str):
+            err.problem = err.problem.replace("that violate indentation", "that violates indentation")
+        raise
+
+
+if os.environ.get("DBT_PYODIDE_SHIM_RAW_LIBYAML") != "1":  # (=1 only to reproduce the original blocker)
+    yaml.load = _yaml_load
+
+# ---- 6. environment defaults ------------------------------------------------------------------------
 # No network in the sandbox: anonymous usage stats would try to reach a tracking server.
 # (Colours and the require-dbt-version check keep dbt's own defaults.)
 os.environ.setdefault("DBT_SEND_ANONYMOUS_USAGE_STATS", "false")

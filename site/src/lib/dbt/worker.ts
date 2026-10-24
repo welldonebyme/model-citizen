@@ -3,7 +3,7 @@
 // saved workspaces. Protocol: types.ts (WorkerRequest / WorkerEvent). Everything heavy is loaded on "boot".
 import runtimeSource from './runtime/mc_dbt.py?raw';
 import { Session } from './session.ts';
-import { PY_ENV, bootPackages, createBridge, installRuntime, type PyodideLike } from './host.ts';
+import { PY_ENV, bootPackages, createBridge, installBytecode, installRuntime, type PyodideLike } from './host.ts';
 import { trackFetchProgress } from './engine-cache.ts';
 import * as store from './persist.ts';
 import { makeZip } from './zip.ts';
@@ -22,6 +22,7 @@ let persistOk = true;
 let current: { ws: string; meta: WorkspaceMeta; release: () => void } | null = null;
 let snapshot = new Map<string, { dir: boolean; mtime: number; size: number }>();
 let prepLog: string[] = [];
+let bytecodeUsed = false;
 
 const post = (m: WorkerEvent, transfer: Transferable[] = []) => self.postMessage(m, transfer);
 let lastProgress = 0;
@@ -51,7 +52,7 @@ async function boot(msg: Extract<WorkerRequest, { type: 'boot' }>) {
   manifest = msg.manifest;
   const indexURL = engineBase + manifest.indexPath;
   const lockURL = engineBase + manifest.lockPath;
-  const bootFiles = manifest.files.filter((f) => f.group !== 'pandas');
+  const bootFiles = manifest.files.filter((f) => f.group !== 'pandas' && f.group !== 'bytecode');
   const total = bootFiles.reduce((s, f) => s + f.size, 0);
   const sizes = new Map(manifest.files.map((f) => [new URL(engineBase + f.path).href, f.size]));
   const got = new Map<string, number>();
@@ -63,7 +64,8 @@ async function boot(msg: Extract<WorkerRequest, { type: 'boot' }>) {
     const before = got.get(url) ?? 0;
     const after = Math.min(cap, before + delta);
     got.set(url, after);
-    if (manifest!.files.find((f) => engineBase + f.path === url)?.group === 'pandas') return;
+    const g = manifest!.files.find((f) => engineBase + f.path === url)?.group;
+    if (g === 'pandas' || g === 'bytecode') return;
     loaded += after - before;
     progress({ phase, label, loaded, total });
   });
@@ -89,6 +91,18 @@ async function boot(msg: Extract<WorkerRequest, { type: 'boot' }>) {
   progress({ phase, label, loaded, total }, true);
   const lock = await (await fetch(lockURL)).json();
   await py!.loadPackage(bootPackages(lock), { messageCallback: () => {}, errorCallback: (m) => console.warn(m) });
+  // Precompiled bytecode: dbt starts about 2 s faster (no compiling of its 1,200 modules). Only when it is already
+  // in the cache: the first start does not wait for it; the page downloads it in the background afterwards.
+  const bc = manifest.files.find((f) => f.group === 'bytecode');
+  bytecodeUsed = false;
+  if (bc && typeof caches !== 'undefined') {
+    try {
+      const hit = await caches.match(engineBase + bc.path, { ignoreSearch: true });
+      if (hit) { await installBytecode(py!, new Uint8Array(await hit.arrayBuffer())); bytecodeUsed = true; }
+    } catch (e) {
+      console.warn('dbt engine: bytecode not used', e);
+    }
+  }
   const t3 = performance.now();
   phase = 'dbt';
   label = 'Starting dbt';
@@ -120,6 +134,7 @@ async function boot(msg: Extract<WorkerRequest, { type: 'boot' }>) {
     versions: await versions(),
     timings: { downloadJsMs: Math.round(t1 - t0), pythonMs: Math.round(t2 - t1), packagesMs: Math.round(t3 - t2), dbtMs: Math.round(t4 - t3), totalMs: Math.round(t4 - t0) },
     resources: { files: res.length, transferBytes: res.reduce((n, e) => n + (e.transferSize || 0), 0), decodedBytes: res.reduce((n, e) => n + (e.decodedBodySize || 0), 0) },
+    bytecode: bytecodeUsed,
   };
 }
 
@@ -233,7 +248,8 @@ async function open(id: number, msg: Extract<WorkerRequest, { type: 'open' }>) {
     s.lastExit = 0;
     current.meta = meta;
     snapshot = scan();
-    return { restored: true, meta, presetChanged: meta.presetHash !== preset.hash, persist: persistOk };
+    const madeFrom = index!.presets.find((p) => p.id === meta!.preset);
+    return { restored: true, meta, presetChanged: !!madeFrom && meta.presetHash !== madeFrom.hash, persist: persistOk };
   }
   const now = Date.now();
   const newMeta: WorkspaceMeta = {

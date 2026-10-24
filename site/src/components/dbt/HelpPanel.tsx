@@ -28,7 +28,7 @@ export function HelpPanel({ manifest, packages }: { manifest: EngineManifest | n
       <ul>
         <li>Each chapter has its own workspace: the project files, <code>~/.dbt/profiles.yml</code> and the practice database. They are saved in this browser after every command, so a reload keeps them. Nothing is sent to a server.</li>
         <li><strong>Reset to the start of this chapter</strong> brings back the files and the database of the chapter's start.</li>
-        <li>The first start downloads about {mb} MB. Later starts use your browser's cache.</li>
+        <li>The first start downloads about {mb} MB. Later starts use your browser's cache.{manifest?.groups.bytecode ? ` After the first start, the page also downloads ${(manifest.groups.bytecode.gzip / 1e6).toFixed(0)} MB of precompiled Python in the background, so that later starts are about 2 seconds faster.` : ''}</li>
       </ul>
       <h3>Commands</h3>
       <p>Type <code>help</code> in the terminal. Besides <code>dbt</code>: <code>duckdb practice.duckdb -c "&lt;sql&gt;"</code>, <code>duckdb practice.duckdb &lt; file.sql</code>, <code>apply day2</code>, <code>ls</code>, <code>cat</code>, <code>cd</code>, <code>pwd</code>, <code>grep</code>, <code>head</code>, <code>tail</code>, <code>cp</code>, <code>mkdir</code>, <code>rm</code>, <code>export</code> (or <code>$env:NAME = "value"</code>), <code>clear</code>. Up and Down show earlier commands; Ctrl+L clears; Ctrl+C or Stop stops a long command.</p>

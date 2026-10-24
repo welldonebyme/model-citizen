@@ -5,7 +5,9 @@ export type PresetStep = { run: string } | { checkout: string; bundle: string };
 export interface Preset {
   id: string;              // "ch07-start"
   project: string;         // "jaffle"
-  chapter: number;         // 7
+  chapter: number;         // 7 (26 for the capstone)
+  milestone?: string;      // "m05" (capstone only)
+  label: string;           // "Chapter 7", "Capstone m05"
   state: 'start' | 'end';
   title: string;           // "Chapter 7, start of the labs"
   chapterTitle: string;    // "Models, ref, source and the DAG"

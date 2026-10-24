@@ -22,6 +22,8 @@ export interface BootInfo {
   versions: Record<string, string>;
   timings: Record<string, number>;
   resources?: { files: number; transferBytes: number; decodedBytes: number };
+  /** the precompiled bytecode was in the cache and used (faster start) */
+  bytecode?: boolean;
   /** false when every engine file was already in the service worker cache before the start */
   cold: boolean;
   /** wall time from the click to a started engine (ms) */
@@ -75,9 +77,10 @@ export function loadPresets(): Promise<PresetIndex> {
   return presetsPromise;
 }
 
-/** Workspace id for a preset: one workspace per chapter ("ch07-start" and "ch07-end" share "jaffle-ch07"). */
-export function workspaceFor(presetId: string, project = 'jaffle'): string {
+/** Workspace id for a preset: one per chapter or milestone ("ch07-start" and "ch07-end" share "jaffle-ch07"). */
+export function workspaceFor(presetId: string): string {
   const m = presetId.match(/^(ch\d\d|m\d\d)-/);
+  const project = presetId.startsWith('m') ? 'shopflow' : 'jaffle';
   return `${project}-${m ? m[1] : presetId}`;
 }
 
@@ -95,7 +98,7 @@ export class DbtEngine extends EventTarget {
     if (!sharedEngine) {
       sharedEngine = new DbtEngine();
       // read-only handle for the end-to-end tests and for curious learners (devtools): window.__mcDbt.info
-      try { (globalThis as unknown as { __mcDbt?: DbtEngine }).__mcDbt = sharedEngine; } catch { /* no window */ }
+      if (typeof window !== 'undefined') (window as unknown as { __mcDbt?: DbtEngine }).__mcDbt = sharedEngine;
     }
     return sharedEngine;
   }
@@ -161,6 +164,7 @@ export class DbtEngine extends EventTarget {
           type: 'boot', engineBase: ENGINE_BASE(), presetsBase: PRESETS_BASE(), manifest, presets,
         });
         void pruneEngineCaches([`mc-engines-dbt-${manifest.id}`, `mc-engines-pyodide-${manifest.versions.pyodide}`]);
+        if (!r.bytecode) this.prefetchBytecode(manifest);
         this.info = { ...r, cold, wallMs: Math.round(performance.now() - t0) };
         this.state = 'ready';
         this.dispatchEvent(new CustomEvent('state', { detail: this.state }));
@@ -177,6 +181,15 @@ export class DbtEngine extends EventTarget {
     return this.bootPromise.finally(() => { if (listener) this.removeEventListener('progress', listener); });
   }
 
+  /** Download the precompiled bytecode in the background (the service worker keeps it): the next start is faster. */
+  private prefetchBytecode(manifest: EngineManifest) {
+    const bc = manifest.files.find((f) => f.group === 'bytecode');
+    if (!bc || typeof navigator === 'undefined' || !navigator.serviceWorker?.controller) return;
+    const go = () => { fetch(ENGINE_BASE() + bc.path).then((r) => r.arrayBuffer()).catch(() => {}); };
+    const idle = (globalThis as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => void }).requestIdleCallback;
+    setTimeout(() => (idle ? idle(go, { timeout: 10_000 }) : go()), 4000);
+  }
+
   /** True if the engine files of the boot are all in the service worker cache (no download needed). */
   async isCached(manifest?: EngineManifest): Promise<boolean> {
     try {
@@ -186,7 +199,7 @@ export class DbtEngine extends EventTarget {
       const opened = await Promise.all(names.map((n) => caches.open(n)));
       const base = ENGINE_BASE();
       for (const f of m.files) {
-        if (f.group === 'pandas') continue;
+        if (f.group === 'pandas' || f.group === 'bytecode') continue;
         let hit = false;
         for (const c of opened) if (await c.match(base + f.path)) { hit = true; break; }
         if (!hit) return false;

@@ -104,7 +104,10 @@ export const Feedback = forwardRef<HTMLHeadingElement, Props>(function Feedback(
         <span className="qz-fb-icon">{correct ? <IconCheck size={18} /> : <IconCross size={18} />}</span>
         {correct ? 'Correct' : timeUp && !response ? 'Time is up' : 'Not correct'}
       </h3>
-      {!correct && <p className="qz-fb-sub">{timeUp && !response ? 'You did not answer in time. ' : ''}The correct answer is shown above, and here: <b>{describeKey(q)}</b>.</p>}
+      {!correct && (q.format === 'fill'
+        // the blanks above already show what was typed next to the accepted answers: say it once
+        ? <p className="qz-fb-sub">{timeUp && !response ? 'You did not answer in time. ' : ''}Compare what you typed with the accepted answer, just above.</p>
+        : <p className="qz-fb-sub">{timeUp && !response ? 'You did not answer in time. ' : ''}The correct answer is shown above, and here: <b>{describeKey(q)}</b>.</p>)}
       {correct && <p className="qz-fb-sub">Well done. Read the explanation anyway: it often teaches a second rule.</p>}
       <Explanation q={q} showKey={false} />
       {!correct && notebook && <NotebookEntry q={q} response={response} />}

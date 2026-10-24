@@ -8,14 +8,14 @@ const cards: CardData[] = [
 ];
 ---
 <Base title="Flashcards" section="practice">
-  <div class="wrap fcp">
+  <div class="wrap wrap-read fcp">
     <h1>Flashcards</h1>
     <p class="lead">Short daily reviews make knowledge stick (the book's day 3, day 7, day 21 rule). Read the card, answer in your head, then check and be honest.</p>
     <Flashcards client:only="react" cards={cards} />
   </div>
 </Base>
 <style>
-  .fcp { padding-block: 40px 16px; max-width: 760px; }
+  .fcp { padding-block: 40px 16px; }
   .lead { color: var(--muted); font-size: var(--fs-lg); }
   :global(.fc) { display: grid; gap: 16px; margin-top: 20px; }
   :global(.fc-decks) { justify-self: start; }

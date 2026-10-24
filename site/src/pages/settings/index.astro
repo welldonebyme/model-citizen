@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 import SettingsApp from '../../components/settings/SettingsApp';
 ---
 <Base title="Settings and progress file" section="none">
-  <div class="wrap settings">
+  <div class="wrap wrap-read settings">
     <h1>Settings and progress file</h1>
     <p class="lead">No account and no server: everything you do is saved in this browser only.</p>
     <SettingsApp client:only="react" />
@@ -11,7 +11,7 @@ import SettingsApp from '../../components/settings/SettingsApp';
   </div>
 </Base>
 <style>
-  .settings { padding-block: 40px 16px; max-width: 860px; }
+  .settings { padding-block: 40px 16px; }
   .lead { color: var(--muted); font-size: var(--fs-lg); margin-bottom: 24px; }
   :global(.st) { display: grid; gap: 18px; }
   :global(.st-sec h2) { font-size: var(--fs-lg); margin-bottom: 8px; }

@@ -3,14 +3,14 @@ import Base from '../../../layouts/Base.astro';
 import Notebook from '../../../components/practice/Notebook';
 ---
 <Base title="Error notebook" section="practice">
-  <div class="wrap nbp">
+  <div class="wrap wrap-read nbp">
     <h1>Error notebook</h1>
     <p class="lead">Every question you miss is added here automatically. Write why you missed it, in your own words. Re-read the whole notebook before you book the exam: it is one of the book's four conditions.</p>
     <Notebook client:only="react" />
   </div>
 </Base>
 <style>
-  .nbp { padding-block: 40px 16px; max-width: 860px; }
+  .nbp { padding-block: 40px 16px; }
   .lead { color: var(--muted); font-size: var(--fs-lg); }
   :global(.nb) { display: grid; gap: 16px; margin-top: 20px; }
   :global(.nb-add) { display: grid; gap: 8px; }

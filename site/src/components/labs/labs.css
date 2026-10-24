@@ -89,6 +89,9 @@
 
 .mcl-foot { margin: 16px 0 0; padding: 12px var(--mcl-pad); border-top: 1px solid var(--line); color: var(--muted); font-size: var(--fs-xs); }
 
+@container (max-width: 480px) {
+  .mcl-data { flex-basis: 100%; }
+}
 @container (max-width: 420px) {
   .mcl { --mcl-pad: 14px; }
   .mcl-bar .mcl-file { display: none; }
@@ -118,8 +121,10 @@
 .mcl-ex-state { width: 18px; height: 18px; border-radius: 6px; border: 2px solid var(--line-strong); margin-top: 1px; display: grid; place-items: center; font-size: 12px; font-weight: 800; }
 .mcl-ex-state[data-state="solved"] { background: var(--ok); border-color: var(--ok); color: var(--surface); }
 .mcl-ex-state[data-state="failed"] { border-color: var(--bad); color: var(--bad); }
-.mcl-group-h { font-size: var(--fs-sm); color: var(--muted); font-weight: 700; margin: 18px 0 8px; }
-.mcl-group-h:first-child { margin-top: 0; }
+.mcl-group-h { font-size: var(--fs-sm); color: var(--muted); font-weight: 700; margin: 20px 0 8px; }
+.mcl-pane-h + .mcl-note + div > .mcl-group-h { margin-top: 0; }
+.mcl-jump { display: none; }
+@media (max-width: 960px) { .mcl-jump { display: inline-flex; } }
 
 .mcl-msg { margin: 12px var(--mcl-pad) 0; padding: 12px 14px; border-radius: 12px; font-size: var(--fs-sm); }
 .mcl-msg.ok { background: var(--ok-bg); }
@@ -167,3 +172,9 @@
 }
 .mcl-split.yamlp, .mcl-split.jinjap { grid-template-columns: minmax(250px, 330px) minmax(0, 1fr); }
 @media (max-width: 960px) { .mcl-split.yamlp, .mcl-split.jinjap { grid-template-columns: minmax(0, 1fr); } }
+
+/* The light-theme comment colour of the design tokens (#737C91 on the code background #F6F7FA = 3.9:1) is below
+   WCAG AA (4.5:1). The lab pages use a darker grey until tokens.css changes (reported to the lead). */
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .mcl-page, :root:not([data-theme="dark"]) .mcl { --tok-cmt: #687185; } }
+:root[data-theme="light"] .mcl-page, :root[data-theme="light"] .mcl { --tok-cmt: #687185; }
+.mcl-grid-wrap:focus-visible, .mcl-out pre:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; }

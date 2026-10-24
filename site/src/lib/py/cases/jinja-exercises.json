@@ -362,7 +362,7 @@
    "solution": {
     "template": "{%- set methods = [\"credit_card\", \"coupon\", \"bank_transfer\", \"gift_card\"] -%}\nselect\n    orderid as order_id,\n    {%- for m in methods %}\n    sum(case when paymentmethod = '{{ m }}' then amount else 0 end)\n        as {{ m }}_amount\n    {%- if not loop.last %},{% endif %}\n    {%- endfor %}\nfrom stripe.payments\nwhere status = 'success'\ngroup by orderid\norder by orderid\n"
    },
-   "task": "The loop writes a comma after every column, also after the last one, and the SQL fails. Use loop.last so that the last column has no comma.",
+   "task": "The loop writes a comma after every column, also after the last one. PostgreSQL and most warehouses reject this trailing comma (DuckDB happens to accept it: try Run). Use loop.last so that the last column has no comma.",
    "goal": {
     "book": "select\n    orderid as order_id,\n    sum(case when paymentmethod = 'credit_card' then amount else 0 end)\n        as credit_card_amount,\n    sum(case when paymentmethod = 'coupon' then amount else 0 end)\n        as coupon_amount,\n    sum(case when paymentmethod = 'bank_transfer' then amount else 0 end)\n        as bank_transfer_amount,\n    sum(case when paymentmethod = 'gift_card' then amount else 0 end)\n        as gift_card_amount\nfrom stripe.payments\nwhere status = 'success'\ngroup by orderid\norder by orderid",
     "cmp": "ws"

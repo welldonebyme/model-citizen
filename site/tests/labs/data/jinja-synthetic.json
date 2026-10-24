@@ -1,0 +1,95 @@
+{
+ "$comment": "Cases not in the book, checked against real dbt-core 1.11.16 + dbt-duckdb 1.11.0 (spikes/pyodide/results/jinja_real_dbt.json). syn-is-incremental needs the table practice.dbt_adnane.syn_incr.",
+ "cases": [
+  {
+   "id": "syn-var-envvar-target",
+   "ref": "synthetic: compared with the real dbt 1.11.16 output recorded by the Pyodide spike",
+   "title": "var(), env_var() with default, target.*",
+   "mode": "dbt",
+   "template": "select '{{ var(\"dev_start_date\") }}' as d, '{{ env_var(\"DBT_ACADEMY_X\", \"fallback\") }}' as e, '{{ target.name }}/{{ target.schema }}/{{ target.type }}' as t",
+   "expect": {
+    "kind": "compiled",
+    "cmp": "equal",
+    "book": "select '2025-01-01' as d, 'fallback' as e, 'dev/dbt_adnane/duckdb' as t"
+   },
+   "project": "ch11",
+   "node": {
+    "name": "inline_query",
+    "resource_type": "sql_operation"
+   },
+   "realDbtOutput": "Running with dbt=1.11.16\nRegistered adapter: duckdb=1.11.0\nFound 12 models, 1 analysis, 10 data tests, 1 sql operation, 5 sources, 669 macros\n\nConcurrency: 4 threads (target='dev')\n\nCompiled inline node is:\nselect '2025-01-01' as d, 'fallback' as e, 'dev/dbt_adnane/duckdb' as t"
+  },
+  {
+   "id": "syn-var-missing",
+   "ref": "synthetic: compared with the real dbt 1.11.16 output recorded by the Pyodide spike",
+   "title": "var() without default and without value",
+   "mode": "dbt",
+   "template": "select '{{ var(\"no_such_var\") }}' as x",
+   "expect": {
+    "kind": "error",
+    "phrases": [
+     "Required var 'no_such_var' not found in config"
+    ]
+   },
+   "project": "ch11",
+   "node": {
+    "name": "inline_query",
+    "resource_type": "sql_operation"
+   },
+   "realDbtOutput": "Running with dbt=1.11.16\nRegistered adapter: duckdb=1.11.0\nFound 12 models, 1 analysis, 10 data tests, 1 sql operation, 5 sources, 669 macros\n\nConcurrency: 4 threads (target='dev')\n\nEncountered an error:\nRuntime Error\n  Compilation Error in sql_operation inline_query (from remote system.sql)\n    Required var 'no_such_var' not found in config:\n    Vars supplied to inline_query = {\n        \"dev_start_date\": \"2025-01-01\"\n    }"
+  },
+  {
+   "id": "syn-is-incremental",
+   "ref": "synthetic: compared with the real dbt 1.11.16 output recorded by the Pyodide spike",
+   "title": "is_incremental() with an existing table",
+   "mode": "dbt",
+   "node": {
+    "name": "syn_incr",
+    "resource_type": "model",
+    "path": "models/marts/syn_incr.sql"
+   },
+   "extra_models": {
+    "syn_incr": {
+     "path": "models/marts/syn_incr.sql",
+     "materialized": "incremental",
+     "schema": "marts"
+    }
+   },
+   "template": "{{ config(materialized='incremental') }}\nselect 1 as x\n{% if is_incremental() %}where x > (select max(x) from {{ this }}){% endif %}\n",
+   "expect": {
+    "kind": "compiled",
+    "cmp": "equal",
+    "book": "select 1 as x\nwhere x > (select max(x) from \"practice\".\"dbt_adnane\".\"syn_incr\")"
+   },
+   "db": true,
+   "project": "ch11",
+   "realDbtOutput": "Running with dbt=1.11.16\nRegistered adapter: duckdb=1.11.0\nFound 13 models, 1 analysis, 10 data tests, 5 sources, 669 macros\n\nConcurrency: 4 threads (target='dev')\n\nCompiled node 'syn_incr' is:\n\nselect 1 as x\nwhere x > (select max(x) from \"practice\".\"dbt_adnane\".\"syn_incr\")"
+  },
+  {
+   "id": "syn-config-get",
+   "ref": "synthetic: compared with the real dbt 1.11.16 output recorded by the Pyodide spike",
+   "title": "config() then config.get()",
+   "mode": "dbt",
+   "node": {
+    "name": "syn_cfg",
+    "resource_type": "model",
+    "path": "models/marts/syn_cfg.sql"
+   },
+   "extra_models": {
+    "syn_cfg": {
+     "path": "models/marts/syn_cfg.sql",
+     "materialized": "table",
+     "schema": "marts"
+    }
+   },
+   "template": "{{ config(materialized='view', tags=['x']) }}\nselect '{{ config.get(\"materialized\") }}' as m\n",
+   "expect": {
+    "kind": "compiled",
+    "cmp": "equal",
+    "book": "select 'view' as m"
+   },
+   "project": "ch11",
+   "realDbtOutput": "Running with dbt=1.11.16\nRegistered adapter: duckdb=1.11.0\nFound 13 models, 1 analysis, 10 data tests, 5 sources, 669 macros\n\nConcurrency: 4 threads (target='dev')\n\nCompiled node 'syn_cfg' is:\n\nselect 'view' as m"
+  }
+ ]
+}

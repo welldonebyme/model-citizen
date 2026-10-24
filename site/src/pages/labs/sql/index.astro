@@ -108,6 +108,8 @@ const engineMb = mb(manifest.wasm.eh.wasm.gzip + manifest.wasm.eh.worker.gzip);
   .sqlp-lesson .count { font-size: var(--fs-xs); color: var(--muted); font-weight: 600; }
   .sqlp-ex { padding: 8px 0 4px; border-top: 1px solid var(--line); }
   .sqlp-ex :global(.mc-code) { margin: 6px 0 4px; }
+  /* long lines wrap here: a code block that scrolls sideways would need to be focusable (axe scrollable-region-focusable) */
+  .sqlp-ex :global(.mc-code-body code) { white-space: pre-wrap; overflow-wrap: anywhere; }
   .sqlp-ex-head { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; margin: 6px 0 0; font-size: var(--fs-sm); }
   .sqlp-ex-head .where { color: var(--muted); }
   .sqlp-status { margin-left: auto; font-size: var(--fs-xs); font-weight: 700; }

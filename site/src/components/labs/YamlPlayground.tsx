@@ -172,7 +172,7 @@ export default function YamlPlayground() {
 
   return (
     <div className="mcl-split yamlp">
-      <div className="mcl-pane mcl-pane-pad mcl-list-pane">
+      <div className="mcl-pane mcl-pane-pad mcl-list-pane" id="yaml-exercises">
         <h2 className="mcl-pane-h">Exercises</h2>
         <p className="mcl-note">{solved.size} of {EXERCISES.length} solved. Each check runs while you type.</p>
         {GROUPS.map(([g, label]) => (
@@ -222,6 +222,7 @@ export default function YamlPlayground() {
               <button type="button" className="mcl-btn mcl-btn-small" aria-expanded={showHint} onClick={() => setShowHint((v) => !v)}>Hint</button>
               <button type="button" className="mcl-btn mcl-btn-small" aria-expanded={showSolution} onClick={() => setShowSolution((v) => !v)}>Show a solution</button>
               <button type="button" className="mcl-btn mcl-btn-small" onClick={() => open(exercise, null)}>Start again</button>
+              <a className="mcl-btn mcl-btn-small mcl-jump" href="#yaml-exercises">All exercises</a>
             </p>
             {showHint && <p className="mcl-note" data-testid="hint">{exercise.hint}</p>}
             {showSolution && <pre className="mcl-solution" data-testid="solution">{exercise.solution}</pre>}
@@ -273,7 +274,7 @@ export default function YamlPlayground() {
           {res?.ok && res.repr !== undefined && (
             <details className="mcl-out" open={!exercise}>
               <summary className="mcl-out-head">What Python reads</summary>
-              <pre data-testid="yaml-repr">{res.repr}</pre>
+              <pre data-testid="yaml-repr" tabIndex={0} aria-label="What Python reads">{res.repr}</pre>
             </details>
           )}
           {checks && (

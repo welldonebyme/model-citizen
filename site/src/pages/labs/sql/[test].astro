@@ -1,0 +1,34 @@
+---
+// A lesson-like page for the end-to-end tests of the SQL workspace: two real lesson steps of Chapter 4
+// (rendered by the site's content renderer, so their SQL blocks get "Run in workspace" buttons) next to the
+// workspace island, mounted the way a lesson page mounts it. Built only when LABS_TEST_PAGES=1
+// (tests/labs/astro.labs.config.mjs): it never ships with the site.
+import Base from '../../../layouts/Base.astro';
+import { StaticBlocks } from '../../../components/content/StaticBlocks';
+import SqlWorkspace from '../../../components/labs/SqlWorkspace';
+import { chapter } from '../../../lib/content';
+import '../../../components/labs/labs.css';
+
+export function getStaticPaths() {
+  return process.env.LABS_TEST_PAGES === '1' ? [{ params: { test: 'lesson-test' } }] : [];
+}
+const ch = chapter('ch04');
+const steps = ch.lessons.flatMap((l) => l.steps).filter((s) => JSON.stringify(s.blocks).includes('"ch04-c27"') || JSON.stringify(s.blocks).includes('"ch04-c59"'));
+---
+<Base title="Workspace test lesson" section="labs">
+  <div class="tl">
+    <article class="tl-read">
+      <h1>Test lesson</h1>
+      {steps.map((s) => (<section><h2>{s.titleText}</h2><StaticBlocks blocks={s.blocks} /></section>))}
+    </article>
+    <aside class="tl-work">
+      <SqlWorkspace client:idle />
+    </aside>
+  </div>
+</Base>
+<style>
+  .tl { display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, 480px); max-width: 1440px; margin-inline: auto; }
+  .tl-read { padding: 32px 40px; min-width: 0; }
+  .tl-work { border-left: 1px solid var(--line); position: sticky; top: var(--header-h); align-self: start; max-height: calc(100vh - var(--header-h)); overflow-y: auto; }
+  @media (max-width: 1080px) { .tl { grid-template-columns: minmax(0, 1fr); } .tl-work { position: static; max-height: none; border-left: 0; border-top: 1px solid var(--line); } }
+</style>

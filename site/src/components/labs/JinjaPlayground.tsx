@@ -188,7 +188,7 @@ export default function JinjaPlayground() {
 
   return (
     <div className="mcl-split jinjap">
-      <div className="mcl-pane mcl-pane-pad mcl-list-pane">
+      <div className="mcl-pane mcl-pane-pad mcl-list-pane" id="jinja-exercises">
         <h2 className="mcl-pane-h">Exercises</h2>
         <p className="mcl-note">{solved.size} of {EXERCISES.length} solved. Compile (Ctrl + Enter) to check.</p>
         <ul className="mcl-ex-list">
@@ -233,6 +233,7 @@ export default function JinjaPlayground() {
               <button type="button" className="mcl-btn mcl-btn-small" aria-expanded={showHint} onClick={() => setShowHint((v) => !v)}>Hint</button>
               <button type="button" className="mcl-btn mcl-btn-small" aria-expanded={showSolution} onClick={() => setShowSolution((v) => !v)}>Show a solution</button>
               <button type="button" className="mcl-btn mcl-btn-small" onClick={() => open(exercise, null)}>Start again</button>
+              <a className="mcl-btn mcl-btn-small mcl-jump" href="#jinja-exercises">All exercises</a>
             </p>
             {showHint && <p className="mcl-note" data-testid="hint">{exercise.hint}</p>}
             {showSolution && <pre className="mcl-solution" data-testid="solution">{exercise.solution.macros ? `-- ${MACRO_FILE}\n${exercise.solution.macros}\n-- template\n` : ''}{exercise.solution.template}</pre>}
@@ -291,13 +292,13 @@ export default function JinjaPlayground() {
                 {out.python_ms !== undefined && <span>{out.python_ms} ms{out.query_rounds ? `, ${out.query_rounds} quer${out.query_rounds === 1 ? 'y' : 'ies'} to DuckDB` : ''}</span>}
                 <button type="button" className="mcl-btn mcl-btn-small" onClick={() => void runSql()} disabled={busy || !out.compiled?.trim()} data-testid="run-compiled">Run the compiled SQL</button>
               </div>
-              <pre data-testid="compiled-text">{out.compiled}</pre>
+              <pre data-testid="compiled-text" tabIndex={0} aria-label={ctx === 'plain' ? 'Rendered text' : 'Compiled SQL'}>{out.compiled}</pre>
             </div>
           )}
           {logs.length > 0 && (
             <div className="mcl-out" data-testid="logs">
               <div className="mcl-out-head"><span>log() and print() output ({logs.length} line{logs.length > 1 ? 's' : ''})</span></div>
-              <pre>{logs.map((l) => `${l.phase === 'parse' ? '[parse] ' : ''}${l.msg}`).join('\n')}</pre>
+              <pre tabIndex={0} aria-label="Log output">{logs.map((l) => `${l.phase === 'parse' ? '[parse] ' : ''}${l.msg}`).join('\n')}</pre>
             </div>
           )}
           {err && (

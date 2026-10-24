@@ -3,6 +3,9 @@
 import { fileURLToPath } from 'node:url';
 import base from '../../astro.config.mjs';
 
+// builds the test-only pages (src/pages/labs/sql/[test].astro)
+process.env.LABS_TEST_PAGES ??= '1';
+
 export default {
   ...base,
   root: fileURLToPath(new URL('../..', import.meta.url)),

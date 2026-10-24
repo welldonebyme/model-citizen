@@ -408,7 +408,7 @@ function jinjaExercises(): JinjaExercise[] {
   const guardMacro = block('ch11-c31') + '\n';
   return [
     { id: 'trailing-comma', title: 'Remove the trailing comma', mode: 'plain', template: withComma, solution: { template: pivot },
-      task: 'The loop writes a comma after every column, also after the last one, and the SQL fails. Use loop.last so that the last column has no comma.',
+      task: 'The loop writes a comma after every column, also after the last one. PostgreSQL and most warehouses reject this trailing comma (DuckDB happens to accept it: try Run). Use loop.last so that the last column has no comma.',
       goal: { book: block('ch05-c38'), cmp: 'ws' }, run: true, hint: '{%- if not loop.last %},{% endif %}',
       why: 'Inside a for loop, Jinja gives you loop.first, loop.last and loop.index.', source: { codeId: 'ch05-c37', label: 'Lesson 5.3, pivot.sql' },
       derived: 'pivot.sql of the book with its loop.last test replaced by a plain comma' },

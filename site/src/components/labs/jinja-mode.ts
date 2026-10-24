@@ -10,11 +10,11 @@ const SQL_KW = new Set(('select from where group by order having limit offset wi
 const JINJA_KW = new Set(('if elif else endif for endfor in set endset macro endmacro call endcall filter endfilter raw endraw do ' +
   'not and or is true false none True False None loop return import from as with without context recursive').split(' '));
 
-interface State { inJinja: null | 'expr' | 'stmt' | 'comment'; inString: string | null; inSqlComment: boolean }
+interface State { inJinja: null | 'expr' | 'stmt' | 'comment'; inString: string | null; inSqlComment: boolean; inSqlString: boolean }
 
 export const jinjaSql: StreamParser<State> = {
   name: 'jinja-sql',
-  startState: () => ({ inJinja: null, inString: null, inSqlComment: false }),
+  startState: () => ({ inJinja: null, inString: null, inSqlComment: false, inSqlString: false }),
   token(stream, state) {
     if (state.inJinja === 'comment') {
       if (stream.skipTo('#}')) { stream.match('#}'); state.inJinja = null; } else stream.skipToEnd();
@@ -48,6 +48,13 @@ export const jinjaSql: StreamParser<State> = {
       return 'comment';
     }
     if (stream.match('{#')) { state.inJinja = 'comment'; return 'comment'; }
+    if (state.inSqlString && !stream.match(/^\{[{%]/, false)) {
+      // inside a SQL string: stop at the closing quote or at a Jinja tag (rendered inside the string)
+      while (!stream.eol() && !stream.match(/^\{[{%#]/, false)) {
+        if (stream.next() === "'") { if (stream.peek() === "'") { stream.next(); continue; } state.inSqlString = false; break; }
+      }
+      return 'string';
+    }
     if (stream.match(/^\{\{-?/)) { state.inJinja = 'expr'; return 'meta'; }
     if (stream.match(/^\{%-?/)) { state.inJinja = 'stmt'; return 'meta'; }
     if (stream.match('--')) {
@@ -56,7 +63,7 @@ export const jinjaSql: StreamParser<State> = {
       return 'comment';
     }
     if (stream.match('/*')) { state.inSqlComment = true; return 'comment'; }
-    if (stream.match(/^'([^']|'')*'?/)) return 'string';
+    if (stream.peek() === "'") { stream.next(); state.inSqlString = true; return 'string'; }
     if (stream.match(/^\d+(\.\d+)?/)) return 'number';
     if (stream.match(/^[A-Za-z_][\w$]*/)) {
       const w = stream.current().toLowerCase();

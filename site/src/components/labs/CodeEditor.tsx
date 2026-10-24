@@ -64,7 +64,7 @@ const theme = EditorView.theme({
   '.cm-content': { padding: '10px 0', caretColor: 'var(--accent)' },
   '.cm-line': { padding: '0 14px 0 6px' },
   '.cm-gutters': { backgroundColor: 'transparent', color: 'var(--muted)', border: 'none', paddingLeft: '4px' },
-  '.cm-activeLine': { backgroundColor: 'color-mix(in srgb, var(--accent-soft) 45%, transparent)' },
+  '.cm-activeLine': { backgroundColor: 'color-mix(in srgb, var(--line) 30%, transparent)' },
   '.cm-activeLineGutter': { backgroundColor: 'transparent', color: 'var(--ink)' },
   '.cm-cursor, .cm-dropCursor': { borderLeftColor: 'var(--accent)', borderLeftWidth: '2px' },
   '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection': { backgroundColor: 'var(--accent-soft) !important' },
@@ -105,6 +105,7 @@ const diagField = StateField.define<DecorationSet>({
 export function CodeEditor(props: CodeEditorProps) {
   const { lang, initial, ariaLabel, readOnly, minLines = 4, testId } = props;
   const host = useRef<HTMLDivElement>(null);
+  const wrap = useRef<HTMLDivElement>(null);
   const view = useRef<EditorView | null>(null);
   const [mounted, setMounted] = useState(false);
   const cb = useRef(props);
@@ -143,6 +144,11 @@ export function CodeEditor(props: CodeEditorProps) {
       }),
     });
     view.current = v;
+    // test / automation hook: element.__mcEditor.setValue(text), .getValue()
+    if (wrap.current) (wrap.current as unknown as { __mcEditor: unknown }).__mcEditor = {
+      getValue: () => v.state.doc.toString(),
+      setValue: (text: string) => v.dispatch({ changes: { from: 0, to: v.state.doc.length, insert: text } }),
+    };
     setMounted(true);
     return () => { v.destroy(); view.current = null; };
     // the editor is created once; later text changes go through the handle
@@ -155,7 +161,7 @@ export function CodeEditor(props: CodeEditorProps) {
 
   const minHeight = `calc(${minLines} * 1.6 * 0.875rem + 20px)`;
   return (
-    <div className="mc-editor" data-lang={lang} style={{ minHeight }}>
+    <div className="mc-editor" data-lang={lang} style={{ minHeight }} ref={wrap} data-editor={testId}>
       {!mounted && <pre className="mc-editor-fallback" aria-label={ariaLabel}><code>{initial}</code></pre>}
       <div ref={host} hidden={!mounted} />
     </div>

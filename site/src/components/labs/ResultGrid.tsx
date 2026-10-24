@@ -23,7 +23,8 @@ export function ResultGrid({ columns, rows, numeric, totalRows, caption, testId,
   const shown = rows.slice(0, limit);
   const total = totalRows ?? rows.length;
   return (
-    <div className="mcl-grid-wrap">
+    // focusable: the table may scroll sideways (keyboard users scroll it with the arrow keys)
+    <div className="mcl-grid-wrap" tabIndex={0} role="region" aria-label={caption ?? 'Result table'}>
       <table className="mcl-grid" data-testid={testId}>
         {caption && <caption className="visually-hidden">{caption}</caption>}
         <thead>

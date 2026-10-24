@@ -2,6 +2,11 @@
 import Base from '../../layouts/Base.astro';
 import { url } from '../../lib/url';
 import { glossary, traps, objectives } from '../../lib/reference';
+import { existsSync, statSync } from 'node:fs';
+import { publicPath } from '../../lib/paths';
+// The book PDF is in the site only when the build includes it (scripts/sync-assets.mjs, MC_INCLUDE_PDF=1).
+const pdfFile = publicPath('pdf', 'dbt-bible.pdf');
+const pdf = existsSync(pdfFile) ? `${(statSync(pdfFile).size / 1024 / 1024).toFixed(1)} MB` : null;
 const cards = [
   { href: 'reference/glossary/', title: 'English–French glossary', text: `${glossary.length || 305} terms with their French translation and the chapter where they first appear.` },
   { href: 'practice/traps/', title: 'The top exam traps', text: `${traps.length || 145} confusions that cost points, each with the truth and where the book explains it.` },
@@ -15,7 +20,7 @@ const cards = [
     <p class="lead">Everything you look up while you study. Press <kbd class="mc-key">Ctrl</kbd> + <kbd class="mc-key">K</kbd> to search the whole course.</p>
     <ul class="cards">
       {cards.map((c) => <li><a href={url(c.href)}><h2>{c.title}</h2><p>{c.text}</p></a></li>)}
-      <li><a href={url('pdf/dbt-bible.pdf')} download><h2>The full book (PDF)</h2><p>The dbt Analytics Engineering Bible: 1,191 pages, 5.8 MB. Every lesson of this site comes from it.</p></a></li>
+      {pdf && <li><a href={url('pdf/dbt-bible.pdf')} download><h2>The full book (PDF)</h2><p>The dbt Analytics Engineering Bible: 1,191 pages, {pdf}. Every lesson of this site comes from it.</p></a></li>}
     </ul>
   </div>
 </Base>

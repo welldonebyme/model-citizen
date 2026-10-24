@@ -287,7 +287,8 @@ def build_ls_entries(trs: list[dict]) -> tuple[list[dict], list[dict]]:
         if len(a["dbts"]) > 1:
             reason = "several dbt commands in one shell line (outputs are mixed)"
         d = cands[0]
-        others_loud = [o for o in a["others"] if o["words"] and o["words"][0] not in SILENT_CMDS]
+        others_loud = [o for o in a["others"] if o["words"] and o["words"][0] not in SILENT_CMDS
+                       and not (o["words"][0] == "echo" and any("exit code" in w for w in o["words"]))]
         if reason is None and d["pipe_out"]:
             pipe_to = None
             for o in a["others"]:
@@ -324,6 +325,11 @@ def build_ls_entries(trs: list[dict]) -> tuple[list[dict], list[dict]]:
         if d["env"]:
             notes.append("environment: " + " ".join(f"{k}={v}" for k, v in d["env"].items()))
         lines = clean(out)
+        echo_exit = [l for l in lines if re.fullmatch(r"exit code: \d+", l.strip())]
+        if echo_exit:
+            lines = [l for l in lines if not re.fullmatch(r"exit code: \d+", l.strip())]
+            if t.get("exit_code") is None:
+                t["exit_code"] = int(echo_exit[-1].split(":")[1])
         e = {
             "id": None,
             "source": t["source"],

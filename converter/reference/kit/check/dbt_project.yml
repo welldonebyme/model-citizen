@@ -1,0 +1,6 @@
+# A tiny project used only by the kit's setup script to run `dbt debug`
+# (dbt debug needs a project folder). It has no models and never writes to the database.
+name: kit_check
+version: "1.0.0"
+config-version: 2
+profile: kit_check

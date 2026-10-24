@@ -1,0 +1,10 @@
+# Used by `dbt debug` in this folder only (dbt reads a profiles.yml in the current folder
+# before ~/.dbt/profiles.yml). Your own profile for jaffle_dbt is written in Chapter 6.
+kit_check:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: ../../practice/practice.duckdb   # = ~/dbt-course/practice/practice.duckdb
+      schema: kit_check
+      threads: 1

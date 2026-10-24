@@ -198,6 +198,18 @@ def parse_found(line: str) -> dict:
     return dict(sorted(out.items()))
 
 
+FOUND_ORDER = ["models", "analyses", "seeds", "data tests", "snapshots", "sources", "exposures", "metrics",
+               "semantic models", "saved queries", "sql operations", "macros", "groups", "unit tests", "functions"]
+SINGULAR = {v: k for k, v in PLURAL.items()}
+
+
+def found_canonical(counts: dict) -> str:
+    """The 'Found ...' line in one fixed order. dbt's own order varies from run to run (it follows the order in
+    which nodes were parsed), so parsers must not depend on it."""
+    keys = [k for k in FOUND_ORDER if k in counts] + sorted(k for k in counts if k not in FOUND_ORDER)
+    return "Found " + ", ".join(f"{counts[k]} {SINGULAR.get(k, k) if counts[k] == 1 else k}" for k in keys)
+
+
 def diff_config(dev: dict, prod: dict) -> dict:
     d = {}
     for k in sorted(set(dev) | set(prod)):
@@ -305,11 +317,12 @@ def export_tag(key: str, tag: str, work: Path, profiles: Path) -> dict:
         "dbt_version": manifest["metadata"]["dbt_version"],
         "adapter_type": manifest["metadata"]["adapter_type"],
         "target": "dev",
-        "found_line": found_line,
+        "found_line": found_canonical(counts) if found_line else None,
         "counts": counts,
         "packages": pkgs,
         "package_lock": lock,
         "notes": [
+            "found_line: dbt's 'Found ...' counts in a fixed order (dbt prints the same parts in a varying order).",
             "nodes = models, seeds, snapshots, analyses, data tests and unit tests, sorted by unique_id; "
             "`ls` = the line dbt ls prints (default output), `search_name` = dbt ls --output name.",
             "dbt ls prints selected nodes in sorted(unique_id) order; analyses are listed only with "

@@ -174,7 +174,8 @@ function configSearch(ctx: MethodContext, included: Set<string>, args: string[],
     }
     if (Array.isArray(value)) {
       const inList = value.some((x) => (severity ? ciEq(selector, x) || pyEq(selector, x) : pyEq(selector, x)));
-      if (inList || (isTrue && value.some((x) => x === true)) || (isFalse && value.some((x) => x === false))) out.push(n.unique_id);
+      // Python: `True in value` compares with ==, so 1 (and 1.0) count as True, 0 as False
+      if (inList || (isTrue && value.some((x) => pyEq(true, x))) || (isFalse && value.some((x) => pyEq(false, x)))) out.push(n.unique_id);
     } else if ((severity ? ciEq(selector, value) || pyEq(selector, value) : pyEq(selector, value)) || (isTrue && value === true) || (isFalse && value === false)) {
       out.push(n.unique_id);
     }
@@ -183,12 +184,20 @@ function configSearch(ctx: MethodContext, included: Set<string>, args: string[],
 }
 
 // --------------------------------------------------------------------------------------------- versions
+/** Python float(): decimal literals with optional _ between digits, inf/infinity/nan; null = ValueError */
+function pyFloat(v: unknown): number | null {
+  if (typeof v === 'number') return v;
+  const s = String(v).trim();
+  const m = /^([+-]?)(inf|infinity|nan)$/i.exec(s);
+  if (m) return m[2].toLowerCase() === 'nan' ? NaN : (m[1] === '-' ? -Infinity : Infinity);
+  if (!/^[+-]?((\d(_?\d)*)(\.(\d(_?\d)*)?)?|\.\d(_?\d)*)([eE][+-]?\d(_?\d)*)?$/.test(s)) return null;
+  return Number(s.replace(/_/g, ''));
+}
+
 function versionLt(a: unknown, b: unknown): boolean {
-  const fa = Number(String(a).trim());
-  const fb = Number(String(b).trim());
-  const okA = String(a).trim() !== '' && !Number.isNaN(fa);
-  const okB = String(b).trim() !== '' && !Number.isNaN(fb);
-  if (okA && okB) return fa < fb;
+  const fa = pyFloat(a);
+  const fb = pyFloat(b);
+  if (fa !== null && fb !== null) return fa < fb;
   return String(a) < String(b);
 }
 

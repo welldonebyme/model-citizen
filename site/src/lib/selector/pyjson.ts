@@ -43,12 +43,12 @@ export function pyJsonDumps(v: unknown): string {
 
 /** repr(float) for a non-integer JS number (shortest round-trip, like Python). */
 function pyFloatRepr(x: number): string {
-  let s = String(x);
-  if (s.includes('e')) {
-    // Python: 1e-05, 1e+16
-    const [m, e] = s.split('e');
+  // Python repr: shortest digits; exponent form when the exponent is < -4 or >= 16
+  const a = Math.abs(x);
+  if (a !== 0 && (a < 1e-4 || a >= 1e16)) {
+    const [m, e] = x.toExponential().split('e');
     const exp = parseInt(e, 10);
-    s = `${m}e${exp < 0 ? '-' : '+'}${String(Math.abs(exp)).padStart(2, '0')}`;
+    return `${m}e${exp < 0 ? '-' : '+'}${String(Math.abs(exp)).padStart(2, '0')}`;
   }
-  return s;
+  return String(x);
 }

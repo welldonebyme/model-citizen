@@ -5,6 +5,8 @@ export type ErrorKind = 'Runtime Error' | 'Internal Error' | 'Compilation Error'
 export class DbtError extends Error {
   /** the command word as typed (usage lines say "dbt list" when the user typed list) */
   cmd?: string;
+  /** a log line dbt prints before the usage block */
+  preface?: string;
   constructor(readonly kind: ErrorKind, message: string, readonly hint?: string) {
     super(message);
   }

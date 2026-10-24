@@ -183,9 +183,12 @@ export class NodeSelector {
   }
 }
 
-function sourceHasFreshness(n: { freshness?: unknown; loaded_at_field?: string | null }): boolean {
-  const f = n.freshness as { warn_after?: { count?: number | null }; error_after?: { count?: number | null } } | null | undefined;
-  return !!f && (!!f.warn_after?.count || !!f.error_after?.count);
+/** SourceDefinition.has_freshness: bool(FreshnessThreshold) = a threshold with count and period not None */
+function sourceHasFreshness(n: { freshness?: unknown }): boolean {
+  type T = { count?: number | null; period?: string | null } | null | undefined;
+  const f = n.freshness as { warn_after?: T; error_after?: T } | null | undefined;
+  const set = (t: T) => !!t && t.count !== null && t.count !== undefined && t.period !== null && t.period !== undefined;
+  return !!f && (set(f.warn_after) || set(f.error_after));
 }
 
 export function union<T>(a: Iterable<T>, b: Iterable<T>): Set<T> {

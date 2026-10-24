@@ -9,6 +9,7 @@
  */
 import { getCloseMatches } from './difflib';
 import { DbtError, usageError } from './errors';
+import { envBool } from './warn';
 import { fnmatchRegExp } from './fnmatch';
 import type { Indirect } from './spec';
 import type { VirtualFs } from './vfs';
@@ -62,7 +63,7 @@ const EXCLUDE_RESOURCE_TYPE_CHOICES = ['metric', 'semantic_model', 'saved_query'
 interface Word { text: string; quotedGlob: boolean; hasGlob: boolean }
 
 /** POSIX-like word splitting. Records whether glob characters appeared unquoted. */
-export function shellWords(line: string): { words: Word[]; pipe: string | null } {
+export function shellWords(line: string, comments = true): { words: Word[]; pipe: string | null } {
   const words: Word[] = [];
   let cur = '';
   let inWord = false;
@@ -100,7 +101,7 @@ export function shellWords(line: string): { words: Word[]; pipe: string | null }
     } else if (c === ' ' || c === '\t' || c === '\n') {
       push();
       i++;
-    } else if (c === '#' && !inWord) {
+    } else if (c === '#' && !inWord && comments) {
       // a comment (like in scripts and in the book's listings): the rest of the line is ignored
       push();
       break;
@@ -163,7 +164,11 @@ const GLOBAL: OptDef[] = [
   O(['--indirect-selection'], 'indirect_selection', 'choice', { global: true, choices: ['eager', 'cautious', 'buildable', 'empty'] }),
   O(['--log-format'], 'log_format', 'value', { global: true }),
   O(['--log-format-file'], 'log_format_file', 'value', { global: true }),
-  O(['--log-level'], 'log_level', 'value', { global: true }),
+  O(['--log-level'], 'log_level', 'choice', { global: true, choices: ['debug', 'info', 'warn', 'error', 'none'] }),
+  O(['--log-cache-events'], 'log_cache_events', 'flag', { global: true, neg: ['--no-log-cache-events'] }),
+  O(['--log-file-max-bytes'], 'log_file_max_bytes', 'value', { global: true }),
+  O(['--macro-debugging'], 'macro_debugging', 'flag', { global: true, neg: ['--no-macro-debugging'] }),
+  O(['--partial-parse-file-path'], 'partial_parse_file_path', 'value', { global: true }),
   O(['--log-level-file'], 'log_level_file', 'value', { global: true }),
   O(['--log-path'], 'log_path', 'value', { global: true }),
   O(['--partial-parse'], 'partial_parse', 'flag', { global: true, neg: ['--no-partial-parse'] }),
@@ -223,6 +228,10 @@ const P = {
   showOutputFormat: O(['--output'], 'output', 'choice', { choices: ['json', 'text'] }),
   args: O(['--args'], 'args', 'value'),
   sqlparse: O(['--sqlparse'], 'sqlparse', 'value'),
+  compileDocs: O(['--compile'], 'compile', 'flag', { neg: ['--no-compile'] }),
+  emptyCatalog: O(['--empty-catalog'], 'empty_catalog', 'flag'),
+  staticDocs: O(['--static'], 'static', 'flag'),
+  injectCtes: O(['--inject-ephemeral-ctes'], 'inject_ephemeral_ctes', 'flag', { neg: ['--no-inject-ephemeral-ctes'] }),
 };
 
 const COMMAND_OPTS: Partial<Record<CommandName, OptDef[]>> = {
@@ -232,11 +241,11 @@ const COMMAND_OPTS: Partial<Record<CommandName, OptDef[]>> = {
   test: [P.exclude, P.resourceType, P.excludeResourceType, P.profilesDir, P.projectDir, P.sqlparse, P.select, P.selector, P.storeFailures, P.targetPath, P.threads, P.vars],
   seed: [P.exclude, P.fullRefresh, P.profilesDir, P.projectDir, P.sqlparse, P.select, P.selector, P.show, P.targetPath, P.threads, P.vars],
   snapshot: [P.empty, P.exclude, P.profilesDir, P.projectDir, P.sqlparse, P.select, P.selector, P.targetPath, P.threads, P.vars],
-  compile: [P.exclude, P.fullRefresh, P.showOutputFormat, P.introspect, P.profilesDir, P.projectDir, P.empty, P.select, P.selector, P.inline, P.sqlparse, P.targetPath, P.threads, P.vars],
+  compile: [P.exclude, P.fullRefresh, P.showOutputFormat, P.introspect, P.profilesDir, P.projectDir, P.empty, P.select, P.selector, P.inline, P.injectCtes, P.sqlparse, P.targetPath, P.threads, P.vars],
   show: [P.exclude, P.fullRefresh, P.showOutputFormat, P.limit, P.introspect, P.profilesDir, P.projectDir, P.select, P.selector, P.inline, P.sqlparse, P.targetPath, P.threads, P.vars],
   clone: [P.exclude, P.fullRefresh, P.profilesDir, P.projectDir, P.resourceType, P.excludeResourceType, P.select, P.selector, P.targetPath, P.threads, P.vars],
   'source freshness': [P.exclude, P.outputPath, P.sqlparse, P.profilesDir, P.projectDir, P.select, P.selector, P.targetPath, P.threads, P.vars],
-  'docs generate': [P.exclude, P.sqlparse, P.profilesDir, P.projectDir, P.select, P.selector, P.targetPath, P.threads, P.vars],
+  'docs generate': [P.compileDocs, P.exclude, P.sqlparse, P.profilesDir, P.projectDir, P.select, P.selector, P.emptyCatalog, P.staticDocs, P.targetPath, P.threads, P.vars],
   parse: [P.profilesDir, P.projectDir, P.targetPath, P.threads, P.vars],
   retry: [P.projectDir, P.profilesDir, P.vars, P.targetPath, P.threads, P.fullRefresh],
   'run-operation': [P.args, P.profilesDir, P.projectDir, P.targetPath, P.threads, P.vars],
@@ -279,7 +288,8 @@ export interface ParseOptions {
 export function parseCommandLine(line: string, opts: ParseOptions = {}): ParsedCommand {
   const shell = opts.shell ?? 'zsh';
   const raw = line.trim().replace(/^\$\s*/, '');
-  const { words: w0, pipe } = shellWords(raw);
+  // interactive zsh does not treat # as a comment (INTERACTIVE_COMMENTS is off): the words go to dbt
+  const { words: w0, pipe } = shellWords(raw, shell !== 'zsh');
   const env: Record<string, string> = {};
   let k = 0;
   while (k < w0.length && /^[A-Za-z_][A-Za-z0-9_]*=/.test(w0[k].text)) {
@@ -304,16 +314,27 @@ export function parseCommandLine(line: string, opts: ParseOptions = {}): ParsedC
 
   // global options before the command
   let i = 0;
+  const seenBefore = new Set<string>();
+  let seenAfter: Set<string> | null = null;
   const takeOption = (defs: OptDef[], word: string, rest: string[]): number | null => {
     let name = word;
     let inlineVal: string | null = null;
     if (word.startsWith('--') && word.includes('=')) {
       name = word.slice(0, word.indexOf('='));
       inlineVal = word.slice(word.indexOf('=') + 1);
+    } else if (/^-[A-Za-z]./.test(word) && !word.startsWith('--')) {
+      // click: "-sfoo" = "-s foo" when -s takes a value
+      const short = word.slice(0, 2);
+      const d = defs.find((x) => x.names.includes(short));
+      if (d && d.kind !== 'flag') { name = short; inlineVal = word.slice(2); }
     }
     for (const d of defs) {
+      if (!d.names.includes(name) && !d.neg?.includes(name)) continue;
+      if (seenAfter !== null) {
+        if (seenBefore.has(d.key)) throw new DbtError('Unhandled', `${d.key} was provided both before and after the subcommand, it can only be set either before or after.`);
+        seenAfter.add(d.key);
+      } else seenBefore.add(d.key);
       if (d.neg?.includes(name)) { values[d.key] = false; return 0; }
-      if (!d.names.includes(name)) continue;
       if (d.kind === 'flag') { values[d.key] = true; return 0; }
       let used = 0;
       let first: string;
@@ -328,7 +349,10 @@ export function parseCommandLine(line: string, opts: ParseOptions = {}): ParsedC
           const v = d.choices!.find((c) => c.toLowerCase() === first.toLowerCase());
           if (!v) throw invalidChoice(d, first);
           values[d.key] = v;
-        } else values[d.key] = first;
+        } else {
+          if (d.key === 'threads' && !/^\s*[+-]?\d+\s*$/.test(first)) throw usageError(`Invalid value for '--threads': '${first}' is not a valid integer.`);
+          values[d.key] = first;
+        }
         return used;
       }
       // MultiOption: split on " ", then eat every following word that does not start with "-"
@@ -364,6 +388,7 @@ export function parseCommandLine(line: string, opts: ParseOptions = {}): ParsedC
     throw new DbtError('UsageTop', `No such command '${cmdWord}'.${suggest(cmdWord, COMMANDS)}`);
   }
   i++;
+  seenAfter = new Set<string>();
   const cmdOpts = [...(COMMAND_OPTS[command] ?? []), ...GLOBAL];
   try {
     while (i < argv.length) {
@@ -400,9 +425,6 @@ export function parseCommandLine(line: string, opts: ParseOptions = {}): ParsedC
     indirect = v as Indirect;
   }
 
-  if (values.__models_used) {
-    notices.push('[WARNING]: Deprecated functionality', 'Usage of `--models`, `--model`, and `-m` is deprecated in favor of `--select` or', '`-s`.');
-  }
 
   const isLs = command === 'ls';
   const args: DbtArgs = {
@@ -419,7 +441,7 @@ export function parseCommandLine(line: string, opts: ParseOptions = {}): ParsedC
     deferState: (values.defer_state as string) ?? null,
     defer: !!values.defer,
     target: (values.target as string) ?? targetEnv ?? null,
-    quiet: values.quiet === undefined ? ['1', 'true', 'True'].includes(quietEnv ?? '') : !!values.quiet,
+    quiet: values.quiet === undefined ? envBool(quietEnv) === true : !!values.quiet,
     other: Object.fromEntries(Object.entries(values).filter(([kk]) => !['select', 'models', 'exclude', 'selector', 'resource_types', 'exclude_resource_types', 'indirect_selection', 'output', 'output_keys', 'state', 'defer_state', 'defer', 'target', 'quiet', '__models_used'].includes(kk))) as Record<string, string | boolean>,
   };
   void SELECTION_COMMANDS;

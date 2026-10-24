@@ -9,6 +9,7 @@ import { Project, pySort, type Target } from './project';
 import { pyJsonDumps } from './pyjson';
 import { NodeSelector, type CriteriaTrace } from './selector';
 import { parseDifference, parseSelectors, type Spec } from './spec';
+import { envBool, WarnPolicy } from './warn';
 
 // ---------------------------------------------------------------------------------------- resource types
 const LS_DEFAULT = ['model', 'snapshot', 'seed', 'test', 'source', 'exposure', 'metric', 'saved_query', 'semantic_model', 'unit_test', 'function'];
@@ -77,8 +78,8 @@ export interface CommandResult {
   command: CommandName | null;
   exitCode: number;
   error: DbtError | null;
-  /** log lines (what dbt prints with a timestamp), in order */
-  logs: { level: 'info' | 'warn' | 'error'; text: string }[];
+  /** log lines (what dbt prints with a timestamp), in order; `at` = printed right after "Running with" or at the end */
+  logs: { level: 'info' | 'warn' | 'error'; text: string; at?: 'version' | 'end' }[];
   /** what `dbt ls` prints for the selected nodes (one line each) */
   output: string[];
   /** selected unique ids after the command's resource type filter (sorted like dbt ls) */
@@ -98,6 +99,8 @@ export interface CommandResult {
   notes: string[];
   /** the selector used (--selector or default) */
   selectorUsed: string | null;
+  /** lines printed at the very end (deprecation summary) */
+  endLogs: string[];
 }
 
 export interface RunOptions {
@@ -131,6 +134,7 @@ export function describeNode(p: Project, uid: string, target: Target): string {
     }
     case 'exposure': return `exposure ${n.name}`;
     case 'saved_query': return `saved query ${n.name}`;
+    case 'source': return `freshness of ${n.source_name}.${n.name}`;
     default: return `${n.resource_type} ${n.name}`;
   }
 }
@@ -158,6 +162,7 @@ function getNested(data: unknown, path: string): unknown {
 
 const ALLOWED_KEYS = new Set(['alias', 'name', 'package_name', 'depends_on', 'tags', 'config', 'resource_type', 'source_name', 'original_file_path', 'unique_id']);
 const DROPPED_KEYS = new Set(['raw_code', 'compiled_code', 'created_at', 'config_call_dict', 'unrendered_config_call_dict', 'build_path', 'compiled_path', 'extra_ctes', 'extra_ctes_injected', 'compiled']);
+// (the export drops raw_code, created_at, config_call_dict, unrendered_config_call_dict, build_path, compiled_path)
 
 /** One `dbt ls --output json` line. Exact with the extras file (node.to_dict()); approximate without it. */
 export function jsonLine(p: Project, uid: string, outputKeys: string[], target: Target): string {
@@ -185,8 +190,12 @@ export function jsonLine(p: Project, uid: string, outputKeys: string[], target: 
         if (v !== null && v !== undefined) result[key] = v;
       } else if (key in dict) {
         result[key] = dict[key];
-      } else if (DROPPED_KEYS.has(key)) {
-        result[key] = `<${key} is not stored in this playground>`;
+      } else if (DROPPED_KEYS.has(key) && n.bucket === 'nodes') {
+        // what node.to_dict() gives for the keys the playground does not store (checked with real dbt ls)
+        if (key === 'build_path' || key === 'compiled_path') result[key] = null;
+        else if (key === 'config_call_dict' || key === 'unrendered_config_call_dict') result[key] = {};
+        else if (key === 'raw_code' || key === 'created_at') result[key] = `<${key} is not stored in this playground>`;
+        // compiled, compiled_code, extra_ctes, extra_ctes_injected: not in to_dict() before compilation
       }
     }
   } else {
@@ -290,35 +299,6 @@ export function fakeClock(): string {
   return [d.getHours(), d.getMinutes(), d.getSeconds()].map((x) => String(x).padStart(2, '0')).join(':');
 }
 
-/** dbt_common warn_or_error with --warn-error / --warn-error-options (or their env vars). */
-export class WarnPolicy {
-  private all = false;
-  private error = new Set<string>();
-  private warn = new Set<string>();
-  private silence = new Set<string>();
-  constructor(args: DbtArgs, env: Record<string, string>) {
-    const envGet = (n: string) => env[n.replace(/^DBT_/, 'DBT_ENGINE_')] ?? env[n];
-    const we = args.other.warn_error ?? ['1', 'true', 'True', 'TRUE'].includes(envGet('DBT_WARN_ERROR') ?? '');
-    if (we === true) this.all = true;
-    const raw = (args.other.warn_error_options as string | undefined) ?? envGet('DBT_WARN_ERROR_OPTIONS');
-    if (raw) {
-      let o: Record<string, unknown>;
-      try { o = JSON.parse(raw); } catch { throw runtimeError(`--warn-error-options must be a JSON or YAML mapping (got ${raw})`); }
-      const list = (v: unknown) => (v === 'all' || v === '*' ? ['*'] : Array.isArray(v) ? v.map(String) : []);
-      for (const x of [...list(o.error), ...list(o.include)]) this.error.add(x);
-      for (const x of [...list(o.warn), ...list(o.exclude)]) this.warn.add(x);
-      for (const x of list(o.silence)) this.silence.add(x);
-    }
-  }
-  /** true = raise, false = print, null = silenced */
-  decide(event: string): boolean | null {
-    if (this.all) return true;
-    if ((this.error.has('*') || this.error.has(event)) && !this.warn.has(event)) return true;
-    if (this.silence.has(event)) return null;
-    return false;
-  }
-}
-
 function targetOf(args: DbtArgs): Target {
   return args.target === 'prod' ? 'prod' : args.target === 'ci' ? 'ci' : 'dev';
 }
@@ -326,10 +306,10 @@ function targetOf(args: DbtArgs): Target {
 export function runCommand(project: Project, line: string, opts: RunOptions = {}): CommandResult {
   const res: CommandResult = {
     parsed: null, command: null, exitCode: 0, error: null, logs: [], output: [], selected: [], selectedUnitTests: [],
-    execution: [], spec: null, traces: [], groupResults: new Map(), resourceTypes: [], target: 'dev', terminal: [], notes: [], selectorUsed: null,
+    execution: [], spec: null, traces: [], groupResults: new Map(), resourceTypes: [], target: 'dev', terminal: [], notes: [], selectorUsed: null, endLogs: [],
   };
   const clock = opts.clock ?? fakeClock();
-  const log = (level: 'info' | 'warn' | 'error', text: string) => res.logs.push({ level, text });
+  const log = (level: 'info' | 'warn' | 'error', text: string, at?: 'version' | 'end') => res.logs.push({ level, text, at });
   try {
     const parsed = parseCommandLine(line, { shell: opts.shell, fs: project.fs });
     res.parsed = parsed;
@@ -347,17 +327,35 @@ export function runCommand(project: Project, line: string, opts: RunOptions = {}
   return res;
 }
 
-function execute(project: Project, parsed: ParsedCommand, opts: RunOptions, res: CommandResult, log: (l: 'info' | 'warn' | 'error', t: string) => void): void {
+const DEPRECATION_MODELS = '[WARNING]: Deprecated functionality\nUsage of `--models`, `--model`, and `-m` is deprecated in favor of `--select` or\n`-s`.';
+const DEPRECATION_SUMMARY = (name: string) => `[WARNING][DeprecationsSummary]: Deprecated functionality\nSummary of encountered deprecations:\n- ${name}: 1 occurrence\nTo see all deprecation instances instead of just the first occurrence of each,\nrun command again with the \`--show-all-deprecations\` flag. You may also need to\nrun with \`--no-partial-parse\` as some deprecations are only encountered during\nparsing.`;
+
+type Log = (l: 'info' | 'warn' | 'error', t: string, at?: 'version' | 'end') => void;
+
+function execute(project: Project, parsed: ParsedCommand, opts: RunOptions, res: CommandResult, log: Log): void {
   const { args, command } = parsed;
   const target = res.target;
-  const policy = new WarnPolicy(args, parsed.env);
+  const envWe = parsed.env.DBT_ENGINE_WARN_ERROR ?? parsed.env.DBT_WARN_ERROR;
+  const weGiven = args.other.warn_error !== undefined || envWe !== undefined;
+  const weOn = args.other.warn_error === true || (args.other.warn_error === undefined && envBool(envWe) === true);
+  const weo = (args.other.warn_error_options as string | undefined) ?? parsed.env.DBT_ENGINE_WARN_ERROR_OPTIONS ?? parsed.env.DBT_WARN_ERROR_OPTIONS;
+  const policy = new WarnPolicy(weOn, weo, weGiven);
   /** warn_or_error: print the warning, raise it (Compilation Error) or say nothing */
-  const warnOrError = (event: string, message: string) => {
-    const d = policy.decide(event);
+  const warnOrError = (event: string, message: string, deprecation = false, at?: 'version' | 'end') => {
+    const d = policy.decide(event, deprecation);
     if (d === true) throw new DbtError('Compilation Error', message);
-    if (d === false) log('warn', message);
+    if (d === false) log('warn', message, at);
+    return d === false;
   };
-  for (const n of parsed.notices) log('warn', n);
+  // the -m / --models deprecation (fired while dbt reads the flags, only for the exact token)
+  if (parsed.argv.some((w) => w === '-m' || w === '--models' || w === '--model')) {
+    if (warnOrError('ModelParamUsageDeprecation', DEPRECATION_MODELS, true, 'version')) res.endLogs.push(DEPRECATION_SUMMARY('ModelParamUsageDeprecation'));
+  }
+  const inline = args.other.inline as string | undefined;
+  if (inline !== undefined && (args.select || args.selector)) {
+    throw new DbtError('Unhandled', `inline: not allowed with argument ${args.select ? 'select' : 'selector'}`);
+  }
+  if (command === 'show' && !args.select && inline === undefined) throw runtimeError('Either --select or --inline must be passed to show');
   if (!supportsSelection(command)) {
     throw runtimeError(`This playground runs node selection only (dbt ls, build, run, test, seed, snapshot, compile, clone). \`dbt ${command}\` does not select nodes.`);
   }
@@ -374,9 +372,24 @@ function execute(project: Project, parsed: ParsedCommand, opts: RunOptions, res:
   // selection spec (GraphRunnableTask.get_selection_spec)
   const selectionArg = command === 'ls' && args.models ? args.models : args.select;
   let spec: Spec;
-  const selectors = () => parseSelectors(project.selectors, args.indirectSelection);
+  // RuntimeConfig loads (and checks) every selector of selectors.yml before any command runs
+  let parsedSelectors: Record<string, Spec> = {};
+  try {
+    parsedSelectors = parseSelectors(project.selectors, args.indirectSelection);
+  } catch (e) {
+    if (e instanceof DbtError) throw runtimeError(`Could not read selector file data: ${e.message}`);
+    throw e;
+  }
+  const selectors = () => parsedSelectors;
   const defaultSelector = defaultSelectorName(project, target);
-  if (args.selector) {
+  if (inline !== undefined && (command === 'compile' || command === 'show')) {
+    // --inline: an empty selection; the inline SQL is not a node of the project
+    spec = parseDifference(null, null, args.indirectSelection);
+    res.notes.push('--inline compiles the SQL you give: it is not a node of the project, so nothing of the project is selected.');
+    res.spec = spec;
+    res.selected = [];
+    return;
+  } else if (args.selector) {
     if (!(args.selector in project.selectors)) {
       throw runtimeError(`Could not find selector named ${args.selector}, expected one of ${pyListRepr(project.selectorNames)}`);
     }
@@ -428,6 +441,12 @@ function execute(project: Project, parsed: ParsedCommand, opts: RunOptions, res:
     warnOrError('NothingToDo', 'Nothing to do. Try checking your model configs and model specification args');
     return;
   }
+  // --defer needs a state (GraphRunnableTask.before_run -> defer_to_manifest); clone always defers
+  if ((args.defer || command === 'clone') && !args.state && !args.deferState) {
+    throw runtimeError('--state or --defer-state are required for deferral, but neither was provided');
+  }
+  // compile, show, clone and docs generate print no START line per node
+  if (!['build', 'run', 'test', 'seed', 'snapshot', 'source freshness'].includes(command)) return;
   // execution plan (one thread)
   const order = executionOrder(project, new Set(res.selected), withTestEdges);
   const unitByModel = new Map<string, string[]>();
@@ -435,8 +454,8 @@ function execute(project: Project, parsed: ParsedCommand, opts: RunOptions, res:
     const m = project.get(u).depends_on?.nodes?.[0];
     if (m) unitByModel.set(m, [...(unitByModel.get(m) ?? []), u]);
   }
-  const total = res.selected.filter((u) => !project.isEphemeralModel(u)).length
-    + (command === 'build' ? res.selectedUnitTests.filter((u) => res.selected.includes(project.get(u).depends_on?.nodes?.[0] ?? '')).length : 0);
+  // BuildTask adds every selected unit test to the total, even one whose model does not run
+  const total = res.selected.filter((u) => !project.isEphemeralModel(u)).length + (command === 'build' ? res.selectedUnitTests.length : 0);
   let i = 0;
   for (const uid of order) {
     if (command === 'build') {
@@ -469,7 +488,9 @@ export function defaultSelectorName(project: Project, target: Target): string | 
       const unq = raw.replace(/^["']|["']$/g, '');
       const m = /^\{\{\s*target\.name\s*(==|!=)\s*['"]([^'"]+)['"]\s*\}\}$/.exec(unq);
       if (m) isDefault = m[1] === '==' ? target === m[2] : target !== m[2];
-      else isDefault = ['true', 'True', 'yes'].includes(unq);
+      else if (/^["']/.test(raw)) isDefault = false; // a quoted "true" is a string, not True (dbt rejects it)
+      else if (/\{\{/.test(unq)) isDefault = target === 'dev' && (s.default === true); // other Jinja: the manifest's value, rendered for dev
+      else isDefault = /^(true|yes|on)$/i.test(unq); // YAML 1.1 booleans (PyYAML)
     } else {
       isDefault = s.default === true || s.default === 'true' || s.default === 'True';
     }
@@ -512,25 +533,32 @@ function collectNotes(project: Project, spec: Spec, res: CommandResult, args: Db
 function renderTerminal(res: CommandResult, clock: string, project: Project): string[] {
   const out: string[] = [];
   const quiet = res.parsed?.args.quiet ?? false;
-  const ts = (t: string) => `${clock}  ${t}`;
-  if (res.error && ['Usage', 'UsageTop', 'UsageShort', 'Shell'].includes(res.error.kind)) return res.error.lines(res.command ?? 'ls');
+  // a message of several lines gets the time stamp on its first line only (like dbt)
+  const ts = (t: string) => { const [first, ...rest] = t.split('\n'); return [`${clock}  ${first}`, ...rest]; };
+  if (res.error && ['Usage', 'UsageTop', 'UsageShort', 'Shell'].includes(res.error.kind)) {
+    return [...(res.error.preface ? ts(res.error.preface) : []), ...res.error.lines(res.command ?? 'ls')];
+  }
+  if (!quiet) out.push(...ts('Running with dbt=1.11.16'));
+  for (const l of res.logs) if (l.at === 'version' && !quiet) out.push(...ts(l.text));
   if (!quiet) {
-    out.push(ts('Running with dbt=1.11.16'), ts('Registered adapter: duckdb=1.11.0'));
-    if (project.dag.found_line) out.push(ts(project.dag.found_line));
+    out.push(...ts('Registered adapter: duckdb=1.11.0'));
+    if (project.dag.found_line) out.push(...ts(project.dag.found_line));
   }
   for (const l of res.logs) {
+    if (l.at === 'version') continue;
     if (quiet && l.level !== 'error') continue;
-    out.push(ts(l.text));
+    out.push(...ts(l.text));
   }
   if (res.error) {
-    out.push(ts('Encountered an error:'), ...res.error.lines(res.command ?? 'ls'));
+    out.push(...ts('Encountered an error:'), ...res.error.lines(res.command ?? 'ls'));
     return out;
   }
   if (res.command === 'ls') out.push(...res.output);
-  else if (res.execution.length && !quiet) {
-    out.push(ts(''), ts(`Concurrency: 1 threads (target='${res.target}')`), ts(''));
-    for (const s of res.execution) if (s.index !== null) out.push(ts(`${s.index} of ${s.total} START ${s.desc} ... [RUN]`));
+  else if (!quiet && res.selected.length && res.command && ['build', 'run', 'test', 'seed', 'snapshot', 'compile', 'show', 'clone', 'source freshness', 'docs generate'].includes(res.command)) {
+    out.push(...ts(''), ...ts(`Concurrency: 1 threads (target='${res.target}')`), ...ts(''));
+    for (const s of res.execution) if (s.index !== null) out.push(...ts(`${s.index} of ${s.total} START ${s.desc} ... [RUN]`));
   }
+  if (!quiet) for (const l of res.endLogs) out.push(...ts(l));
   return out;
 }
 
@@ -544,7 +572,7 @@ export function select(project: Project, args: Partial<DbtArgs> & { command?: Co
   const parsed: ParsedCommand = { raw: '', env: {}, argv: [], command, args: full, pipe: null, notices: [] };
   const res: CommandResult = {
     parsed, command, exitCode: 0, error: null, logs: [], output: [], selected: [], selectedUnitTests: [], execution: [], spec: null,
-    traces: [], groupResults: new Map(), resourceTypes: [], target: targetOf(full), terminal: [], notes: [], selectorUsed: null,
+    traces: [], groupResults: new Map(), resourceTypes: [], target: targetOf(full), terminal: [], notes: [], selectorUsed: null, endLogs: [],
   };
   execute(project, parsed, { previous }, res, () => {});
   return res.selected;

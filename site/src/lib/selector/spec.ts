@@ -77,8 +77,10 @@ function parseMethod(rawMethod: string | undefined | null, value: unknown): { me
   return { method: parts[0] as MethodName, args: parts.slice(1), implicit: false };
 }
 
+/** selector_spec._match_to_int: a falsy value (None, '', 0, false) means "no limit"; true is 1 (int(True)). */
 function matchToInt(v: unknown): number | null {
-  if (v === undefined || v === null || v === '' || v === false) return null;
+  if (v === undefined || v === null || v === '' || v === false || v === 0) return null;
+  if (v === true) return 1;
   if (typeof v === 'number') return Math.trunc(v);
   const s = String(v).trim();
   if (!/^[+-]?\d+$/.test(s.replace(/_/g, ''))) throw runtimeError(`Invalid node spec - could not handle parent depth ${s}`);
@@ -188,11 +190,10 @@ function parseExclusions(def: Record<string, unknown>, ctx: YamlCtx): Spec | nul
 function parseIncludeExclude(defs: Raw[], ctx: YamlCtx): [Spec[], Spec | null] {
   const include: Spec[] = [];
   let diff: Spec | null = null;
-  let seenExclude = false;
   for (const d of defs) {
     if (d && typeof d === 'object' && 'exclude' in (d as object)) {
-      if (seenExclude) throw new DbtError('Runtime Error', 'You cannot provide multiple exclude arguments to the same selector set operator');
-      seenExclude = true;
+      // dbt refuses a second exclude only when the first one produced something (diff_arg is not None)
+      if (diff !== null) throw new DbtError('Runtime Error', 'You cannot provide multiple exclude arguments to the same selector set operator');
       diff = parseExclusions(d as Record<string, unknown>, ctx);
     } else {
       include.push(parseFromDefinition(d, false, ctx));

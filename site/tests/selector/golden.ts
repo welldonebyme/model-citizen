@@ -56,7 +56,8 @@ function shQuote(s: string): string {
 export function commandLine(e: GoldenEntry): string {
   const env = Object.entries(e.env ?? {}).filter(([k]) => !PATH_ENV.has(k)).map(([k, v]) => `${k}=${shQuote(v)}`);
   // `command` is what was typed in zsh (unquoted stars matter); `dbt` is the dbt part re-quoted by the extractor
-  const typed = e.command.startsWith('dbt ') && !e.command.includes('&&') ? e.command : e.dbt;
+  // (a "# ..." note in a listing is the author's comment, not typed: use the dbt part then)
+  const typed = e.command.startsWith('dbt ') && !e.command.includes('&&') && !/\s#/.test(e.command) ? e.command : e.dbt;
   return [...env, typed].join(' ');
 }
 

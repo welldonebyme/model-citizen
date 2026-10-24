@@ -262,3 +262,42 @@ describe('click usage errors (formats checked with real dbt 1.11.16)', () => {
     expect(err('dbt ls fct_orders')).toBe("Usage: dbt ls [OPTIONS]\nTry 'dbt ls --help' for help.\n\nError: Got unexpected extra argument (fct_orders)");
   });
 });
+
+describe('flags and warnings (outputs checked with real dbt 1.11.16 on tag ch16)', () => {
+  const p = loadProject('jaffle', 'ch16');
+  const t = (line: string) => runCommand(p, line, { clock: '00:00:00', shell: 'powershell' });
+  it('--warn-error-options in YAML forms, silence wins over error all', () => {
+    expect(t(`dbt ls -s nope --warn-error-options '{error: all}'`).error?.lines().join('\n')).toBe("Compilation Error\n  The selection criterion 'nope' does not match any enabled nodes");
+    const b = t(`dbt ls -s nope --warn-error-options 'error: [NoNodesSelected]'`);
+    expect(b.logs.map((l) => l.text)).toContain("The selection criterion 'nope' does not match any enabled nodes");
+    expect(b.error?.lines().join('\n')).toBe('Compilation Error\n  No nodes selected!');
+    const c = t(`dbt ls -s nope --warn-error-options '{"error": "all", "silence": ["NoNodesForSelectionCriteria", "NoNodesSelected"]}'`);
+    expect(c.error).toBeNull();
+    expect(c.logs).toEqual([]);
+  });
+  it('invalid --warn-error-options', () => {
+    expect(t(`dbt ls -s nope --warn-error-options notyaml`).terminal.join('\n')).toBe("00:00:00  The YAML provided in the --warn-error-options argument is not valid.\nUsage: dbt ls [OPTIONS]\nTry 'dbt ls --help' for help.\n\nError: Invalid value for '--warn-error-options': String 'notyaml' is not valid YAML");
+    expect(t(`dbt ls -s nope --warn-error --warn-error-options '{"error": "all"}'`).error?.message).toBe('warn_error_options: not allowed with argument warn_error');
+    expect(t(`dbt ls -s nope --warn-error-options '{"error": ["Bogus"]}'`).error?.message).toBe('Bogus is not a valid dbt error name.');
+  });
+  it('--models deprecation: after "Running with", summary at the end; an error with --warn-error', () => {
+    const r = t('dbt ls -m fct_orders');
+    expect(r.terminal.slice(0, 5)).toEqual(['00:00:00  Running with dbt=1.11.16', '00:00:00  [WARNING]: Deprecated functionality',
+      'Usage of `--models`, `--model`, and `-m` is deprecated in favor of `--select` or', '`-s`.', '00:00:00  Registered adapter: duckdb=1.11.0']);
+    expect(r.terminal[r.terminal.length - 7]).toBe('00:00:00  [WARNING][DeprecationsSummary]: Deprecated functionality');
+    expect(t('dbt ls --models=fct_orders').logs).toEqual([]);
+    expect(t('dbt --warn-error ls -m fct_orders').error?.lines().join('\n')).toBe('Compilation Error\n  [WARNING]: Deprecated functionality\n  Usage of `--models`, `--model`, and `-m` is deprecated in favor of `--select` or\n  `-s`.');
+  });
+  it('duplicate flags, attached short values, show and defer checks', () => {
+    expect(t('dbt --target prod ls --target dev').error?.message).toBe('target was provided both before and after the subcommand, it can only be set either before or after.');
+    expect(t('dbt ls -sfct_orders').output).toEqual(['jaffle_dbt.marts.fct_orders']);
+    expect(t('dbt show').error?.lines().join('\n')).toBe('Runtime Error\n  Either --select or --inline must be passed to show');
+    expect(t('dbt compile --defer -s stg_stripe__payments').error?.message).toBe('--state or --defer-state are required for deferral, but neither was provided');
+    expect(t('dbt compile -s stg_stripe__payments').execution).toEqual([]);
+  });
+  it('zsh passes # to dbt, bash treats it as a comment', () => {
+    expect(runCommand(p, 'dbt ls -s fct_orders # mine', { shell: 'bash' }).output).toEqual(['jaffle_dbt.marts.fct_orders']);
+    const z = runCommand(p, 'dbt ls -s fct_orders # mine', { shell: 'zsh' });
+    expect(z.logs.map((l) => l.text)).toContain("The selection criterion '#' does not match any enabled nodes");
+  });
+});

@@ -133,9 +133,14 @@ jobs:
           $extra = Get-ChildItem -Recurse -File $HOME\dbt-course\kit | Where-Object { $_.FullName -notlike '*\capstone\*' } | ForEach-Object { $_.FullName.Substring("$HOME\dbt-course\kit".Length + 1) } | Where-Object { $files -notcontains $_ }
           Write-Output "zip files: $($files.Count); in the kit folder but not in the zip: $($extra -join ', ')"
           if ($files.Count -lt 30 -or $missing.Count -gt 0 -or (Test-Path $HOME\dbt-course\kit\dbt-course-kit)) { throw "kit folder: missing $($missing -join ', ')" }
-          $out = powershell -ExecutionPolicy Bypass -File $HOME\dbt-course\kit\setup.ps1 *>&1 | Out-String
+          # Windows PowerShell 5.1 turns a program's stderr lines (uv's "Using Python ...") into errors when they are
+          # captured with 2>&1; with 'Stop' above they would end this step, so capture with 'Continue'
+          $ErrorActionPreference = 'Continue'
+          $out = powershell -ExecutionPolicy Bypass -File $HOME\dbt-course\kit\setup.ps1 2>&1 | Out-String
+          $code = $LASTEXITCODE
+          $ErrorActionPreference = 'Stop'
           Write-Output $out
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ($code -ne 0) { exit $code }
           if ($out -notmatch 'the kit is already in') { throw 'setup.ps1 did not recognise the kit folder' }
 
       - name: Versions in the venv

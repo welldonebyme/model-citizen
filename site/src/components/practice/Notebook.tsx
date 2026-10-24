@@ -23,7 +23,7 @@ export default function Notebook() {
 
   const refHref = (ref?: string) => {
     if (!ref) return undefined;
-    const q = ref.match(/^q-(ch\d+)-/); if (q) return url(`quiz/${q[1]}/#${ref}`);
+    const q = ref.match(/^q-(ch\d+)-/); if (q) return url(`quiz/${q[1]}/?q=${ref}`);
     const m = ref.match(/^m(\d)-q\d+$/); if (m) return url(`exams/mock${m[1]}/`);
     if (/^ch\d+$/.test(ref)) return url(`learn/${ref}/`);
     return undefined;

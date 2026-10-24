@@ -13,7 +13,8 @@
     "check": "astro check",
     "test": "vitest run",
     "e2e": "playwright test",
-    "build:fast": "astro build"
+    "build:fast": "node scripts/sync-assets.mjs && astro build",
+    "prebuild": "node scripts/sync-assets.mjs"
   },
   "dependencies": {
     "@astrojs/react": "7.0.1",

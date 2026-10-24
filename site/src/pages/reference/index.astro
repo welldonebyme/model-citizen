@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import { url } from '../../lib/url';
+import { glossary, traps, objectives } from '../../lib/reference';
+const cards = [
+  { href: 'reference/glossary/', title: 'English–French glossary', text: `${glossary.length || 305} terms with their French translation and the chapter where they first appear.` },
+  { href: 'practice/traps/', title: 'The top exam traps', text: `${traps.length || 145} confusions that cost points, each with the truth and where the book explains it.` },
+  { href: 'reference/cheatsheets/', title: 'Cheat sheets', text: 'Commands, selection syntax, configurations and YAML skeletons on clean, printable pages.' },
+  { href: 'reference/coverage/', title: 'Coverage matrix', text: `Every official objective (${objectives.length || 33} with the prerequisites) with the lessons, labs and mock questions that cover it, and your mastery.` },
+];
+---
+<Base title="Reference" section="reference">
+  <div class="wrap ref">
+    <h1>Reference</h1>
+    <p class="lead">Everything you look up while you study. Press <kbd class="mc-key">Ctrl</kbd> + <kbd class="mc-key">K</kbd> to search the whole course.</p>
+    <ul class="cards">
+      {cards.map((c) => <li><a href={url(c.href)}><h2>{c.title}</h2><p>{c.text}</p></a></li>)}
+      <li><a href={url('pdf/dbt-bible.pdf')} download><h2>The full book (PDF)</h2><p>The dbt Analytics Engineering Bible: 1,191 pages, 5.8 MB. Every lesson of this site comes from it.</p></a></li>
+    </ul>
+  </div>
+</Base>
+<style>
+  .ref { padding-block: 40px 16px; }
+  .lead { color: var(--muted); font-size: var(--fs-lg); }
+  .cards { list-style: none; margin: 28px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .cards a { display: block; height: 100%; padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card); text-decoration: none; color: var(--text); }
+  .cards a:hover { border-color: var(--ink); }
+  .cards h2 { font-size: var(--fs-lg); margin-bottom: 6px; }
+  .cards p { margin: 0; color: var(--muted); font-size: var(--fs-md); }
+</style>

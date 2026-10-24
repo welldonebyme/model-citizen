@@ -1,0 +1,63 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { Inline } from '../../../components/content/Inline';
+import { traps } from '../../../lib/reference';
+const topics = [...new Set(traps.map((t) => t.topic).filter(Boolean))] as string[];
+---
+<Base title="The top exam traps" section="practice">
+  <div class="wrap tr" data-pagefind-body>
+    <h1 data-pagefind-meta="title">The top exam traps</h1>
+    <p class="lead">{traps.length} confusions that cost points on the exam (Chapter 27). Read the confusion, say the truth out loud, then check. Each trap links to the chapter that explains it.</p>
+    {topics.length > 0 && (
+      <div class="filters no-print" role="group" aria-label="Filter by topic">
+        <button type="button" class="chip" aria-pressed="true" data-topic="">All</button>
+        {topics.map((t) => <button type="button" class="chip" aria-pressed="false" data-topic={t}>{t}</button>)}
+      </div>
+    )}
+    <label class="hide-truth no-print"><input type="checkbox" data-hide-truth /> Hide the truth until I click (self-test)</label>
+    {traps.length === 0 && <p class="empty">The traps appear here once the book has been converted.</p>}
+    <ol class="list">
+      {traps.map((t) => (
+        <li class="trap" id={t.id} data-trap-topic={t.topic ?? ''}>
+          <span class="n">T{t.n}</span>
+          <div class="body">
+            <p class="conf"><span class="lab">Confusion</span> <Inline c={t.confusion} /></p>
+            <details class="truth" open><summary><span class="lab">Truth</span></summary><p><Inline c={t.truth} /></p></details>
+            {t.where && t.where.length > 0 && <p class="where">Where: <Inline c={t.where} /></p>}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+  <script>
+    const chips = document.querySelectorAll<HTMLButtonElement>('[data-topic]');
+    chips.forEach((c) => c.addEventListener('click', () => {
+      chips.forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
+      document.querySelectorAll<HTMLElement>('[data-trap-topic]').forEach((el) => { el.hidden = !!c.dataset.topic && el.dataset.trapTopic !== c.dataset.topic; });
+    }));
+    document.querySelector<HTMLInputElement>('[data-hide-truth]')?.addEventListener('change', (e) => {
+      const hide = (e.target as HTMLInputElement).checked;
+      document.querySelectorAll<HTMLDetailsElement>('details.truth').forEach((d) => (d.open = !hide));
+    });
+  </script>
+</Base>
+<style>
+  .tr { padding-block: 40px 16px; max-width: 900px; }
+  .lead { color: var(--muted); font-size: var(--fs-lg); max-width: 70ch; }
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 8px; }
+  .chip { border: 1px solid var(--line-strong); background: var(--surface); border-radius: 999px; padding: 5px 12px; font-size: var(--fs-sm); font-weight: 600; color: var(--muted); }
+  .chip[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+  .hide-truth { display: flex; gap: 8px; align-items: center; margin: 8px 0 20px; color: var(--muted); font-size: var(--fs-sm); }
+  .hide-truth input { accent-color: var(--accent); width: 18px; height: 18px; }
+  .list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .trap { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card); scroll-margin-top: calc(var(--header-h) + 16px); }
+  .trap:target { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .n { font: 700 var(--fs-sm) var(--mono); color: var(--trap); padding-top: 2px; }
+  .lab { font-size: var(--fs-xs); font-weight: 700; color: var(--trap); margin-right: 4px; }
+  .truth .lab { color: var(--ok); }
+  .conf { margin: 0 0 6px; color: var(--ink); }
+  .truth summary { cursor: pointer; width: max-content; }
+  .truth p { margin: 4px 0 0; }
+  .where { margin: 8px 0 0; color: var(--muted); font-size: var(--fs-sm); }
+  .empty { color: var(--muted); }
+</style>

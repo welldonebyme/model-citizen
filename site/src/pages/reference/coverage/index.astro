@@ -1,0 +1,57 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { url } from '../../../lib/url';
+import { objectives, coverage, TOPICS, topicOf } from '../../../lib/reference';
+import { lessons, routes } from '../../../lib/content';
+const lessonById = new Map(lessons.map((l) => [l.lesson.id, l]));
+const labLesson = new Map(lessons.flatMap((l) => l.lesson.labs.map((lab) => [lab, l] as const)));
+const rows = objectives.length ? objectives : coverage.map((c) => ({ id: c.objective, title: c.objective }));
+const cov = new Map(coverage.map((c) => [c.objective, c]));
+const groups = Object.keys(TOPICS).map((t) => ({ t, title: TOPICS[t], rows: rows.filter((o) => topicOf(o.id) === t) })).filter((g) => g.rows.length);
+const mockLabel = (q: string) => { const m = q.match(/^m(\d)-q(\d+)$/); return m ? `M${m[1]} Q${m[2]}` : q; };
+---
+<Base title="Coverage matrix" section="reference">
+  <div class="wrap cv">
+    <h1>Coverage matrix</h1>
+    <p class="lead">Every objective of the official study guide is taught, practised and tested. For each objective: the lessons that teach it, the labs that train it, and the mock-exam questions that test it. In the last week, redo the labs of every objective where you missed mock questions.</p>
+    {rows.length === 0 && <p class="empty">The matrix appears here once the book has been converted.</p>}
+    {groups.map((g) => (
+      <section aria-labelledby={`t-${g.t}`}>
+        <h2 id={`t-${g.t}`}>{g.t === 'CP0' ? g.title : `Topic ${g.t}: ${g.title}`}</h2>
+        <div class="mc-table-wrap" tabindex="0" role="region" aria-label={g.title}>
+          <table class="mc-table">
+            <thead><tr><th>Objective</th><th>Lessons</th><th>Labs</th><th>Mock questions</th></tr></thead>
+            <tbody>
+              {g.rows.map((o) => {
+                const c = cov.get(o.id);
+                const ls = (c?.lessons ?? []).map((id) => lessonById.get(id)).filter(Boolean);
+                const labs = (c?.labs ?? []).map((id) => ({ id, ref: labLesson.get(id) })).filter((x) => x.ref);
+                const mq = (c?.questions ?? o.mockQuestions ?? []).filter((q) => /^m\d-q\d+$/.test(q));
+                return (
+                  <tr id={`obj-${o.id}`} data-obj={o.id}>
+                    <th scope="row"><span class="mc-obj">{o.id}</span> <span class="ot">{o.title}</span></th>
+                    <td>{ls.map((l) => <a class="lk" href={url(routes.lesson(l!.lesson, l!.chapter.id))}>{l!.lesson.number}</a>)}</td>
+                    <td>{labs.map((x) => <a class="lk" href={url(routes.lesson(x.ref!.lesson, x.ref!.chapter.id)) + '#' + x.id}>{x.id.replace(/^ch(\d+)-lab(\d+)$/, (_m, a, b) => `${Number(a)}.${b}`)}</a>)}</td>
+                    <td class="mq">{mq.map(mockLabel).join(', ')}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    ))}
+  </div>
+</Base>
+<style>
+  .cv { padding-block: 40px 16px; }
+  .lead { color: var(--muted); font-size: var(--fs-lg); max-width: 75ch; }
+  section h2 { font-size: var(--fs-lg); margin: 28px 0 0; }
+  tr { scroll-margin-top: calc(var(--header-h) + 16px); }
+  tr:target > * { background: var(--accent-soft); }
+  th[scope="row"] { min-width: 260px; font-weight: 400; }
+  .ot { color: var(--ink); font-weight: 600; }
+  .lk { display: inline-block; margin: 0 6px 4px 0; font-size: var(--fs-sm); font-variant-numeric: tabular-nums; }
+  .mq { font-size: var(--fs-sm); color: var(--muted); min-width: 140px; }
+  .empty { color: var(--muted); }
+</style>

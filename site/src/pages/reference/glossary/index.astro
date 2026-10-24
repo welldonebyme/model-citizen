@@ -1,0 +1,66 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { url } from '../../../lib/url';
+import { glossary } from '../../../lib/reference';
+import { chapters, routes } from '../../../lib/content';
+const byLetter = new Map<string, typeof glossary>();
+for (const t of [...glossary].sort((a, b) => a.en.localeCompare(b.en, 'en', { sensitivity: 'base' }))) {
+  const L = /^[a-z]/i.test(t.en) ? t.en[0].toUpperCase() : '#';
+  byLetter.set(L, [...(byLetter.get(L) ?? []), t]);
+}
+const chapterHref = (n: number) => { const c = chapters.find((x) => x.number === n); return c ? url(routes.chapter(c)) : undefined; };
+---
+<Base title="English–French glossary" section="reference">
+  <div class="wrap gl" data-pagefind-body>
+    <h1 data-pagefind-meta="title">English–French glossary</h1>
+    <p class="lead">{glossary.length} terms of the course with their French translation and the chapter where they first appear. The exam is in English: learn the English word, use the French to understand it.</p>
+    <div class="tools no-print">
+      <label class="filter"><span class="visually-hidden">Filter terms</span><input type="search" placeholder="Filter, in English or French" data-gl-filter /></label>
+      <nav class="letters" aria-label="Letters">{[...byLetter.keys()].map((L) => <a href={`#letter-${L}`}>{L}</a>)}</nav>
+    </div>
+    {glossary.length === 0 && <p class="empty">The glossary appears here once the book has been converted.</p>}
+    {[...byLetter.entries()].map(([L, terms]) => (
+      <section aria-labelledby={`letter-${L}`} data-gl-section>
+        <h2 id={`letter-${L}`}>{L}</h2>
+        <dl class="terms">
+          {terms.map((t) => (
+            <div class="term" id={t.id} data-gl-term={`${t.en} ${t.fr}`.toLowerCase()}>
+              <dt>{t.en}</dt>
+              <dd lang="fr">{t.fr}</dd>
+              <dd class="ch">{chapterHref(t.chapter) ? <a href={chapterHref(t.chapter)}>Chapter {t.chapter}</a> : `Chapter ${t.chapter}`}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+    ))}
+  </div>
+  <script>
+    const input = document.querySelector<HTMLInputElement>('[data-gl-filter]');
+    input?.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+      document.querySelectorAll<HTMLElement>('[data-gl-term]').forEach((el) => {
+        const t = (el.dataset.glTerm || '').normalize('NFD').replace(/[̀-ͯ]/g, '');
+        el.hidden = !!q && !t.includes(q);
+      });
+      document.querySelectorAll<HTMLElement>('[data-gl-section]').forEach((s) => { s.hidden = !s.querySelector('[data-gl-term]:not([hidden])'); });
+    });
+  </script>
+</Base>
+<style>
+  .gl { padding-block: 40px 16px; max-width: 980px; }
+  .lead { color: var(--muted); font-size: var(--fs-lg); max-width: 70ch; }
+  .tools { position: sticky; top: var(--header-h); z-index: 5; display: grid; gap: 10px; padding: 12px 0; background: var(--paper); }
+  .filter input { width: 100%; max-width: 420px; min-height: 44px; padding: 8px 12px; border: 1.5px solid var(--line-strong); border-radius: var(--r-ctl); background: var(--surface); }
+  .letters { display: flex; flex-wrap: wrap; gap: 4px; }
+  .letters a { display: grid; place-items: center; min-width: 30px; height: 30px; border-radius: 7px; text-decoration: none; color: var(--ink); font-weight: 700; font-size: var(--fs-sm); border: 1px solid var(--line); background: var(--surface); }
+  section h2 { font-size: var(--fs-2xl); margin: 24px 0 8px; color: var(--accent-strong); scroll-margin-top: calc(var(--header-h) + 110px); }
+  .terms { margin: 0; display: grid; }
+  .term { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto; gap: 16px; padding: 9px 4px; border-bottom: 1px solid var(--line); scroll-margin-top: calc(var(--header-h) + 110px); }
+  .term:target { background: var(--accent-soft); border-radius: 8px; }
+  dt { font-weight: 700; color: var(--ink); }
+  dd { margin: 0; }
+  dd[lang="fr"] { color: var(--text); font-style: italic; }
+  .ch { font-size: var(--fs-sm); white-space: nowrap; }
+  .empty { color: var(--muted); }
+  @media (max-width: 640px) { .term { grid-template-columns: 1fr; gap: 2px; } }
+</style>

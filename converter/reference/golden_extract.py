@@ -543,11 +543,12 @@ def main() -> int:
     # keep verification results of an earlier golden_verify run (same id + same command)
     path = GOLDEN / "dbt-ls.json"
     if path.exists():
-        old = {(o["id"], o["command"]): o.get("verification") for o in json.loads(path.read_text())}
+        old = {(o["id"], o["command"]): o for o in json.loads(path.read_text())}
         for e in entries:
-            v = old.get((e["id"], e["command"]))
-            if v:
-                e["verification"] = v
+            o = old.get((e["id"], e["command"]))
+            if o and "verification" in o:
+                e["verification"] = o["verification"]
+                e["unique_ids"] = o.get("unique_ids")
     GOLDEN.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(entries, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 

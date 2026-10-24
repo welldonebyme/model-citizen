@@ -1,0 +1,1481 @@
+{
+ "dbt_ls_entries": 435,
+ "by_kind": {
+  "build": 78,
+  "ls": 240,
+  "run": 79,
+  "seed": 9,
+  "snapshot": 8,
+  "test": 21
+ },
+ "by_origin": {
+  "book": 141,
+  "builder-log": 242,
+  "capstone-log": 52
+ },
+ "state_dependent": 58,
+ "outputs": {
+  "dbt_summary": 254,
+  "dbt_version": 4,
+  "git_log_oneline": 11,
+  "git_status": 10,
+  "git_status_short": 13
+ },
+ "excluded": [
+  {
+   "source": "reference/builder-logs/ch06.md:653",
+   "command": "dbt run",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch06.md:896",
+   "command": "dbt run",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch06.md:1152",
+   "command": "dbt run",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch06.md:1183",
+   "command": "dbt run",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch06.md:1236",
+   "command": "dbt run",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch08.md:726",
+   "command": "dbt run --select int_payments__successful",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch10.md:697",
+   "command": "dbt run --select stg_jaffle_shop__orders --vars '{dev_start_date: 2025-12-01}' && dbt show --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\"",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch10.md:732",
+   "command": "dbt run --select stg_jaffle_shop__orders && dbt show --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\"",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch10.md:1268",
+   "command": "dbt ls --select fct_orders --output json --output-keys name config | tail -1 | python -c \"import json,sys; print('dev grants =', json.load(sys.stdin)['config']['grants'])\"",
+   "reason": "output piped into tail -1"
+  },
+  {
+   "source": "reference/builder-logs/ch10.md:1277",
+   "command": "dbt ls --select fct_orders --target prod --output json --output-keys name config | tail -1 | python -c \"import json,sys; print('prod grants =', json.load(sys.stdin)['config']['grants'])\"",
+   "reason": "output piped into tail -1"
+  },
+  {
+   "source": "reference/builder-logs/ch10.md:1318",
+   "command": "dbt ls --select fct_monthly_revenue --output json --output-keys name config | tail -1 | python -c \"import json,sys; c=json.load(sys.stdin)['config']; print('materialized =', c['materialized'], '| tags =', c['tags'])\"",
+   "reason": "output piped into tail -1"
+  },
+  {
+   "source": "reference/builder-logs/ch10.md:1336",
+   "command": "dbt ls --select fct_monthly_revenue --output json --output-keys name config | tail -1 | python -c \"import json,sys; c=json.load(sys.stdin)['config']; print('materialized =', c['materialized'], '| tags =', c['tags'])\"",
+   "reason": "output piped into tail -1"
+  },
+  {
+   "source": "reference/builder-logs/ch10.md:1354",
+   "command": "dbt ls --select fct_monthly_revenue --output json --output-keys name config | tail -1 | python -c \"import json,sys; c=json.load(sys.stdin)['config']; print('materialized =', c['materialized'], '| tags =', c['tags'])\"",
+   "reason": "output piped into tail -1"
+  },
+  {
+   "source": "reference/builder-logs/ch12.md:227",
+   "command": "dbt ls --resource-type seed && dbt ls --select country_regions+",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch12.md:349",
+   "command": "dbt run --select revenue_by_region",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch12.md:468",
+   "command": "git status --short seeds; dbt seed --full-refresh",
+   "reason": "compound shell line with other commands that print output: git status"
+  },
+  {
+   "source": "reference/builder-logs/ch13.md:380",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"delete from jaffle_shop.customers where id = 100\" && dbt snapshot --select customers_snapshot",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch13.md:427",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"insert into jaffle_shop.customers values (100, 'Mehdi', 'Bernard', 'mehdi.bernard100@example.com', 'Morocco', date '2024-05-05')\" && dbt snapshot --select customers_snapshot",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch13.md:492",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"delete from jaffle_shop.customers where id = 100\" && dbt snapshot --select customers_snapshot",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch13.md:538",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"insert into jaffle_shop.customers values (100, 'Mehdi', 'Bernard', 'mehdi.bernard100@example.com', 'Morocco', date '2024-05-05')\" && dbt snapshot --select customers_snapshot",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch13.md:604",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"delete from jaffle_shop.customers where id = 100\" && dbt snapshot --select customers_snapshot",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch13.md:658",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"insert into jaffle_shop.customers values (100, 'Mehdi', 'Bernard', 'mehdi.bernard100@example.com', 'Morocco', date '2024-05-05')\" && dbt snapshot --select customers_snapshot",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch13.md:716",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.customers_snapshot\" && dbt snapshot --select customers_snapshot",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch13.md:765",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"delete from jaffle_shop.customers where id = 100\" && dbt snapshot --select customers_snapshot",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch13.md:812",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"insert into jaffle_shop.customers values (100, 'Mehdi', 'Bernard', 'mehdi.bernard100@example.com', 'Morocco', date '2024-05-05')\" && dbt snapshot --select customers_snapshot",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:637",
+   "command": "dbt run --select fct_orders --full-refresh -q && python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/practice.duckdb --sql ../practice/updates/day2.sql > /dev/null && dbt run --select fct_orders",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:718",
+   "command": "dbt run --select fct_orders --full-refresh -q && python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/practice.duckdb --sql ../practice/updates/day2.sql > /dev/null && dbt run --select fct_orders",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:800",
+   "command": "dbt run --select fct_orders --full-refresh -q && python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/practice.duckdb --sql ../practice/updates/day2.sql > /dev/null && dbt run --select fct_orders",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:881",
+   "command": "dbt run --select fct_orders --full-refresh -q && python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/practice.duckdb --sql ../practice/updates/day2.sql > /dev/null && dbt run --select fct_orders",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:962",
+   "command": "dbt run --select fct_orders --full-refresh -q && python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/practice.duckdb --sql ../practice/updates/day2.sql > /dev/null && dbt run --select fct_orders",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:1049",
+   "command": "dbt run --select fct_orders --full-refresh -q; dbt run --select fct_orders",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:1277",
+   "command": "sed -n '6,15p' models/marts/fct_orders.sql && dbt run --select fct_orders",
+   "reason": "compound shell line with other commands that print output: sed -n"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:1329",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/practice.duckdb --sql ../practice/updates/day2.sql > /dev/null && dbt run --select fct_orders",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:1420",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/practice.duckdb --sql ../practice/updates/day2.sql > /dev/null && dbt run --select fct_orders",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:1521",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/practice.duckdb --sql ../practice/updates/day2.sql > /dev/null && dbt run --select fct_orders",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:1598",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/practice.duckdb --sql ../practice/updates/day2.sql > /dev/null && dbt run --select fct_orders",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:1676",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/practice.duckdb --sql ../practice/updates/day2.sql > /dev/null && dbt run --select fct_orders",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:1747",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/practice.duckdb --sql ../practice/updates/day2.sql > /dev/null && dbt run --select fct_orders",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:1812",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/practice.duckdb --sql ../practice/updates/day2.sql > /dev/null && dbt run --select fct_orders",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:2229",
+   "command": "dbt ls --select config.materialized:incremental --output json --output-keys name config | python -c \"import json,sys; [print(d['name'], d['config']['incremental_strategy'], d['config'].get('unique_key'), d['config'].get('event_time'), d['config'].get('batch_size')) for d in map(json.loads, [l for l in sys.stdin if l.startswith('{')])]\"",
+   "reason": "output piped into python -c import json,sys; [print(d['name'], d['config']['incremental_strategy'], d['config'].get('unique_key'), d['config'].get('event_time'), d['config'].get('batch_size')) for d in map(json.loads, [l for l in sys.stdin if l.startswith('{')])]"
+  },
+  {
+   "source": "reference/builder-logs/ch14.md:2437",
+   "command": "dbt run --empty --select +fct_orders -q && dbt run --select +fct_orders",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch15.md:60",
+   "command": "dbt ls --select customer_segments+ --output json --output-keys name resource_type language config | python -c \"import json,sys; [print(d['name'], d['resource_type'], d.get('language'), d['config']['materialized']) for d in map(json.loads, [l for l in sys.stdin if l.startswith('{')])]\"",
+   "reason": "output piped into python -c import json,sys; [print(d['name'], d['resource_type'], d.get('language'), d['config']['materialized']) for d in map(json.loads, [l for l in sys.stdin if l.startswith('{')])]"
+  },
+  {
+   "source": "reference/builder-logs/ch15.md:316",
+   "command": "grep -n 'dbt.config' models/marts/customer_segments.py && dbt run --select customer_segments",
+   "reason": "compound shell line with other commands that print output: grep -n"
+  },
+  {
+   "source": "reference/builder-logs/ch15.md:346",
+   "command": "git diff --stat models/marts/customer_segments.py; dbt run --select customer_segments",
+   "reason": "compound shell line with other commands that print output: git diff"
+  },
+  {
+   "source": "reference/builder-logs/ch16.md:1141",
+   "command": "dbt run --select stg_jaffle_shop__orders --sample='3 dayz'",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch16.md:1219",
+   "command": "DBT_DUCKDB_PATH=../practice/sample_copy/practice.duckdb dbt run --select stg_jaffle_shop__orders --sample='3 days' && python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/sample_copy/practice.duckdb \"select count(*) as stg_orders from dbt_adnane.stg_jaffle_shop__orders\"",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch16.md:1462",
+   "command": "ls tests; dbt run --select staging --threads 1",
+   "reason": "compound shell line with other commands that print output: ls tests"
+  },
+  {
+   "source": "reference/builder-logs/ch16.md:1568",
+   "command": "ls; dbt ls --select fct_orders",
+   "reason": "compound shell line with other commands that print output: ls"
+  },
+  {
+   "source": "reference/builder-logs/ch16.md:1670",
+   "command": "git status --short models/ && dbt ls --select state:modified --state ../state_ch16",
+   "reason": "compound shell line with other commands that print output: git status"
+  },
+  {
+   "source": "reference/builder-logs/ch17.md:697",
+   "command": "git status --short models/marts/dim_customers.sql; dbt run --select dim_customers",
+   "reason": "compound shell line with other commands that print output: git status"
+  },
+  {
+   "source": "reference/builder-logs/ch19.md:327",
+   "command": "git status --short macros; dbt test --select test_stg_stripe__payments_cents_to_dollars",
+   "reason": "compound shell line with other commands that print output: git status"
+  },
+  {
+   "source": "reference/builder-logs/ch19.md:351",
+   "command": "git diff --stat; dbt test --select test_dim_customers_lifetime_value",
+   "reason": "compound shell line with other commands that print output: git diff"
+  },
+  {
+   "source": "reference/builder-logs/ch19.md:387",
+   "command": "mkdir -p ../practice/ut_check && python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/ut_check/practice.duckdb --sql ../practice/setup.sql > /dev/null && DBT_DUCKDB_PATH=../practice/ut_check/practice.duckdb dbt test --select test_type:unit",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch19.md:447",
+   "command": "DBT_DUCKDB_PATH=../practice/ut_check/practice.duckdb dbt run --empty --exclude customer_segments && DBT_DUCKDB_PATH=../practice/ut_check/practice.duckdb dbt test --select test_type:unit",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch19.md:569",
+   "command": "mkdir -p ../practice/ut_check && python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/ut_check/practice.duckdb --sql ../practice/setup.sql > /dev/null && export DBT_DUCKDB_PATH=../practice/ut_check/practice.duckdb && dbt seed -q && dbt run --empty -q && dbt test --select test_type:unit",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch19.md:599",
+   "command": "rm -r ../practice/ut_check && mkdir -p ../practice/ut_check && python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/ut_check/practice.duckdb --sql ../practice/setup.sql > /dev/null && DBT_DUCKDB_PATH=../practice/ut_check/practice.duckdb dbt build --empty --select +fct_orders +dim_customers",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch19.md:885",
+   "command": "mkdir -p ../practice/first_build && python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/first_build/practice.duckdb --sql ../practice/setup.sql > /dev/null && DBT_DUCKDB_PATH=../practice/first_build/practice.duckdb dbt build --select +fct_orders",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch19.md:1171",
+   "command": "rm -r ../practice/first_build && mkdir -p ../practice/first_build && python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/first_build/practice.duckdb --sql ../practice/setup.sql > /dev/null && DBT_DUCKDB_PATH=../practice/first_build/practice.duckdb dbt run --select +fct_orders --empty -q && DBT_DUCKDB_PATH=../practice/first_build/practice.duckdb dbt build --select +fct_orders",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch19.md:1290",
+   "command": "mkdir -p ../practice/first_build && python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/build_practice_db.py ../practice/first_build/practice.duckdb --sql ../practice/setup.sql > /dev/null && DBT_DUCKDB_PATH=../practice/first_build/practice.duckdb dbt build --select +fct_orders +fct_order_items --exclude-resource-type unit_test -q; echo \"first build exit code: $?\"; DBT_DUCKDB_PATH=../practice/first_build/practice.duckdb dbt build --select +fct_orders +fct_order_items",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch21.md:417",
+   "command": "dbt source freshness && dbt ls --select source_status:fresher+ --state ../state_freshness --resource-type model",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch22.md:1046",
+   "command": "dbt run --select stg_jaffle_shop__orders --log-level warn",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch22.md:1055",
+   "command": "dbt run --select stg_jaffle_shop__orders -q",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch22.md:1064",
+   "command": "dbt --debug run --select stg_jaffle_shop__orders 2>&1 | grep -v '^\\s*$' | head -45",
+   "reason": "output piped into grep -v ^\\s*$"
+  },
+  {
+   "source": "reference/builder-logs/ch22.md:1121",
+   "command": "dbt run --select stg_jaffle_shop__orders --log-format json > ../json_log_demo.txt; head -c 600 ../json_log_demo.txt; echo; echo '...'; wc -l ../json_log_demo.txt; rm ../json_log_demo.txt",
+   "reason": "compound shell line with other commands that print output: head -c, echo, echo ..., wc -l"
+  },
+  {
+   "source": "reference/builder-logs/ch22.md:1133",
+   "command": "dbt run --select stg_jaffle_shop__orders --log-level-file error && tail -3 logs/dbt.log",
+   "reason": "compound shell line with other commands that print output: tail -3"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:183",
+   "command": "dbt run",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:197",
+   "command": "dbt build --exclude-resource-type unit_test",
+   "reason": "dbt build: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:211",
+   "command": "git status --short; dbt build -q; echo \"exit code: $?\"",
+   "reason": "compound shell line with other commands that print output: git status"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:435",
+   "command": "git status --short; dbt build -q; echo \"exit code: $?\"",
+   "reason": "compound shell line with other commands that print output: git status"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:816",
+   "command": "dbt run --select fct_order_items_daily --full-refresh --target prod",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:834",
+   "command": "dbt run --select fct_order_items_daily --full-refresh",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:850",
+   "command": "dbt build --target prod -q; echo \"exit code: $?\"; mkdir -p prod-artifacts && cp target/manifest.json target/run_results.json prod-artifacts/ && python -c \"import json; r=json.load(open('prod-artifacts/run_results.json')); from collections import Counter; print(Counter(x['status'] for x in r['results']))\"",
+   "reason": "compound shell line with other commands that print output: python -c"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:1038",
+   "command": "dbt build --target prod -q; echo \"exit code: $?\"; mkdir -p prod-artifacts && cp target/manifest.json target/run_results.json prod-artifacts/ && python -c \"import json; r=json.load(open('prod-artifacts/run_results.json')); from collections import Counter; print(r['args']['target'], Counter(x['status'] for x in r['results']))\"",
+   "reason": "compound shell line with other commands that print output: python -c"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:1050",
+   "command": "dbt clone --state prod-artifacts",
+   "reason": "dbt clone: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:1087",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.fct_monthly_revenue\" && dbt clone --select fct_monthly_revenue --state prod-artifacts",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:1146",
+   "command": "dbt clone --select fct_orders --state prod-artifacts --full-refresh",
+   "reason": "dbt clone: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:1249",
+   "command": "dbt build --target prod -q; echo \"exit code: $?\"; cp target/manifest.json target/run_results.json prod-artifacts/ && echo 'prod-artifacts refreshed'",
+   "reason": "compound shell line with other commands that print output: echo prod-artifacts refreshed"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:1273",
+   "command": "dbt clone --select fct_monthly_revenue --state prod-artifacts",
+   "reason": "dbt clone: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:1361",
+   "command": "dbt clone --select fct_orders --state prod-artifacts --full-refresh",
+   "reason": "dbt clone: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:1452",
+   "command": "dbt build -q; echo \"exit code: $?\"",
+   "reason": "dbt build: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:1475",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.fct_monthly_revenue\" && dbt clone --select fct_monthly_revenue --state prod-artifacts",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch23.md:1531",
+   "command": "dbt run --select fct_monthly_revenue && python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select table_type from information_schema.tables where table_schema = 'dbt_adnane' and table_name = 'fct_monthly_revenue'\"",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch24.md:527",
+   "command": "dbt build --select state:modified --state prod-artifacts --target ci --defer --exclude-resource-type unit_test",
+   "reason": "dbt build: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/builder-logs/ch24.md:1181",
+   "command": "dbt build --target prod -q; echo \"exit code: $?\"; cp target/manifest.json target/run_results.json prod-artifacts/ && dbt ls --select state:modified --state prod-artifacts",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch25.md:278",
+   "command": "export GITHUB_WORKSPACE=/private/tmp/claude-501/-Users-mac-Documents-Adnane/01c25d17-e9ca-4e1a-939f-b5b3904f7a5e/scratchpad/a1/throwaway/ci_run/workspace DBT_PROFILES_DIR=/private/tmp/claude-501/-Users-mac-Documents-Adnane/01c25d17-e9ca-4e1a-939f-b5b3904f7a5e/scratchpad/a1/throwaway/ci_run/workspace/ci DBT_DUCKDB_PATH=/private/tmp/claude-501/-Users-mac-Documents-Adnane/01c25d17-e9ca-4e1a-939f-b5b3904f7a5e/scratchpad/a1/throwaway/ci_run/workspace/ci_db/practice.duckdb && git worktree add ../main origin/main && cd ../main && dbt deps && dbt build --target prod --exclude-resource-type unit_test && mkdir -p \"$GITHUB_WORKSPACE/prod-artifacts\" && cp target/manifest.json \"$GITHUB_WORKSPACE/prod-artifacts/\"",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/builder-logs/ch25.md:662",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ci_db/practice.duckdb \"drop schema dbt_ci cascade\" > /dev/null && export GITHUB_WORKSPACE=/private/tmp/claude-501/-Users-mac-Documents-Adnane/01c25d17-e9ca-4e1a-939f-b5b3904f7a5e/scratchpad/a1/throwaway/ci_run/workspace DBT_PROFILES_DIR=/private/tmp/claude-501/-Users-mac-Documents-Adnane/01c25d17-e9ca-4e1a-939f-b5b3904f7a5e/scratchpad/a1/throwaway/ci_run/workspace/ci DBT_DUCKDB_PATH=/private/tmp/claude-501/-Users-mac-Documents-Adnane/01c25d17-e9ca-4e1a-939f-b5b3904f7a5e/scratchpad/a1/throwaway/ci_run/workspace/ci_db/practice.duckdb && dbt build --select state:modified+ --defer --state prod-artifacts --target ci",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch25.md:758",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ci_db/practice.duckdb \"drop schema dbt_ci cascade\" > /dev/null && export GITHUB_WORKSPACE=/private/tmp/claude-501/-Users-mac-Documents-Adnane/01c25d17-e9ca-4e1a-939f-b5b3904f7a5e/scratchpad/a1/throwaway/ci_run/workspace DBT_PROFILES_DIR=/private/tmp/claude-501/-Users-mac-Documents-Adnane/01c25d17-e9ca-4e1a-939f-b5b3904f7a5e/scratchpad/a1/throwaway/ci_run/workspace/ci DBT_DUCKDB_PATH=/private/tmp/claude-501/-Users-mac-Documents-Adnane/01c25d17-e9ca-4e1a-939f-b5b3904f7a5e/scratchpad/a1/throwaway/ci_run/workspace/ci_db/practice.duckdb && dbt build --select state:modified+ --defer --state prod-artifacts --target ci --exclude-resource-type test",
+   "reason": "compound shell line with other commands that print output: python -I"
+  },
+  {
+   "source": "reference/builder-logs/ch25.md:809",
+   "command": "python -I /Users/adnane/Documents/Adnane/dbt-bible/tools/run_sql.py --db ci_db/practice.duckdb \"drop schema dbt_ci cascade\" > /dev/null && export GITHUB_WORKSPACE=/private/tmp/claude-501/-Users-mac-Documents-Adnane/01c25d17-e9ca-4e1a-939f-b5b3904f7a5e/scratchpad/a1/throwaway/ci_run/workspace DBT_PROFILES_DIR=/private/tmp/claude-501/-Users-mac-Documents-Adnane/01c25d17-e9ca-4e1a-939f-b5b3904f7a5e/scratchpad/a1/throwaway/ci_run/workspace/ci DBT_DUCKDB_PATH=/private/tmp/claude-501/-Users-mac-Documents-Adnane/01c25d17-e9ca-4e1a-939f-b5b3904f7a5e/scratchpad/a1/throwaway/ci_run/workspace/ci_db/practice.duckdb && dbt run --select state:modified+ --defer --state prod-artifacts --target ci --empty -q && dbt build --select state:modified+ --defer --state prod-artifacts --target ci --exclude-resource-type test",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "reference/capstone-logs/m05.md:20",
+   "command": "dbt build -s int_orders__enriched+ --quiet",
+   "reason": "dbt build: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "reference/capstone-logs/m13.md:1254",
+   "command": "dbt clone --state prod-artifacts --target ci -s fct_orders fct_daily_revenue dim_customers",
+   "reason": "dbt clone: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch06-first-project.tex:1312",
+   "command": "dbt run",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch07-models-sources-dag.tex:1360",
+   "command": "dbt run",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch07-models-sources-dag.tex:1519",
+   "command": "dbt ls --select stg_jaffle_shop__orders+",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch08-materializations.tex:179",
+   "command": "dbt run",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch08-materializations.tex:482",
+   "command": "dbt run --select int_payments__successful",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch08-materializations.tex:626",
+   "command": "dbt run",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch08-materializations.tex:672",
+   "command": "dbt build",
+   "reason": "dbt build: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch09-modularity-refactoring.tex:522",
+   "command": "dbt run --select fct_monthly_revenue",
+   "reason": "book: outputcode at line 525 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch09-modularity-refactoring.tex:523",
+   "command": "dbt ls --select +fct_monthly_revenue",
+   "reason": "book: outputcode at line 525 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch09-modularity-refactoring.tex:636",
+   "command": "dbt run --select fct_monthly_revenue",
+   "reason": "book: outputcode at line 639 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch09-modularity-refactoring.tex:664",
+   "command": "dbt run --select legacy_monthly_revenue",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch09-modularity-refactoring.tex:665",
+   "command": "dbt ls --select +legacy_monthly_revenue+",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch09-modularity-refactoring.tex:952",
+   "command": "dbt build --select fct_orders+",
+   "reason": "book: outputcode at line 955 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch09-modularity-refactoring.tex:953",
+   "command": "dbt ls --select +fct_orders --resource-type model",
+   "reason": "book: outputcode at line 955 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch09-modularity-refactoring.tex:976",
+   "command": "dbt build",
+   "reason": "book: outputcode at line 978 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch09-modularity-refactoring.tex:1028",
+   "command": "dbt build --select +fct_monthly_revenue",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch09-modularity-refactoring.tex:1042",
+   "command": "dbt build --select fct_orders+",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch09-modularity-refactoring.tex:1049",
+   "command": "dbt build",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch09-modularity-refactoring.tex:1056",
+   "command": "dbt ls --resource-type model",
+   "reason": "book: outputcode at line 1059 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:303",
+   "command": "dbt --quiet ls --resource-type source --output json --output-keys fqn | jq -c '.fqn' | tail -1",
+   "reason": "output piped into jq -c .fqn"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:380",
+   "command": "dbt --quiet ls -s intermediate --output json --output-keys name config | jq -c '{n: .name, m: .config.materialized, tags: .config.tags, meta: .config.meta}'",
+   "reason": "output piped into jq -c {n: .name, m: .config.materialized, tags: .config.tags, meta: .config.meta}"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:755",
+   "command": "dbt ls --select tag:finance",
+   "reason": "book: outputcode at line 760 follows 4 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:756",
+   "command": "dbt ls --select tag:finance tag:marketing",
+   "reason": "book: outputcode at line 760 follows 4 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:757",
+   "command": "dbt ls --select tag:marts,tag:finance",
+   "reason": "book: outputcode at line 760 follows 4 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:758",
+   "command": "dbt ls --select tag:staging,tag:marts",
+   "reason": "book: outputcode at line 760 follows 4 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:872",
+   "command": "dbt --quiet ls -s fct_orders --output json --output-keys config | jq -c '.config | {meta, docs, persist_docs}'",
+   "reason": "output piped into jq -c .config | {meta, docs, persist_docs}"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:873",
+   "command": "dbt --quiet ls -s fct_orders --output json --output-keys config | jq -c '.config | {grants, hooks: [.[\"post-hook\"][].sql]}'",
+   "reason": "output piped into jq -c .config | {grants, hooks: [.[\"post-hook\"][].sql]}"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:874",
+   "command": "dbt --quiet ls -s dim_customers --output json --output-keys config | jq -c '.config | {grants}'",
+   "reason": "output piped into jq -c .config | {grants}"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:909",
+   "command": "dbt --quiet ls -s fct_monthly_revenue --output json --output-keys config | jq -c '.config | {materialized, tags}'",
+   "reason": "output piped into jq -c .config | {materialized, tags}"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:938",
+   "command": "dbt --quiet ls -s fct_monthly_revenue --output json --output-keys config | jq -c '.config | {materialized, tags}'",
+   "reason": "output piped into jq -c .config | {materialized, tags}"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:1098",
+   "command": "DBT_THREADS=2 dbt run -s stg_jaffle_shop__orders",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:1152",
+   "command": "dbt run --select stg_jaffle_shop__orders --vars '{dev_start_date: 2025-12-01}'",
+   "reason": "book: outputcode at line 1155 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:1161",
+   "command": "dbt run --select stg_jaffle_shop__orders",
+   "reason": "book: outputcode at line 1164 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:1285",
+   "command": "dbt run -s fct_orders        # then read logs/dbt.log",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:1407",
+   "command": "dbt test --select stg_jaffle_shop__orders",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:1551",
+   "command": "dbt --quiet ls -s fct_orders --output json --output-keys config | jq -c '.config.grants'",
+   "reason": "output piped into jq -c .config.grants"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:1552",
+   "command": "dbt --quiet ls -s fct_orders --output json --output-keys config --target prod | jq -c '.config.grants'",
+   "reason": "output piped into jq -c .config.grants"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:1647",
+   "command": "dbt build",
+   "reason": "book: outputcode at line 1650 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch11-jinja-macros-packages.tex:438",
+   "command": "dbt build                   # Done. PASS=19 ... at the end of Chapter 10",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch11-jinja-macros-packages.tex:966",
+   "command": "dbt build",
+   "reason": "dbt build: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch11-jinja-macros-packages.tex:1389",
+   "command": "dbt build",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch12-seeds-analyses.tex:252",
+   "command": "dbt seed --select country_regions --show",
+   "reason": "dbt seed: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch12-seeds-analyses.tex:272",
+   "command": "dbt run -s country_regions",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch12-seeds-analyses.tex:308",
+   "command": "dbt seed",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch12-seeds-analyses.tex:614",
+   "command": "dbt ls --resource-type seed",
+   "reason": "book: outputcode at line 617 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch12-seeds-analyses.tex:615",
+   "command": "dbt ls --select country_regions+",
+   "reason": "book: outputcode at line 617 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch12-seeds-analyses.tex:699",
+   "command": "dbt build --select country_regions+",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch12-seeds-analyses.tex:700",
+   "command": "dbt build",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch12-seeds-analyses.tex:825",
+   "command": "dbt run --select revenue_by_region",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch12-seeds-analyses.tex:944",
+   "command": "dbt run -s revenue_by_region",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch12-seeds-analyses.tex:952",
+   "command": "dbt seed                      # after editing the CSV: read the error",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch12-seeds-analyses.tex:953",
+   "command": "dbt seed --full-refresh",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch12-seeds-analyses.tex:959",
+   "command": "dbt seed --full-refresh",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch12-seeds-analyses.tex:960",
+   "command": "dbt build",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch13-snapshots.tex:183",
+   "command": "dbt run -s customers_snapshot",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch13-snapshots.tex:760",
+   "command": "dbt snapshot",
+   "reason": "book: outputcode at line 762 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch13-snapshots.tex:844",
+   "command": "dbt build",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch13-snapshots.tex:1218",
+   "command": "dbt snapshot --full-refresh",
+   "reason": "dbt snapshot: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch13-snapshots.tex:1275",
+   "command": "dbt build --empty --exclude resource_type:snapshot",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch13-snapshots.tex:1276",
+   "command": "dbt build --empty --exclude-resource-type snapshot",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch14-incremental-microbatch.tex:422",
+   "command": "dbt run --exclude fct_orders",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch14-incremental-microbatch.tex:527",
+   "command": "dbt run --select fct_orders",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch14-incremental-microbatch.tex:650",
+   "command": "dbt run --select playground",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch14-incremental-microbatch.tex:1057",
+   "command": "dbt run --select fct_orders --full-refresh",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch14-incremental-microbatch.tex:1058",
+   "command": "dbt build -s fct_orders+ -f          # the model and everything downstream",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch14-incremental-microbatch.tex:1107",
+   "command": "dbt run --select fct_orders --full-refresh",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch14-incremental-microbatch.tex:1120",
+   "command": "dbt run --select big_model --vars '{\"force_full_refresh\": true}'",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch14-incremental-microbatch.tex:1482",
+   "command": "dbt run --select fct_order_items_daily          # lookback not set: default 1",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch14-incremental-microbatch.tex:1487",
+   "command": "dbt run --select fct_order_items_daily          # with lookback=3",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch14-incremental-microbatch.tex:1545",
+   "command": "dbt run --select fct_order_items_daily --event-time-start '2026-01-01' --event-time-end '2026-02-01'",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch14-incremental-microbatch.tex:1772",
+   "command": "dbt run --select mb_retry",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch15-python-models.tex:336",
+   "command": "dbt build --select +customer_segments",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch15-python-models.tex:738",
+   "command": "dbt run -s customer_segments",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:133",
+   "command": "dbt run -s country_regions",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:138",
+   "command": "dbt run -s int_payments__successful",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:262",
+   "command": "dbt run -s stg_stripe__payments+",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1142",
+   "command": "dbt -q ls --selector staging_only",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1143",
+   "command": "dbt -q ls --selector nightly --resource-type model",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1144",
+   "command": "dbt -q ls --selector finance_marts",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1145",
+   "command": "dbt -q ls --selector no_python --resource-type model",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1150",
+   "command": "dbt build --selector nightly",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1506",
+   "command": "dbt seed --empty",
+   "reason": "dbt seed: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1601",
+   "command": "dbt build --empty --exclude-resource-type snapshot",
+   "reason": "dbt build: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1639",
+   "command": "DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt build --empty",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1716",
+   "command": "DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt run -q -s +fct_orders",
+   "reason": "book: outputcode at line 1719 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1727",
+   "command": "dbt build --select customer_segments+",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1785",
+   "command": "dbt run --select stg_jaffle_shop__orders --sample='1 week'",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1871",
+   "command": "dbt run --select stg_jaffle_shop__orders int_orders__enriched fct_order_items --sample=\"{'start': '2026-01-01', 'end': '2026-01-05'}\"",
+   "reason": "book: outputcode at line 1873 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1903",
+   "command": "dbt run -q --select stg_jaffle_shop__orders --sample='3 days'",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1905",
+   "command": "dbt run --select stg_jaffle_shop__orders --sample='1 week'",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:2032",
+   "command": "dbt run --select stg_jaffle_shop__orders --vars '{dev_start_date: \"2026-01-01\"}' -q && dbt show -q --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\"",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:2037",
+   "command": "dbt run --select stg_jaffle_shop__orders -q && dbt show -q --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\"",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:2155",
+   "command": "dbt build --select staging tests/demo_always_fails.sql",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:2156",
+   "command": "dbt build --select staging tests/demo_always_fails.sql --fail-fast --threads 1",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:2169",
+   "command": "dbt ls --select fct_orders      # fails: packages missing",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:2171",
+   "command": "dbt -q ls --select fct_orders   # works again",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:246",
+   "command": "dbt ls --select group:finance        # every node of the finance group",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:247",
+   "command": "dbt ls --select access:public        # the interface of the project",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:327",
+   "command": "dbt ls --resource-type model --output json --output-keys name config.group config.access",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:348",
+   "command": "dbt ls --select group:finance",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:349",
+   "command": "dbt ls --select access:private",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:924",
+   "command": "dbt build --select dim_customers",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:993",
+   "command": "dbt run --select dim_customers",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:1049",
+   "command": "git status --short models/marts/dim_customers.sql; dbt run --select dim_customers",
+   "reason": "compound shell line with other commands that print output: git status"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:1394",
+   "command": "dbt ls --select dim_customers --resource-type model --output json --output-keys name version latest_version alias",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:1405",
+   "command": "dbt run --select dim_customers",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:1406",
+   "command": "dbt ls --select version:latest version:prerelease --resource-type model",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:1407",
+   "command": "dbt ls --select dim_customers.v2",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:1447",
+   "command": "dbt ls --select dim_customers --resource-type model --output json --output-keys name version latest_version deprecation_date",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:1448",
+   "command": "dbt ls --select version:old",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:1472",
+   "command": "dbt run --select demo_uses_v1",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:1508",
+   "command": "dbt build",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:1598",
+   "command": "dbt ls --select state:modified --state ../state-ch17",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part3/ch17-governance.tex:1617",
+   "command": "dbt ls --select state:modified --state ../state-ch17",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch18-data-tests.tex:466",
+   "command": "dbt test --select stg_jaffle_shop__orders stg_stripe__payments",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch18-data-tests.tex:488",
+   "command": "dbt build --select stg_jaffle_shop__orders+",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch18-data-tests.tex:689",
+   "command": "dbt test --select test_name:relationships --store-failures",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch18-data-tests.tex:718",
+   "command": "dbt build --select stg_jaffle_shop__orders+",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch18-data-tests.tex:994",
+   "command": "dbt test --select test_type:singular",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch18-data-tests.tex:1274",
+   "command": "dbt ls --resource-type test --output name",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch18-data-tests.tex:1292",
+   "command": "dbt build",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch18-data-tests.tex:1482",
+   "command": "dbt test --select customer_email_is_known --store-failures",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch19-unit-tests.tex:232",
+   "command": "dbt test --select test_type:unit",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch19-unit-tests.tex:431",
+   "command": "dbt test --select test_dim_customers_lifetime_value",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch19-unit-tests.tex:621",
+   "command": "dbt test --select test_type:unit",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch19-unit-tests.tex:622",
+   "command": "dbt ls --resource-type unit_test",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch19-unit-tests.tex:648",
+   "command": "dbt build --select +dim_customers --exclude-resource-type test",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch19-unit-tests.tex:884",
+   "command": "dbt build --exclude-resource-type unit_test",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part4/ch19-unit-tests.tex:919",
+   "command": "dbt build --select +dim_customers --exclude-resource-type unit_test --exclude-resource-type test --target prod",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch20-documentation.tex:678",
+   "command": "dbt build",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch20-documentation.tex:961",
+   "command": "dbt run --select fct_order_items_daily --full-refresh",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch20-documentation.tex:992",
+   "command": "dbt run --select fct_order_items_daily --full-refresh",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch20-documentation.tex:1018",
+   "command": "dbt build --select marts",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch21-freshness-exposures.tex:459",
+   "command": "dbt build --select \"source_status:fresher+\" --state path/to/previous/artifacts",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch21-freshness-exposures.tex:550",
+   "command": "dbt ls --select source_status:fresher+ --state ../state_freshness --resource-type model",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch21-freshness-exposures.tex:574",
+   "command": "dbt ls --select source_status:fresher+ --state ../state_freshness --resource-type model",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch21-freshness-exposures.tex:595",
+   "command": "dbt build --select source_status:fresher+ --state ../state_freshness --exclude-resource-type test --exclude-resource-type unit_test",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch21-freshness-exposures.tex:800",
+   "command": "dbt run --select exposure:monthly_revenue_dashboard",
+   "reason": "dbt run: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch21-freshness-exposures.tex:893",
+   "command": "dbt ls --resource-type exposure",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch21-freshness-exposures.tex:894",
+   "command": "dbt ls --select +exposure:monthly_revenue_dashboard --resource-type model",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch21-freshness-exposures.tex:895",
+   "command": "dbt ls --select tag:finance --resource-type exposure",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch21-freshness-exposures.tex:921",
+   "command": "dbt ls --select monthly_revenue_dashboard --output json --output-keys name type maturity owner depends_on",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch21-freshness-exposures.tex:930",
+   "command": "dbt build --select +exposure:customer_segmentation_notebook --exclude-resource-type test --exclude-resource-type unit_test",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part5/ch21-freshness-exposures.tex:1088",
+   "command": "dbt run --select exposure:monthly_revenue_dashboard",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:638",
+   "command": "dbt build -q; echo \"exit code: $?\"",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:939",
+   "command": "dbt run -s stg_jaffle_shop__customers",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:967",
+   "command": "dbt run -s stg_jaffle_shop__customers",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:1081",
+   "command": "dbt build -s stg_jaffle_shop__products+",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:1106",
+   "command": "dbt ls -s state:modified+ --state ../main-state --resource-type model",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:1119",
+   "command": "dbt build -s stg_jaffle_shop__products+",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:1135",
+   "command": "dbt ls -s state:modified+ --state ../main-state",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:1174",
+   "command": "DBT_WARN_ERROR=true dbt test         # only this command (old-style name, still works)",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:1514",
+   "command": "dbt build",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:1522",
+   "command": "dbt test -s $T; echo \"exit code: $?\"",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:1523",
+   "command": "dbt test -s $T --warn-error; echo \"exit code: $?\"",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:1524",
+   "command": "DBT_WARN_ERROR=true dbt test -s $T; echo \"exit code: $?\"",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:1531",
+   "command": "dbt ls -s does_not_exist; echo \"exit code: $?\"",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:1532",
+   "command": "dbt ls -s does_not_exist --warn-error-options '{\"error\": [\"NoNodesForSelectionCriteria\"]}'; echo \"exit code: $?\"",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:1533",
+   "command": "dbt ls -s does_not_exist --warn-error-options '{\"silence\": [\"NoNodesForSelectionCriteria\"]}'; echo \"exit code: $?\"",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch22-debugging.tex:1534",
+   "command": "dbt ls -s does_not_exist --warn-error-options '{\"include\": [\"NoNodesForSelectionCriteria\"]}'; echo \"exit code: $?\"",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:261",
+   "command": "dbt build -s stg_jaffle_shop__orders+",
+   "reason": "book: outputcode at line 263 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:448",
+   "command": "dbt run; echo \"exit code: $?\"",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:469",
+   "command": "dbt run --fail-fast",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:470",
+   "command": "dbt build --exclude-resource-type unit_test",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:479",
+   "command": "dbt build -q; echo \"exit code: $?\"",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:497",
+   "command": "dbt build -s stg_jaffle_shop__orders+",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:507",
+   "command": "dbt build -s stg_jaffle_shop__orders+",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:517",
+   "command": "dbt run -s stg_jaffle_shop__orders stg_jaffle_shop__customers",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:757",
+   "command": "dbt build --target prod --exclude-resource-type unit_test",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:850",
+   "command": "dbt clone --state prod-artifacts",
+   "reason": "dbt clone: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:880",
+   "command": "dbt clone -s fct_monthly_revenue --state prod-artifacts",
+   "reason": "book: outputcode at line 882 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:976",
+   "command": "dbt clone -s fct_orders --state prod-artifacts --full-refresh",
+   "reason": "book: outputcode at line 979 follows 2 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:1012",
+   "command": "dbt clone --select \"state:modified+,config.materialized:incremental,state:old\" --state prod-artifacts",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:1112",
+   "command": "dbt clone --state prod-artifacts",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:1119",
+   "command": "dbt clone -s fct_monthly_revenue --state prod-artifacts",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:1142",
+   "command": "dbt clone -s fct_orders --state prod-artifacts --full-refresh",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:1149",
+   "command": "dbt run -s fct_orders fct_monthly_revenue",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:1150",
+   "command": "dbt build -q; echo \"exit code: $?\"",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part6/ch23-pipelines-clone.tex:1156",
+   "command": "dbt build --target prod --exclude-resource-type unit_test -q; echo \"exit code: $?\"",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:51",
+   "command": "dbt build -s fct_monthly_revenue -q",
+   "reason": "dbt build: no 'N of M' node lines in the output"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:263",
+   "command": "dbt ls --select state:modified --state prod-artifacts",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:264",
+   "command": "dbt ls --select state:modified+ --state prod-artifacts",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:269",
+   "command": "dbt ls --select state:modified.body --state prod-artifacts",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:270",
+   "command": "dbt ls --select state:modified.configs --state prod-artifacts",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:271",
+   "command": "dbt ls --select state:new --state prod-artifacts",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:510",
+   "command": "dbt ls -s state:modified.configs --state prod-artifacts --exclude fct_monthly_revenue",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:511",
+   "command": "dbt ls -s state:modified.body --state prod-artifacts --exclude fct_monthly_revenue",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:874",
+   "command": "dbt build --select fct_monthly_revenue --target ci",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:875",
+   "command": "dbt build --select fct_monthly_revenue --target ci --defer --state prod-artifacts",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:973",
+   "command": "dbt clone --select \"state:modified+,config.materialized:incremental,state:old\" --state prod-artifacts --target ci",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:1060",
+   "command": "dbt build --exclude-resource-type unit_test",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:1245",
+   "command": "dbt build --select fct_monthly_revenue+",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:1268",
+   "command": "dbt build --target prod --exclude-resource-type unit_test -q; echo \"exit code: $?\"",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch24-state-defer-retry.tex:1270",
+   "command": "dbt ls --select state:modified --state prod-artifacts",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch25-environments-ci.tex:102",
+   "command": "dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target dev -q",
+   "reason": "book: outputcode at line 106 follows 3 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch25-environments-ci.tex:103",
+   "command": "dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target ci -q",
+   "reason": "book: outputcode at line 106 follows 3 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch25-environments-ci.tex:104",
+   "command": "dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target prod -q",
+   "reason": "book: outputcode at line 106 follows 3 commands (outputs mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch25-environments-ci.tex:643",
+   "command": "cd ../main && dbt deps && dbt build --target prod --exclude-resource-type unit_test",
+   "reason": "several dbt commands in one shell line (outputs are mixed)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch25-environments-ci.tex:647",
+   "command": "dbt ls --select state:modified+ --state prod-artifacts --target ci",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch25-environments-ci.tex:648",
+   "command": "dbt run --select state:modified+ --defer --state prod-artifacts --target ci --empty",
+   "reason": "book lab instruction (no output shown in the block)"
+  },
+  {
+   "source": "dbt-bible/parts/part7/ch25-environments-ci.tex:649",
+   "command": "dbt build --select state:modified+ --defer --state prod-artifacts --target ci",
+   "reason": "book lab instruction (no output shown in the block)"
+  }
+ ]
+}

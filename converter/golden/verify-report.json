@@ -1,0 +1,498 @@
+{
+ "entries": 435,
+ "status": {
+  "intermediate_state": 26,
+  "not_rerun": 59,
+  "ok": 343,
+  "ok_other_tag": 7
+ },
+ "status_meaning": {
+  "ok": "re-run at the entry's tag (with the documented demo edit when there is one): same nodes",
+  "ok_other_tag": "same nodes at another tag/commit: the log was taken at that state",
+  "ok_excerpt": "book excerpt: every printed node is in the real output",
+  "intermediate_state": "different from every tag; the log/book says it was a temporary state (reason)",
+  "mismatch": "different, no explanation found",
+  "not_rerun": "needs the chapter's state artifacts, or a shell error before dbt ran"
+ },
+ "by_origin": {
+  "book": {
+   "intermediate_state": 10,
+   "not_rerun": 15,
+   "ok": 113,
+   "ok_other_tag": 3
+  },
+  "builder-log": {
+   "intermediate_state": 15,
+   "not_rerun": 38,
+   "ok": 185,
+   "ok_other_tag": 4
+  },
+  "capstone-log": {
+   "intermediate_state": 1,
+   "not_rerun": 6,
+   "ok": 45
+  }
+ },
+ "book_ch16": {
+  "intermediate_state": 4,
+  "not_rerun": 4,
+  "ok": 64
+ },
+ "by_kind": {
+  "build": {
+   "intermediate_state": 7,
+   "not_rerun": 10,
+   "ok": 60,
+   "ok_other_tag": 1
+  },
+  "ls": {
+   "intermediate_state": 9,
+   "not_rerun": 48,
+   "ok": 179,
+   "ok_other_tag": 4
+  },
+  "run": {
+   "intermediate_state": 7,
+   "not_rerun": 1,
+   "ok": 69,
+   "ok_other_tag": 2
+  },
+  "seed": {
+   "ok": 9
+  },
+  "snapshot": {
+   "intermediate_state": 2,
+   "ok": 6
+  },
+  "test": {
+   "intermediate_state": 1,
+   "ok": 20
+  }
+ },
+ "with_unique_ids": 319,
+ "not_ok": [
+  {
+   "id": "log-ch06-001",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch06.md:357",
+   "tag": "ch06",
+   "command": "dbt run",
+   "reason": "the two dbt init example models, deleted before the ch06 commit (not reproducible from any tag)",
+   "missing": [
+    "node:my_first_dbt_model",
+    "node:my_second_dbt_model"
+   ],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "log-ch06-002",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch06.md:515",
+   "tag": "ch06",
+   "command": "dbt test",
+   "reason": "the tests of the two dbt init example models, deleted before the ch06 commit (not reproducible from any tag)",
+   "missing": [
+    "test:not_null_my_first_dbt_model_id",
+    "test:not_null_my_second_dbt_model_id",
+    "test:unique_my_first_dbt_model_id",
+    "test:unique_my_second_dbt_model_id"
+   ],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "log-ch08-004",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch08.md:781",
+   "tag": "ch08",
+   "command": "dbt run --select mv_orders_by_status",
+   "reason": "demo model, not committed (log section 'Demo (not committed)') (not reproducible from any tag)",
+   "missing": [
+    "node:mv_orders_by_status"
+   ],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "log-ch10-012",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch10.md:898",
+   "tag": "ch10",
+   "command": "dbt run --select fct_monthly_revenue",
+   "reason": "alias demo, reverted afterwards (log section 6) (not reproducible from any tag)",
+   "missing": [
+    "node:monthly_revenue"
+   ],
+   "extra": [
+    "node:fct_monthly_revenue"
+   ],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "log-ch10-013",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch10.md:936",
+   "tag": "ch10",
+   "command": "dbt ls --select fct_monthly_revenue --output json --output-keys name alias relation_name",
+   "reason": "alias demo, reverted afterwards (log section 6) (not reproducible from any tag)",
+   "missing": [
+    "{\"name\": \"fct_monthly_revenue\", \"alias\": \"monthly_revenue\", \"relation_name\": \"\\\"practice\\\".\\\"dbt_adnane\\\".\\\"monthly_revenue\\\"\"}"
+   ],
+   "extra": [
+    "{\"name\": \"fct_monthly_revenue\", \"alias\": \"fct_monthly_revenue\", \"relation_name\": \"\\\"practice\\\".\\\"dbt_adnane\\\".\\\"fct_monthly_revenue\\\"\"}"
+   ],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "log-ch13-005",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch13.md:903",
+   "tag": "ch13",
+   "command": "dbt snapshot --select legacy_customers_snapshot",
+   "reason": "throwaway copy: legacy SQL snapshot demo (not reproducible from any tag)",
+   "missing": [
+    "node:legacy_customers_snapshot"
+   ],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "log-ch13-006",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch13.md:968",
+   "tag": "ch13",
+   "command": "dbt snapshot --select customers_snapshot_custom",
+   "reason": "throwaway copy: snapshot config demo (not reproducible from any tag)",
+   "missing": [
+    "node:customers_snapshot_custom"
+   ],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "log-ch16-047",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch16.md:1358",
+   "tag": "ch16",
+   "command": "dbt build --select staging tests/demo_always_fails.sql",
+   "reason": "temporary singular test tests/demo_always_fails.sql (log section 9) (not reproducible from any tag)",
+   "missing": [
+    "test:demo_always_fails"
+   ],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "log-ch16-048",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch16.md:1416",
+   "tag": "ch16",
+   "command": "dbt build --select staging path:tests/demo_always_fails.sql --fail-fast --threads 1",
+   "reason": "temporary singular test tests/demo_always_fails.sql (log section 9) (not reproducible from any tag)",
+   "missing": [
+    "test:demo_always_fails"
+   ],
+   "extra": [
+    "test:not_null_stg_jaffle_shop__order_items_order_item_id",
+    "test:not_null_stg_jaffle_shop__orders_order_id",
+    "test:not_null_stg_jaffle_shop__products_product_id",
+    "test:not_null_stg_stripe__payments_payment_id",
+    "test:unique_stg_jaffle_shop__customers_customer_id",
+    "test:unique_stg_jaffle_shop__order_items_order_item_id",
+    "test:unique_stg_jaffle_shop__orders_order_id",
+    "test:unique_stg_jaffle_shop__products_product_id",
+    "test:unique_stg_stripe__payments_payment_id"
+   ],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "log-ch17-001",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch17.md:115",
+   "tag": "ch17",
+   "command": "dbt ls --resource-type model --output json --output-keys name config.group config.access",
+   "reason": "taken before dim_customers became versioned (v1/v2 added later in Chapter 17) (not reproducible from any tag)",
+   "missing": [],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "log-ch17-010",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch17.md:759",
+   "tag": "ch17",
+   "command": "dbt ls --select dim_customers --resource-type model --output json --output-keys name version latest_version alias",
+   "reason": "taken while latest_version was still 1 (Chapter 17 promotes v2 afterwards) (not reproducible from any tag)",
+   "missing": [
+    "{\"name\": \"dim_customers\", \"version\": 1, \"latest_version\": 1, \"alias\": \"dim_customers_v1\"}",
+    "{\"name\": \"dim_customers\", \"version\": 2, \"latest_version\": 1, \"alias\": \"dim_customers_v2\"}"
+   ],
+   "extra": [
+    "{\"name\": \"dim_customers\", \"version\": 1, \"latest_version\": 2, \"alias\": \"dim_customers_v1\"}",
+    "{\"name\": \"dim_customers\", \"version\": 2, \"latest_version\": 2, \"alias\": \"dim_customers_v2\"}"
+   ],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "log-ch17-012",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch17.md:796",
+   "tag": "ch17",
+   "command": "dbt ls --select version:latest version:prerelease --resource-type model",
+   "reason": "taken while latest_version was still 1 (not reproducible from any tag)",
+   "missing": [
+    "jaffle_dbt.marts.dim_customers.v1"
+   ],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "log-ch17-017",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch17.md:999",
+   "tag": "ch17",
+   "command": "dbt run --select demo_uses_v1",
+   "reason": "temporary model demo_uses_v1 (deleted in Chapter 17) (not reproducible from any tag)",
+   "missing": [
+    "node:demo_uses"
+   ],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "log-ch17-018",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch17.md:1036",
+   "tag": "ch17",
+   "command": "dbt run --select demo_uses_v1 dim_customers.v1",
+   "reason": "temporary model demo_uses_v1 (deleted in Chapter 17) (not reproducible from any tag)",
+   "missing": [
+    "node:demo_uses"
+   ],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "log-ch23-004",
+   "status": "intermediate_state",
+   "source": "reference/builder-logs/ch23.md:287",
+   "tag": "ch23",
+   "command": "dbt build --exclude-resource-type unit_test",
+   "reason": "temporary failing singular test demo_enriched_orders_fail (not reproducible from any tag)",
+   "missing": [
+    "test:demo_enriched_orders_fail"
+   ],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "cap-m13-001",
+   "status": "intermediate_state",
+   "source": "reference/capstone-logs/m13.md:4",
+   "tag": "m13",
+   "command": "dbt build --target prod --selector nightly",
+   "reason": "production = main BEFORE the feature (fct_sessions without is_bounce), log section title (not reproducible from any tag)",
+   "missing": [],
+   "extra": [
+    "test:not_null_fct_sessions_is_bounce"
+   ],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "book-ch07-002",
+   "status": "intermediate_state",
+   "source": "dbt-bible/parts/part2/ch07-models-sources-dag.tex:647",
+   "tag": "ch07",
+   "command": "dbt run",
+   "reason": "taken before the marts were written (5 staging models) (not reproducible from any tag)",
+   "missing": [],
+   "extra": [
+    "node:dim_customers",
+    "node:fct_orders"
+   ],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "book-ch08-002",
+   "status": "intermediate_state",
+   "source": "dbt-bible/parts/part2/ch08-materializations.tex:743",
+   "tag": "ch08",
+   "command": "dbt ls --select config.materialized:view --resource-type model",
+   "reason": "taken before the marts folder config (+materialized: table) was added (not reproducible from any tag)",
+   "missing": [
+    "jaffle_dbt.marts.dim_customers"
+   ],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "book-ch10-001",
+   "status": "intermediate_state",
+   "source": "dbt-bible/parts/part2/ch10-configuration.tex:371",
+   "tag": "ch10",
+   "command": "dbt ls -s intermediate --output json --output-keys name config",
+   "reason": "book output abbreviated (selected keys) and taken with a temporary meta config (not reproducible from any tag)",
+   "missing": [
+    "There are 1 unused configuration paths:",
+    "- models.jaffle_dbt.intermediate.meta"
+   ],
+   "extra": [
+    "{\"name\": \"int_orders__enriched\", \"config\": {\"enabled\": true, \"alias\": null, \"schema\": null, \"database\": null, \"tags\": [\"intermediate\"], \"meta\": {}, \"group\": null, \"static_analysis\": null, \"materialized\": \"view\", \"incremental_strategy\": null, \"batch_size\": null, \"lookback\": 1, \"begin\": null, \"persist_docs\": {}, \"post-hook\": [], \"pre-hook\": [], \"quoting\": {}, \"column_types\": {}, \"full_refresh\": null, \"unique_key\": null, \"on_schema_change\": \"ignore\", \"on_configuration_change\": \"apply\", \"grants\": {}, \"packages\": [], \"docs\": {\"show\": true, \"node_color\": \"#F9A825\"}, \"contract\": {\"enforced\": false, \"alias_types\": true}, \"event_time\": null, \"concurrent_batches\": null, \"access\": \"protected\", \"freshness\": null}}",
+    "{\"name\": \"int_payments__successful\", \"config\": {\"enabled\": true, \"alias\": null, \"schema\": null, \"database\": null, \"tags\": [\"intermediate\"], \"meta\": {}, \"group\": null, \"static_analysis\": null, \"materialized\": \"ephemeral\", \"incremental_strategy\": null, \"batch_size\": null, \"lookback\": 1, \"begin\": null, \"persist_docs\": {}, \"post-hook\": [], \"pre-hook\": [], \"quoting\": {}, \"column_types\": {}, \"full_refresh\": null, \"unique_key\": null, \"on_schema_change\": \"ignore\", \"on_configuration_change\": \"apply\", \"grants\": {}, \"packages\": [], \"docs\": {\"show\": true, \"node_color\": \"#F9A825\"}, \"contract\": {\"enforced\": false, \"alias_types\": true}, \"event_time\": null, \"concurrent_batches\": null, \"access\": \"protected\", \"freshness\": null}}"
+   ],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "book-ch11-001",
+   "status": "intermediate_state",
+   "source": "dbt-bible/parts/part2/ch11-jinja-macros-packages.tex:199",
+   "tag": "ch11",
+   "command": "dbt ls -s 1+tmp_comment_demo --resource-type model",
+   "reason": "temporary model tmp_comment_demo (not reproducible from any tag)",
+   "missing": [
+    "jaffle_dbt.marts.dim_customers",
+    "jaffle_dbt.marts.tmp_comment_demo"
+   ],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "book-ch11-002",
+   "status": "intermediate_state",
+   "source": "dbt-bible/parts/part2/ch11-jinja-macros-packages.tex:1019",
+   "tag": "ch11",
+   "command": "dbt ls -s fct_orders        # with require-dbt-version: [\">=1.12.0\", \"<2.0.0\"] in our dbt_project.yml",
+   "reason": "temporary require-dbt-version: [\">=1.12.0\", \"<2.0.0\"] (not reproducible from any tag)",
+   "missing": [],
+   "extra": [
+    "jaffle_dbt.marts.fct_orders"
+   ],
+   "error_expected": "Encountered an error:\nRuntime Error\nThis version of dbt is not supported with the 'jaffle_dbt' package.\nInstalled version of dbt: =1.11.16\nRequired version of dbt for 'jaffle_dbt': ['>=1.12.0', '<2.0.0']\nCheck for a different version of the 'jaffle_dbt' package, or run dbt again with --no-version-ch",
+   "error_actual": ""
+  },
+  {
+   "id": "book-ch14-006",
+   "status": "intermediate_state",
+   "source": "dbt-bible/parts/part2/ch14-incremental-microbatch.tex:651",
+   "tag": "ch14",
+   "command": "dbt run --select playground",
+   "reason": "lab 14.2: temporary models/playground/ folder (toy_* models) (not reproducible from any tag)",
+   "missing": [
+    "node:toy_append",
+    "node:toy_dup_del_ins",
+    "node:toy_dup_merge",
+    "node:toy_null_key"
+   ],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "book-ch16-001",
+   "status": "intermediate_state",
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:228",
+   "tag": "ch16",
+   "command": "dbt build -s stg_stripe__payments+",
+   "reason": "temporary failing test demo_payment_check (not reproducible from any tag)",
+   "missing": [
+    "test:demo_payment_check"
+   ],
+   "extra": [],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "book-ch16-063",
+   "status": "intermediate_state",
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1961",
+   "tag": "ch16",
+   "command": "dbt build --select staging tests/demo_always_fails.sql",
+   "reason": "temporary test demo_always_fails (not reproducible from any tag)",
+   "missing": [
+    "test:demo_always_fails"
+   ],
+   "extra": [
+    "node:stg_jaffle_shop__customers",
+    "node:stg_jaffle_shop__order_items",
+    "node:stg_jaffle_shop__orders",
+    "node:stg_jaffle_shop__products",
+    "node:stg_stripe__payments",
+    "test:not_null_stg_jaffle_shop__customers_customer_id",
+    "test:not_null_stg_jaffle_shop__order_items_order_item_id",
+    "test:not_null_stg_jaffle_shop__orders_order_id",
+    "test:not_null_stg_jaffle_shop__products_product_id",
+    "test:not_null_stg_stripe__payments_payment_id",
+    "test:unique_stg_jaffle_shop__customers_customer_id",
+    "test:unique_stg_jaffle_shop__order_items_order_item_id",
+    "test:unique_stg_jaffle_shop__orders_order_id",
+    "test:unique_stg_jaffle_shop__products_product_id",
+    "test:unique_stg_stripe__payments_payment_id"
+   ],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "book-ch16-064",
+   "status": "intermediate_state",
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:1967",
+   "tag": "ch16",
+   "command": "dbt build --select staging tests/demo_always_fails.sql --fail-fast --threads 1",
+   "reason": "temporary test demo_always_fails (not reproducible from any tag)",
+   "missing": [
+    "test:demo_always_fails"
+   ],
+   "extra": [
+    "node:stg_jaffle_shop__customers",
+    "node:stg_jaffle_shop__order_items",
+    "node:stg_jaffle_shop__orders",
+    "node:stg_jaffle_shop__products",
+    "test:not_null_stg_jaffle_shop__order_items_order_item_id",
+    "test:not_null_stg_jaffle_shop__orders_order_id",
+    "test:not_null_stg_jaffle_shop__products_product_id",
+    "test:not_null_stg_stripe__payments_payment_id",
+    "test:unique_stg_jaffle_shop__customers_customer_id",
+    "test:unique_stg_jaffle_shop__order_items_order_item_id",
+    "test:unique_stg_jaffle_shop__orders_order_id",
+    "test:unique_stg_jaffle_shop__products_product_id",
+    "test:unique_stg_stripe__payments_payment_id"
+   ],
+   "error_expected": null,
+   "error_actual": null
+  },
+  {
+   "id": "book-ch16-069",
+   "status": "intermediate_state",
+   "source": "dbt-bible/parts/part2/ch16-commands-selection.tex:2102",
+   "tag": "ch16",
+   "command": "dbt ls --select fct_orders",
+   "reason": "run right after `dbt clean` (dbt_packages deleted) (not reproducible from any tag)",
+   "missing": [],
+   "extra": [
+    "jaffle_dbt.marts.fct_orders"
+   ],
+   "error_expected": "Encountered an error:\nCompilation Error\ndbt found 2 package(s) specified in packages.yml, but only 0 package(s) installed in dbt_packages. Run \"dbt deps\" to install package dependencies.",
+   "error_actual": ""
+  }
+ ]
+}

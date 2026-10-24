@@ -114,6 +114,8 @@ ANNOTATIONS = {
     ("ch10-configuration.tex", "dbt run"): "hook / custom schema demos of Chapter 10 (temporary)",
     ("ch11-jinja-macros-packages.tex", "dbt ls -s 1+tmp_comment_demo"): "temporary model tmp_comment_demo",
     ("ch11-jinja-macros-packages.tex", "dbt ls -s fct_orders"): "temporary require-dbt-version: [\">=1.12.0\", \"<2.0.0\"]",
+    ("ch14-incremental-microbatch.tex", "dbt run --select playground"): "lab 14.2: temporary models/playground/ "
+                                                                         "folder (toy_* models)",
     ("ch16-commands-selection.tex", "dbt build -s stg_stripe__payments+"): "temporary failing test demo_payment_check",
     ("ch16-commands-selection.tex", "dbt build --select staging tests/demo_always_fails.sql"): "temporary test demo_always_fails",
     ("ch16-commands-selection.tex", "dbt ls --select fct_orders"): "run right after `dbt clean` (dbt_packages deleted)",
@@ -227,6 +229,9 @@ def dag(key: str, tag: str) -> dict | None:
 def name_of_canon(c: str, d: dict | None) -> str:
     """'rel:dbt_adnane.dim_customers_v1' -> 'dim_customers' (model name), 'test:x' -> 'x' ..."""
     kind, _, val = c.partition(":")
+    if kind == "unit_test":
+        # START lines of a versioned model's unit test say "<name>_v2", SKIP lines only "<name>"
+        return "unit_test:" + re.sub(r"_v[0-9]+$", "", val)
     if kind != "rel":
         return f"{kind}:{val}"
     ident = val.split(".")[-1]

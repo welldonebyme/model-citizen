@@ -1,0 +1,3326 @@
+# Chapter quiz question -> the lesson it tests and the exam objective it trains.
+# Agent-mapped, then independently reviewed (workflow quiz-question-mapping, 2026-10-24): 487 questions, 17 corrected by the reviewer.
+# Used for inline checkpoints in lessons and for mastery per objective. Keep ids stable.
+questions:
+  q-ch00-01:
+    lesson: ch00-s5
+    objective: PLAN
+    confidence: high
+    reviewed_change: false
+    reason: '0.5 Logistics row ''Version tested: dbt Core 1.11'' is the direct fact; 0.6 ''Beware of old study material'' only backs up the 1.7
+      distractor. The question is about the exam itself, so PLAN.'
+  q-ch00-02:
+    lesson: ch00-s5
+    objective: PLAN
+    confidence: high
+    reviewed_change: false
+    reason: 0.5 Logistics gives Length 65 questions, Duration 2 hours (120 minutes), Passing score 65% or higher.
+  q-ch00-03:
+    lesson: ch00-s5
+    objective: PLAN
+    confidence: high
+    reviewed_change: false
+    reason: 'All three facts are in 0.5: ''Open book? No'', ''How scoring works'' (no penalty for a wrong answer), and the DOMC format (''Once
+      you answer an option, you cannot go back to it'').'
+  q-ch00-04:
+    lesson: ch00-s5
+    objective: PLAN
+    confidence: high
+    reviewed_change: false
+    reason: '0.5 ''How scoring works'': 1 point if correct, 0 if wrong, no penalty for a wrong answer.'
+  q-ch00-05:
+    lesson: ch00-s6
+    objective: PLAN
+    confidence: high
+    reviewed_change: false
+    reason: 0.6 says the guide lists 7 topics, that it publishes no topic weights ('How much is each topic worth?'), and that documentation is
+      no longer a separate topic ('Beware of old study material'). Its table lists CP0-SQL as joins, aggregations, CTEs and window functions.
+  q-ch00-06:
+    lesson: ch00-s4
+    objective: PLAN
+    confidence: high
+    reviewed_change: false
+    reason: '0.4 ''How to study so it sticks'' gives the loop in order: Read the chapter, Do every lab, Test yourself, Review every mistake.'
+  q-ch00-07:
+    lesson: ch00-s7
+    objective: PLAN
+    confidence: high
+    reviewed_change: false
+    reason: '0.7 ''When are you ready to book the exam?'' lists four conditions: quizzes at 80%, capstone finished, two timed mocks at 80%+, error
+      notebook re-read. Memorising questions is not one of them, and the 0.4 trap warns against it.'
+  q-ch01-01:
+    lesson: ch01-s3
+    objective: CP0-DATA
+    confidence: high
+    reviewed_change: false
+    reason: The 1.3 'ETL vs ELT' table says ELT transforms 'Inside the warehouse, after loading'. ELT is in the chapter's CP0-DATA vocabulary
+      list.
+  q-ch01-02:
+    lesson: ch01-s5
+    objective: CP0-DATA
+    confidence: high
+    reviewed_change: false
+    reason: 1.5 'The simple definition' says dbt works out the dependencies, compiles Jinja into pure SQL and runs it in the warehouse in the
+      right order (options A and D). 'What dbt is not' says it is not a loading tool and stores no data (options B and C). This is core vocabulary
+      about what dbt is.
+  q-ch01-03:
+    lesson: ch01-s6
+    objective: CP0-DATA
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''Grain: the most important word in modeling'': ''The grain of a table is the answer to the question: What does one row represent?'''
+  q-ch01-04:
+    lesson: ch01-s6
+    objective: CP0-DATA
+    confidence: high
+    reviewed_change: false
+    reason: 'The Grain step: order 1 has two payments, and joining orders to payments counts it twice. It says mixing grains by accident causes
+      fan-out. The question is framed around grain mismatch, so CP0-DATA (lesson tag) fits better than CP0-SQL.'
+  q-ch01-05:
+    lesson: ch01-s6
+    objective: CP0-DATA
+    confidence: high
+    reviewed_change: false
+    reason: The 'Facts and dimensions' step (customers and products are dimensions; payments and order lines are facts) and the lab's expected
+      result both give this classification.
+  q-ch01-06:
+    lesson: ch01-s5
+    objective: CP0-DATA
+    confidence: medium
+    reviewed_change: false
+    reason: '''The dbt family of products'' table: dbt Core is the free, open-source command-line tool, and the exam is based on dbt Core 1.11.
+      Studio, the platform and Fusion are described there too. This is product vocabulary, under the chapter''s CP0-DATA foundation.'
+  q-ch01-07:
+    lesson: ch01-s5
+    objective: CP0-DATA
+    confidence: high
+    reviewed_change: false
+    reason: 1.5 says dbt wraps each select in create view/table and can test, document and show lineage (A, C, D). 'What dbt is not' says it is
+      not a loading tool and not a dashboard tool (B, E).
+  q-ch01-08:
+    lesson: ch01-s6
+    objective: CP0-DATA
+    confidence: high
+    reviewed_change: false
+    reason: 'The Keys step uses this exact example: ''order 159 points to customer 101, who does not exist: an orphan row''.'
+  q-ch01-09:
+    lesson: ch01-s3
+    objective: CP0-DATA
+    confidence: high
+    reviewed_change: false
+    reason: '1.3 lists the pipeline in order: Sources (the app records the order), Extract and Load (loading tool), Transform (dbt), Use (BI dashboards).'
+  q-ch01-10:
+    lesson: ch01-s6
+    objective: '1.10'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The ''Slowly changing dimensions'' step: Type 1 overwrites and loses history (sales move to the new country); Type 2 keeps every
+      version with valid from/to dates; dbt implements Type 2 with snapshots. The chapter intro maps 1.10 to ''Slowly changing dimensions: the
+      business problem that snapshots solve''. CP0-DATA is the alternative, since the question does not test snapshot syntax.'
+  q-ch01-11:
+    lesson: ch01-s2
+    objective: CP0-DATA
+    confidence: high
+    reviewed_change: false
+    reason: 'The ''Row storage vs column storage'' step: to sum a column the warehouse reads only that column, and values in a column compress
+      very well.'
+  q-ch01-12:
+    lesson: ch01-s7
+    objective: '1.5'
+    confidence: high
+    reviewed_change: false
+    reason: '''A first look at the DAG'': sources feed staging models (one per source table), which feed marts. The trap says a DAG cannot have
+      a cycle, and that reading a table directly instead of through source()/ref() hides the dependency. The intro maps 1.5 to a clean flow of
+      models.'
+  q-ch01-13:
+    lesson: ch01-s1
+    objective: CP0-DATA
+    confidence: high
+    reviewed_change: false
+    reason: 'The ''Database, schema, table'' step: ''To find a table you say database.schema.table''.'
+  q-ch01-14:
+    lesson: ch01-s7
+    objective: '1.3'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 1.7 habits table: DRY means ''write a piece of logic once (a model or a macro) and reference it everywhere''. The intro maps
+      1.3 to Modularity and DRY.'
+  q-ch02-01:
+    lesson: ch02-s2
+    objective: CP0-CLI
+    confidence: high
+    reviewed_change: false
+    reason: '2.2: a relative path starts from where you are (''if you are in /Users/you/dbt-course, then practice/setup.sql means...''). The navigation
+      code block shows cd with a relative path.'
+  q-ch02-02:
+    lesson: ch02-s2
+    objective: CP0-CLI
+    confidence: high
+    reviewed_change: false
+    reason: '''The three navigation commands'' code block: ''pwd  # print working directory: where am I?'''
+  q-ch02-03:
+    lesson: ch02-s4
+    objective: CP0-CLI
+    confidence: high
+    reviewed_change: false
+    reason: '''Pipes and redirection'': ''>'' writes the output into a file and replaces it, ''>>'' appends. The trap: ''>'' silently replaces
+      the whole file.'
+  q-ch02-04:
+    lesson: ch02-s2
+    objective: CP0-CLI
+    confidence: medium
+    reviewed_change: false
+    reason: 2.2 'Special names' defines three of the five symbols (~ home, . current, .. parent). The pipe | and the wildcard * are in 2.4 (Pipes
+      and redirection, Wildcards), so ch02-s4 is the alternative.
+  q-ch02-05:
+    lesson: ch02-s8
+    objective: CP0-CLI
+    confidence: high
+    reviewed_change: false
+    reason: '''Why a virtual environment?'' in 2.8: ''You must activate it again in every new terminal window'', and the trap ''If dbt says command
+      not found... no (.venv) means you forgot source .venv/bin/activate''. 2.6 (PATH) and the 2.9 troubleshooting table repeat this.'
+  q-ch02-06:
+    lesson: ch02-s7
+    objective: '3.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The Exit codes step of 2.7: 0 means success, any other number means failure. The dbt box says CI systems use the code to decide whether
+      a job passed. The chapter intro maps 3.1 to ''Read messages and errors printed in the terminal, and understand exit codes''. CP0-CLI is
+      a reasonable alternative because options B and D are generic shell facts.'
+  q-ch02-07:
+    lesson: ch02-s8
+    objective: CP0-CLI
+    confidence: medium
+    reviewed_change: false
+    reason: 'The step ''Install dbt Core 1.11 with the DuckDB adapter'': ''~=1.11.0 means version 1.11.anything... We pin 1.11 on purpose because
+      the exam is based on dbt Core 1.11''. This is a setup fact under the chapter''s CP0-CLI objective; PLAN is reserved for Part 0.'
+  q-ch02-08:
+    lesson: ch02-s9
+    objective: CP0-CLI
+    confidence: high
+    reviewed_change: false
+    reason: 'The 2.9 main lab runs this sequence: mkdir -p ~/dbt-course/practice and cd ~/dbt-course, uv venv --python 3.12 .venv, source .venv/bin/activate,
+      uv pip install dbt-core/dbt-duckdb ~=1.11.0, then dbt --version. The lesson is tagged CP0-CLI.'
+  q-ch02-09:
+    lesson: ch02-s6
+    objective: '1.6'
+    confidence: medium
+    reviewed_change: false
+    reason: '''Why secrets go in environment variables'': passwords must never be in files that go into git, and dbt reads them with env_var().
+      The chapter intro maps 1.6 to ''Environment variables, the base of env_var() in dbt configurations''.'
+  q-ch02-10:
+    lesson: ch02-s5
+    objective: CP0-GIT
+    confidence: medium
+    reviewed_change: false
+    reason: In 2.5, the hidden files table says .gitignore lists files like target/ or .venv/. The dbt box says target/, logs/ and dbt_packages/
+      are generated, so .gitignore normally lists them. CP0-GIT is outside the chapter list, but the question clearly tests what to commit to
+      git, not terminal use.
+  q-ch02-11:
+    lesson: ch02-s3
+    objective: CP0-CLI
+    confidence: high
+    reviewed_change: false
+    reason: 'The 2.3 command table: ''rm -r folder removes a folder and everything inside'', and ''mv old new'' moves or renames.'
+  q-ch02-12:
+    lesson: ch02-s7
+    objective: CP0-CLI
+    confidence: medium
+    reviewed_change: false
+    reason: 'The Exit codes step of 2.7: ''The operator && runs the second command only if the first one succeeded (exit code 0)'', with the example
+      ''dbt build && echo ...''. The distractors (; and ||, and whether && works in zsh) test shell operators, so CP0-CLI rather than 3.1.'
+  q-ch02-13:
+    lesson: ch02-s7
+    objective: '3.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The 2.7 trap: a dbt warning (a test with severity: warn) does not make dbt return a failure code; only --warn-error changes that.
+      This is reading dbt results and exit codes, which the chapter intro maps to 3.1.'
+  q-ch02-14:
+    lesson: ch02-s2
+    objective: CP0-CLI
+    confidence: high
+    reviewed_change: false
+    reason: 2.2 explains that the -a option ('all') of ls also shows hidden files whose names start with a dot (the ls -la example). 2.5 only
+      says a normal ls hides them.
+  q-ch03-01:
+    lesson: ch03-s7
+    objective: CP0-GIT
+    confidence: high
+    reviewed_change: false
+    reason: Step 3.7.4 'Keeping your feature branch up to date with main' shows exactly git switch main, git pull, git switch back, git merge
+      main. Step 3.7.3 in the same lesson says fetch only downloads.
+  q-ch03-02:
+    lesson: ch03-s7
+    objective: CP0-GIT
+    confidence: high
+    reviewed_change: false
+    reason: Step 3.7.3 says 'git pull = git fetch + git merge' and that it 'can create a merge commit or a conflict'. The remote command table
+      in 3.7.1 gives git push as the upload command.
+  q-ch03-03:
+    lesson: ch03-s3
+    objective: CP0-GIT
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 3.3.2 ''The .gitignore file'' lists the .gitignore that dbt init writes: target/, dbt_packages/ and logs/. It also says packages.yml
+      is committed.'
+  q-ch03-04:
+    lesson: ch03-s7
+    objective: CP0-GIT
+    confidence: high
+    reviewed_change: false
+    reason: Step 3.7.2 runs git push -u origin main and explains that -u links the local main with origin/main (the upstream).
+  q-ch03-05:
+    lesson: ch03-s8
+    objective: '3.4'
+    confidence: high
+    reviewed_change: false
+    reason: 'The Pull requests lesson (objectives CP0-GIT and 3.4) shows the eight-step PR flow: branch, edit and test, push, open PR, CI and
+      review, merge, then pull main. Its CI paragraph says this is exactly the objective ''developing and implementing a fix and testing it prior
+      to merging''.'
+  q-ch03-06:
+    lesson: ch03-s4
+    objective: CP0-GIT
+    confidence: medium
+    reviewed_change: false
+    reason: The everyday-cycle lesson teaches git diff --staged ('what will go into the next commit?'), git log --oneline and git restore, and
+      uses git status throughout. Only git stash is taught elsewhere (3.6.4). The 3.12 cheat sheet summarises all five commands, but 3.4 is where
+      they are taught.
+  q-ch03-07:
+    lesson: ch03-s6
+    objective: CP0-GIT
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 3.6.2 ''Reading the conflict'' has a marker table: <<<<<<< HEAD starts your version, ======= separates the two, and >>>>>>>
+      branch ends the incoming version.'
+  q-ch03-08:
+    lesson: ch03-s5
+    objective: CP0-GIT
+    confidence: high
+    reviewed_change: false
+    reason: Step 3.5.3 states that 'a merge is fast-forward only when the branch you merge into has no new commits since the other branch was
+      created'. Step 3.5.2 explains --no-edit.
+  q-ch03-09:
+    lesson: ch03-s10
+    objective: CP0-GIT
+    confidence: high
+    reviewed_change: false
+    reason: Lesson 3.10 says 'Main is protected. Studio never commits directly to the main (primary) branch... when you commit, Studio asks you
+      to commit to a new branch.'
+  q-ch03-10:
+    lesson: ch03-s11
+    objective: CP0-GIT
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 3.11.2 ''Revert: undo a pushed commit the safe way'' teaches this, and the closing warning says to undo shared branches with
+      git revert, not reset or amend with a force push.'
+  q-ch03-11:
+    lesson: ch03-s5
+    objective: CP0-GIT
+    confidence: high
+    reviewed_change: false
+    reason: Step 3.5.1 says a branch is a movable pointer (label) and that creating one copies no file and is fast. Step 3.5.2 says git branch
+      -d only removes the label and the commits stay in main.
+  q-ch03-12:
+    lesson: ch03-s3
+    objective: CP0-GIT
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step 3.3.2 says profiles.yml with real passwords must never be committed: it lives in ~/.dbt/, and secrets are read with env_var(),
+      never written in a file Git tracks. This is the only place in Chapter 3 that teaches it.'
+  q-ch03-13:
+    lesson: ch03-s6
+    objective: CP0-GIT
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 3.6.3 gives the recipe: find the files marked ''both modified'', choose the code, delete the markers, test, then git add and
+      git commit.'
+  q-ch03-14:
+    lesson: ch03-s9
+    objective: CP0-GIT
+    confidence: high
+    reviewed_change: false
+    reason: Step 3.9.2 says feature branches are merged into qa (or dev) first, and qa is merged into main once validated. CP0-GIT covers branching
+      strategies.
+  q-ch03-15:
+    lesson: ch03-s11
+    objective: CP0-GIT
+    confidence: high
+    reviewed_change: false
+    reason: Step 3.11.1 shows git commit --amend -m. The lesson's table says amend is only safe if the commit is not pushed.
+  q-ch04-01:
+    lesson: ch04-s4
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: Step 4.4.2 says 'where email = null runs without any error, and returns zero rows... Always write is null'.
+  q-ch04-02:
+    lesson: ch04-s4
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: Step 4.4.5 shows count(*) = 100 against count(email) = 95, so count(column) ignores NULLs.
+  q-ch04-03:
+    lesson: ch04-s7
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: Step 4.7.2 says having filters groups after grouping, and an aggregate in where is an error because the groups do not exist yet.
+  q-ch04-04:
+    lesson: ch04-s7
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 4.7.3 gives the evaluation order: from, where, group by, having, select, order by, limit.'
+  q-ch04-05:
+    lesson: ch04-s8
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: The table in step 4.8.1 defines what inner, left, full outer and cross joins keep for customers and orders.
+  q-ch04-06:
+    lesson: ch04-s7
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: 'The golden rule in step 4.7.1: every selected column must be in the group by or inside an aggregate. Step 4.7.3 explains why order
+      by can use a select alias.'
+  q-ch04-07:
+    lesson: ch04-s4
+    objective: CP0-SQL
+    confidence: medium
+    reviewed_change: false
+    reason: 'Three of the four statements are taught in the NULL lesson: null = null in 4.4.1, count(*) in 4.4.5, and NOT IN with NULL in 4.4.3.
+      Only BETWEEN comes from 4.3.4.'
+  q-ch04-08:
+    lesson: ch04-s8
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: Step 4.8.4 on grain and fan-out shows payments joined to order_items inflating the sum. The exercise answer says each payment row
+      is repeated once per item line.
+  q-ch04-09:
+    lesson: ch04-s8
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 4.8.5 says a filter on the right table of a left join belongs in the on clause. In where it turns the join into an inner join:
+      290 rows instead of 300.'
+  q-ch04-10:
+    lesson: ch04-s2
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: Step 4.2.2 says integer division differs by warehouse (Postgres gives 7 / 2 = 3) and that you should make one side decimal, for example
+      amount / 100.0.
+  q-ch04-11:
+    lesson: ch04-s8
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: 'The answer to the joins lesson exercise: customers 96 and 97 give count(*) = 1 but count(o.id) = 0 after a left join, so count a
+      column of the right table.'
+  q-ch04-12:
+    lesson: ch04-s4
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: Step 4.4.4 says nullif(a, b) returns NULL when a = b, and revenue / nullif(n_orders, 0) returns NULL instead of failing.
+  q-ch04-13:
+    lesson: ch04-s14
+    objective: CP0-SQL
+    confidence: medium
+    reviewed_change: false
+    reason: Step 4.14.1 says a second create table fails, create or replace is idempotent, and an insert duplicates rows. The question is about
+      plain SQL statements, so CP0-SQL fits better than 1.2.
+  q-ch04-14:
+    lesson: ch04-s12
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: Step 4.12.3 says the first order has no previous row in its partition, so lag returns NULL.
+  q-ch04-15:
+    lesson: ch04-s17
+    objective: '1.3'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The refactoring lesson (objectives CP0-SQL and 1.3, based on ''Refactoring SQL for Modularity'') orders the steps: save the old result
+      first, then import CTEs, then logical CTEs, and Step 7 compares with except in both directions.'
+  q-ch04-16:
+    lesson: ch04-s8
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: Step 4.8.5 says a where filter on the right table of a left join removes the NULL rows, so the left join silently becomes an inner
+      join; move the condition to the on clause.
+  q-ch04-17:
+    lesson: ch04-s10
+    objective: CP0-SQL
+    confidence: medium
+    reviewed_change: false
+    reason: The subqueries lesson teaches not exists as 'the safe version of customers without orders' (option A). Its scalar-subquery step shows
+      '= (select user_id ...)' failing because it returns 300 rows (option D). The anti-join in B and the inner-join point in C are in 4.8.
+  q-ch04-18:
+    lesson: ch04-s10
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 4.10.2 uses exactly ''3 not in (1, 2, null)'': it is unknown, so where drops the row, and one NULL in the subquery returns zero
+      rows.'
+  q-ch04-19:
+    lesson: ch04-s12
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: Step 4.12.2 says rank() skips the next number after a tie and dense_rank() does not.
+  q-ch04-20:
+    lesson: ch04-s12
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: Step 4.12.6 says qualify filters on window results and exists in DuckDB, Snowflake and BigQuery, but not in Postgres.
+  q-ch04-21:
+    lesson: ch04-s12
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: The default-frame note in step 4.12.4 says the default is 'range between unbounded preceding and current row', so tied peers get the
+      same running total.
+  q-ch04-22:
+    lesson: ch04-s15
+    objective: '1.2'
+    confidence: high
+    reviewed_change: false
+    reason: Step 4.15.1 'From SQL objects to dbt materializations' maps view, table (CTAS), incremental (insert or merge after the first run)
+      and ephemeral (pasted as a CTE).
+  q-ch04-23:
+    lesson: ch04-s13
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: The set operations lesson shows union all returning 139 rows (46 + 93, duplicates kept) and union removing duplicates (72 rows).
+  q-ch04-24:
+    lesson: ch04-s12
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: Step 4.12.6 shows exactly this query failing with 'WHERE clause cannot contain window functions', and fixes it with a CTE or qualify.
+  q-ch04-25:
+    lesson: ch04-s11
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: 'The CTE syntax rules in 4.11: a CTE lives only during the statement and can read CTEs above it, not below. Step 4.11.1 ends the dbt
+      pattern with select * from final.'
+  q-ch04-26:
+    lesson: ch04-s15
+    objective: '1.2'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The views and tables lesson (lab ''CP0-SQL 1.2 Views versus tables'') runs this exact experiment: 301 from the view, 300 from the
+      table until rebuilt. This is the freshness trade-off between the view and table materializations.'
+  q-ch04-27:
+    lesson: ch04-s17
+    objective: '1.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step 0 ''list the raw tables (and count the sources)'': a source groups the tables of one database/schema, and you count distinct
+      tables. This tests identifying raw object dependencies (1.1), not modularity, so the off-chapter id is justified.'
+  q-ch04-28:
+    lesson: ch04-s8
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: Step 4.8.5 says 'an order with two payments appears on two rows', hence count(distinct o.id), and 4.8.4 says count(distinct) can rescue
+      a count. The 341/290 numbers reappear in 4.18, but the fix is taught in 4.8.
+  q-ch04-29:
+    lesson: ch04-s11
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 4.11.1 ''The dbt CTE pattern: import, logic, final'' gives the order: import CTEs, logical CTEs, final CTE, then select * from
+      final.'
+  q-ch04-30:
+    lesson: ch04-s14
+    objective: CP0-SQL
+    confidence: medium
+    reviewed_change: false
+    reason: Step 4.14.3 'MERGE' says orders 1 and 3, which are not in the updates, were left unchanged. It tests SQL merge semantics, not a dbt
+      strategy choice, so CP0-SQL rather than 1.11.
+  q-ch05-01:
+    lesson: ch05-s2
+    objective: CP0-YAML
+    confidence: high
+    reviewed_change: false
+    reason: Step 5.2.3 'Nesting with indentation' says keys at the same level belong to the same parent and that 'Indentation is meaning'.
+  q-ch05-02:
+    lesson: ch05-s2
+    objective: '3.3'
+    confidence: high
+    reviewed_change: false
+    reason: Step 5.2.7 says a value with a colon followed by a space breaks, and Mistake 4 in 5.2.10 gives the 'mapping values are not allowed'
+      error. Finding the failing line in a properties file is .yml troubleshooting (lesson objective 3.3).
+  q-ch05-03:
+    lesson: ch05-s2
+    objective: CP0-YAML
+    confidence: high
+    reviewed_change: false
+    reason: 'The scalar table in step 5.2.6 shows ''enabled: yes'' read as the boolean True, and ''yes, no, on, off are booleans too''.'
+  q-ch05-04:
+    lesson: ch05-s2
+    objective: CP0-YAML
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 5.2.7 says every value that contains {{ ... }} must be inside quotes: schema: "{{ target.schema }}". This tests a YAML quoting
+      rule, not reading an error.'
+  q-ch05-05:
+    lesson: ch05-s3
+    objective: CP0-JINJA
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 5.3.2 ''The three delimiters'': {{ }} prints, {% %} acts and prints nothing, {# #} is a comment removed during rendering.'
+  q-ch05-06:
+    lesson: ch05-s3
+    objective: CP0-JINJA
+    confidence: high
+    reviewed_change: false
+    reason: Step 5.3.6 gives the fix {% if not loop.last %},{% endif %}. Step 5.3.7 adds the join-filter alternative and says whitespace control
+      only changes the layout.
+  q-ch05-07:
+    lesson: ch05-s3
+    objective: '3.2'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step 5.3.10 ''Compile, then run'' describes the flow: render Jinja, compiled select in target/compiled/, wrap in create, warehouse
+      executes. The step says objective 3.2 is exactly this.'
+  q-ch05-08:
+    lesson: ch05-s3
+    objective: CP0-JINJA
+    confidence: medium
+    reviewed_change: false
+    reason: 'Mixed Jinja facts, all from 5.3: the warehouse never sees a curly brace and dbt compile builds nothing (5.3.10), whitespace control
+      only changes the layout (5.3.7), and macros are reusable (5.3.8).'
+  q-ch05-09:
+    lesson: ch05-s3
+    objective: CP0-JINJA
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 5.3.9 ''Common Jinja mistakes'': a set inside a loop does not survive the loop, the template renders total=0, and you need a
+      namespace.'
+  q-ch05-10:
+    lesson: ch05-s3
+    objective: '3.2'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step 5.3.9: an undefined variable silently becomes empty text, dbt compiles ''select from t'', and the warehouse rejects it. The
+      step says to ''look at the compiled SQL, not at your model file''.'
+  q-ch05-11:
+    lesson: ch05-s3
+    objective: CP0-JINJA
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 5.3.9: inside {% ... %} you are already in Jinja, so do not add {{ }}. The correct form is {% if target.name == ''dev'' %}.'
+  q-ch05-12:
+    lesson: ch05-s2
+    objective: CP0-YAML
+    confidence: medium
+    reviewed_change: false
+    reason: 'The scalar table in step 5.2.6 shows ''zip: 01234'' read as 668 (octal in YAML 1.1); quote codes with leading zeros. This tests YAML
+      typing, not dbt_project.yml configuration, so CP0-YAML rather than 1.6.'
+  q-ch05-13:
+    lesson: ch05-s4
+    objective: '1.8'
+    confidence: high
+    reviewed_change: false
+    reason: Step 5.4.4 'A first look at a dbt Python model' says the function must return a DataFrame and dbt saves it as a table; configuration
+      goes through dbt.config().
+  q-ch05-14:
+    lesson: ch05-s4
+    objective: '1.8'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 5.4.4 says dbt sends the code to the data platform, which runs it next to the data: Snowpark on Snowflake.'
+  q-ch05-15:
+    lesson: ch05-s2
+    objective: CP0-YAML
+    confidence: high
+    reviewed_change: false
+    reason: Step 5.2.8 'Multi-line strings' says | (literal block) keeps the line breaks and > folds them.
+  q-ch05-16:
+    lesson: ch05-s2
+    objective: '3.3'
+    confidence: high
+    reviewed_change: false
+    reason: 'Mistake 2 in step 5.2.10 ''Reading YAML error messages'': ''- name:stg_orders'' is one piece of text, and dbt parse reports ''mapping
+      values are not allowed'' on the next line. Reading that error is .yml troubleshooting.'
+  q-ch06-01:
+    lesson: ch06-s6
+    objective: CP0-CLI
+    confidence: high
+    reviewed_change: false
+    reason: Step 'Where dbt looks for profiles.yml' gives the order flag > DBT_PROFILES_DIR > current folder > ~/.dbt. Chapter 6's CP0-CLI objective
+      text names this exact lookup order.
+  q-ch06-02:
+    lesson: ch06-s1
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: 6.1 lists the five steps every command goes through (load, parse, compile, execute, report) and which command stops where.
+  q-ch06-03:
+    lesson: ch06-s5
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''profile'' of 6.5: the profile key names the top-level entry of profiles.yml and is a separate key from name.'
+  q-ch06-04:
+    lesson: ch06-s5
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: Step 'name' of 6.5 shows that a hyphen is refused, with the pattern ^[^\d\W]\w*$.
+  q-ch06-05:
+    lesson: ch06-s9
+    objective: '3.2'
+    confidence: medium
+    reviewed_change: false
+    reason: The hard pairs (target/run = executed DDL, target/compiled = rendered select, logs/dbt.log) are taught in 6.9 'Compiled code versus
+      executed code' and 'logs/dbt.log'. dbt_packages/ and analyses/ come from the 6.4 table. The ch06 3.2 objective is compiled versus executed
+      code.
+  q-ch06-06:
+    lesson: ch06-s12
+    objective: CP0-GIT
+    confidence: high
+    reviewed_change: false
+    reason: '6.12: the .gitignore from dbt init lists target/, logs/ and dbt_packages/ as generated folders that never go into Git.'
+  q-ch06-07:
+    lesson: ch06-s7
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: '6.7: dbt debug checks the files and the connection and prints the paths it used. It does not parse models (a broken ref still passed)
+      and it builds nothing. The ch06 1.4 objective lists dbt debug.'
+  q-ch06-08:
+    lesson: ch06-s6
+    objective: CP0-CLI
+    confidence: medium
+    reviewed_change: true
+    reason: 'Step ''Choosing a target: --target'' teaches this. The chapter''s own CP0-CLI objective names ''--target'' along with profiles, targets
+      and outputs. A listed chapter objective covers it exactly, so 3.5 (from Ch16/22) should not be used.'
+  q-ch06-09:
+    lesson: ch06-s9
+    objective: '3.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''Compiled code versus executed code'': create table ... __dbt_tmp appears only in target/run. target/compiled has only the
+      select (trap T106).'
+  q-ch06-10:
+    lesson: ch06-s10
+    objective: '3.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 6.10 shows the 'Could not set lock on file' error, including with a -readonly CLI session, and the fix (quit the session). The question
+      tests reading the error to find the fix.
+  q-ch06-11:
+    lesson: ch06-s11
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''Deleting a file does not delete the table'': dbt run never drops the relation of a deleted model. This is behaviour of the
+      run command; no chapter objective fits better.'
+  q-ch06-12:
+    lesson: ch06-s3
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''The way we use: --skip-profile-setup'' (short form -s). The ch06 1.4 objective text includes dbt init, and the lesson is tagged
+      1.4.'
+  q-ch06-13:
+    lesson: ch06-s6
+    objective: CP0-CLI
+    confidence: medium
+    reviewed_change: true
+    reason: Step 'Where dbt looks for profiles.yml' gives the order --profiles-dir > DBT_PROFILES_DIR > current folder > ~/.dbt. The chapter's
+      CP0-CLI objective names this lookup order word for word, so the chapter objective wins over 3.5.
+  q-ch06-14:
+    lesson: ch06-s13
+    objective: CP0-CLI
+    confidence: low
+    reviewed_change: true
+    reason: 'Step ''dbt Core and the dbt platform: what changes'': in the platform, the dev schema is in the personal development credentials
+      and there is no profiles.yml. This is the platform version of the connection, targets and outputs that the ch06 CP0-CLI objective covers.
+      The ch06 1.4 objective is about commands, which this question does not test.'
+  q-ch06-15:
+    lesson: ch06-s5
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: '6.5 covers each statement: version vs require-dbt-version, the name pattern, model-paths defaults, and config() being more specific
+      than the models: block.'
+  q-ch06-16:
+    lesson: ch06-s6
+    objective: CP0-CLI
+    confidence: medium
+    reviewed_change: true
+    reason: 'Step ''The structure: profile, target, outputs'': ''target: dev is the default target ... It must be the name of one of the outputs''.
+      The error text adds nothing; the answer needs profiles.yml structure, which the chapter''s CP0-CLI objective covers (profiles, targets,
+      outputs).'
+  q-ch06-17:
+    lesson: ch06-s11
+    objective: '3.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 6.11 shows this exact 'Configuration paths exist ... do not apply to any resources' warning after deleting models/example and explains
+      it. The question asks what a logged message means; the concept also touches 1.6.
+  q-ch06-18:
+    lesson: ch06-s13
+    objective: CP0-GIT
+    confidence: low
+    reviewed_change: false
+    reason: Step 'Setting up a project, step by step' covers the Initialize dbt project button, development credentials, the repository choices
+      and the protected main branch. CP0-GIT (putting a new project under Git) fits the repository and branch half. No objective covers platform
+      setup well.
+  q-ch07-01:
+    lesson: ch07-s2
+    objective: '1.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'Steps ''source() and what it compiles to'' and ''When the names differ'': schema defaults to the source name, database to the target,
+      and identifier replaces the table name.'
+  q-ch07-02:
+    lesson: ch07-s2
+    objective: '1.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''source() and what it compiles to'': two arguments, the source name and the table name, as written in YAML (trap T38).'
+  q-ch07-03:
+    lesson: ch07-s3
+    objective: '1.1'
+    confidence: medium
+    reviewed_change: false
+    reason: The hard-coded name is a raw table. Step 'Finding hidden raw dependencies' says dbt cannot see such a dependency. 7.5 'How dbt finds
+      the arrows' backs this up.
+  q-ch07-04:
+    lesson: ch07-s9
+    objective: '1.5'
+    confidence: high
+    reviewed_change: false
+    reason: '7.9 tells this exact story: the hard-coded table fails on an empty schema and passes on the second run, and the fix is ref(). The
+      ch07 1.5 objective names ''why hard-coded table names break the order''.'
+  q-ch07-05:
+    lesson: ch07-s4
+    objective: '1.5'
+    confidence: high
+    reviewed_change: false
+    reason: '7.4 ''What a staging model does'': rename and cast in staging; no joins, aggregation or business logic; one staging model per source
+      table.'
+  q-ch07-06:
+    lesson: ch07-s4
+    objective: '1.5'
+    confidence: medium
+    reviewed_change: false
+    reason: Step 'Naming and folders' in 7.4 defines _<source>__sources.yml, _<source>__models.yml and the stg_ model that alone reads the source.
+      fct_orders is from 7.6. The 1.5 objective covers naming conventions.
+  q-ch07-07:
+    lesson: ch07-s3
+    objective: '1.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''A verification routine'': declare, check through dbt show --inline source(), then build. The step that sets the order (verify
+      before writing SQL) is in 7.3; declaration and staging come from 7.2 and 7.4.'
+  q-ch07-08:
+    lesson: ch07-s5
+    objective: '1.5'
+    confidence: high
+    reviewed_change: false
+    reason: '7.5: ref() creates an edge and compiles to the relation in the current target. dbt finds arrows from ref()/source() calls during
+      parsing, not from from clauses.'
+  q-ch07-09:
+    lesson: ch07-s10
+    objective: '3.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''A ref() to a model that does not exist'': a compilation error stops the whole command, even with a --select of another model.'
+  q-ch07-10:
+    lesson: ch07-s10
+    objective: '3.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''A circular dependency'': ''Found a cycle'' means two models ref each other, so no build order exists (trap T41). The ch07
+      3.1 objective lists the cycle message.'
+  q-ch07-11:
+    lesson: ch07-s3
+    objective: '1.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''dbt does not check that a source table exists'' reproduces the payment/payments typo: parse and compile pass, and only the
+      warehouse fails. The ch07 1.1 objective covers ''checking that the raw tables really exist''.'
+  q-ch07-12:
+    lesson: ch07-s2
+    objective: '1.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''When the names differ'' and the ''All source properties'' table: identifier is the real table name (default: the table name).'
+  q-ch07-13:
+    lesson: ch07-s5
+    objective: '1.5'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''Reading the DAG with dbt ls'': stg_x+ selects the model, all its descendants and their tests. The ch07 1.5 objective explicitly
+      covers parents/children and upstream/downstream.'
+  q-ch07-14:
+    lesson: ch07-s7
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''dbt build: why the order matters'': tests run right after each model, and children of a failing test are skipped.'
+  q-ch07-15:
+    lesson: ch07-s6
+    objective: '3.1'
+    confidence: medium
+    reviewed_change: false
+    reason: The 'Remove the semicolon' callout in 7.6 shows the real syntax error when dbt wraps the select in create ... as ( ... ). The ch07
+      3.1 objective lists 'a trailing semicolon'; the rule is first stated in 7.1.
+  q-ch07-16:
+    lesson: ch07-s8
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: '7.8: dbt docs generate writes the files and opens nothing (trap T36); dbt docs serve starts the local server.'
+  q-ch07-17:
+    lesson: ch07-s8
+    objective: '1.5'
+    confidence: medium
+    reviewed_change: false
+    reason: 7.8 covers the Studio IDE Lineage tab and Catalog (formerly dbt Explorer), which needs a successful prod/staging job. Option C (a
+      hard-coded name gives no lineage edge) is the 1.5 point about hard-coded names.
+  q-ch07-18:
+    lesson: ch07-s3
+    objective: '1.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''A verification routine'': compare dbt ls source:* with information_schema, and query through dbt show --inline source(). Step
+      ''dbt does not check...'' shows that parse and compile never check the table.'
+  q-ch08-01:
+    lesson: ch08-s1
+    objective: '1.2'
+    confidence: high
+    reviewed_change: false
+    reason: '8.1: ''The default is view, not table'' (trap T42).'
+  q-ch08-02:
+    lesson: ch08-s4
+    objective: '1.2'
+    confidence: high
+    reviewed_change: false
+    reason: '8.4 edge cases: querying an ephemeral model from a BI tool or the CLI gives Catalog Error ''does not exist'' (trap T43).'
+  q-ch08-03:
+    lesson: ch08-s4
+    objective: '3.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''What dbt does with it'': the compiled fct_orders contains __dbt__cte__int_payments__successful. The ch08 3.2 objective text
+      names the __dbt__cte__ prefix.'
+  q-ch08-04:
+    lesson: ch08-s3
+    objective: '1.2'
+    confidence: medium
+    reviewed_change: false
+    reason: 8.3 gives the view and table swap statements (__dbt_tmp, two renames, drop __dbt_backup). Ephemeral (8.4) and the DuckDB materialized_view
+      Compilation Error (8.8) complete the match.
+  q-ch08-05:
+    lesson: ch08-s2
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: '8.2 ''A folder path that matches nothing'' (mart: instead of marts:) gives only the unused configuration paths warning, and the models
+      keep their old materialization.'
+  q-ch08-06:
+    lesson: ch08-s4
+    objective: '1.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''Edge cases, tested one by one'': no object, injected as a CTE, contracts not supported, dbt run -s builds nothing.'
+  q-ch08-07:
+    lesson: ch08-s9
+    objective: '1.2'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The 8.9 table gives the effect of --full-refresh per materialization: none for table and ephemeral, full rebuild for incremental,
+      materialized view replaced whatever on_configuration_change says.'
+  q-ch08-08:
+    lesson: ch08-s3
+    objective: '1.2'
+    confidence: high
+    reviewed_change: false
+    reason: '8.3 ''The swap pattern'': create __dbt_tmp, rename old to __dbt_backup, rename tmp to the real name, COMMIT, drop the backup. The
+      1.2 objective covers ''the SQL dbt runs for it''.'
+  q-ch08-09:
+    lesson: ch08-s5
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: '8.5 precedence table: config() in the file > properties YAML > dbt_project.yml > default.'
+  q-ch08-10:
+    lesson: ch08-s6
+    objective: '1.2'
+    confidence: high
+    reviewed_change: false
+    reason: '8.6, view or table to ephemeral: the old view stays as an orphan and children use the CTE.'
+  q-ch08-11:
+    lesson: ch08-s11
+    objective: '1.8'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''Python models: table or incremental only'' shows the ''only supports languages [sql]; got python'' error.'
+  q-ch08-12:
+    lesson: ch08-s10
+    objective: '1.2'
+    confidence: high
+    reviewed_change: false
+    reason: '8.10 ''Choose by layer'': marts read by BI many times are tables, so the heavy work is done once during the run.'
+  q-ch08-13:
+    lesson: ch08-s8
+    objective: '1.2'
+    confidence: high
+    reviewed_change: false
+    reason: '8.8 table of on_configuration_change values: apply (default), continue, fail. The ch08 1.2 objective text explicitly includes materialized_view;
+      1.14 is used for microbatch.'
+  q-ch08-14:
+    lesson: ch08-s3
+    objective: '3.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''Where to read the SQL dbt really ran'' (which says ''This is objective 3.2''): logs/dbt.log has every statement; target/run
+      has only the main create; target/compiled has only the select.'
+  q-ch08-15:
+    lesson: ch08-s4
+    objective: '1.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''What dbt does with it'': ''Found 8 models'' but runs only 7, because the ephemeral model is not a step of its own.'
+  q-ch08-16:
+    lesson: ch08-s2
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 8.2 gives the three places for materialized (config(), properties YAML config:, a dbt_project.yml folder). profiles.yml holds only
+      connection settings.
+  q-ch08-17:
+    lesson: ch08-s8
+    objective: '1.2'
+    confidence: medium
+    reviewed_change: false
+    reason: '8.8: Snowflake uses materialized=''dynamic_table'' with target_lag (e.g. ''30 minutes'') instead of materialized views. The book
+      treats this under the materialized_view part of 1.2.'
+  q-ch08-18:
+    lesson: ch08-s2
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: '8.2: ''The + means this is a config, not a folder'' (trap T49), and it does not mean add.'
+  q-ch09-01:
+    lesson: ch09-s1
+    objective: '1.3'
+    confidence: high
+    reviewed_change: false
+    reason: Step 9.1.2 'DRY' says 'every piece of logic has one home' and gives trap T56 (one big model is not DRY). That is the trap the explanation
+      cites.
+  q-ch09-02:
+    lesson: ch09-s2
+    objective: '1.5'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 9.2.1 says a staging model is ''the only door through which raw data enters'', 1-to-1 with a source table. The layer table also
+      says staging ''Reads: source() only''.'
+  q-ch09-03:
+    lesson: ch09-s2
+    objective: '1.5'
+    confidence: medium
+    reviewed_change: false
+    reason: Step 9.2.4 'Naming conventions' gives stg_<source>__<entity>s with a double underscore. Naming is part of the layered structure (1.5).
+  q-ch09-04:
+    lesson: ch09-s2
+    objective: '1.5'
+    confidence: high
+    reviewed_change: false
+    reason: The three-layer table in 9.2 (job, allowed, avoid, materialization) and the sources figure give every pair in the matching.
+  q-ch09-05:
+    lesson: ch09-s3
+    objective: '1.5'
+    confidence: high
+    reviewed_change: false
+    reason: 'Rule 1 in 9.3: only staging calls source(). Its smell ''a mart that selects from a source'' is line 6.'
+  q-ch09-06:
+    lesson: ch09-s4
+    objective: '1.5'
+    confidence: high
+    reviewed_change: false
+    reason: The 9.4 table of warning signs lists 'A model with no parents' (hard-coded names) and 'An arrow from a mart back to a staging model'
+      (backward dependency).
+  q-ch09-07:
+    lesson: ch09-s5
+    objective: '1.3'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The 9.5 table gives the dbt Labs method in order: migrate, sources, (strategy), CTE groupings, centralize/split, audit. The method
+      comes from the course ''Refactoring SQL for Modularity''.'
+  q-ch09-08:
+    lesson: ch09-s10
+    objective: CP0-SQL
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 9.10.2 ''Why both directions, and why the counts'' and the 9.10 trap box: one direction is not enough, EXCEPT removes duplicates,
+      and it compares columns by position. This is SQL set-operation knowledge.'
+  q-ch09-09:
+    lesson: ch09-s12
+    objective: '1.2'
+    confidence: medium
+    reviewed_change: false
+    reason: '9.12 shows legacy_monthly_revenue still in the warehouse after a green build: ''dbt never drops a relation whose model you deleted''.
+      1.2 is listed for this lesson.'
+  q-ch09-10:
+    lesson: ch09-s4
+    objective: '1.1'
+    confidence: high
+    reviewed_change: false
+    reason: 9.4 runs exactly 'dbt ls --select +legacy_monthly_revenue+' and says dbt sees no parent. Its table links 'a model with no parents'
+      to hard-coded names. The question is about verifying raw object dependencies.
+  q-ch09-11:
+    lesson: ch09-s3
+    objective: '1.5'
+    confidence: high
+    reviewed_change: false
+    reason: Step 9.3.1 says only a cycle stops dbt. Trap T40 says selecting from a source in a mart is not an error.
+  q-ch09-12:
+    lesson: ch09-s3
+    objective: '1.3'
+    confidence: medium
+    reviewed_change: true
+    reason: 9.3 is where the rule is taught. Rule 4 says 'If two models compute the same thing (the paid amount per order), move it upstream into
+      one model that both ref... two copies will drift apart'. Figure problem 3 shows this exact scenario (two marts each sum payments per order),
+      with the fix 'compute the sum once in an intermediate model and ref it twice'. 9.11 only applies the rule and points back to 'rule 4 of
+      a clean DAG'. The objective stays 1.3, because the explanation is DRY.
+  q-ch09-13:
+    lesson: ch09-s3
+    objective: '1.5'
+    confidence: high
+    reviewed_change: false
+    reason: 9.3 rule 3 and step 9.3.1 show 'Found a cycle' with nothing run, and trap T41 (models do not run twice).
+  q-ch09-14:
+    lesson: ch09-s2
+    objective: '1.5'
+    confidence: high
+    reviewed_change: false
+    reason: 'Steps 9.2.2 and 9.2.4 say intermediate models are named with a verb: int_<entity>s__<verb>s, int_orders__enriched.'
+  q-ch09-15:
+    lesson: ch09-s5
+    objective: '1.3'
+    confidence: medium
+    reviewed_change: false
+    reason: 9.5 'In place or alongside?' says alongside keeps the legacy model untouched so you can compare at every step, and that dbt Labs recommends
+      it.
+  q-ch09-16:
+    lesson: ch09-s2
+    objective: '1.3'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step 9.2.1: stg_stripe__payments renames orderid and converts cents so that ''every later model gets clean names and dollars, without
+      repeating the conversion (DRY again)''. The explanation gives the same DRY reason.'
+  q-ch09-17:
+    lesson: ch09-s2
+    objective: '1.5'
+    confidence: high
+    reviewed_change: false
+    reason: '9.2 layer table, staging column: rename and cast are allowed. Joins and aggregations are to be avoided because they change the grain
+      (step 9.2.1).'
+  q-ch09-18:
+    lesson: ch09-s2
+    objective: '1.5'
+    confidence: high
+    reviewed_change: false
+    reason: Step 9.2.2 says 'Intermediate models are not for end users'. Step 9.2.3 says marts are read by BI tools.
+  q-ch09-19:
+    lesson: ch09-s2
+    objective: '1.5'
+    confidence: high
+    reviewed_change: false
+    reason: The naming trap in 9.2.4 says the dbt Labs guide writes int_<entity>s_<verb>s with a single underscore, with the example int_orders_summed_to_customer.
+  q-ch10-01:
+    lesson: ch10-s6
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: '10.6 precedence: config() beats the properties YAML, which beats dbt_project.yml (''level 2 always beats level 3, however deep the
+      path''). Trap T46 is the same point.'
+  q-ch10-02:
+    lesson: ch10-s1
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: '10.1: properties (description, columns, data_tests) are written only in YAML. Configs (tags, materialized, grants) can go in three
+      places.'
+  q-ch10-03:
+    lesson: ch10-s4
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 10.4.1: the default generate_schema_name gives <target schema>_<custom schema>.'
+  q-ch10-04:
+    lesson: ch10-s7
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 10.7 steps on target (target.name vs target.schema), var()/--vars and env_var() (always a string) cover all four items.
+  q-ch10-05:
+    lesson: ch10-s8
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 10.8.1 ''Order and transactions'' and the dbt.log excerpt: BEGIN, project pre-hook, model pre-hook, create, project post-hook,
+      COMMIT, after_commit.'
+  q-ch10-06:
+    lesson: ch10-s3
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: '10.3: the + is required for dictionary configs (meta, docs, persist_docs...). Without it dbt reads the key as a folder and warns
+      about unused configuration paths (the meta demo).'
+  q-ch10-07:
+    lesson: ch10-s7
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 10.7.3 on env_var(): a missing variable gives a Parsing Error, values are strings and need | int, and DBT_ENV_SECRET_ is allowed
+      only in profiles.yml and packages.yml. Trap T51 says the same.'
+  q-ch10-08:
+    lesson: ch10-s6
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 10.6.1 table: tags are ''Added (list union)''. The lab shows tags from all three levels collected.'
+  q-ch10-09:
+    lesson: ch10-s6
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 10.6.1: meta is merged only at the top level, with this exact sla {hours: 24, alert: slack} + {hours: 6} example where alert
+      is lost.'
+  q-ch10-10:
+    lesson: ch10-s9
+    objective: '1.9'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 10.9.2: "''+select'' adds instead of replacing" (folder grantees plus the model''s). Grants are applied right after the build.'
+  q-ch10-11:
+    lesson: ch10-s9
+    objective: '1.9'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 10.9.2: ''No grants config = dbt ... changes nothing... To remove every grantee of a privilege, keep the key with an empty list:
+      select: [] (dbt revokes)''.'
+  q-ch10-12:
+    lesson: ch10-s8
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 10.8 hooks table and trap T53: a pre-hook runs per model, while on-run-start runs once per command and exists only at the top
+      level of dbt_project.yml.'
+  q-ch10-13:
+    lesson: ch10-s8
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'Trap T53 in 10.8: in config() write pre_hook/post_hook with an underscore. config(pre-hook=...) fails with a Jinja Compilation Error.
+      10.2 repeats the hyphen/underscore rule.'
+  q-ch10-14:
+    lesson: ch10-s7
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 10.7.2: --vars has the highest priority, and the default of var() is used only when nothing else exists (shown in the table).'
+  q-ch10-15:
+    lesson: ch10-s4
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: Step 10.4.2 shows the target.name == 'prod' override and generate_schema_name_for_env. The schema traps cover the default concatenation,
+      a package macro being ignored, and the profile schema.
+  q-ch10-16:
+    lesson: ch10-s2
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 10.2.1 shows the real errors for a hyphenated name, require-dbt-version and config-version: 1, and the target-path deprecation
+      warning.'
+  q-ch10-17:
+    lesson: ch10-s11
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: '10.11 Jobs bullet and the ''classic exam scenario'' box: the job''s Target Name is not prod, so the macro takes the else branch.
+      The fix is in the job settings.'
+  q-ch10-18:
+    lesson: ch10-s4
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 10.4.3: an alias changes the identifier, and you still write ref(''fct_monthly_revenue''), which compiles to dbt_adnane.monthly_revenue.'
+  q-ch10-19:
+    lesson: ch10-s2
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 10.2 trap box ''A typo in a resource path is not an error'' renames marts: to mart:. It shows the unused-configuration-paths
+      warning and fct_orders built as a view, which is exactly this scenario.'
+  q-ch10-20:
+    lesson: ch10-s7
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 10.7.3: variables starting with DBT_ENV_SECRET_ are masked as ***** and allowed only in profiles.yml and packages.yml. It also
+      mentions DBT_ENV_CUSTOM_ENV_.'
+  q-ch11-01:
+    lesson: ch11-s2
+    objective: '1.3'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step 11.2.1 ''Where macros live'': .sql files in the macro-paths folders (default macros), several macros per file, any file name.
+      1.3 is the lesson''s DRY objective for macros. CP0-JINJA is a close alternative.'
+  q-ch11-02:
+    lesson: ch11-s6
+    objective: '1.7'
+    confidence: high
+    reviewed_change: false
+    reason: Step 11.6.2 on generate_surrogate_key and trap T57 ('Package macros need their namespace'). The 11.2 namespaces table supports it.
+  q-ch11-03:
+    lesson: ch11-s5
+    objective: '1.7'
+    confidence: high
+    reviewed_change: false
+    reason: Step 11.5.6 'When you forget dbt deps' shows the 'found N package(s)... only 0 installed' error. Trap T34 says dbt does not install
+      packages by itself.
+  q-ch11-04:
+    lesson: ch11-s5
+    objective: '1.7'
+    confidence: high
+    reviewed_change: false
+    reason: Step 11.5.5 says to commit package-lock.yml. 11.5.4 says dbt_packages/ is in .gitignore and clean-targets. The Git angle (CP0-GIT)
+      is secondary.
+  q-ch11-05:
+    lesson: ch11-s5
+    objective: '1.7'
+    confidence: high
+    reviewed_change: false
+    reason: The table in step 11.5.3 'Where a package can come from' covers the hub, git, private, local and tarball forms.
+  q-ch11-06:
+    lesson: ch11-s5
+    objective: '1.7'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 11.5.3 ''Versions'': ''dbt installs the newest version inside the range (1.4.1 in our run)''. Ranges are the usual form for
+      hub packages.'
+  q-ch11-07:
+    lesson: ch11-s5
+    objective: '1.7'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 11.5.5: package-lock.yml is written by dbt deps and should be committed, and ''dbt deps --upgrade'' ignores the lock file and
+      rewrites it.'
+  q-ch11-08:
+    lesson: ch11-s3
+    objective: CP0-JINJA
+    confidence: medium
+    reviewed_change: true
+    reason: 'Steps 11.3.1/11.3.2 and trap T25 reproduce "''None'' has no attribute ''table''" during parsing and fix it with {% if execute %}.
+      The question trains the execute/two-renderings concept of dbt Jinja, the same family as q-ch11-10/12/18/19. It does not use compiled code:
+      compilation fails before any exists. So 3.2 ''Troubleshooting using compiled code'' does not fit well.'
+  q-ch11-09:
+    lesson: ch11-s5
+    objective: '1.7'
+    confidence: medium
+    reviewed_change: false
+    reason: '11.5 workflow and lab: declare in packages.yml, run dbt deps (installs and writes the lock file), then commit packages.yml and package-lock.yml.
+      The namespaced call is in 11.6.'
+  q-ch11-10:
+    lesson: ch11-s2
+    objective: CP0-JINJA
+    confidence: high
+    reviewed_change: false
+    reason: Step 11.2.3 runs cents_to_dollars('amount', 2, 'x') and gets 'takes not more than 2 argument(s)' at parse time. A missing argument
+      is silent.
+  q-ch11-11:
+    lesson: ch11-s5
+    objective: '1.7'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 11.5.2 and trap T35: only packages.yml renders Jinja, so a Git URL with env_var(''DBT_ENV_SECRET_GIT_CREDENTIAL'') must be in
+      packages.yml.'
+  q-ch11-12:
+    lesson: ch11-s2
+    objective: CP0-JINJA
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 11.2.5 ''return()'': the printed list is a 23-character text, and a loop goes over its characters (trap T26).'
+  q-ch11-13:
+    lesson: ch11-s4
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: false
+    reason: 11.4 runs 'dbt run-operation print_row_counts' with --args. The coverage appendix links the run-operation lab of chapter 11 to 1.4.
+  q-ch11-14:
+    lesson: ch11-s1
+    objective: CP0-JINJA
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 11.1.2 ''this'': it renders ''"practice"."dbt_adnane"."tmp_this_demo"'' (database, schema, identifier) in dev.'
+  q-ch11-15:
+    lesson: ch11-s8
+    objective: '1.7'
+    confidence: high
+    reviewed_change: false
+    reason: '11.8: dispatch is read only from the root project, default__ is the fallback, and the <adapter>__ prefix comes first. ref/source/config
+      are context functions, not dispatched macros.'
+  q-ch11-16:
+    lesson: ch11-s5
+    objective: '1.7'
+    confidence: high
+    reviewed_change: false
+    reason: Step 11.5.3 'Pin Git packages' shows the 'is not pinned, using HEAD (default branch)' warning.
+  q-ch11-17:
+    lesson: ch11-s5
+    objective: '1.7'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step 11.5.6: after dbt clean (clean-targets target and dbt_packages) the package error returns until dbt deps runs. ''package-lock.yml
+      stays, and no table in the warehouse is touched''.'
+  q-ch11-18:
+    lesson: ch11-s1
+    objective: CP0-JINJA
+    confidence: high
+    reviewed_change: false
+    reason: 'Step 11.1.3 ''Two renderings'' and trap T23: a ref inside a -- comment is still rendered and creates a dependency. Use {# #}.'
+  q-ch11-19:
+    lesson: ch11-s1
+    objective: CP0-JINJA
+    confidence: high
+    reviewed_change: false
+    reason: The table in step 11.1.1 'What dbt puts in the Jinja context' defines execute, this, graph and target with these meanings.
+  q-ch12-01:
+    lesson: ch12-s1
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: false
+    reason: 12.1 gives the seed test (small, static, owned by the team, not secret) and lists test or employee accounts as a good seed, with daily
+      exports and personal data as bad seeds (trap T58). Choosing what to load with dbt seed fits best under 1.4 (seed); no other official id
+      fits better.
+  q-ch12-02:
+    lesson: ch12-s3
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: '12.3 step ''Selecting seeds, and what other commands do with them'': dbt run ignores seeds, and dbt run -s country_regions prints
+      ''Nothing to do'' (trap T29).'
+  q-ch12-03:
+    lesson: ch12-s5
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: '12.5 trap T59: a new column makes a normal dbt seed fail, and dbt seed --full-refresh drops (with cascade) and recreates the table.
+      This is a flag of the seed command.'
+  q-ch12-04:
+    lesson: ch12-s4
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: '12.4 step ''Where seeds are configured'': a CSV cannot hold configuration. Seeds are configured in YAML only, in dbt_project.yml
+      with + or in a properties file under config:.'
+  q-ch12-05:
+    lesson: ch12-s8
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: false
+    reason: '12.8 ''Running it: not with dbt run'' (trap T33): compile writes to target/compiled/<project>/analyses, run and build ignore analyses,
+      and dbt show runs the query without storing anything. Most options are about what build, compile and show do with an analysis.'
+  q-ch12-06:
+    lesson: ch12-s9
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: The 12.9 comparison table has a row 'Commands that execute it' for models, analyses, singular tests and seeds. That row is this matching.
+  q-ch12-07:
+    lesson: ch12-s4
+    objective: '1.6'
+    confidence: medium
+    reviewed_change: false
+    reason: '12.4 uses the zip_code case: column_types {zip_code: varchar} has no effect until dbt seed --full-refresh. 12.3 only shows the wrong
+      type guess and sends the reader to 12.4 for the fix. The fix is a seed config.'
+  q-ch12-08:
+    lesson: ch12-s6
+    objective: '3.3'
+    confidence: medium
+    reviewed_change: false
+    reason: '12.6 notes: ''The top key is seeds:, not models:. A seed described under models: is not found.'' The task is to find the wrong line
+      in a .yml properties file, so it trains .yml troubleshooting (3.3). The file is not dbt_project.yml, so 1.6 fits less well.'
+  q-ch12-09:
+    lesson: ch12-s7
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: false
+    reason: '12.7 ''The seed is a node'': dbt build loads the seed, then runs its tests, then builds dim_customers. This is how dbt build orders
+      its nodes (1.4). 1.5 is about designing the DAG, not about execution order.'
+  q-ch12-10:
+    lesson: ch12-s4
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: false
+    reason: '12.4 trap ''Changing column_types is silent without --full-refresh'': a normal dbt seed truncates and reloads, the output says OK,
+      and the INTEGER column stays. The question asks what the plain seed command does.'
+  q-ch12-11:
+    lesson: ch12-s4
+    objective: '1.6'
+    confidence: medium
+    reviewed_change: false
+    reason: '12.4, delimiter config: the throwaway seed with header status;label_fr loaded ''successfully'' as one column, with no error. Splitting
+      it needs config delimiter: '';''.'
+  q-ch12-12:
+    lesson: ch12-s4
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 12.4 seed-specific configs table defines delimiter: the one-character separator, comma by default, available since 1.7.'
+  q-ch12-13:
+    lesson: ch12-s5
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: The 12.5 table compares truncate+load and INSERT with drop ... cascade + create and CREATE. The text adds that the flag on dbt build
+      is another command, which answers option C.
+  q-ch12-14:
+    lesson: ch12-s7
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: '12.7 ''If you forget to load the seed'': the model fails because the seed table does not exist. The fix is dbt seed first, or dbt
+      build, which loads the parent seed first.'
+  q-ch12-15:
+    lesson: ch12-s7
+    objective: '7.1'
+    confidence: high
+    reviewed_change: false
+    reason: '12.7 note ''Seeds and state comparison'': for state:modified, dbt hashes only seed files under 1 MiB. Larger files are compared by
+      path, with a warning. The question tests state:modified selection directly (7.1), although 7.1 is not a chapter objective.'
+  q-ch12-16:
+    lesson: ch12-s8
+    objective: '3.2'
+    confidence: medium
+    reviewed_change: false
+    reason: '12.8 ''Compiling it'': compiled with --target prod, ref() points to the prod tables. ''Analyses are nodes too'': dbt ls --resource-type
+      analysis lists them. Compiled SQL per target is the 3.2 point the book attaches to analyses (12.9 objectives).'
+  q-ch12-17:
+    lesson: ch12-s4
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 12.4 seed-specific configs table defines column_types, quote_columns and delimiter, three of the four items. Only the full_refresh:
+      false effect is stated in 12.5.'
+  q-ch13-01:
+    lesson: ch13-s2
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: '13.2 trap: ''dbt run builds models only. Snapshots run with dbt snapshot or dbt build'', shown with the ''Nothing to do'' output.
+      The 13.2 comparison table also lists the commands.'
+  q-ch13-02:
+    lesson: ch13-s3
+    objective: '1.10'
+    confidence: high
+    reviewed_change: false
+    reason: '13.3 ''The required configs'' (trap T61): both strategies need unique_key and strategy, timestamp needs updated_at, and check needs
+      check_cols.'
+  q-ch13-03:
+    lesson: ch13-s2
+    objective: '1.10'
+    confidence: high
+    reviewed_change: false
+    reason: '13.2 ''The meta columns'' (trap T62): dbt_valid_to is NULL for the current version unless dbt_valid_to_current is set.'
+  q-ch13-04:
+    lesson: ch13-s2
+    objective: '1.10'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 13.2 meta-columns table defines dbt_scd_id (hash of a version), dbt_valid_from, dbt_valid_to (NULL for current) and dbt_is_deleted
+      (only with hard_deletes: new_record).'
+  q-ch13-05:
+    lesson: ch13-s3
+    objective: '1.10'
+    confidence: high
+    reviewed_change: false
+    reason: '13.3 unique_key step trap: the deliberate unique_key user_id snapshot grew with no data change. ''The key must really be unique.
+      dbt does not check it.'''
+  q-ch13-06:
+    lesson: ch13-s6
+    objective: '1.10'
+    confidence: high
+    reviewed_change: false
+    reason: '13.6 ''How dbt updates a snapshot'' gives the second-run steps from dbt.log: a temporary table of changes against the current rows,
+      then dbt_valid_to is updated, then new versions are inserted. Only 13.6 mentions the temporary table.'
+  q-ch13-07:
+    lesson: ch13-s4
+    objective: '1.10'
+    confidence: high
+    reviewed_change: false
+    reason: '13.4: check needs check_cols (a list or all), uses the run time for dbt_valid_from, and detects NULL-to-value changes (customer 17).
+      The ''Choosing a strategy'' table says it has no history before the first run.'
+  q-ch13-08:
+    lesson: ch13-s4
+    objective: '1.10'
+    confidence: high
+    reviewed_change: false
+    reason: '13.4 timestamp weakness trap: order 301 changed without touching _loaded_at, and the change was ''silently lost'' while the log said
+      OK snapshotted.'
+  q-ch13-09:
+    lesson: ch13-s8
+    objective: '1.10'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 13.8 hard_deletes table: with the default ignore, the last version stays current (dbt_valid_to NULL). invalidate and new_record
+      are options C and D.'
+  q-ch13-10:
+    lesson: ch13-s8
+    objective: '1.10'
+    confidence: high
+    reviewed_change: false
+    reason: '13.8 lab Step 4 and trap T64: switching an existing snapshot to new_record fails with missing "dbt_is_deleted". dbt does not migrate
+      snapshot tables.'
+  q-ch13-11:
+    lesson: ch13-s3
+    objective: '1.10'
+    confidence: high
+    reviewed_change: false
+    reason: '13.3 ''Where the snapshot is built'' (trap T65): since 1.9 the snapshot schema is a custom schema, so dbt''s default macro gives
+      <target_schema>_snapshots. This is snapshot-specific YAML config.'
+  q-ch13-12:
+    lesson: ch13-s12
+    objective: '1.10'
+    confidence: high
+    reviewed_change: false
+    reason: '13.12 maps legacy to YAML: the select becomes relation, config() becomes the config: block, and target_schema becomes schema.'
+  q-ch13-13:
+    lesson: ch13-s11
+    objective: '1.10'
+    confidence: high
+    reviewed_change: false
+    reason: '13.11 Best practices: snapshot sources, not marts (T67); keep all columns (select *); use a dedicated, protected schema; never rebuild.'
+  q-ch13-14:
+    lesson: ch13-s10
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: '13.10 ''No full refresh for snapshots'' (trap T66): the --full-refresh option does not exist for dbt snapshot. The question is about
+      a flag of the snapshot command.'
+  q-ch13-15:
+    lesson: ch13-s10
+    objective: '1.12'
+    confidence: high
+    reviewed_change: false
+    reason: '13.10 ''Snapshots and --empty'': --empty works with dbt snapshot, replaces the relation with a query that returns no rows, and creates
+      an empty table on a new snapshot. With hard_deletes: invalidate it closed every current row.'
+  q-ch13-16:
+    lesson: ch13-s9
+    objective: '1.10'
+    confidence: high
+    reviewed_change: false
+    reason: '13.9 step dbt_valid_to_current: the config takes a static SQL expression, such as cast(''9999-12-31'' as timestamp), and writes it
+      into dbt_valid_to for current rows.'
+  q-ch13-17:
+    lesson: ch13-s7
+    objective: '1.10'
+    confidence: medium
+    reviewed_change: false
+    reason: '13.7 ''Point-in-time queries'' trap: half-open intervals, T >= dbt_valid_from and T < dbt_valid_to, plus ''or dbt_valid_to is null'',
+      because between includes both ends. It rests on snapshot meta-column semantics more than on plain SQL, so 1.10 rather than CP0-SQL.'
+  q-ch13-18:
+    lesson: ch13-s10
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 13.10 ''Selecting snapshots'' table: dbt build -s resource_type:snapshot runs all snapshots and the tests attached to them (indirect
+      selection). dbt run ignores snapshots.'
+  q-ch14-01:
+    lesson: ch14-s2
+    objective: '1.2'
+    confidence: high
+    reviewed_change: false
+    reason: '14.2 ''What is_incremental() really checks'': it is True only if the relation exists, is a table, the model is incremental and there
+      is no full refresh. A view gives False (trap T68).'
+  q-ch14-02:
+    lesson: ch14-s6
+    objective: '1.11'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 14.6 choosing table: append-only events (clicks, logs) never change, and append is cheapest, with one insert and no scan of the
+      target.'
+  q-ch14-03:
+    lesson: ch14-s6
+    objective: '1.11'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 14.6 table: rows that change and have a reliable key call for merge (upsert), the Snowflake default. 14.5 adds that insert_overwrite
+      replaces the whole table on Snowflake. 14.9 says microbatch is not a key upsert.'
+  q-ch14-04:
+    lesson: ch14-s9
+    objective: '1.14'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 14.9 configs table: event_time, begin and batch_size are required and checked at parse time. lookback is optional (default 1),
+      and concurrent_batches is optional.'
+  q-ch14-05:
+    lesson: ch14-s7
+    objective: '1.2'
+    confidence: medium
+    reviewed_change: false
+    reason: '14.7: on_schema_change defaults to ignore. A new column is not added, and a removed column makes the run fail (traps T70, T71). This
+      is incremental-materialization behaviour, not strategy choice.'
+  q-ch14-06:
+    lesson: ch14-s8
+    objective: '1.2'
+    confidence: medium
+    reviewed_change: false
+    reason: '14.8: the --full-refresh flag (-f) throws the incremental table away and rebuilds it from all the data (trap T73). This is part of
+      how the incremental materialization works.'
+  q-ch14-07:
+    lesson: ch14-s7
+    objective: '1.2'
+    confidence: high
+    reviewed_change: false
+    reason: '14.7 ''The four modes, tested'' and the summary table: fail gives an out-of-sync error, append_new_columns adds, sync_all_columns
+      adds and drops, and ignore does not add and breaks on a removed column.'
+  q-ch14-08:
+    lesson: ch14-s5
+    objective: '1.11'
+    confidence: high
+    reviewed_change: false
+    reason: 14.5 'What each strategy does, in SQL' describes append, merge (one statement), delete+insert (two statements), insert_overwrite (whole
+      partitions, no unique_key) and microbatch (time batches).
+  q-ch14-09:
+    lesson: ch14-s2
+    objective: '1.2'
+    confidence: high
+    reviewed_change: false
+    reason: '14.2 describes the later-run path: the relation is looked up while is_incremental() is evaluated during rendering, the filtered query
+      goes to a temporary table, the on_schema_change check runs, then the strategy SQL (MERGE).'
+  q-ch14-10:
+    lesson: ch14-s11
+    objective: '7.2'
+    confidence: high
+    reviewed_change: false
+    reason: '14.11: PARTIAL SUCCESS batches are recorded in run_results.json, and dbt retry reruns only the failed ones. Running dbt show or compile
+      before the retry rewrites the file and breaks the chain.'
+  q-ch14-11:
+    lesson: ch14-s9
+    objective: '1.14'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 14.9 configs table: batch_size accepts only hour, day, month or year (''no week'', trap T77), and it is checked at parse time,
+      so one bad model blocks every command.'
+  q-ch14-12:
+    lesson: ch14-s3
+    objective: '1.12'
+    confidence: high
+    reviewed_change: false
+    reason: '14.3 step ''The --empty trap (objective 1.12)'' (trap T85): after --empty, max(loaded_at) on the empty table is NULL and ''loaded_at
+      > NULL'' is never true. The fix is coalesce or --full-refresh.'
+  q-ch14-13:
+    lesson: ch14-s10
+    objective: '1.14'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The explanation centres on the two false options, both taught in 14.10: normal-run batches come from the clock plus lookback, not
+      from the data, and --event-time-end is exclusive. A and E are in 14.9 and C is in 14.11, so 14.9 would also be acceptable.'
+  q-ch14-14:
+    lesson: ch14-s4
+    objective: '1.11'
+    confidence: high
+    reviewed_change: false
+    reason: '14.4: append ignores the key (T69), most adapters act like append without a key, a key can be a list, and a NULL key never matches
+      in merge (T74).'
+  q-ch14-15:
+    lesson: ch14-s8
+    objective: '1.2'
+    confidence: medium
+    reviewed_change: false
+    reason: '14.8 ''The full_refresh config'': with full_refresh false the flag is ignored silently, the run is green and nothing is rebuilt.
+      It is about rebuilding an incremental model; 1.6 or 3.5 would be weaker fits.'
+  q-ch14-16:
+    lesson: ch14-s5
+    objective: '1.11'
+    confidence: high
+    reviewed_change: false
+    reason: '14.5 ''Limiting the scan of the target: incremental_predicates'': the predicate limits which old target rows merge can match. November
+      order 255 was duplicated under a December predicate.'
+  q-ch14-17:
+    lesson: ch14-s6
+    objective: '1.11'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 14.6 table: a large table partitioned by date where whole days are recomputed calls for insert_overwrite (BigQuery, Spark, Databricks),
+      which replaces whole partitions without row-level matching.'
+  q-ch14-18:
+    lesson: ch14-s7
+    objective: '1.2'
+    confidence: high
+    reviewed_change: false
+    reason: '14.7 tested append_new_columns: the column is added, and only the rows processed in that run get a value, while old rows stay NULL.
+      ''No mode of on_schema_change fills the new column for the old rows.'''
+  q-ch14-19:
+    lesson: ch14-s10
+    objective: '1.14'
+    confidence: high
+    reviewed_change: false
+    reason: '14.10 ''Backfills with --event-time-start and --event-time-end'': both flags are required (trap T78), the start is inclusive and
+      the end exclusive, and 2026-01-01 to 2026-02-01 runs exactly the January batch.'
+  q-ch14-20:
+    lesson: ch14-s5
+    objective: '1.11'
+    confidence: high
+    reviewed_change: false
+    reason: '14.5 ''Which adapter supports which strategy'': the default is adapter-specific, and Snowflake, BigQuery and Databricks use merge
+      (trap T72).'
+  q-ch15-01:
+    lesson: ch15-s2
+    objective: '1.8'
+    confidence: high
+    reviewed_change: false
+    reason: '15.2 ''The model function'': ''return: one DataFrame. dbt saves it as the model''s table.'' This is core Python-model authoring.'
+  q-ch15-02:
+    lesson: ch15-s6
+    objective: '1.2'
+    confidence: medium
+    reviewed_change: false
+    reason: The 15.6 title and steps give table (default) and incremental only. The question is about which materializations are available, so
+      1.2, which the chapter lists. 1.8 is a close alternative.
+  q-ch15-03:
+    lesson: ch15-s2
+    objective: '1.8'
+    confidence: high
+    reviewed_change: false
+    reason: 15.2 shows def model(dbt, session) and defines session as the platform connection (Snowpark, SparkSession, DuckDB).
+  q-ch15-04:
+    lesson: ch15-s3
+    objective: '1.8'
+    confidence: high
+    reviewed_change: false
+    reason: The 15.3 platform table covers Snowpark stored procedure, PySpark clusters, Dataproc/BigFrames, and DuckDB inside the dbt process.
+  q-ch15-05:
+    lesson: ch15-s2
+    objective: '1.8'
+    confidence: high
+    reviewed_change: false
+    reason: 15.2 Rule 2 (literal arguments only) shows the literal_eval Parsing Error when dbt.ref() gets a variable.
+  q-ch15-06:
+    lesson: ch15-s3
+    objective: '1.8'
+    confidence: medium
+    reviewed_change: true
+    reason: 'The 15.3 figure ''How a Python model runs'' gives the D, A, C order: dbt adds helper code (ref, config, this), the platform runs
+      model(dbt, session) and gets a DataFrame, then it saves the table. The step text also says dbt sends the code and waits. Step B (static
+      analysis) comes from 15.2 Rule 2. 15.4 only explains the helper-code contents, so 15.3 is the lesson that teaches the flow.'
+  q-ch15-07:
+    lesson: ch15-s7
+    objective: '1.8'
+    confidence: medium
+    reviewed_change: true
+    reason: '15.7 has the steps ''Data tests: yes / Unit tests: no / Contracts: no'', and ''Other limits'' says SQL models can ref a Python model.
+      The four statements cover tests (5.1), contracts (2.1) and ref. What links them is the limits of Python models, which is 1.8, a chapter
+      objective, as in q-ch15-14.'
+  q-ch15-08:
+    lesson: ch15-s6
+    objective: '1.2'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The 15.6 step ''view and ephemeral: not supported'' quotes ''materialization_view_default only supports languages [''sql'']''. This
+      is a materialization question (1.2, listed for the chapter); 1.8 is a close alternative.'
+  q-ch15-09:
+    lesson: ch15-s2
+    objective: '1.8'
+    confidence: high
+    reviewed_change: false
+    reason: '15.2 Rule 1: no Jinja at all, even in a comment, gives the Parsing Error ''No jinja in python model code is allowed'', and that error
+      stops the whole command.'
+  q-ch15-10:
+    lesson: ch15-s6
+    objective: '1.2'
+    confidence: medium
+    reviewed_change: false
+    reason: '15.6: dbt.ref on the ephemeral int_payments__successful fails because dbt injects a SQL CTE and there is no relation to read. The
+      fix is to materialize the parent as a view or table, which is a materialization concept.'
+  q-ch15-11:
+    lesson: ch15-s6
+    objective: '1.8'
+    confidence: high
+    reviewed_change: false
+    reason: The 15.6 incremental step uses 'if dbt.is_incremental:' in an incremental Python model. 15.2's dbt-object table also defines it as
+      an attribute with no parentheses.
+  q-ch15-12:
+    lesson: ch15-s3
+    objective: '1.8'
+    confidence: high
+    reviewed_change: false
+    reason: The 15.3 step 'The packages config' gives packages=['scikit-learn', ...]; on Snowflake these come from the Anaconda channel and are
+      installed when the model runs.
+  q-ch15-13:
+    lesson: ch15-s8
+    objective: '1.8'
+    confidence: high
+    reviewed_change: false
+    reason: '15.8: .df() converts DECIMAL to pandas float64, and the table is created from the DataFrame (DOUBLE).'
+  q-ch15-14:
+    lesson: ch15-s1
+    objective: '1.8'
+    confidence: high
+    reviewed_change: false
+    reason: The 15.1 'Choose Python when' list names libraries such as scikit-learn and statistics. Its comparison table shows that Python models
+      cannot be views and have no unit tests.
+  q-ch15-15:
+    lesson: ch15-s5
+    objective: '1.8'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 15.5 step ''Passing dynamic values: dbt.config.get()'' reads loyal_threshold: 100 from the YAML config.'
+  q-ch15-16:
+    lesson: ch15-s4
+    objective: '1.8'
+    confidence: medium
+    reviewed_change: true
+    reason: Lab steps 4 and 5 of 15.4 show this exact ModuleNotFoundError and fix it with uv pip install pandas ('On DuckDB, your venv is the
+      Python runtime'). The error is easy to read. The skill tested is knowing where Python libraries come from (venv vs the packages config vs
+      packages.yml), which is 1.8. 15.4 lists 1.8, not 3.1.
+  q-ch15-17:
+    lesson: ch15-s7
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The 15.7 step ''dbt show on a Python model'': --select runs the compiled Python as SQL, so preview with --inline and ref(). The options
+      are about using the dbt show command and its flags, so 1.4 is justified even though it is not a chapter objective.'
+  q-ch16-01:
+    lesson: ch16-s3
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 16.3 step ''dbt ls: your selection checker'' says it prints the nodes a selection matches and never connects to the warehouse.'
+  q-ch16-02:
+    lesson: ch16-s4
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 16.4 operator table: 1+x is the node and its direct parents; x+1 is the direct children.'
+  q-ch16-03:
+    lesson: ch16-s4
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: The 16.4 step 'The @ operator, and why it exists' covers the empty CI schema, where +x+ misses the other parents. childrens_parents
+      comes from the 16.8 table, but @ is the key fact.
+  q-ch16-04:
+    lesson: ch16-s5
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 16.5 set-operator table: -s "a,b" (comma, no space) is an intersection.'
+  q-ch16-05:
+    lesson: ch16-s9
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: false
+    reason: The 16.9 table defines eager (at least one parent), buildable, cautious (all parents) and empty. This is node selection, which the
+      chapter files under 1.4; 5.3 is the alternative.
+  q-ch16-06:
+    lesson: ch16-s2
+    objective: '5.3'
+    confidence: medium
+    reviewed_change: false
+    reason: '16.2 ''What it runs, and in which order'': data tests run right after their node, and unit tests run right before the model. The
+      question is purely about when tests run inside build (5.3, a chapter objective); 1.4 is the alternative.'
+  q-ch16-07:
+    lesson: ch16-s12
+    objective: '1.12'
+    confidence: high
+    reviewed_change: false
+    reason: The 16.12 step 'Which commands accept --empty' shows that 'dbt seed --empty' answers 'No such option --empty'.
+  q-ch16-08:
+    lesson: ch16-s12
+    objective: '1.12'
+    confidence: high
+    reviewed_change: false
+    reason: '16.12 ''What is limited'' and the per-resource table: objects are created with 0 rows, seeds load fully, hard-coded tables are read
+      in full, usual data tests pass, and unit tests still run.'
+  q-ch16-09:
+    lesson: ch16-s13
+    objective: '1.13'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 16.13 step ''The requirement: event_time on the inputs'': --sample filters a ref/source only if the node behind it has event_time.'
+  q-ch16-10:
+    lesson: ch16-s13
+    objective: '1.13'
+    confidence: high
+    reviewed_change: false
+    reason: The 16.13 Syntax step allows hour, day, month and year, but not week, and shows the 'Invalid grain size week' error.
+  q-ch16-11:
+    lesson: ch16-s11
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: '16.11 ''What dbt show really runs'': fct_orders exists, so is_incremental() is true and the compiled SQL returns zero rows.'
+  q-ch16-12:
+    lesson: ch16-s8
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: '16.8 ''Using them'': in 1.11, --selector makes dbt silently ignore --select and --exclude; 1.12 adds a warning and the selector:
+      method.'
+  q-ch16-13:
+    lesson: ch16-s1
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: The 16.1 step 'Commands that do nothing on the wrong resource' shows dbt run -s country_regions answering 'Nothing to do'.
+  q-ch16-14:
+    lesson: ch16-s12
+    objective: '1.12'
+    confidence: high
+    reviewed_change: false
+    reason: '16.12 ''Which commands accept --empty'': run, build, compile and snapshot do; seed, test and show answer ''No such option''.'
+  q-ch16-15:
+    lesson: ch16-s14
+    objective: '3.5'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 16.14 flag table lists ''--fail-fast, -x'': stop the whole command at the first failure.'
+  q-ch16-16:
+    lesson: ch16-s7
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: '16.7: --resource-type is a final filter on the result, and its lab step 3 shows path:models/staging giving 20 lines (models, sources,
+      tests).'
+  q-ch16-17:
+    lesson: ch16-s12
+    objective: '1.12'
+    confidence: high
+    reviewed_change: false
+    reason: '16.12 Trap 2: with --empty the snapshot source looks empty, so hard_deletes: invalidate closes all current rows. The safe practice
+      is --exclude-resource-type snapshot.'
+  q-ch16-18:
+    lesson: ch16-s2
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: false
+    reason: '16.2 ''dbt build in depth'': source freshness is not included, unit tests run before the model, severity: warn skips nothing, and
+      seeds are built. Mostly the build command.'
+  q-ch16-19:
+    lesson: ch16-s1
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 16.1 table ''Every command in one table'' lists the target/ files: sources.json from freshness, catalog.json from docs generate,
+      perf_info.json from parse, run_results.json from build, and only manifest files from ls.'
+  q-ch16-20:
+    lesson: ch16-s5
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: '16.5 Precedence runs this exact selection: commas are applied first inside each item, then the items are joined by union, giving
+      fct_monthly_revenue, fct_order_items and stg_stripe__payments.'
+  q-ch17-01:
+    lesson: ch17-s2
+    objective: '2.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The 17.2 step ''The three access levels'': protected is the default and covers any resource in the same project. No objective is
+      specific to access; 2.1 is the lesson''s governance objective (1.6 is about dbt_project.yml configs).'
+  q-ch17-02:
+    lesson: ch17-s3
+    objective: '2.1'
+    confidence: high
+    reviewed_change: false
+    reason: '17.3 ''What a contract is'' needs enforced: true plus name and data_type for every column, and the pre-flight step says the order
+      is ignored.'
+  q-ch17-03:
+    lesson: ch17-s3
+    objective: '2.1'
+    confidence: high
+    reviewed_change: false
+    reason: '17.3 ''Which models can have a contract?'': incremental requires on_schema_change append_new_columns or fail.'
+  q-ch17-04:
+    lesson: ch17-s3
+    objective: '2.1'
+    confidence: high
+    reviewed_change: false
+    reason: In the same 17.3 step, ignore and sync_all_columns are refused at parse time; sync_all_columns can remove columns, which a contract
+      forbids.
+  q-ch17-05:
+    lesson: ch17-s4
+    objective: '2.3'
+    confidence: high
+    reviewed_change: false
+    reason: The 17.4 step 'Who enforces what?' has the platform table (enforced, metadata, not supported), and says custom constraints are never
+      checked.
+  q-ch17-06:
+    lesson: ch17-s3
+    objective: '2.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 17.3 pre-flight figure and step: query shape (where false limit 0), contract shape (cast(null as ...)), compare, create the typed
+      temp table, insert by name, rename.'
+  q-ch17-07:
+    lesson: ch17-s5
+    objective: '2.2'
+    confidence: high
+    reviewed_change: false
+    reason: 17.5 'How ref picks a version' (latest_version, prerelease), 'Selecting versions' (the model name selects all versions) and 'Files,
+      nodes and relations' (default alias <model>_v<v>).
+  q-ch17-08:
+    lesson: ch17-s2
+    objective: '3.1'
+    confidence: medium
+    reviewed_change: false
+    reason: The 17.2 step 'When is access checked?' shows this exact Parsing Error, explains how to read it (Node, referenced node, group) and
+      lists the three fixes, with 'ref a public model' as the best one. 17.2 lists 3.1; 2.1 is the alternative.
+  q-ch17-09:
+    lesson: ch17-s3
+    objective: '3.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 17.3 step ''Reading contract errors'': ''missing in definition'' plus ''missing in contract'' together mean a renamed column.
+      The task is reading the logged error table.'
+  q-ch17-10:
+    lesson: ch17-s4
+    objective: '2.3'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 17.4 step ''Constraints need an enforced contract'': without contract enforced: true, constraints are silently ignored, with
+      no warning (trap T97).'
+  q-ch17-11:
+    lesson: ch17-s5
+    objective: '2.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The breaking/non-breaking table in 17.5 step 1: removing a column or changing the base data_type breaks; adding a column or constraint,
+      or fixing a calculation, does not. These are changes to a contract (2.2 is the alternative).'
+  q-ch17-12:
+    lesson: ch17-s5
+    objective: '2.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 17.5 step ''How ref picks a version'': ref(''dim_customers'', v=1) is pinned (version=1 works too); an unpinned ref follows latest_version.'
+  q-ch17-13:
+    lesson: ch17-s6
+    objective: '2.1'
+    confidence: medium
+    reviewed_change: true
+    reason: '17.6: when dbt compares states, a breaking change to a contracted model is an error if the model is versioned and only a warning
+      (''Breaking change to contracted, unversioned model'') if not. State comparison is only the setting. The fact tested and every distractor
+      are about how breaking contract changes are handled, so 2.1, which 17.6 lists, fits better than 7.1.'
+  q-ch17-14:
+    lesson: ch17-s5
+    objective: '2.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 17.5 Deprecation step: DeprecatedModel and DeprecatedReference are warnings only; dbt still built both models, and nothing was
+      skipped or dropped.'
+  q-ch17-15:
+    lesson: ch17-s4
+    objective: '2.3'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 17.4 step ''Constraints or data tests?'': an enforced constraint blocks the write, there are no constraints on ephemeral models,
+      unique is metadata-only on Snowflake so a test is needed, and severity is a test config.'
+  q-ch17-16:
+    lesson: ch17-s7
+    objective: '2.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The 17.7 steps ''How a cross-project ref is written'' and ''Project dependency or package?'': projects: in dependencies.yml, a public
+      model, and a two-argument ref. This is access/governance (topic 2 per the 17.1 table), and 2.1 is the governance proxy; 1.7 is not really
+      tested.'
+  q-ch17-17:
+    lesson: ch17-s2
+    objective: '2.1'
+    confidence: medium
+    reviewed_change: false
+    reason: '17.2 ''Groups: a team with an owner'' says the owner needs name or email, and prints ''Group owner must have at least one of name
+      or email''. This is group configuration (governance); 3.3 is the alternative.'
+  q-ch17-18:
+    lesson: ch17-s5
+    objective: '2.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 17.5 ''Selecting versions'' table: version:latest, prerelease (above latest), old (below latest), none (no versions).'
+  q-ch17-19:
+    lesson: ch17-s3
+    objective: '2.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 17.3 step ''Data types: aliases, precision...'': the documentation says the pre-flight check does not compare size, precision
+      or scale (varchar(256) vs varchar(257)).'
+  q-ch18-01:
+    lesson: ch18-s1
+    objective: '5.1'
+    confidence: high
+    reviewed_change: false
+    reason: '18.1 ''How dbt runs a test'': a test returns rows, wrapped in count(*) != 0. Its status table says FAIL 3 means the error condition
+      is true for 3 failing rows. This is test mechanics, so 5.1 (the mock''s similar count(*) question m3-q58 is also 5.1).'
+  q-ch18-02:
+    lesson: ch18-s2
+    objective: '5.1'
+    confidence: high
+    reviewed_change: false
+    reason: 18.2 opens with 'dbt comes with exactly four generic tests' and its table lists unique, not_null, accepted_values and relationships
+      (trap T118).
+  q-ch18-03:
+    lesson: ch18-s2
+    objective: '5.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''Tests with arguments: the 1.10+ syntax'': inputs go under arguments: and behaviour (severity, where) goes under the sibling
+      key config:. This is how to write a generic test, not troubleshooting.'
+  q-ch18-04:
+    lesson: ch18-s2
+    objective: '3.3'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''Tests with arguments'' and lab 1 (tagged 3.3) show MissingArgumentsPropertyInGenericTestDeprecation, caused by values: written
+      directly under the test name. Mock m3-q33 on the same warning is also 3.3.'
+  q-ch18-05:
+    lesson: ch18-s8
+    objective: '5.2'
+    confidence: high
+    reviewed_change: false
+    reason: The opening config table of 18.8 defines where, limit, fail_calc, store_failures and severity. The book maps test configs to 5.2 (lesson
+      objective; mock m1-q54 is also 5.2).
+  q-ch18-06:
+    lesson: ch18-s3
+    objective: '5.3'
+    confidence: medium
+    reviewed_change: true
+    reason: 18.3 steps 1-3 (read the log, store and look at the failing rows, choose a reaction) give this sequence. The question asks for the
+      order of a test-handling procedure, which is objective 5.3, a lesson objective. Mock m2-q24, a similar ordering of testing steps that includes
+      reading stored failures, is 5.3. Only option E touches DAG skipping, so 4.1 is not what the question trains.
+  q-ch18-07:
+    lesson: ch18-s8
+    objective: '5.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''How severity, error_if and warn_if work together'' and its table: error_if is checked first, then warn_if, so the result is
+      WARN. Both default to ''!=0'', so warn_if alone still fails. Threshold questions are 5.2 (mock m1-q29).'
+  q-ch18-08:
+    lesson: ch18-s2
+    objective: '5.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''accepted_values'', detail 1: ''One failing row per distinct wrong value''. The run showed 30 bad orders giving FAIL 2. The
+      question tests how a built-in generic test counts, with default configs, so 5.1 (5.2 is also defensible).'
+  q-ch18-09:
+    lesson: ch18-s2
+    objective: '5.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''relationships'' and its trap T124: the test goes on the child column, with to: ref(parent) and field:. Choosing the built-in
+      test that expresses a rule is 5.2 (mock m1-q02).'
+  q-ch18-10:
+    lesson: ch18-s9
+    objective: '4.1'
+    confidence: high
+    reviewed_change: false
+    reason: '18.9: a test that fails with severity error makes the children, and everything below them, SKIP. Independent branches continue, and
+      only --fail-fast stops everything. This is a failure point in the DAG (mock m1-q09 is also 4.1).'
+  q-ch18-11:
+    lesson: ch18-s3
+    objective: '5.2'
+    confidence: medium
+    reviewed_change: true
+    reason: 'Step ''Where are the failing rows stored?'': by default they go to schema <target schema>_dbt_test__audit, one table per test, named
+      after the test. This is the behaviour of the store_failures config, which the book maps to 5.2: mock m2-q53, the same ''where are the failing
+      rows'' question, is 5.2. The question has no workflow step in it, so not 5.3.'
+  q-ch18-12:
+    lesson: ch18-s6
+    objective: '5.1'
+    confidence: high
+    reviewed_change: false
+    reason: '18.6: the test name is the block name, and the trap says ''- test_is_positive'' makes dbt look for test_test_is_positive. Mock m1-q65
+      (applying a custom generic test) is 5.1.'
+  q-ch18-13:
+    lesson: ch18-s6
+    objective: '5.1'
+    confidence: high
+    reviewed_change: false
+    reason: '18.6: ''Where can a generic test live? In the special folder tests/generic/ ... or in macros/''. Both were tried, and the trap says
+      not models/ (T125).'
+  q-ch18-14:
+    lesson: ch18-s8
+    objective: '5.2'
+    confidence: medium
+    reviewed_change: true
+    reason: 'Step ''Where to set the configs, and which one wins'': the data_tests:/jaffle_dbt/staging/+severity: warn block, and the test''s
+      own YAML config wins. This exact experiment is in the lab ''Play with test configurations'', which is tagged 5.2/5.3, not 1.6. 1.6 is not
+      a ch18 objective, and the mock maps a dbt_project.yml data_tests:+store_failures question to 5.2 (m3-q23). So this is test configuration
+      (5.2).'
+  q-ch18-15:
+    lesson: ch18-s8
+    objective: '5.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''fail_calc and limit change the count'': with limit: 2, the 4 failing rows were reported as 2, and limit is not a threshold.
+      The config table says ''it changes the result!''.'
+  q-ch18-16:
+    lesson: ch18-s5
+    objective: '5.1'
+    confidence: high
+    reviewed_change: false
+    reason: '18.5 rules: one .sql file in tests/ whose name is the test name, no semicolon, use ref()/source(), and do not declare it in a model''s
+      YAML. Step ''Configuring and documenting a singular test'' shows {{ config(severity=''warn'') }}.'
+  q-ch18-17:
+    lesson: ch18-s11
+    objective: '5.2'
+    confidence: high
+    reviewed_change: false
+    reason: '18.11 ''What to test at each layer'' and ''Testing assumptions, not over-testing'': test an assumption once, where it can break,
+      as early as possible, and repeat it only when something in between can break it.'
+  q-ch18-18:
+    lesson: ch18-s10
+    objective: '5.3'
+    confidence: medium
+    reviewed_change: false
+    reason: '18.10 ''Indirect selection'' trap T91: with the default eager mode, dbt test --select stg_stripe__payments also ran assert_payments_match_order_totals.
+      Mock m3-q65 (indirect selection) is 5.3.'
+  q-ch18-19:
+    lesson: ch18-s7
+    objective: '5.2'
+    confidence: medium
+    reviewed_change: true
+    reason: The 18.7 table says unique_combination_of_columns protects 'the grain of a table with a composite key', applied to fct_order_items.
+      The question asks which test checks a model assumption (its grain), which is 5.2, a lesson objective. Mock m3-q14 (testing a composite grain)
+      is 5.2, while 1.7 mock questions are about packages.yml and dbt deps, which this question does not touch.
+  q-ch18-20:
+    lesson: ch18-s8
+    objective: '5.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''How severity, error_if and warn_if work together'': with severity warn, error_if is ignored and warn_if (default ''!=0'')
+      gives WARN. The table column for severity warn + error_if ''>10'' shows 50 -> WARN.'
+  q-ch19-01:
+    lesson: ch19-s1
+    objective: '5.1'
+    confidence: high
+    reviewed_change: false
+    reason: '19.1 comparison table: a unit test checks ''the SQL logic of one model'' with fake given rows, against the expected rows in expect.'
+  q-ch19-02:
+    lesson: ch19-s2
+    objective: '5.1'
+    confidence: high
+    reviewed_change: false
+    reason: '19.2 gives the unit_tests: specification and the first test, with given: (input + rows) and expect: rows.'
+  q-ch19-03:
+    lesson: ch19-s3
+    objective: '5.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''Ephemeral inputs need format sql'': dict/csv rows need the column types of the input relation, and an ephemeral model has
+      none. The step shows this exact ''Not able to get columns...'' error and the format sql fix.'
+  q-ch19-04:
+    lesson: ch19-s3
+    objective: '5.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 19.3 format table: dict is the default, csv comes after rows: |, and sql needs all columns. Step ''Fixture files'' says fixture:
+      reads from tests/fixtures/.'
+  q-ch19-05:
+    lesson: ch19-s6
+    objective: '5.3'
+    confidence: medium
+    reviewed_change: false
+    reason: '19.6 table: dbt build runs ''unit tests, each one just before its model''. ''A failing unit test in dbt build'' shows the unit test
+      gating the model, with data tests after the model. Mock m1-q20, the same build-order question, is 5.3.'
+  q-ch19-06:
+    lesson: ch19-s9
+    objective: '5.1'
+    confidence: medium
+    reviewed_change: false
+    reason: Step 'Limitations to remember' covers A (SQL models only), C (parents must exist) and D (YAML under models/, never tests/). B and
+      E are in 19.6, but most options rest on s9.
+  q-ch19-07:
+    lesson: ch19-s2
+    objective: '5.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''Reading a failing unit test'': in a cell, expected->actual (''we expected 12.50, the model returned 125.00''), and a row that
+      is expected but missing is marked ---.'
+  q-ch19-08:
+    lesson: ch19-s5
+    objective: '5.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''Two parsing errors you will meet'': ''Boolean override for is_incremental must be provided''. The fix is overrides: macros:
+      is_incremental: true/false.'
+  q-ch19-09:
+    lesson: ch19-s5
+    objective: '5.1'
+    confidence: high
+    reviewed_change: false
+    reason: '19.5: ''give the content of the existing table: an input named this'', which the max(loaded_at) incremental filter reads. The second
+      parsing error demands a ''this'' input.'
+  q-ch19-10:
+    lesson: ch19-s5
+    objective: '5.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Trap in 19.5: the expected rows of an incremental unit test are what the model''s select returns (rows to insert or merge), not the
+      final table. A unit test cannot check the merge.'
+  q-ch19-11:
+    lesson: ch19-s8
+    objective: '5.3'
+    confidence: high
+    reviewed_change: false
+    reason: '19.8 Production: two ways to exclude unit tests, --exclude-resource-type unit_test or DBT_ENGINE_EXCLUDE_RESOURCE_TYPES. Mock m1-q62,
+      the same topic, is 5.3.'
+  q-ch19-12:
+    lesson: ch19-s7
+    objective: '4.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''The brand-new schema trap: input: this'': the unit test errors, fct_orders is skipped, and ''running dbt build again does
+      not help''. The fix is to build first with --exclude-resource-type unit_test or dbt run --empty. The core is the failure and skip behaviour
+      in the DAG; the lab is tagged 4.1.'
+  q-ch19-13:
+    lesson: ch19-s7
+    objective: '1.12'
+    confidence: high
+    reviewed_change: false
+    reason: '19.7: parents must exist but need no data, ''so the cheapest way is --empty'' after dbt seed. Mock m2-q52, a brand-new CI schema
+      with a failing unit test, is 1.12.'
+  q-ch19-14:
+    lesson: ch19-s3
+    objective: '5.1'
+    confidence: high
+    reviewed_change: false
+    reason: The 19.3 format table says format sql is 'Required for ephemeral inputs', and step 'Ephemeral inputs need format sql' explains why.
+  q-ch19-15:
+    lesson: ch19-s3
+    objective: '2.2'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''Versioned models'': by default a unit test runs on every version (_v1, _v2), and versions: include/exclude limits it. 2.2
+      is a lesson objective, and the lab is tagged 2.2.'
+  q-ch19-16:
+    lesson: ch19-s2
+    objective: '5.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''A first unit test'': missing input columns are NULL, dbt compares only the expect columns, and row order does not matter.
+      Three of the four options rest on s2; option D (format sql needs all columns) is in the 19.3 table.'
+  q-ch19-17:
+    lesson: ch19-s9
+    objective: '5.1'
+    confidence: medium
+    reviewed_change: false
+    reason: '19.9 ''What to unit test'': complex logic such as regular expressions, and edge cases such as NULL. Do not unit test simple renames
+      or built-in warehouse functions (min, upper).'
+  q-ch19-18:
+    lesson: ch19-s8
+    objective: '5.3'
+    confidence: high
+    reviewed_change: false
+    reason: '19.8: unit tests run in Development and CI; for Production, ''Do not run unit tests'' because the inputs are fixed (trap T130).'
+  q-ch20-01:
+    lesson: ch20-s4
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''What the command does'': it copies index.html, compiles to manifest.json and queries metadata into catalog.json. ''It builds
+      nothing'', but it connects to the warehouse. Trap T36: it starts no server.'
+  q-ch20-02:
+    lesson: ch20-s4
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''Manifest or catalog? Who knows what'': column names and types come from catalog.json, built from warehouse metadata queries.
+      This is a docs generate artifact (chapter objective 1.4).'
+  q-ch20-03:
+    lesson: ch20-s3
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: true
+    reason: 'Step ''The __overview__ block: your home page'': a doc block named __overview__ replaces the default home page of the docs site.
+      The question is about customising the docs site, not about modularity or DRY (1.3). 1.4 (the docs commands and site) is the chapter objective
+      the book uses for docs-site questions, such as mocks m3-q50 and m3-q57.'
+  q-ch20-04:
+    lesson: ch20-s3
+    objective: '3.3'
+    confidence: high
+    reviewed_change: false
+    reason: '20.3 rule ''Quotes: always, because the value starts with {''. Lab step 5 shows the Parsing Error ''found unhashable key'' for an
+      unquoted {{ doc() }}. The 20.2 quoting step covers the quoted colon on line 12.'
+  q-ch20-05:
+    lesson: ch20-s7
+    objective: '1.6'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''The config'': persist_docs applies to ''models, seeds and snapshots. It is not implemented for sources.'' This is about the
+      scope of a config, usually set as +persist_docs in dbt_project.yml (lesson objective 1.6).'
+  q-ch20-06:
+    lesson: ch20-s4
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: Step 'The flags of dbt docs generate' defines --select (catalog only), --no-compile, --empty-catalog and --static.
+  q-ch20-07:
+    lesson: ch20-s5
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: false
+    reason: '20.5: ''dbt docs serve does not generate anything... Always run dbt docs generate first'', and it serves on localhost:8080. The lab
+      runs build, generate, then serve. 20.4 adds that you build before generate.'
+  q-ch20-08:
+    lesson: ch20-s3
+    objective: '1.3'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''The syntax'' rules: a .md file, a name that cannot start with a digit, doc() only in YAML description fields, and duplicate
+      names are an error in 1.11. Doc blocks are the book''s DRY mechanism for text (lesson objective 1.3; the lab is tagged 1.3/3.3).'
+  q-ch20-09:
+    lesson: ch20-s5
+    objective: '1.4'
+    confidence: high
+    reviewed_change: false
+    reason: '20.5 output: ''Serving docs at 8080'', and the option ''--port 8001: use another port (the default is 8080)''.'
+  q-ch20-10:
+    lesson: ch20-s3
+    objective: '3.3'
+    confidence: high
+    reviewed_change: false
+    reason: 20.3 lab step 6 shows 'depends on doc order_statuses which was not found' as a Compilation Error, while YAML problems are Parsing
+      Errors. The closing trap explicitly cites objective 3.3.
+  q-ch20-11:
+    lesson: ch20-s6
+    objective: '1.6'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Trap in step ''docs: show and node_color'': an unquoted hex is read as a YAML comment, so node_color is null with no error and the
+      default colour. The snippet is a +docs config in dbt_project.yml (chapter objective 1.6).'
+  q-ch20-12:
+    lesson: ch20-s8
+    objective: '1.4'
+    confidence: low
+    reviewed_change: false
+    reason: 'Step ''dbt Catalog (formerly dbt Explorer)'': Catalog updates after each job run in production or staging, and CI jobs do not update
+      it. No objective covers Catalog well; 1.4 (docs) is the closest chapter objective.'
+  q-ch20-13:
+    lesson: ch20-s8
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: false
+    reason: 'In ''Generating docs in a job'': with the ''Generate docs on run'' checkbox, a docs failure does not fail the job; as a separate
+      step it does. This is about running the docs command in jobs.'
+  q-ch20-14:
+    lesson: ch20-s7
+    objective: '7.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''persist_docs and state:modified'': only the mart with persist_docs is listed as modified (state:modified.persisted_descriptions),
+      and only a build rewrites the comment. Options A and B test state selection (chapter objective 7.1).'
+  q-ch20-15:
+    lesson: ch20-s6
+    objective: '1.6'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''docs: show and node_color'': show defaults to true; with false the node is hidden from the site navigation but still built.
+      It is a docs config, often set as +docs in dbt_project.yml (chapter objective 1.6).'
+  q-ch20-16:
+    lesson: ch20-s5
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: true
+    reason: 'Step ''A tour of the site'': the full-screen lineage graph has a resources filter (untick Tests) and --select/--exclude boxes that
+      accept selection syntax, and the site is read-only. The question tests features of the docs site, which is 1.4, a lesson objective. 1.5
+      is about designing a clean DAG (mock 1.5 questions are on DAG order and layering), which this question does not train.'
+  q-ch20-17:
+    lesson: ch20-s7
+    objective: '1.14'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''A side effect: microbatch batches that collide'': parallel batches each run comment on table, which causes a DuckDB ''Catalog
+      write-write conflict''. The fix is concurrent_batches=False.'
+  q-ch20-18:
+    lesson: ch20-s4
+    objective: '1.4'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''Only existing relations are in the catalog'': int_payments__successful is ephemeral, never becomes a relation, so it is missing
+      from catalog.json. This is docs generate behaviour (1.4).'
+  q-ch20-19:
+    lesson: ch20-s6
+    objective: '1.6'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''meta: your own keys'': free keys shown in the Details section, written under config: and merged from dbt_project.yml +meta.
+      tags, docs and persist_docs have other roles. meta is a config (chapter objective 1.6).'
+  q-ch21-01:
+    lesson: ch21-s4
+    objective: '6.2'
+    confidence: high
+    reviewed_change: false
+    reason: '21.4 ''The command and its options'' and trap T132: freshness runs only with dbt source freshness, dbt build never checks it, and
+      ''dbt freshness'' does not exist in Core 1.11. The question is about the freshness command (6.2), not the 1.4 command list.'
+  q-ch21-02:
+    lesson: ch21-s3
+    objective: '6.2'
+    confidence: high
+    reviewed_change: false
+    reason: '21.3 key table: period is minute | hour | day. Trap T133 repeats this and says week stops the parse.'
+  q-ch21-03:
+    lesson: ch21-s3
+    objective: '6.2'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Trap T133 in 21.3: period: week gives ''Field error_after ... has invalid value''. The inheritance step shows freshness: null is
+      valid. The fact needed is freshness configuration (6.2). 3.3 is the alternative because the question is framed as a parse error.'
+  q-ch21-04:
+    lesson: ch21-s3
+    objective: '6.2'
+    confidence: high
+    reviewed_change: false
+    reason: '21.3 step ''Inheritance: a table overrides only the keys it sets'' and trap T134 use exactly this example: warn after 6h, error_after
+      24h inherited.'
+  q-ch21-05:
+    lesson: ch21-s3
+    objective: '6.2'
+    confidence: high
+    reviewed_change: false
+    reason: 21.3 says at least one of warn_after/error_after is needed. Trap T133 ('Without loaded_at_field' step) says dbt also needs a loaded_at_field
+      or loaded_at_query unless the adapter supports metadata freshness.
+  q-ch21-06:
+    lesson: ch21-s4
+    objective: '6.2'
+    confidence: high
+    reviewed_change: false
+    reason: '21.4 ''The four outcomes'' table: PASS, WARN, ERROR STALE (older than error_after) and ERROR (the check itself failed).'
+  q-ch21-07:
+    lesson: ch21-s5
+    objective: '7.1'
+    confidence: medium
+    reviewed_change: false
+    reason: '21.5 explains that source_status:fresher compares the previous sources.json (--state) with the current one. Its lab does: full check,
+      save outside target/, new data, full check, select. The intro tags source_status:fresher+ with --state as 7.1. 6.2 is the alternative.'
+  q-ch21-08:
+    lesson: ch21-s4
+    objective: '6.2'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The explanation rests on two 21.4 facts: trap T132 (freshness is a separate command, build does not check it) and ''Exit codes''
+      (WARN exits with 0). Options B and C (filter, freshness: null) come from 21.3.'
+  q-ch21-09:
+    lesson: ch21-s6
+    objective: '6.2'
+    confidence: high
+    reviewed_change: false
+    reason: '21.6 comparison table: the checkbox always runs as the first step, and when data is stale the job continues and the following steps
+      still run.'
+  q-ch21-10:
+    lesson: ch21-s6
+    objective: '6.2'
+    confidence: high
+    reviewed_change: false
+    reason: '21.6 table: with an explicit step, the step fails and the following steps do not run. Typical use: put it first to block the build
+      on stale data.'
+  q-ch21-11:
+    lesson: ch21-s8
+    objective: '6.1'
+    confidence: high
+    reviewed_change: false
+    reason: '21.8 properties table and ''What dbt checks'': type is one of dashboard, notebook, analysis, ml, application, and ''report'' is rejected.
+      Trap T138 says the same.'
+  q-ch21-12:
+    lesson: ch21-s8
+    objective: '6.1'
+    confidence: high
+    reviewed_change: false
+    reason: '21.8 properties table: name, type and owner are required, depends_on is ''expected'', and label, maturity and url are optional.'
+  q-ch21-13:
+    lesson: ch21-s9
+    objective: '6.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'Trap T137 in 21.9: dbt run -s exposure:x says ''Nothing to do'', build shows NO-OP, and the useful selector is +exposure:x.'
+  q-ch21-14:
+    lesson: ch21-s9
+    objective: '6.1'
+    confidence: high
+    reviewed_change: false
+    reason: '21.9 selector table: +exposure:monthly_revenue_dashboard selects the exposure and all its parents. The intro lists ''+exposure:name''
+      selection under 6.1.'
+  q-ch21-15:
+    lesson: ch21-s8
+    objective: '6.1'
+    confidence: high
+    reviewed_change: false
+    reason: '21.8 ''What dbt checks, with the real messages'': maturity: very_high gives ''is not valid under any of the given schemas''. The
+      properties table and T138 say maturity accepts only high, medium and low.'
+  q-ch21-16:
+    lesson: ch21-s8
+    objective: '6.1'
+    confidence: high
+    reviewed_change: false
+    reason: '21.8 covers three of the four statements: owner needs a name and/or an email, depends_on accepts ref() and source(), and dbt never
+      builds or runs an exposure. Its intro also mentions lineage and docs. 21.9 adds detail on docs.'
+  q-ch21-17:
+    lesson: ch21-s7
+    objective: '6.2'
+    confidence: high
+    reviewed_change: false
+    reason: '21.7: a PASS means only that some rows arrived recently. It says nothing about completeness, correctness or model freshness (trap
+      T136).'
+  q-ch21-18:
+    lesson: ch21-s5
+    objective: '7.1'
+    confidence: medium
+    reviewed_change: false
+    reason: '21.5 warning: dbt source freshness --select replaces target/sources.json with only the selected sources, so the children of the other
+      sources are silently left out. The lab reproduces this exact case. This is state comparison (7.1), consistent with q-ch21-07; 6.2 is the
+      alternative.'
+  q-ch21-19:
+    lesson: ch21-s3
+    objective: '6.2'
+    confidence: high
+    reviewed_change: false
+    reason: '21.3 step ''loaded_at_query: when one column is not enough'': you cannot set both keys on the same table (Parsing Error).'
+  q-ch21-20:
+    lesson: ch21-s4
+    objective: '6.2'
+    confidence: high
+    reviewed_change: false
+    reason: '21.4 ''The command and its options'': --output (-o) writes the JSON report somewhere other than target/sources.json.'
+  q-ch22-01:
+    lesson: ch22-s2
+    objective: '3.1'
+    confidence: medium
+    reviewed_change: false
+    reason: '22.2 ''Parsing errors: YAML'' and trap T108: one bad YAML file stops every command, even for unrelated models. The task is to read
+      the error family and phase (Parsing Error before any START comes from dbt''s YAML reader), which matches the intro''s description of 3.1.
+      3.3 is close.'
+  q-ch22-02:
+    lesson: ch22-s1
+    objective: '3.1'
+    confidence: high
+    reviewed_change: false
+    reason: '22.1 ''Three phases'' table and the T105 callout: on DuckDB a database error is labelled ''Runtime Error in model … Binder Error'';
+      on Snowflake or BigQuery it is ''Database Error in model …''.'
+  q-ch22-03:
+    lesson: ch22-s2
+    objective: '3.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Bug 4 in 22.2 ''Dependency errors'': Jinja renders before SQL, so a ref inside a -- comment creates a real edge and the cycle (trap
+      T23); parse passes and ls fails. The task is to trace the error message back to its cause. CP0-JINJA is possible.'
+  q-ch22-04:
+    lesson: ch22-s2
+    objective: '3.1'
+    confidence: medium
+    reviewed_change: false
+    reason: '22.2 ''What each command can see'' and the bug texts: parse catches a broken template (bug 1) and a missing ref (bug 5), but not
+      bad columns or semicolons (bugs 3 and 8) or cycles (bug 4). 22.3 repeats this summary.'
+  q-ch22-05:
+    lesson: ch22-s3
+    objective: '3.2'
+    confidence: high
+    reviewed_change: false
+    reason: '22.3 ''target/compiled versus target/run'' table: target/run holds the full statement sent (create view … as (…)).'
+  q-ch22-06:
+    lesson: ch22-s2
+    objective: '3.1'
+    confidence: high
+    reviewed_change: false
+    reason: The five messages are those of bugs 5, 1, 8, 2 and 4, each shown with its cause in 22.2.
+  q-ch22-07:
+    lesson: ch22-s4
+    objective: '3.4'
+    confidence: high
+    reviewed_change: false
+    reason: '22.4 ''The workflow'': reproduce in dev, branch from an up-to-date main, fix the root cause, dbt build -s model+, PR with CI and
+      review, merge. Trap T111 says the same.'
+  q-ch22-08:
+    lesson: ch22-s5
+    objective: '3.5'
+    confidence: high
+    reviewed_change: false
+    reason: '22.5 covers each statement. Trap T110 (Precedence step): fail_fast under flags: applies to every run. ''What can be set where'':
+      behavior change flags only under flags:, and paths such as log-path are not allowed there. Precedence: env var > flags:.'
+  q-ch22-09:
+    lesson: ch22-s5
+    objective: '3.5'
+    confidence: high
+    reviewed_change: false
+    reason: '22.5 ''Precedence: who wins?'': command line > environment variable > flags: > default, shown with printer_width 60, 70 and 100.'
+  q-ch22-10:
+    lesson: ch22-s5
+    objective: '3.5'
+    confidence: high
+    reviewed_change: false
+    reason: '22.5 ''Warnings as errors'': error: all with exceptions in warn. warn alone is refused, --warn-error cannot be combined with --warn-error-options,
+      and include/exclude are deprecated and fail with ''all'' (trap T109).'
+  q-ch22-11:
+    lesson: ch22-s3
+    objective: '3.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'Trap T106 in 22.3: the merge of an incremental model is in target/run or the debug log, not in target/compiled.'
+  q-ch22-12:
+    lesson: ch22-s2
+    objective: '3.3'
+    confidence: high
+    reviewed_change: false
+    reason: '22.2 ''Silent errors'': CustomKeyInObjectDeprecation is checked only on BigQuery, Databricks, Redshift and Snowflake. It is a warning,
+      the key is ignored and the description is lost.'
+  q-ch22-13:
+    lesson: ch22-s5
+    objective: '3.5'
+    confidence: medium
+    reviewed_change: false
+    reason: '22.5 log flags step and flag table: ''-d / --debug sends the debug lines to the console as well''. Trap T107 in 22.3 says the same
+      and points to 22.5. The fact is a flag (3.5).'
+  q-ch22-14:
+    lesson: ch22-s3
+    objective: '3.2'
+    confidence: high
+    reviewed_change: false
+    reason: '22.3 ''A SQL problem or a dbt problem?'': if the compiled select runs alone (bug 8), the failure is in what dbt wraps around it,
+      visible in target/run.'
+  q-ch22-15:
+    lesson: ch22-s2
+    objective: '3.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'Bug 4 text in 22.2: dbt parse does not see the cycle; dbt ls, compile, run and build link the graph and report ''Found a cycle''.'
+  q-ch22-16:
+    lesson: ch22-s3
+    objective: '3.1'
+    confidence: high
+    reviewed_change: false
+    reason: '22.3 ''logs/dbt.log: everything, at debug level'': the file holds every SQL statement, is written at debug level, and new runs are
+      added at the end. That covers A, B and C. -q only affects the console.'
+  q-ch22-17:
+    lesson: ch22-s5
+    objective: '3.5'
+    confidence: high
+    reviewed_change: false
+    reason: '22.5 behavior change flags table and callout: skip_nodes_if_on_run_start_fails defaults to false in 1.11 (true from 1.12), so the
+      models still run after a failed on-run-start.'
+  q-ch22-18:
+    lesson: ch22-s3
+    objective: '3.2'
+    confidence: medium
+    reviewed_change: false
+    reason: 22.3 step 'dbt compile, dbt show, dbt parse, dbt ls, dbt debug' and its 'Your question | Tool' table match each question to a tool.
+      The intro places dbt compile and dbt show under 3.2. 1.4 is not a ch22 objective.
+  q-ch22-19:
+    lesson: ch22-s1
+    objective: '3.1'
+    confidence: high
+    reviewed_change: false
+    reason: '22.1 ''The four error types of the dbt documentation'': graph validation gives a Dependency Error (''Found a cycle'').'
+  q-ch23-01:
+    lesson: ch23-s2
+    objective: '4.1'
+    confidence: high
+    reviewed_change: false
+    reason: '23.2 ''A model fails in the middle: dbt run'' and trap T113: only descendants are skipped, independent branches continue, and the
+      exit code is 1.'
+  q-ch23-02:
+    lesson: ch23-s2
+    objective: '4.1'
+    confidence: high
+    reviewed_change: false
+    reason: '23.2 ''--fail-fast: stop everything at the first failure'' and trap T112: running queries are cancelled and no new node starts. The
+      intro lists --fail-fast under 4.1.'
+  q-ch23-03:
+    lesson: ch23-s2
+    objective: '4.1'
+    confidence: high
+    reviewed_change: false
+    reason: '23.2 ''The same failure in dbt build: tests are gates'' (event table and trap T30): an error or a failing error-severity test skips
+      downstream nodes. ''A warn never closes the gate.'''
+  q-ch23-04:
+    lesson: ch23-s3
+    objective: '4.1'
+    confidence: high
+    reviewed_change: false
+    reason: '23.3 node status table: a failed test has the status fail, not error (''Two details the exam likes''). The intro maps node statuses
+      and run_results.json to 4.1.'
+  q-ch23-05:
+    lesson: ch23-s3
+    objective: '4.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 23.3 node status table covers SKIP, PARTIAL SUCCESS, NO-OP and WARN, and notes that CANCEL is not a status. These are node statuses
+      under 4.1; 3.1 is possible because the question reads console output.
+  q-ch23-06:
+    lesson: ch23-s5
+    objective: '4.2'
+    confidence: medium
+    reviewed_change: false
+    reason: 23.5 'Selection, and a limit we found' gives the CI clone recipe (state:modified+,config.materialized:incremental,state:old). 'Use
+      cases' puts the clone before dbt build -s state:modified+. State selection (7.1) is secondary.
+  q-ch23-07:
+    lesson: ch23-s5
+    objective: '4.2'
+    confidence: high
+    reviewed_change: false
+    reason: '23.5 ''What dbt clone does, node by node'': --state is mandatory, existing relations are kept without --full-refresh, Snowflake gets
+      a zero-copy clone, and Postgres or DuckDB get pointer views.'
+  q-ch23-08:
+    lesson: ch23-s5
+    objective: '4.2'
+    confidence: high
+    reviewed_change: false
+    reason: '23.5 ''First try'' and ''--full-refresh: replace what already exists'': without --full-refresh, clone prints ''Relation … already
+      exists'' and still reports PASS.'
+  q-ch23-09:
+    lesson: ch23-s5
+    objective: '4.2'
+    confidence: medium
+    reviewed_change: false
+    reason: '23.5 ''Clone or defer?'' table: defer creates nothing and only resolves ref(); clone creates objects in your schema. 7.1 (defer)
+      is the alternative.'
+  q-ch23-10:
+    lesson: ch23-s5
+    objective: '4.2'
+    confidence: high
+    reviewed_change: false
+    reason: '23.5 ''Second try: a missing table, and a real problem'': on DuckDB the clone goes through the view materialization, so the analyze
+      post-hook runs on a view and fails.'
+  q-ch23-11:
+    lesson: ch23-s5
+    objective: CP0-JINJA
+    confidence: medium
+    reviewed_change: true
+    reason: The fact is taught in 23.5 as part of the clone post-hook fix ('The Jinja variable flags.WHICH contains the name of the current command').
+      But the question only asks for a Jinja context variable ('The Jinja expression {{ flags.___ }}'); clone is just one example value. A learner
+      who misses it lacks Jinja context knowledge (also covered in ch11-s1), not clone knowledge, so CP0-JINJA is what it trains rather than 4.2.
+  q-ch23-12:
+    lesson: ch23-s2
+    objective: '4.1'
+    confidence: medium
+    reviewed_change: false
+    reason: '23.2 ''Hooks that fail'': with skip_nodes_if_on_run_start_fails: true, a failed on-run-start skips the selected nodes, with exit
+      code 1. The intro lists a failing hook as a 4.1 failure point; 3.5 is possible because it involves a flag.'
+  q-ch23-13:
+    lesson: ch23-s2
+    objective: '4.1'
+    confidence: high
+    reviewed_change: false
+    reason: '23.2 ''Threads and order'' and trap T114: threads limit parallelism, and dependencies are always respected. The intro lists threads
+      under 4.1.'
+  q-ch23-14:
+    lesson: ch23-s2
+    objective: '4.1'
+    confidence: high
+    reviewed_change: false
+    reason: '23.2 ''The data changes, the code does not'': the accepted_values FAIL after the view is built skips 29 downstream nodes, and the
+      marts keep their old data (skipped models are not dropped).'
+  q-ch23-15:
+    lesson: ch23-s3
+    objective: '4.1'
+    confidence: high
+    reviewed_change: false
+    reason: '23.3 ''run_results.json'': one entry per executed node, status skipped, rewritten even by compile and show but not by dbt parse or
+      dbt ls.'
+  q-ch23-16:
+    lesson: ch23-s2
+    objective: '4.1'
+    confidence: high
+    reviewed_change: false
+    reason: '23.2 ''When the warehouse itself fails'': with the DuckDB file lock, no node ran, there was no Done line, and the exit code was 2.'
+  q-ch23-17:
+    lesson: ch23-s5
+    objective: '4.2'
+    confidence: high
+    reviewed_change: false
+    reason: '23.5 ''Use cases'': CI with incremental models on zero-copy platforms, blue/green deployment, development set-up and BI testing.'
+  q-ch23-18:
+    lesson: ch23-s3
+    objective: '4.1'
+    confidence: high
+    reviewed_change: false
+    reason: '23.3 ''Partial success: the microbatch case'': some batches failed, exit code 1, counted as an error, descendants skipped, and dbt
+      retry re-runs only the failed batches.'
+  q-ch24-01:
+    lesson: ch24-s8
+    objective: '7.2'
+    confidence: high
+    reviewed_change: false
+    reason: 24.8 opens with 'dbt retry reads target/run_results.json' and runs the same command again for error, fail and skipped nodes. This
+      is exactly the fact asked.
+  q-ch24-02:
+    lesson: ch24-s2
+    objective: '7.1'
+    confidence: high
+    reviewed_change: false
+    reason: 24.2 shows the exact error 'Got a state selector method, but no comparison manifest', explains DBT_ENGINE_STATE/DBT_STATE, and says
+      'State is not Git'.
+  q-ch24-03:
+    lesson: ch24-s3
+    objective: '7.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 24.3 table in ''What is detected and what is not'' and its trap callout: tags are never modifications, and a description counts
+      only with persist_docs.'
+  q-ch24-04:
+    lesson: ch24-s3
+    objective: '7.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 24.3 sub-selector table: state:modified.relation covers database/schema/alias, and the trap says these keys are not in .configs.'
+  q-ch24-05:
+    lesson: ch24-s3
+    objective: '7.1'
+    confidence: high
+    reviewed_change: false
+    reason: 24.3 opens with the 'learn this table by heart' list of state:new, old, modified and unmodified, which matches the right-hand items.
+  q-ch24-06:
+    lesson: ch24-s5
+    objective: '7.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''Why result:error+ misses a failed test'': a failing test has status fail, while the Done line counts it under ERROR. result:
+      is a selector that reads the --state folder (state/result selection, 7.1). Retry is only the alternative.'
+  q-ch24-07:
+    lesson: ch24-s6
+    objective: '7.1'
+    confidence: high
+    reviewed_change: false
+    reason: 24.6 gives both defer conditions, --favor-state, 'Selected nodes are never deferred', the '--state or --defer-state are required for
+      deferral' error, and the trap '--defer builds nothing'.
+  q-ch24-08:
+    lesson: ch24-s8
+    objective: '7.2'
+    confidence: high
+    reviewed_change: false
+    reason: The 24.8 'Break, fix and retry' exercise and the trap 'fix first, then retry, otherwise you get the same failure' give this recovery
+      order.
+  q-ch24-09:
+    lesson: ch24-s8
+    objective: '7.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''What retry re-runs, and the Nothing to do cases'': running dbt compile overwrote run_results.json, so the retry printed ''Nothing
+      to do''.'
+  q-ch24-10:
+    lesson: ch24-s4
+    objective: '7.1'
+    confidence: medium
+    reviewed_change: false
+    reason: The wrong line is the one missing '+'. 24.4 'Why state:modified+ and not just state:modified' explains why the children must be built.
+      24.7 only puts the full command together.
+  q-ch24-11:
+    lesson: ch24-s8
+    objective: '7.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''Which flags does retry keep?'': ''dbt retry --target dev'' still ran with target=''ci''. --target is kept, and only --threads/--vars
+      can be overridden.'
+  q-ch24-12:
+    lesson: ch24-s6
+    objective: '7.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''--state versus --defer-state'' in 24.6: --defer-state gives deferral its own folder, and without it deferral uses --state.'
+  q-ch24-13:
+    lesson: ch24-s1
+    objective: '7.2'
+    confidence: medium
+    reviewed_change: false
+    reason: The 24.1 artifact table lists the commands that write run_results.json (compile, seed...; not ls, parse or source freshness). The
+      lesson has no objective. In the exam this file matters mainly as the input of retry (24.8 repeats the ls/parse fact), so 7.2 is defensible.
+      7.1 would also fit.
+  q-ch24-14:
+    lesson: ch24-s3
+    objective: '7.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 24.3 ''What is detected and what is not'' table and trap (3): a new var or env_var value is not detected (a false negative).'
+  q-ch24-15:
+    lesson: ch24-s8
+    objective: '7.2'
+    confidence: high
+    reviewed_change: false
+    reason: 24.8 lists the retryable statuses (error, fail, skipped, partial success). It covers warnings ('Nothing to do' unless --warn-error),
+      the flags table (no --select; --threads and --vars can be overridden) and the microbatch step.
+  q-ch24-16:
+    lesson: ch24-s1
+    objective: '7.1'
+    confidence: medium
+    reviewed_change: false
+    reason: The 24.1 table and trap say catalog.json comes only from docs generate, sources.json only from source freshness, and parse writes
+      the manifest. The lesson has no objective. Artifacts are what a state is (7.1); 1.4 would be the alternative.
+  q-ch24-17:
+    lesson: ch24-s6
+    objective: '4.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'The ''Defer versus clone'' table in 24.6: clone creates objects that are visible outside dbt (BI tool), and its typical use is ''testing
+      a change with a BI tool''. Defer creates nothing. 4.2 is a chapter objective.'
+  q-ch24-18:
+    lesson: ch24-s6
+    objective: '7.1'
+    confidence: medium
+    reviewed_change: false
+    reason: '24.6 dbt callout: the Studio IDE toggle passes --defer with the manifest of the latest successful Staging run if one exists, otherwise
+      Production. This is where the deferral state comes from. 3.4 also fits.'
+  q-ch24-19:
+    lesson: ch24-s5
+    objective: '7.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''source_status:fresher'': ''Both files are required'', with the error ''No previous state comparison freshness results in sources.json''
+      for --state prod-artifacts. This is a state-folder selector; 6.2 is secondary.'
+  q-ch25-01:
+    lesson: ch25-s3
+    objective: '3.4'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''CI jobs'' in 25.3: CI builds into dbt_cloud_pr_<job_id>_<pr_id>, e.g. dbt_cloud_pr_1862_1704. A CI job is how a pull request
+      is tested before merging.'
+  q-ch25-02:
+    lesson: ch25-s3
+    objective: '6.2'
+    confidence: medium
+    reviewed_change: false
+    reason: The 25.3 Deploy jobs table says the Run source freshness checkbox runs first and its failure does not stop the next steps. The trap
+      is 'The checkbox is not the command'. The question tests freshness behaviour, so 6.2 is justified although it is not a chapter objective.
+  q-ch25-03:
+    lesson: ch25-s6
+    objective: '5.3'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 25.6 ''Where each kind of test runs'' table: data tests run in Prod and source freshness in the production job. Unit tests and
+      the --empty dry run do not run in prod.'
+  q-ch25-04:
+    lesson: ch25-s4
+    objective: '1.12'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''The --empty dry run'' in 25.4: every ref() and source() is replaced by a subquery that returns no rows.'
+  q-ch25-05:
+    lesson: ch25-s3
+    objective: '3.4'
+    confidence: low
+    reviewed_change: false
+    reason: The Deploy/CI/Merge job table in 25.3 gives the triggers (schedule/other job/API/by hand; PR opened or new commit; PR merged). No
+      official objective covers platform jobs. 3.4, the pull-request lifecycle around testing before merge, is the closest.
+  q-ch25-06:
+    lesson: ch25-s2
+    objective: '3.4'
+    confidence: high
+    reviewed_change: false
+    reason: '25.2 ''From a branch to production'' says it is ''the answer to exam objective 3.4'' and gives the path: branch, fix and build in
+      dev, PR with CI, merge after a green check, deployment job.'
+  q-ch25-07:
+    lesson: ch25-s4
+    objective: '7.1'
+    confidence: medium
+    reviewed_change: false
+    reason: The 25.4 workflow build step uses --defer --state prod-artifacts so that unbuilt parents are deferred to production (table, lines
+      58-59). Without --defer the parent is looked for in the empty CI schema. This is a deferral/state fact; 7.1 is a lesson objective.
+  q-ch25-08:
+    lesson: ch25-s3
+    objective: '3.4'
+    confidence: low
+    reviewed_change: false
+    reason: '25.3 gives every fact: one development environment, at most one Production, CI runs use no run slots, schedules in UTC, dbt deps
+      runs automatically. No objective fits precisely, so the chapter''s dev-to-CI-to-prod objective is used.'
+  q-ch25-09:
+    lesson: ch25-s3
+    objective: '1.6'
+    confidence: medium
+    reviewed_change: false
+    reason: The priority table in step 'Environment variables in the dbt platform' (job override > environment > project default > code default).
+      env_var material is under 1.6 in ch10-s7, and no chapter objective fits.
+  q-ch25-10:
+    lesson: ch25-s4
+    objective: '1.12'
+    confidence: high
+    reviewed_change: false
+    reason: 'Step ''Why our workflow needs the --empty step'': a new incremental model whose unit test mocks this has nothing to defer to, and
+      unit tests read input columns from the database.'
+  q-ch25-11:
+    lesson: ch25-s4
+    objective: '1.12'
+    confidence: high
+    reviewed_change: false
+    reason: 'The fact table in step ''The --empty dry run'': the warehouse runs every statement, relations get zero rows, only ref()/source()
+      are emptied, and seed/test answer ''No such option --empty''.'
+  q-ch25-12:
+    lesson: ch25-s3
+    objective: '1.6'
+    confidence: medium
+    reviewed_change: false
+    reason: '25.3 env vars step: ''A variable whose name starts with DBT_ENV_SECRET_ is hidden: it is scrubbed from logs and from the interface''.
+      env_var material is under 1.6 in ch10-s7.'
+  q-ch25-13:
+    lesson: ch25-s3
+    objective: '7.1'
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''Merge jobs'': two uses, continuous deployment and ''keeping the production manifest fresh for the next CI runs''. The fresh
+      state for CI is the 7.1 angle; 3.4 does not fit because the job runs after the merge.'
+  q-ch25-14:
+    lesson: ch25-s4
+    objective: CP0-GIT
+    confidence: medium
+    reviewed_change: false
+    reason: 'Step ''The workflow, line by line'' covers on: pull_request branches [main], uses: vs run:, fetch-depth 0 for origin/main, DBT_PROFILES_DIR,
+      and secrets. These are GitHub/PR workflow basics, and CP0-GIT is a lesson objective.'
+  q-ch25-15:
+    lesson: ch25-s7
+    objective: '7.1'
+    confidence: high
+    reviewed_change: false
+    reason: '25.7 trap: a deploy job that selects state:modified+ and defers to itself finishes successfully with zero models on a night without
+      merges, because state selection sees code changes, not data.'
+  q-ch25-16:
+    lesson: ch25-s6
+    objective: '5.3'
+    confidence: high
+    reviewed_change: false
+    reason: 'The 25.6 ''Where each kind of test runs'' table gives each pairing: unit tests dev/CI, data tests everywhere, freshness in prod,
+      --empty in CI (optional in dev).'
+  q-ch25-17:
+    lesson: ch25-s7
+    objective: '5.3'
+    confidence: low
+    reviewed_change: false
+    reason: 'Step ''Blue/green deployment'': build and test a second copy, then switch users only when all tests pass, so they never see a half-built
+      or untested production. This places testing before release. No objective fits perfectly; 4.2 would need clone in the question.'
+  q-ch25-18:
+    lesson: ch25-s1
+    objective: '1.6'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The 25.1 trap in step ''The targets of the practice project'': the dbt platform sets a job''s target name in the job settings, and
+      target.name is not target.schema (T52). Target-aware code is under 1.6 in ch10-s7.'
+  q-ch26-01:
+    lesson: ch26-s8
+    objective: '4.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'm06 Round 1 output: the source unique test FAILs and ''SKIP relation dbt_adnane.stg_shopflow_app__customers'' follows. The text says
+      ''it is a perfect exam question (objective 4.1)''.'
+  q-ch26-02:
+    lesson: ch26-s11
+    objective: '1.11'
+    confidence: high
+    reviewed_change: false
+    reason: 'm09 hint: ''merge and delete+insert both replace rows by unique_key. On dbt-duckdb, insert_overwrite does not exist''. The strategy
+      trap also says microbatch needs event_time.'
+  q-ch26-03:
+    lesson: ch26-s11
+    objective: '1.14'
+    confidence: medium
+    reviewed_change: false
+    reason: 'm09 hints and checkpoint: a microbatch backfill with --event-time-start/--event-time-end, end exclusive. The m09 callout lists these
+      flags under 3.5, but the question trains a microbatch backfill.'
+  q-ch26-04:
+    lesson: ch26-s8
+    objective: '5.2'
+    confidence: medium
+    reviewed_change: false
+    reason: 'm06 trap ''How dbt reads severity, error_if and warn_if'': with severity error, error_if is checked first. Configuring a test for
+      a known source issue is 5.2. Test configs are 5.2/5.3 in ch18-s8, and both are lesson objectives.'
+  q-ch26-05:
+    lesson: ch26-s6
+    objective: '1.2'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The m04 trap: ephemeral models create no object in the warehouse and are inserted as a CTE named __dbt__cte__<name>. It also points
+      to m07 for the unit test. Option D''s format: sql comes from ch26-s9, but three options test the ephemeral materialization.'
+  q-ch26-06:
+    lesson: ch26-s15
+    objective: '3.4'
+    confidence: medium
+    reviewed_change: false
+    reason: 'The m13 checkpoint lists the workflow steps in order: checkout, Python, install dbt, deps+parse, download state, --empty dry run,
+      build. This is the CI check of a PR before merge; 7.1 is secondary.'
+  q-ch26-07:
+    lesson: ch26-s10
+    objective: '1.10'
+    confidence: high
+    reviewed_change: false
+    reason: m08 hints cover the timestamp/check strategies, hard_deletes invalidate, and dbt_valid_to_current changing the NULL dbt_valid_to of
+      current rows.
+  q-ch26-08:
+    lesson: ch26-s7
+    objective: '1.6'
+    confidence: high
+    reviewed_change: false
+    reason: 'm05 hint: ''Without your own generate_schema_name, +schema: finance creates dbt_adnane_finance''. The trap is ''Know the default
+      generate_schema_name by heart''.'
+  q-ch26-09:
+    lesson: ch26-s13
+    objective: '2.1'
+    confidence: high
+    reviewed_change: false
+    reason: The m11 checkpoint shows the enforced contract error number_of_units HUGEINT vs BIGINT 'data type mismatch'. The fix is to cast sum(quantity)
+      to bigint in the SQL.
+  q-ch26-10:
+    lesson: ch26-s15
+    objective: '7.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'm13 retry drill: ''dbt retry ran 34 nodes = 1 error + 33 skipped''. The hints say retry reads run_results.json with the same command
+      and flags.'
+  q-ch26-11:
+    lesson: ch26-s15
+    objective: '4.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'm13 trap: ''dbt clone (objective 4.2) needs --state'', makes a view on DuckDB, and skips existing relations unless --full-refresh.
+      The checkpoint shows VIEW relations in ci.'
+  q-ch26-12:
+    lesson: ch26-s13
+    objective: '2.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'm11 trap: ''ref(''dim_customers'') without v resolves to the latest_version''. The checkpoint shows the relations dim_customers_v1/_v2,
+      and deprecation_date only triggers warnings.'
+  q-ch26-13:
+    lesson: ch26-s14
+    objective: '6.1'
+    confidence: high
+    reviewed_change: false
+    reason: 'm12 checkpoint: ''dbt build -s +exposure:weekly_revenue_dashboard rebuilds and tests exactly what the dashboard needs'', and exposures
+      appear as NO-OP nodes. The trap says +exposure: selects all parents.'
+  q-ch26-14:
+    lesson: ch26-s11
+    objective: '1.13'
+    confidence: high
+    reviewed_change: false
+    reason: 'm09 hint: ''--sample "3 days" also counts from today... use a fixed window: --sample="{''start'': ..., ''end'': ...}"''. The checkpoint
+      shows 0 sessions with ''3 days''.'
+  q-ch26-15:
+    lesson: ch26-s3
+    objective: '6.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'm01 trap: ''only dbt source freshness does, and it writes target/sources.json''.'
+  q-ch26-16:
+    lesson: ch26-s7
+    objective: '3.2'
+    confidence: high
+    reviewed_change: false
+    reason: 'm05 trap ''A real bug from the reference solution'': the compiled round(amount_paid - amount_refunded * rate_to_eur, 2) multiplies
+      only the refund. The lesson says ''objective 3.2: read the compiled code''.'
+  q-ch26-17:
+    lesson: ch26-s13
+    objective: '2.3'
+    confidence: high
+    reviewed_change: false
+    reason: 'm11 trap: ''On Snowflake, Redshift and BigQuery only not_null is enforced; primary_key... are metadata, and check is not supported''.'

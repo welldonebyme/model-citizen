@@ -12,6 +12,7 @@ import DagView from './DagView';
 import Details from './Details';
 import NodeList from './NodeList';
 import Challenges from './Challenges';
+import Facts from './Facts';
 import { layoutDag } from './layout';
 import { labelOf } from './labels';
 import './selector.css';
@@ -166,6 +167,19 @@ export default function SelectorLab() {
 
   const labeler = useCallback((id: string) => labelOf(project!, id), [project]);
   const isTest = useCallback((id: string) => { const t = project?.nodes.get(id)?.resource_type; return t === 'test' || t === 'unit_test'; }, [project]);
+
+  /** open a command from a challenge or a fact: project, command, --state folder, demo selectors */
+  const openCommand = (pid: string, command: string, scen?: string, demoOn?: boolean) => {
+    if (scen) {
+      setScenarioId(scen);
+      urlScenario.current = pid === projectId ? null : scen;
+    }
+    if (demoOn !== undefined) setDemo(demoOn);
+    setProjectId(pid);
+    setCmd(command);
+    setPicked(null);
+    document.getElementById('msl-cmd')?.scrollIntoView({ block: 'center' });
+  };
 
   const pick = (id: string) => {
     setPicked(id);
@@ -412,7 +426,9 @@ export default function SelectorLab() {
 
       {project && result && <PasteCheck result={result} />}
 
-      <Challenges onOpen={(pid, command, scen) => { setProjectId(pid); setCmd(command); if (scen) setScenarioId(scen); window.scrollTo({ top: 0, behavior: 'auto' }); }} />
+      <Facts onTry={(f) => openCommand(f.project, f.cmd, f.scenario, f.demo)} />
+
+      <Challenges onOpen={(pid, command, scen) => openCommand(pid, command, scen)} />
     </div>
   );
 }

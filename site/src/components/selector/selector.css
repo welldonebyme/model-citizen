@@ -198,3 +198,12 @@
 @media (prefers-reduced-motion: no-preference) {
   .msl-node rect.box, .msl-edge { transition: fill .18s, stroke .18s; }
 }
+
+/* 1.11.16 vs docs */
+.msl-facts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.msl-facts li { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; background: var(--surface-2); display: grid; gap: 4px; align-content: start; }
+.msl-facts h3 { font-size: var(--fs-md); margin-bottom: 2px; }
+.msl-facts p { margin: 0; font-size: var(--fs-sm); }
+.msl-facts b { color: var(--ink); }
+.msl-facts .msl-btn { display: block; justify-self: start; margin-top: 6px; white-space: normal; text-align: left; line-height: 1.45; }
+.msl-facts code { font-size: 0.78rem; overflow-wrap: anywhere; }

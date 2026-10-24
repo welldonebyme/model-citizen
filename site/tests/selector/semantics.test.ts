@@ -206,3 +206,35 @@ describe('YAML selector forms vs real dbt 1.11.16 (tag ch18 + extra selectors)',
     });
   }
 });
+
+import { FACTS } from '../../src/components/selector/Facts';
+
+describe('the "1.11.16 vs docs" facts show what they say', () => {
+  const runFact = (i: number) => {
+    const f = FACTS[i];
+    const [key, tag] = f.project.split('-');
+    let p = loadProject(key, tag);
+    if (f.demo) p = withDemoSelectors(p);
+    const sc = f.scenario ? SCENARIOS.find((s) => s.id === f.scenario)!.build(p) : null;
+    return runCommand(p, f.cmd, { previous: sc, clock: '00:00:00', shell: 'powershell' });
+  };
+  it('comma + space', () => {
+    const r = runFact(0);
+    expect(r.logs.map((l) => l.text)).toContain("The selection criterion 'tag:finance,' does not match any enabled nodes");
+    expect(r.output).toEqual(['jaffle_dbt.marts.customer_segments', 'jaffle_dbt.marts.dim_customers']);
+  });
+  it('bare word and sources', () => expect(runFact(1).output).toEqual([]));
+  it('selector: method', () => expect(runFact(2).error?.message).toBe("'selector' is not a valid method name"));
+  it('--selector ignores --select/--exclude', () => expect(runFact(3).output).toContain('jaffle_dbt.marts.fct_orders'));
+  it('CLI-style string', () => expect(runFact(4).output).toEqual([]));
+  it('1+result:fail+', () => expect(runFact(5).output).toEqual([
+    'jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers', 'jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders']));
+  it('result:error+ after a failed test', () => expect(runFact(6).output).toEqual([]));
+  it('group change not detected', () => expect(runFact(7).output).toEqual([]));
+  it('new exposures are not state:modified', () => {
+    expect(runFact(8).output).toEqual([]);
+    const p = loadProject('jaffle', 'ch21');
+    const r = runCommand(p, 'dbt ls -s state:new --state ../state --resource-type exposure', { previous: SCENARIOS[0].build(p) });
+    expect(r.output.length).toBe(2);
+  });
+});

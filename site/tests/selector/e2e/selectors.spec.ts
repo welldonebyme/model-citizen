@@ -84,3 +84,18 @@ test('state scenario and shopflow project', async ({ page }, info) => {
   const a = await axe(page);
   expect(a.bad.map((v) => v.id)).toEqual([]);
 });
+
+test('facts panel: "Try it" loads the project, the command and the --state folder', async ({ page }, info) => {
+  await open(page, 'light');
+  await page.getByText('Where dbt 1.11.16 differs from the documentation').click();
+  await page.getByRole('button', { name: /Try it: ls -s 1\+result:fail\+/ }).click();
+  await expect(page.getByRole('heading', { name: 'jaffle_dbt at tag ch24' })).toBeVisible();
+  await expect(page.getByLabel('The --state folder holds')).toHaveValue('ch24-test-fail');
+  await expect(page.locator('.msl-term pre')).toContainText('jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders');
+  await page.getByRole('button', { name: /Try it: ls --selector cli_union/ }).click();
+  await expect(page.getByRole('heading', { name: 'jaffle_dbt at tag ch16' })).toBeVisible();
+  await expect(page.locator('.msl-term pre')).toContainText('No nodes selected!');
+  await page.locator('.msl-facts').screenshot({ path: `${SHOTS}/${info.project.name}-light-facts.png` });
+  const a = await axe(page);
+  expect(a.bad.map((v) => v.id)).toEqual([]);
+});

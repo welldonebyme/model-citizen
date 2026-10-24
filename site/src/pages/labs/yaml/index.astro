@@ -1,0 +1,23 @@
+---
+import Base from '../../../layouts/Base.astro';
+import YamlPlayground from '../../../components/labs/YamlPlayground';
+import { url } from '../../../lib/url';
+import '../../../components/labs/labs.css';
+---
+<Base title="YAML playground" section="labs" description="Check YAML files like dbt parse and Python's yaml.safe_load, in your browser. Fix the broken files of Chapters 5 and 22.">
+  <div class="wrap mcl-page">
+    <header class="mcl-page-head">
+      <p class="kicker"><a href={url('labs/')}>Labs</a></p>
+      <h1>YAML playground</h1>
+      <p class="lead">Type YAML and see at once what Python reads, or the exact error message with its line and column, in the words of dbt or of Python. The exercises are the broken files of Chapters 5 and 22.</p>
+    </header>
+    <YamlPlayground client:load />
+    <p class="mcl-page-note">Python (Pyodide 314.0.7, about 6 MB) is downloaded once and kept by your browser. The messages come from PyYAML 6.0.3, the library dbt uses; dbt parse messages also imitate dbt-core 1.11 (checked against the real dbt on the book's examples).</p>
+  </div>
+</Base>
+<style>
+  .kicker { margin: 0 0 6px; font-size: var(--fs-sm); }
+  .kicker a { color: var(--muted); text-decoration: none; }
+  .kicker a:hover { color: var(--ink); }
+  .mcl-page-note { margin-top: 18px; color: var(--muted); font-size: var(--fs-sm); max-width: 90ch; }
+</style>

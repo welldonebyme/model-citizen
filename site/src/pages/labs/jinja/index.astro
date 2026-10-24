@@ -1,0 +1,23 @@
+---
+import Base from '../../../layouts/Base.astro';
+import JinjaPlayground from '../../../components/labs/JinjaPlayground';
+import { url } from '../../../lib/url';
+import '../../../components/labs/labs.css';
+---
+<Base title="Jinja playground" section="labs" description="Render Jinja templates like the book's render.py or like dbt compile, then run the compiled SQL on the practice database, in your browser.">
+  <div class="wrap mcl-page">
+    <header class="mcl-page-head">
+      <p class="kicker"><a href={url('labs/')}>Labs</a></p>
+      <h1>Jinja playground</h1>
+      <p class="lead">Write a template, compile it like dbt does, read the SQL it becomes, then run that SQL on the practice database. The exercises come from Chapters 5 and 11: loops, the trailing comma, whitespace control, macros and run_query.</p>
+    </header>
+    <JinjaPlayground client:load />
+    <p class="mcl-page-note">jinja2 3.1.6 runs in Python in your browser (Pyodide 314.0.7, about 6 MB once). The dbt mode is a small imitation of dbt-core 1.11 built for this course: it renders like dbt (two passes, the project's macros, dbt_utils 1.4.1), but it is not dbt. For real dbt, use the <a href={url('labs/dbt/')}>dbt terminal</a> or your computer.</p>
+  </div>
+</Base>
+<style>
+  .kicker { margin: 0 0 6px; font-size: var(--fs-sm); }
+  .kicker a { color: var(--muted); text-decoration: none; }
+  .kicker a:hover { color: var(--ink); }
+  .mcl-page-note { margin-top: 18px; color: var(--muted); font-size: var(--fs-sm); max-width: 90ch; }
+</style>

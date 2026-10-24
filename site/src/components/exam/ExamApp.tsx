@@ -323,7 +323,8 @@ export default function ExamApp(props: ExamAppProps) {
     if (!cur) return;
     const r = judgments ? { format: 'domc' as const, judgments } : responseOf(cur, q.id);
     commit((x) => markChecked(x, q.id));
-    recordOutcome(q, r, grade(q, r).correct, { mode: 'mock-practice', attemptId: cur.id, ms: cur.timeByQuestion[q.id] }).catch(() => undefined);
+    const ms = (cur.timeByQuestion[q.id] ?? 0) + Math.max(0, elapsed() - (cur.markMs ?? cur.elapsedMs));
+    recordOutcome(q, r, grade(q, r).correct, { mode: 'mock-practice', attemptId: cur.id, ms }).catch(() => undefined);
     requestAnimationFrame(() => { feedbackRef.current?.focus({ preventScroll: true }); feedbackRef.current?.scrollIntoView({ block: 'start' }); });
   }
 

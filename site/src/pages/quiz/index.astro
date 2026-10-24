@@ -1,0 +1,47 @@
+---
+// Every chapter quiz ("Check yourself"), in book order.
+import Base from '../../layouts/Base.astro';
+import { chapterQuizzes, questionSource } from '../../lib/questions';
+import { CHAPTER_TITLES } from '../../lib/exam/objectives';
+import { FORMAT_NAME } from '../../lib/exam/describe';
+import { url } from '../../lib/url';
+const generated = import.meta.glob('../../generated/chapters/*.json', { eager: true, import: 'default' }) as Record<string, { id: string; title?: string }>;
+const quizzes = chapterQuizzes().map((c) => ({
+  ...c,
+  title: Object.values(generated).find((g) => g.id === c.id)?.title ?? CHAPTER_TITLES[c.number] ?? '',
+  formats: [...new Set(c.questions.map((q) => FORMAT_NAME[q.format]))],
+}));
+const total = quizzes.reduce((n, c) => n + c.questions.length, 0);
+---
+<Base title="Chapter quizzes" section="practice" description="The quiz of every chapter of the book, in the real exam formats, with feedback after each answer.">
+  <div class="wrap quizzes">
+    <nav class="crumb" aria-label="Breadcrumb"><a href={url('practice/')}>Practice</a><span aria-hidden="true">/</span><b>Chapter quizzes</b></nav>
+    <h1>Chapter quizzes</h1>
+    <p class="lead">{total} questions in {quizzes.length} quizzes, in the real exam formats, with feedback after each answer. Take a chapter's quiz after you finish the chapter, with the book closed.</p>
+    {questionSource.chapters === 'fixtures' && <p class="sample-note">Sample questions: the full question bank is not converted yet.</p>}
+    <ol class="list">
+      {quizzes.map((c) => (
+        <li>
+          <a href={url(`quiz/${c.id}/`)}><span class="n">Chapter {c.number}</span> {c.title}</a>
+          <span class="meta">{c.questions.length} questions · {c.formats.join(', ')}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</Base>
+
+<style>
+  .quizzes { padding-block: var(--s7) var(--s9); max-width: 960px; }
+  .crumb { display: flex; gap: 8px; font-size: var(--fs-sm); color: var(--muted); margin-bottom: var(--s4); }
+  .crumb a { color: var(--muted); }
+  .crumb b { color: var(--ink); }
+  h1 { margin-bottom: var(--s3); }
+  .lead { max-width: 68ch; }
+  .sample-note { display: inline-block; font-size: var(--fs-sm); padding: 4px 10px; border-radius: var(--r-chip); background: var(--warn-bg); color: var(--warn); }
+  .list { list-style: none; margin: var(--s6) 0 0; padding: 0; display: grid; gap: 8px; }
+  .list li { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; padding: 12px 16px; border-radius: var(--r-ctl); background: var(--surface); border: 1px solid var(--line); }
+  .list a { font-weight: 700; color: var(--ink); text-decoration: none; }
+  .list a:hover { text-decoration: underline; }
+  .n { color: var(--accent-strong); margin-right: 4px; }
+  .meta { color: var(--muted); font-size: var(--fs-sm); }
+</style>

@@ -1,0 +1,11 @@
+---
+// Three model nodes joined by two edges: two parents feed one child (the accent node).
+interface Props { size?: number }
+const { size = 30 } = Astro.props;
+---
+<svg width={size} height={size} viewBox="0 0 30 30" aria-hidden="true" focusable="false">
+  <rect x="1" y="3" width="10" height="8" rx="2.5" fill="currentColor" />
+  <rect x="1" y="19" width="10" height="8" rx="2.5" fill="currentColor" />
+  <rect x="19" y="11" width="10" height="8" rx="2.5" fill="var(--accent)" />
+  <path d="M11 7 C 16 7, 14 15, 19 15 M11 23 C 16 23, 14 15, 19 15" stroke="currentColor" stroke-width="2" fill="none" />
+</svg>

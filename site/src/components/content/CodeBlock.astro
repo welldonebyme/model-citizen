@@ -1,0 +1,95 @@
+---
+import type { CodeBlock } from '../../lib/content-types';
+import { highlight, bashLines, commandsOnly } from '../../lib/highlight';
+interface Props { block: CodeBlock; /** id of a runnable workspace this block can be sent to */ runnable?: boolean }
+const { block, runnable = false } = Astro.props;
+const LABEL: Record<string, string> = { sql: 'SQL', dbt: 'dbt SQL', yaml: 'YAML', jinja: 'Jinja', python: 'Python', bash: 'Terminal', output: 'Result', plain: 'Text' };
+const isTerm = block.lang === 'bash';
+const isOut = block.lang === 'output';
+const label = block.title ?? LABEL[block.lang];
+
+function render(text: string) {
+  const html = highlight(block.lang, text);
+  const lines = html.split('\n');
+  if (block.lineNumbers) {
+    const first = block.firstLine ?? 1;
+    return lines.map((l, i) => `<span class="ln" data-line="${first + i}"><span class="n" aria-hidden="true">${first + i}</span><span class="lc">${l || ' '}</span></span>`).join('');
+  }
+  return lines.join('\n');
+}
+const variants = isTerm && block.variants ? block.variants : undefined;
+// Each pane lists the OSes it serves; the book's (macOS) pane serves every OS without its own variant.
+const others = [variants?.win ? 'win' : '', variants?.wsl ? 'wsl' : ''].filter(Boolean);
+const panes = [
+  { os: ['mac', 'win', 'wsl'].filter((o) => o === 'mac' || !others.includes(o)).join(' '), text: block.text },
+  ...(variants?.win ? [{ os: 'win', text: variants.win }] : []),
+  ...(variants?.wsl ? [{ os: 'wsl', text: variants.wsl }] : []),
+];
+const OSNAME: Record<string, string> = { mac: 'macOS', win: 'Windows PowerShell', wsl: 'WSL' };
+---
+<figure class:list={['code', `lang-${block.lang}`, { term: isTerm, out: isOut, small: block.small, numbered: block.lineNumbers }]} data-code id={block.id} data-lang={block.lang}>
+  <figcaption class="head">
+    <span class="label">{label}{variants && panes.map((p) => <span class="os-note" data-os-only={p.os}> for {p.os.split(' ').map((o) => OSNAME[o]).join(' and ')}</span>)}</span>
+    <span class="actions">
+      {runnable && <button type="button" class="act" data-send-to-workspace={block.id}>Run in workspace</button>}
+      {!isOut && <button type="button" class="act" data-copy>{isTerm ? 'Copy commands' : 'Copy'}</button>}
+    </span>
+  </figcaption>
+  {panes.map((p) => (
+    <pre
+      class="body"
+      data-os-only={panes.length > 1 ? p.os : undefined}
+      data-copy-source
+      data-copy-text={isTerm ? commandsOnly(p.text) : p.text}
+      aria-label={panes.length > 1 ? p.os.split(' ').map((o) => OSNAME[o]).join(', ') : undefined}
+    ><code set:html={render(p.text)} /></pre>
+  ))}
+</figure>
+
+<style>
+  .code { margin: var(--s5) 0; border: 1px solid var(--code-line); border-radius: 12px; overflow: hidden; background: var(--code-bg); }
+  .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 8px 6px 14px; border-bottom: 1px solid var(--code-line); font: 500 var(--fs-xs)/1.4 var(--sans); color: var(--muted); }
+  .label { font-family: var(--mono); overflow-wrap: anywhere; }
+  .os-note { font-family: var(--sans); }
+  .actions { display: flex; gap: 4px; flex: none; }
+  .act { border: 0; background: transparent; color: var(--accent-strong); font: 700 var(--fs-xs)/1 var(--sans); padding: 7px 9px; border-radius: 6px; }
+  .act:hover { background: var(--accent-soft); }
+  .act[data-done] { color: var(--ok); }
+  .body { margin: 0; padding: 12px 16px 14px; overflow-x: auto; font: 400 0.875rem/1.6 var(--mono); color: var(--code-ink); tab-size: 2; }
+  .body code { font: inherit; white-space: pre; }
+  .small .body { font-size: 0.8125rem; }
+
+  .term { background: var(--term-bg); border-color: var(--term-bg); }
+  .term .head { color: var(--term-dim); border-bottom-color: rgba(255, 255, 255, .08); }
+  .term .act { color: #F6A6D3; }
+  .term .act:hover { background: rgba(255, 255, 255, .08); }
+  .term .body { color: var(--term-ink); }
+
+  .out { background: var(--out-bg); }
+  .out .body { color: var(--out-ink); font-size: 0.8125rem; }
+
+  .numbered .body { padding-left: 0; }
+  .numbered :global(.ln) { display: block; }
+  .numbered :global(.n) { display: inline-block; width: 3.2em; padding-right: 1em; text-align: right; color: var(--muted); user-select: none; }
+
+  /* tokens */
+  .code :global(.tok-kw) { color: var(--tok-kw); font-weight: 600; }
+  .code :global(.tok-str) { color: var(--tok-str); }
+  .code :global(.tok-num) { color: var(--tok-num); }
+  .code :global(.tok-cmt) { color: var(--tok-cmt); font-style: italic; }
+  .code :global(.tok-fn) { color: var(--tok-fn); }
+  .code :global(.tok-jinja) { color: var(--tok-jinja); font-weight: 600; }
+  .code :global(.tok-key) { color: var(--tok-key); }
+  .code :global(.tok-punct) { color: var(--tok-punct); }
+  .term :global(.tok-prompt) { color: var(--term-prompt); user-select: none; }
+  .term :global(.tok-fn) { color: #FFFFFF; font-weight: 600; }
+  .term :global(.tok-kw) { color: #9DB8FF; font-weight: 500; }
+  .term :global(.tok-str) { color: #8CE6BF; }
+  .term :global(.tok-cmt) { color: #8592AD; }
+  .term :global(.tok-out) { color: #B7C2D8; }
+
+  /* OS variants: show the pane for the chosen OS */
+  :global(:root[data-os="mac"]) [data-os-only]:not([data-os-only~="mac"]),
+  :global(:root[data-os="win"]) [data-os-only]:not([data-os-only~="win"]),
+  :global(:root[data-os="wsl"]) [data-os-only]:not([data-os-only~="wsl"]) { display: none; }
+</style>

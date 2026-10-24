@@ -1,0 +1,42 @@
+---
+import type { Inline } from '../../lib/content-types';
+import { url } from '../../lib/url';
+interface Props { c: Inline[] | undefined }
+const { c = [] } = Astro.props;
+const ICONS: Record<string, string> = { check: '✓', checkbox: '☐', done: '✓', cross: '✗', warning: '⚠', arrow: '→' };
+const href = (h: string) => (/^(https?:|mailto:|#)/.test(h) ? h : url(h));
+---
+{c.map((n) => {
+  if (typeof n === 'string') return n;
+  switch (n.t) {
+    case 'code': return <code class="ic">{n.v}</code>;
+    case 'b': return <strong><Astro.self c={n.c} /></strong>;
+    case 'i': return <em><Astro.self c={n.c} /></em>;
+    case 'u': return <span class="u"><Astro.self c={n.c} /></span>;
+    case 'sf': return <Astro.self c={n.c} />;
+    case 'term': return (
+      <a class="term" href={url(`reference/glossary/#${n.id}`)} data-fr={n.fr}>
+        <Astro.self c={n.en} /><span class="term-fr" role="tooltip"><span lang="fr">FR : {n.fr}</span></span>
+      </a>
+    );
+    case 'key': return <kbd class="key">{n.v}</kbd>;
+    case 'obj': return <a class="obj" href={url(`reference/coverage/#obj-${n.id}`)} title={`Exam objective ${n.id}`}>{n.id}</a>;
+    case 'ref': return <a href={href(n.href)}>{n.text}</a>;
+    case 'link': return <a href={n.href} rel="noopener" target="_blank"><Astro.self c={n.c} /></a>;
+    case 'icon': return <span class="icon" aria-hidden="true">{ICONS[n.name] ?? '•'}</span>;
+    case 'blank': return <span class="blank" aria-label="blank">&nbsp;</span>;
+    case 'br': return <br />;
+    default: return null;
+  }
+})}
+<style>
+  .ic { font-family: var(--mono); font-size: 0.9em; background: var(--code-bg); color: var(--code-ink); border: 1px solid var(--code-line); border-radius: 5px; padding: 0.05em 0.32em; overflow-wrap: anywhere; }
+  .u { text-decoration: underline; text-underline-offset: 3px; }
+  .term { position: relative; color: var(--ink); font-weight: 700; text-decoration: none; border-bottom: 2px dotted var(--accent); }
+  .term:hover, .term:focus-visible { border-bottom-style: solid; }
+  .term-fr { position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translate(-50%, 4px); z-index: 20; white-space: nowrap; background: var(--ink); color: var(--surface); font-size: var(--fs-sm); font-weight: 500; padding: 6px 10px; border-radius: 8px; box-shadow: var(--shadow-pop); opacity: 0; pointer-events: none; transition: opacity .14s, transform .14s; }
+  .term:hover .term-fr, .term:focus-visible .term-fr { opacity: 1; transform: translate(-50%, 0); }
+  .key { font-family: var(--mono); font-size: 0.85em; border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 5px; padding: 0.05em 0.4em; background: var(--surface); color: var(--ink); }
+  .obj { display: inline-block; font: 700 0.78em/1.5 var(--mono); padding: 0 0.45em; border-radius: var(--r-chip); background: var(--exam); color: var(--on-exam); text-decoration: none; vertical-align: 0.08em; }
+  .blank { display: inline-block; min-width: 7em; border-bottom: 2px solid var(--ink); }
+</style>

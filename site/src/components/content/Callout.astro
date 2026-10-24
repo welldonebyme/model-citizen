@@ -1,0 +1,58 @@
+---
+import type { CalloutKind, Inline as InlineT } from '../../lib/content-types';
+import Inline from './Inline.astro';
+interface Props { kind: CalloutKind; title?: InlineT[] }
+const { kind, title } = Astro.props;
+const DEFAULT: Record<CalloutKind, string> = {
+  why: 'Why this matters', idea: 'The idea in 3 sentences', analogy: 'Analogy', trap: 'Exam trap', tip: 'Tip',
+  deep: 'Going deeper (optional)', dbt: 'Where you will meet this in dbt', summary: 'Chapter summary',
+  quiz: 'Check yourself', answer: 'Answers and explanations',
+};
+// Simple line icons, one per meaning (never colour alone).
+const ICON: Record<CalloutKind, string> = {
+  why: '<circle cx="8" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M6 14h4M8 4.5v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',
+  idea: '<circle cx="5.5" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8.7 8H15M12.5 8v2.5M14.5 8v2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',
+  analogy: '<circle cx="5" cy="5.5" r="2.3" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="11" cy="5.5" r="2.3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M1.5 14c.5-2.6 2-3.8 3.5-3.8S8 11.4 8.5 14M7.5 14c.5-2.6 2-3.8 3.5-3.8s3 1.2 3.5 3.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>',
+  trap: '<path d="M8 1.8 15 14H1z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8 6.2v3.8M8 11.6v.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+  tip: '<circle cx="8" cy="8" r="6.3" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 7.3v4M8 4.6v.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+  deep: '<circle cx="7" cy="7" r="4.6" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M10.5 10.5 14.5 14.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+  dbt: '<rect x="1" y="2" width="5" height="4" rx="1.3" fill="currentColor"/><rect x="1" y="10" width="5" height="4" rx="1.3" fill="currentColor"/><rect x="10" y="6" width="5" height="4" rx="1.3" fill="currentColor"/><path d="M6 4c3 0 1.5 4 4 4M6 12c3 0 1.5-4 4-4" fill="none" stroke="currentColor" stroke-width="1.4"/>',
+  summary: '<path d="M2 4h12M2 8h12M2 12h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+  quiz: '<circle cx="8" cy="8" r="6.3" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M6 6.2a2 2 0 1 1 2.8 1.8c-.6.3-.8.7-.8 1.3M8 11.5v.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',
+  answer: '<circle cx="8" cy="8" r="6.3" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M5 8.2 7.2 10.4 11 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
+};
+const collapsed = kind === 'deep';
+---
+{collapsed ? (
+  <details class={`callout k-${kind}`}>
+    <summary class="ct"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" set:html={ICON[kind]} />{title ? <Inline c={title} /> : DEFAULT[kind]}<span class="chev" aria-hidden="true"></span></summary>
+    <div class="cb"><slot /></div>
+  </details>
+) : (
+  <aside class={`callout k-${kind}`} aria-label={DEFAULT[kind]}>
+    <p class="ct"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" set:html={ICON[kind]} />{title ? <Inline c={title} /> : DEFAULT[kind]}</p>
+    <div class="cb"><slot /></div>
+  </aside>
+)}
+<style>
+  .callout { --fg: var(--ink); --bg: var(--surface-2); --ln: var(--line); margin: var(--s5) 0; padding: 14px 18px; border-radius: var(--r-card); background: var(--bg); border: 1px solid var(--ln); max-width: calc(var(--measure) + 40px); }
+  .ct { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font-size: var(--fs-sm); font-weight: 700; color: var(--fg); max-width: none; }
+  .ct svg { flex: none; }
+  .cb { font-size: var(--fs-md); }
+  .cb > :global(:last-child) { margin-bottom: 0; }
+  .cb :global(p) { max-width: none; }
+  .k-why { --fg: var(--why); --bg: var(--why-bg); --ln: var(--why-line); }
+  .k-idea { --fg: var(--idea); --bg: var(--idea-bg); --ln: var(--idea-line); }
+  .k-analogy { --fg: var(--analogy); --bg: var(--analogy-bg); --ln: var(--analogy-line); }
+  .k-trap { --fg: var(--trap); --bg: var(--trap-bg); --ln: var(--trap-line); }
+  .k-tip { --fg: var(--tip); --bg: var(--tip-bg); --ln: var(--tip-line); }
+  .k-deep { --fg: var(--deep); --bg: var(--deep-bg); --ln: var(--deep-line); }
+  .k-quiz, .k-answer { --fg: var(--quiz); --bg: var(--quiz-bg); --ln: var(--quiz-line); }
+  .k-summary { --fg: var(--summary); --bg: var(--summary-bg); --ln: var(--summary-line); }
+  .k-dbt { --fg: var(--accent-strong); --bg: var(--surface); --ln: var(--line); border-left: 4px solid var(--accent); border-radius: 6px var(--r-card) var(--r-card) 6px; }
+  details.callout > summary { cursor: pointer; list-style: none; margin: 0; }
+  details.callout > summary::-webkit-details-marker { display: none; }
+  .chev { margin-left: auto; width: 9px; height: 9px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform .15s; }
+  details[open] .chev { transform: rotate(-135deg) translate(-2px, 0); }
+  details[open] > summary { margin-bottom: 8px; }
+</style>

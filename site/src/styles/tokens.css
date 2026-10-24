@@ -1,0 +1,146 @@
+/* Model Citizen design tokens (direction A, "Lineage").
+   Every colour has a light and a dark value. Semantic box colours keep the book's meaning:
+   why = blue, idea/analogy = amber, lab = green, trap = red, tip = cyan, deep = grey,
+   dbt bridge = brand accent, objectives = navy, quiz = violet, summary = accent tint. */
+
+:root {
+  color-scheme: light;
+
+  /* base */
+  --paper: #F3F5F9;
+  --surface: #FFFFFF;
+  --surface-2: #F7F8FB;
+  --ink: #16213B;
+  --text: #2A3550;
+  --muted: #5B6782;
+  --line: #D5DBE6;
+  --line-strong: #B7C1D3;
+  --focus: #B4237A;
+
+  /* brand */
+  --accent: #B4237A;
+  --accent-strong: #951A64;
+  --accent-soft: #F8E6F0;
+  --on-accent: #FFFFFF;
+
+  /* semantic: fg (titles, icons), bg (box), line (rule) */
+  --why: #1D4ED8;      --why-bg: #EAF0FE;     --why-line: #B9CCFA;
+  --idea: #8A5300;     --idea-bg: #FFF4DE;    --idea-line: #F1D49B;
+  --analogy: #7A4A00;  --analogy-bg: #FFF8EB; --analogy-line: #EED7A8;
+  --lab: #0B7350;      --lab-bg: #E3F4EC;     --lab-line: #A9DCC4;
+  --trap: #B42318;     --trap-bg: #FDECEA;    --trap-line: #F4B9B2;
+  --tip: #0B6A80;      --tip-bg: #E2F3F7;     --tip-line: #A8D8E4;
+  --deep: #48536A;     --deep-bg: #EEF1F6;    --deep-line: #CDD4E0;
+  --quiz: #5B34C0;     --quiz-bg: #EFEAFC;    --quiz-line: #CDBEF3;
+  --summary: #951A64;  --summary-bg: #FBEFF5; --summary-line: #EFC2D9;
+  --exam: #16213B;     --exam-bg: #E9ECF3;    --on-exam: #FFFFFF;
+
+  /* feedback */
+  --ok: #0B7350;   --ok-bg: #E3F4EC;
+  --bad: #B42318;  --bad-bg: #FDECEA;
+  --warn: #8A5300; --warn-bg: #FFF4DE;
+
+  /* code */
+  --code-bg: #F6F7FA;
+  --code-ink: #1E2740;
+  --code-line: #DCE1EA;
+  --term-bg: #18223A;      /* shell blocks are dark in both themes */
+  --term-ink: #E4E9F3;
+  --term-dim: #93A0BA;
+  --term-prompt: #F06AB4;
+  --out-bg: #FBFBF6;       /* result blocks: light paper */
+  --out-ink: #2B3248;
+  --tok-kw: #1D4ED8;
+  --tok-str: #0B7350;
+  --tok-num: #9A3412;
+  --tok-cmt: #737C91;
+  --tok-fn: #6D28D9;
+  --tok-jinja: #A04A00;
+  --tok-key: #1D4ED8;
+  --tok-punct: #5B6782;
+
+  /* figures (TikZ SVGs map the book palette to these) */
+  --fig-ink: #16213B;
+  --fig-accent: #B4237A;
+  --fig-muted: #6B7280;
+  --fig-paper: #FFFFFF;
+  --fig-code-bg: #F6F7F9;
+  --fig-code-frame: #D7DBE2;
+
+  /* type */
+  --sans: "Atkinson Hyperlegible Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "Atkinson Hyperlegible Mono", "Cascadia Mono", Consolas, ui-monospace, monospace;
+  --fs-xs: 0.8125rem;   /* 13 */
+  --fs-sm: 0.875rem;    /* 14 */
+  --fs-md: 1rem;        /* 16 */
+  --fs-body: 1.0625rem; /* 17 */
+  --fs-lg: 1.25rem;     /* 20 */
+  --fs-xl: 1.5rem;      /* 24 */
+  --fs-2xl: 1.875rem;   /* 30 */
+  --fs-3xl: 2.375rem;   /* 38 */
+  --lh-body: 1.62;
+  --measure: 68ch;
+
+  /* space, radius, depth */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 20px; --s6: 24px; --s7: 32px; --s8: 40px; --s9: 56px; --s10: 72px;
+  --r-chip: 6px; --r-ctl: 10px; --r-card: 14px; --r-panel: 18px;
+  --shadow: 0 1px 2px rgba(22, 33, 59, .06), 0 8px 24px -12px rgba(22, 33, 59, .18);
+  --shadow-pop: 0 12px 36px -12px rgba(22, 33, 59, .35);
+  --header-h: 64px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #111A2E; --surface: #17223A; --surface-2: #1B2741; --ink: #EDF1F8; --text: #CBD3E3; --muted: #97A3BC;
+    --line: #2A3754; --line-strong: #3B4A6B; --focus: #F06AB4;
+    --accent: #F06AB4; --accent-strong: #F58AC4; --accent-soft: #3A1D33; --on-accent: #1A0F18;
+    --why: #8DB0FF; --why-bg: #1B2A4D; --why-line: #2E4677;
+    --idea: #F5B74E; --idea-bg: #33281A; --idea-line: #5A4524;
+    --analogy: #F2C478; --analogy-bg: #30291E; --analogy-line: #554630;
+    --lab: #4FD1A1; --lab-bg: #15332A; --lab-line: #24553F;
+    --trap: #FF8A7A; --trap-bg: #3A1C1C; --trap-line: #66302C;
+    --tip: #6FD3EA; --tip-bg: #14303A; --tip-line: #22505E;
+    --deep: #AEB8CC; --deep-bg: #1D2840; --deep-line: #33415F;
+    --quiz: #B39BFF; --quiz-bg: #272143; --quiz-line: #42386E;
+    --summary: #F58AC4; --summary-bg: #331C30; --summary-line: #5C3052;
+    --exam: #EDF1F8; --exam-bg: #222E4A; --on-exam: #111A2E;
+    --ok: #4FD1A1; --ok-bg: #15332A; --bad: #FF8A7A; --bad-bg: #3A1C1C; --warn: #F5B74E; --warn-bg: #33281A;
+    --code-bg: #0E1628; --code-ink: #DCE3F0; --code-line: #26324D;
+    --term-bg: #0B1120; --term-ink: #E4E9F3; --term-dim: #8592AD; --term-prompt: #F06AB4;
+    --out-bg: #141E33; --out-ink: #D4DBE8;
+    --tok-kw: #8DB0FF; --tok-str: #6EE0B2; --tok-num: #FDBA74; --tok-cmt: #7F8BA6; --tok-fn: #C4B5FD; --tok-jinja: #F5B74E; --tok-key: #8DB0FF; --tok-punct: #97A3BC;
+    --fig-ink: #E4E9F3; --fig-accent: #F06AB4; --fig-muted: #A3ADC2; --fig-paper: #17223A; --fig-code-bg: #0E1628; --fig-code-frame: #33415F;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 28px -14px rgba(0, 0, 0, .6);
+    --shadow-pop: 0 16px 40px -12px rgba(0, 0, 0, .7);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #111A2E; --surface: #17223A; --surface-2: #1B2741; --ink: #EDF1F8; --text: #CBD3E3; --muted: #97A3BC;
+  --line: #2A3754; --line-strong: #3B4A6B; --focus: #F06AB4;
+  --accent: #F06AB4; --accent-strong: #F58AC4; --accent-soft: #3A1D33; --on-accent: #1A0F18;
+  --why: #8DB0FF; --why-bg: #1B2A4D; --why-line: #2E4677;
+  --idea: #F5B74E; --idea-bg: #33281A; --idea-line: #5A4524;
+  --analogy: #F2C478; --analogy-bg: #30291E; --analogy-line: #554630;
+  --lab: #4FD1A1; --lab-bg: #15332A; --lab-line: #24553F;
+  --trap: #FF8A7A; --trap-bg: #3A1C1C; --trap-line: #66302C;
+  --tip: #6FD3EA; --tip-bg: #14303A; --tip-line: #22505E;
+  --deep: #AEB8CC; --deep-bg: #1D2840; --deep-line: #33415F;
+  --quiz: #B39BFF; --quiz-bg: #272143; --quiz-line: #42386E;
+  --summary: #F58AC4; --summary-bg: #331C30; --summary-line: #5C3052;
+  --exam: #EDF1F8; --exam-bg: #222E4A; --on-exam: #111A2E;
+  --ok: #4FD1A1; --ok-bg: #15332A; --bad: #FF8A7A; --bad-bg: #3A1C1C; --warn: #F5B74E; --warn-bg: #33281A;
+  --code-bg: #0E1628; --code-ink: #DCE3F0; --code-line: #26324D;
+  --term-bg: #0B1120; --term-ink: #E4E9F3; --term-dim: #8592AD; --term-prompt: #F06AB4;
+  --out-bg: #141E33; --out-ink: #D4DBE8;
+  --tok-kw: #8DB0FF; --tok-str: #6EE0B2; --tok-num: #FDBA74; --tok-cmt: #7F8BA6; --tok-fn: #C4B5FD; --tok-jinja: #F5B74E; --tok-key: #8DB0FF; --tok-punct: #97A3BC;
+  --fig-ink: #E4E9F3; --fig-accent: #F06AB4; --fig-muted: #A3ADC2; --fig-paper: #17223A; --fig-code-bg: #0E1628; --fig-code-frame: #33415F;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 28px -14px rgba(0, 0, 0, .6);
+  --shadow-pop: 0 16px 40px -12px rgba(0, 0, 0, .7);
+}
+
+/* reader font size (Settings): small / normal / large / extra large */
+:root[data-size="s"] { font-size: 93.75%; }
+:root[data-size="l"] { font-size: 112.5%; }
+:root[data-size="xl"] { font-size: 125%; }

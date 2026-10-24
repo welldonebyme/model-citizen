@@ -1,0 +1,36 @@
+---
+import Base from '../../layouts/Base.astro';
+import SettingsApp from '../../components/settings/SettingsApp';
+---
+<Base title="Settings and progress file" section="none">
+  <div class="wrap settings">
+    <h1>Settings and progress file</h1>
+    <p class="lead">No account and no server: everything you do is saved in this browser only.</p>
+    <SettingsApp client:only="react" />
+    <noscript><p>Settings need JavaScript, because your progress is stored by the browser.</p></noscript>
+  </div>
+</Base>
+<style>
+  .settings { padding-block: 40px 16px; max-width: 860px; }
+  .lead { color: var(--muted); font-size: var(--fs-lg); margin-bottom: 24px; }
+  :global(.st) { display: grid; gap: 18px; }
+  :global(.st-sec h2) { font-size: var(--fs-lg); margin-bottom: 8px; }
+  :global(.st-sec p) { max-width: 70ch; }
+  :global(.st-counts) { color: var(--muted); font-size: var(--fs-sm); }
+  :global(.st-row) { display: flex; flex-wrap: wrap; gap: 10px; }
+  :global(.st-file) { position: relative; overflow: hidden; }
+  :global(.st-file input) { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  :global(.st-file:focus-within) { outline: 3px solid var(--focus); outline-offset: 2px; }
+  :global(.st-ok) { margin: 12px 0 0; padding: 10px 14px; border-radius: var(--r-ctl); background: var(--ok-bg); color: var(--text); }
+  :global(.st-error) { margin: 12px 0 0; padding: 10px 14px; border-radius: var(--r-ctl); background: var(--bad-bg); color: var(--text); }
+  :global(.st-field) { display: grid; gap: 6px; margin: 0 0 14px; border: 0; padding: 0; }
+  :global(.st-field > span), :global(.st-field legend) { font-weight: 700; color: var(--ink); font-size: var(--fs-md); }
+  :global(.st-field input:not([type="radio"])) { min-height: 44px; padding: 8px 12px; border: 1.5px solid var(--line-strong); border-radius: var(--r-ctl); background: var(--surface); max-width: 320px; }
+  :global(.st-field .seg) { justify-self: start; }
+  :global(.st-radio), :global(.st-check) { display: flex; gap: 10px; align-items: baseline; margin: 6px 0; cursor: pointer; }
+  :global(.st-radio input), :global(.st-check input) { accent-color: var(--accent); width: 18px; height: 18px; flex: none; transform: translateY(3px); }
+  :global(.st-grid2) { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  :global(.st-muted) { color: var(--muted); }
+  :global(.st-danger) { border-color: var(--trap-line); }
+  @media (max-width: 600px) { :global(.st-grid2) { grid-template-columns: 1fr; } }
+</style>

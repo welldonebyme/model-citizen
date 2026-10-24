@@ -8,11 +8,12 @@
   },
   "scripts": {
     "dev": "astro dev --port 4321 --host 127.0.0.1",
-    "build": "astro build",
+    "build": "astro build && pagefind --site dist --output-subdir pagefind --glob \"**/*.html\"",
     "preview": "astro preview --port 4322 --host 127.0.0.1",
     "check": "astro check",
     "test": "vitest run",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "build:fast": "astro build"
   },
   "dependencies": {
     "@astrojs/react": "7.0.1",
@@ -26,10 +27,12 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.12",
+    "@axe-core/playwright": "4.13.0",
     "@playwright/test": "1.64.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "fake-indexeddb": "^6.2.6",
+    "pagefind": "^1.5.2",
     "typescript": "5.9.3",
     "vitest": "5.0.5"
   }

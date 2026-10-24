@@ -71,6 +71,9 @@ document.addEventListener('click', async (e) => {
   }
 });
 
+// Search: the dialog and the index load on first use.
+document.addEventListener('mc:search-open', () => { import('./search').then((m) => m.openSearch()); });
+
 // Ctrl/Cmd + K opens search.
 document.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {

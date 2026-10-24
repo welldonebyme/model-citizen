@@ -51,10 +51,11 @@ const isLast = !next || next.chapter.id !== chapter.id;
       </ol>
     </nav>
 
-    <article class="read">
+    <article class="read" data-pagefind-body>
       <header class="lesson-head">
         <p class="kicker">Lesson {lesson.number}, about {lesson.minutes} minutes</p>
-        <h1><Inline c={lesson.title} /></h1>
+        <h1 data-pagefind-meta="title"><Inline c={lesson.title} /></h1>
+        <span hidden data-pagefind-meta="section">Chapter {chapter.number}, {chapter.title}</span>
         {lesson.objectives.length > 0 && (
           <p class="objs"><span class="visually-hidden">Exam objectives:</span>{lesson.objectives.map((o) => <Inline c={[{ t: 'obj', id: o }]} />)}</p>
         )}

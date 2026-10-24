@@ -31,6 +31,8 @@ export interface QuizRunnerProps {
   backLabel?: string;
   onExit?: () => void;
   exitLabel?: string;
+  /** question id to open first (deep link ?q=<id>) */
+  startAt?: string;
 }
 
 function PaceTimer({ limitMs, running, onTimeUp }: { limitMs: number; running: boolean; onTimeUp: () => void }) {
@@ -58,12 +60,12 @@ function PaceTimer({ limitMs, running, onTimeUp }: { limitMs: number; running: b
 }
 
 export function QuizRunner(props: QuizRunnerProps) {
-  const { questions, mode, title, domcExamLike, timePerQuestionMs, seed, backHref, backLabel, onExit, exitLabel } = props;
+  const { questions, mode, title, domcExamLike, timePerQuestionMs, seed, backHref, backLabel, onExit, exitLabel, startAt } = props;
   const settings = useDomcRules();
   const rules = props.domcRules ?? settings.rules;
   const [round, setRound] = useState<Question[]>(questions);
   const [roundNo, setRoundNo] = useState(1);
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(() => Math.max(0, startAt ? questions.findIndex((x) => x.id === startAt) : 0));
   const [phase, setPhase] = useState<'question' | 'summary'>('question');
   const [states, setStates] = useState<Record<string, QState>>({});
   const [saveError, setSaveError] = useState('');

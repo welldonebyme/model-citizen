@@ -61,32 +61,43 @@ export function BuildList({ q, response, onResponse, locked, review, name }: Pro
     else if (e.key === 'End') { e.preventDefault(); move(i, order.length - 1, 'handle'); }
   };
 
-  // Pointer drag: the item follows the pointer; a line shows where it will land.
-  const rects = useRef<DOMRect[]>([]);
+  // Pointer drag: the item follows the pointer; a line shows where it will land. The live drag lives in a
+  // ref (pointer events come faster than renders); the state only draws it. Positions are in page
+  // coordinates, so the page can scroll while dragging (it scrolls by itself near the window edges).
+  const live = useRef<{ id: string; startY: number; dy: number; target: number; mids: number[]; mid: number; lastY: number } | null>(null);
+  // near the window edges, the page scrolls in the direction the pointer moves
+  const edgeScroll = (clientY: number, lastY: number) => {
+    if (clientY < 70 && clientY < lastY) window.scrollBy(0, -14);
+    else if (clientY > window.innerHeight - 70 && clientY > lastY) window.scrollBy(0, 14);
+  };
   const onDown = (id: string) => (e: React.PointerEvent<HTMLElement>) => {
     if (locked || e.button !== 0) return;
     e.preventDefault();
     (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
-    rects.current = Array.from(listRef.current?.querySelectorAll<HTMLElement>('[data-item]') ?? []).map((el) => el.getBoundingClientRect());
-    setDrag({ id, startY: e.clientY, dy: 0, target: order.indexOf(id) });
+    const els = Array.from(listRef.current?.querySelectorAll<HTMLElement>('[data-item]') ?? []);
+    const mids = els.map((el) => { const r = el.getBoundingClientRect(); return r.top + window.scrollY + r.height / 2; });
+    const from = order.indexOf(id);
+    live.current = { id, startY: e.clientY + window.scrollY, dy: 0, target: from, mids, mid: mids[from], lastY: e.clientY };
+    setDrag({ id, startY: e.clientY, dy: 0, target: from });
   };
   const onMove = (e: React.PointerEvent) => {
-    if (!drag) return;
-    const from = order.indexOf(drag.id);
-    const r = rects.current[from];
-    if (!r) return;
-    const center = r.top + r.height / 2 + (e.clientY - drag.startY);
+    const d = live.current;
+    if (!d) return;
+    edgeScroll(e.clientY, d.lastY);
+    d.lastY = e.clientY;
+    const from = order.indexOf(d.id);
+    d.dy = e.clientY + window.scrollY - d.startY;
+    const center = d.mid + d.dy;
     // final position = how many other items have their middle above the dragged item's middle
-    let target = 0;
-    rects.current.forEach((rc, k) => { if (k !== from && center > rc.top + rc.height / 2) target++; });
-    setDrag({ ...drag, dy: e.clientY - drag.startY, target });
+    d.target = d.mids.reduce((n, m, k) => (k !== from && center > m ? n + 1 : n), 0);
+    setDrag({ id: d.id, startY: d.startY, dy: d.dy, target: d.target });
   };
   const onUp = () => {
-    if (!drag) return;
-    const from = order.indexOf(drag.id);
-    const moved = Math.abs(drag.dy) > 4;
+    const d = live.current;
+    live.current = null;
     setDrag(null);
-    if (moved) move(from, drag.target, 'handle');
+    if (!d) return;
+    if (Math.abs(d.dy) > 4) move(order.indexOf(d.id), d.target, 'handle');
   };
 
   return (
@@ -118,7 +129,7 @@ export function BuildList({ q, response, onResponse, locked, review, name }: Pro
                   aria-label={`Move ${plain(o?.c)}, position ${i + 1} of ${order.length}`}
                   aria-describedby={`${name}-help`}
                   onKeyDown={onHandleKey(i)}
-                  onPointerDown={onDown(id)} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={() => setDrag(null)}
+                  onPointerDown={onDown(id)} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={() => { live.current = null; setDrag(null); }}
                 ><IconGrip /></button>
               )}
               <span className="qz-letter" aria-hidden="true">{id}</span>

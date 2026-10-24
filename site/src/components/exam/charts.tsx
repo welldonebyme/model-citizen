@@ -1,6 +1,6 @@
 // Small accessible SVG charts for the results pages (dataviz method: one hue for one series, thin marks,
 // rounded data-ends, hairline axes, values in text colours, hover/focus tooltip, a table twin for each).
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 import { PASS_PCT, TARGET_PCT } from '../../lib/scoring';
 import type { Row, Outcome } from '../../lib/exam/results';
 import { mss, shortDate } from '../../lib/exam/time';
@@ -55,13 +55,33 @@ export function RowBars({ rows, label, idLabel }: { rows: Row[]; label: string; 
 
 interface Tip { x: number; y: number; text: string; sub: string }
 
+/** Width of the chart box in CSS pixels, so the SVG is drawn at its real size (labels stay readable on phones). */
+function useWidth(ref: RefObject<HTMLElement | null>, fallback = 720): number {
+  const [w, setW] = useState(fallback);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const set = () => {
+      const cs = getComputedStyle(el);
+      setW(Math.max(280, Math.round(el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight))));
+    };
+    set();
+    if (typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(set);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref]);
+  return w;
+}
+
 /** Time spent on each question (columns) against the 1 min 50 s pace (a labelled reference line). */
 export function TimeChart({ outcomes, paceMs }: { outcomes: Outcome[]; paceMs: number }) {
   const [tip, setTip] = useState<Tip | null>(null);
   const boxRef = useRef<HTMLDivElement>(null);
+  const W = useWidth(boxRef);
   const n = outcomes.length;
   if (!n) return null;
-  const W = 720, H = 200, L = 44, R = 12, T = 14, B = 26;
+  const H = 200, L = 44, R = 12, T = 14, B = 26;
   const maxMs = Math.max(paceMs * 1.5, ...outcomes.map((o) => o.ms));
   const step = maxMs > 6 * 60_000 ? 120_000 : 60_000;
   const top = Math.ceil(maxMs / step) * step;
@@ -76,7 +96,7 @@ export function TimeChart({ outcomes, paceMs }: { outcomes: Outcome[]; paceMs: n
     if (!box || !r) return;
     setTip({ x: r.left + r.width / 2 - box.left, y: r.top - box.top, text: mss(o.ms), sub: `Question ${o.index + 1}${o.correct ? ', correct' : ', not correct'}` });
   };
-  const xLabelEvery = n > 40 ? 10 : n > 15 ? 5 : 1;
+  const xLabelEvery = n > 40 ? (W < 500 ? 20 : 10) : n > 15 ? 5 : W < 500 && n > 8 ? 2 : 1;
   return (
     <div className="viz-box" ref={boxRef} onPointerLeave={() => setTip(null)}>
       <svg viewBox={`0 0 ${W} ${H}`} className="viz-svg" role="img" aria-label={`Time per question. Pace line at ${mss(paceMs)}. ${outcomes.filter((o) => o.ms > paceMs).length} questions took longer.`}>
@@ -116,20 +136,24 @@ export function TimeChart({ outcomes, paceMs }: { outcomes: Outcome[]; paceMs: n
 export function HistoryChart({ attempts, currentId }: { attempts: Attempt[]; currentId?: string }) {
   const [tip, setTip] = useState<Tip | null>(null);
   const boxRef = useRef<HTMLDivElement>(null);
+  const W = useWidth(boxRef);
   const list = attempts.filter((a) => a.status === 'finished' && a.score).sort((a, b) => a.startedAt - b.startedAt);
   if (!list.length) return null;
-  const W = 720, H = 220, L = 44, R = 16, T = 16, B = 34;
+  const H = 220, L = 44, R = 16, T = 16, B = 34;
   const x = (i: number) => (list.length === 1 ? (L + W - R) / 2 : L + ((W - L - R) * i) / (list.length - 1));
   const y = (p: number) => T + (H - T - B) * (1 - p / 100);
   const pts = list.map((a, i) => ({ a, x: x(i), y: y(a.score!.pct) }));
   const line = pts.map((p, i) => `${i ? 'L' : 'M'}${p.x},${p.y}`).join(' ');
-  const every = Math.ceil(list.length / 7);
+  const every = Math.ceil(list.length / Math.max(2, Math.floor(W / 100)));
   const show = (i: number) => {
     const p = pts[i];
     const box = boxRef.current;
     if (!box) return;
-    const sx = box.getBoundingClientRect().width / W;
-    setTip({ x: p.x * sx, y: p.y * sx, text: `${Math.floor(p.a.score!.pct)}%`, sub: `Mock ${p.a.mock}, ${p.a.mode} mode, ${shortDate(p.a.startedAt)}` });
+    const sv = box.querySelector('svg')?.getBoundingClientRect();
+    const br = box.getBoundingClientRect();
+    const ox = sv ? sv.left - br.left : 0;
+    const oy = sv ? sv.top - br.top : 0;
+    setTip({ x: p.x + ox, y: p.y + oy, text: `${Math.floor(p.a.score!.pct)}%`, sub: `Mock ${p.a.mock}, ${p.a.mode} mode, ${shortDate(p.a.startedAt)}` });
   };
   return (
     <div className="viz-box" ref={boxRef} onPointerLeave={() => setTip(null)}>

@@ -1,6 +1,6 @@
 // Feedback after an answer: right or wrong (icon + colour + words), the correct answer, the book's
 // explanation, why each wrong option is wrong, where to review, and the error-notebook entry.
-import { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import type { Question } from '../../lib/content-types';
 import type { Response } from '../../lib/scoring';
 import { Blocks } from '../content/Blocks';
@@ -9,6 +9,7 @@ import { blocksText, describeKey } from '../../lib/exam/describe';
 import { getNote, ruleOf, saveRule } from '../../lib/exam/learning';
 import { url } from '../../lib/url';
 import { IconCheck, IconCross } from './icons';
+import { useFocusableScrollers } from './hooks';
 
 export function reviewLinks(q: Question): { inline?: Question['review']; href?: string; text?: string } {
   if (q.review && q.review.length) return { inline: q.review };
@@ -35,8 +36,10 @@ export function explanationBlocks(q: Question): Question['explanation'] {
 export function Explanation({ q, showKey = true }: { q: Question; showKey?: boolean }) {
   const links = reviewLinks(q);
   const blocks = explanationBlocks(q);
+  const ref = useRef<HTMLDivElement>(null);
+  useFocusableScrollers(ref);
   return (
-    <div className="qz-expl">
+    <div className="qz-expl" ref={ref}>
       {showKey && <p className="qz-key-line">Correct answer: <b>{describeKey(q)}</b></p>}
       {blocks.length > 0 && (
         <>

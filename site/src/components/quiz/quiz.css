@@ -208,3 +208,40 @@
   .qz-actions .btn { flex: 1 1 auto; }
 }
 .qz-fill-blanks { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; }
+
+/* ------------------------------------------------------------ drills builder */
+.dr { display: grid; gap: var(--s5); max-width: 1000px; }
+.dr-box { margin: 0; padding: 16px 18px 14px; border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface); min-width: 0; }
+.dr-box legend { padding: 0 6px; margin-left: -6px; font-weight: 700; color: var(--ink); }
+.dr-box[disabled] { opacity: .7; }
+.dr-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: var(--s5); align-items: start; }
+.dr-col { display: grid; gap: var(--s5); }
+.dr-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.dr-mode { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border: 1.5px solid var(--line-strong); border-radius: var(--r-ctl); cursor: pointer; color: var(--ink); }
+.dr-mode:hover { border-color: var(--ink); }
+.dr-mode[data-checked] { border-color: var(--ink); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--ink); }
+.dr-mode:has(input:focus-visible), .dr-check:has(input:focus-visible), .dr-chip:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+.dr-mode input { margin-top: 4px; accent-color: var(--ink); width: 18px; height: 18px; }
+.dr-sub { display: block; font-size: var(--fs-sm); color: var(--muted); margin-top: 2px; }
+.dr-check { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 6px 0; cursor: pointer; color: var(--text); }
+.dr-check input, .dr-chip input { width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--ink); }
+.dr-n { color: var(--muted); font-size: var(--fs-xs); font-variant-numeric: tabular-nums; }
+.dr-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.dr-chip { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 10px; border: 1px solid var(--line-strong); border-radius: 999px; cursor: pointer; color: var(--ink); font-size: var(--fs-sm); background: var(--surface); }
+.dr-chip input { margin: 0; }
+.dr-chip:has(input:checked) { border-color: var(--ink); background: var(--surface-2); font-weight: 700; }
+.dr-box select, .dr-start select { width: 100%; max-width: 100%; min-height: 42px; padding: 0 10px; border-radius: 8px; border: 1.5px solid var(--line-strong); background: var(--surface); color: var(--ink); }
+.dr-start select { width: auto; }
+.dr-hint { margin: 8px 0 0; font-size: var(--fs-sm); color: var(--muted); }
+.dr-start { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 16px 18px; border-radius: var(--r-card); background: var(--surface); border: 1.5px solid var(--ink); }
+.dr-start label { font-weight: 700; color: var(--ink); }
+.dr-count { flex-basis: 100%; margin: 0; color: var(--text); }
+.dr-msg { flex-basis: 100%; margin: 0; color: var(--bad); font-weight: 700; }
+.dr-run-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-bottom: var(--s4); color: var(--muted); }
+.dr-run-head b { color: var(--ink); }
+@media (max-width: 860px) {
+  .dr-grid, .dr-modes { grid-template-columns: minmax(0, 1fr); }
+}
+/* hotspot: lines as wide as the longest line, so the highlight covers the whole line when the code scrolls */
+.qz-hotspot .mc-code-body code { display: inline-block; min-width: 100%; }
+@media (pointer: coarse) { .qz-yn-btn kbd, .qz-keys-hint { display: none; } }

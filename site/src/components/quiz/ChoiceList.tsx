@@ -90,7 +90,7 @@ export function MultipleSelect({ q, response, onResponse, locked, review, name }
             {review && (isKey || checked) && (
               <span className="qz-choice-mark">
                 {isKey && checked && <Mark ok label="Your answer, correct" />}
-                {isKey && !checked && <Mark ok={false} label="Correct answer, not chosen" />}
+                {isKey && !checked && <Mark ok label="Correct answer, you did not choose it" />}
                 {!isKey && checked && <Mark ok={false} label="Your answer, wrong" />}
               </span>
             )}

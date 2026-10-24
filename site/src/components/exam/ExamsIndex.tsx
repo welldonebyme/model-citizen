@@ -62,12 +62,12 @@ export default function ExamsIndex({ mocks, attemptHref }: Props) {
               <tbody>
                 {(attempts ?? []).filter((a) => a.mock >= 1 && a.status !== 'abandoned').slice().reverse().map((a) => (
                   <tr key={a.id}>
-                    <td>{dateTime(a.startedAt)}</td>
-                    <td>Mock {a.mock}</td>
-                    <td>{a.mode === 'exam' ? 'Exam' : 'Practice'}</td>
-                    <td>{a.status === 'finished' && a.score ? <b>{Math.floor(a.score.pct)}% <span className="xi-muted">({a.score.correct} of {a.score.total})</span></b> : 'In progress'}</td>
-                    <td>{clock(a.elapsedMs)}</td>
-                    <td>{a.status === 'finished'
+                    <td data-label="Date">{dateTime(a.startedAt)}</td>
+                    <td data-label="Mock">Mock {a.mock}</td>
+                    <td data-label="Mode">{a.mode === 'exam' ? 'Exam' : 'Practice'}</td>
+                    <td data-label="Score">{a.status === 'finished' && a.score ? <b>{Math.floor(a.score.pct)}% <span className="xi-muted">({a.score.correct} of {a.score.total})</span></b> : 'In progress'}</td>
+                    <td data-label="Time used">{clock(a.elapsedMs)}</td>
+                    <td className="xi-link">{a.status === 'finished'
                       ? <a href={`${attemptHref}?id=${encodeURIComponent(a.id)}`}>See results<span className="visually-hidden"> of mock {a.mock}, {dateTime(a.startedAt)}</span></a>
                       : <a href={mocks.find((m) => m.n === a.mock)?.href}>Resume<span className="visually-hidden"> mock {a.mock}</span></a>}</td>
                   </tr>

@@ -76,7 +76,13 @@ export function Matching({ q, response, onResponse, locked, review, name }: Prop
     (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
     setDrag({ from: l, ...pointFrom(e) });
   };
-  const onDotMove = (e: React.PointerEvent) => { if (drag) setDrag({ ...drag, ...pointFrom(e) }); };
+  const onDotMove = (e: React.PointerEvent) => {
+    if (!drag) return;
+    const lastY = drag.y + (boxRef.current?.getBoundingClientRect().top ?? 0);
+    if (e.clientY < 70 && e.clientY < lastY) window.scrollBy(0, -14);
+    else if (e.clientY > window.innerHeight - 70 && e.clientY > lastY) window.scrollBy(0, 14);
+    setDrag({ ...drag, ...pointFrom(e) });
+  };
   const onDotUp = (e: React.PointerEvent) => {
     if (!drag) return;
     const from = drag.from;

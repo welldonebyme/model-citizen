@@ -1,0 +1,33 @@
+---
+// Drills: custom quizzes from all the questions of the book, DOMC training and a speed round.
+import Base from '../../../layouts/Base.astro';
+import DrillsApp from '../../../components/quiz/DrillsApp';
+import '../../../components/quiz/quiz.css';
+import { allQuestions, questionSource } from '../../../lib/questions';
+import { url } from '../../../lib/url';
+const total = allQuestions().length;
+---
+<Base title="Drills" section="practice" description="Build your own quiz from all the questions of the book: by topic, objective, format, your mistakes. DOMC training and a speed round.">
+  <div class="wrap drills-page">
+    <nav class="crumb" aria-label="Breadcrumb"><a href={url('practice/')}>Practice</a><span aria-hidden="true">/</span><b>Drills</b></nav>
+    <header class="head">
+      <h1>Drills</h1>
+      <p>Build your own quiz from the {total} questions of the book: chapter quizzes and mock exams. Choose what to train, then answer with feedback after each question. Your mistakes go to your error notebook.</p>
+      {questionSource.chapters === 'fixtures' && <p class="sample-note">Sample questions: the full question bank is not converted yet.</p>}
+    </header>
+    <DrillsApp client:only="react" bankUrl={url('practice/drills/bank.json')}>
+      <p slot="fallback" class="fallback">Loading the drill builder…</p>
+    </DrillsApp>
+  </div>
+</Base>
+
+<style>
+  .drills-page { padding-block: var(--s7) var(--s9); }
+  .crumb { display: flex; gap: 8px; font-size: var(--fs-sm); color: var(--muted); margin-bottom: var(--s4); }
+  .crumb a { color: var(--muted); }
+  .crumb b { color: var(--ink); }
+  .head { max-width: 760px; margin-bottom: var(--s6); }
+  .head h1 { margin-bottom: var(--s3); }
+  .sample-note { display: inline-block; font-size: var(--fs-sm); padding: 4px 10px; border-radius: var(--r-chip); background: var(--warn-bg); color: var(--warn); }
+  .fallback { color: var(--muted); }
+</style>

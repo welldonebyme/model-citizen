@@ -85,7 +85,7 @@ export function Domc({ q, state, rules, onJudge, letters, keys = true, locked, n
               No <kbd aria-hidden="true">N</kbd>
             </button>
           </div>
-          <p className="qz-domc-note">You cannot go back to an option once you answer it, like on the real exam. Keys: Y for yes, N for no.</p>
+          <p className="qz-domc-note">You cannot go back to an option once you answer it, like on the real exam.<span className="qz-keys-hint"> Keys: Y for yes, N for no.</span></p>
         </div>
       ) : (
         <p className="qz-domc-done" ref={doneRef} tabIndex={-1}>

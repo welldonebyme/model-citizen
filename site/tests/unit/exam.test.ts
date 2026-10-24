@@ -204,7 +204,7 @@ describe('describe and time', () => {
     expect(describeKey(domcQ)).toBe('A YES, B NO, C YES, D YES, E YES');
     expect(describeResponse(byId('q-ch07-05'), { format: 'ms', choices: ['C', 'A'] })).toBe('A and C');
     expect(describeResponse(byId('q-ch07-03'), undefined)).toBe('No answer');
-    expect(plain(byId('q-ch07-02').stem[0].t === 'p' ? (byId('q-ch07-02').stem[0] as { c: never[] }).c : [])).toContain('____');
+    expect(plain(byId('q-ch07-02').stem[0].t === 'p' ? (byId('q-ch07-02').stem[0] as unknown as { c: never[] }).c : [])).toContain('____');
   });
   it('formats time', () => {
     expect(clock(120 * 60_000)).toBe('02:00:00');

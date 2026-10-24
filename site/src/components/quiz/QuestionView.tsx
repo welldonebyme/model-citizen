@@ -1,5 +1,6 @@
 // One question in any of the 7 formats: format label, stem, answer area.
 // `review` shows the learner's answer against the key (feedback, results); `locked` stops changes.
+import { useRef } from 'react';
 import type { Question } from '../../lib/content-types';
 import type { Response } from '../../lib/scoring';
 import type { DomcRules, DomcState } from '../../lib/exam/domc';
@@ -11,6 +12,7 @@ import { Hotspot } from './Hotspot';
 import { Matching } from './Matching';
 import { BuildList } from './BuildList';
 import { Domc, DomcReview } from './Domc';
+import { useFocusableScrollers } from './hooks';
 
 export interface DomcProps { state: DomcState; rules: DomcRules; onJudge: (yes: boolean) => void; letters: boolean; keys?: boolean }
 
@@ -30,8 +32,10 @@ export interface QuestionViewProps {
 export function QuestionView({ q, response, onResponse, name, domc, locked, review, exam, onEnter }: QuestionViewProps) {
   const lock = locked || review;
   const common = { q, response, onResponse, locked: lock, review, name };
+  const ref = useRef<HTMLDivElement>(null);
+  useFocusableScrollers(ref);
   return (
-    <div className="qz-q" data-format={q.format}>
+    <div className="qz-q" data-format={q.format} ref={ref}>
       <p className="qz-meta">
         <span className="qz-fmt">{FORMAT_NAME[q.format]}</span>
         <span>{formatHint(q)}</span>

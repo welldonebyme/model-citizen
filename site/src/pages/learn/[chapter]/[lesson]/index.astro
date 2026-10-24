@@ -3,6 +3,7 @@ import Base from '../../../../layouts/Base.astro';
 import { StaticBlocks } from '../../../../components/content/StaticBlocks';
 import { Inline } from '../../../../components/content/Inline';
 import OsSwitch from '../../../../components/ui/OsSwitch.astro';
+import LessonCheckpoints from '../../../../components/quiz/LessonCheckpoints';
 import { lessons, neighbours, routes, partName } from '../../../../lib/content';
 import { figuresFor } from '../../../../lib/figures';
 import { url } from '../../../../lib/url';
@@ -75,6 +76,12 @@ const isLast = !next || next.chapter.id !== chapter.id;
         </section>
       ))}
 
+      {lesson.checkpoints.length > 0 && (
+        <section class="checkpoints" aria-label="Check your understanding">
+          <LessonCheckpoints client:visible chapterId={chapter.id} questionIds={lesson.checkpoints} />
+        </section>
+      )}
+
       <nav class="pager" aria-label="Lessons">
         {prev ? <a class="pg prev" href={url(routes.lesson(prev.lesson, prev.chapter.id))}><span>Previous lesson</span><b>{prev.lesson.number} {prev.lesson.titleText}</b></a> : <span />}
         {isLast && chapter.quiz.length > 0
@@ -137,6 +144,7 @@ const isLast = !next || next.chapter.id !== chapter.id;
   .next-step::after { content: " ↓"; }
   .end-note { color: var(--muted); font-size: var(--fs-sm); }
 
+  .checkpoints { max-width: 780px; margin-top: 40px; }
   .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 780px; margin-top: 48px; }
   .pg { display: grid; gap: 2px; padding: 14px 18px; border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface); text-decoration: none; color: var(--text); }
   .pg span { font-size: var(--fs-sm); color: var(--muted); }

@@ -1,0 +1,783 @@
+{
+ "info": {
+  "abi_version": "2026_0",
+  "arch": "wasm32",
+  "platform": "emscripten_5_0_3",
+  "python": "3.14.2"
+ },
+ "packages": {
+  "micropip": {
+   "depends": [],
+   "file_name": "micropip-0.11.1-py3-none-any.whl",
+   "imports": [
+    "micropip"
+   ],
+   "install_dir": "site",
+   "name": "micropip",
+   "package_type": "package",
+   "sha256": "e2d52886594fd4cd0d0847110a1c34ae0134d3a970eb4496d3b5eb31ee2d8af6",
+   "tool": {},
+   "unvendored_tests": false,
+   "version": "0.11.1"
+  },
+  "rpds-py": {
+   "depends": [],
+   "file_name": "rpds_py-0.30.0-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+   "imports": [
+    "rpds"
+   ],
+   "install_dir": "site",
+   "name": "rpds-py",
+   "package_type": "package",
+   "sha256": "9997dcfaee4465d4e877397c0f95fb9ec1dddb0e9da6dac94e96ff9621cdcd05",
+   "tool": {},
+   "unvendored_tests": false,
+   "version": "0.30.0"
+  },
+  "markupsafe": {
+   "depends": [],
+   "file_name": "markupsafe-3.0.3-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+   "imports": [
+    "markupsafe"
+   ],
+   "install_dir": "site",
+   "name": "MarkupSafe",
+   "package_type": "package",
+   "sha256": "b44c364dc0d19e4210ce68ab77833c2b5d608f78fe6966263add4fc1fa667d97",
+   "tool": {},
+   "unvendored_tests": false,
+   "version": "3.0.3"
+  },
+  "pyyaml": {
+   "depends": [],
+   "file_name": "pyyaml-6.0.3-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+   "imports": [
+    "_yaml",
+    "yaml"
+   ],
+   "install_dir": "site",
+   "name": "pyyaml",
+   "package_type": "package",
+   "sha256": "a05d2a48c13ed72a8c60c73b30b753a25c3a591bb66c15428b7e95e69a9e806f",
+   "tool": {},
+   "unvendored_tests": false,
+   "version": "6.0.3"
+  },
+  "duckdb": {
+   "depends": [],
+   "file_name": "duckdb-1.5.1-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+   "imports": [
+    "duckdb"
+   ],
+   "install_dir": "site",
+   "name": "duckdb",
+   "package_type": "package",
+   "sha256": "b53411919dda46ebeda004835fd04c8168256d37c42ceb54d75454cbcc04f81c",
+   "tool": {},
+   "unvendored_tests": false,
+   "version": "1.5.1"
+  },
+  "dbt-extractor": {
+   "name": "dbt-extractor",
+   "version": "0.6.0+pyodidestub",
+   "file_name": "dbt_extractor-0.6.0+pyodidestub-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "1cd79cb0d14b4541d98b1cd58cbaf5290fb33eba635a63200a9902fd423333a6",
+   "imports": [
+    "dbt_extractor"
+   ],
+   "depends": []
+  },
+  "dbt-pyodide-shim": {
+   "name": "dbt-pyodide-shim",
+   "version": "0.1.0",
+   "file_name": "dbt_pyodide_shim-0.1.0-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "a135b6191c4a1cbf8f5460498e4b4eb96e2bbe916a82bc7c8d4aa533e783023a",
+   "imports": [
+    "dbt_pyodide_shim"
+   ],
+   "depends": []
+  },
+  "annotated-types": {
+   "name": "annotated-types",
+   "version": "0.8.0",
+   "file_name": "annotated_types-0.8.0-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "f072f4d804ea359e4eaf198b1af7a8b0943881a87f31bb764f8bf219bb9419e0",
+   "imports": [],
+   "depends": []
+  },
+  "typing-inspection": {
+   "name": "typing-inspection",
+   "version": "0.4.4",
+   "file_name": "typing_inspection-0.4.4-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "65b8397ba37ccbce054456aaccddfc91e6e3083c92824df348d96ca832f3f147",
+   "imports": [],
+   "depends": []
+  },
+  "orderly-set": {
+   "name": "orderly-set",
+   "version": "5.5.0",
+   "file_name": "orderly_set-5.5.0-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "46f0b801948e98f427b412fcabb831677194c05c3b699b80de260374baa0b1e7",
+   "imports": [],
+   "depends": []
+  },
+  "isodate": {
+   "name": "isodate",
+   "version": "0.7.2",
+   "file_name": "isodate-0.7.2-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "28009937d8031054830160fce6d409ed342816b543597cece116d966c6d99e15",
+   "imports": [
+    "isodate"
+   ],
+   "depends": []
+  },
+  "leather": {
+   "name": "leather",
+   "version": "0.4.1",
+   "file_name": "leather-0.4.1-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "ec61cba1ca3ccb96ed90e38b116fc58757d97d352171006b3288c47ce3fbd183",
+   "imports": [
+    "leather"
+   ],
+   "depends": []
+  },
+  "text-unidecode": {
+   "name": "text-unidecode",
+   "version": "1.3",
+   "file_name": "text_unidecode-1.3-py2.py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8",
+   "imports": [
+    "text_unidecode"
+   ],
+   "depends": []
+  },
+  "pytimeparse": {
+   "name": "pytimeparse",
+   "version": "1.1.10",
+   "file_name": "pytimeparse-1.1.10-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "a9f9117a02eaa32efd268e70af29bc3ec1e84f473d3edef6d9809b36793b1c5d",
+   "imports": [
+    "pytimeparse"
+   ],
+   "depends": []
+  },
+  "python-slugify": {
+   "name": "python-slugify",
+   "version": "9.1.3",
+   "file_name": "python_slugify-9.1.3-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "9aced0670e54c5603e2335c0fa9a4011ad4bc41ecb3c46e8097294c46fd60ed4",
+   "imports": [
+    "slugify"
+   ],
+   "depends": [
+    "text-unidecode"
+   ]
+  },
+  "agate": {
+   "name": "agate",
+   "version": "1.9.1",
+   "file_name": "agate-1.9.1-py2.py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "1cf329510b3dde07c4ad1740b7587c9c679abc3dcd92bb1107eabc10c2e03c50",
+   "imports": [
+    "agate"
+   ],
+   "depends": [
+    "babel",
+    "isodate",
+    "leather",
+    "parsedatetime",
+    "python-slugify",
+    "pytimeparse"
+   ]
+  },
+  "opentelemetry-api": {
+   "name": "opentelemetry-api",
+   "version": "1.45.1",
+   "file_name": "opentelemetry_api-1.45.1-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "b31553efa588ae44bc306f863c785c5333a9ecc091248c6ee68b4b6c87fdedfb",
+   "imports": [],
+   "depends": [
+    "typing-extensions"
+   ]
+  },
+  "sqlparse": {
+   "name": "sqlparse",
+   "version": "0.6.0",
+   "file_name": "sqlparse-0.6.0-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "b861c0288ce2fa56209a9a6412d2e066ac664b3873b89c26c9d8415e8e32996f",
+   "imports": [],
+   "depends": []
+  },
+  "dbt-duckdb": {
+   "name": "dbt-duckdb",
+   "version": "1.11.0",
+   "file_name": "dbt_duckdb-1.11.0-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "bac8c77771de890efa1af5b003af7c74de50c5ef67dba5891894e78348f7091b",
+   "imports": [
+    "dbt"
+   ],
+   "depends": [
+    "dbt-adapters",
+    "dbt-common",
+    "dbt-core",
+    "duckdb"
+   ]
+  },
+  "pathspec": {
+   "name": "pathspec",
+   "version": "0.12.1",
+   "file_name": "pathspec-0.12.1-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "a0d503e138a4c123b27490a4f7beda6a01c6f288df0e4a8b79c7eb0dc7b4cc08",
+   "imports": [],
+   "depends": []
+  },
+  "colorama": {
+   "name": "colorama",
+   "version": "0.4.6",
+   "file_name": "colorama-0.4.6-py2.py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6",
+   "imports": [],
+   "depends": []
+  },
+  "daff": {
+   "name": "daff",
+   "version": "1.4.2",
+   "file_name": "daff-1.4.2-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "88981a21d065e4378b5c4bd40b975dbfdea9b7ff540071f3bb5e20cc8b3590b5",
+   "imports": [
+    "daff"
+   ],
+   "depends": []
+  },
+  "snowplow-tracker": {
+   "name": "snowplow-tracker",
+   "version": "1.1.0",
+   "file_name": "snowplow_tracker-1.1.0-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "24ea32ddac9cca547421bf9ab162f5f33c00711c6ef118ad5f78093cee962224",
+   "imports": [
+    "snowplow_tracker"
+   ],
+   "depends": [
+    "requests",
+    "typing-extensions"
+   ]
+  },
+  "parsedatetime": {
+   "name": "parsedatetime",
+   "version": "2.6",
+   "file_name": "parsedatetime-2.6-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "cb96edd7016872f58479e35879294258c71437195760746faffedb692aef000b",
+   "imports": [
+    "parsedatetime"
+   ],
+   "depends": []
+  },
+  "idna": {
+   "name": "idna",
+   "version": "3.20",
+   "file_name": "idna-3.20-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c",
+   "imports": [],
+   "depends": []
+  },
+  "deepdiff": {
+   "name": "deepdiff",
+   "version": "8.6.2",
+   "file_name": "deepdiff-8.6.2-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "4d22034a866c3928303a9332c279362f714192d9305bac17c498720d095fd1b4",
+   "imports": [],
+   "depends": [
+    "orderly-set"
+   ]
+  },
+  "typing-extensions": {
+   "name": "typing_extensions",
+   "version": "4.16.0",
+   "file_name": "typing_extensions-4.16.0-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8",
+   "imports": [],
+   "depends": []
+  },
+  "zipp": {
+   "name": "zipp",
+   "version": "4.1.2",
+   "file_name": "zipp-4.1.2-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "b30cb6cd253122169c47de245ca24a86bac2a5d3802ba15bf7ba6414eb9e144d",
+   "imports": [
+    "zipp"
+   ],
+   "depends": []
+  },
+  "certifi": {
+   "name": "certifi",
+   "version": "2026.10.23",
+   "file_name": "certifi-2026.10.23-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "e9b54de76e530bb6cf0ccd036787103acb58fd42ba930ea8bf948ddbaa2f61d1",
+   "imports": [
+    "certifi"
+   ],
+   "depends": []
+  },
+  "click": {
+   "name": "click",
+   "version": "8.5.0",
+   "file_name": "click-8.5.0-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "255bc9599cf7748b4b1a446ccc735421bd08a2ae529a8b88597d3de5664ee360",
+   "imports": [],
+   "depends": []
+  },
+  "urllib3": {
+   "name": "urllib3",
+   "version": "2.8.0",
+   "file_name": "urllib3-2.8.0-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3",
+   "imports": [],
+   "depends": []
+  },
+  "more-itertools": {
+   "name": "more-itertools",
+   "version": "10.8.0",
+   "file_name": "more_itertools-10.8.0-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "52d4362373dcf7c52546bc4af9a86ee7c4579df9a8dc268be0a2f949d376cc9b",
+   "imports": [],
+   "depends": []
+  },
+  "importlib-metadata": {
+   "name": "importlib_metadata",
+   "version": "8.9.0",
+   "file_name": "importlib_metadata-8.9.0-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "e0f761b6ea91ced3b0844c14c9d955224d538105921f8e6754c00f6ca79fba7f",
+   "imports": [
+    "importlib_metadata"
+   ],
+   "depends": [
+    "zipp"
+   ]
+  },
+  "requests": {
+   "name": "requests",
+   "version": "2.34.2",
+   "file_name": "requests-2.34.2-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0",
+   "imports": [
+    "requests"
+   ],
+   "depends": [
+    "certifi",
+    "charset-normalizer",
+    "idna",
+    "urllib3"
+   ]
+  },
+  "dbt-protos": {
+   "name": "dbt-protos",
+   "version": "1.0.615",
+   "file_name": "dbt_protos-1.0.615-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "86a2237841b2b4b1f282d0dec6919ae6540544318cfd2d63239c961d49d0f195",
+   "imports": [
+    "dbtlabs",
+    "test"
+   ],
+   "depends": [
+    "protobuf"
+   ]
+  },
+  "mashumaro": {
+   "name": "mashumaro",
+   "version": "3.17",
+   "file_name": "mashumaro-3.17-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "3964e2c804f62de9e4c58fb985de71dcd716f9507cc18374b1bd5c4f1a1b879b",
+   "imports": [
+    "mashumaro"
+   ],
+   "depends": [
+    "msgpack",
+    "typing-extensions"
+   ]
+  },
+  "dbt-common": {
+   "name": "dbt-common",
+   "version": "1.39.0",
+   "file_name": "dbt_common-1.39.0-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "30d63490b9ef2aad6f469ec841fb758430fcb1d997b79ff3df36fcb7b79a241f",
+   "imports": [],
+   "depends": [
+    "agate",
+    "colorama",
+    "dbt-protos",
+    "deepdiff",
+    "isodate",
+    "jinja2",
+    "jsonschema",
+    "mashumaro",
+    "opentelemetry-api",
+    "pathspec",
+    "protobuf",
+    "python-dateutil",
+    "requests",
+    "typing-extensions"
+   ]
+  },
+  "protobuf": {
+   "name": "protobuf",
+   "version": "6.33.6",
+   "file_name": "protobuf-6.33.6-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "77179e006c476e69bf8e8ce866640091ec42e1beb80b213c3900006ecfba6901",
+   "imports": [],
+   "depends": []
+  },
+  "dbt-core": {
+   "name": "dbt-core",
+   "version": "1.11.16",
+   "file_name": "dbt_core-1.11.16-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "8798a8e2b4f7addd62807d96f7e6d9d1c29688282a19a467cb39f6b20d972959",
+   "imports": [],
+   "depends": [
+    "agate",
+    "click",
+    "daff",
+    "dbt-adapters",
+    "dbt-common",
+    "dbt-extractor",
+    "dbt-protos",
+    "dbt-semantic-interfaces",
+    "jinja2",
+    "jsonschema",
+    "mashumaro",
+    "networkx",
+    "packaging",
+    "pathspec",
+    "protobuf",
+    "pydantic",
+    "pytz",
+    "pyyaml",
+    "requests",
+    "snowplow-tracker",
+    "sqlparse",
+    "typing-extensions"
+   ]
+  },
+  "dbt-semantic-interfaces": {
+   "name": "dbt-semantic-interfaces",
+   "version": "0.9.0",
+   "file_name": "dbt_semantic_interfaces-0.9.0-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "1b54c06ba89190a47a7f0563360930a0cce869e55b484ca09d261ade0e319155",
+   "imports": [],
+   "depends": [
+    "click",
+    "importlib-metadata",
+    "jinja2",
+    "jsonschema",
+    "more-itertools",
+    "pydantic",
+    "python-dateutil",
+    "pyyaml",
+    "typing-extensions"
+   ]
+  },
+  "pytz": {
+   "name": "pytz",
+   "version": "2026.5",
+   "file_name": "pytz-2026.5-py2.py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "e658af3757f9e26a9d25dd2aff38335acd92bc9104f890a894b2c1ba28311b03",
+   "imports": [
+    "pytz"
+   ],
+   "depends": []
+  },
+  "dbt-adapters": {
+   "name": "dbt-adapters",
+   "version": "1.24.5",
+   "file_name": "dbt_adapters-1.24.5-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "32345118b921160722a13f12c3e369b9d59a0fb8fb9b3297e29d8cd53f973411",
+   "imports": [],
+   "depends": [
+    "agate",
+    "dbt-common",
+    "dbt-protos",
+    "mashumaro",
+    "protobuf",
+    "pytz",
+    "typing-extensions"
+   ]
+  },
+  "pydantic": {
+   "name": "pydantic",
+   "version": "2.14.1",
+   "file_name": "pydantic-2.14.1-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "9195d967ec791692a04438115466764fb8b9a27b31f14a760437694f40d6b454",
+   "imports": [],
+   "depends": [
+    "annotated-types",
+    "pydantic-core",
+    "typing-extensions",
+    "typing-inspection"
+   ]
+  },
+  "networkx": {
+   "name": "networkx",
+   "version": "3.7",
+   "file_name": "networkx-3.7-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "e3fd2c13a7814cee3746340d8d7f8598a67f16a58bf47fb7f8793fab6efca1b0",
+   "imports": [
+    "networkx"
+   ],
+   "depends": []
+  },
+  "packaging": {
+   "name": "packaging",
+   "version": "26.3",
+   "file_name": "packaging-26.3-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
+   "imports": [],
+   "depends": []
+  },
+  "babel": {
+   "name": "babel",
+   "version": "2.18.0",
+   "file_name": "babel-2.18.0-py3-none-any.whl",
+   "install_dir": "site",
+   "sha256": "e2b422b277c2b9a9630c1d7903c2a00d0830c409c59ac8cae9081c92f1aeba35",
+   "imports": [
+    "babel"
+   ],
+   "depends": []
+  },
+  "msgpack": {
+   "name": "msgpack",
+   "version": "1.2.3",
+   "file_name": "msgpack-1.2.3-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+   "install_dir": "site",
+   "sha256": "2487453ca1b6104442c6442f9a1a8fee1fe8f428a70d99d4cba799108b304150",
+   "imports": [
+    "msgpack"
+   ],
+   "depends": []
+  },
+  "pydantic-core": {
+   "name": "pydantic_core",
+   "version": "2.50.1",
+   "file_name": "pydantic_core-2.50.1-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+   "install_dir": "site",
+   "sha256": "99ba9bc2b8062ea0c326a990f7f00e6530c23579de66dd246e72c4cafef950a5",
+   "imports": [],
+   "depends": [
+    "typing-extensions"
+   ]
+  },
+  "charset-normalizer": {
+   "name": "charset-normalizer",
+   "version": "3.5.2",
+   "file_name": "charset_normalizer-3.5.2-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+   "install_dir": "site",
+   "sha256": "ee43c17b173d46a3212baa6ead3ae258eeabdae48c263a01ccf0218c366dd655",
+   "imports": [
+    "charset_normalizer"
+   ],
+   "depends": []
+  },
+  "pyrsistent": {
+   "depends": [],
+   "file_name": "pyrsistent-0.20.0-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+   "imports": [
+    "_pyrsistent_version",
+    "pyrsistent"
+   ],
+   "install_dir": "site",
+   "name": "pyrsistent",
+   "package_type": "package",
+   "sha256": "6252303d76b705f83c68a78fd2d7860be5b39f84482fee8aced8b52d7fd5ae80",
+   "tool": {},
+   "unvendored_tests": false,
+   "version": "0.20.0"
+  },
+  "six": {
+   "depends": [],
+   "file_name": "six-1.17.0-py2.py3-none-any.whl",
+   "imports": [
+    "six"
+   ],
+   "install_dir": "site",
+   "name": "six",
+   "package_type": "package",
+   "sha256": "228c50f73aa7addf2c2ccf2979c256802a59ab69cad8152b31b9443cc8140f42",
+   "tool": {},
+   "unvendored_tests": false,
+   "version": "1.17.0"
+  },
+  "attrs": {
+   "depends": [
+    "six"
+   ],
+   "file_name": "attrs-26.1.0-py3-none-any.whl",
+   "imports": [
+    "attr",
+    "attrs"
+   ],
+   "install_dir": "site",
+   "name": "attrs",
+   "package_type": "package",
+   "sha256": "0506ebb8e46c83017941a7239eecb2f74420d332cf1f341bddc43a217ab0bb66",
+   "tool": {},
+   "unvendored_tests": false,
+   "version": "26.1.0"
+  },
+  "referencing": {
+   "depends": [
+    "attrs",
+    "rpds-py",
+    "typing-extensions"
+   ],
+   "file_name": "referencing-0.37.0-py3-none-any.whl",
+   "imports": [
+    "referencing"
+   ],
+   "install_dir": "site",
+   "name": "referencing",
+   "package_type": "package",
+   "sha256": "db67659fe2ec73040d2b9785f0c8a7c45b8c1ca03dc2cd8e8b1fbc6f752854d8",
+   "tool": {},
+   "unvendored_tests": true,
+   "version": "0.37.0"
+  },
+  "jsonschema": {
+   "depends": [
+    "attrs",
+    "pyrsistent",
+    "referencing",
+    "jsonschema_specifications"
+   ],
+   "file_name": "jsonschema-4.26.0-py3-none-any.whl",
+   "imports": [
+    "jsonschema"
+   ],
+   "install_dir": "site",
+   "name": "jsonschema",
+   "package_type": "package",
+   "sha256": "7ce77bd37ad161555c166d815bf1bc84980fd388a74059c73c9bc9214faa0a6e",
+   "tool": {},
+   "unvendored_tests": true,
+   "version": "4.26.0"
+  },
+  "jinja2": {
+   "depends": [
+    "markupsafe"
+   ],
+   "file_name": "jinja2-3.1.6-py3-none-any.whl",
+   "imports": [
+    "jinja2"
+   ],
+   "install_dir": "site",
+   "name": "Jinja2",
+   "package_type": "package",
+   "sha256": "9330ec9cf2241fb8fc352928ea5e72016bf82de1d3d3b71ffea52a093a3ebab8",
+   "tool": {},
+   "unvendored_tests": false,
+   "version": "3.1.6"
+  },
+  "jsonschema-specifications": {
+   "depends": [
+    "referencing"
+   ],
+   "file_name": "jsonschema_specifications-2025.9.1-py3-none-any.whl",
+   "imports": [
+    "jsonschema_specifications"
+   ],
+   "install_dir": "site",
+   "name": "jsonschema_specifications",
+   "package_type": "package",
+   "sha256": "8e4353ea148aca60a2ea2aabbc068a62cf8d3deab5ee3ef91cfb991ecdb61c1b",
+   "tool": {},
+   "unvendored_tests": true,
+   "version": "2025.9.1"
+  },
+  "python-dateutil": {
+   "depends": [
+    "six"
+   ],
+   "file_name": "python_dateutil-2.9.0.post0-py2.py3-none-any.whl",
+   "imports": [
+    "dateutil"
+   ],
+   "install_dir": "site",
+   "name": "python-dateutil",
+   "package_type": "package",
+   "sha256": "9b13365edf9c188f570baf9c540bbb3029ada2a2dacb9694b3659941693ee9e5",
+   "tool": {},
+   "unvendored_tests": false,
+   "version": "2.9.0.post0"
+  },
+  "numpy": {
+   "depends": [],
+   "file_name": "numpy-2.4.6-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+   "imports": [
+    "numpy"
+   ],
+   "install_dir": "site",
+   "name": "numpy",
+   "package_type": "package",
+   "sha256": "a292c1f5d7d8a2208cd5e94fc467604c131cabcd2fc14fed6eefde121e7fabdf",
+   "tool": {},
+   "unvendored_tests": false,
+   "version": "2.4.6"
+  },
+  "pandas": {
+   "depends": [
+    "numpy",
+    "python-dateutil",
+    "pytz"
+   ],
+   "file_name": "pandas-3.0.2-cp314-cp314-pyemscripten_2026_0_wasm32.whl",
+   "imports": [
+    "pandas"
+   ],
+   "install_dir": "site",
+   "name": "pandas",
+   "package_type": "package",
+   "sha256": "45ff57772cc2f366a8582c7d3097cc4e6676342ecd5a3c08184a43462d5a02ae",
+   "tool": {},
+   "unvendored_tests": true,
+   "version": "3.0.2"
+  }
+ }
+}

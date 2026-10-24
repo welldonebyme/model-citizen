@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL;
+---
+<Base title="Home">
+  <h1>DuckDB-WASM spike</h1>
+  <p>Static Astro site under the base path <code>{base}</code>, mimicking a GitHub Pages project page.</p>
+  <ul>
+    <li><a href={`${base}read/`}>A pure reading page</a> (no JavaScript).</li>
+    <li><a href={`${base}lab/`}>A SQL lab</a>: lesson text first, the DuckDB engine loads lazily in a Web Worker.</li>
+    <li><a href={`${base}parity/`}>Chapter 4 parity runner</a>: every book example with a printed result, compared to the book.</li>
+  </ul>
+</Base>

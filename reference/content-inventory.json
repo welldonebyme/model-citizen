@@ -1,0 +1,2803 @@
+{
+  "summary": {
+    "chapters": 37,
+    "quiz_questions_total": 487,
+    "mock_questions_total": 195,
+    "labs_total": 118,
+    "tikz_figures_total": 64,
+    "code_blocks_total": 1927,
+    "traps": 145,
+    "glossary_terms": 305
+  },
+  "chapters": [
+    {
+      "number": 0,
+      "title": "Start Here",
+      "label": "ch:start",
+      "files": [
+        "parts/part0/ch00-start-here.tex"
+      ],
+      "sections": [
+        "Welcome, Adnane",
+        "The journey map",
+        "Anatomy of a chapter",
+        "How to study so it sticks",
+        "The exam decoded",
+        "The official topics, and where to learn them",
+        "Your 14-week study plan",
+        "Your progress tracker",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 2,
+        "whybox": 2,
+        "ideabox": 2,
+        "analogybox": 1,
+        "labbox": 1,
+        "dbtbox": 1,
+        "trapbox": 3,
+        "tipbox": 3,
+        "deepbox": 2,
+        "quizbox": 7,
+        "answerbox": 2,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 0,
+        "yamlcode": 1,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 1,
+        "outputcode": 0,
+        "plaincode": 1
+      },
+      "tikz": 3,
+      "labs": [
+        {
+          "title": "example",
+          "objectives": ""
+        }
+      ],
+      "quiz_questions": 7,
+      "quiz_formats": {
+        "Multiple choice": 3,
+        "Fill in the blank": 1,
+        "DOMC": 1,
+        "Multiple select": 1,
+        "Build list": 1
+      },
+      "objectives": [
+        "1.11",
+        "EXAM",
+        "PLAN"
+      ],
+      "terms": 1,
+      "mock_keys": 0
+    },
+    {
+      "number": 1,
+      "title": "The Data World in Simple Words",
+      "label": "ch:data-world",
+      "files": [
+        "parts/part1/ch01-data-world.tex"
+      ],
+      "sections": [
+        "Data, tables, rows and columns",
+        "Two kinds of databases: OLTP and OLAP",
+        "The data pipeline: from apps to dashboards",
+        "Who does what: the data roles",
+        "What dbt is (and what it is not)",
+        "Thinking in models: facts, dimensions and grain",
+        "Engineering habits for analytics: the dbt viewpoint",
+        "Your dbt vocabulary map",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 2,
+        "labbox": 2,
+        "dbtbox": 4,
+        "trapbox": 4,
+        "tipbox": 2,
+        "deepbox": 0,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 0,
+        "yamlcode": 0,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 0,
+        "outputcode": 2,
+        "plaincode": 0
+      },
+      "tikz": 4,
+      "labs": [
+        {
+          "title": "Find the grain of each table",
+          "objectives": "CP0-DATA"
+        },
+        {
+          "title": "Draw your first DAG on paper",
+          "objectives": "CP0-DATA, 1.5"
+        }
+      ],
+      "quiz_questions": 14,
+      "quiz_formats": {
+        "Multiple choice": 7,
+        "Multiple select": 2,
+        "Fill in the blank": 2,
+        "Matching": 1,
+        "DOMC": 1,
+        "Build list": 1
+      },
+      "objectives": [
+        "1.1",
+        "1.10",
+        "1.3",
+        "1.5",
+        "CP0-DATA"
+      ],
+      "terms": 44,
+      "mock_keys": 0
+    },
+    {
+      "number": 2,
+      "title": "The Command Line from Zero",
+      "label": "ch:cli",
+      "files": [
+        "parts/part1/ch02-command-line.tex"
+      ],
+      "sections": [
+        "Terminal, shell and prompt",
+        "Where am I? Folders and paths",
+        "Creating, copying, moving and deleting",
+        "Searching and combining commands",
+        "Hidden files and folders",
+        "Environment variables",
+        "Getting help and reading exit codes",
+        "Installing tools: Homebrew, Python environments and dbt",
+        "Main lab: build your study workspace",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 2,
+        "dbtbox": 4,
+        "trapbox": 5,
+        "tipbox": 5,
+        "deepbox": 1,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 0,
+        "yamlcode": 0,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 26,
+        "outputcode": 1,
+        "plaincode": 1
+      },
+      "tikz": 1,
+      "labs": [
+        {
+          "title": "Explore the practice files",
+          "objectives": "CP0-CLI"
+        },
+        {
+          "title": "Create \\textasciitilde/dbt-course with dbt 1.11, DuckDB and the practice database",
+          "objectives": "CP0-CLI"
+        }
+      ],
+      "quiz_questions": 14,
+      "quiz_formats": {
+        "Multiple choice": 7,
+        "Fill in the blank": 2,
+        "Matching": 1,
+        "Multiple select": 1,
+        "Build list": 1,
+        "DOMC": 1,
+        "Hotspot": 1
+      },
+      "objectives": [
+        "1.4",
+        "1.6",
+        "3.1",
+        "CP0-CLI"
+      ],
+      "terms": 13,
+      "mock_keys": 0
+    },
+    {
+      "number": 3,
+      "title": "Git and GitHub from Zero",
+      "label": "ch:git",
+      "files": [
+        "parts/part1/ch03-git.tex"
+      ],
+      "sections": [
+        "Git, GitHub and the vocabulary you need",
+        "Install and configure Git",
+        "Your first repository",
+        "The everyday cycle: change, review, stage, commit",
+        "Branches",
+        "Merge conflicts",
+        "Remotes and GitHub",
+        "Pull requests",
+        "Branching strategies",
+        "Git inside dbt Studio",
+        "Undoing things safely",
+        "Git cheat sheet",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 2,
+        "labbox": 4,
+        "dbtbox": 3,
+        "trapbox": 5,
+        "tipbox": 3,
+        "deepbox": 1,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 4,
+        "dbtcode": 0,
+        "yamlcode": 0,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 32,
+        "outputcode": 0,
+        "plaincode": 5
+      },
+      "tikz": 6,
+      "labs": [
+        {
+          "title": "Put your practice folder under Git",
+          "objectives": "CP0-GIT"
+        },
+        {
+          "title": "Branch, change, merge",
+          "objectives": "CP0-GIT"
+        },
+        {
+          "title": "Create a conflict and fix it",
+          "objectives": "CP0-GIT"
+        },
+        {
+          "title": "Push to GitHub and merge a pull request",
+          "objectives": "CP0-GIT, 3.4"
+        }
+      ],
+      "quiz_questions": 15,
+      "quiz_formats": {
+        "Multiple choice": 7,
+        "DOMC": 2,
+        "Multiple select": 1,
+        "Fill in the blank": 2,
+        "Build list": 1,
+        "Matching": 1,
+        "Hotspot": 1
+      },
+      "objectives": [
+        "3.4",
+        "7.1",
+        "CP0-GIT"
+      ],
+      "terms": 17,
+      "mock_keys": 0
+    },
+    {
+      "number": 4,
+      "title": "SQL from Zero to Exam Level",
+      "label": "ch:sql",
+      "files": [
+        "parts/part1/ch04-sql.tex",
+        "parts/part1/ch04-sql-a.tex",
+        "parts/part1/ch04-sql-b.tex"
+      ],
+      "sections": [
+        "Meet your practice database",
+        "SELECT and FROM: asking for columns",
+        "WHERE: keeping only some rows",
+        "NULL: the value that is not a value",
+        "ORDER BY, LIMIT and DISTINCT",
+        "Functions: text, dates, CASE and CAST",
+        "Aggregation: GROUP BY and HAVING",
+        "Joins: combining tables",
+        "Check yourself (part 1)",
+        "Subqueries: a query inside a query",
+        "CTEs: give a name to each step",
+        "Window functions",
+        "Set operations: UNION, INTERSECT, EXCEPT",
+        "DDL and DML: the statements dbt writes for you",
+        "Views, tables and temporary tables",
+        "Writing readable and performant SQL",
+        "Refactoring legacy SQL",
+        "Final lab: the customer orders report",
+        "Check yourself (part 2)"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 5,
+        "labbox": 10,
+        "dbtbox": 13,
+        "trapbox": 18,
+        "tipbox": 6,
+        "deepbox": 2,
+        "quizbox": 2,
+        "answerbox": 2,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 91,
+        "dbtcode": 1,
+        "yamlcode": 0,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 1,
+        "outputcode": 71,
+        "plaincode": 0
+      },
+      "tikz": 6,
+      "labs": [
+        {
+          "title": "Filtering rows",
+          "objectives": "CP0-SQL"
+        },
+        {
+          "title": "NULLs, functions and CASE",
+          "objectives": "CP0-SQL"
+        },
+        {
+          "title": "Group and filter",
+          "objectives": "CP0-SQL"
+        },
+        {
+          "title": "Joins and grain",
+          "objectives": "CP0-SQL"
+        },
+        {
+          "title": "Subqueries and CTEs",
+          "objectives": "CP0-SQL"
+        },
+        {
+          "title": "Window functions on real orders",
+          "objectives": "CP0-SQL"
+        },
+        {
+          "title": "DDL and DML in a sandbox",
+          "objectives": "CP0-SQL, 1.2"
+        },
+        {
+          "title": "Views versus tables",
+          "objectives": "CP0-SQL, 1.2"
+        },
+        {
+          "title": "Refactor the legacy query",
+          "objectives": "CP0-SQL, 1.3"
+        },
+        {
+          "title": "Build and check the customer orders report",
+          "objectives": "CP0-SQL, 1.5"
+        }
+      ],
+      "quiz_questions": 30,
+      "quiz_formats": {
+        "Multiple choice": 15,
+        "Multiple select": 2,
+        "Fill in the blank": 4,
+        "Build list": 3,
+        "Matching": 2,
+        "Hotspot": 2,
+        "DOMC": 2
+      },
+      "objectives": [
+        "1.2",
+        "1.3",
+        "1.5",
+        "CP0-SQL"
+      ],
+      "terms": 40,
+      "mock_keys": 0
+    },
+    {
+      "number": 5,
+      "title": "YAML, Jinja and Just Enough Python",
+      "label": "ch:yaml-jinja-python",
+      "files": [
+        "parts/part1/ch05-yaml-jinja-python.tex"
+      ],
+      "sections": [
+        "Three small languages around SQL",
+        "YAML: configuration you can read",
+        "Jinja: SQL that writes SQL",
+        "Just enough Python",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 2,
+        "labbox": 3,
+        "dbtbox": 6,
+        "trapbox": 7,
+        "tipbox": 6,
+        "deepbox": 2,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 2,
+        "yamlcode": 17,
+        "jinjacode": 9,
+        "pycode": 4,
+        "bashcode": 11,
+        "outputcode": 15,
+        "plaincode": 2
+      },
+      "tikz": 2,
+      "labs": [
+        {
+          "title": "Fix a broken YAML file",
+          "objectives": "CP0-YAML, 3.3"
+        },
+        {
+          "title": "Render Jinja templates yourself",
+          "objectives": "CP0-JINJA"
+        },
+        {
+          "title": "Generate the payment pivot with a loop and run it",
+          "objectives": "CP0-JINJA, 1.3"
+        }
+      ],
+      "quiz_questions": 16,
+      "quiz_formats": {
+        "Multiple choice": 9,
+        "Hotspot": 1,
+        "Fill in the blank": 2,
+        "Matching": 1,
+        "Multiple select": 1,
+        "Build list": 1,
+        "DOMC": 1
+      },
+      "objectives": [
+        "1.3",
+        "1.6",
+        "1.8",
+        "3.2",
+        "3.3",
+        "CP0-JINJA",
+        "CP0-PY",
+        "CP0-YAML"
+      ],
+      "terms": 24,
+      "mock_keys": 0
+    },
+    {
+      "number": 6,
+      "title": "Installing dbt and Your First Project",
+      "label": "ch:first-project",
+      "files": [
+        "parts/part2/ch06-first-project.tex"
+      ],
+      "sections": [
+        "What dbt does when you type a command",
+        "Before you start: check your workspace",
+        "Creating a project with dbt init",
+        "Anatomy of a dbt project",
+        "dbt\\_project.yml, line by line",
+        "profiles.yml: how dbt connects to the warehouse",
+        "dbt debug: is everything connected?",
+        "Your first dbt run",
+        "Inside target/ and logs/",
+        "The DuckDB file lock",
+        "Removing the example models",
+        "Put the project under Git",
+        "The dbt platform path",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 4,
+        "dbtbox": 2,
+        "trapbox": 11,
+        "tipbox": 3,
+        "deepbox": 3,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 3,
+        "dbtcode": 2,
+        "yamlcode": 8,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 15,
+        "outputcode": 29,
+        "plaincode": 2
+      },
+      "tikz": 2,
+      "labs": [
+        {
+          "title": "Create the jaffle\\_dbt project",
+          "objectives": "1.4, CP0-CLI"
+        },
+        {
+          "title": "Write your profile and check the connection",
+          "objectives": "CP0-CLI, 1.4"
+        },
+        {
+          "title": "Run the starter project and explore what dbt wrote",
+          "objectives": "1.4, 3.2"
+        },
+        {
+          "title": "Remove the examples, commit, push and compare with the reference",
+          "objectives": "1.6, CP0-GIT"
+        }
+      ],
+      "quiz_questions": 18,
+      "quiz_formats": {
+        "Multiple choice": 8,
+        "Build list": 1,
+        "Fill in the blank": 2,
+        "Hotspot": 2,
+        "Matching": 1,
+        "Multiple select": 2,
+        "DOMC": 2
+      },
+      "objectives": [
+        "1.4",
+        "1.6",
+        "3.1",
+        "3.2",
+        "CP0-CLI",
+        "CP0-GIT"
+      ],
+      "terms": 9,
+      "mock_keys": 0
+    },
+    {
+      "number": 7,
+      "title": "Models, ref, Sources and the DAG",
+      "label": "ch:models-sources-dag",
+      "files": [
+        "parts/part2/ch07-models-sources-dag.tex"
+      ],
+      "sections": [
+        "What a model is",
+        "Sources: declaring the raw data",
+        "Verifying raw object dependencies",
+        "Staging models: one clean copy per raw table",
+        "ref() and the DAG",
+        "The marts: fct\\_orders and dim\\_customers",
+        "The commands of this chapter",
+        "Seeing the lineage: dbt docs and Catalog",
+        "The classic scenario: a hard-coded table name",
+        "Common errors and how to read them",
+        "The same work in the dbt platform",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 4,
+        "dbtbox": 2,
+        "trapbox": 4,
+        "tipbox": 1,
+        "deepbox": 2,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 3,
+        "dbtcode": 9,
+        "yamlcode": 6,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 14,
+        "outputcode": 27,
+        "plaincode": 1
+      },
+      "tikz": 4,
+      "labs": [
+        {
+          "title": "Declare the two sources",
+          "objectives": "1.1, CP0-YAML"
+        },
+        {
+          "title": "Write the five staging models",
+          "objectives": "1.1, 1.5, 5.1"
+        },
+        {
+          "title": "Build the marts and check the numbers",
+          "objectives": "1.4, 1.5, CP0-SQL"
+        },
+        {
+          "title": "Commit, break it, read it, fix it",
+          "objectives": "1.1, 1.5, 3.1"
+        }
+      ],
+      "quiz_questions": 18,
+      "quiz_formats": {
+        "Multiple choice": 8,
+        "Fill in the blank": 2,
+        "Hotspot": 2,
+        "Multiple select": 2,
+        "Matching": 1,
+        "Build list": 1,
+        "DOMC": 2
+      },
+      "objectives": [
+        "1.1",
+        "1.4",
+        "1.5",
+        "3.1",
+        "5.1"
+      ],
+      "terms": 8,
+      "mock_keys": 0
+    },
+    {
+      "number": 8,
+      "title": "Materializations",
+      "label": "ch:materializations",
+      "files": [
+        "parts/part2/ch08-materializations.tex"
+      ],
+      "sections": [
+        "What a materialization is",
+        "Where you configure a materialization",
+        "View and table: the SQL behind them",
+        "Ephemeral models",
+        "Which config wins? A first look at precedence",
+        "Changing the materialization of an existing model",
+        "Incremental models: a preview",
+        "Materialized views and dynamic tables",
+        "What \\code{-{",
+        "Choosing a materialization",
+        "Python models and custom materializations",
+        "In the dbt platform",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 2,
+        "dbtbox": 0,
+        "trapbox": 7,
+        "tipbox": 2,
+        "deepbox": 1,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 3,
+        "dbtcode": 4,
+        "yamlcode": 5,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 17,
+        "outputcode": 23,
+        "plaincode": 1
+      },
+      "tikz": 3,
+      "labs": [
+        {
+          "title": "Configure the materialization of each folder",
+          "objectives": "1.2, 1.6, 3.2"
+        },
+        {
+          "title": "Add an ephemeral intermediate model",
+          "objectives": "1.2, 1.3, 3.2"
+        }
+      ],
+      "quiz_questions": 18,
+      "quiz_formats": {
+        "Multiple choice": 10,
+        "Fill in the blank": 2,
+        "Matching": 1,
+        "Hotspot": 1,
+        "Multiple select": 1,
+        "DOMC": 2,
+        "Build list": 1
+      },
+      "objectives": [
+        "1.11",
+        "1.14",
+        "1.2",
+        "1.6",
+        "1.8",
+        "3.2"
+      ],
+      "terms": 10,
+      "mock_keys": 0
+    },
+    {
+      "number": 9,
+      "title": "Modularity, DRY and Refactoring",
+      "label": "ch:modularity-refactoring",
+      "files": [
+        "parts/part2/ch09-modularity-refactoring.tex"
+      ],
+      "sections": [
+        "Modularity and DRY, in plain words",
+        "The three layers",
+        "The rules of a clean DAG",
+        "Reading the lineage to spot problems",
+        "The refactoring method",
+        "Step 1: migrate the legacy query as it is",
+        "Step 2: replace the hard-coded tables by sources",
+        "Step 3: CTE groupings and cosmetic clean-up",
+        "Step 4: move the logic into staging and intermediate models",
+        "Step 5: audit the result",
+        "Step 6: DRY again, \\code{fct\\_orders",
+        "Step 7: delete the legacy model",
+        "In the dbt platform",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 0,
+        "labbox": 2,
+        "dbtbox": 0,
+        "trapbox": 6,
+        "tipbox": 0,
+        "deepbox": 0,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 1,
+        "dbtcode": 7,
+        "yamlcode": 0,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 22,
+        "outputcode": 18,
+        "plaincode": 1
+      },
+      "tikz": 2,
+      "labs": [
+        {
+          "title": "Migrate the legacy query and audit the first two steps",
+          "objectives": "1.1, 1.3, 1.5, CP0-SQL"
+        },
+        {
+          "title": "Split into intermediate and mart models, audit, and delete the legacy model",
+          "objectives": "1.3, 1.5, 1.2, CP0-SQL, CP0-GIT"
+        }
+      ],
+      "quiz_questions": 19,
+      "quiz_formats": {
+        "Multiple choice": 11,
+        "Fill in the blank": 2,
+        "Matching": 1,
+        "Hotspot": 1,
+        "Multiple select": 1,
+        "Build list": 1,
+        "DOMC": 2
+      },
+      "objectives": [
+        "1.1",
+        "1.3",
+        "1.5",
+        "CP0-SQL"
+      ],
+      "terms": 4,
+      "mock_keys": 0
+    },
+    {
+      "number": 10,
+      "title": "Configuration",
+      "label": "ch:configuration",
+      "files": [
+        "parts/part2/ch10-configuration.tex"
+      ],
+      "sections": [
+        "Configs and properties: two kinds of settings",
+        "A tour of dbt\\_project.yml",
+        "The + prefix",
+        "Custom schemas, databases and aliases",
+        "Tags, meta, docs and enabled",
+        "Precedence: which value wins?",
+        "Environment-aware code: target, vars and env\\_var",
+        "Hooks",
+        "Grants: who may read your models",
+        "Quoting, persist\\_docs and other configs",
+        "Configuration on the dbt platform",
+        "Finish the chapter: build, commit, compare",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 7,
+        "dbtbox": 1,
+        "trapbox": 11,
+        "tipbox": 5,
+        "deepbox": 1,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 8,
+        "yamlcode": 22,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 41,
+        "outputcode": 42,
+        "plaincode": 0
+      },
+      "tikz": 2,
+      "labs": [
+        {
+          "title": "Custom schemas: concatenation first, then the dev/prod macro",
+          "objectives": "1.6"
+        },
+        {
+          "title": "Tags, meta, node colours and a properties file for the marts",
+          "objectives": "1.6"
+        },
+        {
+          "title": "Prove the precedence order (demo, then undo)",
+          "objectives": "1.6"
+        },
+        {
+          "title": "A dev-only filter with target and vars, and env\\_var in the profile",
+          "objectives": "1.6"
+        },
+        {
+          "title": "Model hooks and run hooks",
+          "objectives": "1.6"
+        },
+        {
+          "title": "Grants on DuckDB, then prod-only grants",
+          "objectives": "1.9"
+        },
+        {
+          "title": "Build everything, commit and compare with the reference",
+          "objectives": "1.6, 1.9, CP0-GIT"
+        }
+      ],
+      "quiz_questions": 20,
+      "quiz_formats": {
+        "Multiple choice": 10,
+        "Multiple select": 2,
+        "Fill in the blank": 3,
+        "Matching": 1,
+        "Build list": 1,
+        "Hotspot": 1,
+        "DOMC": 2
+      },
+      "objectives": [
+        "1.6",
+        "1.9",
+        "CP0-YAML"
+      ],
+      "terms": 12,
+      "mock_keys": 0
+    },
+    {
+      "number": 11,
+      "title": "Jinja, Macros and Packages",
+      "label": "ch:jinja-macros-packages",
+      "files": [
+        "parts/part2/ch11-jinja-macros-packages.tex"
+      ],
+      "sections": [
+        "Jinja inside dbt: the rendering context",
+        "Macros: write once, call everywhere",
+        "Talking to the database during compilation",
+        "Running a macro on its own: \\code{dbt run-operation",
+        "Packages: other people's macros",
+        "Using package macros",
+        "Comparing and generating code: audit\\_helper and codegen",
+        "Dispatch: one macro, many warehouses",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 2,
+        "labbox": 4,
+        "dbtbox": 2,
+        "trapbox": 10,
+        "tipbox": 1,
+        "deepbox": 1,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 18,
+        "yamlcode": 8,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 40,
+        "outputcode": 40,
+        "plaincode": 0
+      },
+      "tikz": 1,
+      "labs": [
+        {
+          "title": "The cents\\_to\\_dollars macro",
+          "objectives": "1.3, CP0-JINJA, 3.2"
+        },
+        {
+          "title": "Install dbt\\_utils and audit\\_helper",
+          "objectives": "1.7, CP0-GIT"
+        },
+        {
+          "title": "The pivot model and fct\\_order\\_items",
+          "objectives": "1.3, 1.7, 3.2"
+        },
+        {
+          "title": "run-operation, the audit, and the end of the chapter",
+          "objectives": "1.4, 1.7, CP0-GIT"
+        }
+      ],
+      "quiz_questions": 19,
+      "quiz_formats": {
+        "Multiple choice": 9,
+        "Fill in the blank": 2,
+        "Multiple select": 2,
+        "Matching": 2,
+        "DOMC": 2,
+        "Hotspot": 1,
+        "Build list": 1
+      },
+      "objectives": [
+        "1.3",
+        "1.4",
+        "1.7",
+        "3.2",
+        "CP0-JINJA"
+      ],
+      "terms": 10,
+      "mock_keys": 0
+    },
+    {
+      "number": 12,
+      "title": "Seeds and Analyses",
+      "label": "ch:seeds-analyses",
+      "files": [
+        "parts/part2/ch12-seeds-analyses.tex"
+      ],
+      "sections": [
+        "Seeds: what they are for",
+        "Writing the CSV file",
+        "Loading a seed: \\code{dbt seed",
+        "Seed configurations",
+        "Full refresh: when the columns change",
+        "Properties, tests and documentation",
+        "Seeds in the DAG",
+        "Analyses: SQL that dbt compiles but never runs",
+        "Analyses, singular tests, models and seeds compared",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 2,
+        "labbox": 3,
+        "dbtbox": 1,
+        "trapbox": 5,
+        "tipbox": 0,
+        "deepbox": 1,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 1,
+        "yamlcode": 5,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 23,
+        "outputcode": 26,
+        "plaincode": 5
+      },
+      "tikz": 1,
+      "labs": [
+        {
+          "title": "Create and load the country\\_regions seed",
+          "objectives": "1.4, 1.6"
+        },
+        {
+          "title": "Use the seed in dim\\_customers",
+          "objectives": "1.5, 1.4"
+        },
+        {
+          "title": "The revenue\\_by\\_region analysis, a seed column change, and the end of the chapter",
+          "objectives": "1.4, 3.2, CP0-GIT"
+        }
+      ],
+      "quiz_questions": 17,
+      "quiz_formats": {
+        "Multiple choice": 7,
+        "Fill in the blank": 2,
+        "Multiple select": 2,
+        "DOMC": 2,
+        "Matching": 2,
+        "Hotspot": 1,
+        "Build list": 1
+      },
+      "objectives": [
+        "1.4",
+        "1.5",
+        "1.6",
+        "3.2"
+      ],
+      "terms": 2,
+      "mock_keys": 0
+    },
+    {
+      "number": 13,
+      "title": "Snapshots",
+      "label": "ch:snapshots",
+      "files": [
+        "parts/part2/ch13-snapshots.tex"
+      ],
+      "sections": [
+        "Why keep history?",
+        "Snapshots in dbt: the big picture",
+        "Defining a snapshot in YAML",
+        "The two strategies: timestamp and check",
+        "Your first snapshots",
+        "The next loading day",
+        "Querying a snapshot",
+        "Hard deletes",
+        "More configs from dbt 1.9",
+        "Snapshots in the DAG and in commands",
+        "Best practices",
+        "Recognising the legacy SQL syntax",
+        "Commit and compare",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 4,
+        "dbtbox": 0,
+        "trapbox": 14,
+        "tipbox": 4,
+        "deepbox": 1,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 13,
+        "dbtcode": 2,
+        "yamlcode": 5,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 15,
+        "outputcode": 28,
+        "plaincode": 5
+      },
+      "tikz": 1,
+      "labs": [
+        {
+          "title": "Write the two snapshots and take the first picture",
+          "objectives": "1.10, 1.4"
+        },
+        {
+          "title": "The next loading day: apply day2.sql and snapshot again",
+          "objectives": "1.10, 1.4"
+        },
+        {
+          "title": "Hard deletes in a throwaway copy",
+          "objectives": "1.10"
+        },
+        {
+          "title": "Commit Chapter 13 and compare with the reference",
+          "objectives": "CP0-GIT, 1.10"
+        }
+      ],
+      "quiz_questions": 18,
+      "quiz_formats": {
+        "Multiple choice": 9,
+        "Multiple select": 2,
+        "Fill in the blank": 2,
+        "Matching": 1,
+        "Hotspot": 1,
+        "Build list": 1,
+        "DOMC": 2
+      },
+      "objectives": [
+        "1.10",
+        "1.12",
+        "1.4",
+        "1.6"
+      ],
+      "terms": 4,
+      "mock_keys": 0
+    },
+    {
+      "number": 14,
+      "title": "Incremental Models and Microbatch",
+      "label": "ch:incremental-microbatch",
+      "files": [
+        "parts/part2/ch14-incremental-microbatch.tex"
+      ],
+      "sections": [
+        "Why incremental models (and when not to use them)",
+        "First run and later runs: \\texttt{is\\_incremental()",
+        "Writing a safe incremental filter",
+        "The \\texttt{unique\\_key",
+        "The incremental strategies",
+        "Choosing the strategy (objective 1.11)",
+        "When the columns change: \\texttt{on\\_schema\\_change",
+        "Rebuilding: \\texttt{--full-refresh",
+        "Microbatch: incremental by time slices (objective 1.14)",
+        "Which batches run? Lookback, late data and backfills",
+        "Failed batches, partial success and \\texttt{dbt retry",
+        "In the dbt platform, and finishing the chapter",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 2,
+        "labbox": 6,
+        "dbtbox": 0,
+        "trapbox": 14,
+        "tipbox": 4,
+        "deepbox": 1,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 1,
+        "dbtcode": 14,
+        "yamlcode": 8,
+        "jinjacode": 1,
+        "pycode": 0,
+        "bashcode": 31,
+        "outputcode": 28,
+        "plaincode": 3
+      },
+      "tikz": 2,
+      "labs": [
+        {
+          "title": "14.1 --- \\texttt{fct\\_orders} becomes incremental",
+          "objectives": "1.2, 1.11"
+        },
+        {
+          "title": "14.2 --- \\texttt{unique\\_key} traps in a playground",
+          "objectives": "1.11"
+        },
+        {
+          "title": "14.3 --- A microbatch model: \\texttt{fct\\_order\\_items\\_daily}",
+          "objectives": "1.14, 1.13"
+        },
+        {
+          "title": "14.4 --- Day 2 arrives: both incremental models at work",
+          "objectives": "1.11, 1.14"
+        },
+        {
+          "title": "14.5 --- Break one batch, then retry it (playground)",
+          "objectives": "1.14, 7.2"
+        },
+        {
+          "title": "14.6 --- Full refresh, final build, commit and compare",
+          "objectives": "1.2, 1.11, 1.14"
+        }
+      ],
+      "quiz_questions": 20,
+      "quiz_formats": {
+        "Multiple choice": 7,
+        "Multiple select": 2,
+        "Fill in the blank": 3,
+        "Matching": 2,
+        "Build list": 2,
+        "Hotspot": 2,
+        "DOMC": 2
+      },
+      "objectives": [
+        "1.11",
+        "1.12",
+        "1.13",
+        "1.14",
+        "1.2",
+        "7.2"
+      ],
+      "terms": 12,
+      "mock_keys": 0
+    },
+    {
+      "number": 15,
+      "title": "Python Models",
+      "label": "ch:python-models",
+      "files": [
+        "parts/part2/ch15-python-models.tex"
+      ],
+      "sections": [
+        "Why (and when) Python models",
+        "Anatomy of a Python model",
+        "Where does the Python code run?",
+        "Your first Python model: \\code{customer\\_segments",
+        "Configuring a Python model",
+        "Materializations: table and incremental only",
+        "Testing, contracts and other limits",
+        "Types change when data goes through pandas",
+        "Python models on the dbt platform, and a look ahead",
+        "Commit and compare",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 3,
+        "dbtbox": 0,
+        "trapbox": 3,
+        "tipbox": 1,
+        "deepbox": 1,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 2,
+        "dbtcode": 0,
+        "yamlcode": 2,
+        "jinjacode": 0,
+        "pycode": 9,
+        "bashcode": 10,
+        "outputcode": 15,
+        "plaincode": 0
+      },
+      "tikz": 1,
+      "labs": [
+        {
+          "title": "Build the customer\\_segments Python model",
+          "objectives": "1.8, 1.2, 5.1"
+        },
+        {
+          "title": "Break the Python model on purpose",
+          "objectives": "1.8, 3.1"
+        },
+        {
+          "title": "Commit Chapter 15 and compare with the reference",
+          "objectives": "CP0-GIT, 1.8"
+        }
+      ],
+      "quiz_questions": 17,
+      "quiz_formats": {
+        "Multiple choice": 9,
+        "Multiple select": 2,
+        "Fill in the blank": 2,
+        "Matching": 1,
+        "Hotspot": 1,
+        "Build list": 1,
+        "DOMC": 1
+      },
+      "objectives": [
+        "1.2",
+        "1.8",
+        "2.1",
+        "3.1",
+        "5.1"
+      ],
+      "terms": 4,
+      "mock_keys": 0
+    },
+    {
+      "number": 16,
+      "title": "Commands and Node Selection",
+      "label": "ch:commands-selection",
+      "files": [
+        "parts/part2/ch16-commands-selection.tex"
+      ],
+      "sections": [
+        "The map of dbt commands",
+        "\\code{dbt build",
+        "Node selection: the basics",
+        "Graph operators",
+        "Set operators: union, intersection, exclusion",
+        "Selection methods",
+        "Filtering by resource type",
+        "YAML selectors",
+        "Indirect selection: which tests come along?",
+        "\\code{dbt ls",
+        "\\code{dbt show",
+        "Dry runs with \\code{--empty",
+        "Smaller runs with \\code{--sample",
+        "Flags that change how a command runs",
+        "Housekeeping: \\code{parse",
+        "Preview: selecting by state and by result",
+        "The same commands in the dbt platform",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 5,
+        "dbtbox": 0,
+        "trapbox": 17,
+        "tipbox": 4,
+        "deepbox": 1,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 3,
+        "yamlcode": 3,
+        "jinjacode": 0,
+        "pycode": 1,
+        "bashcode": 68,
+        "outputcode": 13,
+        "plaincode": 1
+      },
+      "tikz": 1,
+      "labs": [
+        {
+          "title": "Predict, then check with dbt ls",
+          "objectives": "1.4"
+        },
+        {
+          "title": "Name your selections in selectors.yml",
+          "objectives": "1.4"
+        },
+        {
+          "title": "A dry run that finds a real bug",
+          "objectives": "1.12, 1.4"
+        },
+        {
+          "title": "A sampled dev run on a copy of the database",
+          "objectives": "1.13"
+        },
+        {
+          "title": "Fail fast, threads, clean and commit",
+          "objectives": "1.4, 4.1, 3.5"
+        }
+      ],
+      "quiz_questions": 20,
+      "quiz_formats": {
+        "Multiple choice": 10,
+        "Multiple select": 2,
+        "Fill in the blank": 2,
+        "Matching": 2,
+        "Build list": 1,
+        "Hotspot": 1,
+        "DOMC": 2
+      },
+      "objectives": [
+        "1.12",
+        "1.13",
+        "1.4",
+        "3.5",
+        "4.1",
+        "5.3",
+        "7.1"
+      ],
+      "terms": 13,
+      "mock_keys": 0
+    },
+    {
+      "number": 17,
+      "title": "Governance: Contracts, Constraints, Versions and Access",
+      "label": "ch:governance",
+      "files": [
+        "parts/part3/ch17-governance.tex"
+      ],
+      "sections": [
+        "Why governance: models as data products",
+        "Groups and model access",
+        "Model contracts",
+        "Constraints",
+        "Model versions",
+        "Breaking changes and state comparison",
+        "dbt Mesh: references across projects",
+        "Governance on the dbt platform",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 3,
+        "labbox": 5,
+        "dbtbox": 1,
+        "trapbox": 12,
+        "tipbox": 1,
+        "deepbox": 2,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 3,
+        "yamlcode": 17,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 24,
+        "outputcode": 42,
+        "plaincode": 1
+      },
+      "tikz": 2,
+      "labs": [
+        {
+          "title": "Groups and access",
+          "objectives": "2.1, 1.6, 3.1"
+        },
+        {
+          "title": "A contract and constraints on dim\\_customers",
+          "objectives": "2.1, 2.3"
+        },
+        {
+          "title": "Break the contract and the constraints on purpose",
+          "objectives": "2.1, 2.3, 3.1"
+        },
+        {
+          "title": "Version dim\\_customers",
+          "objectives": "2.2, 2.1, 1.4"
+        },
+        {
+          "title": "Catch a breaking change with state",
+          "objectives": "2.1, 2.2, 7.1"
+        }
+      ],
+      "quiz_questions": 19,
+      "quiz_formats": {
+        "Multiple choice": 8,
+        "Multiple select": 2,
+        "Fill in the blank": 2,
+        "Hotspot": 2,
+        "Matching": 2,
+        "Build list": 1,
+        "DOMC": 2
+      },
+      "objectives": [
+        "2.1",
+        "2.2",
+        "2.3",
+        "3.1",
+        "7.1"
+      ],
+      "terms": 20,
+      "mock_keys": 0
+    },
+    {
+      "number": 18,
+      "title": "Data Tests",
+      "label": "ch:data-tests",
+      "files": [
+        "parts/part4/ch18-data-tests.tex"
+      ],
+      "sections": [
+        "What a data test is",
+        "The four built-in generic tests",
+        "Reading a failure and handling a known problem",
+        "Testing sources, seeds and snapshots",
+        "Singular tests",
+        "Custom generic tests",
+        "Tests from packages",
+        "Test configurations",
+        "Tests inside dbt build",
+        "Selecting tests",
+        "A testing strategy",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 5,
+        "dbtbox": 1,
+        "trapbox": 11,
+        "tipbox": 3,
+        "deepbox": 1,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 6,
+        "dbtcode": 4,
+        "yamlcode": 31,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 17,
+        "outputcode": 32,
+        "plaincode": 1
+      },
+      "tikz": 3,
+      "labs": [
+        {
+          "title": "Your first generic tests, and a real failure",
+          "objectives": "5.1, 5.2, 3.3, 4.1"
+        },
+        {
+          "title": "Investigate and handle the orphan order",
+          "objectives": "5.2, 5.3, 4.1"
+        },
+        {
+          "title": "Test the sources and write two singular tests",
+          "objectives": "5.1, 5.2"
+        },
+        {
+          "title": "A custom generic test and package tests",
+          "objectives": "5.1, 1.7, 5.2"
+        },
+        {
+          "title": "Play with test configurations (and undo everything)",
+          "objectives": "5.2, 5.3"
+        }
+      ],
+      "quiz_questions": 20,
+      "quiz_formats": {
+        "Multiple choice": 11,
+        "Multiple select": 2,
+        "Fill in the blank": 2,
+        "Hotspot": 1,
+        "Matching": 1,
+        "Build list": 1,
+        "DOMC": 2
+      },
+      "objectives": [
+        "1.7",
+        "3.3",
+        "4.1",
+        "5.1",
+        "5.2",
+        "5.3"
+      ],
+      "terms": 8,
+      "mock_keys": 0
+    },
+    {
+      "number": 19,
+      "title": "Unit Tests",
+      "label": "ch:unit-tests",
+      "files": [
+        "parts/part4/ch19-unit-tests.tex"
+      ],
+      "sections": [
+        "Data tests and unit tests",
+        "Anatomy of a unit test",
+        "Input formats and fixtures",
+        "Overrides: macros, variables and environment variables",
+        "Unit testing an incremental model",
+        "Running unit tests",
+        "Unit tests need their parents in the warehouse",
+        "Unit tests in the workflow",
+        "What to unit test, and what not",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 5,
+        "dbtbox": 1,
+        "trapbox": 5,
+        "tipbox": 1,
+        "deepbox": 0,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 2,
+        "dbtcode": 1,
+        "yamlcode": 9,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 11,
+        "outputcode": 18,
+        "plaincode": 3
+      },
+      "tikz": 0,
+      "labs": [
+        {
+          "title": "Your first unit test",
+          "objectives": "5.1, 5.3"
+        },
+        {
+          "title": "A unit test with three input formats",
+          "objectives": "5.1, 2.2"
+        },
+        {
+          "title": "Unit test the incremental logic, and watch the build order",
+          "objectives": "5.1, 5.3, 1.11"
+        },
+        {
+          "title": "Unit tests on a brand-new database",
+          "objectives": "5.3, 4.1, 1.12"
+        },
+        {
+          "title": "A production build without unit tests, then commit",
+          "objectives": "5.3, 3.4"
+        }
+      ],
+      "quiz_questions": 18,
+      "quiz_formats": {
+        "Multiple choice": 10,
+        "Fill in the blank": 2,
+        "Hotspot": 1,
+        "Matching": 1,
+        "Build list": 1,
+        "DOMC": 2,
+        "Multiple select": 1
+      },
+      "objectives": [
+        "1.12",
+        "2.2",
+        "4.1",
+        "5.1",
+        "5.3"
+      ],
+      "terms": 4,
+      "mock_keys": 0
+    },
+    {
+      "number": 20,
+      "title": "Documentation",
+      "label": "ch:documentation",
+      "files": [
+        "parts/part5/ch20-documentation.tex"
+      ],
+      "sections": [
+        "Why document a dbt project",
+        "Descriptions: what you can document",
+        "Doc blocks: long texts you write once",
+        "Generating the documentation: \\code{dbt docs generate",
+        "Serving and exploring the site",
+        "\\code{meta",
+        "\\code{persist\\_docs",
+        "Documentation on the dbt platform: dbt Catalog",
+        "Good documentation habits",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 3,
+        "dbtbox": 0,
+        "trapbox": 7,
+        "tipbox": 4,
+        "deepbox": 1,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 1,
+        "yamlcode": 13,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 21,
+        "outputcode": 24,
+        "plaincode": 3
+      },
+      "tikz": 2,
+      "labs": [
+        {
+          "title": "Doc blocks and the overview page",
+          "objectives": "3.3, 1.3"
+        },
+        {
+          "title": "Generate, serve and explore the documentation",
+          "objectives": "1.4, 1.5"
+        },
+        {
+          "title": "persist\\_docs on the marts, and a safe microbatch model",
+          "objectives": "1.6, 1.14, 1.4"
+        }
+      ],
+      "quiz_questions": 19,
+      "quiz_formats": {
+        "Multiple choice": 10,
+        "Fill in the blank": 2,
+        "Hotspot": 1,
+        "Multiple select": 2,
+        "Matching": 1,
+        "Build list": 1,
+        "DOMC": 2
+      },
+      "objectives": [
+        "1.14",
+        "1.4",
+        "1.6",
+        "3.3",
+        "6.1",
+        "7.1"
+      ],
+      "terms": 12,
+      "mock_keys": 0
+    },
+    {
+      "number": 21,
+      "title": "Source Freshness and Exposures",
+      "label": "ch:freshness-exposures",
+      "files": [
+        "parts/part5/ch21-freshness-exposures.tex"
+      ],
+      "sections": [
+        "External dependencies: what comes in, what goes out",
+        "Source freshness: the idea",
+        "Configuring freshness",
+        "Running the check and reading the results",
+        "Building only what has new data: \\code{source\\_status:fresher+",
+        "Freshness on the dbt platform",
+        "What freshness cannot tell you",
+        "Exposures: who uses your models",
+        "Using exposures: selection, docs, impact analysis, CI",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 3,
+        "dbtbox": 0,
+        "trapbox": 6,
+        "tipbox": 2,
+        "deepbox": 0,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 0,
+        "yamlcode": 9,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 23,
+        "outputcode": 29,
+        "plaincode": 0
+      },
+      "tikz": 2,
+      "labs": [
+        {
+          "title": "Configure freshness and meet your first ERROR STALE",
+          "objectives": "6.2, 1.1, 3.3"
+        },
+        {
+          "title": "Fresh data, PASS, and rebuilding only what changed",
+          "objectives": "6.2, 7.1, 1.4"
+        },
+        {
+          "title": "Declare two exposures and use them",
+          "objectives": "6.1, 1.4, 1.5"
+        }
+      ],
+      "quiz_questions": 20,
+      "quiz_formats": {
+        "Multiple choice": 10,
+        "Fill in the blank": 2,
+        "Hotspot": 2,
+        "Multiple select": 2,
+        "Matching": 1,
+        "Build list": 1,
+        "DOMC": 2
+      },
+      "objectives": [
+        "1.1",
+        "1.4",
+        "6.1",
+        "6.2",
+        "7.1"
+      ],
+      "terms": 3,
+      "mock_keys": 0
+    },
+    {
+      "number": 22,
+      "title": "Debugging",
+      "label": "ch:debugging",
+      "files": [
+        "parts/part6/ch22-debugging.tex"
+      ],
+      "sections": [
+        "A method for every error",
+        "The error families, with real messages",
+        "Where to look",
+        "Fixing safely: from branch to merge",
+        "Flags: changing how dbt runs",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 3,
+        "labbox": 4,
+        "dbtbox": 3,
+        "trapbox": 12,
+        "tipbox": 2,
+        "deepbox": 2,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 2,
+        "yamlcode": 3,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 27,
+        "outputcode": 38,
+        "plaincode": 1
+      },
+      "tikz": 3,
+      "labs": [
+        {
+          "title": "Nine bugs, nine messages",
+          "objectives": "3.1, 3.3, CP0-GIT"
+        },
+        {
+          "title": "Follow one error everywhere",
+          "objectives": "3.1, 3.2"
+        },
+        {
+          "title": "Fix a bug the safe way",
+          "objectives": "3.4, CP0-GIT, 7.1"
+        },
+        {
+          "title": "Project flags, the safe way",
+          "objectives": "3.5, 3.4, CP0-GIT"
+        }
+      ],
+      "quiz_questions": 19,
+      "quiz_formats": {
+        "Multiple choice": 9,
+        "Hotspot": 1,
+        "Multiple select": 2,
+        "Fill in the blank": 2,
+        "Matching": 2,
+        "Build list": 1,
+        "DOMC": 2
+      },
+      "objectives": [
+        "3.1",
+        "3.2",
+        "3.3",
+        "3.4",
+        "3.5",
+        "CP0-GIT"
+      ],
+      "terms": 9,
+      "mock_keys": 0
+    },
+    {
+      "number": 23,
+      "title": "Pipelines, Failures and dbt clone",
+      "label": "ch:pipelines-clone",
+      "files": [
+        "parts/part6/ch23-pipelines-clone.tex"
+      ],
+      "sections": [
+        "Where a pipeline can break",
+        "What dbt does when a node fails",
+        "Reading the results: statuses and run\\_results.json",
+        "The production build and its artifacts",
+        "dbt clone",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 2,
+        "labbox": 4,
+        "dbtbox": 3,
+        "trapbox": 6,
+        "tipbox": 1,
+        "deepbox": 0,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 0,
+        "yamlcode": 4,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 33,
+        "outputcode": 26,
+        "plaincode": 3
+      },
+      "tikz": 2,
+      "labs": [
+        {
+          "title": "Break the pipeline in the middle",
+          "objectives": "4.1, 3.1"
+        },
+        {
+          "title": "When the data and the hooks fail",
+          "objectives": "4.1, 5.2, 3.5"
+        },
+        {
+          "title": "Build production and keep its artifacts",
+          "objectives": "1.4, 4.1, 7.1"
+        },
+        {
+          "title": "Clone production into development, and fix a hook",
+          "objectives": "4.2, 3.1, 1.6"
+        }
+      ],
+      "quiz_questions": 18,
+      "quiz_formats": {
+        "Multiple choice": 9,
+        "Multiple select": 2,
+        "Fill in the blank": 2,
+        "Matching": 1,
+        "Build list": 1,
+        "DOMC": 2,
+        "Hotspot": 1
+      },
+      "objectives": [
+        "1.4",
+        "3.1",
+        "4.1",
+        "4.2"
+      ],
+      "terms": 10,
+      "mock_keys": 0
+    },
+    {
+      "number": 24,
+      "title": "State, Defer and dbt retry",
+      "label": "ch:state-defer-retry",
+      "files": [
+        "parts/part7/ch24-state-defer-retry.tex"
+      ],
+      "sections": [
+        "Artifacts: what dbt writes after each command",
+        "What ``state'' means",
+        "The state selection method",
+        "Why \\code{state:modified+",
+        "Result selectors: re-running what failed",
+        "Defer: borrow the parents from production",
+        "Slim CI in one command",
+        "dbt retry: restart from the point of failure",
+        "Finish the chapter: merge, deploy, refresh the state",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 2,
+        "labbox": 5,
+        "dbtbox": 3,
+        "trapbox": 8,
+        "tipbox": 4,
+        "deepbox": 1,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 2,
+        "yamlcode": 1,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 27,
+        "outputcode": 38,
+        "plaincode": 1
+      },
+      "tikz": 3,
+      "labs": [
+        {
+          "title": "Your first state comparison",
+          "objectives": "7.1"
+        },
+        {
+          "title": "The sub-selectors, one change at a time",
+          "objectives": "7.1"
+        },
+        {
+          "title": "Build one model in an empty schema with -{}-defer",
+          "objectives": "7.1, 3.4"
+        },
+        {
+          "title": "Break, fix and retry",
+          "objectives": "7.2, 4.1"
+        },
+        {
+          "title": "Merge, deploy to production and refresh prod-artifacts",
+          "objectives": "7.1, 3.4"
+        }
+      ],
+      "quiz_questions": 19,
+      "quiz_formats": {
+        "Multiple choice": 9,
+        "Multiple select": 2,
+        "Fill in the blank": 2,
+        "Matching": 2,
+        "DOMC": 2,
+        "Build list": 1,
+        "Hotspot": 1
+      },
+      "objectives": [
+        "3.4",
+        "4.1",
+        "4.2",
+        "7.1",
+        "7.2"
+      ],
+      "terms": 9,
+      "mock_keys": 0
+    },
+    {
+      "number": 25,
+      "title": "Environments, Jobs and CI/CD",
+      "label": "ch:environments-ci",
+      "files": [
+        "parts/part7/ch25-environments-ci.tex"
+      ],
+      "sections": [
+        "Three environments, one project",
+        "From a branch to production",
+        "Environments and jobs in the dbt platform",
+        "CI for dbt Core with GitHub Actions",
+        "Pull request template and required checks",
+        "Where each kind of test runs",
+        "Designing the production job",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 3,
+        "dbtbox": 1,
+        "trapbox": 5,
+        "tipbox": 1,
+        "deepbox": 0,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 1,
+        "yamlcode": 5,
+        "jinjacode": 0,
+        "pycode": 1,
+        "bashcode": 10,
+        "outputcode": 9,
+        "plaincode": 1
+      },
+      "tikz": 1,
+      "labs": [
+        {
+          "title": "Add the CI files to your project",
+          "objectives": "3.4, 5.3, 1.12"
+        },
+        {
+          "title": "Run the CI job on your laptop",
+          "objectives": "3.4, 5.3, 1.12, 7.1"
+        },
+        {
+          "title": "Optional: the real thing on GitHub",
+          "objectives": "CP0-GIT, 3.4"
+        }
+      ],
+      "quiz_questions": 18,
+      "quiz_formats": {
+        "Multiple choice": 8,
+        "Multiple select": 2,
+        "Fill in the blank": 2,
+        "Matching": 2,
+        "Build list": 1,
+        "Hotspot": 1,
+        "DOMC": 2
+      },
+      "objectives": [
+        "1.12",
+        "3.4",
+        "5.3",
+        "7.1",
+        "CP0-GIT"
+      ],
+      "terms": 17,
+      "mock_keys": 0
+    },
+    {
+      "number": 26,
+      "title": "Capstone Project: ShopFlow",
+      "label": "ch:capstone",
+      "files": [
+        "parts/part8/ch26-capstone.tex"
+      ],
+      "sections": [
+        "The ShopFlow story",
+        "Milestone m00 --- Setup",
+        "Milestone m01 --- Sources and freshness",
+        "Milestone m02 --- Staging",
+        "Milestone m03 --- Seeds",
+        "Milestone m04 --- Intermediate models and marts",
+        "Milestone m05 --- Jinja, macros and packages",
+        "Milestone m06 --- Data tests",
+        "Milestone m07 --- Unit tests",
+        "Milestone m08 --- Snapshots",
+        "Milestone m09 --- Incremental models and microbatch",
+        "Milestone m10 --- A Python model",
+        "Milestone m11 --- Governance",
+        "Milestone m12 --- Documentation and exposures",
+        "Milestone m13 --- Production, state and slim CI",
+        "Milestone m14 --- Release",
+        "The trap hunt: what the data was hiding",
+        "Self-assessment rubric",
+        "If you are stuck",
+        "Check yourself"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 15,
+        "dbtbox": 10,
+        "trapbox": 18,
+        "tipbox": 3,
+        "deepbox": 0,
+        "quizbox": 1,
+        "answerbox": 1,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 1,
+        "yamlcode": 2,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 12,
+        "outputcode": 75,
+        "plaincode": 1
+      },
+      "tikz": 1,
+      "labs": [
+        {
+          "title": "m00 --- an empty project that connects",
+          "objectives": "CP0-CLI, CP0-GIT, CP0-YAML, 1.4, 1.6"
+        },
+        {
+          "title": "m01 --- nine source tables, four freshness checks",
+          "objectives": "1.1, 6.2, CP0-YAML"
+        },
+        {
+          "title": "m02 --- nine staging views with primary key tests",
+          "objectives": "1.1, 1.2, 1.5, CP0-SQL, 5.1"
+        },
+        {
+          "title": "m03 --- two seeds with explicit types",
+          "objectives": "1.4, 1.6, 5.1"
+        },
+        {
+          "title": "m04 --- three intermediate models and five marts",
+          "objectives": "1.2, 1.3, 1.5, 1.6, CP0-SQL"
+        },
+        {
+          "title": "m05 --- macros, dbt\\_utils and custom schemas",
+          "objectives": "1.3, 1.6, 1.7, 1.4, CP0-JINJA, 3.2"
+        },
+        {
+          "title": "m06 --- 80 data tests, every failure handled",
+          "objectives": "5.1, 5.2, 5.3, 4.1, 3.1, 3.4, 1.7"
+        },
+        {
+          "title": "m07 --- three unit tests, three formats",
+          "objectives": "5.1, 5.3, 3.4"
+        },
+        {
+          "title": "m08 --- two YAML snapshots and the next loading day",
+          "objectives": "1.10, 1.4, 1.1"
+        },
+        {
+          "title": "m09 --- merge, microbatch and a backfill",
+          "objectives": "1.11, 1.14, 1.13, 5.1, 3.5"
+        },
+        {
+          "title": "m10 --- customer\\_rfm.py",
+          "objectives": "1.8, CP0-PY, 5.1"
+        },
+        {
+          "title": "m11 --- groups, access, contracts and a version 2",
+          "objectives": "2.1, 2.2, 2.3, 1.9, 3.1, 3.3"
+        },
+        {
+          "title": "m12 --- docs, persist\\_docs and two exposures",
+          "objectives": "6.1, 1.6, 3.3, 1.4"
+        },
+        {
+          "title": "m13 --- prod artifacts, state:modified+, defer, clone, retry, CI",
+          "objectives": "7.1, 7.2, 4.1, 4.2, 1.12, 3.4, 3.5, CP0-GIT"
+        },
+        {
+          "title": "m14 --- v1.0.0",
+          "objectives": "1.6, 3.5, 1.4, 6.2, CP0-GIT"
+        }
+      ],
+      "quiz_questions": 17,
+      "quiz_formats": {
+        "Multiple choice": 7,
+        "Multiple select": 2,
+        "Fill in the blank": 2,
+        "Hotspot": 2,
+        "DOMC": 2,
+        "Build list": 1,
+        "Matching": 1
+      },
+      "objectives": [
+        "1.1",
+        "1.10",
+        "1.11",
+        "1.12",
+        "1.13",
+        "1.14",
+        "1.2",
+        "1.3",
+        "1.4",
+        "1.5",
+        "1.6",
+        "1.7",
+        "1.8",
+        "1.9",
+        "2.1",
+        "2.2",
+        "2.3",
+        "3.1",
+        "3.2",
+        "3.3",
+        "3.4",
+        "3.5",
+        "4.1",
+        "4.2",
+        "5.1",
+        "5.2",
+        "5.3",
+        "6.1",
+        "6.2",
+        "7.1",
+        "7.2",
+        "CP0-CLI",
+        "CP0-GIT",
+        "CP0-SQL"
+      ],
+      "terms": 24,
+      "mock_keys": 0
+    },
+    {
+      "number": 27,
+      "title": "Exam Strategy and the Top Traps",
+      "label": "ch:exam-strategy",
+      "files": [
+        "parts/part9/ch27-exam-strategy.tex"
+      ],
+      "sections": [
+        "How an exam question is built",
+        "Reading a scenario question in five steps",
+        "Elimination techniques",
+        "The six formats, one by one",
+        "Pacing: your 120-minute plan",
+        "The top traps",
+        "The last 7 days",
+        "Exam-day checklist",
+        "After the exam"
+      ],
+      "boxes": {
+        "exambox": 1,
+        "whybox": 1,
+        "ideabox": 1,
+        "analogybox": 1,
+        "labbox": 0,
+        "dbtbox": 0,
+        "trapbox": 3,
+        "tipbox": 4,
+        "deepbox": 0,
+        "quizbox": 5,
+        "answerbox": 5,
+        "summarybox": 1
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 0,
+        "yamlcode": 0,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 0,
+        "outputcode": 1,
+        "plaincode": 0
+      },
+      "tikz": 3,
+      "labs": [],
+      "quiz_questions": 0,
+      "quiz_formats": {},
+      "objectives": [
+        "ALL",
+        "EXAM",
+        "PLAN"
+      ],
+      "terms": 6,
+      "mock_keys": 0
+    },
+    {
+      "number": 28,
+      "title": "Mock Exam 1",
+      "label": "ch:mock1",
+      "files": [
+        "parts/part9/ch28-mock1.tex"
+      ],
+      "sections": [
+        "Answer sheet"
+      ],
+      "boxes": {
+        "exambox": 0,
+        "whybox": 0,
+        "ideabox": 0,
+        "analogybox": 0,
+        "labbox": 0,
+        "dbtbox": 0,
+        "trapbox": 0,
+        "tipbox": 1,
+        "deepbox": 0,
+        "quizbox": 0,
+        "answerbox": 0,
+        "summarybox": 0
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 11,
+        "yamlcode": 10,
+        "jinjacode": 0,
+        "pycode": 1,
+        "bashcode": 6,
+        "outputcode": 10,
+        "plaincode": 1
+      },
+      "tikz": 0,
+      "labs": [],
+      "quiz_questions": 65,
+      "quiz_formats": {
+        "Multiple choice": 30,
+        "Multiple select": 6,
+        "Fill in the blank": 6,
+        "Hotspot": 5,
+        "Build list": 5,
+        "DOMC": 8,
+        "Matching": 5
+      },
+      "objectives": [],
+      "terms": 0,
+      "mock_keys": 0
+    },
+    {
+      "number": 29,
+      "title": "Mock Exam 1: Answers and Explanations",
+      "label": "ch:mock1-answers",
+      "files": [
+        "parts/part9/ch29-mock1-answers.tex"
+      ],
+      "sections": [
+        "How to score",
+        "Answers"
+      ],
+      "boxes": {
+        "exambox": 0,
+        "whybox": 0,
+        "ideabox": 0,
+        "analogybox": 0,
+        "labbox": 0,
+        "dbtbox": 0,
+        "trapbox": 0,
+        "tipbox": 0,
+        "deepbox": 0,
+        "quizbox": 0,
+        "answerbox": 0,
+        "summarybox": 0
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 0,
+        "yamlcode": 0,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 0,
+        "outputcode": 0,
+        "plaincode": 0
+      },
+      "tikz": 0,
+      "labs": [],
+      "quiz_questions": 0,
+      "quiz_formats": {},
+      "objectives": [],
+      "terms": 0,
+      "mock_keys": 65
+    },
+    {
+      "number": 30,
+      "title": "Mock Exam 2",
+      "label": "ch:mock2",
+      "files": [
+        "parts/part9/ch30-mock2.tex"
+      ],
+      "sections": [
+        "The scenario: RideNow",
+        "Answer sheet"
+      ],
+      "boxes": {
+        "exambox": 0,
+        "whybox": 0,
+        "ideabox": 0,
+        "analogybox": 0,
+        "labbox": 0,
+        "dbtbox": 0,
+        "trapbox": 0,
+        "tipbox": 1,
+        "deepbox": 0,
+        "quizbox": 0,
+        "answerbox": 0,
+        "summarybox": 0
+      },
+      "code": {
+        "sqlcode": 4,
+        "dbtcode": 11,
+        "yamlcode": 18,
+        "jinjacode": 0,
+        "pycode": 1,
+        "bashcode": 5,
+        "outputcode": 26,
+        "plaincode": 1
+      },
+      "tikz": 0,
+      "labs": [],
+      "quiz_questions": 65,
+      "quiz_formats": {
+        "Multiple choice": 30,
+        "DOMC": 8,
+        "Hotspot": 5,
+        "Multiple select": 6,
+        "Matching": 5,
+        "Fill in the blank": 6,
+        "Build list": 5
+      },
+      "objectives": [],
+      "terms": 0,
+      "mock_keys": 0
+    },
+    {
+      "number": 31,
+      "title": "Mock Exam 2: Answers and Explanations",
+      "label": "ch:mock2-answers",
+      "files": [
+        "parts/part9/ch31-mock2-answers.tex"
+      ],
+      "sections": [
+        "Score table",
+        "Answers"
+      ],
+      "boxes": {
+        "exambox": 0,
+        "whybox": 0,
+        "ideabox": 0,
+        "analogybox": 0,
+        "labbox": 0,
+        "dbtbox": 0,
+        "trapbox": 0,
+        "tipbox": 1,
+        "deepbox": 0,
+        "quizbox": 0,
+        "answerbox": 0,
+        "summarybox": 0
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 0,
+        "yamlcode": 2,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 0,
+        "outputcode": 6,
+        "plaincode": 0
+      },
+      "tikz": 0,
+      "labs": [],
+      "quiz_questions": 0,
+      "quiz_formats": {},
+      "objectives": [],
+      "terms": 0,
+      "mock_keys": 65
+    },
+    {
+      "number": 32,
+      "title": "Mock Exam 3",
+      "label": "ch:mock3",
+      "files": [
+        "parts/part9/ch32-mock3.tex"
+      ],
+      "sections": [
+        "Answer sheet"
+      ],
+      "boxes": {
+        "exambox": 0,
+        "whybox": 0,
+        "ideabox": 0,
+        "analogybox": 0,
+        "labbox": 0,
+        "dbtbox": 0,
+        "trapbox": 0,
+        "tipbox": 1,
+        "deepbox": 0,
+        "quizbox": 0,
+        "answerbox": 0,
+        "summarybox": 0
+      },
+      "code": {
+        "sqlcode": 2,
+        "dbtcode": 6,
+        "yamlcode": 20,
+        "jinjacode": 3,
+        "pycode": 1,
+        "bashcode": 1,
+        "outputcode": 3,
+        "plaincode": 0
+      },
+      "tikz": 0,
+      "labs": [],
+      "quiz_questions": 65,
+      "quiz_formats": {
+        "Multiple choice": 30,
+        "DOMC": 8,
+        "Hotspot": 5,
+        "Fill in the blank": 6,
+        "Matching": 5,
+        "Build list": 5,
+        "Multiple select": 6
+      },
+      "objectives": [],
+      "terms": 0,
+      "mock_keys": 0
+    },
+    {
+      "number": 33,
+      "title": "Mock Exam 3: Answers and Explanations",
+      "label": "ch:mock3-answers",
+      "files": [
+        "parts/part9/ch33-mock3-answers.tex"
+      ],
+      "sections": [
+        "Score table",
+        "Quick answer key",
+        "Detailed explanations"
+      ],
+      "boxes": {
+        "exambox": 0,
+        "whybox": 0,
+        "ideabox": 0,
+        "analogybox": 0,
+        "labbox": 0,
+        "dbtbox": 0,
+        "trapbox": 0,
+        "tipbox": 1,
+        "deepbox": 0,
+        "quizbox": 0,
+        "answerbox": 0,
+        "summarybox": 0
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 0,
+        "yamlcode": 0,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 0,
+        "outputcode": 0,
+        "plaincode": 0
+      },
+      "tikz": 0,
+      "labs": [],
+      "quiz_questions": 0,
+      "quiz_formats": {},
+      "objectives": [],
+      "terms": 0,
+      "mock_keys": 65
+    },
+    {
+      "number": 34,
+      "title": "Cheat Sheets",
+      "label": "app:cheatsheets",
+      "files": [
+        "appendices/cheatsheets.tex"
+      ],
+      "sections": [
+        "Commands and key flags",
+        "Node selection",
+        "dbt\\_project.yml and configuration",
+        "Property files",
+        "Materializations",
+        "Incremental models and microbatch",
+        "Snapshots",
+        "Data tests and unit tests",
+        "Governance: contracts, constraints, versions, access",
+        "Jinja: functions and context variables",
+        "Artifacts",
+        "State, defer, clone and retry",
+        "Source freshness",
+        "Git",
+        "SQL window functions"
+      ],
+      "boxes": {
+        "exambox": 0,
+        "whybox": 0,
+        "ideabox": 0,
+        "analogybox": 0,
+        "labbox": 0,
+        "dbtbox": 0,
+        "trapbox": 0,
+        "tipbox": 1,
+        "deepbox": 0,
+        "quizbox": 0,
+        "answerbox": 0,
+        "summarybox": 0
+      },
+      "code": {
+        "sqlcode": 2,
+        "dbtcode": 4,
+        "yamlcode": 14,
+        "jinjacode": 5,
+        "pycode": 1,
+        "bashcode": 2,
+        "outputcode": 0,
+        "plaincode": 1
+      },
+      "tikz": 0,
+      "labs": [],
+      "quiz_questions": 0,
+      "quiz_formats": {},
+      "objectives": [],
+      "terms": 0,
+      "mock_keys": 0
+    },
+    {
+      "number": 35,
+      "title": "Coverage Matrix",
+      "label": "app:coverage",
+      "files": [
+        "appendices/coverage.tex"
+      ],
+      "sections": [],
+      "boxes": {
+        "exambox": 0,
+        "whybox": 0,
+        "ideabox": 0,
+        "analogybox": 0,
+        "labbox": 0,
+        "dbtbox": 0,
+        "trapbox": 0,
+        "tipbox": 0,
+        "deepbox": 0,
+        "quizbox": 0,
+        "answerbox": 0,
+        "summarybox": 0
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 0,
+        "yamlcode": 0,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 0,
+        "outputcode": 0,
+        "plaincode": 0
+      },
+      "tikz": 0,
+      "labs": [],
+      "quiz_questions": 0,
+      "quiz_formats": {},
+      "objectives": [],
+      "terms": 0,
+      "mock_keys": 0
+    },
+    {
+      "number": 36,
+      "title": "English--French Glossary",
+      "label": "app:glossary",
+      "files": [
+        "appendices/glossary.tex"
+      ],
+      "sections": [],
+      "boxes": {
+        "exambox": 0,
+        "whybox": 0,
+        "ideabox": 0,
+        "analogybox": 0,
+        "labbox": 0,
+        "dbtbox": 0,
+        "trapbox": 0,
+        "tipbox": 0,
+        "deepbox": 0,
+        "quizbox": 0,
+        "answerbox": 0,
+        "summarybox": 0
+      },
+      "code": {
+        "sqlcode": 0,
+        "dbtcode": 0,
+        "yamlcode": 0,
+        "jinjacode": 0,
+        "pycode": 0,
+        "bashcode": 0,
+        "outputcode": 0,
+        "plaincode": 0
+      },
+      "tikz": 0,
+      "labs": [],
+      "quiz_questions": 0,
+      "quiz_formats": {},
+      "objectives": [],
+      "terms": 0,
+      "mock_keys": 0
+    }
+  ]
+}

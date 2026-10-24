@@ -1,0 +1,14 @@
+jaffle_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      # DBT_DUCKDB_PATH lets CI (or a test) point to another file; the default is our practice database
+      path: "{{ env_var('DBT_DUCKDB_PATH', '../practice/practice.duckdb') }}"   # relative: run dbt from jaffle_dbt
+      schema: dbt_adnane
+      threads: 4
+    prod:
+      type: duckdb
+      path: "{{ env_var('DBT_DUCKDB_PATH', '../practice/practice.duckdb') }}"
+      schema: prod
+      threads: 4

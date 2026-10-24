@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: stripe
+    description: Raw data from Stripe, our payment provider.
+    tables:
+      - name: payments
+        description: One row per payment attempt. Amounts are in cents.
+        config:
+          event_time: created

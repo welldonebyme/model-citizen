@@ -1,0 +1,41 @@
+{
+  "name": "spike-duckdb-wasm",
+  "private": true,
+  "type": "module",
+  "version": "0.0.0",
+  "engines": {
+    "node": ">=22.23.4 <23 || >=24 <25"
+  },
+  "scripts": {
+    "extract": "tsx scripts/extract-ch4.ts",
+    "dev": "astro dev",
+    "build": "npm run extract && astro build",
+    "serve": "node scripts/serve.mjs",
+    "sizes": "node scripts/measure-sizes.mjs",
+    "test:unit": "playwright test --project=unit",
+    "test:e2e": "playwright test e2e --project=chromium --project=webkit --project=firefox",
+    "test:parity": "playwright test parity --project=chromium --project=webkit --project=firefox",
+    "test:measure": "playwright test --project=measure",
+    "test": "npm run build && playwright test",
+    "parity:node": "tsx scripts/parity-node.ts"
+  },
+  "dependencies": {
+    "@astrojs/react": "7.1.1",
+    "@codemirror/commands": "6.11.1",
+    "@codemirror/lang-sql": "6.10.0",
+    "@codemirror/language": "6.13.1",
+    "@codemirror/state": "6.7.6",
+    "@codemirror/view": "6.43.15",
+    "@duckdb/duckdb-wasm": "1.33.1-dev57.0",
+    "astro": "7.4.2",
+    "duckdb-wasm-next": "npm:@duckdb/duckdb-wasm@1.33.1-dev110.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "tsx": "4.23.15"
+  }
+}

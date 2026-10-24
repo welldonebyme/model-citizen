@@ -1,0 +1,127 @@
+"""Inventory of the book's content, to plan and check the website conversion.
+
+    python3 tools/inventory.py          # writes reference/content-inventory.json and .md
+
+Reads ../dbt-bible (the LaTeX book). Counts, per chapter: sections, every box type, code blocks
+by language, TikZ figures, labs (with objective tags), quiz questions by format; plus mock exams,
+traps, glossary terms and objective coverage. Re-run after any change to the book.
+"""
+import json
+import re
+from collections import Counter
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent.parent
+BOOK = HERE.parent / "dbt-bible"
+MAIN = BOOK / "main.tex"
+
+BOXES = ["exambox", "whybox", "ideabox", "analogybox", "labbox", "dbtbox", "trapbox", "tipbox",
+         "deepbox", "quizbox", "answerbox", "summarybox"]
+CODE = ["sqlcode", "dbtcode", "yamlcode", "jinjacode", "pycode", "bashcode", "outputcode", "plaincode"]
+FORMATS = ["Multiple choice", "Multiple select", "Fill in the blank", "Matching", "Hotspot",
+           "Build list", "DOMC"]
+
+
+def included_files():
+    seen = []
+
+    def walk(path):
+        for line in path.read_text().splitlines():
+            line = line.split("%")[0]
+            for name in re.findall(r"\\input\{([^}]*)\}", line):
+                p = BOOK / (name if name.endswith(".tex") else name + ".tex")
+                if p.exists() and p not in seen and p.name != "preamble.tex":
+                    seen.append(p)
+                    walk(p)
+    walk(MAIN)
+    return seen
+
+
+def top_items(block):
+    depth = n = 0
+    for tok in re.finditer(r"\\begin\{(\w+)\}|\\end\{(\w+)\}|\\item\b", block):
+        if tok.group(1):
+            depth += 1
+        elif tok.group(2):
+            depth -= 1
+        elif depth == 0:
+            n += 1
+    return n
+
+
+def fmt_counts(text):
+    c = Counter()
+    for m in re.finditer(r"\\item\s*(?:\{|\\textsf\{\\textbf\{|\\textbf\{)\[([^\]]+)\]", text):
+        lab = m.group(1)
+        for f in FORMATS:
+            if lab.startswith(f):
+                c[f] += 1
+    return dict(c)
+
+
+chapters = []
+part = None
+chapter_no = -1
+for f in included_files():
+    rel = str(f.relative_to(BOOK))
+    t = f.read_text()
+    tc = "\n".join(l for l in t.splitlines() if not l.lstrip().startswith("%"))
+    for m in re.finditer(r"\\part\{([^}]*)\}", MAIN.read_text()):
+        pass
+    ch = re.search(r"\\chapter\{([^}]*)\}(?:\\label\{([^}]*)\})?", tc)
+    if ch:
+        chapter_no += 1
+        entry = {"number": chapter_no, "title": ch.group(1), "label": ch.group(2), "files": [rel],
+                 "sections": [], "boxes": Counter(), "code": Counter(), "tikz": 0, "labs": [],
+                 "quiz_questions": 0, "quiz_formats": Counter(), "objectives": set(), "terms": 0,
+                 "mock_keys": 0}
+        chapters.append(entry)
+    elif chapters:
+        entry = chapters[-1]
+        entry["files"].append(rel)
+    else:
+        continue
+    entry["sections"] += [s for s in re.findall(r"\\section\*?\{([^}]*)\}", tc)]
+    for b in BOXES:
+        entry["boxes"][b] += len(re.findall(r"\\begin\{" + b + r"\}", tc))
+    for c in CODE:
+        entry["code"][c] += len(re.findall(r"\\begin\{" + c + r"\}", tc))
+    entry["tikz"] += len(re.findall(r"\\begin\{tikzpicture\}", tc))
+    for lm in re.finditer(r"\\begin\{labbox\}(?:\[[^\]]*\])?\{((?:[^{}]|\{[^{}]*\})*)\}", tc):
+        tag = re.search(r"\\labtag\{([^}]*)\}", tc[lm.end(): lm.end() + 400])
+        entry["labs"].append({"title": lm.group(1), "objectives": tag.group(1) if tag else ""})
+    entry["quiz_questions"] += sum(top_items(b) for b in re.findall(r"\\begin\{questions\}(.*?)\\end\{questions\}", tc, re.S))
+    entry["quiz_formats"].update(fmt_counts(tc))
+    entry["objectives"].update(o.strip() for o in re.findall(r"\\objective\{([^}]*)\}", tc))
+    entry["terms"] += len(re.findall(r"\\term\{", tc))
+    entry["mock_keys"] += len(re.findall(r"\\mockkey\{", tc))
+
+for e in chapters:
+    e["boxes"] = dict(e["boxes"]); e["code"] = dict(e["code"]); e["quiz_formats"] = dict(e["quiz_formats"])
+    e["objectives"] = sorted(e["objectives"])
+
+traps = len(re.findall(r"^\\cxxviitrap\{", (BOOK / "parts/part9/ch27-exam-strategy.tex").read_text(), re.M))
+glossary = len(re.findall(r"\\textit\{", (BOOK / "appendices/glossary.tex").read_text()))
+summary = {
+    "chapters": len(chapters),
+    "quiz_questions_total": sum(e["quiz_questions"] for e in chapters if "mock" not in e["label"] or "answers" in e["label"]),
+    "mock_questions_total": sum(e["mock_keys"] for e in chapters),
+    "labs_total": sum(len(e["labs"]) for e in chapters),
+    "tikz_figures_total": sum(e["tikz"] for e in chapters),
+    "code_blocks_total": sum(sum(e["code"].values()) for e in chapters),
+    "traps": traps,
+    "glossary_terms": glossary,
+}
+out = {"summary": summary, "chapters": chapters}
+(HERE / "reference").mkdir(exist_ok=True)
+(HERE / "reference/content-inventory.json").write_text(json.dumps(out, indent=2, ensure_ascii=False))
+
+lines = ["# Content inventory of the book (generated by tools/inventory.py)", "",
+         "| Item | Count |", "|---|---|"] + [f"| {k} | {v} |" for k, v in summary.items()] + ["",
+         "| # | Chapter | Sections | Labs | Quiz Qs | Code blocks | Figures | Objectives |", "|---|---|---|---|---|---|---|---|"]
+for e in chapters:
+    lines.append(f"| {e['number']} | {e['title']} | {len(e['sections'])} | {len(e['labs'])} | "
+                 f"{e['quiz_questions'] or e['mock_keys']} | {sum(e['code'].values())} | {e['tikz']} | "
+                 f"{', '.join(o for o in e['objectives'] if o[0].isdigit() or o.startswith('CP0'))} |")
+(HERE / "reference/content-inventory.md").write_text("\n".join(lines) + "\n")
+print(json.dumps(summary, indent=2))

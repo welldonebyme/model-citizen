@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import SqlLab from '../../components/SqlLab.tsx';
+import data from '../../data/ch4-examples.json';
+const pick = (id: string) => data.examples.find((e) => e.id === id)!;
+const groupBy = pick('ch04-sql-a:1020');
+const binderError = pick('ch04-sql-a:1051');
+---
+<Base title="SQL lab">
+  <article>
+    <h1>Lab: revenue per payment method</h1>
+    <p>
+      The text of the lesson is plain HTML: it is readable immediately, before any JavaScript runs. The SQL engine
+      (DuckDB compiled to WebAssembly) only starts when the lab scrolls into view, in a Web Worker, with a progress bar.
+    </p>
+    <p>
+      Run the query, then change it: try <code>count(distinct orderid)</code>, or remove the <code>where</code>. The
+      check compares your result with the book (columns and values, order only when the query has an
+      <code>order by</code>).
+    </p>
+    <SqlLab client:visible id="lab-group-by" title="Revenue per payment method (book 4.6)"
+      initialSql={groupBy.sql} expectedRaw={groupBy.expectedRaw} ordered={groupBy.ordered} />
+    <h2>When GROUP BY goes wrong</h2>
+    <p>The book shows the exact error DuckDB prints. The checker accepts the error type and message.</p>
+    <SqlLab client:visible id="lab-binder-error" title="Binder error (book 4.6)"
+      initialSql={binderError.sql} expectedRaw={binderError.expectedRaw} ordered={binderError.ordered} />
+  </article>
+</Base>

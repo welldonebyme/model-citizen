@@ -1,0 +1,124 @@
+
+
+============================== 02:05:05.749903 | 56e11aa3-cfcd-418a-91bc-c5d8bac05160 ==============================
+[0m02:05:05.749903 [info ] [MainThread]: Running with dbt=1.11.16
+[0m02:05:05.770846 [debug] [MainThread]: running dbt with arguments {'profiles_dir': '/Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05', 'version_check': 'True', 'invocation_command': 'dbt compile -s stg_orders --profiles-dir /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05 --project-dir /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05 --no-partial-parse', 'log_format': 'default', 'use_experimental_parser': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'static_parser': 'True', 'warn_error': 'None', 'debug': 'False', 'target_path': 'None', 'cache_selected_only': 'False', 'quiet': 'False', 'send_anonymous_usage_stats': 'False', 'fail_fast': 'False', 'log_path': '/Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/logs', 'log_cache_events': 'False', 'use_colors': 'True', 'partial_parse': 'False', 'write_json': 'True', 'indirect_selection': 'eager', 'introspect': 'True', 'no_print': 'None', 'printer_width': '80', 'empty': 'False'}
+[0m02:05:05.929851 [info ] [MainThread]: Registered adapter: duckdb=1.11.0
+[0m02:05:06.002273 [debug] [MainThread]: checksum: 6775cc4f71c9acc0c7013aa05043ee74c024b5544edd0346634b66273284ee7f, vars: {}, profile: , target: , version: 1.11.16
+[0m02:05:06.003019 [debug] [MainThread]: Partial parsing not enabled
+[0m02:05:06.662735 [debug] [MainThread]: Wrote artifact WritableManifest to /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/target/manifest.json
+[0m02:05:06.664448 [debug] [MainThread]: Wrote artifact SemanticManifest to /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/target/semantic_manifest.json
+[0m02:05:06.684135 [info ] [MainThread]: Found 1 model, 3 sources, 500 macros
+[0m02:05:06.684912 [info ] [MainThread]: 
+[0m02:05:06.685114 [info ] [MainThread]: Concurrency: 1 threads (target='dev')
+[0m02:05:06.685261 [info ] [MainThread]: 
+[0m02:05:06.685509 [debug] [MainThread]: Acquiring new duckdb connection 'master'
+[0m02:05:06.686005 [debug] [ThreadPool]: Acquiring new duckdb connection 'list_practice_dbt_adnane'
+[0m02:05:06.733009 [debug] [ThreadPool]: Using duckdb connection "list_practice_dbt_adnane"
+[0m02:05:06.733335 [debug] [ThreadPool]: On list_practice_dbt_adnane: BEGIN
+[0m02:05:06.733520 [debug] [ThreadPool]: Opening a new connection, currently in state init
+[0m02:05:06.741746 [debug] [ThreadPool]: SQL status: OK in 0.008 seconds
+[0m02:05:06.742015 [debug] [ThreadPool]: Using duckdb connection "list_practice_dbt_adnane"
+[0m02:05:06.742192 [debug] [ThreadPool]: On list_practice_dbt_adnane: /* {"app": "dbt", "dbt_version": "1.11.16", "profile_name": "jaffle_practice", "target_name": "dev", "connection_name": "list_practice_dbt_adnane"} */
+select
+      'practice' as database,
+      table_name as name,
+      table_schema as schema,
+      CASE table_type
+        WHEN 'BASE TABLE' THEN 'table'
+        WHEN 'VIEW' THEN 'view'
+        WHEN 'LOCAL TEMPORARY' THEN 'table'
+        END as type
+    from system.information_schema.tables
+    where lower(table_schema) = 'dbt_adnane'
+    and lower(table_catalog) = 'practice'
+  
+[0m02:05:06.744108 [debug] [ThreadPool]: SQL status: OK in 0.002 seconds
+[0m02:05:06.745093 [debug] [ThreadPool]: On list_practice_dbt_adnane: ROLLBACK
+[0m02:05:06.745516 [debug] [ThreadPool]: On list_practice_dbt_adnane: Close
+[0m02:05:06.749030 [debug] [Thread-1 (]: Began running node model.jaffle_practice.stg_orders
+[0m02:05:06.749358 [debug] [Thread-1 (]: Re-using an available connection from the pool (formerly list_practice_dbt_adnane, now model.jaffle_practice.stg_orders)
+[0m02:05:06.749550 [debug] [Thread-1 (]: Began compiling node model.jaffle_practice.stg_orders
+[0m02:05:06.753276 [debug] [Thread-1 (]: Writing injected SQL for node "model.jaffle_practice.stg_orders"
+[0m02:05:06.753968 [debug] [Thread-1 (]: Began executing node model.jaffle_practice.stg_orders
+[0m02:05:06.754325 [debug] [Thread-1 (]: Finished running node model.jaffle_practice.stg_orders
+[0m02:05:06.754934 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m02:05:06.755195 [debug] [MainThread]: Connection 'model.jaffle_practice.stg_orders' was properly closed.
+[0m02:05:06.755583 [debug] [MainThread]: Command end result
+[0m02:05:06.769849 [debug] [MainThread]: Wrote artifact WritableManifest to /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/target/manifest.json
+[0m02:05:06.770888 [debug] [MainThread]: Wrote artifact SemanticManifest to /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/target/semantic_manifest.json
+[0m02:05:06.774033 [debug] [MainThread]: Wrote artifact RunExecutionResult to /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/target/run_results.json
+[0m02:05:06.774260 [info ] [MainThread]: Compiled node 'stg_orders' is:
+select id as order_id, user_id as customer_id, order_date, status
+from "practice"."jaffle_shop"."orders"
+[0m02:05:06.774599 [debug] [MainThread]: Resource report: {"command_name": "compile", "command_success": true, "command_wall_clock_time": 1.0723369, "process_in_blocks": "0", "process_kernel_time": 0.321597, "process_mem_max_rss": "168476672", "process_out_blocks": "0", "process_user_time": 2.674936}
+[0m02:05:06.774838 [debug] [MainThread]: Command `dbt compile` succeeded at 02:05:06.774799 after 1.07 seconds
+[0m02:05:06.775203 [debug] [MainThread]: Flushing usage events
+
+
+============================== 02:05:08.681418 | 427113c0-d02e-4ffc-ae88-eca000697d90 ==============================
+[0m02:05:08.681418 [info ] [MainThread]: Running with dbt=1.11.16
+[0m02:05:08.700661 [debug] [MainThread]: running dbt with arguments {'empty': 'False', 'profiles_dir': '/Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05', 'debug': 'False', 'log_format': 'default', 'send_anonymous_usage_stats': 'False', 'static_parser': 'True', 'indirect_selection': 'eager', 'printer_width': '80', 'partial_parse': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'version_check': 'True', 'cache_selected_only': 'False', 'invocation_command': "dbt compile --inline {% if {{ target.name }} == 'prod' %}select 1{% endif %} --profiles-dir /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05 --project-dir /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05 --no-partial-parse", 'use_colors': 'True', 'fail_fast': 'False', 'write_json': 'True', 'introspect': 'True', 'warn_error': 'None', 'no_print': 'None', 'log_cache_events': 'False', 'target_path': 'None', 'use_experimental_parser': 'False', 'quiet': 'False', 'log_path': '/Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/logs'}
+[0m02:05:08.848752 [info ] [MainThread]: Registered adapter: duckdb=1.11.0
+[0m02:05:08.919387 [debug] [MainThread]: checksum: 6775cc4f71c9acc0c7013aa05043ee74c024b5544edd0346634b66273284ee7f, vars: {}, profile: , target: , version: 1.11.16
+[0m02:05:08.919938 [debug] [MainThread]: Partial parsing not enabled
+[0m02:05:09.446337 [debug] [MainThread]: Wrote artifact WritableManifest to /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/target/manifest.json
+[0m02:05:09.447546 [debug] [MainThread]: Wrote artifact SemanticManifest to /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/target/semantic_manifest.json
+[0m02:05:09.528596 [error] [MainThread]: Error while parsing node: inline_query
+expected token ':', got '}'
+  line 1
+    {% if {{ target.name }} == 'prod' %}select 1{% endif %}
+[0m02:05:09.528910 [error] [MainThread]: Encountered an error:
+Error parsing inline query
+[0m02:05:09.529239 [debug] [MainThread]: Resource report: {"command_name": "compile", "command_success": false, "command_wall_clock_time": 0.8929049, "process_in_blocks": "0", "process_kernel_time": 0.184142, "process_mem_max_rss": "154451968", "process_out_blocks": "0", "process_user_time": 2.364491}
+[0m02:05:09.529495 [debug] [MainThread]: Command `dbt compile` failed at 02:05:09.529456 after 0.89 seconds
+[0m02:05:09.529692 [debug] [MainThread]: Flushing usage events
+
+
+============================== 02:05:11.422724 | 1ab11a4f-6a7f-44c3-b70a-d27c9743d3cc ==============================
+[0m02:05:11.422724 [info ] [MainThread]: Running with dbt=1.11.16
+[0m02:05:11.442310 [debug] [MainThread]: running dbt with arguments {'indirect_selection': 'eager', 'version_check': 'True', 'no_print': 'None', 'profiles_dir': '/Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05', 'introspect': 'True', 'use_experimental_parser': 'False', 'partial_parse': 'False', 'static_parser': 'True', 'empty': 'False', 'target_path': 'None', 'printer_width': '80', 'debug': 'False', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'log_path': '/Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/logs', 'use_colors': 'True', 'warn_error': 'None', 'send_anonymous_usage_stats': 'False', 'log_format': 'default', 'write_json': 'True', 'log_cache_events': 'False', 'invocation_command': 'dbt compile --inline select {{ my_colum }} from t --profiles-dir /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05 --project-dir /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05 --no-partial-parse', 'fail_fast': 'False', 'quiet': 'False', 'cache_selected_only': 'False'}
+[0m02:05:11.593113 [info ] [MainThread]: Registered adapter: duckdb=1.11.0
+[0m02:05:11.663929 [debug] [MainThread]: checksum: 6775cc4f71c9acc0c7013aa05043ee74c024b5544edd0346634b66273284ee7f, vars: {}, profile: , target: , version: 1.11.16
+[0m02:05:11.664471 [debug] [MainThread]: Partial parsing not enabled
+[0m02:05:12.193960 [debug] [MainThread]: Wrote artifact WritableManifest to /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/target/manifest.json
+[0m02:05:12.195234 [debug] [MainThread]: Wrote artifact SemanticManifest to /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/target/semantic_manifest.json
+[0m02:05:12.284033 [info ] [MainThread]: Found 1 sql operation, 3 sources, 500 macros
+[0m02:05:12.285124 [info ] [MainThread]: 
+[0m02:05:12.285374 [info ] [MainThread]: Concurrency: 1 threads (target='dev')
+[0m02:05:12.285538 [info ] [MainThread]: 
+[0m02:05:12.285796 [debug] [MainThread]: Acquiring new duckdb connection 'master'
+[0m02:05:12.287782 [debug] [Thread-1 (]: Began running node sql_operation.jaffle_practice.inline_query
+[0m02:05:12.288189 [debug] [Thread-1 (]: Acquiring new duckdb connection 'sql_operation.jaffle_practice.inline_query'
+[0m02:05:12.288404 [debug] [Thread-1 (]: Began compiling node sql_operation.jaffle_practice.inline_query
+[0m02:05:12.291973 [debug] [Thread-1 (]: Writing injected SQL for node "sql_operation.jaffle_practice.inline_query"
+[0m02:05:12.292564 [debug] [Thread-1 (]: Began executing node sql_operation.jaffle_practice.inline_query
+[0m02:05:12.292941 [debug] [Thread-1 (]: Finished running node sql_operation.jaffle_practice.inline_query
+[0m02:05:12.293544 [debug] [MainThread]: Connection 'master' was properly closed.
+[0m02:05:12.293805 [debug] [MainThread]: Connection 'sql_operation.jaffle_practice.inline_query' was properly closed.
+[0m02:05:12.294161 [debug] [MainThread]: Command end result
+[0m02:05:12.307972 [debug] [MainThread]: Wrote artifact WritableManifest to /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/target/manifest.json
+[0m02:05:12.309024 [debug] [MainThread]: Wrote artifact SemanticManifest to /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/target/semantic_manifest.json
+[0m02:05:12.311929 [debug] [MainThread]: Wrote artifact RunExecutionResult to /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/target/run_results.json
+[0m02:05:12.312150 [info ] [MainThread]: Compiled inline node is:
+select  from t
+[0m02:05:12.312504 [debug] [MainThread]: Resource report: {"command_name": "compile", "command_success": true, "command_wall_clock_time": 0.93326515, "process_in_blocks": "0", "process_kernel_time": 0.192107, "process_mem_max_rss": "153927680", "process_out_blocks": "0", "process_user_time": 2.393504}
+[0m02:05:12.312759 [debug] [MainThread]: Command `dbt compile` succeeded at 02:05:12.312718 after 0.93 seconds
+[0m02:05:12.312956 [debug] [MainThread]: Flushing usage events
+
+
+============================== 02:05:14.224352 | 0f527804-554e-4cde-8e24-5b508619b4d5 ==============================
+[0m02:05:14.224352 [info ] [MainThread]: Running with dbt=1.11.16
+[0m02:05:14.243954 [debug] [MainThread]: running dbt with arguments {'no_print': 'None', 'send_anonymous_usage_stats': 'False', 'quiet': 'False', 'target_path': 'None', 'log_cache_events': 'False', 'fail_fast': 'False', 'version_check': 'True', 'partial_parse': 'False', 'static_parser': 'True', 'write_json': 'True', 'log_format': 'default', 'empty': 'False', 'printer_width': '80', 'use_colors': 'True', 'log_path': '/Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/logs', 'debug': 'False', 'warn_error': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'profiles_dir': '/Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05', 'introspect': 'True', 'cache_selected_only': 'False', 'invocation_command': "dbt compile --inline select {{ order_dat }} from {{ ref('stg_orders') }} --profiles-dir /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05 --project-dir /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05 --no-partial-parse", 'use_experimental_parser': 'False', 'indirect_selection': 'eager'}
+[0m02:05:14.392147 [info ] [MainThread]: Registered adapter: duckdb=1.11.0
+[0m02:05:14.462249 [debug] [MainThread]: checksum: 6775cc4f71c9acc0c7013aa05043ee74c024b5544edd0346634b66273284ee7f, vars: {}, profile: , target: , version: 1.11.16
+[0m02:05:14.462953 [debug] [MainThread]: Partial parsing not enabled
+[0m02:05:14.989968 [debug] [MainThread]: Wrote artifact WritableManifest to /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/target/manifest.json
+[0m02:05:14.991144 [debug] [MainThread]: Wrote artifact SemanticManifest to /Users/mac/Documents/Adnane/dbt-academy/spikes/pyodide/ground-truth/_proj_jinja_ch05/target/semantic_manifest.json
+[0m02:05:15.076299 [error] [MainThread]: Error while parsing node: inline_query
+Sql_Operation 'sql_operation.jaffle_practice.inline_query' (from remote system.sql) depends on a node named 'stg_orders' which was not found
+[0m02:05:15.076626 [error] [MainThread]: Encountered an error:
+Error parsing inline query
+[0m02:05:15.076969 [debug] [MainThread]: Resource report: {"command_name": "compile", "command_success": false, "command_wall_clock_time": 0.89701277, "process_in_blocks": "0", "process_kernel_time": 0.188657, "process_mem_max_rss": "155254784", "process_out_blocks": "0", "process_user_time": 2.377531}
+[0m02:05:15.077226 [debug] [MainThread]: Command `dbt compile` failed at 02:05:15.077182 after 0.90 seconds
+[0m02:05:15.077428 [debug] [MainThread]: Flushing usage events

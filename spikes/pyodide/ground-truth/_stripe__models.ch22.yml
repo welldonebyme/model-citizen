@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_stripe__payments
+    description: One row per payment attempt, amount in dollars.
+    config:
+      event_time: created_at
+    columns:
+      - name: payment_id
+        description: Primary key of the payment.
+        data_tests:
+          - unique
+          - not_null
+      - name: payment_method
+       description: How the customer paid.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['credit_card', 'coupon', 'bank_transfer', 'gift_card']
+      - name: status
+        description: success or fail. Only successful payments count as revenue.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['success', 'fail']
+      - name: amount
+        description: Amount in dollars.
+        data_tests:
+          - is_positive

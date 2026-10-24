@@ -1,0 +1,25 @@
+pyodide 314.0.7 loaded in 1124 ms
+pyodide-built packages loaded in 815 ms
+MarkupSafe already loaded from default channel
+rpds-py already loaded from default channel
+typing-extensions already loaded from pypi
+micropip install OK in 2374 ms
+3.14.2 (main, Sep 14 2026, 03:03:51) [Clang 23.0.0git (https:/github.com/llvm/llvm-project e5927fecf8a6ce89e1a4eac5b8
+duckdb 1.5.1
+dbt_extractor import: ModuleNotFoundError No module named 'dbt_extractor'
+Traceback (most recent call last):
+  File "<exec>", line 10, in <module>
+  File "/lib/python3.14/site-packages/dbt/cli/__init__.py", line 1, in <module>
+    from .main import cli as dbt_cli  # noqa
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/cli/main.py", line 11, in <module>
+    from dbt.adapters.factory import register_adapter
+  File "/lib/python3.14/site-packages/dbt/adapters/factory.py", line 14, in <module>
+    from dbt.adapters.base.plugin import AdapterPlugin
+  File "/lib/python3.14/site-packages/dbt/adapters/base/__init__.py", line 3, in <module>
+    from dbt.adapters.base.connections import BaseConnectionManager
+  File "/lib/python3.14/site-packages/dbt/adapters/base/connections.py", line 7, in <module>
+    from multiprocessing.synchronize import RLock
+  File "/lib/python314.zip/multiprocessing/synchronize.py", line 17, in <module>
+    import _multiprocessing
+ModuleNotFoundError: No module named '_multiprocessing'

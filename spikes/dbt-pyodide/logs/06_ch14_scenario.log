@@ -1,0 +1,621 @@
+MarkupSafe already loaded from default channel
+rpds-py already loaded from default channel
+typing-extensions already loaded from pypi
+Loading Jinja2, attrs, jsonschema, jsonschema_specifications, pyrsistent, python-dateutil, referencing, six
+Loaded Jinja2, attrs, jsonschema, jsonschema_specifications, pyrsistent, python-dateutil, referencing, six
+[spike] checkout ch13
+[spike] load setup.sql: 1.12s
+[spike] boot timings (ms) {
+  pyodide: 1108,
+  distPackages: 774,
+  micropip: 2412,
+  shim: 1410,
+  importAndData: 3492
+}
+[prelude] next command is setup only
+$ [prelude] dbt build
+01:56:47  Running with dbt=1.11.16
+01:56:47  Registered adapter: duckdb=1.11.0
+01:56:47  Unable to do partial parsing because saved manifest not found. Starting full parse.
+01:56:50  Found 12 models, 2 analyses, 1 seed, 12 data tests, 2 snapshots, 5 sources, 669 macros
+01:56:50  
+01:56:50  Concurrency: 4 threads (target='dev')
+01:56:50  
+01:56:50  1 of 26 START sql view model dbt_adnane.stg_jaffle_shop__customers ............. [RUN]
+01:56:50  1 of 26 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ........ [OK in 0.11s]
+01:56:50  2 of 26 START sql view model dbt_adnane.stg_jaffle_shop__order_items ........... [RUN]
+01:56:50  2 of 26 OK created sql view model dbt_adnane.stg_jaffle_shop__order_items ...... [OK in 0.02s]
+01:56:50  3 of 26 START sql view model dbt_adnane.stg_jaffle_shop__orders ................ [RUN]
+01:56:50  3 of 26 OK created sql view model dbt_adnane.stg_jaffle_shop__orders ........... [OK in 0.02s]
+01:56:50  4 of 26 START sql view model dbt_adnane.stg_jaffle_shop__products .............. [RUN]
+01:56:50  4 of 26 OK created sql view model dbt_adnane.stg_jaffle_shop__products ......... [OK in 0.02s]
+01:56:50  5 of 26 START sql view model dbt_adnane.stg_stripe__payments ................... [RUN]
+01:56:50  5 of 26 OK created sql view model dbt_adnane.stg_stripe__payments .............. [OK in 0.03s]
+01:56:50  6 of 26 START seed file dbt_adnane.country_regions ............................. [RUN]
+01:56:50  6 of 26 OK loaded seed file dbt_adnane.country_regions ......................... [INSERT 6 in 0.08s]
+01:56:50  7 of 26 START snapshot dbt_adnane.customers_snapshot ........................... [RUN]
+01:56:50  7 of 26 OK snapshotted dbt_adnane.customers_snapshot ........................... [OK in 0.14s]
+01:56:50  8 of 26 START snapshot dbt_adnane.orders_snapshot .............................. [RUN]
+01:56:50  8 of 26 OK snapshotted dbt_adnane.orders_snapshot .............................. [OK in 0.04s]
+01:56:50  9 of 26 START test not_null_country_regions_country ............................ [RUN]
+01:56:50  9 of 26 PASS not_null_country_regions_country .................................. [PASS in 0.04s]
+01:56:50  10 of 26 START test not_null_stg_jaffle_shop__customers_customer_id ............ [RUN]
+01:56:50  10 of 26 PASS not_null_stg_jaffle_shop__customers_customer_id .................. [PASS in 0.02s]
+01:56:50  11 of 26 START test not_null_stg_jaffle_shop__order_items_order_item_id ........ [RUN]
+01:56:50  11 of 26 PASS not_null_stg_jaffle_shop__order_items_order_item_id .............. [PASS in 0.02s]
+01:56:50  12 of 26 START test not_null_stg_jaffle_shop__orders_order_id .................. [RUN]
+01:56:50  12 of 26 PASS not_null_stg_jaffle_shop__orders_order_id ........................ [PASS in 0.02s]
+01:56:50  13 of 26 START test not_null_stg_jaffle_shop__products_product_id .............. [RUN]
+01:56:50  13 of 26 PASS not_null_stg_jaffle_shop__products_product_id .................... [PASS in 0.01s]
+01:56:50  14 of 26 START test not_null_stg_stripe__payments_payment_id ................... [RUN]
+01:56:50  14 of 26 PASS not_null_stg_stripe__payments_payment_id ......................... [PASS in 0.02s]
+01:56:50  15 of 26 START test unique_country_regions_country ............................. [RUN]
+01:56:50  15 of 26 PASS unique_country_regions_country ................................... [PASS in 0.03s]
+01:56:50  16 of 26 START test unique_stg_jaffle_shop__customers_customer_id .............. [RUN]
+01:56:50  16 of 26 PASS unique_stg_jaffle_shop__customers_customer_id .................... [PASS in 0.03s]
+01:56:50  17 of 26 START test unique_stg_jaffle_shop__order_items_order_item_id .......... [RUN]
+01:56:51  17 of 26 PASS unique_stg_jaffle_shop__order_items_order_item_id ................ [PASS in 0.02s]
+01:56:51  18 of 26 START test unique_stg_jaffle_shop__orders_order_id .................... [RUN]
+01:56:51  18 of 26 PASS unique_stg_jaffle_shop__orders_order_id .......................... [PASS in 0.02s]
+01:56:51  19 of 26 START test unique_stg_jaffle_shop__products_product_id ................ [RUN]
+01:56:51  19 of 26 PASS unique_stg_jaffle_shop__products_product_id ...................... [PASS in 0.02s]
+01:56:51  20 of 26 START test unique_stg_stripe__payments_payment_id ..................... [RUN]
+01:56:51  20 of 26 PASS unique_stg_stripe__payments_payment_id ........................... [PASS in 0.02s]
+01:56:51  21 of 26 START sql table model dbt_adnane.fct_order_items ...................... [RUN]
+01:56:51  21 of 26 OK created sql table model dbt_adnane.fct_order_items ................. [OK in 0.12s]
+01:56:51  22 of 26 START sql view model dbt_adnane.int_orders__enriched .................. [RUN]
+01:56:51  22 of 26 OK created sql view model dbt_adnane.int_orders__enriched ............. [OK in 0.04s]
+01:56:51  23 of 26 START sql view model dbt_adnane.int_orders__payment_methods_pivoted ... [RUN]
+01:56:51  23 of 26 OK created sql view model dbt_adnane.int_orders__payment_methods_pivoted  [OK in 0.04s]
+01:56:51  24 of 26 START sql table model dbt_adnane.fct_monthly_revenue .................. [RUN]
+01:56:51  24 of 26 OK created sql table model dbt_adnane.fct_monthly_revenue ............. [OK in 0.06s]
+01:56:51  25 of 26 START sql table model dbt_adnane.fct_orders ........................... [RUN]
+01:56:51  25 of 26 OK created sql table model dbt_adnane.fct_orders ...................... [OK in 0.07s]
+01:56:51  26 of 26 START sql table model dbt_adnane.dim_customers ........................ [RUN]
+01:56:51  26 of 26 OK created sql table model dbt_adnane.dim_customers ................... [OK in 0.04s]
+01:56:51  
+01:56:51  Finished running 1 seed, 2 snapshots, 4 table models, 12 data tests, 7 view models in 0 hours 0 minutes and 1.35 seconds (1.35s).
+01:56:51  
+01:56:51  Completed successfully
+01:56:51  
+01:56:51  Done. PASS=26 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=26
+[spike] success=True wall=4.50s
+[spike] ran updates/day2.sql: 0.07s
+[prelude] next command is setup only
+$ [prelude] dbt build
+01:56:51  Running with dbt=1.11.16
+01:56:51  Registered adapter: duckdb=1.11.0
+01:56:51  Found 12 models, 2 analyses, 1 seed, 12 data tests, 2 snapshots, 5 sources, 669 macros
+01:56:51  
+01:56:51  Concurrency: 4 threads (target='dev')
+01:56:51  
+01:56:51  1 of 26 START sql view model dbt_adnane.stg_jaffle_shop__customers ............. [RUN]
+01:56:51  1 of 26 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ........ [OK in 0.03s]
+01:56:51  2 of 26 START sql view model dbt_adnane.stg_jaffle_shop__order_items ........... [RUN]
+01:56:51  2 of 26 OK created sql view model dbt_adnane.stg_jaffle_shop__order_items ...... [OK in 0.02s]
+01:56:51  3 of 26 START sql view model dbt_adnane.stg_jaffle_shop__orders ................ [RUN]
+01:56:51  3 of 26 OK created sql view model dbt_adnane.stg_jaffle_shop__orders ........... [OK in 0.03s]
+01:56:51  4 of 26 START sql view model dbt_adnane.stg_jaffle_shop__products .............. [RUN]
+01:56:51  4 of 26 OK created sql view model dbt_adnane.stg_jaffle_shop__products ......... [OK in 0.03s]
+01:56:51  5 of 26 START sql view model dbt_adnane.stg_stripe__payments ................... [RUN]
+01:56:51  5 of 26 OK created sql view model dbt_adnane.stg_stripe__payments .............. [OK in 0.03s]
+01:56:51  6 of 26 START seed file dbt_adnane.country_regions ............................. [RUN]
+01:56:52  6 of 26 OK loaded seed file dbt_adnane.country_regions ......................... [INSERT 6 in 0.03s]
+01:56:52  7 of 26 START snapshot dbt_adnane.customers_snapshot ........................... [RUN]
+01:56:52  7 of 26 OK snapshotted dbt_adnane.customers_snapshot ........................... [OK in 0.17s]
+01:56:52  8 of 26 START snapshot dbt_adnane.orders_snapshot .............................. [RUN]
+01:56:52  8 of 26 OK snapshotted dbt_adnane.orders_snapshot .............................. [OK in 0.08s]
+01:56:52  9 of 26 START test not_null_country_regions_country ............................ [RUN]
+01:56:52  9 of 26 PASS not_null_country_regions_country .................................. [PASS in 0.02s]
+01:56:52  10 of 26 START test not_null_stg_jaffle_shop__customers_customer_id ............ [RUN]
+01:56:52  10 of 26 PASS not_null_stg_jaffle_shop__customers_customer_id .................. [PASS in 0.02s]
+01:56:52  11 of 26 START test not_null_stg_jaffle_shop__order_items_order_item_id ........ [RUN]
+01:56:52  11 of 26 PASS not_null_stg_jaffle_shop__order_items_order_item_id .............. [PASS in 0.02s]
+01:56:52  12 of 26 START test not_null_stg_jaffle_shop__orders_order_id .................. [RUN]
+01:56:52  12 of 26 PASS not_null_stg_jaffle_shop__orders_order_id ........................ [PASS in 0.02s]
+01:56:52  13 of 26 START test not_null_stg_jaffle_shop__products_product_id .............. [RUN]
+01:56:52  13 of 26 PASS not_null_stg_jaffle_shop__products_product_id .................... [PASS in 0.02s]
+01:56:52  14 of 26 START test not_null_stg_stripe__payments_payment_id ................... [RUN]
+01:56:52  14 of 26 PASS not_null_stg_stripe__payments_payment_id ......................... [PASS in 0.02s]
+01:56:52  15 of 26 START test unique_country_regions_country ............................. [RUN]
+01:56:52  15 of 26 PASS unique_country_regions_country ................................... [PASS in 0.01s]
+01:56:52  16 of 26 START test unique_stg_jaffle_shop__customers_customer_id .............. [RUN]
+01:56:52  16 of 26 PASS unique_stg_jaffle_shop__customers_customer_id .................... [PASS in 0.02s]
+01:56:52  17 of 26 START test unique_stg_jaffle_shop__order_items_order_item_id .......... [RUN]
+01:56:52  17 of 26 PASS unique_stg_jaffle_shop__order_items_order_item_id ................ [PASS in 0.02s]
+01:56:52  18 of 26 START test unique_stg_jaffle_shop__orders_order_id .................... [RUN]
+01:56:52  18 of 26 PASS unique_stg_jaffle_shop__orders_order_id .......................... [PASS in 0.02s]
+01:56:52  19 of 26 START test unique_stg_jaffle_shop__products_product_id ................ [RUN]
+01:56:52  19 of 26 PASS unique_stg_jaffle_shop__products_product_id ...................... [PASS in 0.02s]
+01:56:52  20 of 26 START test unique_stg_stripe__payments_payment_id ..................... [RUN]
+01:56:52  20 of 26 PASS unique_stg_stripe__payments_payment_id ........................... [PASS in 0.02s]
+01:56:52  21 of 26 START sql table model dbt_adnane.fct_order_items ...................... [RUN]
+01:56:52  21 of 26 OK created sql table model dbt_adnane.fct_order_items ................. [OK in 0.14s]
+01:56:52  22 of 26 START sql view model dbt_adnane.int_orders__enriched .................. [RUN]
+01:56:52  22 of 26 OK created sql view model dbt_adnane.int_orders__enriched ............. [OK in 0.04s]
+01:56:52  23 of 26 START sql view model dbt_adnane.int_orders__payment_methods_pivoted ... [RUN]
+01:56:52  23 of 26 OK created sql view model dbt_adnane.int_orders__payment_methods_pivoted  [OK in 0.04s]
+01:56:52  24 of 26 START sql table model dbt_adnane.fct_monthly_revenue .................. [RUN]
+01:56:52  24 of 26 OK created sql table model dbt_adnane.fct_monthly_revenue ............. [OK in 0.06s]
+01:56:52  25 of 26 START sql table model dbt_adnane.fct_orders ........................... [RUN]
+01:56:52  25 of 26 OK created sql table model dbt_adnane.fct_orders ...................... [OK in 0.08s]
+01:56:52  26 of 26 START sql table model dbt_adnane.dim_customers ........................ [RUN]
+01:56:52  26 of 26 OK created sql table model dbt_adnane.dim_customers ................... [OK in 0.05s]
+01:56:52  
+01:56:52  Finished running 1 seed, 2 snapshots, 4 table models, 12 data tests, 7 view models in 0 hours 0 minutes and 1.14 seconds (1.14s).
+01:56:52  
+01:56:52  Completed successfully
+01:56:52  
+01:56:52  Done. PASS=26 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=26
+[spike] success=True wall=1.38s
+[spike] ran setup.sql: 0.84s
+$ dbt run --exclude fct_orders
+01:56:53  Running with dbt=1.11.16
+01:56:53  Registered adapter: duckdb=1.11.0
+01:56:53  Found 12 models, 2 analyses, 1 seed, 12 data tests, 2 snapshots, 5 sources, 669 macros
+01:56:53  
+01:56:53  Concurrency: 4 threads (target='dev')
+01:56:53  
+01:56:54  1 of 10 START sql view model dbt_adnane.stg_jaffle_shop__customers ............. [RUN]
+01:56:54  1 of 10 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ........ [OK in 0.03s]
+01:56:54  2 of 10 START sql view model dbt_adnane.stg_jaffle_shop__order_items ........... [RUN]
+01:56:54  2 of 10 OK created sql view model dbt_adnane.stg_jaffle_shop__order_items ...... [OK in 0.03s]
+01:56:54  3 of 10 START sql view model dbt_adnane.stg_jaffle_shop__orders ................ [RUN]
+01:56:54  3 of 10 OK created sql view model dbt_adnane.stg_jaffle_shop__orders ........... [OK in 0.03s]
+01:56:54  4 of 10 START sql view model dbt_adnane.stg_jaffle_shop__products .............. [RUN]
+01:56:54  4 of 10 OK created sql view model dbt_adnane.stg_jaffle_shop__products ......... [OK in 0.08s]
+01:56:54  5 of 10 START sql view model dbt_adnane.stg_stripe__payments ................... [RUN]
+01:56:54  5 of 10 OK created sql view model dbt_adnane.stg_stripe__payments .............. [OK in 0.02s]
+01:56:54  6 of 10 START sql table model dbt_adnane.fct_order_items ....................... [RUN]
+01:56:54  6 of 10 OK created sql table model dbt_adnane.fct_order_items .................. [OK in 0.06s]
+01:56:54  7 of 10 START sql view model dbt_adnane.int_orders__enriched ................... [RUN]
+01:56:54  7 of 10 OK created sql view model dbt_adnane.int_orders__enriched .............. [OK in 0.03s]
+01:56:54  8 of 10 START sql view model dbt_adnane.int_orders__payment_methods_pivoted .... [RUN]
+01:56:54  8 of 10 OK created sql view model dbt_adnane.int_orders__payment_methods_pivoted  [OK in 0.03s]
+01:56:54  9 of 10 START sql table model dbt_adnane.dim_customers ......................... [RUN]
+01:56:54  9 of 10 OK created sql table model dbt_adnane.dim_customers .................... [OK in 0.05s]
+01:56:54  10 of 10 START sql table model dbt_adnane.fct_monthly_revenue .................. [RUN]
+01:56:54  10 of 10 OK created sql table model dbt_adnane.fct_monthly_revenue ............. [OK in 0.05s]
+01:56:54  
+01:56:54  Finished running 3 table models, 7 view models in 0 hours 0 minutes and 0.47 seconds (0.47s).
+01:56:54  
+01:56:54  Completed successfully
+01:56:54  
+01:56:54  Done. PASS=10 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=10
+[spike] success=True wall=0.64s
+[spike] copied models/marts/fct_orders.sql from ch14
+$ dbt run --select fct_orders
+01:56:54  Running with dbt=1.11.16
+01:56:54  Registered adapter: duckdb=1.11.0
+01:56:54  Found 12 models, 2 analyses, 1 seed, 12 data tests, 2 snapshots, 5 sources, 669 macros
+01:56:54  
+01:56:54  Concurrency: 4 threads (target='dev')
+01:56:54  
+01:56:54  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]
+01:56:54  1 of 1 ERROR creating sql incremental model dbt_adnane.fct_orders .............. [ERROR in 0.07s]
+01:56:54  
+01:56:54  Finished running 1 incremental model in 0 hours 0 minutes and 0.11 seconds (0.11s).
+01:56:54  
+01:56:54  Completed with 1 error, 0 partial successes, and 0 warnings:
+01:56:54  
+01:56:54  Failure in model fct_orders (models/marts/fct_orders.sql)
+01:56:54    Runtime Error in model fct_orders (models/marts/fct_orders.sql)
+  Binder Error: WHERE clause cannot contain aggregates!
+  
+  LINE 23:     where loaded_at > (select coalesce(max(loaded_at), '1900-01-01') from "practice"."dbt_adnane...
+                                                  ^
+01:56:54  
+01:56:54    compiled code at target/compiled/jaffle_dbt/models/marts/fct_orders.sql
+01:56:54  
+01:56:54  Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1
+[spike] success=False wall=0.29s
+$ dbt run --select fct_orders --full-refresh
+01:56:54  Running with dbt=1.11.16
+01:56:54  Registered adapter: duckdb=1.11.0
+01:56:54  Found 12 models, 2 analyses, 1 seed, 12 data tests, 2 snapshots, 5 sources, 669 macros
+01:56:54  
+01:56:54  Concurrency: 4 threads (target='dev')
+01:56:54  
+01:56:54  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]
+01:56:55  1 of 1 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.07s]
+01:56:55  
+01:56:55  Finished running 1 incremental model in 0 hours 0 minutes and 0.11 seconds (0.11s).
+01:56:55  
+01:56:55  Completed successfully
+01:56:55  
+01:56:55  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1
+[spike] success=True wall=0.27s
+$ dbt show --inline "select count(*) as n_rows, max(loaded_at) as max_loaded_at, sum(amount) as total_amount from {{ ref('fct_orders') }}"
+01:56:55  Running with dbt=1.11.16
+01:56:55  Registered adapter: duckdb=1.11.0
+01:56:55  Found 12 models, 2 analyses, 1 seed, 12 data tests, 2 snapshots, 1 sql operation, 5 sources, 669 macros
+01:56:55  
+01:56:55  Concurrency: 4 threads (target='dev')
+01:56:55  
+Previewing inline node:
+| n_rows |       max_loaded_at | total_amount |
+| ------ | ------------------- | ------------ |
+|    300 | 2025-12-31 16:22:00 |      5,004.4 |
+
+[spike] success=True wall=0.32s
+$ dbt run --select fct_orders
+01:56:55  Running with dbt=1.11.16
+01:56:55  Registered adapter: duckdb=1.11.0
+01:56:55  Found 12 models, 2 analyses, 1 seed, 12 data tests, 2 snapshots, 5 sources, 669 macros
+01:56:55  
+01:56:55  Concurrency: 4 threads (target='dev')
+01:56:55  
+01:56:55  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]
+01:56:55  1 of 1 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.16s]
+01:56:55  
+01:56:55  Finished running 1 incremental model in 0 hours 0 minutes and 0.20 seconds (0.20s).
+01:56:55  
+01:56:55  Completed successfully
+01:56:55  
+01:56:55  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1
+[spike] success=True wall=0.42s
+$ dbt run --select fct_orders dim_customers
+01:56:55  Running with dbt=1.11.16
+01:56:55  Registered adapter: duckdb=1.11.0
+01:56:55  Found 12 models, 2 analyses, 1 seed, 12 data tests, 2 snapshots, 5 sources, 669 macros
+01:56:55  
+01:56:55  Concurrency: 4 threads (target='dev')
+01:56:55  
+01:56:55  1 of 2 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]
+01:56:56  1 of 2 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.08s]
+01:56:56  2 of 2 START sql table model dbt_adnane.dim_customers .......................... [RUN]
+01:56:56  2 of 2 OK created sql table model dbt_adnane.dim_customers ..................... [OK in 0.06s]
+01:56:56  
+01:56:56  Finished running 1 incremental model, 1 table model in 0 hours 0 minutes and 0.18 seconds (0.18s).
+01:56:56  
+01:56:56  Completed successfully
+01:56:56  
+01:56:56  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=2
+[spike] success=True wall=0.34s
+[spike] checkout ch14
+$ dbt run --select fct_order_items fct_order_items_daily
+01:56:56  Running with dbt=1.11.16
+01:56:56  Registered adapter: duckdb=1.11.0
+01:56:56  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 5 sources, 669 macros
+01:56:56  
+01:56:56  Concurrency: 4 threads (target='dev')
+01:56:56  
+01:56:56  1 of 2 START sql table model dbt_adnane.fct_order_items ........................ [RUN]
+01:56:56  1 of 2 OK created sql table model dbt_adnane.fct_order_items ................... [OK in 0.06s]
+01:56:56  2 of 2 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]
+01:56:56  Batch 1 of 22 START batch 2025-01 of dbt_adnane.fct_order_items_daily ................ [RUN]
+01:56:56  Batch 1 of 22 OK created batch 2025-01 of dbt_adnane.fct_order_items_daily ........... [OK in 0.03s]
+01:56:56  Batch 2 of 22 START batch 2025-02 of dbt_adnane.fct_order_items_daily ................ [RUN]
+01:56:56  Batch 2 of 22 OK created batch 2025-02 of dbt_adnane.fct_order_items_daily ........... [OK in 0.05s]
+01:56:56  Batch 3 of 22 START batch 2025-03 of dbt_adnane.fct_order_items_daily ................ [RUN]
+01:56:56  Batch 3 of 22 OK created batch 2025-03 of dbt_adnane.fct_order_items_daily ........... [OK in 0.03s]
+01:56:56  Batch 4 of 22 START batch 2025-04 of dbt_adnane.fct_order_items_daily ................ [RUN]
+01:56:56  Batch 4 of 22 OK created batch 2025-04 of dbt_adnane.fct_order_items_daily ........... [OK in 0.03s]
+01:56:56  Batch 5 of 22 START batch 2025-05 of dbt_adnane.fct_order_items_daily ................ [RUN]
+01:56:56  Batch 5 of 22 OK created batch 2025-05 of dbt_adnane.fct_order_items_daily ........... [OK in 0.03s]
+01:56:56  Batch 6 of 22 START batch 2025-06 of dbt_adnane.fct_order_items_daily ................ [RUN]
+01:56:56  Batch 6 of 22 OK created batch 2025-06 of dbt_adnane.fct_order_items_daily ........... [OK in 0.03s]
+01:56:56  Batch 7 of 22 START batch 2025-07 of dbt_adnane.fct_order_items_daily ................ [RUN]
+01:56:56  Batch 7 of 22 OK created batch 2025-07 of dbt_adnane.fct_order_items_daily ........... [OK in 0.03s]
+01:56:56  Batch 8 of 22 START batch 2025-08 of dbt_adnane.fct_order_items_daily ................ [RUN]
+01:56:56  Batch 8 of 22 OK created batch 2025-08 of dbt_adnane.fct_order_items_daily ........... [OK in 0.04s]
+01:56:56  Batch 9 of 22 START batch 2025-09 of dbt_adnane.fct_order_items_daily ................ [RUN]
+01:56:56  Batch 9 of 22 OK created batch 2025-09 of dbt_adnane.fct_order_items_daily ........... [OK in 0.04s]
+01:56:56  Batch 10 of 22 START batch 2025-10 of dbt_adnane.fct_order_items_daily ............... [RUN]
+01:56:56  Batch 10 of 22 OK created batch 2025-10 of dbt_adnane.fct_order_items_daily .......... [OK in 0.04s]
+01:56:56  Batch 11 of 22 START batch 2025-11 of dbt_adnane.fct_order_items_daily ............... [RUN]
+01:56:56  Batch 11 of 22 OK created batch 2025-11 of dbt_adnane.fct_order_items_daily .......... [OK in 0.03s]
+01:56:56  Batch 12 of 22 START batch 2025-12 of dbt_adnane.fct_order_items_daily ............... [RUN]
+01:56:56  Batch 12 of 22 OK created batch 2025-12 of dbt_adnane.fct_order_items_daily .......... [OK in 0.04s]
+01:56:56  Batch 13 of 22 START batch 2026-01 of dbt_adnane.fct_order_items_daily ............... [RUN]
+01:56:57  Batch 13 of 22 OK created batch 2026-01 of dbt_adnane.fct_order_items_daily .......... [OK in 0.04s]
+01:56:57  Batch 14 of 22 START batch 2026-02 of dbt_adnane.fct_order_items_daily ............... [RUN]
+01:56:57  Batch 14 of 22 OK created batch 2026-02 of dbt_adnane.fct_order_items_daily .......... [OK in 0.04s]
+01:56:57  Batch 15 of 22 START batch 2026-03 of dbt_adnane.fct_order_items_daily ............... [RUN]
+01:56:57  Batch 15 of 22 OK created batch 2026-03 of dbt_adnane.fct_order_items_daily .......... [OK in 0.03s]
+01:56:57  Batch 16 of 22 START batch 2026-04 of dbt_adnane.fct_order_items_daily ............... [RUN]
+01:56:57  Batch 16 of 22 OK created batch 2026-04 of dbt_adnane.fct_order_items_daily .......... [OK in 0.03s]
+01:56:57  Batch 17 of 22 START batch 2026-05 of dbt_adnane.fct_order_items_daily ............... [RUN]
+01:56:57  Batch 17 of 22 OK created batch 2026-05 of dbt_adnane.fct_order_items_daily .......... [OK in 0.03s]
+01:56:57  Batch 18 of 22 START batch 2026-06 of dbt_adnane.fct_order_items_daily ............... [RUN]
+01:56:57  Batch 18 of 22 OK created batch 2026-06 of dbt_adnane.fct_order_items_daily .......... [OK in 0.03s]
+01:56:57  Batch 19 of 22 START batch 2026-07 of dbt_adnane.fct_order_items_daily ............... [RUN]
+01:56:57  Batch 19 of 22 OK created batch 2026-07 of dbt_adnane.fct_order_items_daily .......... [OK in 0.03s]
+01:56:57  Batch 20 of 22 START batch 2026-08 of dbt_adnane.fct_order_items_daily ............... [RUN]
+01:56:57  Batch 20 of 22 OK created batch 2026-08 of dbt_adnane.fct_order_items_daily .......... [OK in 0.04s]
+01:56:57  Batch 21 of 22 START batch 2026-09 of dbt_adnane.fct_order_items_daily ............... [RUN]
+01:56:57  Batch 21 of 22 OK created batch 2026-09 of dbt_adnane.fct_order_items_daily .......... [OK in 0.09s]
+01:56:57  Batch 22 of 22 START batch 2026-10 of dbt_adnane.fct_order_items_daily ............... [RUN]
+01:56:57  Batch 22 of 22 OK created batch 2026-10 of dbt_adnane.fct_order_items_daily .......... [OK in 0.03s]
+01:56:57  2 of 2 OK created sql microbatch model dbt_adnane.fct_order_items_daily ........ [SUCCESS in 0.88s]
+01:56:57  
+01:56:57  Finished running 1 incremental model, 1 table model in 0 hours 0 minutes and 0.99 seconds (0.99s).
+01:56:57  
+01:56:57  Completed successfully
+01:56:57  
+01:56:57  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=2
+[spike] success=True wall=1.29s
+$ dbt show --inline "select count(*) as n_rows, min(order_date) as first_day, max(order_date) as last_day, sum(quantity) as quantity, sum(revenue) as revenue from {{ ref('fct_order_items_daily') }}"
+01:56:57  Running with dbt=1.11.16
+01:56:57  Registered adapter: duckdb=1.11.0
+01:56:57  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 1 sql operation, 5 sources, 669 macros
+01:56:57  
+01:56:57  Concurrency: 4 threads (target='dev')
+01:56:57  
+Previewing inline node:
+| n_rows |  first_day |   last_day | quantity | revenue |
+| ------ | ---------- | ---------- | -------- | ------- |
+|    564 | 2025-01-05 | 2025-12-31 |     1021 | 5,255.6 |
+
+[spike] success=True wall=0.21s
+[spike] ran updates/day2.sql: 0.06s
+$ dbt show --inline "select count(*) as n_rows, max(loaded_at) as max_loaded_at from {{ ref('fct_orders') }}"
+01:56:57  Running with dbt=1.11.16
+01:56:57  Registered adapter: duckdb=1.11.0
+01:56:57  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 1 sql operation, 5 sources, 669 macros
+01:56:57  
+01:56:57  Concurrency: 4 threads (target='dev')
+01:56:57  
+Previewing inline node:
+| n_rows |       max_loaded_at |
+| ------ | ------------------- |
+|    300 | 2025-12-31 16:22:00 |
+
+[spike] success=True wall=0.24s
+$ dbt show --inline "select count(*) as rows_to_process from {{ ref('int_orders__enriched') }} where loaded_at > (select max(loaded_at) from {{ ref('fct_orders') }})"
+01:56:57  Running with dbt=1.11.16
+01:56:57  Registered adapter: duckdb=1.11.0
+01:56:58  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 1 sql operation, 5 sources, 669 macros
+01:56:58  
+01:56:58  Concurrency: 4 threads (target='dev')
+01:56:58  
+Previewing inline node:
+| rows_to_process |
+| --------------- |
+|              33 |
+
+[spike] success=True wall=0.21s
+$ dbt run --select fct_orders
+01:56:58  Running with dbt=1.11.16
+01:56:58  Registered adapter: duckdb=1.11.0
+01:56:58  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 5 sources, 669 macros
+01:56:58  
+01:56:58  Concurrency: 4 threads (target='dev')
+01:56:58  
+01:56:58  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]
+01:56:58  1 of 1 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.09s]
+01:56:58  
+01:56:58  Finished running 1 incremental model in 0 hours 0 minutes and 0.15 seconds (0.15s).
+01:56:58  
+01:56:58  Completed successfully
+01:56:58  
+01:56:58  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1
+[spike] success=True wall=0.31s
+$ dbt show --inline "select count(*) as n_rows, count(distinct order_id) as n_orders, max(loaded_at) as max_loaded_at, sum(amount) as total_amount from {{ ref('fct_orders') }}"
+01:56:58  Running with dbt=1.11.16
+01:56:58  Registered adapter: duckdb=1.11.0
+01:56:58  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 1 sql operation, 5 sources, 669 macros
+01:56:58  
+01:56:58  Concurrency: 4 threads (target='dev')
+01:56:58  
+Previewing inline node:
+| n_rows | n_orders |       max_loaded_at | total_amount |
+| ------ | -------- | ------------------- | ------------ |
+|    320 |      320 | 2026-01-04 16:13:00 |      5,443.2 |
+
+[spike] success=True wall=0.21s
+$ dbt show --inline "select order_id, status, amount, credit_card_amount, loaded_at from {{ ref('fct_orders') }} where order_id in (255, 288, 301) order by order_id"
+01:56:58  Running with dbt=1.11.16
+01:56:58  Registered adapter: duckdb=1.11.0
+01:56:58  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 1 sql operation, 5 sources, 669 macros
+01:56:58  
+01:56:58  Concurrency: 4 threads (target='dev')
+01:56:58  
+Previewing inline node:
+| order_id | status    | amount | credit_card_amount |           loaded_at |
+| -------- | --------- | ------ | ------------------ | ------------------- |
+|      255 | completed |   18.4 |               18.4 | 2026-01-02 07:50:00 |
+|      288 | shipped   |   34.0 |               34.0 | 2026-01-02 07:00:00 |
+|      301 | completed |    6.0 |                6.0 | 2026-01-01 08:00:00 |
+
+[spike] success=True wall=0.26s
+$ dbt run --select fct_order_items
+01:56:58  Running with dbt=1.11.16
+01:56:58  Registered adapter: duckdb=1.11.0
+01:56:59  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 5 sources, 669 macros
+01:56:59  
+01:56:59  Concurrency: 4 threads (target='dev')
+01:56:59  
+01:56:59  1 of 1 START sql table model dbt_adnane.fct_order_items ........................ [RUN]
+01:56:59  1 of 1 OK created sql table model dbt_adnane.fct_order_items ................... [OK in 0.06s]
+01:56:59  
+01:56:59  Finished running 1 table model in 0 hours 0 minutes and 0.10 seconds (0.10s).
+01:56:59  
+01:56:59  Completed successfully
+01:56:59  
+01:56:59  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1
+[spike] success=True wall=0.29s
+$ dbt run --select fct_order_items_daily
+01:56:59  Running with dbt=1.11.16
+01:56:59  Registered adapter: duckdb=1.11.0
+01:56:59  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 5 sources, 669 macros
+01:56:59  
+01:56:59  Concurrency: 4 threads (target='dev')
+01:56:59  
+01:56:59  1 of 1 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]
+01:56:59  Batch 1 of 2 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]
+01:56:59  Batch 1 of 2 OK created batch 2026-09 of dbt_adnane.fct_order_items_daily ............ [OK in 0.04s]
+01:56:59  Batch 2 of 2 START batch 2026-10 of dbt_adnane.fct_order_items_daily ................. [RUN]
+01:56:59  Batch 2 of 2 OK created batch 2026-10 of dbt_adnane.fct_order_items_daily ............ [OK in 0.04s]
+01:56:59  1 of 1 OK created sql microbatch model dbt_adnane.fct_order_items_daily ........ [SUCCESS in 0.08s]
+01:56:59  
+01:56:59  Finished running 1 incremental model in 0 hours 0 minutes and 0.13 seconds (0.13s).
+01:56:59  
+01:56:59  Completed successfully
+01:56:59  
+01:56:59  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1
+[spike] success=True wall=0.38s
+$ dbt show --inline "select count(*) as rows_in_january_2026 from {{ ref('fct_order_items_daily') }} where order_date >= '2026-01-01' and order_date < '2026-02-01'"
+01:56:59  Running with dbt=1.11.16
+01:56:59  Registered adapter: duckdb=1.11.0
+01:56:59  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 1 sql operation, 5 sources, 669 macros
+01:56:59  
+01:56:59  Concurrency: 4 threads (target='dev')
+01:56:59  
+Previewing inline node:
+| rows_in_january_2026 |
+| -------------------- |
+|                    0 |
+
+[spike] success=True wall=0.21s
+$ dbt run --select fct_order_items_daily --event-time-start '2026-01-01' --event-time-end '2026-02-01'
+01:56:59  Running with dbt=1.11.16
+01:56:59  Registered adapter: duckdb=1.11.0
+01:56:59  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 5 sources, 669 macros
+01:56:59  
+01:56:59  Concurrency: 4 threads (target='dev')
+01:56:59  
+01:56:59  1 of 1 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]
+01:56:59  Batch 1 of 1 START batch 2026-01 of dbt_adnane.fct_order_items_daily ................. [RUN]
+01:57:00  Batch 1 of 1 OK created batch 2026-01 of dbt_adnane.fct_order_items_daily ............ [OK in 0.04s]
+01:57:00  1 of 1 OK created sql microbatch model dbt_adnane.fct_order_items_daily ........ [SUCCESS in 0.05s]
+01:57:00  
+01:57:00  Finished running 1 incremental model in 0 hours 0 minutes and 0.08 seconds (0.08s).
+01:57:00  
+01:57:00  Completed successfully
+01:57:00  
+01:57:00  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1
+[spike] success=True wall=0.24s
+$ dbt show --inline "select count(*) as n_rows, sum(quantity) as quantity, sum(revenue) as revenue, count(*) filter (where order_date >= '2026-01-01') as rows_in_2026 from {{ ref('fct_order_items_daily') }}"
+01:57:00  Running with dbt=1.11.16
+01:57:00  Registered adapter: duckdb=1.11.0
+01:57:00  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 1 sql operation, 5 sources, 669 macros
+01:57:00  
+01:57:00  Concurrency: 4 threads (target='dev')
+01:57:00  
+Previewing inline node:
+| n_rows | quantity | revenue | rows_in_2026 |
+| ------ | -------- | ------- | ------------ |
+|    596 |     1064 | 5,443.2 |           32 |
+
+[spike] success=True wall=0.22s
+$ dbt show --inline "select sum(quantity) as quantity, sum(line_amount) as revenue from {{ ref('fct_order_items') }}"
+01:57:00  Running with dbt=1.11.16
+01:57:00  Registered adapter: duckdb=1.11.0
+01:57:00  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 1 sql operation, 5 sources, 669 macros
+01:57:00  
+01:57:00  Concurrency: 4 threads (target='dev')
+01:57:00  
+Previewing inline node:
+| quantity | revenue |
+| -------- | ------- |
+|     1064 | 5,443.2 |
+
+[spike] success=True wall=0.32s
+$ dbt run --select fct_orders --full-refresh
+01:57:00  Running with dbt=1.11.16
+01:57:00  Registered adapter: duckdb=1.11.0
+01:57:00  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 5 sources, 669 macros
+01:57:00  
+01:57:00  Concurrency: 4 threads (target='dev')
+01:57:00  
+01:57:00  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]
+01:57:00  1 of 1 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.07s]
+01:57:00  
+01:57:00  Finished running 1 incremental model in 0 hours 0 minutes and 0.11 seconds (0.11s).
+01:57:00  
+01:57:00  Completed successfully
+01:57:00  
+01:57:00  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1
+[spike] success=True wall=0.35s
+$ dbt show --inline "select count(*) as n_rows, sum(amount) as total_amount from {{ ref('fct_orders') }}"
+01:57:00  Running with dbt=1.11.16
+01:57:00  Registered adapter: duckdb=1.11.0
+01:57:01  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 1 sql operation, 5 sources, 669 macros
+01:57:01  
+01:57:01  Concurrency: 4 threads (target='dev')
+01:57:01  
+Previewing inline node:
+| n_rows | total_amount |
+| ------ | ------------ |
+|    320 |      5,443.2 |
+
+[spike] success=True wall=0.19s
+$ dbt build
+01:57:01  Running with dbt=1.11.16
+01:57:01  Registered adapter: duckdb=1.11.0
+01:57:01  Found 1 seed, 12 data tests, 2 snapshots, 13 models, 2 analyses, 5 sources, 669 macros
+01:57:01  
+01:57:01  Concurrency: 4 threads (target='dev')
+01:57:01  
+01:57:01  1 of 27 START sql view model dbt_adnane.stg_jaffle_shop__customers ............. [RUN]
+01:57:01  1 of 27 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ........ [OK in 0.02s]
+01:57:01  2 of 27 START sql view model dbt_adnane.stg_jaffle_shop__order_items ........... [RUN]
+01:57:01  2 of 27 OK created sql view model dbt_adnane.stg_jaffle_shop__order_items ...... [OK in 0.02s]
+01:57:01  3 of 27 START sql view model dbt_adnane.stg_jaffle_shop__orders ................ [RUN]
+01:57:01  3 of 27 OK created sql view model dbt_adnane.stg_jaffle_shop__orders ........... [OK in 0.02s]
+01:57:01  4 of 27 START sql view model dbt_adnane.stg_jaffle_shop__products .............. [RUN]
+01:57:01  4 of 27 OK created sql view model dbt_adnane.stg_jaffle_shop__products ......... [OK in 0.03s]
+01:57:01  5 of 27 START sql view model dbt_adnane.stg_stripe__payments ................... [RUN]
+01:57:01  5 of 27 OK created sql view model dbt_adnane.stg_stripe__payments .............. [OK in 0.03s]
+01:57:01  6 of 27 START seed file dbt_adnane.country_regions ............................. [RUN]
+01:57:01  6 of 27 OK loaded seed file dbt_adnane.country_regions ......................... [INSERT 6 in 0.02s]
+01:57:01  7 of 27 START snapshot dbt_adnane.customers_snapshot ........................... [RUN]
+01:57:01  7 of 27 OK snapshotted dbt_adnane.customers_snapshot ........................... [OK in 0.09s]
+01:57:01  8 of 27 START snapshot dbt_adnane.orders_snapshot .............................. [RUN]
+01:57:01  8 of 27 OK snapshotted dbt_adnane.orders_snapshot .............................. [OK in 0.06s]
+01:57:01  9 of 27 START test not_null_country_regions_country ............................ [RUN]
+01:57:01  9 of 27 PASS not_null_country_regions_country .................................. [PASS in 0.01s]
+01:57:01  10 of 27 START test not_null_stg_jaffle_shop__customers_customer_id ............ [RUN]
+01:57:01  10 of 27 PASS not_null_stg_jaffle_shop__customers_customer_id .................. [PASS in 0.01s]
+01:57:01  11 of 27 START test not_null_stg_jaffle_shop__order_items_order_item_id ........ [RUN]
+01:57:01  11 of 27 PASS not_null_stg_jaffle_shop__order_items_order_item_id .............. [PASS in 0.01s]
+01:57:01  12 of 27 START test not_null_stg_jaffle_shop__orders_order_id .................. [RUN]
+01:57:01  12 of 27 PASS not_null_stg_jaffle_shop__orders_order_id ........................ [PASS in 0.01s]
+01:57:01  13 of 27 START test not_null_stg_jaffle_shop__products_product_id .............. [RUN]
+01:57:01  13 of 27 PASS not_null_stg_jaffle_shop__products_product_id .................... [PASS in 0.01s]
+01:57:01  14 of 27 START test not_null_stg_stripe__payments_payment_id ................... [RUN]
+01:57:01  14 of 27 PASS not_null_stg_stripe__payments_payment_id ......................... [PASS in 0.01s]
+01:57:01  15 of 27 START test unique_country_regions_country ............................. [RUN]
+01:57:01  15 of 27 PASS unique_country_regions_country ................................... [PASS in 0.02s]
+01:57:01  16 of 27 START test unique_stg_jaffle_shop__customers_customer_id .............. [RUN]
+01:57:01  16 of 27 PASS unique_stg_jaffle_shop__customers_customer_id .................... [PASS in 0.02s]
+01:57:01  17 of 27 START test unique_stg_jaffle_shop__order_items_order_item_id .......... [RUN]
+01:57:01  17 of 27 PASS unique_stg_jaffle_shop__order_items_order_item_id ................ [PASS in 0.03s]
+01:57:01  18 of 27 START test unique_stg_jaffle_shop__orders_order_id .................... [RUN]
+01:57:01  18 of 27 PASS unique_stg_jaffle_shop__orders_order_id .......................... [PASS in 0.01s]
+01:57:01  19 of 27 START test unique_stg_jaffle_shop__products_product_id ................ [RUN]
+01:57:01  19 of 27 PASS unique_stg_jaffle_shop__products_product_id ...................... [PASS in 0.02s]
+01:57:01  20 of 27 START test unique_stg_stripe__payments_payment_id ..................... [RUN]
+01:57:01  20 of 27 PASS unique_stg_stripe__payments_payment_id ........................... [PASS in 0.02s]
+01:57:01  21 of 27 START sql table model dbt_adnane.fct_order_items ...................... [RUN]
+01:57:01  21 of 27 OK created sql table model dbt_adnane.fct_order_items ................. [OK in 0.06s]
+01:57:01  22 of 27 START sql microbatch model dbt_adnane.fct_order_items_daily ........... [RUN]
+01:57:01  Batch 1 of 2 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]
+01:57:01  Batch 1 of 2 OK created batch 2026-09 of dbt_adnane.fct_order_items_daily ............ [OK in 0.04s]
+01:57:01  Batch 2 of 2 START batch 2026-10 of dbt_adnane.fct_order_items_daily ................. [RUN]
+01:57:02  Batch 2 of 2 OK created batch 2026-10 of dbt_adnane.fct_order_items_daily ............ [OK in 0.03s]
+01:57:02  22 of 27 OK created sql microbatch model dbt_adnane.fct_order_items_daily ...... [SUCCESS in 0.08s]
+01:57:02  23 of 27 START sql view model dbt_adnane.int_orders__enriched .................. [RUN]
+01:57:02  23 of 27 OK created sql view model dbt_adnane.int_orders__enriched ............. [OK in 0.03s]
+01:57:02  24 of 27 START sql view model dbt_adnane.int_orders__payment_methods_pivoted ... [RUN]
+01:57:02  24 of 27 OK created sql view model dbt_adnane.int_orders__payment_methods_pivoted  [OK in 0.09s]
+01:57:02  25 of 27 START sql table model dbt_adnane.fct_monthly_revenue .................. [RUN]
+01:57:02  25 of 27 OK created sql table model dbt_adnane.fct_monthly_revenue ............. [OK in 0.06s]
+01:57:02  26 of 27 START sql incremental model dbt_adnane.fct_orders ..................... [RUN]
+01:57:02  26 of 27 OK created sql incremental model dbt_adnane.fct_orders ................ [OK in 0.06s]
+01:57:02  27 of 27 START sql table model dbt_adnane.dim_customers ........................ [RUN]
+01:57:02  27 of 27 OK created sql table model dbt_adnane.dim_customers ................... [OK in 0.04s]
+01:57:02  
+01:57:02  Finished running 2 incremental models, 1 seed, 2 snapshots, 3 table models, 12 data tests, 7 view models in 0 hours 0 minutes and 1.01 seconds (1.01s).
+01:57:02  
+01:57:02  Completed successfully
+01:57:02  
+01:57:02  Done. PASS=27 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=27
+[spike] success=True wall=1.19s
+[spike] query: select count(*) from dbt_adnane.customers_snapshot
+    (105,)
+[spike] query: select count(*) from dbt_adnane.orders_snapshot
+    (333,)
+[spike] results [{"cmd":"!build","ok":true,"ms":4504},{"cmd":"!build","ok":true,"ms":1385},{"cmd":"run --exclude fct_orders","ok":true,"ms":644},{"cmd":"run --select fct_orders","ok":false,"ms":293},{"cmd":"run --select fct_orders --full-refresh","ok":true,"ms":269},{"cmd":"show --inline \"select count(*) as n_rows, max(loaded_at) as max_loaded_at, sum(amount) as total_amount from {{ ref('fct_orders') }}\"","ok":true,"ms":321},{"cmd":"run --select fct_orders","ok":true,"ms":424},{"cmd":"run --select fct_orders dim_customers","ok":true,"ms":339},{"cmd":"run --select fct_order_items fct_order_items_daily","ok":true,"ms":1287},{"cmd":"show --inline \"select count(*) as n_rows, min(order_date) as first_day, max(order_date) as last_day, sum(quantity) as quantity, sum(revenue) as revenue from {{ ref('fct_order_items_daily') }}\"","ok":true,"ms":215},{"cmd":"show --inline \"select count(*) as n_rows, max(loaded_at) as max_loaded_at from {{ ref('fct_orders') }}\"","ok":true,"ms":243},{"cmd":"show --inline \"select count(*) as rows_to_process from {{ ref('int_orders__enriched') }} where loaded_at > (select max(loaded_at) from {{ ref('fct_orders') }})\"","ok":true,"ms":212},{"cmd":"run --select fct_orders","ok":true,"ms":314},{"cmd":"show --inline \"select count(*) as n_rows, count(distinct order_id) as n_orders, max(loaded_at) as max_loaded_at, sum(amount) as total_amount from {{ ref('fct_orders') }}\"","ok":true,"ms":208},{"cmd":"show --inline \"select order_id, status, amount, credit_card_amount, loaded_at from {{ ref('fct_orders') }} where order_id in (255, 288, 301) order by order_id\"","ok":true,"ms":263},{"cmd":"run --select fct_order_items","ok":true,"ms":290},{"cmd":"run --select fct_order_items_daily","ok":true,"ms":378},{"cmd":"show --inline \"select count(*) as rows_in_january_2026 from {{ ref('fct_order_items_daily') }} where order_date >= '2026-01-01' and order_date < '2026-02-01'\"","ok":true,"ms":211},{"cmd":"run --select fct_order_items_daily --event-time-start '2026-01-01' --event-time-end '2026-02-01'","ok":true,"ms":236},{"cmd":"show --inline \"select count(*) as n_rows, sum(quantity) as quantity, sum(revenue) as revenue, count(*) filter (where order_date >= '2026-01-01') as rows_in_2026 from {{ ref('fct_order_items_daily') }}\"","ok":true,"ms":219},{"cmd":"show --inline \"select sum(quantity) as quantity, sum(line_amount) as revenue from {{ ref('fct_order_items') }}\"","ok":true,"ms":316},{"cmd":"run --select fct_orders --full-refresh","ok":true,"ms":353},{"cmd":"show --inline \"select count(*) as n_rows, sum(amount) as total_amount from {{ ref('fct_orders') }}\"","ok":true,"ms":197},{"cmd":"build","ok":true,"ms":1187}]
+[spike] total wall 24547 ms

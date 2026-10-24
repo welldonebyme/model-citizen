@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: int_payments__successful
+    description: Successful payments only (ephemeral, one row per payment).
+
+  - name: int_orders__enriched
+    description: One row per order, with the customer country and the amount paid.
+    config:
+      event_time: order_date
+
+  - name: int_orders__payment_methods_pivoted
+    description: One row per paid order, one amount column per payment method.

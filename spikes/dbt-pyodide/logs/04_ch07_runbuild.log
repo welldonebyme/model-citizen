@@ -1,0 +1,92 @@
+MarkupSafe already loaded from default channel
+rpds-py already loaded from default channel
+typing-extensions already loaded from pypi
+Loading Jinja2, attrs, jsonschema, jsonschema_specifications, pyrsistent, python-dateutil, referencing, six
+Loaded Jinja2, attrs, jsonschema, jsonschema_specifications, pyrsistent, python-dateutil, referencing, six
+[spike] load setup.sql: 0.99s
+[spike] boot timings (ms) {
+  pyodide: 1160,
+  distPackages: 815,
+  micropip: 2536,
+  shim: 1511,
+  importAndData: 3443
+}
+$ dbt run
+01:52:52  Running with dbt=1.11.16
+01:52:52  Registered adapter: duckdb=1.11.0
+01:52:53  Unable to do partial parsing because saved manifest not found. Starting full parse.
+01:52:54  Found 7 models, 10 data tests, 5 sources, 500 macros
+01:52:54  
+01:52:54  Concurrency: 4 threads (target='dev')
+01:52:54  
+01:52:54  1 of 7 START sql view model dbt_adnane.stg_jaffle_shop__customers .............. [RUN]
+01:52:54  1 of 7 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ......... [OK in 0.08s]
+01:52:54  2 of 7 START sql view model dbt_adnane.stg_jaffle_shop__order_items ............ [RUN]
+01:52:54  2 of 7 OK created sql view model dbt_adnane.stg_jaffle_shop__order_items ....... [OK in 0.02s]
+01:52:54  3 of 7 START sql view model dbt_adnane.stg_jaffle_shop__orders ................. [RUN]
+01:52:54  3 of 7 OK created sql view model dbt_adnane.stg_jaffle_shop__orders ............ [OK in 0.02s]
+01:52:54  4 of 7 START sql view model dbt_adnane.stg_jaffle_shop__products ............... [RUN]
+01:52:54  4 of 7 OK created sql view model dbt_adnane.stg_jaffle_shop__products .......... [OK in 0.03s]
+01:52:54  5 of 7 START sql view model dbt_adnane.stg_stripe__payments .................... [RUN]
+01:52:54  5 of 7 OK created sql view model dbt_adnane.stg_stripe__payments ............... [OK in 0.03s]
+01:52:54  6 of 7 START sql view model dbt_adnane.fct_orders .............................. [RUN]
+01:52:54  6 of 7 OK created sql view model dbt_adnane.fct_orders ......................... [OK in 0.03s]
+01:52:54  7 of 7 START sql view model dbt_adnane.dim_customers ........................... [RUN]
+01:52:54  7 of 7 OK created sql view model dbt_adnane.dim_customers ...................... [OK in 0.03s]
+01:52:54  
+01:52:54  Finished running 7 view models in 0 hours 0 minutes and 0.45 seconds (0.45s).
+01:52:55  
+01:52:55  Completed successfully
+01:52:55  
+01:52:55  Done. PASS=7 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=7
+[spike] success=True wall=2.35s
+$ dbt build
+01:52:55  Running with dbt=1.11.16
+01:52:55  Registered adapter: duckdb=1.11.0
+01:52:55  Found 7 models, 10 data tests, 5 sources, 500 macros
+01:52:55  
+01:52:55  Concurrency: 4 threads (target='dev')
+01:52:55  
+01:52:55  1 of 17 START sql view model dbt_adnane.stg_jaffle_shop__customers ............. [RUN]
+01:52:55  1 of 17 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ........ [OK in 0.03s]
+01:52:55  2 of 17 START sql view model dbt_adnane.stg_jaffle_shop__order_items ........... [RUN]
+01:52:55  2 of 17 OK created sql view model dbt_adnane.stg_jaffle_shop__order_items ...... [OK in 0.03s]
+01:52:55  3 of 17 START sql view model dbt_adnane.stg_jaffle_shop__orders ................ [RUN]
+01:52:55  3 of 17 OK created sql view model dbt_adnane.stg_jaffle_shop__orders ........... [OK in 0.06s]
+01:52:55  4 of 17 START sql view model dbt_adnane.stg_jaffle_shop__products .............. [RUN]
+01:52:55  4 of 17 OK created sql view model dbt_adnane.stg_jaffle_shop__products ......... [OK in 0.03s]
+01:52:55  5 of 17 START sql view model dbt_adnane.stg_stripe__payments ................... [RUN]
+01:52:55  5 of 17 OK created sql view model dbt_adnane.stg_stripe__payments .............. [OK in 0.03s]
+01:52:55  6 of 17 START test not_null_stg_jaffle_shop__customers_customer_id ............. [RUN]
+01:52:55  6 of 17 PASS not_null_stg_jaffle_shop__customers_customer_id ................... [PASS in 0.04s]
+01:52:55  7 of 17 START test not_null_stg_jaffle_shop__order_items_order_item_id ......... [RUN]
+01:52:55  7 of 17 PASS not_null_stg_jaffle_shop__order_items_order_item_id ............... [PASS in 0.02s]
+01:52:55  8 of 17 START test not_null_stg_jaffle_shop__orders_order_id ................... [RUN]
+01:52:55  8 of 17 PASS not_null_stg_jaffle_shop__orders_order_id ......................... [PASS in 0.01s]
+01:52:55  9 of 17 START test not_null_stg_jaffle_shop__products_product_id ............... [RUN]
+01:52:55  9 of 17 PASS not_null_stg_jaffle_shop__products_product_id ..................... [PASS in 0.02s]
+01:52:55  10 of 17 START test not_null_stg_stripe__payments_payment_id ................... [RUN]
+01:52:55  10 of 17 PASS not_null_stg_stripe__payments_payment_id ......................... [PASS in 0.02s]
+01:52:55  11 of 17 START test unique_stg_jaffle_shop__customers_customer_id .............. [RUN]
+01:52:55  11 of 17 PASS unique_stg_jaffle_shop__customers_customer_id .................... [PASS in 0.02s]
+01:52:55  12 of 17 START test unique_stg_jaffle_shop__order_items_order_item_id .......... [RUN]
+01:52:55  12 of 17 PASS unique_stg_jaffle_shop__order_items_order_item_id ................ [PASS in 0.02s]
+01:52:55  13 of 17 START test unique_stg_jaffle_shop__orders_order_id .................... [RUN]
+01:52:55  13 of 17 PASS unique_stg_jaffle_shop__orders_order_id .......................... [PASS in 0.02s]
+01:52:55  14 of 17 START test unique_stg_jaffle_shop__products_product_id ................ [RUN]
+01:52:55  14 of 17 PASS unique_stg_jaffle_shop__products_product_id ...................... [PASS in 0.02s]
+01:52:55  15 of 17 START test unique_stg_stripe__payments_payment_id ..................... [RUN]
+01:52:55  15 of 17 PASS unique_stg_stripe__payments_payment_id ........................... [PASS in 0.02s]
+01:52:55  16 of 17 START sql view model dbt_adnane.fct_orders ............................ [RUN]
+01:52:55  16 of 17 OK created sql view model dbt_adnane.fct_orders ....................... [OK in 0.03s]
+01:52:55  17 of 17 START sql view model dbt_adnane.dim_customers ......................... [RUN]
+01:52:55  17 of 17 OK created sql view model dbt_adnane.dim_customers .................... [OK in 0.03s]
+01:52:55  
+01:52:55  Finished running 10 data tests, 7 view models in 0 hours 0 minutes and 0.50 seconds (0.50s).
+01:52:55  
+01:52:55  Completed successfully
+01:52:55  
+01:52:55  Done. PASS=17 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=17
+[spike] success=True wall=0.81s
+[spike] results [{"cmd":"run","ok":true,"ms":2350},{"cmd":"build","ok":true,"ms":809}]
+[spike] total wall 12632 ms

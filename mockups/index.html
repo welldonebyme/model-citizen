@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Three design directions</title>
+<style>
+:root { color-scheme: light dark; }
+body { margin: 0; font: 16px/1.55 system-ui, sans-serif; background: #f4f5f7; color: #1d2230; }
+@media (prefers-color-scheme: dark) { body { background: #16191f; color: #e6e8ee; } .c { background: #1f232b !important; border-color: #2c313b !important; } .c p { color: #a8afbd !important; } }
+main { max-width: 1240px; margin: 0 auto; padding: 32px 16px 48px; }
+h1 { font-size: 26px; margin: 0 0 6px; } main > p { margin: 0 0 24px; color: #6a7181; }
+.g { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 18px; }
+.c { background: #fff; border: 1px solid #dde0e6; border-radius: 14px; overflow: hidden; text-decoration: none; color: inherit; display: block; }
+.c img { width: 100%; display: block; aspect-ratio: 16/10; object-fit: cover; object-position: top; border-bottom: 1px solid #dde0e6; }
+.c div { padding: 14px 16px 16px; } .c h2 { font-size: 18px; margin: 0 0 4px; } .c p { margin: 0; color: #5d6474; font-size: 15px; }
+</style></head><body><main>
+<h1>Three design directions</h1>
+<p>Each one shows the Today page, a lesson with its SQL lab, and a mock exam question in DOMC format. Click to open, then use the dark bar on top to switch screens and themes.</p>
+<div class="g">
+<a class="c" href="a-lineage.html"><img src="screens/a-lineage-today-light-desk.png" alt="Mockup A, Today page"><div><h2>A. Lineage</h2><p>Calm and precise. Your course is drawn as a DAG. Navy ink, magenta accent, Atkinson Hyperlegible type (made for easy reading).</p></div></a>
+<a class="c" href="b-runlog.html"><img src="screens/b-runlog-today-light-desk.png" alt="Mockup B, Today page"><div><h2>B. Run log</h2><p>Speaks dbt's language. Today's plan reads like a dbt run log, lessons sit next to a dark Codecademy-style workbench. IBM Plex type, cobalt accent.</p></div></a>
+<a class="c" href="c-cahier.html"><img src="screens/c-cahier-today-light-desk.png" alt="Mockup C, Today page"><div><h2>C. Cahier</h2><p>Warm and personal. A French school notebook: Seyès ruling, blue ink, red margin, highlighter, a sticky note. Recursive type.</p></div></a>
+</div></main></body></html>

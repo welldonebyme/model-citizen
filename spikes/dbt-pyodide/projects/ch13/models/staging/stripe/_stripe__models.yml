@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: stg_stripe__payments
+    description: One row per payment attempt, amount in dollars.
+    columns:
+      - name: payment_id
+        description: Primary key of the payment.
+        data_tests:
+          - unique
+          - not_null
+      - name: status
+        description: success or fail. Only successful payments count as revenue.
+      - name: amount
+        description: Amount in dollars.

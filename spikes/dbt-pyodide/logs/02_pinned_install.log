@@ -1,0 +1,76 @@
+pyodide 314.0.7 loaded in 1099 ms
+pyodide-built packages loaded in 1436 ms
+MarkupSafe already loaded from default channel
+rpds-py already loaded from default channel
+typing-extensions already loaded from pypi
+micropip install OK in 2440 ms
+3.14.2 (main, Sep 14 2026, 03:03:51) [Clang 23.0.0git (https:/github.com/llvm/llvm-project e5927fecf8a6ce89e1a4eac5b8
+duckdb 1.5.1
+dbt_extractor import: ModuleNotFoundError No module named 'dbt_extractor'
+Traceback (most recent call last):
+  File "<exec>", line 10, in <module>
+  File "/lib/python3.14/site-packages/dbt/cli/__init__.py", line 1, in <module>
+    from .main import cli as dbt_cli  # noqa
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/cli/main.py", line 11, in <module>
+    from dbt.adapters.factory import register_adapter
+  File "/lib/python3.14/site-packages/dbt/adapters/factory.py", line 9, in <module>
+    from dbt_common.events.functions import fire_event
+  File "/lib/python3.14/site-packages/dbt_common/events/__init__.py", line 2, in <module>
+    from dbt_common.events.event_manager_client import get_event_manager
+  File "/lib/python3.14/site-packages/dbt_common/events/event_manager_client.py", line 5, in <module>
+    from dbt_common.events.event_manager import IEventManager, EventManager
+  File "/lib/python3.14/site-packages/dbt_common/events/event_manager.py", line 13, in <module>
+    from dbt_common.events.logger import LoggerConfig, _Logger, _TextLogger, _JsonLogger, LineFormat
+  File "/lib/python3.14/site-packages/dbt_common/events/logger.py", line 14, in <module>
+    from dbt_common.utils.encoding import ForgivingJSONEncoder
+  File "/lib/python3.14/site-packages/dbt_common/utils/__init__.py", line 9, in <module>
+    from dbt_common.utils.dict import (
+    ...<6 lines>...
+    )
+  File "/lib/python3.14/site-packages/dbt_common/utils/dict.py", line 5, in <module>
+    from dbt_common.exceptions import DbtConfigError, RecursionError
+  File "/lib/python3.14/site-packages/dbt_common/exceptions/__init__.py", line 1, in <module>
+    from dbt_common.exceptions.base import *  # noqa
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt_common/exceptions/base.py", line 6, in <module>
+    from dbt_common.dataclass_schema import ValidationError
+  File "/lib/python3.14/site-packages/dbt_common/dataclass_schema.py", line 15, in <module>
+    from mashumaro.jsonschema import build_json_schema
+  File "/lib/python3.14/site-packages/mashumaro/jsonschema/__init__.py", line 1, in <module>
+    from .builder import JSONSchemaBuilder, build_json_schema
+  File "/lib/python3.14/site-packages/mashumaro/jsonschema/builder.py", line 5, in <module>
+    from mashumaro.jsonschema.models import Context, JSONSchema
+  File "/lib/python3.14/site-packages/mashumaro/jsonschema/models.py", line 178, in <module>
+    class JSONObjectSchema(JSONSchema):
+        type: Optional[JSONSchemaInstanceType] = JSONSchemaInstanceType.OBJECT
+  File "/lib/python3.14/site-packages/mashumaro/mixins/dict.py", line 25, in __init_subclass__
+    compile_mixin_unpacker(cls, **builder_params["unpacker"])
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/mashumaro/core/meta/mixin.py", line 49, in compile_mixin_unpacker
+    builder.add_unpack_method()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/lib/python3.14/site-packages/mashumaro/core/meta/code/builder.py", line 586, in add_unpack_method
+    self._add_unpack_method_lines(method_name)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/mashumaro/core/meta/code/builder.py", line 491, in _add_unpack_method_lines
+    ).build(
+      ~~~~~^
+        fname=fname,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        alias=alias,
+        ^^^^^^^^^^^^
+    )
+    ^
+  File "/lib/python3.14/site-packages/mashumaro/core/meta/code/builder.py", line 1332, in build
+    unpacked_value = UnpackerRegistry.get(
+        ValueSpec(
+    ...<8 lines>...
+        )
+    )
+  File "/lib/python3.14/site-packages/mashumaro/core/meta/types/common.py", line 241, in get
+    raise UnserializableField(
+        spec.field_ctx.name, spec.type, spec.builder.cls
+    )
+mashumaro.exceptions.UnserializableField: Field "schema" of type Optional[str] in JSONObjectSchema is not serializable

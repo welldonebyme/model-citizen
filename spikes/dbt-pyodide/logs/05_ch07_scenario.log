@@ -1,0 +1,270 @@
+MarkupSafe already loaded from default channel
+rpds-py already loaded from default channel
+typing-extensions already loaded from pypi
+Loading Jinja2, attrs, jsonschema, jsonschema_specifications, pyrsistent, python-dateutil, referencing, six
+Loaded Jinja2, attrs, jsonschema, jsonschema_specifications, pyrsistent, python-dateutil, referencing, six
+[spike] load setup.sql: 0.97s
+[spike] boot timings (ms) {
+  pyodide: 1282,
+  distPackages: 863,
+  micropip: 2215,
+  shim: 1440,
+  importAndData: 3383
+}
+$ dbt run
+01:53:18  Running with dbt=1.11.16
+01:53:18  Registered adapter: duckdb=1.11.0
+01:53:18  Unable to do partial parsing because saved manifest not found. Starting full parse.
+01:53:20  Found 7 models, 10 data tests, 5 sources, 500 macros
+01:53:20  
+01:53:20  Concurrency: 4 threads (target='dev')
+01:53:20  
+01:53:20  1 of 7 START sql view model dbt_adnane.stg_jaffle_shop__customers .............. [RUN]
+01:53:20  1 of 7 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ......... [OK in 0.09s]
+01:53:20  2 of 7 START sql view model dbt_adnane.stg_jaffle_shop__order_items ............ [RUN]
+01:53:20  2 of 7 OK created sql view model dbt_adnane.stg_jaffle_shop__order_items ....... [OK in 0.02s]
+01:53:20  3 of 7 START sql view model dbt_adnane.stg_jaffle_shop__orders ................. [RUN]
+01:53:20  3 of 7 OK created sql view model dbt_adnane.stg_jaffle_shop__orders ............ [OK in 0.02s]
+01:53:20  4 of 7 START sql view model dbt_adnane.stg_jaffle_shop__products ............... [RUN]
+01:53:20  4 of 7 OK created sql view model dbt_adnane.stg_jaffle_shop__products .......... [OK in 0.02s]
+01:53:20  5 of 7 START sql view model dbt_adnane.stg_stripe__payments .................... [RUN]
+01:53:20  5 of 7 OK created sql view model dbt_adnane.stg_stripe__payments ............... [OK in 0.02s]
+01:53:20  6 of 7 START sql view model dbt_adnane.fct_orders .............................. [RUN]
+01:53:20  6 of 7 OK created sql view model dbt_adnane.fct_orders ......................... [OK in 0.02s]
+01:53:20  7 of 7 START sql view model dbt_adnane.dim_customers ........................... [RUN]
+01:53:20  7 of 7 OK created sql view model dbt_adnane.dim_customers ...................... [OK in 0.03s]
+01:53:20  
+01:53:20  Finished running 7 view models in 0 hours 0 minutes and 0.39 seconds (0.39s).
+01:53:20  
+01:53:20  Completed successfully
+01:53:20  
+01:53:20  Done. PASS=7 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=7
+[spike] success=True wall=2.40s
+$ dbt build
+01:53:20  Running with dbt=1.11.16
+01:53:20  Registered adapter: duckdb=1.11.0
+01:53:20  Found 7 models, 10 data tests, 5 sources, 500 macros
+01:53:20  
+01:53:20  Concurrency: 4 threads (target='dev')
+01:53:20  
+01:53:20  1 of 17 START sql view model dbt_adnane.stg_jaffle_shop__customers ............. [RUN]
+01:53:21  1 of 17 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ........ [OK in 0.06s]
+01:53:21  2 of 17 START sql view model dbt_adnane.stg_jaffle_shop__order_items ........... [RUN]
+01:53:21  2 of 17 OK created sql view model dbt_adnane.stg_jaffle_shop__order_items ...... [OK in 0.02s]
+01:53:21  3 of 17 START sql view model dbt_adnane.stg_jaffle_shop__orders ................ [RUN]
+01:53:21  3 of 17 OK created sql view model dbt_adnane.stg_jaffle_shop__orders ........... [OK in 0.02s]
+01:53:21  4 of 17 START sql view model dbt_adnane.stg_jaffle_shop__products .............. [RUN]
+01:53:21  4 of 17 OK created sql view model dbt_adnane.stg_jaffle_shop__products ......... [OK in 0.02s]
+01:53:21  5 of 17 START sql view model dbt_adnane.stg_stripe__payments ................... [RUN]
+01:53:21  5 of 17 OK created sql view model dbt_adnane.stg_stripe__payments .............. [OK in 0.02s]
+01:53:21  6 of 17 START test not_null_stg_jaffle_shop__customers_customer_id ............. [RUN]
+01:53:21  6 of 17 PASS not_null_stg_jaffle_shop__customers_customer_id ................... [PASS in 0.04s]
+01:53:21  7 of 17 START test not_null_stg_jaffle_shop__order_items_order_item_id ......... [RUN]
+01:53:21  7 of 17 PASS not_null_stg_jaffle_shop__order_items_order_item_id ............... [PASS in 0.01s]
+01:53:21  8 of 17 START test not_null_stg_jaffle_shop__orders_order_id ................... [RUN]
+01:53:21  8 of 17 PASS not_null_stg_jaffle_shop__orders_order_id ......................... [PASS in 0.01s]
+01:53:21  9 of 17 START test not_null_stg_jaffle_shop__products_product_id ............... [RUN]
+01:53:21  9 of 17 PASS not_null_stg_jaffle_shop__products_product_id ..................... [PASS in 0.01s]
+01:53:21  10 of 17 START test not_null_stg_stripe__payments_payment_id ................... [RUN]
+01:53:21  10 of 17 PASS not_null_stg_stripe__payments_payment_id ......................... [PASS in 0.01s]
+01:53:21  11 of 17 START test unique_stg_jaffle_shop__customers_customer_id .............. [RUN]
+01:53:21  11 of 17 PASS unique_stg_jaffle_shop__customers_customer_id .................... [PASS in 0.02s]
+01:53:21  12 of 17 START test unique_stg_jaffle_shop__order_items_order_item_id .......... [RUN]
+01:53:21  12 of 17 PASS unique_stg_jaffle_shop__order_items_order_item_id ................ [PASS in 0.02s]
+01:53:21  13 of 17 START test unique_stg_jaffle_shop__orders_order_id .................... [RUN]
+01:53:21  13 of 17 PASS unique_stg_jaffle_shop__orders_order_id .......................... [PASS in 0.02s]
+01:53:21  14 of 17 START test unique_stg_jaffle_shop__products_product_id ................ [RUN]
+01:53:21  14 of 17 PASS unique_stg_jaffle_shop__products_product_id ...................... [PASS in 0.02s]
+01:53:21  15 of 17 START test unique_stg_stripe__payments_payment_id ..................... [RUN]
+01:53:21  15 of 17 PASS unique_stg_stripe__payments_payment_id ........................... [PASS in 0.02s]
+01:53:21  16 of 17 START sql view model dbt_adnane.fct_orders ............................ [RUN]
+01:53:21  16 of 17 OK created sql view model dbt_adnane.fct_orders ....................... [OK in 0.03s]
+01:53:21  17 of 17 START sql view model dbt_adnane.dim_customers ......................... [RUN]
+01:53:21  17 of 17 OK created sql view model dbt_adnane.dim_customers .................... [OK in 0.03s]
+01:53:21  
+01:53:21  Finished running 10 data tests, 7 view models in 0 hours 0 minutes and 0.47 seconds (0.47s).
+01:53:21  
+01:53:21  Completed successfully
+01:53:21  
+01:53:21  Done. PASS=17 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=17
+[spike] success=True wall=0.76s
+$ dbt compile
+01:53:21  Running with dbt=1.11.16
+01:53:21  Registered adapter: duckdb=1.11.0
+01:53:21  Found 7 models, 10 data tests, 5 sources, 500 macros
+01:53:21  
+01:53:21  Concurrency: 4 threads (target='dev')
+01:53:21  
+[spike] success=True wall=0.21s
+$ dbt compile --select stg_stripe__payments
+01:53:21  Running with dbt=1.11.16
+01:53:21  Registered adapter: duckdb=1.11.0
+01:53:21  Found 7 models, 10 data tests, 5 sources, 500 macros
+01:53:21  
+01:53:21  Concurrency: 4 threads (target='dev')
+01:53:21  
+Compiled node 'stg_stripe__payments' is:
+with
+
+source as (
+
+    select * from "practice"."stripe"."payments"
+
+),
+
+renamed as (
+
+    select
+        id as payment_id,
+        orderid as order_id,
+        paymentmethod as payment_method,
+        status,
+        -- cents -> dollars, stored as an exact decimal (not a float)
+        cast(amount / 100 as decimal(16, 2)) as amount,
+        created as created_at,
+        _loaded_at as loaded_at
+
+    from source
+
+)
+
+select * from renamed
+[spike] success=True wall=0.14s
+$ dbt ls
+01:53:21  Running with dbt=1.11.16
+01:53:21  Registered adapter: duckdb=1.11.0
+01:53:21  Found 7 models, 10 data tests, 5 sources, 500 macros
+jaffle_dbt.marts.dim_customers
+jaffle_dbt.marts.fct_orders
+jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers
+jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__order_items
+jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders
+jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products
+jaffle_dbt.staging.stripe.stg_stripe__payments
+source:jaffle_dbt.jaffle_shop.customers
+source:jaffle_dbt.jaffle_shop.order_items
+source:jaffle_dbt.jaffle_shop.orders
+source:jaffle_dbt.jaffle_shop.products
+source:jaffle_dbt.stripe.payments
+jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id
+jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__order_items_order_item_id
+jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__orders_order_id
+jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__products_product_id
+jaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id
+jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id
+jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__order_items_order_item_id
+jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__orders_order_id
+jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__products_product_id
+jaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id
+[spike] success=True wall=0.10s
+$ dbt ls --resource-type source
+01:53:21  Running with dbt=1.11.16
+01:53:21  Registered adapter: duckdb=1.11.0
+01:53:21  Found 7 models, 10 data tests, 5 sources, 500 macros
+source:jaffle_dbt.jaffle_shop.customers
+source:jaffle_dbt.jaffle_shop.order_items
+source:jaffle_dbt.jaffle_shop.orders
+source:jaffle_dbt.jaffle_shop.products
+source:jaffle_dbt.stripe.payments
+[spike] success=True wall=0.08s
+$ dbt ls --select +dim_customers
+01:53:21  Running with dbt=1.11.16
+01:53:21  Registered adapter: duckdb=1.11.0
+01:53:22  Found 7 models, 10 data tests, 5 sources, 500 macros
+jaffle_dbt.marts.dim_customers
+jaffle_dbt.marts.fct_orders
+jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers
+jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders
+jaffle_dbt.staging.stripe.stg_stripe__payments
+source:jaffle_dbt.jaffle_shop.customers
+source:jaffle_dbt.jaffle_shop.orders
+source:jaffle_dbt.stripe.payments
+jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id
+jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__orders_order_id
+jaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id
+jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id
+jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__orders_order_id
+jaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id
+[spike] success=True wall=0.08s
+$ dbt show --select dim_customers --limit 10
+01:53:22  Running with dbt=1.11.16
+01:53:22  Registered adapter: duckdb=1.11.0
+01:53:22  Found 7 models, 10 data tests, 5 sources, 500 macros
+01:53:22  
+01:53:22  Concurrency: 4 threads (target='dev')
+01:53:22  
+Previewing node 'dim_customers':
+| customer_id | first_name | last_name | email                | country       | first_order_date | ... |
+| ----------- | ---------- | --------- | -------------------- | ------------- | ---------------- | --- |
+|           1 | Lina       | Brown     | lina.brown1@examp... | Spain         |       2025-06-22 | ... |
+|           2 | Yasmine    | Bernard   | yasmine.bernard2@... | Morocco       |       2025-03-25 | ... |
+|           3 | Ali        | Fischer   | ali.fischer3@exam... | United States |       2025-05-21 | ... |
+|           4 | Hana       | Fischer   | hana.fischer4@exa... | Spain         |       2025-03-01 | ... |
+|           5 | Adam       | Evans     | adam.evans5@examp... | Morocco       |       2025-05-24 | ... |
+|           6 | Emma       | Bernard   | emma.bernard6@exa... | Spain         |       2025-02-05 | ... |
+|           7 | Zineb      | Moreau    | zineb.moreau7@exa... | Germany       |       2025-04-06 | ... |
+|           8 | Karim      | Idrissi   | karim.idrissi8@ex... | France        |       2025-07-24 | ... |
+|           9 | Leo        | Taylor    | leo.taylor9@examp... | France        |       2025-09-11 | ... |
+|          10 | Yasmine    | Martin    | yasmine.martin10@... | Germany       |       2025-10-15 | ... |
+
+[spike] success=True wall=0.21s
+$ dbt show --inline "select customer_id, number_of_orders, lifetime_value from {{ ref('dim_customers') }} order by customer_id" --limit 10
+01:53:22  Running with dbt=1.11.16
+01:53:22  Registered adapter: duckdb=1.11.0
+01:53:22  Found 7 models, 10 data tests, 1 sql operation, 5 sources, 500 macros
+01:53:22  
+01:53:22  Concurrency: 4 threads (target='dev')
+01:53:22  
+Previewing inline node:
+| customer_id | number_of_orders | lifetime_value |
+| ----------- | ---------------- | -------------- |
+|           1 |                3 |           46.7 |
+|           2 |                3 |           65.5 |
+|           3 |                3 |           24.8 |
+|           4 |                5 |           67.5 |
+|           5 |                3 |           57.8 |
+|           6 |                3 |           81.4 |
+|           7 |                1 |            6.0 |
+|           8 |                2 |           21.5 |
+|           9 |                1 |           40.0 |
+|          10 |                1 |           28.0 |
+
+[spike] success=True wall=0.35s
+$ dbt show --inline "select count(*) as n_customers, sum(number_of_orders) as total_orders, sum(lifetime_value) as total_lifetime_value, count(*) filter (where number_of_orders = 0) as customers_without_orders from {{ ref('dim_customers') }}"
+01:53:22  Running with dbt=1.11.16
+01:53:22  Registered adapter: duckdb=1.11.0
+01:53:22  Found 7 models, 10 data tests, 1 sql operation, 5 sources, 500 macros
+01:53:22  
+01:53:22  Concurrency: 4 threads (target='dev')
+01:53:22  
+Previewing inline node:
+| n_customers | total_orders | total_lifetime_value | customers_without... |
+| ----------- | ------------ | -------------------- | -------------------- |
+|         100 |          299 |              4,988.4 |                   11 |
+
+[spike] success=True wall=0.19s
+$ dbt show --inline "select count(*) as n_orders, sum(amount) as total_amount from {{ ref('fct_orders') }}"
+01:53:22  Running with dbt=1.11.16
+01:53:22  Registered adapter: duckdb=1.11.0
+01:53:22  Found 7 models, 10 data tests, 1 sql operation, 5 sources, 500 macros
+01:53:22  
+01:53:22  Concurrency: 4 threads (target='dev')
+01:53:22  
+Previewing inline node:
+| n_orders | total_amount |
+| -------- | ------------ |
+|      300 |      5,004.4 |
+
+[spike] success=True wall=0.15s
+$ dbt docs generate
+01:53:22  Running with dbt=1.11.16
+01:53:22  Registered adapter: duckdb=1.11.0
+01:53:22  Found 7 models, 10 data tests, 5 sources, 500 macros
+01:53:22  
+01:53:22  Concurrency: 4 threads (target='dev')
+01:53:22  
+01:53:23  Building catalog
+01:53:23  Catalog written to /home/pyodide/dbt-course/jaffle_dbt/target/catalog.json
+[spike] success=True wall=0.37s
+[spike] results [{"cmd":"run","ok":true,"ms":2405},{"cmd":"build","ok":true,"ms":756},{"cmd":"compile","ok":true,"ms":210},{"cmd":"compile --select stg_stripe__payments","ok":true,"ms":143},{"cmd":"ls","ok":true,"ms":97},{"cmd":"ls --resource-type source","ok":true,"ms":78},{"cmd":"ls --select +dim_customers","ok":true,"ms":83},{"cmd":"show --select dim_customers --limit 10","ok":true,"ms":214},{"cmd":"show --inline \"select customer_id, number_of_orders, lifetime_value from {{ ref('dim_customers') }} order by customer_id\" --limit 10","ok":true,"ms":353},{"cmd":"show --inline \"select count(*) as n_customers, sum(number_of_orders) as total_orders, sum(lifetime_value) as total_lifetime_value, count(*) filter (where number_of_orders = 0) as customers_without_orders from {{ ref('dim_customers') }}\"","ok":true,"ms":187},{"cmd":"show --inline \"select count(*) as n_orders, sum(amount) as total_amount from {{ ref('fct_orders') }}\"","ok":true,"ms":154},{"cmd":"docs generate","ok":true,"ms":367}]
+[spike] total wall 14240 ms

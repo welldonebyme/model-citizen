@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: One row per order, with the amount paid (successful payments only).
+    config:
+      tags: ['finance']
+      meta:
+        owner: finance-team
+        contains_pii: false
+
+  - name: fct_monthly_revenue
+    description: Orders and revenue per order month and customer country (returned orders excluded).
+    config:
+      tags: ['finance']
+
+  - name: dim_customers
+    description: One row per customer, with order history and lifetime value.
+    config:
+      tags: ['marketing']
+      meta:
+        contains_pii: true
+
+  - name: fct_order_items
+    description: One row per order line (order x product), with the line amount in dollars.
+    config:
+      tags: ['finance']

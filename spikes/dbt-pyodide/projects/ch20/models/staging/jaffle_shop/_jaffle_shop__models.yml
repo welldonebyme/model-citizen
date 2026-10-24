@@ -1,0 +1,70 @@
+version: 2
+
+models:
+  - name: stg_jaffle_shop__customers
+    description: One row per customer, cleaned (email in lower case).
+    columns:
+      - name: customer_id
+        description: Primary key of the customer.
+        data_tests:
+          - unique
+          - not_null
+      - name: email
+        description: Email address in lower case. NULL when the customer gave none.
+
+  - name: stg_jaffle_shop__orders
+    description: One row per order.
+    config:
+      event_time: order_date
+    columns:
+      - name: order_id
+        description: Primary key of the order.
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: The customer who placed the order.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_jaffle_shop__customers')
+                field: customer_id
+              config:
+                # known orphan (order 159, ticket APP-123): warn for a few, fail for many
+                warn_if: ">0"
+                error_if: ">10"
+      - name: status
+        description: "{{ doc('order_status') }}"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
+      - name: loaded_at
+        description: When the row was loaded into the warehouse.
+
+  - name: stg_jaffle_shop__order_items
+    description: One row per product line inside an order.
+    columns:
+      - name: order_item_id
+        description: Primary key of the order item.
+        data_tests:
+          - unique
+          - not_null
+      - name: quantity
+        description: Number of units of the product.
+        data_tests:
+          - is_positive
+
+  - name: stg_jaffle_shop__products
+    description: One row per product, price in dollars.
+    columns:
+      - name: product_id
+        description: Primary key of the product.
+        data_tests:
+          - unique
+          - not_null
+      - name: price
+        description: Unit price in dollars.
+        data_tests:
+          - is_positive

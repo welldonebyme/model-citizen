@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: stripe
+    description: Raw data from Stripe, our payment provider.
+    tables:
+      - name: payments
+        description: One row per payment attempt. Amounts are in cents.
+        config:
+          event_time: created
+          loaded_at_field: _loaded_at
+          freshness:
+            warn_after: {count: 6, period: hour}
+            error_after: {count: 1, period: day}
+            filter: "status = 'success'"   # only successful payments count
+        columns:
+          - name: id
+            data_tests:
+              - unique
+              - not_null

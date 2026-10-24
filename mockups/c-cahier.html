@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup C: Cahier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..900,0..1,0..1,0..1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #FFFFFF; --desk: #EEF0F6; --rule-major: #BAC4EA; --rule-minor: #E4E8F7; --margin: #E06A6A;
+  --ink: #1D3296; --ink-strong: #15246E; --text: #23283A; --muted: #5C6378; --line: #DCE0EC;
+  --hl: #FFE45C; --hl-text: #23283A; --note: #FFF1A8; --note-edge: #E9D46A;
+  --tick: #1B7F47; --tick-soft: #E3F3EA; --red: #C1272D; --red-soft: #FCEBEB; --idea: #8A5300; --idea-soft: #FFF4DE; --quiz: #5B34C0;
+  --code-bg: #F5F6FB; --kw: #1D3296;
+  --sans: "Recursive", system-ui, sans-serif;
+  --hand: "Recursive", "Comic Sans MS", cursive;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #141B2E; --desk: #0F1424; --rule-major: #2A3561; --rule-minor: #1C2444; --margin: #9C4A57;
+  --ink: #A9BAFF; --ink-strong: #C6D2FF; --text: #D9DDE9; --muted: #9AA2B8; --line: #283152;
+  --hl: #E6C440; --hl-text: #171A24; --note: #3A3518; --note-edge: #5A5122;
+  --tick: #5FD39A; --tick-soft: #153126; --red: #FF8B8B; --red-soft: #3A1D22; --idea: #F5B74E; --idea-soft: #332818; --quiz: #B39BFF;
+  --code-bg: #0F1526; --kw: #A9BAFF; color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --paper: #141B2E; --desk: #0F1424; --rule-major: #2A3561; --rule-minor: #1C2444; --margin: #9C4A57;
+  --ink: #A9BAFF; --ink-strong: #C6D2FF; --text: #D9DDE9; --muted: #9AA2B8; --line: #283152;
+  --hl: #E6C440; --hl-text: #171A24; --note: #3A3518; --note-edge: #5A5122;
+  --tick: #5FD39A; --tick-soft: #153126; --red: #FF8B8B; --red-soft: #3A1D22; --idea: #F5B74E; --idea-soft: #332818; --quiz: #B39BFF;
+  --code-bg: #0F1526; --kw: #A9BAFF; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--desk); color: var(--text); font: 400 17px/1.65 var(--sans); font-variation-settings: "CASL" 0, "MONO" 0; }
+h1, h2, h3 { color: var(--ink-strong); margin: 0; line-height: 1.2; }
+code, .mono { font-family: var(--sans); font-variation-settings: "MONO" 1, "CASL" 0; font-size: .92em; }
+p code, li code, .callout code, .stem code, .opt code { background: var(--code-bg); border-radius: 4px; padding: 0 .3em; color: var(--ink-strong); }
+.hand { font-variation-settings: "CASL" 1, "MONO" 0; font-style: normal; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; border-radius: 4px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+.frame { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 8px 16px; background: #2b2b2b; color: #eee; font: 500 13px/1.2 system-ui, sans-serif; }
+.frame b { margin-right: 8px; font-weight: 600; }
+.frame button { background: #444; border: 0; border-radius: 6px; padding: 6px 10px; color: #eee; }
+.frame button[aria-pressed="true"] { background: #eee; color: #222; }
+.frame .sp { flex: 1; }
+
+.top { display: flex; align-items: center; gap: 26px; height: 64px; padding: 0 28px; background: var(--paper); border-bottom: 1px solid var(--line); }
+.wordmark { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink-strong); font-size: 21px; font-weight: 800; font-variation-settings: "CASL" .6; letter-spacing: -.01em; }
+.wordmark svg { flex: none; }
+.nav { display: flex; gap: 4px; }
+.nav a { color: var(--muted); text-decoration: none; padding: 6px 10px; border-radius: 6px; font-size: 15.5px; font-weight: 500; }
+.nav a[aria-current="page"] { color: var(--ink-strong); box-shadow: inset 0 -3px 0 var(--hl); border-radius: 0; }
+.search { margin-left: auto; display: flex; align-items: center; gap: 8px; width: 250px; padding: 7px 12px; border: 1.5px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 15px; }
+.search kbd { margin-left: auto; font: 500 12px var(--sans); font-variation-settings: "MONO" 1; }
+.btn { display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 999px; padding: 11px 20px; font-weight: 700; font-size: 16px; text-decoration: none; }
+.btn-ink { background: var(--ink); color: var(--paper); }
+.btn-ink:hover { background: var(--ink-strong); }
+.btn-line { background: transparent; color: var(--ink-strong); border: 1.5px solid var(--ink); }
+
+.wrap { max-width: 1220px; margin: 0 auto; padding: 32px 28px 64px; }
+
+/* Seyes ruling: 8 px minor lines, 32 px major lines, red margin */
+.page {
+  --mx: 112px;
+  position: relative; border-radius: 4px 14px 14px 4px; box-shadow: 0 1px 0 var(--line), 0 18px 40px -26px rgba(29,50,150,.45);
+  background:
+    linear-gradient(to right, transparent calc(var(--mx) - 1px), var(--margin) calc(var(--mx) - 1px), var(--margin) calc(var(--mx) + 1px), transparent calc(var(--mx) + 1px)),
+    repeating-linear-gradient(to bottom, transparent 0 31px, var(--rule-major) 31px 32px),
+    repeating-linear-gradient(to bottom, transparent 0 7px, var(--rule-minor) 7px 8px),
+    repeating-linear-gradient(to right, transparent 0 31px, var(--rule-minor) 31px 32px),
+    var(--paper);
+  background-position: 0 0, 0 24px, 0 24px, var(--mx) 0, 0 0;
+}
+.page.holes::before { content: ""; position: absolute; left: 22px; top: 40px; bottom: 40px; width: 14px; background: radial-gradient(circle, var(--desk) 6px, transparent 7px) 0 0 / 14px 96px repeat-y; }
+
+/* ---------- TODAY ---------- */
+.today { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 28px; align-items: start; }
+.day { padding: 24px 40px 32px var(--mx); line-height: 32px; }
+.day .when { position: relative; padding-left: 24px; font-size: 30px; font-weight: 700; color: var(--ink); line-height: 64px; }
+.day .when svg { position: absolute; left: 22px; bottom: 8px; }
+.day .sub { padding-left: 24px; color: var(--muted); margin: 0 0 32px; }
+.tasks { list-style: none; margin: 0; padding: 0; }
+.tasks li { position: relative; display: grid; grid-template-columns: 32px 1fr; column-gap: 12px; padding-left: 24px; margin-bottom: 32px; }
+.tasks .min { position: absolute; left: calc(-1 * var(--mx) + 16px); width: calc(var(--mx) - 28px); text-align: right; color: var(--red); font-size: 15px; font-variation-settings: "CASL" 1; }
+.tasks .box { width: 22px; height: 22px; margin-top: 5px; border: 2px solid var(--ink); border-radius: 4px; position: relative; }
+.tasks li.done .box::after { content: ""; position: absolute; left: 3px; top: -8px; width: 10px; height: 20px; border: solid var(--tick); border-width: 0 3.5px 3.5px 0; transform: rotate(40deg); }
+.tasks h3 { font-size: 18px; font-weight: 700; line-height: 32px; color: var(--text); }
+.tasks li.done h3 { color: var(--muted); text-decoration: line-through 2px var(--tick); }
+.tasks p { margin: 0; color: var(--muted); font-size: 16px; line-height: 32px; }
+.tasks li.now h3 span { background: linear-gradient(transparent 12%, var(--hl) 12%, var(--hl) 88%, transparent 88%); color: var(--hl-text); padding: 0 4px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.tasks .go { margin-top: 0; height: 32px; padding: 0 18px; align-self: start; }
+.tasks .actions { display: flex; align-items: center; gap: 14px; margin-top: 0; }
+.tasks .actions .hand { color: var(--muted); font-size: 15px; }
+.badge { display: inline-block; font-size: 13px; font-weight: 700; padding: 0 9px; border-radius: 999px; line-height: 22px; vertical-align: 2px; margin-left: 6px; }
+.badge.lab { background: var(--tick-soft); color: var(--tick); }
+.badge.quiz { background: color-mix(in srgb, var(--quiz) 14%, var(--paper)); color: var(--quiz); }
+
+.side { display: grid; gap: 26px; }
+.sticky { background: var(--note); border-bottom: 3px solid var(--note-edge); padding: 20px 22px 18px; transform: rotate(-1.4deg); box-shadow: 0 12px 22px -16px rgba(80,60,0,.5); border-radius: 2px; }
+.sticky h2 { font-size: 22px; font-variation-settings: "CASL" 1; color: var(--text); }
+.sticky p { margin: 6px 0 14px; color: var(--text); }
+.card { background: var(--paper); border-radius: 14px; padding: 18px 20px; box-shadow: 0 1px 0 var(--line); }
+.card h2 { font-size: 18px; margin-bottom: 4px; }
+.card > p { margin: 0 0 10px; color: var(--muted); font-size: 15px; }
+.report { list-style: none; margin: 0; padding: 0; }
+.report li { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 15px; }
+.report li:last-child { border-bottom: 0; }
+.report b { color: var(--red); font-variation-settings: "CASL" 1; font-weight: 700; }
+.stamps { display: flex; gap: 8px; margin-top: 6px; }
+.stamps span { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: var(--muted); border: 2px dashed var(--line); }
+.stamps .on { border: 2px solid var(--tick); color: var(--tick); background: var(--tick-soft); }
+.stamps .now { border: 2px solid var(--ink); color: var(--ink); }
+
+.contents { margin-top: 30px; padding: 28px 40px 28px var(--mx); line-height: 32px; }
+.contents h2 { padding-left: 24px; font-size: 22px; line-height: 64px; }
+.contents ol { list-style: none; margin: 0; padding: 0 0 0 24px; columns: 2; column-gap: 48px; }
+.contents li { display: flex; align-items: baseline; gap: 8px; break-inside: avoid; font-size: 16px; }
+.contents li .dots { flex: 1; border-bottom: 2px dotted var(--rule-major); transform: translateY(-6px); }
+.contents li .pct { font-variation-settings: "CASL" 1; color: var(--red); font-weight: 600; font-size: 15px; }
+.contents li.done { color: var(--muted); }
+.contents li.done .pct { color: var(--tick); }
+.contents li.now { font-weight: 700; color: var(--ink-strong); }
+
+/* ---------- LESSON ---------- */
+.lbar { display: flex; align-items: center; gap: 18px; padding: 0 28px; height: 56px; background: var(--paper); border-bottom: 1px solid var(--line); font-size: 15px; }
+.lbar .crumb { color: var(--muted); } .lbar .crumb b { color: var(--ink-strong); }
+.pages { margin-left: auto; display: flex; gap: 6px; align-items: center; color: var(--muted); font-size: 14px; }
+.pages i { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--rule-major); }
+.pages i.d { background: var(--tick); border-color: var(--tick); }
+.pages i.n { background: var(--ink); border-color: var(--ink); }
+.seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 999px; border: 1.5px solid var(--line); }
+.seg button { border: 0; background: transparent; padding: 4px 12px; border-radius: 999px; font-size: 13.5px; font-weight: 600; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.lesson { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 500px); gap: 24px; max-width: 1360px; margin: 0 auto; padding: 24px 24px 60px; align-items: start; }
+.sheet { --mx: 112px; position: relative; background: linear-gradient(to right, transparent calc(var(--mx) - 1px), var(--margin) calc(var(--mx) - 1px), var(--margin) calc(var(--mx) + 1px), transparent calc(var(--mx) + 1px)), var(--paper); border-radius: 4px 14px 14px 4px; padding: 30px 44px 44px calc(var(--mx) + 28px); box-shadow: 0 18px 40px -28px rgba(29,50,150,.45); }
+.sheet .kick { margin: 0 0 4px; color: var(--muted); font-size: 15px; }
+.sheet h1 { font-size: 32px; font-weight: 800; margin-bottom: 18px; letter-spacing: -.01em; }
+.sheet h2 { font-size: 21px; margin: 30px 0 8px; }
+.sheet p { margin: 0 0 14px; max-width: 66ch; }
+.note-m { position: absolute; left: 12px; width: calc(var(--mx) - 24px); text-align: right; font-size: 14.5px; line-height: 1.3; font-variation-settings: "CASL" 1; color: var(--red); transform: rotate(-3deg); }
+.term { position: relative; font-weight: 700; color: var(--ink-strong); background: linear-gradient(transparent 62%, var(--hl) 62%); cursor: help; }
+:root[data-theme="dark"] .term { background: linear-gradient(transparent 70%, color-mix(in srgb, var(--hl) 55%, transparent) 70%); }
+.term .tip { position: absolute; left: 0; bottom: calc(100% + 6px); white-space: nowrap; background: var(--ink-strong); color: var(--paper); font-size: 14px; font-weight: 500; padding: 5px 10px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity .12s; font-variation-settings: "CASL" 1; }
+.term:hover .tip, .term:focus .tip { opacity: 1; }
+.callout { position: relative; margin: 18px 0; padding: 14px 18px; border-radius: 12px; font-size: 16px; }
+.callout h3 { font-size: 15.5px; margin-bottom: 4px; }
+.callout p { margin: 0; }
+.callout.analogy { background: var(--idea-soft); } .callout.analogy h3 { color: var(--idea); }
+.callout.trap { background: var(--red-soft); } .callout.trap h3 { color: var(--red); }
+.callout.bridge { border: 1.5px dashed var(--ink); } .callout.bridge h3 { color: var(--ink); }
+.code { margin: 14px 0; border-radius: 12px; background: var(--code-bg); overflow: hidden; border: 1px solid var(--line); }
+.code header { display: flex; justify-content: space-between; padding: 6px 14px; font-size: 13px; color: var(--muted); border-bottom: 1px solid var(--line); }
+.code header button { border: 0; background: none; color: var(--ink); font-weight: 700; font-size: 13px; }
+.code pre { margin: 0; padding: 12px 16px; font: 400 14.5px/1.6 var(--sans); font-variation-settings: "MONO" 1; color: var(--text); overflow-x: auto; }
+.k { color: var(--kw); font-weight: 700; }
+.sheet-foot { display: flex; justify-content: space-between; gap: 12px; margin-top: 28px; padding-top: 20px; border-top: 1.5px dashed var(--line); }
+.sheet-foot [aria-pressed="true"] { border-color: var(--tick); color: var(--tick); background: var(--tick-soft); }
+
+.labsheet { position: sticky; top: 56px; background: var(--paper); border-radius: 14px; box-shadow: 0 18px 40px -28px rgba(29,50,150,.45); overflow: hidden; }
+.labsheet .head { padding: 16px 20px 12px; background: var(--tick-soft); }
+.labsheet .head h2 { font-size: 17px; color: var(--tick); }
+.labsheet .head p { margin: 2px 0 0; font-size: 14.5px; color: var(--text); }
+.ed { margin: 16px 20px 0; border-radius: 12px; border: 1.5px solid var(--line); overflow: hidden; background: var(--code-bg); }
+.ed .bar { display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 14px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.ed .bar .sp { flex: 1; }
+.ed textarea { display: block; width: 100%; min-height: 120px; border: 0; resize: vertical; background: transparent; color: var(--text); padding: 12px 14px; font: 400 14.5px/1.6 var(--sans); font-variation-settings: "MONO" 1; }
+.ed textarea:focus { outline: none; }
+.mini { border: 1.5px solid var(--line); background: var(--paper); border-radius: 999px; padding: 4px 12px; font-size: 13px; font-weight: 600; }
+.runb { border: 0; background: var(--ink); color: var(--paper); border-radius: 999px; padding: 6px 16px; font-weight: 700; font-size: 14px; }
+.res { margin: 14px 20px 0; overflow-x: auto; }
+.res table { width: 100%; border-collapse: collapse; font: 400 14px/1.4 var(--sans); font-variation-settings: "MONO" 1; }
+.res th { text-align: left; color: var(--muted); font-weight: 600; padding: 6px 10px; border-bottom: 2px solid var(--rule-major); }
+.res td { padding: 6px 10px; border-bottom: 1px solid var(--rule-minor); }
+.res td.num { text-align: right; } .res td.null { color: var(--muted); font-style: italic; }
+.res .empty { color: var(--muted); font-size: 14px; }
+.verdict { margin: 14px 20px 18px; padding: 12px 14px; border-radius: 12px; font-size: 15px; }
+.verdict[data-state="pass"] { background: var(--tick-soft); } .verdict[data-state="pass"] strong { color: var(--tick); }
+.verdict[data-state="trap"] { background: var(--red-soft); } .verdict[data-state="trap"] strong { color: var(--red); }
+.labsheet .foot { padding: 10px 20px 14px; color: var(--muted); font-size: 13px; }
+
+/* ---------- EXAM ---------- */
+.exam { min-height: calc(100vh - 40px); background: var(--paper); display: flex; flex-direction: column; }
+.ex-top { display: flex; align-items: center; gap: 14px; padding: 0 28px; height: 60px; border-bottom: 1px solid var(--line); }
+.ex-top b { color: var(--ink-strong); }
+.ex-top .muted { color: var(--muted); font-size: 14.5px; }
+.ex-top .timer { margin-left: auto; font: 700 20px var(--sans); font-variation-settings: "MONO" 1; color: var(--ink-strong); }
+.ex-top .count { color: var(--muted); font-size: 15px; padding-left: 14px; border-left: 1px solid var(--line); }
+.ex-body { flex: 1; width: 100%; max-width: 860px; margin: 0 auto; padding: 40px 28px; }
+.qh { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; color: var(--muted); font-size: 14.5px; }
+.qh b { color: var(--paper); background: var(--ink); border-radius: 999px; padding: 1px 10px; font-size: 13.5px; }
+.stem { font-size: 19px; line-height: 1.55; color: var(--text); margin: 0 0 26px; }
+.domc-trail { list-style: none; margin: 0 0 12px; padding: 0; display: flex; gap: 6px; flex-wrap: wrap; min-height: 26px; }
+.domc-trail li { font-size: 13px; color: var(--muted); border: 1.5px dashed var(--line); border-radius: 999px; padding: 1px 10px; }
+.domc-card { border: 1.5px solid var(--rule-major); border-radius: 14px; padding: 20px 22px; }
+.domc-in { animation: domc .26s ease-out; }
+@keyframes domc { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.domc-card .lab { color: var(--muted); font-weight: 700; font-size: 14px; margin-bottom: 6px; }
+.domc-card .opt { font-size: 18px; margin: 0 0 18px; color: var(--text); }
+.yn { display: flex; gap: 12px; }
+.yn button { min-width: 120px; padding: 10px 18px; border-radius: 999px; border: 1.5px solid var(--ink); background: var(--paper); color: var(--ink-strong); font-weight: 700; font-size: 16px; }
+.yn button:hover { background: var(--ink); color: var(--paper); }
+.domc-note { margin: 14px 0 0; color: var(--muted); font-size: 14px; }
+.domc-done { border: 1.5px solid var(--line); border-radius: 14px; padding: 20px 22px; }
+.navp { border-top: 1px solid var(--line); padding: 16px 28px 20px; }
+.navgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 6px; max-width: 860px; margin: 0 auto; }
+.navgrid button { height: 36px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--paper); font-size: 13px; font-weight: 600; }
+.navgrid [data-state="answered"] { background: color-mix(in srgb, var(--ink) 14%, var(--paper)); border-color: transparent; }
+.navgrid [data-state="flagged"] { background: var(--hl); color: var(--hl-text); border-color: transparent; }
+.navgrid [data-state="current"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.navkey { display: flex; gap: 16px; max-width: 860px; margin: 10px auto 0; font-size: 13px; color: var(--muted); }
+.ex-foot { display: flex; gap: 12px; align-items: center; padding: 12px 28px; border-top: 1px solid var(--line); }
+.ex-foot .sp { flex: 1; }
+.ex-foot button { border: 1.5px solid var(--line); background: var(--paper); border-radius: 999px; padding: 8px 18px; font-weight: 600; font-size: 15px; }
+.ex-foot .next { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.ex-foot [data-flag][aria-pressed="true"] { background: var(--hl); color: var(--hl-text); border-color: transparent; }
+
+footer.disc { padding: 22px 28px; text-align: center; color: var(--muted); font-size: 13px; }
+
+@media (max-width: 1100px) {
+  .today { grid-template-columns: 1fr; }
+  .side { grid-template-columns: 1fr 1fr; }
+  .lesson { grid-template-columns: 1fr; }
+  .labsheet { position: static; }
+}
+@media (max-width: 760px) {
+  .top { padding: 0 16px; gap: 12px; } .nav, .search { display: none; }
+  .wrap { padding: 16px 12px 40px; }
+  .page, .sheet { --mx: 44px; }
+  .page.holes::before { display: none; }
+  .day { padding: 12px 16px 20px var(--mx); }
+  .day .when { font-size: 23px; padding-left: 12px; } .day .sub, .tasks li, .contents h2, .contents ol { padding-left: 12px; }
+  .tasks .min { display: none; }
+  .side { grid-template-columns: 1fr; }
+  .contents { padding: 16px 16px 20px var(--mx); } .contents ol { columns: 1; }
+  .lbar { overflow-x: auto; padding: 0 16px; } .lbar .crumb { white-space: nowrap; }
+  .lesson { padding: 12px 8px 40px; }
+  .sheet { padding: 20px 16px 28px calc(var(--mx) + 12px); }
+  .note-m { display: none; }
+  .sheet h1 { font-size: 26px; }
+  .ex-top { flex-wrap: wrap; height: auto; padding: 10px 16px; } .ex-body { padding: 24px 16px; }
+  .yn button { flex: 1; min-width: 0; } .ex-foot { flex-wrap: wrap; padding: 12px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="frame" role="toolbar" aria-label="Mockup controls">
+  <b>Mockup C: Cahier</b>
+  <button data-screen-btn="today">Today</button>
+  <button data-screen-btn="lesson">Lesson + lab</button>
+  <button data-screen-btn="exam">Exam (DOMC)</button>
+  <span class="sp"></span>
+  <button data-theme-toggle>Dark mode</button>
+</div>
+
+<!-- ======================= TODAY ======================= -->
+<section data-screen="today">
+  <header class="top">
+    <a class="wordmark" href="#today" data-go="today">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect x="2" y="2" width="24" height="24" rx="6" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M8 14.5l4 4 8.5-9.5" fill="none" stroke="var(--tick)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Model Citizen
+    </a>
+    <nav class="nav" aria-label="Main"><a href="#today" aria-current="page">Today</a><a href="#">Contents</a><a href="#">Labs</a><a href="#exam" data-go="exam">Mock exams</a><a href="#">Flashcards</a><a href="#">Glossary</a></nav>
+    <div class="search" role="search">Search the course <kbd>Ctrl K</kbd></div>
+  </header>
+
+  <main class="wrap">
+    <div class="today">
+      <section class="page holes day" aria-labelledby="day-h">
+        <h1 class="when hand" id="day-h">Saturday 24 October
+          <svg width="300" height="10" viewBox="0 0 300 10" aria-hidden="true"><path d="M2 6 C 60 1, 120 9, 180 4 S 270 3, 298 6" fill="none" stroke="var(--margin)" stroke-width="2.5" stroke-linecap="round"/></svg>
+        </h1>
+        <p class="sub">Week 2 of 14, day 3. Tonight, SQL: from NULL to CASE.</p>
+        <ol class="tasks">
+          <li class="done"><span class="min">0 to 10</span><span class="box" aria-label="Done"></span><div><h3>Spaced review, 4 cards</h3><p>Two traps from Chapter 2, two from Chapter 3.</p></div></li>
+          <li class="now"><span class="min">10 to 35</span><span class="box"></span><div><h3><span>Read 4.4 NULL: the value that is not a value</span></h3><p>Step 2 of 6: <code>is null</code>, not <code>= null</code>.</p><div class="actions"><a class="btn btn-ink go" href="#lesson" data-go="lesson">Continue reading</a><span class="hand">about 20 minutes left</span></div></div></li>
+          <li><span class="min">35 to 60</span><span class="box"></span><div><h3>Read 4.5 ORDER BY, LIMIT and DISTINCT, then 4.6 Functions</h3><p>Text, dates, CASE and CAST.</p></div></li>
+          <li><span class="min">60 to 100</span><span class="box"></span><div><h3>Lab: NULLs, functions and CASE <span class="badge lab">in your browser</span></h3><p>Real DuckDB with the jaffle_shop data, checked against the book.</p></div></li>
+          <li><span class="min">100 to 120</span><span class="box"></span><div><h3>Check yourself, part 1 <span class="badge quiz">8 questions</span></h3><p>Book closed. Wrong answers go to your error notebook.</p></div></li>
+        </ol>
+      </section>
+
+      <aside class="side">
+        <section class="sticky" aria-labelledby="st-h">
+          <h2 id="st-h">4 cards to review</h2>
+          <p>From Chapters 2 and 3. Do them first, while your mind is fresh.</p>
+          <a class="btn btn-ink" href="#">Review now</a>
+        </section>
+        <section class="card" aria-labelledby="rep-h">
+          <h2 id="rep-h">Ready to book the exam?</h2>
+          <p>All four lines must be ticked.</p>
+          <ul class="report">
+            <li><span>Every chapter quiz at 80% or more</span><b>2 / 26</b></li>
+            <li><span>Capstone builds without errors</span><b>0 / 15</b></li>
+            <li><span>Two timed mocks at 80% or more</span><b>0 / 2</b></li>
+            <li><span>Error notebook re-read</span><b>12 notes</b></li>
+          </ul>
+        </section>
+        <section class="card" aria-labelledby="sk-h">
+          <h2 id="sk-h">6 days in a row</h2>
+          <div class="stamps" aria-label="This week"><span class="on">M</span><span class="on">T</span><span class="on">W</span><span class="on">T</span><span class="on">F</span><span class="now">S</span><span>S</span></div>
+        </section>
+      </aside>
+    </div>
+
+    <section class="page contents" aria-labelledby="toc-h">
+      <h2 id="toc-h" class="hand">Contents</h2>
+      <ol>
+        <li class="done">0 Start here<span class="dots"></span><span class="pct">done</span></li>
+        <li class="done">1 The data world in simple words<span class="dots"></span><span class="pct">done</span></li>
+        <li class="done">2 The command line from zero<span class="dots"></span><span class="pct">done</span></li>
+        <li class="done">3 Git and GitHub from zero<span class="dots"></span><span class="pct">done</span></li>
+        <li class="now">4 SQL from zero to exam level<span class="dots"></span><span class="pct">3 of 19</span></li>
+        <li>5 YAML, Jinja and just enough Python<span class="dots"></span><span class="pct"></span></li>
+        <li>6 Installing dbt, your first project<span class="dots"></span><span class="pct"></span></li>
+        <li>7 Models, ref, sources and the DAG<span class="dots"></span><span class="pct"></span></li>
+        <li>8 Materializations<span class="dots"></span><span class="pct"></span></li>
+        <li>9 Modularity, DRY and refactoring<span class="dots"></span><span class="pct"></span></li>
+      </ol>
+    </section>
+  </main>
+  <footer class="disc">Unofficial study guide. Not affiliated with or endorsed by dbt Labs. dbt is a trademark of dbt Labs, Inc.</footer>
+</section>
+
+<!-- ======================= LESSON ======================= -->
+<section data-screen="lesson" hidden>
+  <header class="top">
+    <a class="wordmark" href="#today" data-go="today">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect x="2" y="2" width="24" height="24" rx="6" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M8 14.5l4 4 8.5-9.5" fill="none" stroke="var(--tick)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Model Citizen
+    </a>
+    <nav class="nav" aria-label="Main"><a href="#today" data-go="today">Today</a><a href="#" aria-current="page">Contents</a><a href="#">Labs</a><a href="#exam" data-go="exam">Mock exams</a><a href="#">Flashcards</a><a href="#">Glossary</a></nav>
+    <div class="search" role="search">Search the course <kbd>Ctrl K</kbd></div>
+  </header>
+  <div class="lbar">
+    <span class="crumb">Chapter 4 / <b>4.4 NULL: the value that is not a value</b></span>
+    <div class="pages" aria-label="Step 2 of 6"><i class="d"></i><i class="n"></i><i></i><i></i><i></i><i></i><span>step 2 of 6</span></div>
+    <div class="seg" data-os-group aria-label="Your computer"><button data-os-value="mac" aria-pressed="true">macOS</button><button data-os-value="win" aria-pressed="false">Windows</button><button data-os-value="wsl" aria-pressed="false">WSL</button></div>
+  </div>
+  <div class="lesson">
+    <article class="sheet">
+      <p class="kick">Lesson 4.4</p>
+      <h1>NULL: the value that is not a value</h1>
+      <p>Five customers have no email address. In the table, their <code>email</code> is <span class="term" tabindex="0">NULL<span class="tip" role="tooltip">en français : valeur absente</span></span>. NULL means <em>unknown</em> or <em>missing</em>. It is not zero, it is not an empty text <code>''</code>, it is "we do not know".</p>
+      <div class="callout analogy"><h3>Analogy</h3><p>Imagine a form where somebody did not answer the question "What is your age?". You cannot say the age is 0. You cannot say it is equal to the age of another person who also did not answer: you simply do not know either age. SQL reasons exactly like this.</p></div>
+      <h2>IS NULL, not = NULL</h2>
+      <p>The only correct test is <code>is null</code> or <code>is not null</code>. Run this query in the lab sheet.</p>
+      <div class="code"><header><span>SQL</span><button type="button">Copy to the lab sheet</button></header>
+<pre><span class="k">select</span> id, first_name, email
+<span class="k">from</span> jaffle_shop.customers
+<span class="k">where</span> email <span class="k">is null</span>;</pre></div>
+      <div class="callout trap"><span class="note-m" style="left: -132px; top: 12px;">on the exam!</span><h3>Exam trap</h3><p><code>where email = null</code> runs without any error, and returns <strong>zero rows</strong>. The comparison is unknown for every row, so no row is kept. A query that is wrong but does not fail is the most dangerous kind of bug.</p></div>
+      <div class="callout bridge"><h3>Where you will meet this in dbt</h3><p>dbt's built-in <code>not_null</code> data test (Chapter 18) is just a query like <code>select * from my_model where my_column is null</code>. If it returns rows, the test fails.</p></div>
+      <div class="sheet-foot"><button class="btn btn-line" data-understood aria-pressed="false">I understood this</button><a class="btn btn-ink" href="#">Next: the NOT IN trap</a></div>
+    </article>
+
+    <aside class="labsheet" data-sql aria-label="SQL lab sheet">
+      <div class="head"><h2>Lab sheet</h2><p>Run it, compare with the book, then try the trap.</p></div>
+      <div class="ed">
+        <div class="bar"><span>query.sql</span><span class="sp"></span><button class="mini" data-sql-try>Try = null</button><button class="mini" data-sql-reset>Reset</button><button class="runb" data-sql-run>Run</button></div>
+        <textarea data-sql-editor spellcheck="false" aria-label="SQL editor">select id, first_name, email
+from jaffle_shop.customers
+where email is null;</textarea>
+      </div>
+      <div class="res" data-sql-result aria-live="polite"></div>
+      <div class="verdict" data-sql-status hidden aria-live="polite"></div>
+      <div class="foot">Ctrl + Enter runs the query. Mockup: results are taken from the book.</div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= EXAM ======================= -->
+<section data-screen="exam" hidden>
+  <div class="exam">
+    <header class="ex-top">
+      <b>Mock exam 1</b><span class="muted">Exam mode</span>
+      <span class="timer" data-timer aria-label="Time left">01:47:12</span>
+      <span class="count">Question 8 of 65</span>
+    </header>
+    <main class="ex-body" data-domc>
+      <div class="qh"><b>DOMC</b><span>Judge each option YES or NO. Options appear one at a time.</span></div>
+      <p class="stem">In the CI job of <code>jaffle_dbt</code>, Adnane runs <code>dbt build --empty</code>. For each statement, answer YES (true) or NO (false).</p>
+      <ul class="domc-trail" data-domc-trail aria-label="Options already answered"></ul>
+      <div class="domc-card" data-domc-card>
+        <div class="lab" data-domc-label>Option A</div>
+        <p class="opt" data-domc-text></p>
+        <div class="yn"><button data-domc-yes>Yes</button><button data-domc-no>No</button></div>
+        <p class="domc-note">An answered option cannot be changed, like on the real exam.</p>
+      </div>
+      <div class="domc-done" data-domc-done hidden>Every option of this question is answered. <button class="mini" data-domc-restart>Restart the demo</button></div>
+    </main>
+    <div class="navp" id="navp" hidden>
+      <div class="navgrid" data-nav-grid></div>
+      <div class="navkey"><span>Tinted: answered</span><span>Yellow: flagged for review</span><span>Solid: this question</span></div>
+    </div>
+    <footer class="ex-foot">
+      <button data-flag aria-pressed="false"><span data-flag-label>Flag for review</span></button>
+      <button data-nav-toggle aria-expanded="false" aria-controls="navp">All questions</button>
+      <span class="sp"></span><button>Previous</button><button class="next">Next</button>
+    </footer>
+  </div>
+</section>
+<script src="shared.js"></script>
+</body>
+</html>

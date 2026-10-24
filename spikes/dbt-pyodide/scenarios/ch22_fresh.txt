@@ -1,0 +1,5 @@
+# Fresh database (setup.sql is loaded by the runner) + day 2, then the documented fresh-DB sequence (docs/08-dbt-facts.md)
+sql:updates/day2.sql
+parse --no-partial-parse
+!build --exclude-resource-type unit_test
+build

@@ -1,0 +1,74 @@
+unit_tests:
+  - name: test_dim_customers_lifetime_value
+    description: >
+      number_of_orders and lifetime_value come from fct_orders; a customer without
+      orders keeps 0 orders, 0 value and NULL dates.
+    model: dim_customers
+    given:
+      # format dict (the default): one YAML dictionary per row; missing columns are NULL
+      - input: ref('stg_jaffle_shop__customers')
+        rows:
+          - {customer_id: 1, first_name: Ana, last_name: Lopez, country: France}
+          - {customer_id: 2, first_name: Omar, last_name: Alami, country: Morocco}
+      # format csv: the rows as CSV text
+      - input: ref('fct_orders')
+        format: csv
+        rows: |
+          order_id,customer_id,order_date,status,amount
+          10,1,2025-03-01,completed,12.50
+          11,1,2025-04-15,returned,7.50
+          12,1,2025-05-01,placed,0
+      # format sql: a SELECT that returns ALL the columns of the input
+      - input: ref('country_regions')
+        format: sql
+        rows: |
+          select 'France' as country, 'Europe' as region, 'EUR' as currency
+          union all
+          select 'Morocco', 'Africa', 'MAD'
+    expect:
+      rows:
+        - {customer_id: 1, region: Europe, first_order_date: 2025-03-01, most_recent_order_date: 2025-05-01, number_of_orders: 3, lifetime_value: 20.00}
+        - {customer_id: 2, region: Africa, first_order_date: null, most_recent_order_date: null, number_of_orders: 0, lifetime_value: 0}
+
+  - name: test_fct_orders_incremental_keeps_only_new_rows
+    description: In an incremental run, only orders loaded after the newest loaded_at already in the table are processed.
+    model: fct_orders
+    overrides:
+      macros:
+        is_incremental: true
+    given:
+      - input: ref('int_orders__enriched')
+        rows:
+          - {order_id: 1, customer_id: 1, order_date: 2025-12-30, status: shipped, loaded_at: "2025-12-30 10:00:00", paid_amount: 10.00}
+          - {order_id: 2, customer_id: 2, order_date: 2025-12-31, status: placed, loaded_at: "2026-01-02 07:00:00", paid_amount: 25.00}
+          - {order_id: 3, customer_id: 1, order_date: 2026-01-01, status: completed, loaded_at: "2026-01-01 08:00:00", paid_amount: 6.00}
+      - input: ref('int_orders__payment_methods_pivoted')
+        rows:
+          - {order_id: 2, bank_transfer_amount: 0, coupon_amount: 5.00, credit_card_amount: 20.00, gift_card_amount: 0}
+          - {order_id: 3, bank_transfer_amount: 0, coupon_amount: 0, credit_card_amount: 6.00, gift_card_amount: 0}
+      # 'this' = the current content of the incremental table
+      - input: this
+        rows:
+          - {order_id: 1, loaded_at: "2025-12-31 00:00:00"}
+    expect:
+      rows:
+        - {order_id: 2, status: placed, coupon_amount: 5.00, credit_card_amount: 20.00, amount: 25.00}
+        - {order_id: 3, status: completed, coupon_amount: 0, credit_card_amount: 6.00, amount: 6.00}
+
+  - name: test_fct_orders_full_refresh_keeps_all_rows
+    description: In a full refresh (is_incremental false), every order is processed.
+    model: fct_orders
+    overrides:
+      macros:
+        is_incremental: false
+    given:
+      - input: ref('int_orders__enriched')
+        rows:
+          - {order_id: 1, loaded_at: "2025-12-30 10:00:00", paid_amount: 10.00}
+          - {order_id: 2, loaded_at: "2026-01-02 07:00:00", paid_amount: 25.00}
+      - input: ref('int_orders__payment_methods_pivoted')
+        rows: []
+    expect:
+      rows:
+        - {order_id: 1, amount: 10.00, credit_card_amount: 0}
+        - {order_id: 2, amount: 25.00, credit_card_amount: 0}

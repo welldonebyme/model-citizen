@@ -1,0 +1,643 @@
+[spike] load setup.sql: 0.95s
+[spike] boot timings (ms) {
+  pyodide: 1090,
+  distPackages: 779,
+  micropip: 3246,
+  shim: 90,
+  importAndData: 4619
+}
+$ dbt run
+01:50:59  Running with dbt=1.11.16
+01:50:59  Registered adapter: duckdb=1.11.0
+01:51:00  Unable to do partial parsing because saved manifest not found. Starting full parse.
+01:51:01  Found 7 models, 10 data tests, 5 sources, 500 macros
+01:51:01  
+01:51:01  Concurrency: 4 threads (target='dev')
+01:51:01  
+01:51:01  
+01:51:01  Finished running  in 0 hours 0 minutes and 0.12 seconds (0.12s).
+01:51:01  Encountered an error:
+Runtime Error
+  Connection Error: Connection already closed!
+dbtRunner exception: Traceback (most recent call last):
+  File "/lib/python3.14/site-packages/dbt/adapters/duckdb/connections.py", line 110, in exception_handler
+    yield
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/connections.py", line 148, in add_query
+    _execute_query_with_retry(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor=cursor,
+        ^^^^^^^^^^^^^^
+    ...<4 lines>...
+        attempt=1,
+        ^^^^^^^^^^
+    )
+    ^
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/connections.py", line 97, in _execute_query_with_retry
+    cursor.execute(sql, bindings)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/duckdb/environments/local.py", line 23, in execute
+    return self._cursor.execute(sql)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^
+_duckdb.ConnectionException: Connection Error: Connection already closed!
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 187, in wrapper
+    result, success = func(*args, **kwargs)
+                      ~~~~^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 133, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 281, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 326, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 396, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 373, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 413, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/main.py", line 593, in run
+    results = task.run()
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 626, in run
+    result = self.execute_with_hooks(selected_uids)
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 559, in execute_with_hooks
+    before_run_status = self.before_run(adapter, selected_uids)
+  File "/lib/python3.14/site-packages/dbt/task/run.py", line 1115, in before_run
+    self.populate_adapter_cache(adapter, required_schemas)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 525, in populate_adapter_cache
+    adapter.set_relations_cache(cachable_nodes)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/base/impl.py", line 703, in set_relations_cache
+    self._relations_cache_for_schemas(relation_configs, required_schemas)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/base/impl.py", line 679, in _relations_cache_for_schemas
+    for relation in future.result():
+                    ~~~~~~~~~~~~~^^
+  File "/lib/python314.zip/concurrent/futures/_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/lib/python314.zip/concurrent/futures/_base.py", line 395, in __get_result
+    raise self._exception
+  File "/lib/python3.14/site-packages/dbt_common/utils/executor.py", line 42, in submit
+    result = fn(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt_common/utils/executor.py", line 20, in connected
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/impl.py", line 194, in list_relations_without_caching
+    results = self.execute_macro(LIST_RELATIONS_MACRO_NAME, kwargs=kwargs)
+  File "/lib/python3.14/site-packages/dbt/adapters/base/impl.py", line 1372, in execute_macro
+    result = macro_function(**kwargs)
+  File "/lib/python3.14/site-packages/dbt_common/clients/jinja.py", line 427, in __call__
+    return self.call_macro(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt_common/clients/jinja.py", line 395, in call_macro
+    return macro(*args, **kwargs)
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 770, in __call__
+    return self._invoke(arguments, autoescape)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 784, in _invoke
+    rv = self._func(*arguments)
+  File "<template>", line 21, in macro
+  File "/lib/python3.14/site-packages/jinja2/sandbox.py", line 401, in call
+    return __context.call(__obj, *args, **kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 303, in call
+    return __obj(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/clients/jinja.py", line 82, in __call__
+    return self.call_macro(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt_common/clients/jinja.py", line 395, in call_macro
+    return macro(*args, **kwargs)
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 770, in __call__
+    return self._invoke(arguments, autoescape)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 784, in _invoke
+    rv = self._func(*arguments)
+  File "<template>", line 43, in macro
+  File "/lib/python3.14/site-packages/jinja2/sandbox.py", line 401, in call
+    return __context.call(__obj, *args, **kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 303, in call
+    return __obj(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/clients/jinja.py", line 82, in __call__
+    return self.call_macro(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt_common/clients/jinja.py", line 395, in call_macro
+    return macro(*args, **kwargs)
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 770, in __call__
+    return self._invoke(arguments, autoescape)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 784, in _invoke
+    rv = self._func(*arguments)
+  File "<template>", line 52, in macro
+  File "/lib/python3.14/site-packages/jinja2/sandbox.py", line 401, in call
+    return __context.call(__obj, *args, **kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 303, in call
+    return __obj(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt_common/record.py", line 538, in record_replay_wrapper
+    return func_to_record(*call_args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/adapters/base/impl.py", line 523, in execute
+    return self.connections.execute(sql=sql, auto_begin=auto_begin, fetch=fetch, limit=limit)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/duckdb/connections.py", line 145, in execute
+    return super().execute(sql, auto_begin, fetch, limit)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/connections.py", line 219, in execute
+    _, cursor = self.add_query(sql, auto_begin)
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/connections.py", line 122, in add_query
+    self.begin()
+    ~~~~~~~~~~^^
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/connections.py", line 245, in begin
+    self.add_begin_query()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/connections.py", line 228, in add_begin_query
+    return self.add_query("BEGIN", auto_begin=False)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/connections.py", line 131, in add_query
+    with self.exception_handler(sql):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/lib/python314.zip/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/duckdb/connections.py", line 118, in exception_handler
+    raise dbt.exceptions.DbtRuntimeError(str(e)) from e
+dbt_common.exceptions.base.DbtRuntimeError: Runtime Error
+  Connection Error: Connection already closed!
+
+[spike] success=False wall=1.81s
+$ dbt build
+01:51:01  Running with dbt=1.11.16
+01:51:01  Registered adapter: duckdb=1.11.0
+01:51:01  Found 7 models, 10 data tests, 5 sources, 500 macros
+01:51:01  
+01:51:01  Concurrency: 4 threads (target='dev')
+01:51:01  
+01:51:01  
+01:51:01  Finished running  in 0 hours 0 minutes and 0.02 seconds (0.02s).
+01:51:01  Encountered an error:
+Runtime Error
+  Connection Error: Connection already closed!
+dbtRunner exception: Traceback (most recent call last):
+  File "/lib/python3.14/site-packages/dbt/adapters/duckdb/connections.py", line 110, in exception_handler
+    yield
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/connections.py", line 148, in add_query
+    _execute_query_with_retry(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        cursor=cursor,
+        ^^^^^^^^^^^^^^
+    ...<4 lines>...
+        attempt=1,
+        ^^^^^^^^^^
+    )
+    ^
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/connections.py", line 97, in _execute_query_with_retry
+    cursor.execute(sql, bindings)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/duckdb/environments/local.py", line 23, in execute
+    return self._cursor.execute(sql)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^
+_duckdb.ConnectionException: Connection Error: Connection already closed!
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 187, in wrapper
+    result, success = func(*args, **kwargs)
+                      ~~~~^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 133, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 281, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 326, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 396, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 373, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 413, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/main.py", line 211, in build
+    results = task.run()
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 626, in run
+    result = self.execute_with_hooks(selected_uids)
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 559, in execute_with_hooks
+    before_run_status = self.before_run(adapter, selected_uids)
+  File "/lib/python3.14/site-packages/dbt/task/run.py", line 1115, in before_run
+    self.populate_adapter_cache(adapter, required_schemas)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 525, in populate_adapter_cache
+    adapter.set_relations_cache(cachable_nodes)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/base/impl.py", line 703, in set_relations_cache
+    self._relations_cache_for_schemas(relation_configs, required_schemas)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/base/impl.py", line 679, in _relations_cache_for_schemas
+    for relation in future.result():
+                    ~~~~~~~~~~~~~^^
+  File "/lib/python314.zip/concurrent/futures/_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/lib/python314.zip/concurrent/futures/_base.py", line 395, in __get_result
+    raise self._exception
+  File "/lib/python3.14/site-packages/dbt_common/utils/executor.py", line 42, in submit
+    result = fn(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt_common/utils/executor.py", line 20, in connected
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/impl.py", line 194, in list_relations_without_caching
+    results = self.execute_macro(LIST_RELATIONS_MACRO_NAME, kwargs=kwargs)
+  File "/lib/python3.14/site-packages/dbt/adapters/base/impl.py", line 1372, in execute_macro
+    result = macro_function(**kwargs)
+  File "/lib/python3.14/site-packages/dbt_common/clients/jinja.py", line 427, in __call__
+    return self.call_macro(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt_common/clients/jinja.py", line 395, in call_macro
+    return macro(*args, **kwargs)
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 770, in __call__
+    return self._invoke(arguments, autoescape)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 784, in _invoke
+    rv = self._func(*arguments)
+  File "<template>", line 21, in macro
+  File "/lib/python3.14/site-packages/jinja2/sandbox.py", line 401, in call
+    return __context.call(__obj, *args, **kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 303, in call
+    return __obj(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/clients/jinja.py", line 82, in __call__
+    return self.call_macro(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt_common/clients/jinja.py", line 395, in call_macro
+    return macro(*args, **kwargs)
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 770, in __call__
+    return self._invoke(arguments, autoescape)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 784, in _invoke
+    rv = self._func(*arguments)
+  File "<template>", line 43, in macro
+  File "/lib/python3.14/site-packages/jinja2/sandbox.py", line 401, in call
+    return __context.call(__obj, *args, **kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 303, in call
+    return __obj(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/clients/jinja.py", line 82, in __call__
+    return self.call_macro(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt_common/clients/jinja.py", line 395, in call_macro
+    return macro(*args, **kwargs)
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 770, in __call__
+    return self._invoke(arguments, autoescape)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 784, in _invoke
+    rv = self._func(*arguments)
+  File "<template>", line 52, in macro
+  File "/lib/python3.14/site-packages/jinja2/sandbox.py", line 401, in call
+    return __context.call(__obj, *args, **kwargs)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/jinja2/runtime.py", line 303, in call
+    return __obj(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt_common/record.py", line 538, in record_replay_wrapper
+    return func_to_record(*call_args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/adapters/base/impl.py", line 523, in execute
+    return self.connections.execute(sql=sql, auto_begin=auto_begin, fetch=fetch, limit=limit)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/duckdb/connections.py", line 145, in execute
+    return super().execute(sql, auto_begin, fetch, limit)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/connections.py", line 219, in execute
+    _, cursor = self.add_query(sql, auto_begin)
+                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/connections.py", line 122, in add_query
+    self.begin()
+    ~~~~~~~~~~^^
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/connections.py", line 245, in begin
+    self.add_begin_query()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/connections.py", line 228, in add_begin_query
+    return self.add_query("BEGIN", auto_begin=False)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/sql/connections.py", line 131, in add_query
+    with self.exception_handler(sql):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/lib/python314.zip/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/adapters/duckdb/connections.py", line 118, in exception_handler
+    raise dbt.exceptions.DbtRuntimeError(str(e)) from e
+dbt_common.exceptions.base.DbtRuntimeError: Runtime Error
+  Connection Error: Connection already closed!
+
+[spike] success=False wall=0.31s
+$ dbt compile
+01:51:01  Running with dbt=1.11.16
+01:51:01  Registered adapter: duckdb=1.11.0
+01:51:01  Found 7 models, 10 data tests, 5 sources, 500 macros
+01:51:01  
+01:51:01  Concurrency: 4 threads (target='dev')
+01:51:01  
+[spike] success=True wall=0.24s
+$ dbt compile --select stg_stripe__payments
+01:51:02  Running with dbt=1.11.16
+01:51:02  Registered adapter: duckdb=1.11.0
+01:51:02  Found 7 models, 10 data tests, 5 sources, 500 macros
+01:51:02  
+01:51:02  Concurrency: 4 threads (target='dev')
+01:51:02  
+Compiled node 'stg_stripe__payments' is:
+with
+
+source as (
+
+    select * from "practice"."stripe"."payments"
+
+),
+
+renamed as (
+
+    select
+        id as payment_id,
+        orderid as order_id,
+        paymentmethod as payment_method,
+        status,
+        -- cents -> dollars, stored as an exact decimal (not a float)
+        cast(amount / 100 as decimal(16, 2)) as amount,
+        created as created_at,
+        _loaded_at as loaded_at
+
+    from source
+
+)
+
+select * from renamed
+[spike] success=True wall=0.17s
+$ dbt ls
+01:51:02  Running with dbt=1.11.16
+01:51:02  Registered adapter: duckdb=1.11.0
+01:51:02  Found 7 models, 10 data tests, 5 sources, 500 macros
+jaffle_dbt.marts.dim_customers
+jaffle_dbt.marts.fct_orders
+jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers
+jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__order_items
+jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders
+jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products
+jaffle_dbt.staging.stripe.stg_stripe__payments
+source:jaffle_dbt.jaffle_shop.customers
+source:jaffle_dbt.jaffle_shop.order_items
+source:jaffle_dbt.jaffle_shop.orders
+source:jaffle_dbt.jaffle_shop.products
+source:jaffle_dbt.stripe.payments
+jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id
+jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__order_items_order_item_id
+jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__orders_order_id
+jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__products_product_id
+jaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id
+jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id
+jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__order_items_order_item_id
+jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__orders_order_id
+jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__products_product_id
+jaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id
+[spike] success=True wall=0.08s
+$ dbt ls --resource-type source
+01:51:02  Running with dbt=1.11.16
+01:51:02  Registered adapter: duckdb=1.11.0
+01:51:02  Found 7 models, 10 data tests, 5 sources, 500 macros
+source:jaffle_dbt.jaffle_shop.customers
+source:jaffle_dbt.jaffle_shop.order_items
+source:jaffle_dbt.jaffle_shop.orders
+source:jaffle_dbt.jaffle_shop.products
+source:jaffle_dbt.stripe.payments
+[spike] success=True wall=0.08s
+$ dbt ls --select +dim_customers
+01:51:02  Running with dbt=1.11.16
+01:51:02  Registered adapter: duckdb=1.11.0
+01:51:02  Found 7 models, 10 data tests, 5 sources, 500 macros
+jaffle_dbt.marts.dim_customers
+jaffle_dbt.marts.fct_orders
+jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers
+jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders
+jaffle_dbt.staging.stripe.stg_stripe__payments
+source:jaffle_dbt.jaffle_shop.customers
+source:jaffle_dbt.jaffle_shop.orders
+source:jaffle_dbt.stripe.payments
+jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id
+jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__orders_order_id
+jaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id
+jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id
+jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__orders_order_id
+jaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id
+[spike] success=True wall=0.08s
+$ dbt show --select dim_customers --limit 10
+01:51:02  Running with dbt=1.11.16
+01:51:02  Registered adapter: duckdb=1.11.0
+01:51:02  Found 7 models, 10 data tests, 5 sources, 500 macros
+01:51:02  
+01:51:02  Concurrency: 4 threads (target='dev')
+01:51:02  
+01:51:02  Encountered an error:
+Runtime Error
+  Runtime Error in model dim_customers (models/marts/dim_customers.sql)
+    Catalog Error: Table with name stg_jaffle_shop__customers does not exist!
+    Did you mean "main.sqlite_master"?
+    
+    LINE 8:     select * from "practice"."dbt_adnane"."stg_jaffle_shop__customers"
+                              ^
+dbtRunner exception: Traceback (most recent call last):
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 187, in wrapper
+    result, success = func(*args, **kwargs)
+                      ~~~~^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 133, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 281, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 326, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 373, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/main.py", line 401, in show
+    results = task.run()
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 626, in run
+    result = self.execute_with_hooks(selected_uids)
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 563, in execute_with_hooks
+    res = self.execute_nodes()
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 443, in execute_nodes
+    self.run_queue(pool)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 346, in run_queue
+    self._raise_set_error()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 315, in _raise_set_error
+    raise self._raise_next_tick
+dbt_common.exceptions.base.DbtRuntimeError: Runtime Error
+  Runtime Error in model dim_customers (models/marts/dim_customers.sql)
+    Catalog Error: Table with name stg_jaffle_shop__customers does not exist!
+    Did you mean "main.sqlite_master"?
+    
+    LINE 8:     select * from "practice"."dbt_adnane"."stg_jaffle_shop__customers"
+                              ^
+
+[spike] success=False wall=0.11s
+$ dbt show --inline "select customer_id, number_of_orders, lifetime_value from {{ ref('dim_customers') }} order by customer_id" --limit 10
+01:51:02  Running with dbt=1.11.16
+01:51:02  Registered adapter: duckdb=1.11.0
+01:51:02  Found 7 models, 10 data tests, 1 sql operation, 5 sources, 500 macros
+01:51:02  
+01:51:02  Concurrency: 4 threads (target='dev')
+01:51:02  
+01:51:02  Encountered an error:
+Runtime Error
+  Runtime Error in sql_operation inline_query (from remote system.sql)
+    Catalog Error: Table with name dim_customers does not exist!
+    Did you mean "jaffle_shop.customers"?
+    
+    LINE 4: ...  select customer_id, number_of_orders, lifetime_value from "practice"."dbt_adnane"."dim_customers" order by customer_i...
+                                                                           ^
+dbtRunner exception: Traceback (most recent call last):
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 187, in wrapper
+    result, success = func(*args, **kwargs)
+                      ~~~~^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 133, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 281, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 326, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 373, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/main.py", line 401, in show
+    results = task.run()
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 626, in run
+    result = self.execute_with_hooks(selected_uids)
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 563, in execute_with_hooks
+    res = self.execute_nodes()
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 443, in execute_nodes
+    self.run_queue(pool)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 346, in run_queue
+    self._raise_set_error()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 315, in _raise_set_error
+    raise self._raise_next_tick
+dbt_common.exceptions.base.DbtRuntimeError: Runtime Error
+  Runtime Error in sql_operation inline_query (from remote system.sql)
+    Catalog Error: Table with name dim_customers does not exist!
+    Did you mean "jaffle_shop.customers"?
+    
+    LINE 4: ...  select customer_id, number_of_orders, lifetime_value from "practice"."dbt_adnane"."dim_customers" order by customer_i...
+                                                                           ^
+
+[spike] success=False wall=0.22s
+$ dbt show --inline "select count(*) as n_customers, sum(number_of_orders) as total_orders, sum(lifetime_value) as total_lifetime_value, count(*) filter (where number_of_orders = 0) as customers_without_orders from {{ ref('dim_customers') }}"
+01:51:02  Running with dbt=1.11.16
+01:51:02  Registered adapter: duckdb=1.11.0
+01:51:02  Found 7 models, 10 data tests, 1 sql operation, 5 sources, 500 macros
+01:51:02  
+01:51:02  Concurrency: 4 threads (target='dev')
+01:51:02  
+01:51:02  Encountered an error:
+Runtime Error
+  Runtime Error in sql_operation inline_query (from remote system.sql)
+    Catalog Error: Table with name dim_customers does not exist!
+    Did you mean "jaffle_shop.customers"?
+    
+    LINE 4: ... (where number_of_orders = 0) as customers_without_orders from "practice"."dbt_adnane"."dim_customers"
+                                                                              ^
+dbtRunner exception: Traceback (most recent call last):
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 187, in wrapper
+    result, success = func(*args, **kwargs)
+                      ~~~~^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 133, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 281, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 326, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 373, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/main.py", line 401, in show
+    results = task.run()
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 626, in run
+    result = self.execute_with_hooks(selected_uids)
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 563, in execute_with_hooks
+    res = self.execute_nodes()
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 443, in execute_nodes
+    self.run_queue(pool)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 346, in run_queue
+    self._raise_set_error()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 315, in _raise_set_error
+    raise self._raise_next_tick
+dbt_common.exceptions.base.DbtRuntimeError: Runtime Error
+  Runtime Error in sql_operation inline_query (from remote system.sql)
+    Catalog Error: Table with name dim_customers does not exist!
+    Did you mean "jaffle_shop.customers"?
+    
+    LINE 4: ... (where number_of_orders = 0) as customers_without_orders from "practice"."dbt_adnane"."dim_customers"
+                                                                              ^
+
+[spike] success=False wall=0.11s
+$ dbt show --inline "select count(*) as n_orders, sum(amount) as total_amount from {{ ref('fct_orders') }}"
+01:51:02  Running with dbt=1.11.16
+01:51:02  Registered adapter: duckdb=1.11.0
+01:51:03  Found 7 models, 10 data tests, 1 sql operation, 5 sources, 500 macros
+01:51:03  
+01:51:03  Concurrency: 4 threads (target='dev')
+01:51:03  
+01:51:03  Encountered an error:
+Runtime Error
+  Runtime Error in sql_operation inline_query (from remote system.sql)
+    Catalog Error: Table with name fct_orders does not exist!
+    Did you mean "jaffle_shop.orders"?
+    
+    LINE 4: ... select count(*) as n_orders, sum(amount) as total_amount from "practice"."dbt_adnane"."fct_orders"
+                                                                              ^
+dbtRunner exception: Traceback (most recent call last):
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 187, in wrapper
+    result, success = func(*args, **kwargs)
+                      ~~~~^^^^^^^^^^^^^^^^^
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 133, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 281, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 326, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/requires.py", line 373, in wrapper
+    return func(*args, **kwargs)
+  File "/lib/python3.14/site-packages/dbt/cli/main.py", line 401, in show
+    results = task.run()
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 626, in run
+    result = self.execute_with_hooks(selected_uids)
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 563, in execute_with_hooks
+    res = self.execute_nodes()
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 443, in execute_nodes
+    self.run_queue(pool)
+    ~~~~~~~~~~~~~~^^^^^^
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 346, in run_queue
+    self._raise_set_error()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/lib/python3.14/site-packages/dbt/task/runnable.py", line 315, in _raise_set_error
+    raise self._raise_next_tick
+dbt_common.exceptions.base.DbtRuntimeError: Runtime Error
+  Runtime Error in sql_operation inline_query (from remote system.sql)
+    Catalog Error: Table with name fct_orders does not exist!
+    Did you mean "jaffle_shop.orders"?
+    
+    LINE 4: ... select count(*) as n_orders, sum(amount) as total_amount from "practice"."dbt_adnane"."fct_orders"
+                                                                              ^
+
+[spike] success=False wall=0.11s
+$ dbt docs generate
+01:51:03  Running with dbt=1.11.16
+01:51:03  Registered adapter: duckdb=1.11.0
+01:51:03  Found 7 models, 10 data tests, 5 sources, 500 macros
+01:51:03  
+01:51:03  Concurrency: 4 threads (target='dev')
+01:51:03  
+01:51:03  Building catalog
+01:51:03  Catalog written to /home/pyodide/dbt-course/jaffle_dbt/target/catalog.json
+[spike] success=True wall=0.40s
+[spike] results [{"cmd":"run","ok":false,"ms":1817},{"cmd":"build","ok":false,"ms":320},{"cmd":"compile","ok":true,"ms":241},{"cmd":"compile --select stg_stripe__payments","ok":true,"ms":176},{"cmd":"ls","ok":true,"ms":84},{"cmd":"ls --resource-type source","ok":true,"ms":117},{"cmd":"ls --select +dim_customers","ok":true,"ms":81},{"cmd":"show --select dim_customers --limit 10","ok":false,"ms":115},{"cmd":"show --inline \"select customer_id, number_of_orders, lifetime_value from {{ ref('dim_customers') }} order by customer_id\" --limit 10","ok":false,"ms":221},{"cmd":"show --inline \"select count(*) as n_customers, sum(number_of_orders) as total_orders, sum(lifetime_value) as total_lifetime_value, count(*) filter (where number_of_orders = 0) as customers_without_orders from {{ ref('dim_customers') }}\"","ok":false,"ms":112},{"cmd":"show --inline \"select count(*) as n_orders, sum(amount) as total_amount from {{ ref('fct_orders') }}\"","ok":false,"ms":112},{"cmd":"docs generate","ok":true,"ms":406}]
+[spike] total wall 13635 ms

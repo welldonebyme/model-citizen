@@ -1,0 +1,20 @@
+version: 2
+
+seeds:
+  - name: country_regions
+    description: Static mapping from a customer country to its sales region and currency (maintained by hand).
+    config:
+      column_types:
+        country: varchar
+        region: varchar
+        currency: varchar
+    columns:
+      - name: country
+        description: Country name, exactly as in jaffle_shop.customers.country.
+        data_tests:
+          - unique
+          - not_null
+      - name: region
+        description: Sales region (Europe, Africa, North America).
+      - name: currency
+        description: ISO 4217 currency code used in that country.

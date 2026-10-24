@@ -1,0 +1,36 @@
+selectors:
+  - name: staging_only
+    description: Only the staging layer (models and their tests).
+    definition:
+      method: path
+      value: models/staging
+
+  - name: nightly
+    description: The nightly job - every finance or marketing mart, with all its parents.
+    definition:
+      union:
+        - method: tag
+          value: finance
+          parents: true
+        - method: tag
+          value: marketing
+          parents: true
+
+  - name: finance_marts
+    description: Finance models that live in the marts folder (intersection).
+    definition:
+      intersection:
+        - method: tag
+          value: finance
+        - method: path
+          value: models/marts
+
+  - name: no_python
+    description: Everything except the Python model.
+    definition:
+      union:
+        - method: fqn
+          value: "*"
+        - exclude:
+            - method: fqn
+              value: customer_segments

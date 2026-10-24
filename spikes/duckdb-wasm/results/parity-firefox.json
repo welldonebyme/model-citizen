@@ -1,0 +1,3817 @@
+{
+  "info": {
+    "duckdbVersion": "v2.0.0-dev88614",
+    "sourceId": "d54cbbe3df",
+    "bundle": "base",
+    "channel": "next",
+    "libraryVersion": "1.33.1-dev110.0",
+    "timingsMs": {
+      "workerStarted": 1,
+      "instantiated": 828,
+      "opened": 1004,
+      "dataFetched": 1004,
+      "setupDone": 1108
+    }
+  },
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:157.0) Gecko/20100101 Firefox/157.0",
+  "rows": [
+    {
+      "id": "ch04-sql-a:88",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "table_schema",
+          "table_name"
+        ],
+        "rows": [
+          [
+            "jaffle_shop",
+            "customers"
+          ],
+          [
+            "jaffle_shop",
+            "order_items"
+          ],
+          [
+            "jaffle_shop",
+            "orders"
+          ],
+          [
+            "jaffle_shop",
+            "products"
+          ],
+          [
+            "stripe",
+            "payments"
+          ]
+        ],
+        "totalRows": 5
+      },
+      "elapsedMs": 18
+    },
+    {
+      "id": "ch04-sql-a:108",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "column_name",
+          "column_type",
+          "null",
+          "key",
+          "default",
+          "extra"
+        ],
+        "rows": [
+          [
+            "id",
+            "INTEGER",
+            "YES",
+            null,
+            null,
+            null
+          ],
+          [
+            "user_id",
+            "INTEGER",
+            "YES",
+            null,
+            null,
+            null
+          ],
+          [
+            "order_date",
+            "DATE",
+            "YES",
+            null,
+            null,
+            null
+          ],
+          [
+            "status",
+            "VARCHAR",
+            "YES",
+            null,
+            null,
+            null
+          ],
+          [
+            "_loaded_at",
+            "TIMESTAMP",
+            "YES",
+            null,
+            null,
+            null
+          ]
+        ],
+        "totalRows": 5
+      },
+      "elapsedMs": 1
+    },
+    {
+      "id": "ch04-sql-a:159",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "user_id",
+          "order_date",
+          "status",
+          "_loaded_at"
+        ],
+        "rows": [
+          [
+            "1",
+            "51",
+            "2025-01-05",
+            "completed",
+            "2025-01-06 02:51:00"
+          ],
+          [
+            "2",
+            "85",
+            "2025-01-06",
+            "completed",
+            "2025-01-06 23:55:00"
+          ],
+          [
+            "3",
+            "42",
+            "2025-01-10",
+            "completed",
+            "2025-01-10 21:15:00"
+          ]
+        ],
+        "totalRows": 3
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:190",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "first_name",
+          "country"
+        ],
+        "rows": [
+          [
+            "1",
+            "Lina",
+            "Spain"
+          ],
+          [
+            "2",
+            "Yasmine",
+            "Morocco"
+          ],
+          [
+            "3",
+            "Ali",
+            "United States"
+          ],
+          [
+            "4",
+            "Hana",
+            "Spain"
+          ],
+          [
+            "5",
+            "Adam",
+            "Morocco"
+          ]
+        ],
+        "totalRows": 5
+      },
+      "elapsedMs": 0
+    },
+    {
+      "id": "ch04-sql-a:221",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "order_id",
+          "customer_id",
+          "order_date",
+          "status"
+        ],
+        "rows": [
+          [
+            "1",
+            "51",
+            "2025-01-05",
+            "completed"
+          ],
+          [
+            "2",
+            "85",
+            "2025-01-06",
+            "completed"
+          ],
+          [
+            "3",
+            "42",
+            "2025-01-10",
+            "completed"
+          ]
+        ],
+        "totalRows": 3
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:253",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "payment_id",
+          "order_id",
+          "amount_cents",
+          "amount_dollars"
+        ],
+        "rows": [
+          [
+            "1",
+            "1",
+            "500",
+            "5.0"
+          ],
+          [
+            "2",
+            "1",
+            "2520",
+            "25.2"
+          ],
+          [
+            "3",
+            "2",
+            "1950",
+            "19.5"
+          ],
+          [
+            "4",
+            "3",
+            "4350",
+            "43.5"
+          ],
+          [
+            "5",
+            "4",
+            "750",
+            "7.5"
+          ]
+        ],
+        "totalRows": 5
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:277",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "slash",
+          "double_slash",
+          "cents_to_dollars"
+        ],
+        "rows": [
+          [
+            "3.5",
+            "3",
+            "10.5"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 0
+    },
+    {
+      "id": "ch04-sql-a:300",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "greeting",
+          "answer",
+          "a_date",
+          "flag"
+        ],
+        "rows": [
+          [
+            "hello",
+            "42",
+            "2025-03-01",
+            "true"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:335",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "user_id",
+          "order_date",
+          "status"
+        ],
+        "rows": [
+          [
+            "9",
+            "54",
+            "2025-01-23",
+            "returned"
+          ],
+          [
+            "41",
+            "2",
+            "2025-03-25",
+            "returned"
+          ],
+          [
+            "54",
+            "85",
+            "2025-04-08",
+            "returned"
+          ],
+          [
+            "65",
+            "38",
+            "2025-04-24",
+            "returned"
+          ],
+          [
+            "90",
+            "48",
+            "2025-05-21",
+            "returned"
+          ],
+          [
+            "102",
+            "14",
+            "2025-06-15",
+            "returned"
+          ],
+          [
+            "145",
+            "45",
+            "2025-07-29",
+            "returned"
+          ],
+          [
+            "165",
+            "27",
+            "2025-08-23",
+            "returned"
+          ],
+          [
+            "166",
+            "82",
+            "2025-08-23",
+            "returned"
+          ],
+          [
+            "184",
+            "92",
+            "2025-09-08",
+            "returned"
+          ],
+          [
+            "191",
+            "29",
+            "2025-09-18",
+            "returned"
+          ],
+          [
+            "193",
+            "92",
+            "2025-09-18",
+            "returned"
+          ],
+          [
+            "195",
+            "84",
+            "2025-09-21",
+            "returned"
+          ],
+          [
+            "224",
+            "19",
+            "2025-10-14",
+            "returned"
+          ],
+          [
+            "270",
+            "42",
+            "2025-12-03",
+            "returned"
+          ],
+          [
+            "271",
+            "4",
+            "2025-12-05",
+            "returned"
+          ],
+          [
+            "275",
+            "85",
+            "2025-12-06",
+            "returned"
+          ],
+          [
+            "281",
+            "18",
+            "2025-12-13",
+            "returned"
+          ]
+        ],
+        "totalRows": 18
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:442",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "name",
+          "category"
+        ],
+        "rows": [
+          [
+            "2",
+            "Cappuccino",
+            "coffee"
+          ],
+          [
+            "4",
+            "Cold Brew",
+            "coffee"
+          ],
+          [
+            "6",
+            "Matcha Latte",
+            "tea"
+          ],
+          [
+            "7",
+            "Croissant",
+            "food"
+          ],
+          [
+            "9",
+            "Chocolate Cookie",
+            "food"
+          ],
+          [
+            "11",
+            "Coffee Beans 250g",
+            "merch"
+          ],
+          [
+            "12",
+            "Ceramic Mug",
+            "merch"
+          ]
+        ],
+        "totalRows": 7
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:505",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            null,
+            null,
+            "true",
+            null
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 1
+    },
+    {
+      "id": "ch04-sql-a:538",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "first_name",
+          "email"
+        ],
+        "rows": [
+          [
+            "17",
+            "Leo",
+            null
+          ],
+          [
+            "34",
+            "Leo",
+            null
+          ],
+          [
+            "51",
+            "Lina",
+            null
+          ],
+          [
+            "68",
+            "Ben",
+            null
+          ],
+          [
+            "85",
+            "Hugo",
+            null
+          ]
+        ],
+        "totalRows": 5
+      },
+      "elapsedMs": 0
+    },
+    {
+      "id": "ch04-sql-a:582",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "first_name",
+          "email"
+        ],
+        "rows": [
+          [
+            "15",
+            "Paul",
+            "paul.bernard15@example.com"
+          ],
+          [
+            "17",
+            "Leo",
+            "no email"
+          ],
+          [
+            "34",
+            "Leo",
+            "no email"
+          ]
+        ],
+        "totalRows": 3
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-a:612",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "all_rows",
+          "with_email",
+          "missing"
+        ],
+        "rows": [
+          [
+            "100",
+            "95",
+            "5"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 1
+    },
+    {
+      "id": "ch04-sql-a:648",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "name",
+          "category",
+          "price_cents"
+        ],
+        "rows": [
+          [
+            "11",
+            "Coffee Beans 250g",
+            "merch",
+            "1400"
+          ],
+          [
+            "12",
+            "Ceramic Mug",
+            "merch",
+            "1200"
+          ],
+          [
+            "8",
+            "Avocado Toast",
+            "food",
+            "750"
+          ],
+          [
+            "6",
+            "Matcha Latte",
+            "tea",
+            "480"
+          ],
+          [
+            "4",
+            "Cold Brew",
+            "coffee",
+            "450"
+          ]
+        ],
+        "totalRows": 5
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:700",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "status"
+        ],
+        "rows": [
+          [
+            "completed"
+          ],
+          [
+            "placed"
+          ],
+          [
+            "return_pending"
+          ],
+          [
+            "returned"
+          ],
+          [
+            "shipped"
+          ]
+        ],
+        "totalRows": 5
+      },
+      "elapsedMs": 1
+    },
+    {
+      "id": "ch04-sql-a:744",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "email",
+          "email_clean",
+          "first_upper",
+          "first_len"
+        ],
+        "rows": [
+          [
+            "11",
+            "YOUSSEF.WILSON11@EXAMPLE.COM",
+            "youssef.wilson11@example.com",
+            "YOUSSEF",
+            "7"
+          ],
+          [
+            "22",
+            "MIA.GARCIA22@EXAMPLE.COM",
+            "mia.garcia22@example.com",
+            "MIA",
+            "3"
+          ],
+          [
+            "33",
+            "ZINEB.SCHMIDT33@EXAMPLE.COM",
+            "zineb.schmidt33@example.com",
+            "ZINEB",
+            "5"
+          ]
+        ],
+        "totalRows": 3
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:784",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "email",
+          "local_part",
+          "domain"
+        ],
+        "rows": [
+          [
+            "lina.brown1@example.com",
+            "lina.brown1",
+            "example.com"
+          ],
+          [
+            "yasmine.bernard2@example.com",
+            "yasmine.bernard2",
+            "example.com"
+          ],
+          [
+            "ali.fischer3@example.com",
+            "ali.fischer3",
+            "example.com"
+          ]
+        ],
+        "totalRows": 3
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:815",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "order_date",
+          "order_month",
+          "order_year",
+          "day_name"
+        ],
+        "rows": [
+          [
+            "1",
+            "2025-01-05",
+            "2025-01-01",
+            "2025",
+            "Sunday"
+          ],
+          [
+            "150",
+            "2025-08-06",
+            "2025-08-01",
+            "2025",
+            "Wednesday"
+          ],
+          [
+            "300",
+            "2025-12-31",
+            "2025-12-01",
+            "2025",
+            "Wednesday"
+          ]
+        ],
+        "totalRows": 3
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:846",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "signup_date",
+          "days_since_signup"
+        ],
+        "rows": [
+          [
+            "1",
+            "2025-06-08",
+            "206"
+          ],
+          [
+            "2",
+            "2025-03-06",
+            "300"
+          ],
+          [
+            "3",
+            "2025-05-17",
+            "228"
+          ]
+        ],
+        "totalRows": 3
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:872",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "status",
+          "simple_case",
+          "status_group"
+        ],
+        "rows": [
+          [
+            "1",
+            "completed",
+            "done",
+            "normal"
+          ],
+          [
+            "7",
+            "shipped",
+            "on the way",
+            "normal"
+          ],
+          [
+            "8",
+            "return_pending",
+            "other",
+            "return"
+          ],
+          [
+            "9",
+            "returned",
+            "other",
+            "return"
+          ],
+          [
+            "290",
+            "placed",
+            "other",
+            "not paid yet"
+          ]
+        ],
+        "totalRows": 5
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-a:913",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "name",
+          "price_cents",
+          "price_band"
+        ],
+        "rows": [
+          [
+            "Coffee Beans 250g",
+            "1400",
+            "premium"
+          ],
+          [
+            "Ceramic Mug",
+            "1200",
+            "premium"
+          ],
+          [
+            "Avocado Toast",
+            "750",
+            "mid"
+          ],
+          [
+            "Matcha Latte",
+            "480",
+            "mid"
+          ]
+        ],
+        "totalRows": 4
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:944",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "rows": [
+          [
+            "42",
+            "43",
+            "2025-03-01",
+            null
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:994",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "n_payments",
+          "total_dollars",
+          "first_payment",
+          "last_payment"
+        ],
+        "rows": [
+          [
+            "317",
+            "5004.4",
+            "2025-01-05",
+            "2025-12-25"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:1020",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "paymentmethod",
+          "n_payments",
+          "total_dollars"
+        ],
+        "rows": [
+          [
+            "credit_card",
+            "204",
+            "3477.2"
+          ],
+          [
+            "bank_transfer",
+            "48",
+            "787.5"
+          ],
+          [
+            "coupon",
+            "45",
+            "451.3"
+          ],
+          [
+            "gift_card",
+            "20",
+            "288.4"
+          ]
+        ],
+        "totalRows": 4
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:1051",
+      "match": true,
+      "diffs": [
+        {
+          "kind": "errorMessageExtra",
+          "severity": "warning",
+          "detail": "DuckDB adds: \"Either add it to the GROUP BY list, or use ANY_VALUE(\"user_id\") if the exact value of \"user_id\" is not important. LINE 1: select status, user_id, count(*) ^^^^^^^\""
+        }
+      ],
+      "actual": {
+        "kind": "error",
+        "message": "Binder Error: column \"user_id\" must appear in the GROUP BY clause or must be part of an aggregate function.\nEither add it to the GROUP BY list, or use ANY_VALUE(\"user_id\") if the exact value of \"user_id\" is not important.\n\nLINE 1: select status, user_id, count(*)\n                       ^^^^^^^"
+      },
+      "elapsedMs": 4
+    },
+    {
+      "id": "ch04-sql-a:1067",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "order_month",
+          "n_orders"
+        ],
+        "rows": [
+          [
+            "2025-01-01",
+            "14"
+          ],
+          [
+            "2025-02-01",
+            "10"
+          ],
+          [
+            "2025-03-01",
+            "22"
+          ],
+          [
+            "2025-04-01",
+            "23"
+          ]
+        ],
+        "totalRows": 4
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:1093",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "user_id",
+          "n_orders"
+        ],
+        "rows": [
+          [
+            "19",
+            "7"
+          ],
+          [
+            "39",
+            "7"
+          ],
+          [
+            "66",
+            "7"
+          ],
+          [
+            "72",
+            "7"
+          ],
+          [
+            "85",
+            "7"
+          ],
+          [
+            "18",
+            "6"
+          ]
+        ],
+        "totalRows": 6
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:1167",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "all_payments",
+          "failed",
+          "failed_portable"
+        ],
+        "rows": [
+          [
+            "341",
+            "24",
+            "24"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 5
+    },
+    {
+      "id": "ch04-sql-a:1224",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "order_id",
+          "order_date",
+          "first_name",
+          "country"
+        ],
+        "rows": [
+          [
+            "1",
+            "2025-01-05",
+            "Lina",
+            "Morocco"
+          ],
+          [
+            "2",
+            "2025-01-06",
+            "Hugo",
+            "Morocco"
+          ],
+          [
+            "3",
+            "2025-01-10",
+            "Ava",
+            "United Kingdom"
+          ],
+          [
+            "4",
+            "2025-01-12",
+            "Zineb",
+            "United States"
+          ],
+          [
+            "5",
+            "2025-01-15",
+            "Emma",
+            "Morocco"
+          ]
+        ],
+        "totalRows": 5
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-a:1337",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "first_name",
+          "order_id",
+          "order_date"
+        ],
+        "rows": [
+          [
+            "5",
+            "Adam",
+            "95",
+            "2025-05-24"
+          ],
+          [
+            "5",
+            "Adam",
+            "253",
+            "2025-11-24"
+          ],
+          [
+            "5",
+            "Adam",
+            "256",
+            "2025-11-26"
+          ],
+          [
+            "96",
+            "Mehdi",
+            null,
+            null
+          ]
+        ],
+        "totalRows": 4
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-a:1383",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "first_name",
+          "last_name"
+        ],
+        "rows": [
+          [
+            "31",
+            "Hugo",
+            "Moreau"
+          ],
+          [
+            "35",
+            "Hugo",
+            "Dubois"
+          ],
+          [
+            "58",
+            "Lucia",
+            "Evans"
+          ],
+          [
+            "65",
+            "Mateo",
+            "Muller"
+          ],
+          [
+            "73",
+            "Youssef",
+            "Dubois"
+          ],
+          [
+            "86",
+            "Leo",
+            "Brown"
+          ],
+          [
+            "96",
+            "Mehdi",
+            "Tazi"
+          ],
+          [
+            "97",
+            "Salma",
+            "Brown"
+          ],
+          [
+            "98",
+            "Emma",
+            "Tazi"
+          ],
+          [
+            "99",
+            "Olivia",
+            "Brown"
+          ],
+          [
+            "100",
+            "Mehdi",
+            "Bernard"
+          ]
+        ],
+        "totalRows": 11
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:1412",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "user_id",
+          "order_date",
+          "status"
+        ],
+        "rows": [
+          [
+            "159",
+            "101",
+            "2025-08-14",
+            "completed"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 1
+    },
+    {
+      "id": "ch04-sql-a:1440",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "customer_a",
+          "customer_b",
+          "first_name",
+          "last_name"
+        ],
+        "rows": [
+          [
+            "2",
+            "84",
+            "Yasmine",
+            "Bernard"
+          ],
+          [
+            "6",
+            "90",
+            "Emma",
+            "Bernard"
+          ],
+          [
+            "7",
+            "36",
+            "Zineb",
+            "Moreau"
+          ],
+          [
+            "12",
+            "69",
+            "Emma",
+            "Dubois"
+          ]
+        ],
+        "totalRows": 4
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:1472",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "n_rows_after_join",
+          "n_distinct_orders"
+        ],
+        "rows": [
+          [
+            "606",
+            "300"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:1544",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "order_id",
+          "status",
+          "paid_dollars"
+        ],
+        "rows": [
+          [
+            "1",
+            "completed",
+            "30.2"
+          ],
+          [
+            "2",
+            "completed",
+            "19.5"
+          ],
+          [
+            "3",
+            "completed",
+            "43.5"
+          ],
+          [
+            "4",
+            "completed",
+            "7.5"
+          ],
+          [
+            "5",
+            "completed",
+            "23.3"
+          ]
+        ],
+        "totalRows": 5
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-a:1584",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "country",
+          "n_orders",
+          "revenue_dollars"
+        ],
+        "rows": [
+          [
+            "Morocco",
+            "92",
+            "1643.4"
+          ],
+          [
+            "France",
+            "54",
+            "973.9"
+          ],
+          [
+            "Spain",
+            "65",
+            "965.1"
+          ],
+          [
+            "Germany",
+            "36",
+            "602.7"
+          ],
+          [
+            "United States",
+            "31",
+            "539.5"
+          ],
+          [
+            "United Kingdom",
+            "11",
+            "263.8"
+          ]
+        ],
+        "totalRows": 6
+      },
+      "elapsedMs": 6
+    },
+    {
+      "id": "ch04-sql-b:33",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "avg_payment_dollars",
+          "n_success"
+        ],
+        "rows": [
+          [
+            "15.79",
+            "317"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 1
+    },
+    {
+      "id": "ch04-sql-b:51",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "orderid",
+          "amount_dollars"
+        ],
+        "rows": [
+          [
+            "298",
+            "251",
+            "82.5"
+          ],
+          [
+            "114",
+            "97",
+            "74.8"
+          ],
+          [
+            "20",
+            "16",
+            "73.2"
+          ],
+          [
+            "158",
+            "135",
+            "66.9"
+          ],
+          [
+            "45",
+            "37",
+            "63.5"
+          ]
+        ],
+        "totalRows": 5
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-b:85",
+      "match": true,
+      "diffs": [
+        {
+          "kind": "errorMessageExtra",
+          "severity": "warning",
+          "detail": "DuckDB adds: \"Use \"SET scalar_subquery_error_on_multiple_rows=false\" to revert to previous behavior of returning a random row.\""
+        }
+      ],
+      "actual": {
+        "kind": "error",
+        "message": "Invalid Input Error: More than one row returned by a subquery used as an expression - scalar subqueries can only return a single row.\n\nUse \"SET scalar_subquery_error_on_multiple_rows=false\" to revert to previous behavior of returning a random row."
+      },
+      "elapsedMs": 4
+    },
+    {
+      "id": "ch04-sql-b:102",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "first_name",
+          "last_name"
+        ],
+        "rows": [
+          [
+            "31",
+            "Hugo",
+            "Moreau"
+          ],
+          [
+            "35",
+            "Hugo",
+            "Dubois"
+          ],
+          [
+            "58",
+            "Lucia",
+            "Evans"
+          ],
+          [
+            "65",
+            "Mateo",
+            "Muller"
+          ],
+          [
+            "73",
+            "Youssef",
+            "Dubois"
+          ],
+          [
+            "86",
+            "Leo",
+            "Brown"
+          ],
+          [
+            "96",
+            "Mehdi",
+            "Tazi"
+          ],
+          [
+            "97",
+            "Salma",
+            "Brown"
+          ],
+          [
+            "98",
+            "Emma",
+            "Tazi"
+          ],
+          [
+            "99",
+            "Olivia",
+            "Brown"
+          ],
+          [
+            "100",
+            "Mehdi",
+            "Bernard"
+          ]
+        ],
+        "totalRows": 11
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-b:132",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "a",
+          "b",
+          "c"
+        ],
+        "rows": [
+          [
+            null,
+            null,
+            "true"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 1
+    },
+    {
+      "id": "ch04-sql-b:147",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "count_star()"
+        ],
+        "rows": [
+          [
+            "0"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-b:172",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "first_name"
+        ],
+        "rows": [
+          [
+            "2",
+            "Yasmine"
+          ],
+          [
+            "4",
+            "Hana"
+          ],
+          [
+            "14",
+            "Lucia"
+          ],
+          [
+            "18",
+            "Liam"
+          ],
+          [
+            "19",
+            "Ali"
+          ]
+        ],
+        "totalRows": 5
+      },
+      "elapsedMs": 4
+    },
+    {
+      "id": "ch04-sql-b:219",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "first_name",
+          "n_orders"
+        ],
+        "rows": [
+          [
+            "1",
+            "Lina",
+            "3"
+          ],
+          [
+            "2",
+            "Yasmine",
+            "3"
+          ],
+          [
+            "3",
+            "Ali",
+            "3"
+          ],
+          [
+            "4",
+            "Hana",
+            "5"
+          ],
+          [
+            "5",
+            "Adam",
+            "3"
+          ]
+        ],
+        "totalRows": 5
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-b:252",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "country",
+          "n"
+        ],
+        "rows": [
+          [
+            "Morocco",
+            "31"
+          ],
+          [
+            "France",
+            "24"
+          ],
+          [
+            "Spain",
+            "20"
+          ]
+        ],
+        "totalRows": 3
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-b:310",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "n_completed",
+          "n_customers"
+        ],
+        "rows": [
+          [
+            "1",
+            "18"
+          ],
+          [
+            "2",
+            "19"
+          ],
+          [
+            "3",
+            "23"
+          ],
+          [
+            "4",
+            "17"
+          ],
+          [
+            "5",
+            "4"
+          ],
+          [
+            "6",
+            "2"
+          ],
+          [
+            "7",
+            "2"
+          ]
+        ],
+        "totalRows": 7
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-b:520",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "user_id",
+          "order_date",
+          "n_orders_of_customer"
+        ],
+        "rows": [
+          [
+            "111",
+            "1",
+            "2025-06-22",
+            "3"
+          ],
+          [
+            "181",
+            "1",
+            "2025-09-06",
+            "3"
+          ],
+          [
+            "185",
+            "1",
+            "2025-09-11",
+            "3"
+          ],
+          [
+            "41",
+            "2",
+            "2025-03-25",
+            "3"
+          ],
+          [
+            "63",
+            "2",
+            "2025-04-23",
+            "3"
+          ],
+          [
+            "137",
+            "2",
+            "2025-07-20",
+            "3"
+          ]
+        ],
+        "totalRows": 6
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-b:578",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "user_id",
+          "n_orders",
+          "row_num",
+          "rnk",
+          "dense_rnk"
+        ],
+        "rows": [
+          [
+            "19",
+            "7",
+            "1",
+            "1",
+            "1"
+          ],
+          [
+            "39",
+            "7",
+            "2",
+            "1",
+            "1"
+          ],
+          [
+            "66",
+            "7",
+            "3",
+            "1",
+            "1"
+          ],
+          [
+            "72",
+            "7",
+            "4",
+            "1",
+            "1"
+          ],
+          [
+            "85",
+            "7",
+            "5",
+            "1",
+            "1"
+          ],
+          [
+            "18",
+            "6",
+            "6",
+            "6",
+            "2"
+          ],
+          [
+            "29",
+            "6",
+            "7",
+            "6",
+            "2"
+          ],
+          [
+            "46",
+            "6",
+            "8",
+            "6",
+            "2"
+          ]
+        ],
+        "totalRows": 8
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-b:632",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "quartile",
+          "n_customers",
+          "min_orders",
+          "max_orders"
+        ],
+        "rows": [
+          [
+            "1",
+            "23",
+            "4",
+            "7"
+          ],
+          [
+            "2",
+            "23",
+            "3",
+            "4"
+          ],
+          [
+            "3",
+            "22",
+            "2",
+            "3"
+          ],
+          [
+            "4",
+            "22",
+            "1",
+            "2"
+          ]
+        ],
+        "totalRows": 4
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-b:670",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "order_id",
+          "order_date",
+          "previous_order_date",
+          "days_since_previous",
+          "next_order_date"
+        ],
+        "rows": [
+          [
+            "42",
+            "2025-03-25",
+            null,
+            null,
+            "2025-04-27"
+          ],
+          [
+            "68",
+            "2025-04-27",
+            "2025-03-25",
+            "33",
+            "2025-07-19"
+          ],
+          [
+            "136",
+            "2025-07-19",
+            "2025-04-27",
+            "83",
+            "2025-10-07"
+          ],
+          [
+            "215",
+            "2025-10-07",
+            "2025-07-19",
+            "80",
+            "2025-10-14"
+          ],
+          [
+            "224",
+            "2025-10-14",
+            "2025-10-07",
+            "7",
+            "2025-10-15"
+          ],
+          [
+            "227",
+            "2025-10-15",
+            "2025-10-14",
+            "1",
+            "2025-11-28"
+          ],
+          [
+            "263",
+            "2025-11-28",
+            "2025-10-15",
+            "44",
+            null
+          ]
+        ],
+        "totalRows": 7
+      },
+      "elapsedMs": 4
+    },
+    {
+      "id": "ch04-sql-b:708",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "payment_month",
+          "revenue",
+          "running_revenue"
+        ],
+        "rows": [
+          [
+            "2025-01-01",
+            "303.1",
+            "303.1"
+          ],
+          [
+            "2025-02-01",
+            "232.9",
+            "536.0"
+          ],
+          [
+            "2025-03-01",
+            "403.1",
+            "939.1"
+          ],
+          [
+            "2025-04-01",
+            "469.4",
+            "1408.5"
+          ],
+          [
+            "2025-05-01",
+            "413.2",
+            "1821.7"
+          ],
+          [
+            "2025-06-01",
+            "334.6",
+            "2156.3"
+          ],
+          [
+            "2025-07-01",
+            "405.7",
+            "2562.0"
+          ],
+          [
+            "2025-08-01",
+            "503.9",
+            "3065.9"
+          ],
+          [
+            "2025-09-01",
+            "566.2",
+            "3632.1"
+          ],
+          [
+            "2025-10-01",
+            "516.7",
+            "4148.8"
+          ],
+          [
+            "2025-11-01",
+            "482.6",
+            "4631.4"
+          ],
+          [
+            "2025-12-01",
+            "373.0",
+            "5004.4"
+          ]
+        ],
+        "totalRows": 12
+      },
+      "elapsedMs": 2
+    },
+    {
+      "id": "ch04-sql-b:765",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "id",
+          "created",
+          "amount",
+          "total_default",
+          "total_rows"
+        ],
+        "rows": [
+          [
+            "1",
+            "2025-01-05",
+            "500",
+            "3020",
+            "500"
+          ],
+          [
+            "2",
+            "2025-01-05",
+            "2520",
+            "3020",
+            "3020"
+          ],
+          [
+            "3",
+            "2025-01-06",
+            "1950",
+            "4970",
+            "4970"
+          ],
+          [
+            "4",
+            "2025-01-11",
+            "4350",
+            "9320",
+            "9320"
+          ],
+          [
+            "5",
+            "2025-01-12",
+            "750",
+            "10070",
+            "10070"
+          ],
+          [
+            "6",
+            "2025-01-15",
+            "2330",
+            "14600",
+            "12400"
+          ],
+          [
+            "7",
+            "2025-01-15",
+            "1500",
+            "14600",
+            "13900"
+          ],
+          [
+            "8",
+            "2025-01-15",
+            "450",
+            "14600",
+            "14350"
+          ],
+          [
+            "9",
+            "2025-01-15",
+            "250",
+            "14600",
+            "14600"
+          ]
+        ],
+        "totalRows": 9
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-b:802",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "category",
+          "name",
+          "price_cents",
+          "cheapest",
+          "last_default",
+          "most_expensive"
+        ],
+        "rows": [
+          [
+            "coffee",
+            "Espresso",
+            "250",
+            "Espresso",
+            "Espresso",
+            "Cold Brew"
+          ],
+          [
+            "coffee",
+            "Cappuccino",
+            "380",
+            "Espresso",
+            "Cappuccino",
+            "Cold Brew"
+          ],
+          [
+            "coffee",
+            "Flat White",
+            "400",
+            "Espresso",
+            "Flat White",
+            "Cold Brew"
+          ],
+          [
+            "coffee",
+            "Cold Brew",
+            "450",
+            "Espresso",
+            "Cold Brew",
+            "Cold Brew"
+          ],
+          [
+            "food",
+            "Chocolate Cookie",
+            "180",
+            "Chocolate Cookie",
+            "Chocolate Cookie",
+            "Avocado Toast"
+          ],
+          [
+            "food",
+            "Croissant",
+            "220",
+            "Chocolate Cookie",
+            "Croissant",
+            "Avocado Toast"
+          ],
+          [
+            "food",
+            "Bagel",
+            "320",
+            "Chocolate Cookie",
+            "Bagel",
+            "Avocado Toast"
+          ],
+          [
+            "food",
+            "Avocado Toast",
+            "750",
+            "Chocolate Cookie",
+            "Avocado Toast",
+            "Avocado Toast"
+          ],
+          [
+            "merch",
+            "Ceramic Mug",
+            "1200",
+            "Ceramic Mug",
+            "Ceramic Mug",
+            "Coffee Beans 250g"
+          ],
+          [
+            "merch",
+            "Coffee Beans 250g",
+            "1400",
+            "Ceramic Mug",
+            "Coffee Beans 250g",
+            "Coffee Beans 250g"
+          ],
+          [
+            "tea",
+            "Mint Tea",
+            "300",
+            "Mint Tea",
+            "Mint Tea",
+            "Matcha Latte"
+          ],
+          [
+            "tea",
+            "Matcha Latte",
+            "480",
+            "Mint Tea",
+            "Matcha Latte",
+            "Matcha Latte"
+          ]
+        ],
+        "totalRows": 12
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-b:851",
+      "match": true,
+      "diffs": [
+        {
+          "kind": "errorMessageExtra",
+          "severity": "warning",
+          "detail": "DuckDB adds: \"LINE 3: where row_number() over (partition by user_id order by order_date... ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\""
+        }
+      ],
+      "actual": {
+        "kind": "error",
+        "message": "Binder Error: WHERE clause cannot contain window functions!\n\nLINE 3: where row_number() over (partition by user_id order by order_date...\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-b:863",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "order_id",
+          "user_id",
+          "order_date",
+          "status"
+        ],
+        "rows": [
+          [
+            "185",
+            "1",
+            "2025-09-11",
+            "completed"
+          ],
+          [
+            "137",
+            "2",
+            "2025-07-20",
+            "completed"
+          ],
+          [
+            "205",
+            "3",
+            "2025-09-30",
+            "completed"
+          ],
+          [
+            "271",
+            "4",
+            "2025-12-05",
+            "returned"
+          ],
+          [
+            "256",
+            "5",
+            "2025-11-26",
+            "completed"
+          ]
+        ],
+        "totalRows": 5
+      },
+      "elapsedMs": 5
+    },
+    {
+      "id": "ch04-sql-b:1055",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "n_days",
+          "total_revenue"
+        ],
+        "rows": [
+          [
+            "190",
+            "5004.4"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-b:1095",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "order_id",
+          "n_copies"
+        ],
+        "rows": [
+          [
+            "1",
+            "2"
+          ],
+          [
+            "2",
+            "2"
+          ],
+          [
+            "3",
+            "2"
+          ]
+        ],
+        "totalRows": 3
+      },
+      "elapsedMs": 4
+    },
+    {
+      "id": "ch04-sql-b:1123",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "order_id",
+          "status"
+        ],
+        "rows": [
+          [
+            "1",
+            "completed"
+          ],
+          [
+            "2",
+            "completed"
+          ],
+          [
+            "3",
+            "completed"
+          ]
+        ],
+        "totalRows": 3
+      },
+      "elapsedMs": 4
+    },
+    {
+      "id": "ch04-sql-b:1171",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "order_id",
+          "status"
+        ],
+        "rows": [
+          [
+            "1",
+            "completed"
+          ],
+          [
+            "2",
+            "returned"
+          ],
+          [
+            "3",
+            "completed"
+          ],
+          [
+            "4",
+            "completed"
+          ]
+        ],
+        "totalRows": 4
+      },
+      "elapsedMs": 4
+    },
+    {
+      "id": "ch04-sql-b:1258",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "from_view",
+          "from_table"
+        ],
+        "rows": [
+          [
+            "301",
+            "300"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 7
+    },
+    {
+      "id": "ch04-sql-b:1288",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "table_name",
+          "table_type"
+        ],
+        "rows": [
+          [
+            "daily_revenue",
+            "BASE TABLE"
+          ],
+          [
+            "order_count_table",
+            "BASE TABLE"
+          ],
+          [
+            "order_count_view",
+            "VIEW"
+          ],
+          [
+            "order_status",
+            "BASE TABLE"
+          ],
+          [
+            "orders_copy",
+            "BASE TABLE"
+          ],
+          [
+            "status_log",
+            "BASE TABLE"
+          ],
+          [
+            "status_updates",
+            "BASE TABLE"
+          ]
+        ],
+        "totalRows": 7
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-b:1471",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "country",
+          "ORDERS",
+          "REVENUE"
+        ],
+        "rows": [
+          [
+            "Morocco",
+            "76",
+            "1350.1"
+          ],
+          [
+            "France",
+            "46",
+            "877.2"
+          ],
+          [
+            "Spain",
+            "37",
+            "613.6"
+          ],
+          [
+            "Germany",
+            "27",
+            "420.2"
+          ],
+          [
+            "United States",
+            "20",
+            "379.7"
+          ],
+          [
+            "United Kingdom",
+            "7",
+            "187.3"
+          ]
+        ],
+        "totalRows": 6
+      },
+      "elapsedMs": 7
+    },
+    {
+      "id": "ch04-sql-b:1598",
+      "annotation": "placeholders replaced by ch04-sql-b:1471 (legacy) and ch04-sql-b:1529 (refactored), without order by",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "legacy_rows",
+          "refactored_rows"
+        ],
+        "rows": [
+          [
+            "6",
+            "6"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 18
+    },
+    {
+      "id": "ch04-sql-b:1598#except",
+      "annotation": "derived from the book note \"both EXCEPT queries return 0 rows\"",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "legacy_only",
+          "refactored_only"
+        ],
+        "rows": [
+          [
+            "0",
+            "0"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 20
+    },
+    {
+      "id": "ch04-sql-b:1676",
+      "annotation": "output printed after a sentence; first 10 rows only, name columns hidden (columnSubset + rowPrefix)",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "customer_id",
+          "first_name",
+          "last_name",
+          "first_order_date",
+          "most_recent_order_date",
+          "number_of_orders",
+          "lifetime_value"
+        ],
+        "rows": [
+          [
+            "1",
+            "Lina",
+            "Brown",
+            "2025-06-22",
+            "2025-09-11",
+            "3",
+            "46.7"
+          ],
+          [
+            "2",
+            "Yasmine",
+            "Bernard",
+            "2025-03-25",
+            "2025-07-20",
+            "3",
+            "65.5"
+          ],
+          [
+            "3",
+            "Ali",
+            "Fischer",
+            "2025-05-21",
+            "2025-09-30",
+            "3",
+            "24.8"
+          ],
+          [
+            "4",
+            "Hana",
+            "Fischer",
+            "2025-03-01",
+            "2025-12-05",
+            "5",
+            "67.5"
+          ],
+          [
+            "5",
+            "Adam",
+            "Evans",
+            "2025-05-24",
+            "2025-11-26",
+            "3",
+            "57.8"
+          ],
+          [
+            "6",
+            "Emma",
+            "Bernard",
+            "2025-02-05",
+            "2025-10-31",
+            "3",
+            "81.4"
+          ],
+          [
+            "7",
+            "Zineb",
+            "Moreau",
+            "2025-04-06",
+            "2025-04-06",
+            "1",
+            "6.0"
+          ],
+          [
+            "8",
+            "Karim",
+            "Idrissi",
+            "2025-07-24",
+            "2025-12-08",
+            "2",
+            "21.5"
+          ],
+          [
+            "9",
+            "Leo",
+            "Taylor",
+            "2025-09-11",
+            "2025-09-11",
+            "1",
+            "40.0"
+          ],
+          [
+            "10",
+            "Yasmine",
+            "Martin",
+            "2025-10-15",
+            "2025-10-15",
+            "1",
+            "28.0"
+          ],
+          [
+            "11",
+            "Youssef",
+            "Wilson",
+            "2025-02-05",
+            "2025-10-30",
+            "4",
+            "100.2"
+          ],
+          [
+            "12",
+            "Emma",
+            "Dubois",
+            "2025-09-11",
+            "2025-09-11",
+            "1",
+            "12.2"
+          ],
+          [
+            "13",
+            "Adam",
+            "Taylor",
+            "2025-09-05",
+            "2025-10-14",
+            "2",
+            "45.4"
+          ],
+          [
+            "14",
+            "Lucia",
+            "Martin",
+            "2025-06-15",
+            "2025-10-27",
+            "3",
+            "18.5"
+          ],
+          [
+            "15",
+            "Paul",
+            "Bernard",
+            "2025-12-12",
+            "2025-12-12",
+            "1",
+            "14.6"
+          ],
+          [
+            "16",
+            "Ali",
+            "Evans",
+            "2025-03-02",
+            "2025-06-28",
+            "3",
+            "35.0"
+          ],
+          [
+            "17",
+            "Leo",
+            "Fernandez",
+            "2025-09-04",
+            "2025-12-24",
+            "4",
+            "47.7"
+          ],
+          [
+            "18",
+            "Liam",
+            "Moreau",
+            "2025-07-11",
+            "2025-12-13",
+            "6",
+            "60.4"
+          ],
+          [
+            "19",
+            "Ali",
+            "Alaoui",
+            "2025-03-25",
+            "2025-11-28",
+            "7",
+            "119.9"
+          ],
+          [
+            "20",
+            "Hana",
+            "Garcia",
+            "2025-09-11",
+            "2025-10-21",
+            "2",
+            "27.1"
+          ],
+          [
+            "21",
+            "Julie",
+            "Bernard",
+            "2025-05-12",
+            "2025-11-30",
+            "5",
+            "106.2"
+          ],
+          [
+            "22",
+            "Mia",
+            "Garcia",
+            "2025-05-04",
+            "2025-06-16",
+            "2",
+            "5.6"
+          ],
+          [
+            "23",
+            "Paul",
+            "Bernard",
+            "2025-05-01",
+            "2025-08-21",
+            "4",
+            "89.6"
+          ],
+          [
+            "24",
+            "Rayan",
+            "Moreau",
+            "2025-10-05",
+            "2025-12-21",
+            "3",
+            "21.0"
+          ],
+          [
+            "25",
+            "Olivia",
+            "Idrissi",
+            "2025-02-16",
+            "2025-10-03",
+            "4",
+            "58.2"
+          ],
+          [
+            "26",
+            "Olivia",
+            "Fernandez",
+            "2025-08-08",
+            "2025-11-27",
+            "2",
+            "19.0"
+          ],
+          [
+            "27",
+            "Ali",
+            "Idrissi",
+            "2025-08-08",
+            "2025-11-07",
+            "3",
+            "25.2"
+          ],
+          [
+            "28",
+            "Emma",
+            "Muller",
+            "2025-01-15",
+            "2025-12-23",
+            "5",
+            "108.3"
+          ],
+          [
+            "29",
+            "Omar",
+            "Evans",
+            "2025-07-21",
+            "2025-12-09",
+            "6",
+            "75.6"
+          ],
+          [
+            "30",
+            "Leo",
+            "Moreau",
+            "2025-06-19",
+            "2025-08-30",
+            "2",
+            "17.4"
+          ],
+          [
+            "31",
+            "Hugo",
+            "Moreau",
+            null,
+            null,
+            "0",
+            "0.0"
+          ],
+          [
+            "32",
+            "Hana",
+            "Moreau",
+            "2025-03-06",
+            "2025-07-03",
+            "2",
+            "19.9"
+          ],
+          [
+            "33",
+            "Zineb",
+            "Schmidt",
+            "2025-05-23",
+            "2025-12-19",
+            "3",
+            "42.0"
+          ],
+          [
+            "34",
+            "Leo",
+            "Bernard",
+            "2025-08-29",
+            "2025-09-06",
+            "3",
+            "27.2"
+          ],
+          [
+            "35",
+            "Hugo",
+            "Dubois",
+            null,
+            null,
+            "0",
+            "0.0"
+          ],
+          [
+            "36",
+            "Zineb",
+            "Moreau",
+            "2025-10-05",
+            "2025-10-05",
+            "1",
+            "9.0"
+          ],
+          [
+            "37",
+            "Julie",
+            "Moreau",
+            "2025-07-06",
+            "2025-07-06",
+            "1",
+            "3.0"
+          ],
+          [
+            "38",
+            "Karim",
+            "Tazi",
+            "2025-04-24",
+            "2025-11-25",
+            "3",
+            "81.4"
+          ],
+          [
+            "39",
+            "Leo",
+            "Alaoui",
+            "2025-01-15",
+            "2025-09-05",
+            "7",
+            "124.9"
+          ],
+          [
+            "40",
+            "Ben",
+            "Fischer",
+            "2025-04-07",
+            "2025-11-19",
+            "3",
+            "43.5"
+          ],
+          [
+            "41",
+            "Ava",
+            "Smith",
+            "2025-01-29",
+            "2025-10-04",
+            "4",
+            "67.6"
+          ],
+          [
+            "42",
+            "Ava",
+            "Benali",
+            "2025-01-10",
+            "2025-12-03",
+            "4",
+            "76.5"
+          ],
+          [
+            "43",
+            "Rayan",
+            "Taylor",
+            "2025-01-15",
+            "2025-10-24",
+            "4",
+            "54.8"
+          ],
+          [
+            "44",
+            "Lucas",
+            "Fischer",
+            "2025-06-11",
+            "2025-12-24",
+            "3",
+            "49.5"
+          ],
+          [
+            "45",
+            "Salma",
+            "Garcia",
+            "2025-06-12",
+            "2025-10-07",
+            "4",
+            "64.8"
+          ],
+          [
+            "46",
+            "Mia",
+            "Fischer",
+            "2025-07-02",
+            "2025-12-24",
+            "6",
+            "140.8"
+          ],
+          [
+            "47",
+            "Emma",
+            "Martin",
+            "2025-04-03",
+            "2025-11-30",
+            "4",
+            "131.7"
+          ],
+          [
+            "48",
+            "Leo",
+            "Garcia",
+            "2025-02-10",
+            "2025-05-21",
+            "3",
+            "35.1"
+          ],
+          [
+            "49",
+            "Noah",
+            "Tazi",
+            "2025-05-03",
+            "2025-05-15",
+            "2",
+            "34.5"
+          ],
+          [
+            "50",
+            "Noah",
+            "Smith",
+            "2025-04-07",
+            "2025-11-19",
+            "2",
+            "32.7"
+          ],
+          [
+            "51",
+            "Lina",
+            "Idrissi",
+            "2025-01-05",
+            "2025-09-30",
+            "4",
+            "51.6"
+          ],
+          [
+            "52",
+            "Zineb",
+            "Taylor",
+            "2025-01-12",
+            "2025-12-29",
+            "2",
+            "7.5"
+          ],
+          [
+            "53",
+            "Leo",
+            "Alaoui",
+            "2025-06-22",
+            "2025-12-26",
+            "4",
+            "37.5"
+          ],
+          [
+            "54",
+            "Mia",
+            "Brown",
+            "2025-01-23",
+            "2025-12-31",
+            "5",
+            "128.1"
+          ],
+          [
+            "55",
+            "Ben",
+            "Brown",
+            "2025-08-22",
+            "2025-11-09",
+            "3",
+            "85.5"
+          ],
+          [
+            "56",
+            "Ben",
+            "Fischer",
+            "2025-04-13",
+            "2025-09-17",
+            "3",
+            "62.3"
+          ],
+          [
+            "57",
+            "Omar",
+            "Fischer",
+            "2025-05-15",
+            "2025-10-18",
+            "2",
+            "29.2"
+          ],
+          [
+            "58",
+            "Lucia",
+            "Evans",
+            null,
+            null,
+            "0",
+            "0.0"
+          ],
+          [
+            "59",
+            "Ava",
+            "Johnson",
+            "2025-03-28",
+            "2025-07-13",
+            "4",
+            "55.6"
+          ],
+          [
+            "60",
+            "Olivia",
+            "Idrissi",
+            "2025-04-12",
+            "2025-12-15",
+            "5",
+            "53.7"
+          ],
+          [
+            "61",
+            "Yasmine",
+            "Lopez",
+            "2025-01-30",
+            "2025-01-30",
+            "1",
+            "40.0"
+          ],
+          [
+            "62",
+            "Ben",
+            "Smith",
+            "2025-02-16",
+            "2025-09-24",
+            "5",
+            "122.3"
+          ],
+          [
+            "63",
+            "Omar",
+            "Fernandez",
+            "2025-07-10",
+            "2025-09-02",
+            "3",
+            "91.7"
+          ],
+          [
+            "64",
+            "Julie",
+            "Garcia",
+            "2025-03-03",
+            "2025-07-26",
+            "3",
+            "65.2"
+          ],
+          [
+            "65",
+            "Mateo",
+            "Muller",
+            null,
+            null,
+            "0",
+            "0.0"
+          ],
+          [
+            "66",
+            "Lucia",
+            "Martin",
+            "2025-03-19",
+            "2025-12-08",
+            "7",
+            "152.8"
+          ],
+          [
+            "67",
+            "Nora",
+            "Taylor",
+            "2025-04-18",
+            "2025-12-26",
+            "3",
+            "50.6"
+          ],
+          [
+            "68",
+            "Ben",
+            "Moreau",
+            "2025-10-18",
+            "2025-11-27",
+            "3",
+            "61.1"
+          ],
+          [
+            "69",
+            "Emma",
+            "Dubois",
+            "2025-03-20",
+            "2025-09-22",
+            "4",
+            "90.0"
+          ],
+          [
+            "70",
+            "Noah",
+            "Moreau",
+            "2025-01-15",
+            "2025-12-21",
+            "4",
+            "13.6"
+          ],
+          [
+            "71",
+            "Noah",
+            "Fernandez",
+            "2025-06-18",
+            "2025-08-31",
+            "2",
+            "52.2"
+          ],
+          [
+            "72",
+            "Paul",
+            "Smith",
+            "2025-05-22",
+            "2025-12-26",
+            "7",
+            "38.4"
+          ],
+          [
+            "73",
+            "Youssef",
+            "Dubois",
+            null,
+            null,
+            "0",
+            "0.0"
+          ],
+          [
+            "74",
+            "Lucia",
+            "Wilson",
+            "2025-01-23",
+            "2025-01-23",
+            "1",
+            "39.8"
+          ],
+          [
+            "75",
+            "Adam",
+            "Taylor",
+            "2025-01-28",
+            "2025-06-26",
+            "3",
+            "42.5"
+          ],
+          [
+            "76",
+            "Olivia",
+            "Fischer",
+            "2025-01-25",
+            "2025-12-27",
+            "5",
+            "92.0"
+          ],
+          [
+            "77",
+            "Lina",
+            "Evans",
+            "2025-06-16",
+            "2025-11-09",
+            "2",
+            "8.9"
+          ],
+          [
+            "78",
+            "Olivia",
+            "Fischer",
+            "2025-09-03",
+            "2025-11-28",
+            "4",
+            "126.2"
+          ],
+          [
+            "79",
+            "Liam",
+            "Schmidt",
+            "2025-02-16",
+            "2025-10-04",
+            "3",
+            "86.5"
+          ],
+          [
+            "80",
+            "Rayan",
+            "Wilson",
+            "2025-09-08",
+            "2025-12-19",
+            "3",
+            "50.9"
+          ],
+          [
+            "81",
+            "Ali",
+            "Muller",
+            "2025-03-26",
+            "2025-08-06",
+            "3",
+            "34.8"
+          ],
+          [
+            "82",
+            "Nora",
+            "Bernard",
+            "2025-05-18",
+            "2025-09-24",
+            "4",
+            "48.4"
+          ],
+          [
+            "83",
+            "Hana",
+            "Taylor",
+            "2025-03-02",
+            "2025-12-05",
+            "6",
+            "83.5"
+          ],
+          [
+            "84",
+            "Yasmine",
+            "Bernard",
+            "2025-09-21",
+            "2025-09-21",
+            "1",
+            "8.6"
+          ],
+          [
+            "85",
+            "Hugo",
+            "Fischer",
+            "2025-01-06",
+            "2025-12-06",
+            "7",
+            "65.7"
+          ],
+          [
+            "86",
+            "Leo",
+            "Brown",
+            null,
+            null,
+            "0",
+            "0.0"
+          ],
+          [
+            "87",
+            "Hugo",
+            "Martin",
+            "2025-05-23",
+            "2025-12-19",
+            "6",
+            "123.1"
+          ],
+          [
+            "88",
+            "Paul",
+            "Muller",
+            "2025-03-20",
+            "2025-10-12",
+            "4",
+            "98.6"
+          ],
+          [
+            "89",
+            "Sara",
+            "Bernard",
+            "2025-06-28",
+            "2025-06-28",
+            "1",
+            "32.1"
+          ],
+          [
+            "90",
+            "Emma",
+            "Bernard",
+            "2025-05-12",
+            "2025-12-10",
+            "2",
+            "40.4"
+          ],
+          [
+            "91",
+            "Lucas",
+            "Dubois",
+            "2025-03-20",
+            "2025-11-26",
+            "4",
+            "64.3"
+          ],
+          [
+            "92",
+            "Leo",
+            "Idrissi",
+            "2025-09-08",
+            "2025-12-14",
+            "4",
+            "50.2"
+          ],
+          [
+            "93",
+            "Ava",
+            "Dubois",
+            "2025-03-30",
+            "2025-11-27",
+            "4",
+            "54.8"
+          ],
+          [
+            "94",
+            "Rayan",
+            "Taylor",
+            "2025-02-07",
+            "2025-09-20",
+            "3",
+            "46.4"
+          ],
+          [
+            "95",
+            "Mateo",
+            "Schmidt",
+            "2025-02-21",
+            "2025-08-14",
+            "2",
+            "16.6"
+          ],
+          [
+            "96",
+            "Mehdi",
+            "Tazi",
+            null,
+            null,
+            "0",
+            "0.0"
+          ],
+          [
+            "97",
+            "Salma",
+            "Brown",
+            null,
+            null,
+            "0",
+            "0.0"
+          ],
+          [
+            "98",
+            "Emma",
+            "Tazi",
+            null,
+            null,
+            "0",
+            "0.0"
+          ],
+          [
+            "99",
+            "Olivia",
+            "Brown",
+            null,
+            null,
+            "0",
+            "0.0"
+          ],
+          [
+            "100",
+            "Mehdi",
+            "Bernard",
+            null,
+            null,
+            "0",
+            "0.0"
+          ]
+        ],
+        "totalRows": 100
+      },
+      "elapsedMs": 9
+    },
+    {
+      "id": "ch04-sql-b:1780",
+      "annotation": "placeholder \"( ... the query above ... )\" replaced by ch04-sql-b:1676 without its order by",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "n_customers",
+          "total_orders",
+          "total_lifetime_value",
+          "customers_without_orders"
+        ],
+        "rows": [
+          [
+            "100",
+            "299",
+            "4988.4",
+            "11"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 6
+    },
+    {
+      "id": "ch04-sql-b:1811",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "order_id",
+          "user_id",
+          "paid"
+        ],
+        "rows": [
+          [
+            "159",
+            "101",
+            "16.0"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 3
+    },
+    {
+      "id": "ch04-sql-b:1836",
+      "match": true,
+      "diffs": [],
+      "actual": {
+        "kind": "table",
+        "columns": [
+          "n_rows",
+          "n_orders"
+        ],
+        "rows": [
+          [
+            "341",
+            "290"
+          ]
+        ],
+        "totalRows": 1
+      },
+      "elapsedMs": 3
+    }
+  ],
+  "passed": 69,
+  "total": 69,
+  "day2": {
+    "before": [
+      [
+        "customers",
+        "100"
+      ],
+      [
+        "orders",
+        "300"
+      ],
+      [
+        "order_items",
+        "606"
+      ],
+      [
+        "products",
+        "12"
+      ],
+      [
+        "payments",
+        "341"
+      ],
+      [
+        "successful payments",
+        "317"
+      ],
+      [
+        "successful amount",
+        "500440"
+      ],
+      [
+        "max orders._loaded_at",
+        "2025-12-31 16:22:00"
+      ],
+      [
+        "orders by status",
+        "completed 239, shipped 21, returned 18, return_pending 12, placed 10"
+      ],
+      [
+        "null / upper emails",
+        "5 / 9"
+      ],
+      [
+        "customers without orders",
+        "11"
+      ],
+      [
+        "orphan orders",
+        "1"
+      ]
+    ],
+    "after": [
+      [
+        "customers",
+        "100"
+      ],
+      [
+        "orders",
+        "320"
+      ],
+      [
+        "order_items",
+        "638"
+      ],
+      [
+        "products",
+        "12"
+      ],
+      [
+        "payments",
+        "371"
+      ],
+      [
+        "successful payments",
+        "347"
+      ],
+      [
+        "successful amount",
+        "544320"
+      ],
+      [
+        "max orders._loaded_at",
+        "2026-01-04 16:13:00"
+      ],
+      [
+        "orders by status",
+        "completed 252, shipped 38, returned 18, return_pending 12"
+      ],
+      [
+        "null / upper emails",
+        "4 / 8"
+      ],
+      [
+        "customers without orders",
+        "9"
+      ],
+      [
+        "orphan orders",
+        "1"
+      ]
+    ],
+    "checks": [
+      {
+        "name": "customers",
+        "expected": "100",
+        "actual": "100",
+        "ok": true
+      },
+      {
+        "name": "orders",
+        "expected": "320",
+        "actual": "320",
+        "ok": true
+      },
+      {
+        "name": "order_items",
+        "expected": "638",
+        "actual": "638",
+        "ok": true
+      },
+      {
+        "name": "products",
+        "expected": "12",
+        "actual": "12",
+        "ok": true
+      },
+      {
+        "name": "payments",
+        "expected": "371",
+        "actual": "371",
+        "ok": true
+      },
+      {
+        "name": "successful payments",
+        "expected": "347",
+        "actual": "347",
+        "ok": true
+      },
+      {
+        "name": "successful amount",
+        "expected": "544320",
+        "actual": "544320",
+        "ok": true
+      },
+      {
+        "name": "max orders._loaded_at",
+        "expected": "2026-01-04 16:13:00",
+        "actual": "2026-01-04 16:13:00",
+        "ok": true
+      },
+      {
+        "name": "orders by status",
+        "expected": "completed 252, shipped 38, returned 18, return_pending 12",
+        "actual": "completed 252, shipped 38, returned 18, return_pending 12",
+        "ok": true
+      },
+      {
+        "name": "null / upper emails",
+        "expected": "4 / 8",
+        "actual": "4 / 8",
+        "ok": true
+      },
+      {
+        "name": "customers without orders",
+        "expected": "9",
+        "actual": "9",
+        "ok": true
+      },
+      {
+        "name": "orphan orders",
+        "expected": "1",
+        "actual": "1",
+        "ok": true
+      },
+      {
+        "name": "idempotent (second run changes nothing)",
+        "expected": "same",
+        "actual": "same",
+        "ok": true
+      }
+    ]
+  },
+  "totalMs": 1609
+}

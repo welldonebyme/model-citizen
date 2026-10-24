@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup A: Lineage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Atkinson+Hyperlegible+Next:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #F3F5F9; --surface: #FFFFFF; --ink: #16213B; --text: #2A3550; --muted: #5B6782;
+  --line: #D5DBE6; --line-strong: #B7C1D3;
+  --accent: #B4237A; --accent-strong: #951A64; --accent-soft: #F8E6F0; --on-accent: #FFFFFF;
+  --trap: #B42318; --trap-soft: #FDECEA; --idea: #8A5300; --idea-soft: #FFF4DE;
+  --lab: #0B7350; --lab-soft: #E2F3EB; --quiz: #5B34C0; --quiz-soft: #EFEAFC; --why: #1D4ED8; --why-soft: #E7EEFD;
+  --code-bg: #F6F7FA; --code-ink: #1E2740; --kw: #1D4ED8; --str: #0B7350; --cmt: #7A8399;
+  --shadow: 0 1px 2px rgba(22,33,59,.06), 0 8px 24px -12px rgba(22,33,59,.18);
+  --sans: "Atkinson Hyperlegible Next", system-ui, sans-serif;
+  --mono: "Atkinson Hyperlegible Mono", ui-monospace, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #111A2E; --surface: #17223A; --ink: #EDF1F8; --text: #CBD3E3; --muted: #97A3BC;
+  --line: #2A3754; --line-strong: #3B4A6B;
+  --accent: #F06AB4; --accent-strong: #F58AC4; --accent-soft: #3A1D33; --on-accent: #1A0F18;
+  --trap: #FF8A7A; --trap-soft: #3A1C1C; --idea: #F5B74E; --idea-soft: #33281A;
+  --lab: #4FD1A1; --lab-soft: #15332A; --quiz: #B39BFF; --quiz-soft: #272143; --why: #8DB0FF; --why-soft: #1B2A4D;
+  --code-bg: #0E1628; --code-ink: #DCE3F0; --kw: #8DB0FF; --str: #4FD1A1; --cmt: #7C88A3;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px -14px rgba(0,0,0,.6); color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --paper: #111A2E; --surface: #17223A; --ink: #EDF1F8; --text: #CBD3E3; --muted: #97A3BC;
+  --line: #2A3754; --line-strong: #3B4A6B;
+  --accent: #F06AB4; --accent-strong: #F58AC4; --accent-soft: #3A1D33; --on-accent: #1A0F18;
+  --trap: #FF8A7A; --trap-soft: #3A1C1C; --idea: #F5B74E; --idea-soft: #33281A;
+  --lab: #4FD1A1; --lab-soft: #15332A; --quiz: #B39BFF; --quiz-soft: #272143; --why: #8DB0FF; --why-soft: #1B2A4D;
+  --code-bg: #0E1628; --code-ink: #DCE3F0; --kw: #8DB0FF; --str: #4FD1A1; --cmt: #7C88A3;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px -14px rgba(0,0,0,.6); color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--text); font: 400 17px/1.6 var(--sans); }
+h1, h2, h3 { color: var(--ink); line-height: 1.2; margin: 0; }
+code, kbd, .mono { font-family: var(--mono); font-size: .9em; }
+p code, li code, .callout code { background: var(--code-bg); border: 1px solid var(--line); border-radius: 4px; padding: 0 .3em; color: var(--code-ink); }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* mockup frame (not part of the design) */
+.frame { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 8px 16px; background: #2b2b2b; color: #eee; font: 500 13px/1.2 system-ui, sans-serif; }
+.frame b { margin-right: 8px; font-weight: 600; }
+.frame button { background: #444; border: 0; border-radius: 6px; padding: 6px 10px; color: #eee; }
+.frame button[aria-pressed="true"] { background: #eee; color: #222; }
+.frame .sp { flex: 1; }
+
+/* app chrome */
+.top { display: flex; align-items: center; gap: 28px; padding: 0 28px; height: 64px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 800; font-size: 18px; letter-spacing: -.01em; text-decoration: none; }
+.brand svg { flex: none; }
+.nav { display: flex; gap: 4px; }
+.nav a { padding: 8px 12px; border-radius: 8px; color: var(--muted); text-decoration: none; font-weight: 500; font-size: 15px; }
+.nav a[aria-current="page"] { color: var(--ink); background: var(--paper); }
+.top .search { margin-left: auto; display: flex; align-items: center; gap: 8px; width: 260px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; color: var(--muted); font-size: 15px; background: var(--paper); }
+.top .search kbd { margin-left: auto; font-size: 12px; border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; }
+
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 28px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 10px; padding: 11px 18px; font-weight: 700; font-size: 16px; text-decoration: none; }
+.btn-primary { background: var(--accent); color: var(--on-accent); }
+.btn-primary:hover { background: var(--accent-strong); }
+.btn-quiet { background: transparent; border: 1px solid var(--line-strong); color: var(--ink); }
+
+/* ---------------- TODAY ---------------- */
+.hello { display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; padding: 44px 0 24px; }
+.hello h1 { font-size: 40px; font-weight: 800; letter-spacing: -.02em; }
+.hello p { margin: 8px 0 0; color: var(--muted); font-size: 18px; }
+.hello .cta { text-align: right; }
+.hello .cta small { display: block; margin-top: 8px; color: var(--muted); font-size: 14px; }
+
+.lineage { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px 22px 14px; box-shadow: var(--shadow); }
+.lineage-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 6px; }
+.lineage-head h2 { font-size: 18px; }
+.lineage-head p { margin: 0; color: var(--muted); font-size: 14px; }
+.lineage-scroll { overflow-x: auto; }
+.lineage svg { display: block; width: 100%; min-width: 1060px; height: auto; }
+.lineage .edge { fill: none; stroke: var(--line-strong); stroke-width: 2; }
+.lineage .edge.done { stroke: var(--ink); }
+.lineage .node rect.box { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1.5; }
+.lineage .node.done rect.box { fill: var(--ink); stroke: var(--ink); }
+.lineage .node.done text { fill: var(--surface); }
+.lineage .node.now rect.box { fill: var(--accent); stroke: var(--accent); }
+.lineage .node.now text { fill: var(--on-accent); }
+.lineage .node text { fill: var(--ink); font-family: var(--sans); }
+.lineage .node .k { font-size: 12px; font-weight: 500; opacity: .75; }
+.lineage .node .t { font-size: 14.5px; font-weight: 700; }
+.lineage .bar-bg { fill: var(--line); }
+.lineage .node.done .bar-bg, .lineage .node.now .bar-bg { fill: rgba(255,255,255,.28); }
+.lineage .bar { fill: var(--accent); }
+.lineage .node.done .bar, .lineage .node.now .bar { fill: currentColor; color: var(--surface); }
+:root[data-theme="dark"] .lineage .node.now .bar { color: var(--on-accent); }
+.lineage .port { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1.5; }
+.lineage .node.done .port { stroke: var(--ink); }
+.lineage .ring { fill: none; stroke: var(--accent); stroke-width: 2; opacity: .35; transform-box: fill-box; transform-origin: center; animation: ring 2.4s ease-out 1 .4s both; }
+@keyframes ring { from { opacity: .7; transform: scale(1); } to { opacity: 0; transform: scale(1.18); } }
+.lineage .you { font: 700 12px var(--sans); fill: var(--accent); }
+.legend { display: flex; gap: 18px; margin-top: 8px; color: var(--muted); font-size: 13px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 12px; height: 12px; border-radius: 3px; border: 1.5px solid var(--line-strong); display: inline-block; }
+.legend i.d { background: var(--ink); border-color: var(--ink); }
+.legend i.n { background: var(--accent); border-color: var(--accent); }
+
+.today-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 28px; padding: 32px 0 64px; }
+.section-title { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
+.section-title h2 { font-size: 22px; }
+.section-title span { color: var(--muted); font-size: 14px; }
+
+.mission { list-style: none; margin: 0; padding: 0; position: relative; }
+.mission::before { content: ""; position: absolute; left: 21px; top: 22px; bottom: 22px; width: 2px; background: var(--line); }
+.mission li { position: relative; display: grid; grid-template-columns: 44px 1fr auto; gap: 14px; align-items: start; padding: 12px 0; }
+.mission .dot { position: relative; z-index: 1; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--surface); border: 1.5px solid var(--line-strong); color: var(--muted); font-weight: 700; font-size: 15px; }
+.mission li.done .dot { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.mission li.now .dot { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.mission h3 { font-size: 17px; font-weight: 700; }
+.mission p { margin: 2px 0 0; color: var(--muted); font-size: 15px; }
+.mission .min { color: var(--muted); font-size: 14px; white-space: nowrap; padding-top: 2px; }
+.mission li.now .body { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px 16px; box-shadow: var(--shadow); margin-top: -4px; }
+.mission li.now .body .btn { margin-top: 12px; }
+.mission .tag { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; font-size: 12.5px; font-weight: 700; vertical-align: 2px; }
+.tag.lab { background: var(--lab-soft); color: var(--lab); }
+.tag.quiz { background: var(--quiz-soft); color: var(--quiz); }
+.tag.review { background: var(--idea-soft); color: var(--idea); }
+.progress-line { height: 6px; border-radius: 3px; background: var(--line); margin-top: 10px; overflow: hidden; }
+.progress-line i { display: block; height: 100%; width: 33%; background: var(--accent); border-radius: 3px; }
+
+.side { display: grid; gap: 20px; align-content: start; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; }
+.panel h2 { font-size: 17px; margin-bottom: 4px; }
+.panel > p { margin: 0 0 12px; color: var(--muted); font-size: 14.5px; }
+.gate { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 15px; }
+.gate li { display: grid; grid-template-columns: 22px 1fr auto; gap: 10px; align-items: center; }
+.gate li span:last-child { color: var(--muted); font-size: 13.5px; }
+.check { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--line-strong); display: grid; place-items: center; }
+.streak { display: flex; gap: 8px; margin-top: 4px; }
+.streak div { flex: 1; text-align: center; font-size: 12px; color: var(--muted); }
+.streak i { display: block; height: 30px; border-radius: 8px; background: var(--line); margin-bottom: 4px; }
+.streak .on i { background: var(--ink); }
+.streak .today i { background: transparent; border: 2px dashed var(--accent); }
+.obj { display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 6px; }
+.obj span { font: 600 12px var(--mono); text-align: center; padding: 8px 0; border-radius: 7px; background: var(--paper); color: var(--muted); border: 1px solid var(--line); }
+.obj span[data-m="1"] { background: var(--accent-soft); color: var(--accent-strong); border-color: transparent; }
+.obj span[data-m="2"] { background: var(--accent); color: var(--on-accent); border-color: transparent; }
+.obj-legend { display: flex; justify-content: space-between; margin-top: 10px; color: var(--muted); font-size: 13px; }
+
+/* ---------------- LESSON ---------------- */
+.lessonbar { display: flex; align-items: center; gap: 20px; padding: 0 24px; height: 56px; background: var(--surface); border-bottom: 1px solid var(--line); font-size: 15px; }
+.crumb { color: var(--muted); }
+.crumb b { color: var(--ink); }
+.steps { display: flex; gap: 6px; margin-left: auto; align-items: center; }
+.steps i { width: 26px; height: 6px; border-radius: 3px; background: var(--line); }
+.steps i.d { background: var(--ink); }
+.steps i.n { background: var(--accent); }
+.steps span { margin-left: 8px; color: var(--muted); font-size: 14px; }
+.seg { display: inline-flex; padding: 3px; border-radius: 10px; background: var(--paper); border: 1px solid var(--line); }
+.seg button { border: 0; background: transparent; border-radius: 7px; padding: 5px 10px; font-size: 13.5px; font-weight: 600; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+
+.lesson { display: grid; grid-template-columns: 240px minmax(0, 1fr) minmax(0, 520px); min-height: calc(100vh - 120px); }
+.outline { border-right: 1px solid var(--line); padding: 24px 18px; background: var(--surface); }
+.outline h2 { font-size: 13.5px; color: var(--muted); font-weight: 600; margin-bottom: 14px; }
+.outline ol { list-style: none; margin: 0; padding: 0; position: relative; }
+.outline ol::before { content: ""; position: absolute; left: 7px; top: 10px; bottom: 10px; width: 2px; background: var(--line); }
+.outline li { position: relative; padding: 7px 0 7px 26px; font-size: 14.5px; line-height: 1.35; color: var(--muted); }
+.outline li::before { content: ""; position: absolute; left: 1px; top: 11px; width: 10px; height: 10px; border-radius: 3px; border: 2px solid var(--line-strong); background: var(--surface); }
+.outline li.d { color: var(--text); }
+.outline li.d::before { background: var(--ink); border-color: var(--ink); }
+.outline li.n { color: var(--ink); font-weight: 700; }
+.outline li.n::before { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.outline li .lab-mark { display: block; font-size: 12.5px; color: var(--lab); font-weight: 600; margin-top: 2px; }
+
+.read { padding: 36px 48px 80px; max-width: 760px; }
+.read .eyebrowless { color: var(--muted); font-size: 15px; margin: 0 0 6px; }
+.read h1 { font-size: 34px; font-weight: 800; letter-spacing: -.015em; margin-bottom: 18px; }
+.read h2 { font-size: 22px; margin: 32px 0 10px; }
+.read p { margin: 0 0 14px; max-width: 68ch; }
+.term { border-bottom: 2px dotted var(--accent); cursor: help; position: relative; color: var(--ink); font-weight: 600; }
+.term .tip { position: absolute; left: 50%; bottom: calc(100% + 8px); transform: translateX(-50%); white-space: nowrap; background: var(--ink); color: var(--surface); font-size: 13.5px; font-weight: 500; padding: 6px 10px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity .15s; }
+.term:hover .tip, .term:focus .tip { opacity: 1; }
+.callout { border-radius: 14px; padding: 14px 18px 14px 18px; margin: 18px 0; border: 1px solid transparent; font-size: 16px; }
+.callout h3 { display: flex; align-items: center; gap: 8px; font-size: 15px; margin-bottom: 4px; }
+.callout p { margin: 0; }
+.callout.analogy { background: var(--idea-soft); }
+.callout.analogy h3 { color: var(--idea); }
+.callout.trap { background: var(--trap-soft); }
+.callout.trap h3 { color: var(--trap); }
+.callout.bridge { background: var(--surface); border-color: var(--line); border-left: 4px solid var(--accent); border-radius: 6px 14px 14px 6px; }
+.callout.bridge h3 { color: var(--accent-strong); }
+.code { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 14px 0; background: var(--code-bg); }
+.code header { display: flex; justify-content: space-between; align-items: center; padding: 6px 12px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.code header button { border: 0; background: none; color: var(--accent-strong); font-weight: 700; font-size: 13px; }
+.code pre { margin: 0; padding: 12px 14px; font: 400 14.5px/1.55 var(--mono); color: var(--code-ink); overflow-x: auto; }
+.k { color: var(--kw); font-weight: 600; }
+.understood { margin-top: 28px; display: flex; gap: 12px; align-items: center; justify-content: space-between; padding-top: 20px; border-top: 1px solid var(--line); }
+.understood [aria-pressed="true"] { background: var(--lab-soft); border-color: var(--lab); color: var(--lab); }
+
+.work { border-left: 1px solid var(--line); background: var(--surface); display: flex; flex-direction: column; }
+.work-head { padding: 16px 20px 12px; border-bottom: 1px solid var(--line); }
+.work-head h2 { font-size: 16px; }
+.work-head p { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
+.task { margin: 16px 20px 0; padding: 12px 14px; border-radius: 12px; background: var(--lab-soft); color: var(--text); font-size: 15px; }
+.task b { color: var(--lab); }
+.editor { margin: 14px 20px 0; border: 1px solid var(--line-strong); border-radius: 12px; overflow: hidden; background: var(--code-bg); }
+.editor .bar { display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.editor .bar .sp { flex: 1; }
+.editor textarea { display: block; width: 100%; min-height: 128px; border: 0; resize: vertical; padding: 12px 14px; background: transparent; color: var(--code-ink); font: 400 14.5px/1.6 var(--mono); }
+.editor textarea:focus { outline: none; }
+.run { background: var(--ink); color: var(--surface); border: 0; border-radius: 8px; padding: 7px 14px; font-weight: 700; font-size: 14px; }
+.mini { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 6px 10px; font-size: 13px; font-weight: 600; color: var(--text); }
+.result { margin: 14px 20px 0; overflow-x: auto; }
+.result table { border-collapse: collapse; width: 100%; font: 400 14px/1.4 var(--mono); }
+.result th { text-align: left; font-weight: 600; color: var(--muted); border-bottom: 1.5px solid var(--line-strong); padding: 6px 10px; }
+.result td { padding: 6px 10px; border-bottom: 1px solid var(--line); color: var(--code-ink); }
+.result td.num { text-align: right; }
+.result td.null { color: var(--cmt); font-style: italic; }
+.result .empty { color: var(--muted); font-size: 14px; margin: 10px 0 0; }
+.status { margin: 14px 20px 20px; padding: 12px 14px; border-radius: 12px; font-size: 15px; }
+.status[data-state="pass"] { background: var(--lab-soft); color: var(--text); }
+.status[data-state="pass"] strong { color: var(--lab); }
+.status[data-state="trap"] { background: var(--trap-soft); }
+.status[data-state="trap"] strong { color: var(--trap); }
+.work .foot { margin-top: auto; padding: 12px 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+
+/* ---------------- EXAM (deliberately plain) ---------------- */
+.exam { min-height: calc(100vh - 40px); background: var(--surface); display: flex; flex-direction: column; }
+.exam-top { display: flex; align-items: center; gap: 16px; padding: 0 28px; height: 60px; border-bottom: 1px solid var(--line); }
+.exam-top .title { font-weight: 700; color: var(--ink); }
+.exam-top .mode { color: var(--muted); font-size: 14px; }
+.exam-top .timer { margin-left: auto; font: 600 20px var(--mono); color: var(--ink); padding: 6px 12px; border: 1.5px solid var(--line-strong); border-radius: 8px; }
+.exam-top .count { color: var(--muted); font-size: 15px; }
+.exam-body { flex: 1; width: 100%; max-width: 860px; margin: 0 auto; padding: 40px 28px; }
+.qmeta { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; font-size: 14px; color: var(--muted); }
+.fmt { font-weight: 700; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; }
+.stem { font-size: 19px; line-height: 1.55; color: var(--ink); margin: 0 0 26px; }
+.domc-trail { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; min-height: 26px; }
+.domc-trail li { font-size: 13px; color: var(--muted); border: 1px dashed var(--line-strong); border-radius: 6px; padding: 2px 8px; }
+.domc-card { border: 1.5px solid var(--line-strong); border-radius: 12px; padding: 20px 22px; }
+.domc-in { animation: domc .28s ease-out; }
+@keyframes domc { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.domc-card .lab { font-size: 14px; color: var(--muted); font-weight: 700; margin-bottom: 6px; }
+.domc-card .opt { font-size: 18px; color: var(--ink); margin: 0 0 18px; }
+.yn { display: flex; gap: 12px; }
+.yn button { min-width: 120px; padding: 11px 18px; border-radius: 9px; border: 1.5px solid var(--line-strong); background: var(--surface); font-weight: 700; font-size: 16px; color: var(--ink); }
+.yn button:hover { border-color: var(--ink); }
+.domc-note { margin-top: 14px; color: var(--muted); font-size: 14px; }
+.domc-done { border: 1.5px solid var(--line); border-radius: 12px; padding: 20px 22px; color: var(--text); }
+.exam-foot { border-top: 1px solid var(--line); padding: 12px 28px; display: flex; gap: 12px; align-items: center; }
+.exam-foot .sp { flex: 1; }
+.exam-foot button { border: 1.5px solid var(--line-strong); background: var(--surface); border-radius: 9px; padding: 9px 16px; font-weight: 600; font-size: 15px; }
+.exam-foot .next { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.exam-foot [data-flag][aria-pressed="true"] { border-color: var(--idea); color: var(--idea); background: var(--idea-soft); }
+.navgrid-panel { border-top: 1px solid var(--line); padding: 16px 28px 20px; background: var(--paper); }
+.navgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 6px; max-width: 860px; margin: 0 auto; }
+.navkey { max-width: 860px; margin-inline: auto; }
+.navgrid button { height: 36px; border-radius: 7px; border: 1.5px solid var(--line-strong); background: var(--surface); font: 600 13px var(--mono); }
+.navgrid [data-state="answered"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.navgrid [data-state="flagged"] { background: var(--idea-soft); border-color: var(--idea); color: var(--idea); }
+.navgrid [data-state="current"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.navkey { display: flex; gap: 16px; margin-top: 10px; font-size: 13px; color: var(--muted); }
+
+footer.disc { padding: 24px 28px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); text-align: center; }
+
+@media (max-width: 1100px) {
+  .lesson { grid-template-columns: minmax(0, 1fr); }
+  .outline { display: none; }
+  .work { border-left: 0; border-top: 1px solid var(--line); }
+  .read { padding: 28px 24px 40px; margin: 0 auto; }
+}
+@media (max-width: 860px) {
+  .top { gap: 12px; padding: 0 16px; }
+  .nav, .top .search { display: none; }
+  .wrap { padding: 0 16px; }
+  .hello { grid-template-columns: 1fr; padding-top: 28px; }
+  .hello h1 { font-size: 30px; }
+  .hello .cta { text-align: left; }
+  .today-grid { grid-template-columns: 1fr; }
+  .lessonbar { gap: 10px; padding: 0 16px; overflow-x: auto; }
+  .crumb { white-space: nowrap; }
+  .read { padding: 24px 16px 32px; }
+  .read h1 { font-size: 27px; }
+  .exam-top { padding: 0 16px; flex-wrap: wrap; height: auto; padding-block: 10px; }
+  .exam-body { padding: 24px 16px; }
+  .exam-foot { padding: 12px 16px; flex-wrap: wrap; }
+  .yn button { min-width: 0; flex: 1; }
+}
+</style>
+</head>
+<body>
+<div class="frame" role="toolbar" aria-label="Mockup controls">
+  <b>Mockup A: Lineage</b>
+  <button data-screen-btn="today">Today</button>
+  <button data-screen-btn="lesson">Lesson + lab</button>
+  <button data-screen-btn="exam">Exam (DOMC)</button>
+  <span class="sp"></span>
+  <button data-theme-toggle>Dark mode</button>
+</div>
+
+<!-- ======================= TODAY ======================= -->
+<section data-screen="today">
+  <header class="top">
+    <a class="brand" href="#today" data-go="today">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect x="1" y="3" width="10" height="8" rx="2.5" fill="currentColor"/><rect x="1" y="19" width="10" height="8" rx="2.5" fill="currentColor"/><rect x="19" y="11" width="10" height="8" rx="2.5" fill="var(--accent)"/><path d="M11 7 C 16 7, 14 15, 19 15 M11 23 C 16 23, 14 15, 19 15" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+      Lineage Academy
+    </a>
+    <nav class="nav" aria-label="Main">
+      <a href="#today" aria-current="page">Today</a><a href="#">Path</a><a href="#">Labs</a><a href="#exam" data-go="exam">Mock exams</a><a href="#">Drills</a><a href="#">Glossary</a>
+    </nav>
+    <div class="search" role="search"><span>Search the course</span><kbd>Ctrl K</kbd></div>
+  </header>
+
+  <main class="wrap">
+    <div class="hello">
+      <div>
+        <h1>Good evening, Adnane.</h1>
+        <p>Week 2 of 14, day 3. Tonight: SQL, from NULL to CASE.</p>
+      </div>
+      <div class="cta">
+        <a class="btn btn-primary" href="#lesson" data-go="lesson">Continue: 4.4 NULL, step 2 of 6</a>
+        <small>About 1 h 40 min left in today's plan</small>
+      </div>
+    </div>
+
+    <section class="lineage" aria-labelledby="lin-h">
+      <div class="lineage-head">
+        <h2 id="lin-h">Your course, as a DAG</h2>
+        <p>Each part depends on the ones before it, like models in a project.</p>
+      </div>
+      <div class="lineage-scroll">
+      <svg viewBox="0 0 1300 250" role="img" aria-label="Course map: Part 0 done, Part I in progress at 40 percent, the other parts not started">
+<path class="edge done" d="M146 125 C 166 125, 166 125, 186 125"/>
+<path class="edge" d="M332 125 C 352 125, 352 125, 372 125"/>
+<path class="edge" d="M518 125 C 546 125, 546 45, 574 45"/>
+<path class="edge" d="M518 125 C 546 125, 546 125, 574 125"/>
+<path class="edge" d="M518 125 C 546 125, 546 205, 574 205"/>
+<path class="edge" d="M720 45 C 748 45, 748 125, 776 125"/>
+<path class="edge" d="M720 125 C 748 125, 748 125, 776 125"/>
+<path class="edge" d="M720 205 C 748 205, 748 125, 776 125"/>
+<path class="edge" d="M922 125 C 942 125, 942 125, 962 125"/>
+<path class="edge" d="M1108 125 C 1128 125, 1128 125, 1148 125"/>
+<g class="node done" transform="translate(0,96)"><rect class="box" width="146" height="58" rx="12"/><text class="k" x="14" y="20">Part 0</text><text class="t" x="14" y="39">Start here</text><circle class="port" cx="146" cy="29" r="4"/></g>
+<rect class="ring" x="186" y="96" width="146" height="58" rx="12"/>
+<g class="node now" transform="translate(186,96)"><rect class="box" width="146" height="58" rx="12"/><text class="k" x="14" y="20">Part I, 40%</text><text class="t" x="14" y="39">Foundations</text><rect class="bar-bg" x="14" y="46" width="118" height="4" rx="2"/><rect class="bar" x="14" y="46" width="47" height="4" rx="2"/><circle class="port" cx="0" cy="29" r="4"/><circle class="port" cx="146" cy="29" r="4"/></g>
+<text class="you" x="200" y="176">You are here: Ch. 4 SQL</text>
+<g class="node" transform="translate(372,96)"><rect class="box" width="146" height="58" rx="12"/><text class="k" x="14" y="20">Part II, 11 chapters</text><text class="t" x="14" y="39">Building with dbt</text><rect class="bar-bg" x="14" y="46" width="118" height="4" rx="2"/><circle class="port" cx="0" cy="29" r="4"/><circle class="port" cx="146" cy="29" r="4"/></g>
+<g class="node" transform="translate(574,16)"><rect class="box" width="146" height="58" rx="12"/><text class="k" x="14" y="20">Part III</text><text class="t" x="14" y="39">Governance</text><rect class="bar-bg" x="14" y="46" width="118" height="4" rx="2"/><circle class="port" cx="0" cy="29" r="4"/><circle class="port" cx="146" cy="29" r="4"/></g>
+<g class="node" transform="translate(574,96)"><rect class="box" width="146" height="58" rx="12"/><text class="k" x="14" y="20">Part IV</text><text class="t" x="14" y="39">Testing</text><rect class="bar-bg" x="14" y="46" width="118" height="4" rx="2"/><circle class="port" cx="0" cy="29" r="4"/><circle class="port" cx="146" cy="29" r="4"/></g>
+<g class="node" transform="translate(574,176)"><rect class="box" width="146" height="58" rx="12"/><text class="k" x="14" y="20">Part V</text><text class="t" x="14" y="39">Docs, freshness</text><rect class="bar-bg" x="14" y="46" width="118" height="4" rx="2"/><circle class="port" cx="0" cy="29" r="4"/><circle class="port" cx="146" cy="29" r="4"/></g>
+<g class="node" transform="translate(776,96)"><rect class="box" width="146" height="58" rx="12"/><text class="k" x="14" y="20">Part VI</text><text class="t" x="14" y="39">Debugging</text><rect class="bar-bg" x="14" y="46" width="118" height="4" rx="2"/><circle class="port" cx="0" cy="29" r="4"/><circle class="port" cx="146" cy="29" r="4"/></g>
+<g class="node" transform="translate(962,96)"><rect class="box" width="146" height="58" rx="12"/><text class="k" x="14" y="20">Part VII</text><text class="t" x="14" y="39">State and CI</text><rect class="bar-bg" x="14" y="46" width="118" height="4" rx="2"/><circle class="port" cx="0" cy="29" r="4"/><circle class="port" cx="146" cy="29" r="4"/></g>
+<g class="node" transform="translate(1148,96)"><rect class="box" width="146" height="58" rx="12"/><text class="k" x="14" y="20">Parts VIII and IX</text><text class="t" x="14" y="39">Capstone, mocks</text><rect class="bar-bg" x="14" y="46" width="118" height="4" rx="2"/><circle class="port" cx="0" cy="29" r="4"/></g>
+</svg>
+      </div>
+      <div class="legend"><span><i class="d"></i>Done</span><span><i class="n"></i>In progress</span><span><i></i>Not started</span></div>
+    </section>
+
+    <div class="today-grid">
+      <section aria-labelledby="mis-h">
+        <div class="section-title"><h2 id="mis-h">Today's mission</h2><span>2 hours, the book's study session</span></div>
+        <ol class="mission">
+          <li class="done"><div class="dot" aria-label="Done">✓</div><div class="body"><h3>Spaced review <span class="tag review">4 cards</span></h3><p>Two traps from Chapter 2, two from Chapter 3. Done in 9 minutes.</p></div><div class="min">10 min</div></li>
+          <li class="now"><div class="dot">2</div><div class="body"><h3>Read 4.4 NULL: the value that is not a value</h3><p>Three-valued logic, <code>is null</code>, the NOT IN trap, <code>coalesce</code>, <code>count(*)</code> versus <code>count(column)</code>.</p><div class="progress-line" aria-label="Step 2 of 6"><i></i></div><a class="btn btn-primary" href="#lesson" data-go="lesson">Continue at step 2</a></div><div class="min">25 min</div></li>
+          <li><div class="dot">3</div><div class="body"><h3>Read 4.5 ORDER BY, LIMIT and DISTINCT, then 4.6 Functions</h3><p>Text, dates, CASE and CAST.</p></div><div class="min">25 min</div></li>
+          <li><div class="dot">4</div><div class="body"><h3>Lab: NULLs, functions and CASE <span class="tag lab">In your browser</span></h3><p>Real DuckDB with the jaffle_shop data. Your results are checked against the book.</p></div><div class="min">40 min</div></li>
+          <li><div class="dot">5</div><div class="body"><h3>Check yourself, part 1 <span class="tag quiz">8 questions</span></h3><p>Book closed. Wrong answers go to your error notebook.</p></div><div class="min">20 min</div></li>
+        </ol>
+      </section>
+
+      <aside class="side">
+        <section class="panel" aria-labelledby="gate-h">
+          <h2 id="gate-h">Ready to book the exam?</h2>
+          <p>The book's rule: all four conditions must be true.</p>
+          <ul class="gate">
+            <li><span class="check"></span><span>Every chapter quiz at 80% or more</span><span>2 of 26</span></li>
+            <li><span class="check"></span><span>Capstone builds without errors</span><span>0 of 15</span></li>
+            <li><span class="check"></span><span>Two timed mocks at 80% or more</span><span>0 of 2</span></li>
+            <li><span class="check"></span><span>Error notebook re-read</span><span>12 entries</span></li>
+          </ul>
+        </section>
+        <section class="panel" aria-labelledby="str-h">
+          <h2 id="str-h">6-day streak</h2>
+          <div class="streak" aria-label="This week">
+            <div class="on"><i></i>Mon</div><div class="on"><i></i>Tue</div><div class="on"><i></i>Wed</div><div class="on"><i></i>Thu</div><div class="on"><i></i>Fri</div><div class="today"><i></i>Sat</div><div><i></i>Sun</div>
+          </div>
+        </section>
+        <section class="panel" aria-labelledby="obj-h">
+          <h2 id="obj-h">Mastery of the 33 objectives</h2>
+          <p>Official sub-objectives plus the SQL and Git prerequisites.</p>
+          <div class="obj">
+            <span data-m="2">SQL</span><span data-m="2">GIT</span><span data-m="1">1.1</span><span>1.2</span><span data-m="1">1.3</span><span data-m="1">1.4</span><span data-m="1">1.5</span><span>1.6</span><span>1.7</span><span>1.8</span><span>1.9</span><span>1.10</span><span>1.11</span><span>1.12</span><span>1.13</span><span>1.14</span><span>2.1</span><span>2.2</span><span>2.3</span><span>3.1</span><span>3.2</span><span>3.3</span><span>3.4</span><span>3.5</span><span>4.1</span><span>4.2</span><span>5.1</span><span>5.2</span><span>5.3</span><span>6.1</span><span>6.2</span><span>7.1</span><span>7.2</span>
+          </div>
+          <div class="obj-legend"><span>Not started</span><span>Learning</span><span>Mastered</span></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+  <footer class="disc">Unofficial study guide. Not affiliated with or endorsed by dbt Labs. dbt is a trademark of dbt Labs, Inc.</footer>
+</section>
+
+<!-- ======================= LESSON ======================= -->
+<section data-screen="lesson" hidden>
+  <header class="top">
+    <a class="brand" href="#today" data-go="today">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><rect x="1" y="3" width="10" height="8" rx="2.5" fill="currentColor"/><rect x="1" y="19" width="10" height="8" rx="2.5" fill="currentColor"/><rect x="19" y="11" width="10" height="8" rx="2.5" fill="var(--accent)"/><path d="M11 7 C 16 7, 14 15, 19 15 M11 23 C 16 23, 14 15, 19 15" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+      Lineage Academy
+    </a>
+    <nav class="nav" aria-label="Main"><a href="#today" data-go="today">Today</a><a href="#" aria-current="page">Path</a><a href="#">Labs</a><a href="#exam" data-go="exam">Mock exams</a><a href="#">Drills</a><a href="#">Glossary</a></nav>
+    <div class="search" role="search"><span>Search the course</span><kbd>Ctrl K</kbd></div>
+  </header>
+  <div class="lessonbar">
+    <span class="crumb">Chapter 4, SQL from zero to exam level &nbsp;/&nbsp; <b>4.4 NULL</b></span>
+    <div class="steps" aria-label="Step 2 of 6"><i class="d"></i><i class="n"></i><i></i><i></i><i></i><i></i><span>Step 2 of 6</span></div>
+    <div class="seg" data-os-group aria-label="Your computer"><button data-os-value="mac" aria-pressed="true">macOS</button><button data-os-value="win" aria-pressed="false">Windows</button><button data-os-value="wsl" aria-pressed="false">WSL</button></div>
+  </div>
+
+  <div class="lesson">
+    <nav class="outline" aria-label="Chapter 4 lessons">
+      <h2>Chapter 4 lessons</h2>
+      <ol>
+        <li class="d">4.1 Meet your practice database</li>
+        <li class="d">4.2 SELECT and FROM</li>
+        <li class="d">4.3 WHERE: keeping only some rows<span class="lab-mark">Lab done: Filtering rows</span></li>
+        <li class="n">4.4 NULL: the value that is not a value</li>
+        <li>4.5 ORDER BY, LIMIT and DISTINCT</li>
+        <li>4.6 Functions: text, dates, CASE<span class="lab-mark">Lab: NULLs, functions and CASE</span></li>
+        <li>4.7 Aggregation: GROUP BY, HAVING</li>
+        <li>4.8 Joins: combining tables</li>
+        <li>Check yourself, part 1</li>
+      </ol>
+    </nav>
+
+    <article class="read">
+      <p class="eyebrowless">Lesson 4.4</p>
+      <h1>NULL: the value that is not a value</h1>
+      <p>Five customers have no email address. In the table, their <code>email</code> is <span class="term" tabindex="0">NULL<span class="tip" role="tooltip">FR : NULL (valeur absente)</span></span>. NULL means <em>unknown</em> or <em>missing</em>. It is not zero, it is not an empty text <code>''</code>, it is "we do not know".</p>
+
+      <div class="callout analogy">
+        <h3><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M6 14h4" stroke="currentColor" stroke-width="1.8"/></svg>Analogy</h3>
+        <p>Imagine a form where somebody did not answer the question "What is your age?". You cannot say the age is 0. You cannot say it is equal to the age of another person who also did not answer: you simply do not know either age. SQL reasons exactly like this.</p>
+      </div>
+
+      <h2>IS NULL, not = NULL</h2>
+      <p>The only correct test is <code>is null</code> or <code>is not null</code>. Run this query in the workspace on the right.</p>
+      <div class="code">
+        <header><span>SQL</span><button type="button">Open in workspace</button></header>
+<pre><span class="k">select</span> id, first_name, email
+<span class="k">from</span> jaffle_shop.customers
+<span class="k">where</span> email <span class="k">is null</span>;</pre>
+      </div>
+
+      <div class="callout trap">
+        <h3><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5 15 14H1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 6v4M8 11.5v.5" stroke="currentColor" stroke-width="1.8"/></svg>Exam trap</h3>
+        <p><code>where email = null</code> runs without any error, and returns <strong>zero rows</strong>. The comparison is unknown for every row, so no row is kept. A query that is wrong but does not fail is the most dangerous kind of bug.</p>
+      </div>
+
+      <div class="callout bridge">
+        <h3>Where you will meet this in dbt</h3>
+        <p>dbt's built-in <code>not_null</code> data test (Chapter 18) is just a query like <code>select * from my_model where my_column is null</code>. If it returns rows, the test fails.</p>
+      </div>
+
+      <div class="understood">
+        <button class="btn btn-quiet" data-understood aria-pressed="false">I understood this</button>
+        <a class="btn btn-primary" href="#">Next step: the NOT IN trap</a>
+      </div>
+    </article>
+
+    <aside class="work" data-sql aria-label="SQL workspace">
+      <div class="work-head">
+        <h2>Workspace</h2>
+        <p>Practice database jaffle_shop and stripe, running in your browser.</p>
+      </div>
+      <div class="task"><b>Try it.</b> Run the query and compare with the book. Then try the trap and see what happens.</div>
+      <div class="editor">
+        <div class="bar"><span>query.sql</span><span class="sp"></span><button class="mini" data-sql-try>Try the trap: = null</button><button class="mini" data-sql-reset>Reset</button><button class="run" data-sql-run>Run</button></div>
+        <textarea data-sql-editor spellcheck="false" aria-label="SQL editor">select id, first_name, email
+from jaffle_shop.customers
+where email is null;</textarea>
+      </div>
+      <div class="result" data-sql-result aria-live="polite"></div>
+      <div class="status" data-sql-status hidden aria-live="polite"></div>
+      <div class="foot">Ctrl + Enter runs the query. Mockup: results are taken from the book.</div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= EXAM ======================= -->
+<section data-screen="exam" hidden>
+  <div class="exam">
+    <header class="exam-top">
+      <span class="title">Mock exam 1</span><span class="mode">Exam mode, no feedback until the end</span>
+      <span class="timer" data-timer aria-label="Time left">01:47:12</span>
+      <span class="count">Question 8 of 65</span>
+    </header>
+    <main class="exam-body" data-domc>
+      <div class="qmeta"><span class="fmt">DOMC</span><span>Judge each option YES or NO. Options appear one at a time.</span></div>
+      <p class="stem">In the CI job of <code>jaffle_dbt</code>, Adnane runs <code>dbt build --empty</code>. For each statement, answer YES (true) or NO (false).</p>
+      <ul class="domc-trail" data-domc-trail aria-label="Options already answered"></ul>
+      <div class="domc-card" data-domc-card>
+        <div class="lab" data-domc-label>Option A</div>
+        <p class="opt" data-domc-text></p>
+        <div class="yn"><button data-domc-yes>Yes</button><button data-domc-no>No</button></div>
+        <p class="domc-note">You cannot go back to an option once you answer it, like on the real exam.</p>
+      </div>
+      <div class="domc-done" data-domc-done hidden>All options of this question are answered. <button class="mini" data-domc-restart>Restart the demo</button></div>
+    </main>
+    <div class="navgrid-panel" id="navpanel" hidden>
+      <div class="navgrid" data-nav-grid></div>
+      <div class="navkey"><span>Filled: answered</span><span>Amber: flagged for review</span><span>Ring: this question</span></div>
+    </div>
+    <footer class="exam-foot">
+      <button data-flag aria-pressed="false"><span data-flag-label>Flag for review</span></button>
+      <button data-nav-toggle aria-expanded="false" aria-controls="navpanel">All questions</button>
+      <span class="sp"></span>
+      <button>Previous</button><button class="next">Next</button>
+    </footer>
+  </div>
+</section>
+
+<script src="shared.js"></script>
+</body>
+</html>

@@ -1,0 +1,865 @@
+{
+  "config": {
+    "argv": [
+      "/opt/homebrew/Cellar/node/25.2.1/bin/node",
+      "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/node_modules/.bin/playwright",
+      "test",
+      "e2e",
+      "parity",
+      "--project=chromium",
+      "--project=webkit",
+      "--project=firefox"
+    ],
+    "configFile": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/playwright.config.ts",
+    "rootDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "unit",
+        "name": "unit",
+        "testDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/unit\\/.*\\.spec\\.ts/"
+        ],
+        "timeout": 180000
+      },
+      {
+        "outputDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/(e2e|parity)\\.spec\\.ts/"
+        ],
+        "timeout": 180000
+      },
+      {
+        "outputDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/(e2e|parity)\\.spec\\.ts/"
+        ],
+        "timeout": 180000
+      },
+      {
+        "outputDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/(e2e|parity)\\.spec\\.ts/"
+        ],
+        "timeout": 180000
+      },
+      {
+        "outputDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "measure",
+        "name": "measure",
+        "testDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/measure\\.spec\\.ts/"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests",
+        "snapshotDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 180000,
+        "use": {
+          "baseURL": "http://localhost:4401/dbt-academy/",
+          "trace": "retain-on-failure",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "webkit",
+        "testDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests",
+        "snapshotDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 180000,
+        "use": {
+          "baseURL": "http://localhost:4401/dbt-academy/",
+          "trace": "retain-on-failure",
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1792,
+            "height": 1120
+          },
+          "deviceScaleFactor": 2,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "webkit"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "firefox",
+        "testDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests",
+        "snapshotDir": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 180000,
+        "use": {
+          "baseURL": "http://localhost:4401/dbt-academy/",
+          "trace": "retain-on-failure",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:157.0) Gecko/20100101 Firefox/157.0",
+          "viewport": {
+            "width": 1280,
+            "height": 720
+          },
+          "screen": {
+            "width": 1920,
+            "height": 1080
+          },
+          "deviceScaleFactor": 1,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "firefox"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "firefox"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "results/playwright-report.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/serve.mjs",
+      "url": "http://localhost:4401/dbt-academy/",
+      "reuseExistingServer": true,
+      "env": {
+        "PORT": "4401",
+        "BASE": "/dbt-academy/",
+        "DIST": "dist-next"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "e2e.spec.ts",
+      "file": "e2e.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "lab page: text first, engine lazy, query result matches the book",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [
+                {
+                  "type": "engine",
+                  "description": "chromium: DuckDB v2.0.0-dev88614 bundle=base lib=1.33.1-dev110.0"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2990,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at /Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts:60:74",
+                    "location": {
+                      "file": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts",
+                      "column": 74,
+                      "line": 60
+                    },
+                    "snippet": "  58 |   const foreign = requests.filter((u) => !u.startsWith(new URL('.', page.url()).origin + '/dbt-academy/'));\n  59 |   expect(foreign).toEqual([]);\n> 60 |   expect(requests.some((u) => /duckdb-(eh|mvp)\\.[\\w-]+\\.wasm$/.test(u))).toBe(true);\n     |                                                                          ^\n  61 |   expect(consoleErrors).toEqual([]);\n  62 | });\n  63 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts",
+                        "column": 74,
+                        "line": 60
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  58 |   const foreign = requests.filter((u) => !u.startsWith(new URL('.', page.url()).origin + '/dbt-academy/'));\n  59 |   expect(foreign).toEqual([]);\n> 60 |   expect(requests.some((u) => /duckdb-(eh|mvp)\\.[\\w-]+\\.wasm$/.test(u))).toBe(true);\n     |                                                                          ^\n  61 |   expect(consoleErrors).toEqual([]);\n  62 | });\n  63 |\n    at /Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts:60:74"
+                    }
+                  ],
+                  "stdout": [
+                    {
+                      "text": "[chromium] DuckDB v2.0.0-dev88614 (d54cbbe3df) bundle=base timings={\"workerStarted\":1,\"instantiated\":1387,\"opened\":1564,\"dataFetched\":1564,\"setupDone\":1699}\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T02:01:39.241Z",
+                  "annotations": [
+                    {
+                      "type": "engine",
+                      "description": "chromium: DuckDB v2.0.0-dev88614 bundle=base lib=1.33.1-dev110.0"
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results/e2e-lab-page-text-first-en-9a229-ery-result-matches-the-book-chromium/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results/e2e-lab-page-text-first-en-9a229-ery-result-matches-the-book-chromium/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts",
+                    "column": 74,
+                    "line": 60
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "b1c7859d981cc20c96be-349d5f208c712f29af10",
+          "file": "e2e.spec.ts",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "reading page ships zero JavaScript",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 126,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T02:01:42.909Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b1c7859d981cc20c96be-b5fade6fcac762f99304",
+          "file": "e2e.spec.ts",
+          "line": 64,
+          "column": 1
+        },
+        {
+          "title": "base path: assets resolve under /dbt-academy/, root is 404",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 153,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T02:01:43.167Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b1c7859d981cc20c96be-c94ee2ed3da7582d0a38",
+          "file": "e2e.spec.ts",
+          "line": 73,
+          "column": 1
+        },
+        {
+          "title": "lab page: text first, engine lazy, query result matches the book",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 121812,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('lab-lab-group-by').getByTestId('engine-status')\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"error\"\u001b[39m\nTimeout:  120000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('lab-lab-group-by').getByTestId('engine-status') with timeout 120000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('lab-lab-group-by').getByTestId('engine-status')\u001b[22m\n\u001b[2m    3 × locator resolved to <div role=\"status\" data-phase=\"worker\" class=\"sqllab-progress\" data-testid=\"engine-status\">…</div>\u001b[22m\n\u001b[2m      - unexpected value \"worker\"\u001b[22m\n\u001b[2m    2 × locator resolved to <div role=\"status\" data-phase=\"download\" class=\"sqllab-progress\" data-testid=\"engine-status\">…</div>\u001b[22m\n\u001b[2m      - unexpected value \"download\"\u001b[22m\n\u001b[2m    236 × locator resolved to <div role=\"status\" data-phase=\"error\" class=\"sqllab-progress\" data-testid=\"engine-status\">…</div>\u001b[22m\n\u001b[2m        - unexpected value \"error\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('lab-lab-group-by').getByTestId('engine-status')\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"error\"\u001b[39m\nTimeout:  120000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('lab-lab-group-by').getByTestId('engine-status') with timeout 120000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('lab-lab-group-by').getByTestId('engine-status')\u001b[22m\n\u001b[2m    3 × locator resolved to <div role=\"status\" data-phase=\"worker\" class=\"sqllab-progress\" data-testid=\"engine-status\">…</div>\u001b[22m\n\u001b[2m      - unexpected value \"worker\"\u001b[22m\n\u001b[2m    2 × locator resolved to <div role=\"status\" data-phase=\"download\" class=\"sqllab-progress\" data-testid=\"engine-status\">…</div>\u001b[22m\n\u001b[2m      - unexpected value \"download\"\u001b[22m\n\u001b[2m    236 × locator resolved to <div role=\"status\" data-phase=\"error\" class=\"sqllab-progress\" data-testid=\"engine-status\">…</div>\u001b[22m\n\u001b[2m        - unexpected value \"error\"\u001b[22m\n\n    at /Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts:19:50",
+                    "location": {
+                      "file": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts",
+                      "column": 50,
+                      "line": 19
+                    },
+                    "snippet": "  17 |\n  18 |   const lab = page.getByTestId('lab-lab-group-by');\n> 19 |   await expect(lab.getByTestId('engine-status')).toHaveAttribute('data-phase', 'ready');\n     |                                                  ^\n  20 |   await lab.getByTestId('run').click();\n  21 |\n  22 |   const grid = lab.getByTestId('result-grid');"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts",
+                        "column": 50,
+                        "line": 19
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveAttribute\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByTestId('lab-lab-group-by').getByTestId('engine-status')\nExpected: \u001b[32m\"ready\"\u001b[39m\nReceived: \u001b[31m\"error\"\u001b[39m\nTimeout:  120000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveAttribute\" getByTestId('lab-lab-group-by').getByTestId('engine-status') with timeout 120000ms\u001b[22m\n\u001b[2m  - waiting for getByTestId('lab-lab-group-by').getByTestId('engine-status')\u001b[22m\n\u001b[2m    3 × locator resolved to <div role=\"status\" data-phase=\"worker\" class=\"sqllab-progress\" data-testid=\"engine-status\">…</div>\u001b[22m\n\u001b[2m      - unexpected value \"worker\"\u001b[22m\n\u001b[2m    2 × locator resolved to <div role=\"status\" data-phase=\"download\" class=\"sqllab-progress\" data-testid=\"engine-status\">…</div>\u001b[22m\n\u001b[2m      - unexpected value \"download\"\u001b[22m\n\u001b[2m    236 × locator resolved to <div role=\"status\" data-phase=\"error\" class=\"sqllab-progress\" data-testid=\"engine-status\">…</div>\u001b[22m\n\u001b[2m        - unexpected value \"error\"\u001b[22m\n\n\n  17 |\n  18 |   const lab = page.getByTestId('lab-lab-group-by');\n> 19 |   await expect(lab.getByTestId('engine-status')).toHaveAttribute('data-phase', 'ready');\n     |                                                  ^\n  20 |   await lab.getByTestId('run').click();\n  21 |\n  22 |   const grid = lab.getByTestId('result-grid');\n    at /Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts:19:50"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T02:01:45.176Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results/e2e-lab-page-text-first-en-9a229-ery-result-matches-the-book-webkit/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results/e2e-lab-page-text-first-en-9a229-ery-result-matches-the-book-webkit/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts",
+                    "column": 50,
+                    "line": 19
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "b1c7859d981cc20c96be-337d4ffad37ad53c8314",
+          "file": "e2e.spec.ts",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "reading page ships zero JavaScript",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 507,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T02:03:48.918Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b1c7859d981cc20c96be-d68fcacb69068f72a1eb",
+          "file": "e2e.spec.ts",
+          "line": 64,
+          "column": 1
+        },
+        {
+          "title": "base path: assets resolve under /dbt-academy/, root is 404",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 258,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T02:03:49.679Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b1c7859d981cc20c96be-7b3fe2ee153920e820a3",
+          "file": "e2e.spec.ts",
+          "line": 73,
+          "column": 1
+        },
+        {
+          "title": "lab page: text first, engine lazy, query result matches the book",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [
+                {
+                  "type": "engine",
+                  "description": "firefox: DuckDB v2.0.0-dev88614 bundle=base lib=1.33.1-dev110.0"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 3315,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at /Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts:60:74",
+                    "location": {
+                      "file": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts",
+                      "column": 74,
+                      "line": 60
+                    },
+                    "snippet": "  58 |   const foreign = requests.filter((u) => !u.startsWith(new URL('.', page.url()).origin + '/dbt-academy/'));\n  59 |   expect(foreign).toEqual([]);\n> 60 |   expect(requests.some((u) => /duckdb-(eh|mvp)\\.[\\w-]+\\.wasm$/.test(u))).toBe(true);\n     |                                                                          ^\n  61 |   expect(consoleErrors).toEqual([]);\n  62 | });\n  63 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts",
+                        "column": 74,
+                        "line": 60
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  58 |   const foreign = requests.filter((u) => !u.startsWith(new URL('.', page.url()).origin + '/dbt-academy/'));\n  59 |   expect(foreign).toEqual([]);\n> 60 |   expect(requests.some((u) => /duckdb-(eh|mvp)\\.[\\w-]+\\.wasm$/.test(u))).toBe(true);\n     |                                                                          ^\n  61 |   expect(consoleErrors).toEqual([]);\n  62 | });\n  63 |\n    at /Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts:60:74"
+                    }
+                  ],
+                  "stdout": [
+                    {
+                      "text": "[firefox] DuckDB v2.0.0-dev88614 (d54cbbe3df) bundle=base timings={\"workerStarted\":2,\"instantiated\":901,\"opened\":1073,\"dataFetched\":1073,\"setupDone\":1170}\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T02:03:54.193Z",
+                  "annotations": [
+                    {
+                      "type": "engine",
+                      "description": "firefox: DuckDB v2.0.0-dev88614 bundle=base lib=1.33.1-dev110.0"
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results/e2e-lab-page-text-first-en-9a229-ery-result-matches-the-book-firefox/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results/e2e-lab-page-text-first-en-9a229-ery-result-matches-the-book-firefox/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/e2e.spec.ts",
+                    "column": 74,
+                    "line": 60
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "b1c7859d981cc20c96be-749ada82abe0bb2f95f1",
+          "file": "e2e.spec.ts",
+          "line": 7,
+          "column": 1
+        },
+        {
+          "title": "reading page ships zero JavaScript",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 927,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T02:03:58.834Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b1c7859d981cc20c96be-3b2daa6e86deaaa789c1",
+          "file": "e2e.spec.ts",
+          "line": 64,
+          "column": 1
+        },
+        {
+          "title": "base path: assets resolve under /dbt-academy/, root is 404",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 422,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T02:04:00.348Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b1c7859d981cc20c96be-2b9caa1dbbf1ee6cc46e",
+          "file": "e2e.spec.ts",
+          "line": 73,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "parity.spec.ts",
+      "file": "parity.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "chapter 4 parity + day2.sql",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1487,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "[chromium] parity 69/69, day2 13/13, 1249 ms\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T02:01:43.335Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ff3b57e4e431ee533ad9-b8f1644090bedb720822",
+          "file": "parity.spec.ts",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "chapter 4 parity + day2.sql",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit",
+              "projectName": "webkit",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 2650,
+                  "error": {
+                    "message": "Error: parity runner error\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeUndefined\u001b[2m()\u001b[22m\n\nReceived: \u001b[31m\"The operation failed for an unknown transient reason (e.g. out of memory).\"\u001b[39m",
+                    "stack": "Error: parity runner error\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeUndefined\u001b[2m()\u001b[22m\n\nReceived: \u001b[31m\"The operation failed for an unknown transient reason (e.g. out of memory).\"\u001b[39m\n    at /Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/parity.spec.ts:13:38",
+                    "location": {
+                      "file": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/parity.spec.ts",
+                      "column": 38,
+                      "line": 13
+                    },
+                    "snippet": "  11 |   await expect(page.getByTestId('parity-done').or(page.getByTestId('parity-error'))).toBeVisible({ timeout: 170_000 });\n  12 |   const err = await page.evaluate(() => window.__parityError);\n> 13 |   expect(err, 'parity runner error').toBeUndefined();\n     |                                      ^\n  14 |   const report = (await page.evaluate(() => window.__parity)) as ParityReport;\n  15 |\n  16 |   mkdirSync('results', { recursive: true });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/parity.spec.ts",
+                        "column": 38,
+                        "line": 13
+                      },
+                      "message": "Error: parity runner error\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeUndefined\u001b[2m()\u001b[22m\n\nReceived: \u001b[31m\"The operation failed for an unknown transient reason (e.g. out of memory).\"\u001b[39m\n\n  11 |   await expect(page.getByTestId('parity-done').or(page.getByTestId('parity-error'))).toBeVisible({ timeout: 170_000 });\n  12 |   const err = await page.evaluate(() => window.__parityError);\n> 13 |   expect(err, 'parity runner error').toBeUndefined();\n     |                                      ^\n  14 |   const report = (await page.evaluate(() => window.__parity)) as ParityReport;\n  15 |\n  16 |   mkdirSync('results', { recursive: true });\n    at /Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/parity.spec.ts:13:38"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T02:03:49.950Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results/parity-chapter-4-parity-day2-sql-webkit/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/test-results/parity-chapter-4-parity-day2-sql-webkit/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Users/mac/Documents/Adnane/dbt-academy/spikes/duckdb-wasm/tests/parity.spec.ts",
+                    "column": 38,
+                    "line": 13
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "ff3b57e4e431ee533ad9-4fbb66fdb804b8bd0272",
+          "file": "parity.spec.ts",
+          "line": 9,
+          "column": 1
+        },
+        {
+          "title": "chapter 4 parity + day2.sql",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "firefox",
+              "projectName": "firefox",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2282,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "[firefox] parity 69/69, day2 13/13, 1609 ms\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-24T02:04:00.785Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ff3b57e4e431ee533ad9-8d7f9e716361fb363d23",
+          "file": "parity.spec.ts",
+          "line": 9,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-24T02:01:38.808Z",
+    "duration": 144517.198,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  }
+}

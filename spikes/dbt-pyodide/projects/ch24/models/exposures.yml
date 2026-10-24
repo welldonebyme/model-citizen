@@ -1,0 +1,31 @@
+version: 2
+
+exposures:
+  - name: monthly_revenue_dashboard
+    label: Monthly revenue dashboard
+    type: dashboard
+    maturity: high
+    url: https://bi.jaffle.example/dashboards/monthly-revenue
+    description: >
+      Revenue and number of orders per month and country, with the customer
+      list for drill-down. Used by the finance team every Monday morning.
+    depends_on:
+      - ref('fct_monthly_revenue')
+      - ref('dim_customers')
+    owner:
+      name: Finance analytics team
+      email: finance-data@jaffle.example
+    config:
+      tags: ['finance']
+
+  - name: customer_segmentation_notebook
+    label: Customer segmentation notebook
+    type: notebook
+    maturity: medium
+    url: https://notebooks.jaffle.example/marketing/segments
+    description: Marketing notebook that targets campaigns by customer segment.
+    depends_on:
+      - ref('customer_segments')
+    owner:
+      name: Marketing analytics team
+      email: marketing-data@jaffle.example

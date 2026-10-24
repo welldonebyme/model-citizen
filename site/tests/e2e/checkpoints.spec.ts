@@ -1,6 +1,6 @@
 // Inline lesson checkpoints, on a test page that mounts them like a lesson page (tests/e2e/pages/).
 import { expect, test } from '@playwright/test';
-import { feedback, idb } from './helpers';
+import { feedback, idb, tabTo } from './helpers';
 
 test('lesson checkpoints: only this chapter loads, feedback, notebook, review queue, resume, score', async ({ page }) => {
   const requests: string[] = [];
@@ -8,10 +8,11 @@ test('lesson checkpoints: only this chapter loads, feedback, notebook, review qu
   await page.goto('test/checkpoints/ch07-s2/');
   const box = page.getByRole('region', { name: 'Check your understanding' });
   await expect(box.getByRole('heading', { level: 3, name: /Question 1 of \d/ })).toBeVisible();
-  expect(requests).toEqual(['/model-citizen/quiz/data/ch07.json']); // not the whole bank
+  // question data: only this chapter's file, not the whole bank (other islands may load their own JSON)
+  expect(requests.filter((p) => /\/(quiz\/data|exams\/data|practice\/drills)\//.test(p))).toEqual(['/model-citizen/quiz/data/ch07.json']);
 
   // q-ch07-01: a wrong answer, with feedback, the notebook entry and an SRS card
-  await box.getByRole('radio', { name: /^A\./ }).check();
+  await box.getByRole('radio', { name: /^[A-D]\. analytics\.crm\.accounts$/ }).check(); // a wrong option (letters are shuffled)
   await box.getByRole('button', { name: 'Check answer' }).click();
   await expect(feedback(page).getByRole('heading', { name: 'Not correct' })).toBeVisible();
   const answers = await idb<{ qid: string; mode: string; correct: boolean }>(page, 'answers');
@@ -42,6 +43,7 @@ test('lesson checkpoints: keyboard only, DOMC with the Y key', async ({ page }) 
   const box = page.getByRole('region', { name: 'Check your understanding' });
   await expect(box.locator('.qz-q')).toHaveAttribute('data-format', 'domc');
   await box.getByRole('heading', { level: 3 }).first().focus();
+  await tabTo(page, box.getByRole('button', { name: 'Yes' })); // the Y key works while the option has the focus
   for (let i = 0; i < 6 && !(await feedback(page).count()); i++) await page.keyboard.press('y');
   await expect(feedback(page)).toBeVisible();
   await expect(feedback(page).locator('.qz-fb-title')).toBeFocused();

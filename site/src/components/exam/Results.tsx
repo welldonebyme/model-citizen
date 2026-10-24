@@ -15,6 +15,7 @@ import { Explanation } from '../quiz/Feedback';
 import { Inline } from '../content/Inline';
 import { IconCheck, IconCross, IconFlag } from '../quiz/icons';
 import { HistoryChart, RowBars, ScoreMeter, TimeChart } from './charts';
+import { mocksAt80 } from '../../lib/progress-summary';
 
 interface Props {
   attempt: Attempt;
@@ -70,7 +71,8 @@ export function Results({ attempt, questions, links, history, title, examsHref }
   const shown = outcomes.filter((o) => filter === 'all' || (filter === 'wrong' && !o.correct) || (filter === 'flagged' && o.flagged) || (filter === 'unanswered' && !o.answered));
   const counts = { all: outcomes.length, wrong: outcomes.filter((o) => !o.correct).length, flagged: outcomes.filter((o) => o.flagged).length, unanswered: outcomes.filter((o) => !o.answered).length };
   const exam = attempt.mode === 'exam';
-  const timedTwice = history.filter((h) => h.mode === 'exam' && h.status === 'finished' && (h.score?.pct ?? 0) >= 80).length;
+  // distinct mocks, like the dashboard: passing the same mock twice is still one mock
+  const mocksPassed = Math.min(2, mocksAt80(history.some((h) => h.id === attempt.id) ? history : [...history, attempt]));
 
   const reviewRefs = (oid: string) => {
     const seen = new Set<string>();
@@ -104,7 +106,7 @@ export function Results({ attempt, questions, links, history, title, examsHref }
           </p>
         </div>
         <ScoreMeter pct={v.pct} />
-        {exam && <p className="ex-muted ex-small">Timed mocks at 80% or more so far: <b>{timedTwice}</b>. The book's rule: book the real exam after two of them.</p>}
+        {exam && <p className="ex-muted ex-small">Different mocks at 80% or more in timed exam mode: <b>{mocksPassed} of 2</b>. The book's rule: book the exam after two different mocks at 80% or more in timed exam mode.</p>}
         {!exam && <p className="ex-muted ex-small">Practice mode had feedback after each question, so this score counts less than an exam-mode score.</p>}
       </section>
 
@@ -151,6 +153,7 @@ export function Results({ attempt, questions, links, history, title, examsHref }
           <li><span className="rs-stat-n">{mss(pace.avgMs)}</span><span>average per question (pace: {mss(pace.paceMs)})</span></li>
           <li><span className="rs-stat-n">{pace.overPace}</span><span>questions took more than {mss(pace.paceMs)}</span></li>
         </ul>
+        {(attempt.reviewMs ?? 0) >= 1000 && <p className="ex-muted ex-small">Time on the review screen before you submitted: <b>{spoken(attempt.reviewMs!)}</b> (not counted for any question). The book plans about 10 minutes for this final check.</p>}
         {pace.checkpoints.length > 0 && (
           <table className="rs-table">
             <caption>Checkpoints of the book's three-pass plan</caption>

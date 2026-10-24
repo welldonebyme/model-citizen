@@ -5,6 +5,7 @@ import type { Attempt } from '../../lib/exam/engine';
 import { getAttempt, listAttempts } from '../../lib/exam/persist';
 import type { ObjectiveLinks } from '../../lib/exam/links-types';
 import { Results } from './Results';
+import { shuffleView } from '../../lib/exam/shuffle';
 
 interface Props { links: ObjectiveLinks; dataBase: string; examsHref: string; settingsHref: string }
 
@@ -29,7 +30,9 @@ export default function AttemptPage({ links, dataBase, examsHref, settingsHref }
         const res = await fetch(`${dataBase}mock${attempt.mock}.json`);
         if (!res.ok) throw new Error(String(res.status));
         const data = (await res.json()) as { questions: Question[] };
-        setSt({ kind: 'ready', attempt, questions: data.questions, history: history.filter((a) => a.status === 'finished') });
+        // the questions as this attempt showed them (seeded option order), so the review matches the answers
+        const shown = attempt.shuffle ? data.questions.map((q) => shuffleView(q, attempt!.seed)) : data.questions;
+        setSt({ kind: 'ready', attempt, questions: shown, history: history.filter((a) => a.status === 'finished') });
         document.title = `Mock exam ${attempt.mock} results | Model Citizen`;
       } catch {
         setSt({ kind: 'missing', why: 'questions' });

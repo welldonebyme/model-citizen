@@ -60,3 +60,14 @@ test('Settings: "Pause the timer when I close the page"', async ({ page, context
   await back.getByRole('button', { name: 'Resume where you stopped' }).click();
   await expect(back.locator('.ex-timer-value')).toHaveText(/^(02:00:00|01:59:\d\d)$/);
 });
+
+test('if the time runs out on the resume screen, the notice says so (review E16)', async ({ page }) => {
+  await page.clock.install();
+  await startAndAnswer(page);
+  await page.goto('exams/');
+  await page.clock.fastForward('01:59:50');
+  await page.goto('exams/mock1/');
+  await expect(page.getByRole('button', { name: 'Resume where you stopped' })).toBeVisible();
+  await page.clock.fastForward('00:00:20');
+  await expect(page.getByText('The time ran out before you resumed.')).toBeVisible();
+});

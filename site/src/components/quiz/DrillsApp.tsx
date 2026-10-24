@@ -53,7 +53,8 @@ export default function DrillsApp({ indexUrl, chapterDataBase, mockDataBase }: P
   const [loadError, setLoadError] = useState('');
   const [history, setHistory] = useState<{ seen: Set<string>; mistakes: Set<string> }>({ seen: new Set(), mistakes: new Set() });
   const [mode, setMode] = useState<Mode>('practice');
-  const [f, setF] = useState<DrillFilter>(EMPTY_FILTER);
+  // chapter quizzes by default: drilling mock questions spoils the timed mocks the readiness rule relies on
+  const [f, setF] = useState<DrillFilter>({ ...EMPTY_FILTER, sources: ['chapters'] });
   const [size, setSize] = useState(20);
   const [rules, setRules] = useState({ earlyEnd: DEFAULT_SETTINGS.domcEarlyEnd, extraOption: DEFAULT_SETTINGS.domcExtraOption });
   const [run, setRun] = useState<{ questions: Question[]; seed: number; mode: Mode } | null>(null);
@@ -191,6 +192,16 @@ export default function DrillsApp({ indexUrl, chapterDataBase, mockDataBase }: P
                 </label>
               ))}
             </div>
+            <p className="dr-hint">None ticked: every source.</p>
+            {(() => {
+              const mocksIn = (f.sources.length ? f.sources : SOURCES.map((x) => x.id)).filter((x) => x !== 'chapters');
+              return mocksIn.length > 0 ? (
+                <p className="dr-warn" role="note">
+                  {mocksIn.length === 1 ? `These questions include ${SOURCES.find((x) => x.id === mocksIn[0])!.label}.` : 'These questions include mock exam questions.'}
+                  {' '}Take a mock in timed exam mode before you drill its questions: a mock you have already seen gives a score higher than your real level, and the book's readiness rule counts timed mocks.
+                </p>
+              ) : null;
+            })()}
           </fieldset>
 
           {difficulties.length > 0 && (
@@ -222,7 +233,7 @@ export default function DrillsApp({ indexUrl, chapterDataBase, mockDataBase }: P
       <fieldset className="dr-box">
         <legend>DOMC rules</legend>
         <label className="dr-check"><input type="checkbox" checked={rules.earlyEnd} onChange={(e) => setRule({ earlyEnd: e.target.checked })} /><span>End a DOMC question as soon as its result is known (like the real exam)</span></label>
-        <label className="dr-check"><input type="checkbox" checked={rules.extraOption} onChange={(e) => setRule({ extraOption: e.target.checked })} /><span>Show one more option after the question is decided, so the end does not tell you if you were right</span></label>
+        <label className="dr-check"><input type="checkbox" checked={rules.extraOption} onChange={(e) => setRule({ extraOption: e.target.checked })} /><span>Sometimes show one more option after the question is decided (like the real exam), so where a question ends does not tell you when it was decided</span></label>
         <p className="dr-hint">These are your Settings: they also apply to chapter quizzes. Mock exams in exam mode always end DOMC questions early.</p>
       </fieldset>
 

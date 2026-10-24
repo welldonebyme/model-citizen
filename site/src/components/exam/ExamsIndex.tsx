@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import type { Attempt } from '../../lib/exam/engine';
 import { listAttempts } from '../../lib/exam/persist';
 import { clock, dateTime, spoken } from '../../lib/exam/time';
-import { remainingMs } from '../../lib/exam/engine';
+import { elapsedAt, remainingMs } from '../../lib/exam/engine';
 import { HistoryChart } from './charts';
 import { mocksAt80 } from '../../lib/progress-summary';
 import { url } from '../../lib/url';
@@ -20,7 +20,8 @@ export default function ExamsIndex({ mocks, attemptHref }: Props) {
   const finished = (attempts ?? []).filter((a) => a.status === 'finished' && a.score && a.mock >= 1);
   // distinct mocks, like the dashboard (passing Mock 1 twice is still one mock)
   const timed80 = mocksAt80(finished);
-  const best = (n: number) => finished.filter((a) => a.mock === n).reduce<number | null>((m, a) => Math.max(m ?? 0, a.score!.pct), null);
+  // the card's best score counts timed exam-mode attempts only (practice gives feedback after each question)
+  const best = (n: number, mode: 'exam' | 'practice' = 'exam') => finished.filter((a) => a.mock === n && a.mode === mode).reduce<number | null>((m, a) => Math.max(m ?? 0, a.score!.pct), null);
   const active = (n: number) => (attempts ?? []).filter((a) => a.mock === n && a.status === 'active').sort((a, b) => b.startedAt - a.startedAt)[0];
 
   return (
@@ -38,16 +39,26 @@ export default function ExamsIndex({ mocks, attemptHref }: Props) {
       <ul className="xi-cards">
         {mocks.map((m) => {
           const b = best(m.n);
+          const bp = best(m.n, 'practice');
           const act = active(m.n);
           return (
             <li key={m.n} className="xi-card">
               <h2>{m.title}</h2>
               <p className="xi-desc">{m.description}</p>
               <p className="xi-meta">{m.available ? `${m.count} questions · ${m.minutes} minutes` : 'Not available yet'}</p>
-              <p className="xi-best">{b === null ? 'Not taken yet' : <>Best score: <b>{Math.floor(b)}%</b></>}</p>
-              {act && <p className="xi-progress">In progress ({act.mode} mode): {Object.keys(act.responses).length} of {act.questionIds.length} answered{act.mode === 'exam' ? `, ${spoken(remainingMs(act))} left` : ''}.</p>}
+              <p className="xi-best">
+                {b === null ? (bp === null ? 'Not taken yet' : 'Not taken in exam mode yet') : <>Best score in exam mode: <b>{Math.floor(b)}%</b></>}
+                {bp !== null && <span className="xi-muted"> · practice mode: {Math.floor(bp)}%</span>}
+              </p>
+              {act && (() => {
+                // the realistic clock keeps running while the page is closed
+                const left = act.mode === 'exam' ? remainingMs(act, elapsedAt(act, Date.now())) : 0;
+                const answered = act.answered ?? Object.keys(act.responses).length;
+                if (act.mode === 'exam' && left <= 0) return <p className="xi-progress">Time is over: open it to see your results.</p>;
+                return <p className="xi-progress">In progress ({act.mode} mode): {answered} of {act.questionIds.length} answered{act.mode === 'exam' ? `, ${spoken(left)} left${act.clock === 'wall' ? ' (the timer is running)' : ''}` : ''}.</p>;
+              })()}
               {m.available
-                ? <a className={`btn ${act ? 'btn-primary' : b === null ? 'btn-primary' : 'btn-quiet'}`} href={m.href}>{act ? 'Resume' : b === null ? 'Start' : 'Take it again'}<span className="visually-hidden"> {m.title}</span></a>
+                ? <a className={`btn ${act ? 'btn-primary' : b === null && bp === null ? 'btn-primary' : 'btn-quiet'}`} href={m.href}>{act ? 'Resume' : b === null && bp === null ? 'Start' : 'Take it again'}<span className="visually-hidden"> {m.title}</span></a>
                 : <span className="xi-na">The questions are not converted yet.</span>}
             </li>
           );

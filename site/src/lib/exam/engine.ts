@@ -25,6 +25,13 @@ export interface Attempt extends ExamAttempt {
   clock?: 'wall' | 'pause';
   /** wall-clock time (ms) when elapsedMs was last measured */
   clockAt?: number;
+  /** 1: multiple choice / select options and build-list starts are shown in a seeded order (shuffle.ts) */
+  shuffle?: 1;
+  /** the review screen is open: its time goes to reviewMs, not to a question */
+  inReview?: boolean;
+  reviewMs?: number;
+  /** complete answers, kept up to date for the exams list (which has no questions to check) */
+  answered?: number;
 }
 
 /**
@@ -82,6 +89,7 @@ export function newAttempt(opts: {
     domcRules: opts.domcRules,
     clock: opts.mode === 'exam' && !opts.pauseOnClose ? 'wall' : 'pause',
     clockAt: opts.now,
+    shuffle: 1,
   };
 }
 
@@ -98,6 +106,8 @@ export function accrue(a: Attempt, elapsedMs: number): Attempt {
   const qid = a.questionIds[a.current];
   const mark = a.markMs ?? a.elapsedMs;
   const delta = Math.max(0, elapsedMs - mark);
+  // time on the review screen is the final check, not time on the last question viewed
+  if (a.inReview) return { ...a, elapsedMs, markMs: elapsedMs, reviewMs: (a.reviewMs ?? 0) + delta };
   if (!qid) return { ...a, elapsedMs, markMs: elapsedMs };
   return { ...a, elapsedMs, markMs: elapsedMs, timeByQuestion: { ...a.timeByQuestion, [qid]: (a.timeByQuestion[qid] ?? 0) + delta } };
 }
@@ -108,7 +118,12 @@ export function goTo(a: Attempt, index: number, elapsedMs: number): Attempt {
   const qid = b.questionIds[i];
   const reached = { ...(b.reached ?? {}) };
   if (qid && reached[qid] === undefined) reached[qid] = elapsedMs;
-  return { ...b, current: i, reached };
+  return { ...b, current: i, reached, inReview: false };
+}
+
+/** Opens the review screen: the current question gets its time so far; the review time is counted apart. */
+export function openReview(a: Attempt, elapsedMs: number): Attempt {
+  return { ...accrue(a, elapsedMs), inReview: true };
 }
 
 export function setResponse(a: Attempt, qid: string, r: Response | undefined): Attempt {

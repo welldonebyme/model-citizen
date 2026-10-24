@@ -64,14 +64,26 @@ function HotspotCode({ block, line, onLine, locked, lineState, label }: {
   );
 }
 
+/** The hotspot data, with the converter's optional fields (several code blocks, numbers printed in the text). */
+type HotspotData = { codeId: string; lines: number; numbering?: 'text' | 'listing'; parts?: { codeId: string; from: number; to: number }[] };
+
+/** "1| select", " 2    - name: x": the book printed the line numbers in the code; the site shows them in the gutter. */
+export function stripPrintedNumbers(text: string): string {
+  return text.split('\n').map((l) => l.replace(/^\s*\d+(?:\|\s?|\s{2}|\s*$)/, '')).join('\n');
+}
+
 export function Hotspot({ q, response, onResponse, locked, review, hideCopy }: Props) {
   const line = response?.format === 'hotspot' ? response.line : null;
   const key = q.key as number;
   const lineState: Record<number, 'right' | 'wrong'> | undefined = review
     ? { ...(line != null && line !== key ? { [line]: 'wrong' as const } : {}), [key]: 'right' as const }
     : undefined;
-  const codeId = q.hotspot?.codeId;
-  const hasCode = q.stem.some((b) => b.t === 'code' && b.id === codeId);
+  const hs = q.hotspot as HotspotData | undefined;
+  const codeId = hs?.codeId;
+  // a hotspot can span several code blocks (for example a macro, lines 1-6, and the model that calls it,
+  // lines 7-12): every part is clickable and keeps its global line numbers
+  const parts = hs?.parts?.length ? hs.parts : codeId ? [{ codeId, from: 0, to: 0 }] : [];
+  const hasCode = q.stem.some((b) => b.t === 'code' && parts.some((p) => p.codeId === b.id));
   const label = `Code lines. Use the arrow keys to move, Enter to choose a line.${line != null ? ` Line ${line} is chosen.` : ''}`;
 
   return (
@@ -79,9 +91,16 @@ export function Hotspot({ q, response, onResponse, locked, review, hideCopy }: P
       <Stem
         blocks={q.stem}
         hideCopy={hideCopy}
-        renderCode={(b) => (b.id === codeId || (!hasCode && b.lineNumbers)
-          ? <HotspotCode block={b} line={line} locked={locked} lineState={lineState} label={label} onLine={(n) => onResponse({ format: 'hotspot', line: n })} />
-          : null)}
+        renderCode={(b) => {
+          const part = parts.find((p) => p.codeId === b.id);
+          if (!part && (hasCode || !b.lineNumbers)) return null;
+          const block = {
+            ...b,
+            text: hs?.numbering === 'text' ? stripPrintedNumbers(b.text) : b.text,
+            firstLine: part && part.from > 0 ? part.from : b.firstLine,
+          };
+          return <HotspotCode block={block} line={line} locked={locked} lineState={lineState} label={label} onLine={(n) => onResponse({ format: 'hotspot', line: n })} />;
+        }}
       />
       <p className="qz-hint" aria-live="polite">{line != null ? <>You chose <b>line {line}</b>.</> : 'No line chosen yet.'}</p>
       {review && (

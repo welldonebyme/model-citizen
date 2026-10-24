@@ -64,8 +64,17 @@ export function objectiveLinks(): ObjectiveLinks {
     const c = cov[o.id];
     const links: ReviewLink[] = [];
     if (c) {
-      for (const l of c.lessons.slice(0, 3)) { const x = lessonLink(l); if (x) links.push(x); }
-      for (const l of c.labs.slice(0, 2)) { const x = labLink(l); if (x) links.push(x); }
+      // the chapters that teach the objective first (main chapter first), then the others; in book order
+      const rank = (id: string) => {
+        const i = o.chapters.indexOf(chapterNumOf(id));
+        return [i < 0 ? 99 : i, chapterNumOf(id), Number((id.match(/(\d+)$/) ?? [])[1] ?? 0)];
+      };
+      const byRank = (a: string, b: string) => { const x = rank(a); const y = rank(b); return x[0] - y[0] || x[1] - y[1] || x[2] - y[2]; };
+      const lessons = c.lessons.slice().sort(byRank);
+      const labs = c.labs.slice().sort(byRank);
+      if (!lessons.some((l) => chapterNumOf(l) === o.chapters[0])) links.push(chapterLink(o.chapters[0]));
+      for (const l of lessons.slice(0, 3)) { const x = lessonLink(l); if (x) links.push(x); }
+      for (const l of labs.slice(0, 2)) { const x = labLink(l); if (x) links.push(x); }
     }
     if (!links.length) for (const n of o.chapters.slice(0, 2)) links.push(chapterLink(n));
     out[o.id] = links;

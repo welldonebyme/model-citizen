@@ -264,3 +264,11 @@
 .qz-compact .qz-score { font-size: var(--fs-lg); }
 .qz-compact .qz-score b { font-size: var(--fs-xl); }
 @media (max-width: 640px) { .qz-checkpoints { padding: 14px 12px 16px; margin-inline: -4px; } .qz-compact .qz-card { padding: var(--s4) var(--s3); } }
+.qz-sum-stem { flex: 1 1 100%; order: 3; color: var(--text); font-size: var(--fs-sm); }
+
+/* Logs and terminal output in questions and explanations wrap instead of scrolling sideways, so the clue at
+   the end of a long log line is on screen (review finding E12). Code that the learner must read with its
+   exact columns (SQL, YAML, Jinja) keeps scrolling. */
+.qz-q .mc-out .mc-code-body code, .qz-q .mc-term-block .mc-code-body code,
+.qz-expl .mc-out .mc-code-body code, .qz-expl .mc-term-block .mc-code-body code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.dr-warn { margin: 10px 0 0; padding: 8px 12px; border-radius: var(--r-ctl); background: var(--warn-bg); color: var(--ink); font-size: var(--fs-sm); border: 1px solid var(--warn); }

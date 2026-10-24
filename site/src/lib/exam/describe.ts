@@ -78,6 +78,28 @@ export function describeKey(q: Question): string {
   }
 }
 
+const short = (t: string, n = 70) => (t.length > n ? `${t.slice(0, n - 1).replace(/\s+\S*$/, '')}…` : t);
+function withTexts(q: Question, ids: string[], words: string): string {
+  if ((q.format !== 'mc' && q.format !== 'ms') || !ids.length) return words;
+  const texts = ids.map((id) => q.options?.find((o) => o.id === id)).filter(Boolean).map((o) => `${o!.id}. ${short(plain(o!.c))}`);
+  return texts.length ? texts.join(' / ') : words;
+}
+
+/**
+ * Like describeResponse / describeKey, with the text of the chosen options (multiple choice and select),
+ * so an error-notebook entry still makes sense when the options are shown in another order later.
+ */
+export function describeResponseWithText(q: Question, r: Response | null | undefined): string {
+  if (r?.format === 'mc' && r.choice) return withTexts(q, [r.choice], describeResponse(q, r));
+  if (r?.format === 'ms' && r.choices.length) return withTexts(q, [...r.choices].sort(), describeResponse(q, r));
+  return describeResponse(q, r);
+}
+export function describeKeyWithText(q: Question): string {
+  if (q.format === 'mc') return withTexts(q, [q.key as string], describeKey(q));
+  if (q.format === 'ms') return withTexts(q, (q.key as string[]).slice().sort(), describeKey(q));
+  return describeKey(q);
+}
+
 export const FORMAT_NAME: Record<Question['format'], string> = {
   mc: 'Multiple choice', ms: 'Multiple select', fill: 'Fill in the blank', match: 'Matching',
   hotspot: 'Hotspot', order: 'Build list', domc: 'DOMC',

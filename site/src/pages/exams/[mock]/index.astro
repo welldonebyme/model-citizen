@@ -14,10 +14,13 @@ export function getStaticPaths() {
 const { n } = Astro.props as { n: number };
 const m = getMock(n);
 const meta = { n, title: `Mock exam ${n}`, description: m?.description ?? '', durationMin: m?.durationMin ?? 120 };
+// The exam needs the keys in the browser (a static site grades there, and DOMC ends early from the key);
+// the converter's audit fields are not needed, so they stay out of the page.
+const examQuestions = (m?.questions ?? []).map(({ keyRaw: _r, keyNote: _n, keyStatus: _s, ...q }) => ({ ...q, keyRaw: '' }));
 ---
 <Base title={meta.title} section="exams" chrome="plain" description={`Mock exam ${n}: a timed practice exam in the real formats of the dbt Analytics Engineering Certification.`}>
   {m ? (
-    <ExamApp client:only="react" mock={meta} questions={m.questions} links={objectiveLinks()}
+    <ExamApp client:only="react" mock={meta} questions={examQuestions} links={objectiveLinks()}
       examsHref={url('exams/')} homeHref={url('')} settingsHref={url('settings/')} sample={questionSource.mocks === 'fixtures'} missing={Math.max(0, MOCK_SIZE - m.questions.length)}>
       <p slot="fallback" class="fallback">Loading the mock exam…</p>
     </ExamApp>

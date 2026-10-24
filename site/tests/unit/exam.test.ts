@@ -58,9 +58,9 @@ describe('DOMC state', () => {
     expect(st.done).toBe(false);
     st = domcJudge(domcQ, st, rules, true); // E: the last YES — decided right
     expect(st.done).toBe(true); // no option left, so no extra option
-    // with an option left after the decision, an extra option appears
+    // with an option left after the decision, an extra option appears (on the questions whose coin allows it)
     const q2 = byId('q-ch16-18'); // NO, YES, NO, YES
-    let s2 = domcInit(q2, { shuffle: false, seed: 0 });
+    let s2 = { ...domcInit(q2, { shuffle: false, seed: 0 }), allowExtra: true };
     s2 = domcJudge(q2, s2, rules, true); // A is NO, said YES: wrong -> decided
     expect(s2.done).toBe(false);
     expect(domcCurrent(q2, s2, rules)).toEqual({ option: 'B', extra: true });
@@ -70,6 +70,23 @@ describe('DOMC state', () => {
     expect(Object.keys(s2.judgments)).toEqual(['A']);
     expect(grade(q2, domcResponse(s2)).correct).toBe(false);
     expect(fromStored(toStored(s2))).toEqual(s2);
+  });
+  it('shows the extra option on about half of the questions, the same after a reload (review E6)', () => {
+    const rules = { earlyEnd: true, extraOption: true };
+    const q2 = byId('q-ch16-18');
+    let withExtra = 0;
+    for (let seed = 0; seed < 200; seed++) {
+      let st = domcInit(q2, { shuffle: false, seed });
+      expect(domcInit(q2, { shuffle: false, seed }).allowExtra).toBe(st.allowExtra); // reproducible
+      st = domcJudge(q2, st, rules, true); // decided (wrong)
+      if (!st.done) withExtra++;
+      expect(fromStored(toStored(st))?.allowExtra).toBe(st.allowExtra);
+    }
+    expect(withExtra).toBeGreaterThan(60);
+    expect(withExtra).toBeLessThan(140);
+    // older saved states (no coin) keep showing the extra option
+    const old = { ...domcInit(q2, { shuffle: false, seed: 1 }), allowExtra: undefined };
+    expect(domcJudge(q2, old, rules, true).done).toBe(false);
   });
   it('shows every option when early ending is off', () => {
     const rules = { earlyEnd: false, extraOption: false };

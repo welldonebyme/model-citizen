@@ -10,22 +10,29 @@ const check = (page: Page) => page.getByRole('button', { name: 'Check answer' })
 const expectCorrect = async (page: Page) => {
   await expect(feedback(page).getByRole('heading', { name: 'Correct', exact: true })).toBeVisible();
 };
+// Options are shown in a seeded order with new letters (review F1): pick them by their text.
+const RIGHT_MC = /^[A-D]\. analytics\.crm\.accounts_v2/;          // q-ch07-01
+const MS_RIGHT = [/^[A-E]\. Renaming id/, /^[A-E]\. Converting an amount/]; // q-ch07-05
 
 test.describe('multiple choice', () => {
   test('mouse', async ({ page }) => {
     await open(page, 'q-ch07-01');
     await page.getByText('analytics.crm.accounts_v2', { exact: true }).click();
-    await expect(page.getByRole('radio', { name: /^B\./ })).toBeChecked();
+    await expect(page.getByRole('radio', { name: RIGHT_MC })).toBeChecked();
     await check(page).click();
     await expectCorrect(page);
     await expect(page.getByText('Your answer, correct')).toBeVisible();
+    // the explanation names the letter the learner saw for the right option
+    const letter = (await page.getByRole('radio', { name: RIGHT_MC }).getAttribute('value'))!;
+    await expect(feedback(page).locator('.qz-expl strong').first()).toHaveText(`${letter}.`);
   });
   test('keyboard only', async ({ page }) => {
     await open(page, 'q-ch07-01');
     await startAtHeading(page);
     await tabTo(page, page.getByRole('radio', { name: /^A\./ }));
-    await page.keyboard.press('ArrowDown');
-    await expect(page.getByRole('radio', { name: /^B\./ })).toBeChecked();
+    await page.keyboard.press('Space');
+    for (let i = 0; i < 4 && !(await page.getByRole('radio', { name: RIGHT_MC }).isChecked()); i++) await page.keyboard.press('ArrowDown');
+    await expect(page.getByRole('radio', { name: RIGHT_MC })).toBeChecked();
     await tabTo(page, check(page));
     await page.keyboard.press('Enter');
     await expectCorrect(page);
@@ -37,13 +44,14 @@ test.describe('multiple select', () => {
   test('mouse, and never more than N', async ({ page }) => {
     await open(page, 'q-ch07-05');
     await expect(page.getByText('Choose 2.')).toBeVisible();
-    await page.getByRole('checkbox', { name: /^A\./ }).click();
-    await page.getByRole('checkbox', { name: /^C\./ }).click();
-    await page.locator('label.qz-choice').nth(3).scrollIntoViewIfNeeded();
-    const d = (await page.locator('label.qz-choice').nth(3).boundingBox())!; // D: a third choice is refused
+    await page.getByRole('checkbox', { name: MS_RIGHT[0] }).click();
+    await page.getByRole('checkbox', { name: MS_RIGHT[1] }).click();
+    const third = page.locator('label.qz-choice', { hasText: 'Aggregating payments' }); // a third choice is refused
+    await third.scrollIntoViewIfNeeded();
+    const d = (await third.boundingBox())!;
     await page.mouse.click(d.x + d.width / 2, d.y + d.height / 2);
-    await expect(page.getByRole('checkbox', { name: /^D\./ })).not.toBeChecked();
-    await expect(page.getByRole('checkbox', { name: /^D\./ })).toHaveAttribute('aria-disabled', 'true');
+    await expect(page.getByRole('checkbox', { name: /Aggregating payments/ })).not.toBeChecked();
+    await expect(page.getByRole('checkbox', { name: /Aggregating payments/ })).toHaveAttribute('aria-disabled', 'true');
     await expect(page.getByText('You already chose 2.')).toBeVisible();
     await expect(page.getByText('2 of 2 chosen.')).toBeVisible();
     await check(page).click();
@@ -52,11 +60,14 @@ test.describe('multiple select', () => {
   test('keyboard only', async ({ page }) => {
     await open(page, 'q-ch07-05');
     await startAtHeading(page);
-    await tabTo(page, page.getByRole('checkbox', { name: /^A\./ }));
-    await page.keyboard.press('Space');
-    await tabTo(page, page.getByRole('checkbox', { name: /^C\./ }));
-    await page.keyboard.press('Space');
-    await expect(page.getByRole('checkbox', { name: /^C\./ })).toBeChecked();
+    // the two right options, in the order they are shown (Tab only goes forward)
+    const boxes = await Promise.all(MS_RIGHT.map(async (r) => ({ r, letter: (await page.getByRole('checkbox', { name: r }).getAttribute('value'))! })));
+    boxes.sort((a, b) => a.letter.localeCompare(b.letter));
+    for (const { r } of boxes) {
+      await tabTo(page, page.getByRole('checkbox', { name: r }));
+      await page.keyboard.press('Space');
+      await expect(page.getByRole('checkbox', { name: r })).toBeChecked();
+    }
     await tabTo(page, check(page));
     await page.keyboard.press('Enter');
     await expectCorrect(page);
@@ -140,32 +151,49 @@ test.describe('matching', () => {
 });
 
 test.describe('build list', () => {
+  const KEY = ['B', 'D', 'A', 'E', 'C']; // q-ch07-07
   const texts = async (page: Page) => page.locator('.qz-order-item .qz-letter').allTextContents();
+  test('starts in a seeded order that is not the answer (review E10)', async ({ page }) => {
+    await open(page, 'q-ch07-07');
+    await expect(page.locator('.qz-order-item')).toHaveCount(5);
+    const start = await texts(page);
+    expect([...start].sort()).toEqual(['A', 'B', 'C', 'D', 'E']);
+    expect(start).not.toEqual(KEY);
+    await page.reload();
+    await expect(page.locator('.qz-order-item')).toHaveCount(5);
+    expect(await texts(page)).toEqual(start); // the same order after a reload
+  });
   test('mouse drag', async ({ page }) => {
     await open(page, 'q-ch07-07');
     const handle = (id: string) => page.locator(`[data-item="${id}"] .qz-handle`);
     const item = (id: string) => page.locator(`[data-item="${id}"]`);
-    await drag(page, handle('B'), item('A'), { dy: 4 });
-    expect(await texts(page)).toEqual(['B', 'A', 'C', 'D', 'E']);
-    await drag(page, handle('D'), item('A'), { dy: 4 });
-    expect(await texts(page)).toEqual(['B', 'D', 'A', 'C', 'E']);
-    await drag(page, handle('E'), item('C'), { dy: 4 });
-    expect(await texts(page)).toEqual(['B', 'D', 'A', 'E', 'C']);
+    // put each item of the key in place, from the top: drag it onto the item that is there now
+    for (let i = 0; i < KEY.length; i++) {
+      const now = await texts(page);
+      if (now[i] === KEY[i]) continue;
+      await drag(page, handle(KEY[i]), item(now[i]), { dy: 4 });
+      expect((await texts(page))[i]).toBe(KEY[i]);
+    }
+    expect(await texts(page)).toEqual(KEY);
     await check(page).click();
     await expectCorrect(page);
   });
   test('keyboard only (arrow keys on the handle, and the Move buttons)', async ({ page }) => {
     await open(page, 'q-ch07-07');
     await startAtHeading(page);
-    await tabTo(page, page.locator('[data-item="B"] .qz-handle'));
-    await page.keyboard.press('ArrowUp');                         // B A C D E
-    await expect(page.locator('[data-item="B"] .qz-handle')).toBeFocused();
-    await tabTo(page, page.locator('[data-item="D"] [data-ctl="up"]'));
-    await page.keyboard.press('Enter');                           // B A D C E
-    await page.keyboard.press('Enter');                           // B D A C E (focus stays on the moved item)
-    await tabTo(page, page.locator('[data-item="E"] .qz-handle'));
-    await page.keyboard.press('ArrowUp');                         // B D A E C
-    expect(await texts(page)).toEqual(['B', 'D', 'A', 'E', 'C']);
+    for (let i = 0; i < KEY.length; i++) {
+      const up = (await texts(page)).indexOf(KEY[i]) - i;
+      if (up <= 0) continue;
+      if (i % 2 === 0) {
+        await tabTo(page, page.locator(`[data-item="${KEY[i]}"] .qz-handle`));
+        for (let k = 0; k < up; k++) await page.keyboard.press('ArrowUp');
+        await expect(page.locator(`[data-item="${KEY[i]}"] .qz-handle`)).toBeFocused(); // the focus follows the item
+      } else {
+        await tabTo(page, page.locator(`[data-item="${KEY[i]}"] [data-ctl="up"]`));
+        for (let k = 0; k < up; k++) await page.keyboard.press('Enter');
+      }
+    }
+    expect(await texts(page)).toEqual(KEY);
     await tabTo(page, check(page));
     await page.keyboard.press('Enter');
     await expectCorrect(page);
@@ -194,9 +222,12 @@ test.describe('DOMC', () => {
     await expect(page.getByText('Extra option, not scored: you answered YES')).toBeVisible();
     await expect(page.getByText('Not shown: the question ended before this option.')).toBeVisible();
   });
-  test('keyboard only: Y and N keys', async ({ page }) => {
+  test('keyboard only: Y and N keys, only when the option has the focus (review E15)', async ({ page }) => {
     await open(page, 'q-ch07-08');
     await startAtHeading(page);
+    await page.keyboard.press('y'); // the focus is on the heading: nothing is judged
+    await expect(page.getByText('Option A', { exact: true })).toBeVisible();
+    await tabTo(page, page.getByRole('button', { name: 'Yes' }));
     await page.keyboard.press('y');
     await expect(page.getByText('Option B', { exact: true })).toBeVisible();
     await page.keyboard.press('n'); // B is YES: wrong, the question ends (then the extra option)
@@ -204,4 +235,35 @@ test.describe('DOMC', () => {
     await page.keyboard.press('n');
     await expect(feedback(page).getByRole('heading', { name: 'Not correct' })).toBeVisible();
   });
+});
+
+test('DOMC: on some questions no extra option follows the decision (review E6)', async ({ page }) => {
+  await page.goto('quiz/ch16/?q=q-ch16-08'); // this question's coin shows no extra option
+  await expect(page.locator('.qz-q')).toHaveAttribute('data-format', 'domc');
+  await page.getByRole('button', { name: 'No', exact: true }).click(); // option A is YES: the question is decided (wrong)
+  await expect(feedback(page).getByRole('heading', { name: 'Not correct' })).toBeVisible();
+  await expect(page.getByText('Extra option, not scored')).toHaveCount(0);
+});
+
+test('fill in the blank: a code blank and a sentence blank both get an input (review E1, Mock 1 Q61)', async ({ page }) => {
+  await page.goto('exams/mock1/');
+  await page.getByRole('button', { name: 'Start in practice mode' }).click();
+  await page.getByRole('button', { name: 'All questions' }).click();
+  await page.getByRole('region', { name: 'All questions' }).getByRole('button', { name: /^Question 61:/ }).click();
+  await expect(page.getByRole('textbox')).toHaveCount(2);
+  await page.getByRole('textbox', { name: 'Blank 1 of 2' }).fill('state');
+  await page.getByRole('textbox', { name: 'Blank 2 of 2' }).fill('manifest.json');
+  await page.getByRole('button', { name: 'Check answer' }).click();
+  await expectCorrect(page);
+});
+
+test('hotspot: a question split over two code blocks has every line clickable (review E2, Mock 3 Q40)', async ({ page }) => {
+  await page.goto('exams/mock3/');
+  await page.getByRole('button', { name: 'Start in exam mode' }).click();
+  await page.getByRole('button', { name: 'All questions' }).click();
+  await page.getByRole('region', { name: 'All questions' }).getByRole('button', { name: /^Question 40:/ }).click();
+  await expect(page.locator('.qz-q button.mc-ln')).toHaveCount(12);
+  await page.getByRole('button', { name: 'Line 9', exact: true }).click();
+  await expect(page.getByText('You chose line 9.')).toBeVisible();
+  await expect(page.locator('.qz-q button.mc-ln').first()).not.toContainText('1|'); // printed numbers are not shown twice (E7)
 });

@@ -10,8 +10,9 @@ import { getSettings, DEFAULT_SETTINGS } from '../../lib/store/db';
 import { domcJudge, type DomcRules } from '../../lib/exam/domc';
 import {
   newAttempt, goTo, setResponse, setDomc, toggleFlag, markChecked, finishAttempt, progressOf, responseOf, domcOf,
-  isComplete, blanksOf, remainingMs, catchUp, elapsedAt, EXAM_MINUTES, type Attempt,
+  isComplete, blanksOf, remainingMs, catchUp, elapsedAt, openReview, EXAM_MINUTES, type Attempt,
 } from '../../lib/exam/engine';
+import { shuffleView } from '../../lib/exam/shuffle';
 import { activeAttempt, abandonAttempt, listAttempts, makeSaver, saveAttempt } from '../../lib/exam/persist';
 import { recordMany, recordOutcome } from '../../lib/exam/learning';
 import { clock, dateTime, spoken } from '../../lib/exam/time';
@@ -58,6 +59,14 @@ export default function ExamApp(props: ExamAppProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const feedbackRef = useRef<HTMLHeadingElement>(null);
   const byId = useMemo(() => new Map(questions.map((q) => [q.id, q])), [questions]);
+  /** The questions as this attempt shows them (MC/MS options and build-list starts in the attempt's seeded order). */
+  const viewCache = useRef(new Map<number, Question[]>());
+  const viewOf = useCallback((x: Attempt) => {
+    if (!x.shuffle) return questions;
+    let v = viewCache.current.get(x.seed);
+    if (!v) { v = questions.map((q) => shuffleView(q, x.seed)); viewCache.current.set(x.seed, v); }
+    return v;
+  }, [questions]);
   const durationMs = (mock.durationMin || EXAM_MINUTES) * 60_000;
 
   const elapsed = useCallback(() => {
@@ -93,20 +102,42 @@ export default function ExamApp(props: ExamAppProps) {
     return () => { live = false; };
   }, [mock.n, byId]);
 
+  // ---------------------------------------------------------------- one tab at a time
+  // Two tabs on the same attempt would overwrite each other's answers. The tab that starts or resumes an
+  // attempt says so on a BroadcastChannel; any other tab on that attempt stops saving and says why.
+  const tabId = useMemo(() => Math.random().toString(36).slice(2), []);
+  const channel = useMemo(() => (typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('mc-exam') : null), []);
+  const [elsewhere, setElsewhere] = useState(false);
+  const elsewhereRef = useRef(false);
+  useEffect(() => {
+    if (!channel) return;
+    channel.onmessage = (ev: MessageEvent<{ type: string; id: string; tab: string }>) => {
+      const cur = aRef.current;
+      if (ev.data?.type === 'claim' && ev.data.tab !== tabId && cur && cur.id === ev.data.id && cur.status === 'active') {
+        elsewhereRef.current = true;
+        setElsewhere(true);
+        stopClock();
+      }
+    };
+    return () => { channel.onmessage = null; };
+  }, [channel, tabId]);
+  const claim = (id: string) => { elsewhereRef.current = false; setElsewhere(false); channel?.postMessage({ type: 'claim', id, tab: tabId }); };
+
   // ---------------------------------------------------------------- autosave
   const commit = useCallback((fn: (x: Attempt) => Attempt) => {
     const cur = aRef.current;
-    if (!cur) return;
-    const next = fn({ ...cur, elapsedMs: elapsed(), clockAt: Date.now() });
+    if (!cur || elsewhereRef.current) return;
+    const next0 = fn({ ...cur, elapsedMs: elapsed(), clockAt: Date.now() });
+    const next = { ...next0, answered: progressOf(next0, viewOf(next0)).answered };
     aRef.current = next;
     setA(next);
     saver.push(next);
-  }, [elapsed, saver]);
+  }, [elapsed, saver, viewOf]);
 
   useEffect(() => {
     if (phase !== 'running' && phase !== 'review') return;
-    const t = setInterval(() => { const cur = aRef.current; if (cur) saver.push({ ...cur, elapsedMs: elapsed(), clockAt: Date.now() }); }, 5000);
-    const flush = () => { const cur = aRef.current; if (cur && cur.status === 'active') { saver.push({ ...cur, elapsedMs: elapsed(), clockAt: Date.now() }); saver.flush(); } };
+    const t = setInterval(() => { const cur = aRef.current; if (cur && !elsewhereRef.current) saver.push({ ...cur, elapsedMs: elapsed(), clockAt: Date.now() }); }, 5000);
+    const flush = () => { const cur = aRef.current; if (cur && cur.status === 'active' && !elsewhereRef.current) { saver.push({ ...cur, elapsedMs: elapsed(), clockAt: Date.now() }); saver.flush(); } };
     const onVis = () => { if (document.visibilityState === 'hidden') flush(); };
     window.addEventListener('pagehide', flush);
     document.addEventListener('visibilitychange', onVis);
@@ -126,6 +157,7 @@ export default function ExamApp(props: ExamAppProps) {
       setA(fresh);
       setPending(null);
       startClock(0);
+      claim(fresh.id);
       setPhase('running');
       focusQuestion();
     } catch {
@@ -139,39 +171,44 @@ export default function ExamApp(props: ExamAppProps) {
     const t = setInterval(() => {
       const n = Date.now();
       setNow(n);
-      if (elapsedAt(pending, n) >= pending.durationMs) { clearInterval(t); setPending(null); submitCaughtUp(pending); }
+      if (elapsedAt(pending, n) >= pending.durationMs) { clearInterval(t); setPending(null); submitCaughtUp(pending, 'prompt'); }
     }, 1000);
     return () => clearInterval(t);
   });
 
-  function submitCaughtUp(x: Attempt) {
+  /** The time is over for an attempt that was not open: submit it. `where` says what the learner was doing. */
+  function submitCaughtUp(x: Attempt, where: 'closed' | 'prompt' = 'closed') {
     const r = catchUp(x, Date.now());
     if (r.domcRules) setRules(r.domcRules);
     aRef.current = r;
     setA(r);
     clockRef.current = { base: r.elapsedMs, since: Date.now(), running: false };
-    finishRef.current(true, true);
+    finishRef.current(true, where);
   }
 
   const resume = () => {
     if (!pending) return;
-    const r = catchUp(pending, Date.now());
-    if (r.mode === 'exam' && r.elapsedMs >= r.durationMs) { setPending(null); submitCaughtUp(pending); return; }
+    const r0 = catchUp(pending, Date.now());
+    if (r0.mode === 'exam' && r0.elapsedMs >= r0.durationMs) { setPending(null); submitCaughtUp(pending, 'prompt'); return; }
+    const r = { ...r0, inReview: false };
     if (r.domcRules) setRules(r.domcRules);
     aRef.current = r;
     setA(r);
     setPending(null);
     startClock(r.elapsedMs);
+    claim(r.id);
     setPhase('running');
     focusQuestion();
   };
 
-  const finish = useCallback(async (timeUp: boolean, whileClosed = false) => {
+  const finish = useCallback(async (timeUp: boolean, away: false | 'closed' | 'prompt' = false) => {
     const cur = aRef.current;
-    if (!cur || cur.status !== 'active') return;
+    if (!cur || cur.status !== 'active' || elsewhereRef.current) return;
     const e = elapsed();
     stopClock();
-    const done = finishAttempt(cur, questions, Date.now(), e, timeUp);
+    const view = viewOf(cur);
+    const viewById = new Map(view.map((q) => [q.id, q]));
+    const done = finishAttempt(cur, view, Date.now(), e, timeUp);
     aRef.current = done;
     setA(done);
     setNavOpen(false);
@@ -181,7 +218,7 @@ export default function ExamApp(props: ExamAppProps) {
       await saveAttempt(done);
       if (done.mode === 'exam') {
         await recordMany(done.questionIds.map((id) => {
-          const q = byId.get(id)!;
+          const q = viewById.get(id)!;
           const r = responseOf(done, id);
           return { q, response: r, correct: grade(q, r).correct, ms: done.timeByQuestion[id] };
         }), { mode: 'mock-exam', attemptId: done.id });
@@ -190,10 +227,12 @@ export default function ExamApp(props: ExamAppProps) {
     } catch {
       setSaveError('The result could not be saved in this browser (storage is blocked). You can still read it here.');
     }
-    setNotice(whileClosed ? 'The time ran out while the page was closed, like on the real exam. Your answers were submitted automatically.' : timeUp ? 'Time is up. Your answers were submitted automatically.' : '');
+    setNotice(away === 'closed' ? 'The time ran out while the page was closed, like on the real exam. Your answers were submitted automatically.'
+      : away === 'prompt' ? 'The time ran out before you resumed. Your answers were submitted automatically.'
+        : timeUp ? 'Time is up. Your answers were submitted automatically.' : '');
     setPhase('results');
     window.scrollTo({ top: 0 });
-  }, [elapsed, questions, saver, byId]);
+  }, [elapsed, saver, viewOf]);
   const finishRef = useRef(finish);
   finishRef.current = finish;
 
@@ -210,12 +249,21 @@ export default function ExamApp(props: ExamAppProps) {
     setNavOpen(false);
     focusQuestion();
   };
+  const cancelSubmit = () => {
+    setConfirm(null);
+    requestAnimationFrame(() => document.getElementById('ex-submit-btn')?.focus());
+  };
   const toReview = () => {
-    commit((x) => goTo(x, x.current, elapsed()));
+    commit((x) => openReview(x, elapsed()));
     setNavOpen(false);
     setPhase('review');
     requestAnimationFrame(() => { document.getElementById('ex-review-h')?.focus(); window.scrollTo({ top: 0 }); });
   };
+
+  // the questions as the current attempt shows them
+  const aId = a?.id; const aSeed = a?.seed; const aShuffle = a?.shuffle;
+  const view = useMemo(() => (aId !== undefined ? viewOf({ seed: aSeed!, shuffle: aShuffle } as Attempt) : questions), [aId, aSeed, aShuffle, viewOf, questions]);
+  const viewById = useMemo(() => new Map(view.map((q) => [q.id, q])), [view]);
 
   // ---------------------------------------------------------------- render: no attempt yet
   const top = (
@@ -312,7 +360,8 @@ export default function ExamApp(props: ExamAppProps) {
           <p className="ex-muted ex-small">
             DOMC settings: {rules.extraOption ? 'one extra option can appear after a question is decided, like on the real exam' : 'no extra option after a question is decided'}.
             {' '}Timer: {pauseOnClose ? 'it stops when you close the page' : 'it keeps running when you close the page'}. <a href={settingsHref}>Change these in Settings</a>.
-            {' '}Tip from the book: read every DOMC stem twice, and never leave a question empty: a blank is always wrong.
+            {' '}Tips from the book: read every DOMC stem twice, and never leave a question empty: a blank is always wrong.
+            {' '}The book's multiple-select questions ask for two answers; the real exam can ask for two or three, and it tells you how many.
           </p>
         </div>
       </div>
@@ -327,7 +376,7 @@ export default function ExamApp(props: ExamAppProps) {
         <div className="ex-body ex-results-body">
           {notice && <p className="ex-alert" role="alert">{notice}</p>}
           {saveError && <p className="ex-alert" role="alert">{saveError}</p>}
-          <Results attempt={a} questions={questions} links={links} history={history} title={mock.title} examsHref={examsHref} />
+          <Results attempt={a} questions={view} links={links} history={history} title={mock.title} examsHref={examsHref} />
           <p className="ex-row ex-after">
             <button type="button" className="ex-btn ex-btn-primary" onClick={() => { setA(null); setPhase('start'); window.scrollTo({ top: 0 }); }}>Take this mock again</button>
             <a className="ex-btn" href={examsHref}>All mock exams</a>
@@ -338,7 +387,7 @@ export default function ExamApp(props: ExamAppProps) {
   }
 
   // ---------------------------------------------------------------- render: running / review
-  const q = byId.get(a.questionIds[a.current])!;
+  const q = viewById.get(a.questionIds[a.current])!;
   const domcState = q.format === 'domc' ? domcOf(a, q) : undefined;
   const response = responseOf(a, q.id);
   const flagged = a.flags.includes(q.id);
@@ -347,12 +396,12 @@ export default function ExamApp(props: ExamAppProps) {
   const g = checked ? grade(q, response) : null;
   const total = a.questionIds.length;
   const navItems: NavItem[] = a.questionIds.map((id) => {
-    const qq = byId.get(id)!;
+    const qq = viewById.get(id)!;
     const r = responseOf(a, id);
     const st = qq.format === 'domc' ? domcOf(a, qq) : undefined;
     return { id, answered: isComplete(qq, r, st, blanksOf(qq)), started: isAnswered(r), flagged: a.flags.includes(id) };
   });
-  const prog = progressOf(a, questions);
+  const prog = progressOf(a, view);
 
   const onJudge = (yes: boolean) => {
     if (!domcState || domcState.done || checked) return;
@@ -379,6 +428,18 @@ export default function ExamApp(props: ExamAppProps) {
       <span className="ex-count">{phase === 'review' ? `${prog.answered} of ${total} answered` : `Question ${a.current + 1} of ${total}`}</span>
     </header>
   );
+
+  if (elsewhere) {
+    return (
+      <div className="ex ex-plain">{top}
+        <div className="ex-body">
+          <h1>{mock.title}</h1>
+          <p className="ex-alert" role="alert">This mock exam is now open in another tab or window. To keep your answers safe, only one of them can be used: this one has stopped. Go on in the other one, or use this one instead.</p>
+          <p className="ex-row"><button type="button" className="ex-btn ex-btn-primary" onClick={() => location.reload()}>Use it in this tab</button></p>
+        </div>
+      </div>
+    );
+  }
 
   if (phase === 'review') {
     const list = (ids: string[]) => (
@@ -411,17 +472,20 @@ export default function ExamApp(props: ExamAppProps) {
             {prog.flagged.length ? list(prog.flagged) : <p className="ex-muted">None.</p>}
           </section>
           {confirm === 'submit' ? (
-            <div className="ex-confirm" role="alertdialog" aria-labelledby="ex-submit-q" aria-describedby="ex-submit-d">
+            // the focus goes to the question, not to "Yes, submit": a second Enter must not end the exam
+            <div className="ex-confirm" role="alertdialog" aria-labelledby="ex-submit-q" aria-describedby="ex-submit-d" tabIndex={-1}
+              ref={(el) => { if (el && !el.contains(document.activeElement)) el.focus(); }}
+              onKeyDown={(e) => { if (e.key === 'Escape') { e.preventDefault(); cancelSubmit(); } }}>
               <p id="ex-submit-q"><b>Submit the exam now?</b></p>
-              <p id="ex-submit-d">You cannot change your answers after this.</p>
+              <p id="ex-submit-d">You cannot change your answers after this. Press Escape to go back.</p>
               <p className="ex-row">
-                <button type="button" className="ex-btn ex-btn-primary" autoFocus onClick={() => finish(false)}>Yes, submit</button>
-                <button type="button" className="ex-btn" onClick={() => setConfirm(null)}>Cancel</button>
+                <button type="button" className="ex-btn ex-btn-primary" onClick={() => finish(false)}>Yes, submit</button>
+                <button type="button" className="ex-btn" onClick={cancelSubmit}>Cancel</button>
               </p>
             </div>
           ) : (
             <p className="ex-row">
-              <button type="button" className="ex-btn ex-btn-primary" onClick={() => setConfirm('submit')}>Submit the exam</button>
+              <button type="button" className="ex-btn ex-btn-primary" id="ex-submit-btn" onClick={() => setConfirm('submit')}>Submit the exam</button>
               <button type="button" className="ex-btn" onClick={() => go(a.current)}>Back to the questions</button>
             </p>
           )}

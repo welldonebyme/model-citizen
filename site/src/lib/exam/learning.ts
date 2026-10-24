@@ -5,7 +5,7 @@ import type { Question } from '../content-types';
 import type { Response } from '../scoring';
 import { db, logActivity, type AnswerMode, type Note } from '../store/db';
 import { isDue, newCard, review } from '../srs';
-import { describeKey, describeResponse, sourceLabel } from './describe';
+import { describeKeyWithText, describeResponseWithText, sourceLabel } from './describe';
 
 export const RULE_MARK = 'The rule in my own words:';
 
@@ -14,8 +14,8 @@ export function errorNoteId(qid: string) { return `error:${qid}`; }
 export function errorNoteText(q: Question, r: Response | undefined, rule = ''): string {
   return [
     `Question: ${sourceLabel(q)} (${q.id})`,
-    `What I answered: ${describeResponse(q, r)}`,
-    `Correct answer: ${describeKey(q)}`,
+    `What I answered: ${describeResponseWithText(q, r)}`,
+    `Correct answer: ${describeKeyWithText(q)}`,
     `${RULE_MARK} ${rule}`.trimEnd(),
   ].join('\n');
 }

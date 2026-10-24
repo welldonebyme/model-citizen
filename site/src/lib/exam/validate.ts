@@ -24,6 +24,8 @@ export function playableReason(q: Question): string | null {
     case 'hotspot': {
       if (!q.hotspot || typeof k !== 'number') return 'no code line to choose';
       const code = q.stem.find((b) => b.t === 'code' && b.id === q.hotspot!.codeId);
+      const parts = (q.hotspot as { parts?: { codeId: string }[] }).parts ?? [];
+      if (!parts.every((p) => q.stem.some((b) => b.t === 'code' && b.id === p.codeId))) return 'a code block of the hotspot is missing';
       return code && k >= 1 ? null : 'the code block of the hotspot is missing';
     }
     case 'fill': {

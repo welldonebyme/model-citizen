@@ -8,7 +8,8 @@ import type { AnswerMode } from '../../lib/store/db';
 import { domcInit, domcJudge, domcResponse, type DomcRules, type DomcState } from '../../lib/exam/domc';
 import { isComplete, blanksOf } from '../../lib/exam/engine';
 import { recordOutcome } from '../../lib/exam/learning';
-import { sourceLabel } from '../../lib/exam/describe';
+import { blocksText, sourceLabel } from '../../lib/exam/describe';
+import { shuffleView } from '../../lib/exam/shuffle';
 import { mss } from '../../lib/exam/time';
 import { QuestionView } from './QuestionView';
 import { Feedback } from './Feedback';
@@ -41,6 +42,12 @@ function saveSession(key: string | undefined, s: Saved | null) {
   } catch { /* storage blocked: the session just does not survive a reload */ }
 }
 
+/** The first words of a question, for the score list. */
+function preview(q: Question): string {
+  const t = blocksText(q.stem.filter((b) => b.t !== 'code'));
+  return t.length > 110 ? `${t.slice(0, 107).replace(/\s+\S*$/, '')}…` : t;
+}
+
 export interface QuizFinish { score: number; total: number; roundNo: number; roundScore: number; roundTotal: number }
 
 export interface QuizRunnerProps {
@@ -69,6 +76,10 @@ export interface QuizRunnerProps {
   /** compact summary: link to the full chapter quiz */
   moreHref?: string;
   moreLabel?: string;
+  /** more links on the score screen (next chapter, Today) */
+  links?: { href: string; label: string }[];
+  /** multiple choice / select: seeded random order with new letters (default), build lists: seeded start */
+  shuffleOptions?: boolean;
 }
 
 function PaceTimer({ limitMs, running, onTimeUp }: { limitMs: number; running: boolean; onTimeUp: () => void }) {
@@ -96,11 +107,17 @@ function PaceTimer({ limitMs, running, onTimeUp }: { limitMs: number; running: b
 }
 
 export function QuizRunner(props: QuizRunnerProps) {
-  const { questions, mode, title, domcExamLike, timePerQuestionMs, seed, backHref, backLabel, onExit, exitLabel, startAt, sessionKey, onFinish, compact, moreHref, moreLabel } = props;
+  const { questions: source, mode, title, domcExamLike, timePerQuestionMs, seed, backHref, backLabel, onExit, exitLabel, startAt, sessionKey, onFinish, compact, moreHref, moreLabel, links, shuffleOptions = true } = props;
+  // the questions as shown in this session: options in a seeded order (the book's keys are mostly B)
+  const questions = useMemo(() => (shuffleOptions ? source.map((x) => shuffleView(x, seed)) : source), [source, seed, shuffleOptions]);
   const settings = useDomcRules();
   const rules = props.domcRules ?? settings.rules;
   const byId = useMemo(() => new Map(questions.map((x) => [x.id, x])), [questions]);
-  const [saved] = useState(() => loadSession(sessionKey, questions));
+  const [saved] = useState(() => {
+    const s = loadSession(sessionKey, questions);
+    // a link to a question outside the saved retry round starts a full round at that question
+    return s && startAt && !s.round.includes(startAt) && questions.some((x) => x.id === startAt) ? null : s;
+  });
   const [round, setRound] = useState<Question[]>(() => (saved ? saved.round.map((id) => byId.get(id)!) : questions));
   const [roundNo, setRoundNo] = useState(saved?.roundNo ?? 1);
   const [index, setIndex] = useState(() => {
@@ -225,6 +242,7 @@ export function QuizRunner(props: QuizRunnerProps) {
               <button type="button" className="qz-linkbtn" onClick={() => { setIndex(i); setPhase('question'); }}>
                 Question {i + 1}
               </button>
+              <span className="qz-sum-stem">{preview(r.q)}</span>
               <span className="qz-muted">{r.s?.checked ? '' : 'Skipped. '}{sourceLabel(r.q)}</span>
             </li>
           ))}
@@ -233,6 +251,7 @@ export function QuizRunner(props: QuizRunnerProps) {
           {wrong.length > 0 && <button type="button" className="btn btn-primary" onClick={() => restart(wrong)}>Retry the {wrong.length === 1 ? 'question you missed' : `${wrong.length} questions you missed`}</button>}
           <button type="button" className="btn btn-quiet" onClick={() => restart(questions)}>{compact ? 'Start again' : 'Start again with all questions'}</button>
           {moreHref && <a className="btn btn-quiet" href={moreHref}>{moreLabel ?? 'The full chapter quiz'}</a>}
+          {links?.map((l) => <a key={l.href} className="btn btn-quiet" href={l.href}>{l.label}</a>)}
           {onExit && <button type="button" className="btn btn-quiet" onClick={onExit}>{exitLabel ?? 'Back'}</button>}
           {backHref && <a className="btn btn-quiet" href={backHref}>{backLabel ?? 'Back to the lesson'}</a>}
         </div>
@@ -240,7 +259,7 @@ export function QuizRunner(props: QuizRunnerProps) {
     );
   }
 
-  const done = Object.values(states).filter((s) => s.checked).length;
+  const done = round.filter((x) => states[x.id]?.checked).length;
   return (
     <section className={`qz-runner${sectionCls}`} aria-labelledby={qHeadingId} ref={rootRef}>
       <div className="qz-progress">

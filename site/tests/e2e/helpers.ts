@@ -59,3 +59,18 @@ export async function drag(page: Page, from: Locator, to: Locator, opts: { dy?: 
 }
 
 export const feedback = (page: Page) => page.getByRole('region', { name: 'Feedback' });
+
+/** Writes rows into an IndexedDB table of the site's database (the page must have opened the database). */
+export async function putRows(page: Page, table: string, rows: unknown[]): Promise<void> {
+  await page.evaluate(({ t, rs }) => new Promise<void>((resolve, reject) => {
+    const open = indexedDB.open('model-citizen');
+    open.onerror = () => reject(open.error);
+    open.onsuccess = () => {
+      const db = open.result;
+      const tx = db.transaction(t, 'readwrite');
+      for (const r of rs) tx.objectStore(t).put(r);
+      tx.oncomplete = () => { db.close(); resolve(); };
+      tx.onerror = () => reject(tx.error);
+    };
+  }), { t: table, rs: rows });
+}

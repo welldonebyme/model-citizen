@@ -32,6 +32,7 @@ export function Domc({ q, state, rules, onJudge, letters, keys = true, locked, n
   const position = shown + 1;
   const [announce, setAnnounce] = useState('');
   const yesRef = useRef<HTMLButtonElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const doneRef = useRef<HTMLParagraphElement>(null);
   const judgeRef = useRef(onJudge);
   judgeRef.current = onJudge;
@@ -54,6 +55,8 @@ export function Domc({ q, state, rules, onJudge, letters, keys = true, locked, n
     if (!keys || locked || !cur) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.repeat || e.ctrlKey || e.metaKey || e.altKey || isTyping(document.activeElement)) return;
+      // only while the option has the focus (a Yes/No button): a stray key elsewhere must not judge an option
+      if (!rootRef.current?.contains(document.activeElement)) return;
       const k = e.key.toLowerCase();
       if (k === 'y' || k === 'n') { e.preventDefault(); judgeRef.current(k === 'y'); }
     };
@@ -64,7 +67,7 @@ export function Domc({ q, state, rules, onJudge, letters, keys = true, locked, n
   const trail = Array.from({ length: shown }, (_, i) => i);
 
   return (
-    <div className="qz-domc">
+    <div className="qz-domc" ref={rootRef}>
       <ol className="qz-domc-trail" aria-label="Options already answered">
         {trail.map((i) => {
           const id = i < Object.keys(state.judgments).length ? Object.keys(state.judgments)[i] : state.extra?.option;
@@ -85,7 +88,7 @@ export function Domc({ q, state, rules, onJudge, letters, keys = true, locked, n
               No <kbd aria-hidden="true">N</kbd>
             </button>
           </div>
-          <p className="qz-domc-note">You cannot go back to an option once you answer it, like on the real exam.<span className="qz-keys-hint"> Keys: Y for yes, N for no.</span></p>
+          <p className="qz-domc-note">You cannot go back to an option once you answer it, like on the real exam.<span className="qz-keys-hint"> Keys: Y for yes, N for no, when the Yes or No button has the focus.</span></p>
         </div>
       ) : (
         <p className="qz-domc-done" ref={doneRef} tabIndex={-1}>

@@ -13,6 +13,9 @@ export interface QuizAppProps {
   chapterTitle: string;
   questions: Question[];
   lessonHref: string;
+  /** the next chapter that has a quiz, for "Next: Chapter N" on the score screen */
+  next?: { href: string; label: string };
+  todayHref?: string;
 }
 
 interface QuizData { score?: number; total?: number; best?: number; quizAt?: number }
@@ -23,7 +26,7 @@ export async function markChapterQuiz(chapterId: string, r: { score: number; tot
   await markProgress('chapter', chapterId, 'done', { ...prev, score: r.score, total: r.total, best: Math.max(prev.best ?? 0, r.score), quizAt: Date.now() });
 }
 
-export default function QuizApp({ chapterId, chapterNumber, questions, lessonHref }: QuizAppProps) {
+export default function QuizApp({ chapterId, chapterNumber, questions, lessonHref, next, todayHref }: QuizAppProps) {
   // ?q=<question id> opens that question first (links from the error notebook, reviews)
   const startAt = typeof location !== 'undefined' ? new URLSearchParams(location.search).get('q') ?? undefined : undefined;
   const [last, setLast] = useState<QuizData | null>(null);
@@ -49,6 +52,7 @@ export default function QuizApp({ chapterId, chapterNumber, questions, lessonHre
         startAt={startAt}
         sessionKey={`quiz:${chapterId}`}
         onFinish={onFinish}
+        links={[...(next ? [next] : []), ...(todayHref ? [{ href: todayHref, label: 'Back to Today' }] : [])]}
       />
     </>
   );

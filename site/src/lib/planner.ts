@@ -115,6 +115,8 @@ export interface MissionInput {
   readingBudget?: number;        // minutes of reading per day (book: 40 of 120)
   labTitles?: Map<string, string>;
   labsDone?: Set<string>;        // labs whose ticks are all done (progress-summary labsDone)
+  /** the first lab that needs the course files: a "Get the course files" item comes right before it */
+  courseFiles?: { beforeLab: string; href: string };
 }
 
 /**
@@ -153,7 +155,10 @@ export function mission(m: MissionInput): { items: MissionItem[]; behind: number
   const owed = upToToday.map((id) => m.lessons.get(id)).filter((l): l is PlanLesson => !!l && m.done.has(l.id));
   const todayLabs = [...read, ...owed].flatMap((l) => l.labs.filter((lab) => !labDone(lab)).map((lab) => ({ lab, mins: labMins(l) })))
     .filter((x, i, all) => all.findIndex((y) => y.lab === x.lab) === i).slice(0, 3);
-  for (const { lab, mins } of todayLabs) items.push({ kind: 'lab', title: m.labTitles?.get(lab) ?? 'The lab of this lesson', minutes: mins, refs: [lab] });
+  for (const { lab, mins } of todayLabs) {
+    if (m.courseFiles && lab === m.courseFiles.beforeLab) items.push({ kind: 'lab', title: 'Get the course files (the practice kit)', minutes: 10, href: m.courseFiles.href });
+    items.push({ kind: 'lab', title: m.labTitles?.get(lab) ?? 'The lab of this lesson', minutes: mins, refs: [lab] });
+  }
   // Quiz: when today's reading finishes a chapter (or a chapter is finished but its quiz not taken).
   const finished = new Set<string>();
   for (const [cid] of m.chapterQuiz) {

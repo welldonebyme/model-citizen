@@ -30,6 +30,9 @@ function greeting(d = new Date()) {
   return h < 5 ? 'Good night' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
 }
 
+/** Where the course files (practice kit) are first needed: lab 1.6; the box with the download is just before it. */
+const COURSE_FILES = { beforeLab: 'ch01-lab1', href: 'learn/ch01/ch01-s6/#get-the-course-files' };
+
 const KIND_LABEL: Record<MissionItem['kind'], string> = { review: 'Review', read: 'Read', lab: 'Lab', quiz: 'Quiz', mock: 'Mock exam', rest: 'Free time' };
 
 export default function TodayApp(p: TodayProps) {
@@ -69,7 +72,7 @@ export default function TodayApp(p: TodayProps) {
   // Reading budget per day = the course's reading time spread over the plan's study days (the book: about 40 of 120 minutes).
   const totalReading = p.lessons.reduce((n, l) => n + l.minutes, 0);
   const readingBudget = Math.max(30, Math.round(totalReading / Math.max(1, days.length) / 5) * 5);
-  const m = mission({ days, dayIndex: dayIdx, done: doneLessons, dueCards, lessons: lessonMap, chapterQuiz, quizDone, labTitles, readingBudget, labsDone: labsDone(labRows, p.labSteps).done });
+  const m = mission({ days, dayIndex: dayIdx, done: doneLessons, dueCards, lessons: lessonMap, chapterQuiz, quizDone, labTitles, readingBudget, labsDone: labsDone(labRows, p.labSteps).done, courseFiles: COURSE_FILES });
 
   // the same numbers as the dashboard (lib/progress-summary)
   const quizzes = quizzesAt80(quizRows, answers, chapterQuiz);
@@ -98,7 +101,8 @@ export default function TodayApp(p: TodayProps) {
   const daysToExam = settings.examDate ? Math.ceil((new Date(settings.examDate + 'T09:00:00').getTime() - Date.now()) / 86400000) : null;
   const planWeek = STANDARD_WEEKS[Math.min(13, (calendar(rhythm)[week - 1]?.planWeeks ?? [1]).at(-1)! - 1)];
   const total = m.items.reduce((n, i) => n + i.minutes, 0);
-  const missionHref = (it: MissionItem) => it.kind === 'read' && it.refs ? url(p.lessonPaths[it.refs[0]])
+  const missionHref = (it: MissionItem) => it.href ? url(it.href)
+    : it.kind === 'read' && it.refs ? url(p.lessonPaths[it.refs[0]])
     : it.kind === 'lab' && it.refs ? url(p.lessonPaths[p.labLessons[it.refs[0]]] ?? '') + '#' + it.refs[0]
     : it.kind === 'quiz' && it.refs ? url(`quiz/${it.refs[0]}/`)
     : it.kind === 'review' ? url('practice/flashcards/')
@@ -132,7 +136,9 @@ export default function TodayApp(p: TodayProps) {
                   <div className="t-body">
                     <span className={`pill t-k-${it.kind}`}>{KIND_LABEL[it.kind]}</span>
                     <h3>{href ? <a href={href}>{it.title}</a> : it.title}</h3>
-                    {it.kind === 'lab' && <p>Steps on this site, checked against the book. Some labs run in your browser, others on your computer (macOS, Windows or WSL).</p>}
+                    {it.kind === 'lab' && (it.href
+                      ? <p>Download and unzip them once, before lab 1.6: every later lab uses them. The box in lesson 1.6 shows how on macOS, Windows and WSL.</p>
+                      : <p>Steps on this site, checked against the book. Some labs run in your browser, others on your computer (macOS, Windows or WSL).</p>)}
                     {it.kind === 'review' && <p>Cards you missed, from traps, terms and questions. Do them first, while your mind is fresh.</p>}
                     {it.kind === 'quiz' && <p>Book closed. Wrong answers go to your error notebook.</p>}
                   </div>

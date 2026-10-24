@@ -60,7 +60,7 @@ describe('DOMC state', () => {
     expect(st.done).toBe(true); // no option left, so no extra option
     // with an option left after the decision, an extra option appears (on the questions whose coin allows it)
     const q2 = byId('q-ch16-18'); // NO, YES, NO, YES
-    let s2 = { ...domcInit(q2, { shuffle: false, seed: 0 }), allowExtra: true };
+    let s2: ReturnType<typeof domcInit> = { ...domcInit(q2, { shuffle: false, seed: 0 }), allowExtra: true };
     s2 = domcJudge(q2, s2, rules, true); // A is NO, said YES: wrong -> decided
     expect(s2.done).toBe(false);
     expect(domcCurrent(q2, s2, rules)).toEqual({ option: 'B', extra: true });

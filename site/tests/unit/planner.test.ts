@@ -43,6 +43,21 @@ describe('days and missions', () => {
     expect(m.items[1].refs).toEqual([days.flat()[0]]);
     expect(m.behind).toBeGreaterThan(0);
   });
+  it('keeps today\'s finished lessons ticked and the labs of understood lessons until they are ticked', () => {
+    const days = [['ch01-s1', 'ch01-s2'], ['ch02-s1']];
+    const lessons = new Map(course.map((l) => [l.id, l]));
+    const base = { days, dayIndex: 0, dueCards: 0, lessons, chapterQuiz: new Map(), quizDone: new Set<string>() };
+    const m = mission({ ...base, done: new Set(['ch01-s1', 'ch01-s2']) });
+    expect(m.items.filter((i) => i.done).map((i) => i.refs?.[0])).toEqual(['ch01-s1', 'ch01-s2']);
+    expect(m.items.some((i) => i.kind === 'lab' && i.refs?.[0] === 'ch01-lab1')).toBe(true);
+    const ticked = mission({ ...base, done: new Set(['ch01-s1', 'ch01-s2']), labsDone: new Set(['ch01-lab1']) });
+    expect(ticked.items.some((i) => i.refs?.[0] === 'ch01-lab1')).toBe(false);
+  });
+  it('puts "Get the course files" right before the first lab that needs them', () => {
+    const m = mission({ days: [['ch01-s1', 'ch01-s2']], dayIndex: 0, dueCards: 0, done: new Set(), lessons: new Map(course.map((l) => [l.id, l])), chapterQuiz: new Map(), quizDone: new Set(), readingBudget: 120, courseFiles: { beforeLab: 'ch01-lab1', href: 'learn/ch01/ch01-s6/#get-the-course-files' } });
+    const i = m.items.findIndex((x) => x.refs?.[0] === 'ch01-lab1');
+    expect(m.items[i - 1]).toMatchObject({ kind: 'lab', href: 'learn/ch01/ch01-s6/#get-the-course-files' });
+  });
   it('readiness needs all four conditions', () => {
     const base = { quizzes: { ok: 27, total: 27 }, capstone: { ok: 15, total: 15 }, mocks: { ok: 2, total: 2 as const }, notebook: { reread: true, notes: 4 } };
     expect(readiness(base).ready).toBe(true);

@@ -198,7 +198,8 @@ export function parseLine(line: string, ctx: ExpandContext): ParseResult {
   }
   endCmd();
   if (pipeline.cmds.length) items.push({ op, pipeline });
-  else if (op === '&&' || op === '||') return { ok: false, error: `A command is missing after ${op}` };
+  // `op` is set inside push(); TypeScript cannot see that, so it is read back as a plain string here
+  else if ((op as string | null) === '&&' || (op as string | null) === '||') return { ok: false, error: `A command is missing after ${op}` };
   return { ok: true, items };
 }
 
@@ -258,7 +259,8 @@ export function splitList(line: string): { ok: true; items: { op: ListItem['op']
   }
   const rest = s.slice(start, i);
   if (rest.trim()) items.push({ op, text: rest });
-  else if (op === '&&' || op === '||') return { ok: false, error: `A command is missing after ${op}` };
+  // `op` is set inside push(); TypeScript cannot see that, so it is read back as a plain string here
+  else if ((op as string | null) === '&&' || (op as string | null) === '||') return { ok: false, error: `A command is missing after ${op}` };
   return { ok: true, items };
 }
 

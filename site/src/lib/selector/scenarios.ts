@@ -62,7 +62,7 @@ export const SCENARIOS: Scenario[] = [
     id: 'ch16-build-staging', key: 'jaffle', tag: 'ch16', kind: 'results', origin: 'simulated', source: 'Chapter 16, "Preview: selecting by state and by result"',
     title: 'Run results of dbt build --select staging',
     description: 'run_results.json after a successful dbt build --select staging: the staging models are success, their tests are pass.',
-    build: (p) => withResults(null, 'run_results.json of dbt build --select staging', simulateRunResults(p, { command: 'dbt build --select staging', label: '' })),
+    build: (p) => withResults(simulateState(p, { changes: [], label: 'target/ (manifest.json of the same project)' }), 'run_results.json of dbt build --select staging', simulateRunResults(p, { command: 'dbt build --select staging', label: '' })),
   },
   {
     id: 'ch20-docs', key: 'jaffle', tag: 'ch20', kind: 'state', origin: 'simulated', source: 'Chapter 20, "persist_docs and state:modified"',
@@ -108,7 +108,8 @@ export const SCENARIOS: Scenario[] = [
     id: 'ch24-typo', key: 'jaffle', tag: 'ch24', kind: 'results', origin: 'simulated', source: 'Chapter 24, "Result selectors: re-running what failed"',
     title: 'Run results: stg_jaffle_shop__products is broken',
     description: 'dbt build --exclude-resource-type unit_test after a typo (categoryy): the model errors, everything below it is skipped, the orphan-order relationships test warns.',
-    build: (p) => withResults(null, '../last_run/run_results.json (typo in stg_jaffle_shop__products)', simulateRunResults(p, {
+    // the folder also has the manifest of the broken run: compared with the fixed project, the model's SQL changed
+    build: (p) => withResults(simulateState(p, { changes: [{ uid: J('stg_jaffle_shop__products'), kinds: ['body'] }], label: '../last_run/manifest.json (with the typo)' }), '../last_run/run_results.json (typo in stg_jaffle_shop__products)', simulateRunResults(p, {
       command: 'dbt build --exclude-resource-type unit_test', errors: [J('stg_jaffle_shop__products')],
       warns: ['test.jaffle_dbt.relationships_stg_jaffle_shop__orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_.3e222ebf00'], label: '',
     })),
@@ -117,7 +118,7 @@ export const SCENARIOS: Scenario[] = [
     id: 'ch24-test-fail', key: 'jaffle', tag: 'ch24', kind: 'results', origin: 'simulated', source: 'builder log ch24, "result:fail and retry"',
     title: 'Run results: a relationships test fails',
     description: 'dbt test --select test_name:relationships --warn-error: the warning becomes a failure (status fail).',
-    build: (p) => withResults(null, '../last_run/run_results.json (dbt test --select test_name:relationships --warn-error)', simulateRunResults(p, {
+    build: (p) => withResults(simulateState(p, { changes: [], label: '../last_run/manifest.json' }), '../last_run/run_results.json (dbt test --select test_name:relationships --warn-error)', simulateRunResults(p, {
       command: 'dbt test --select test_name:relationships',
       fails: ['test.jaffle_dbt.relationships_stg_jaffle_shop__orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_.3e222ebf00'], label: '',
     })),

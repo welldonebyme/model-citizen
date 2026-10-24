@@ -1,0 +1,385 @@
+{
+ "about": "Extra YAML selector forms appended to selectors.yml of tag ch18, run with real dbt 1.11.16: dbt -q ls --selector <name> (by the selection-engine agent).",
+ "yml": "\n  - name: y_cautious\n    definition:\n      method: fqn\n      value: stg_jaffle_shop__orders\n      indirect_selection: cautious\n\n  - name: y_buildable_children\n    definition:\n      method: fqn\n      value: stg_jaffle_shop__customers\n      children: true\n      children_depth: 1\n      indirect_selection: buildable\n\n  - name: y_at\n    definition:\n      method: fqn\n      value: int_orders__enriched\n      childrens_parents: true\n\n  - name: y_parents_depth\n    definition:\n      method: fqn\n      value: fct_orders\n      parents: true\n      parents_depth: 1\n\n  - name: y_depth_without_flag\n    definition:\n      method: fqn\n      value: fct_orders\n      parents_depth: 1\n\n  - name: y_inherit\n    definition:\n      union:\n        - method: selector\n          value: finance_marts\n        - method: tag\n          value: staging\n\n  - name: y_method_exclude\n    definition:\n      method: tag\n      value: marts\n      exclude:\n        - method: fqn\n          value: fct_orders\n          children: true\n\n  - name: y_nested\n    definition:\n      intersection:\n        - union:\n            - method: tag\n              value: finance\n            - method: tag\n              value: marketing\n        - method: config.materialized\n          value: table\n\n  - name: y_union_exclude_many\n    definition:\n      union:\n        - method: path\n          value: models/marts\n        - exclude:\n            - method: tag\n              value: finance\n            - method: resource_type\n              value: test\n\n  - name: y_string_ops\n    definition: '@stg_stripe__payments'\n\n  - name: y_test_type\n    definition:\n      method: test_type\n      value: singular\n",
+ "selectors": [
+  {
+   "name": "y_cautious",
+   "definition": {
+    "method": "fqn",
+    "value": "stg_jaffle_shop__orders",
+    "indirect_selection": "cautious"
+   }
+  },
+  {
+   "name": "y_buildable_children",
+   "definition": {
+    "method": "fqn",
+    "value": "stg_jaffle_shop__customers",
+    "children": true,
+    "children_depth": 1,
+    "indirect_selection": "buildable"
+   }
+  },
+  {
+   "name": "y_at",
+   "definition": {
+    "method": "fqn",
+    "value": "int_orders__enriched",
+    "childrens_parents": true
+   }
+  },
+  {
+   "name": "y_parents_depth",
+   "definition": {
+    "method": "fqn",
+    "value": "fct_orders",
+    "parents": true,
+    "parents_depth": 1
+   }
+  },
+  {
+   "name": "y_depth_without_flag",
+   "definition": {
+    "method": "fqn",
+    "value": "fct_orders",
+    "parents_depth": 1
+   }
+  },
+  {
+   "name": "y_inherit",
+   "definition": {
+    "union": [
+     {
+      "method": "selector",
+      "value": "finance_marts"
+     },
+     {
+      "method": "tag",
+      "value": "staging"
+     }
+    ]
+   }
+  },
+  {
+   "name": "y_method_exclude",
+   "definition": {
+    "method": "tag",
+    "value": "marts",
+    "exclude": [
+     {
+      "method": "fqn",
+      "value": "fct_orders",
+      "children": true
+     }
+    ]
+   }
+  },
+  {
+   "name": "y_nested",
+   "definition": {
+    "intersection": [
+     {
+      "union": [
+       {
+        "method": "tag",
+        "value": "finance"
+       },
+       {
+        "method": "tag",
+        "value": "marketing"
+       }
+      ]
+     },
+     {
+      "method": "config.materialized",
+      "value": "table"
+     }
+    ]
+   }
+  },
+  {
+   "name": "y_union_exclude_many",
+   "definition": {
+    "union": [
+     {
+      "method": "path",
+      "value": "models/marts"
+     },
+     {
+      "exclude": [
+       {
+        "method": "tag",
+        "value": "finance"
+       },
+       {
+        "method": "resource_type",
+        "value": "test"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "y_string_ops",
+   "definition": "@stg_stripe__payments"
+  },
+  {
+   "name": "y_test_type",
+   "definition": {
+    "method": "test_type",
+    "value": "singular"
+   }
+  }
+ ],
+ "real": {
+  "y_cautious": [
+   "jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders",
+   "jaffle_dbt.staging.jaffle_shop.accepted_values_stg_jaffle_shop__orders_status__placed__shipped__completed__return_pending__returned",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__orders_customer_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__orders_order_id",
+   "jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__orders_order_id"
+  ],
+  "y_buildable_children": [
+   "jaffle_dbt.marts.dim_customers.v1",
+   "jaffle_dbt.marts.dim_customers.v2",
+   "jaffle_dbt.intermediate.int_orders__enriched",
+   "jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers",
+   "jaffle_dbt.marts.dbt_utils_accepted_range_dim_customers_v1_lifetime_value__0",
+   "jaffle_dbt.marts.dbt_utils_accepted_range_dim_customers_v2_lifetime_value__0",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id",
+   "jaffle_dbt.staging.jaffle_shop.relationships_stg_jaffle_shop__orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_",
+   "jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id"
+  ],
+  "y_at": [
+   "jaffle_dbt.marts.customer_segments",
+   "jaffle_dbt.marts.dim_customers.v1",
+   "jaffle_dbt.marts.dim_customers.v2",
+   "jaffle_dbt.marts.fct_monthly_revenue",
+   "jaffle_dbt.marts.fct_order_items",
+   "jaffle_dbt.marts.fct_orders",
+   "jaffle_dbt.intermediate.int_orders__enriched",
+   "jaffle_dbt.intermediate.int_orders__payment_methods_pivoted",
+   "jaffle_dbt.intermediate.int_payments__successful",
+   "jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers",
+   "jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__order_items",
+   "jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders",
+   "jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products",
+   "jaffle_dbt.staging.stripe.stg_stripe__payments",
+   "jaffle_dbt.country_regions",
+   "source:jaffle_dbt.jaffle_shop.customers",
+   "source:jaffle_dbt.jaffle_shop.order_items",
+   "source:jaffle_dbt.jaffle_shop.orders",
+   "source:jaffle_dbt.jaffle_shop.products",
+   "source:jaffle_dbt.stripe.payments",
+   "jaffle_dbt.staging.jaffle_shop.accepted_values_stg_jaffle_shop__orders_status__placed__shipped__completed__return_pending__returned",
+   "jaffle_dbt.staging.stripe.accepted_values_stg_stripe__payments_payment_method__credit_card__coupon__bank_transfer__gift_card",
+   "jaffle_dbt.staging.stripe.accepted_values_stg_stripe__payments_status__success__fail",
+   "jaffle_dbt.assert_paid_orders_match_items",
+   "jaffle_dbt.assert_payments_match_order_totals",
+   "jaffle_dbt.marts.dbt_utils_accepted_range_dim_customers_v1_lifetime_value__0",
+   "jaffle_dbt.marts.dbt_utils_accepted_range_dim_customers_v2_lifetime_value__0",
+   "jaffle_dbt.marts.dbt_utils_accepted_range_fct_order_items_quantity__10__1",
+   "jaffle_dbt.marts.dbt_utils_expression_is_true_fct_order_items_line_amount_quantity_unit_price",
+   "jaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country",
+   "jaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_order_items_order_id__product_id",
+   "jaffle_dbt.marts.is_positive_fct_orders_True__amount",
+   "jaffle_dbt.staging.jaffle_shop.is_positive_stg_jaffle_shop__order_items_quantity",
+   "jaffle_dbt.staging.jaffle_shop.is_positive_stg_jaffle_shop__products_price",
+   "jaffle_dbt.staging.stripe.is_positive_stg_stripe__payments_amount",
+   "jaffle_dbt.not_null_country_regions_country",
+   "jaffle_dbt.marts.not_null_customer_segments_customer_id",
+   "jaffle_dbt.marts.not_null_fct_order_items_order_item_key",
+   "jaffle_dbt.marts.not_null_fct_orders_order_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__order_items_order_item_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__orders_customer_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__orders_order_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__products_product_id",
+   "jaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id",
+   "jaffle_dbt.staging.jaffle_shop.relationships_stg_jaffle_shop__orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_",
+   "jaffle_dbt.staging.jaffle_shop.source_not_null_jaffle_shop_customers_id",
+   "jaffle_dbt.staging.jaffle_shop.source_not_null_jaffle_shop_order_items_id",
+   "jaffle_dbt.staging.jaffle_shop.source_not_null_jaffle_shop_orders_id",
+   "jaffle_dbt.staging.jaffle_shop.source_not_null_jaffle_shop_products_id",
+   "jaffle_dbt.staging.stripe.source_not_null_stripe_payments_id",
+   "jaffle_dbt.staging.jaffle_shop.source_unique_jaffle_shop_customers_id",
+   "jaffle_dbt.staging.jaffle_shop.source_unique_jaffle_shop_order_items_id",
+   "jaffle_dbt.staging.jaffle_shop.source_unique_jaffle_shop_orders_id",
+   "jaffle_dbt.staging.jaffle_shop.source_unique_jaffle_shop_products_id",
+   "jaffle_dbt.staging.stripe.source_unique_stripe_payments_id",
+   "jaffle_dbt.unique_country_regions_country",
+   "jaffle_dbt.marts.unique_customer_segments_customer_id",
+   "jaffle_dbt.marts.unique_fct_order_items_order_item_key",
+   "jaffle_dbt.marts.unique_fct_orders_order_id",
+   "jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id",
+   "jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__order_items_order_item_id",
+   "jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__orders_order_id",
+   "jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__products_product_id",
+   "jaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id"
+  ],
+  "y_parents_depth": [
+   "jaffle_dbt.marts.fct_orders",
+   "jaffle_dbt.intermediate.int_orders__enriched",
+   "jaffle_dbt.intermediate.int_orders__payment_methods_pivoted",
+   "jaffle_dbt.assert_paid_orders_match_items",
+   "jaffle_dbt.assert_payments_match_order_totals",
+   "jaffle_dbt.marts.is_positive_fct_orders_True__amount",
+   "jaffle_dbt.marts.not_null_fct_orders_order_id",
+   "jaffle_dbt.marts.unique_fct_orders_order_id"
+  ],
+  "y_depth_without_flag": [
+   "jaffle_dbt.marts.fct_orders",
+   "jaffle_dbt.assert_paid_orders_match_items",
+   "jaffle_dbt.assert_payments_match_order_totals",
+   "jaffle_dbt.marts.is_positive_fct_orders_True__amount",
+   "jaffle_dbt.marts.not_null_fct_orders_order_id",
+   "jaffle_dbt.marts.unique_fct_orders_order_id"
+  ],
+  "y_inherit": [
+   "jaffle_dbt.marts.fct_monthly_revenue",
+   "jaffle_dbt.marts.fct_order_items",
+   "jaffle_dbt.marts.fct_order_items_daily",
+   "jaffle_dbt.marts.fct_orders",
+   "jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers",
+   "jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__order_items",
+   "jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders",
+   "jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products",
+   "jaffle_dbt.staging.stripe.stg_stripe__payments",
+   "jaffle_dbt.staging.jaffle_shop.accepted_values_stg_jaffle_shop__orders_status__placed__shipped__completed__return_pending__returned",
+   "jaffle_dbt.staging.stripe.accepted_values_stg_stripe__payments_payment_method__credit_card__coupon__bank_transfer__gift_card",
+   "jaffle_dbt.staging.stripe.accepted_values_stg_stripe__payments_status__success__fail",
+   "jaffle_dbt.assert_paid_orders_match_items",
+   "jaffle_dbt.assert_payments_match_order_totals",
+   "jaffle_dbt.marts.dbt_utils_accepted_range_fct_order_items_quantity__10__1",
+   "jaffle_dbt.marts.dbt_utils_expression_is_true_fct_order_items_line_amount_quantity_unit_price",
+   "jaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country",
+   "jaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_order_items_order_id__product_id",
+   "jaffle_dbt.marts.is_positive_fct_orders_True__amount",
+   "jaffle_dbt.staging.jaffle_shop.is_positive_stg_jaffle_shop__order_items_quantity",
+   "jaffle_dbt.staging.jaffle_shop.is_positive_stg_jaffle_shop__products_price",
+   "jaffle_dbt.staging.stripe.is_positive_stg_stripe__payments_amount",
+   "jaffle_dbt.marts.not_null_fct_order_items_order_item_key",
+   "jaffle_dbt.marts.not_null_fct_orders_order_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__order_items_order_item_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__orders_customer_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__orders_order_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__products_product_id",
+   "jaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id",
+   "jaffle_dbt.staging.jaffle_shop.relationships_stg_jaffle_shop__orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_",
+   "jaffle_dbt.marts.unique_fct_order_items_order_item_key",
+   "jaffle_dbt.marts.unique_fct_orders_order_id",
+   "jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id",
+   "jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__order_items_order_item_id",
+   "jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__orders_order_id",
+   "jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__products_product_id",
+   "jaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id"
+  ],
+  "y_method_exclude": [
+   "jaffle_dbt.marts.fct_monthly_revenue",
+   "jaffle_dbt.marts.fct_order_items",
+   "jaffle_dbt.marts.fct_order_items_daily",
+   "jaffle_dbt.marts.dbt_utils_accepted_range_fct_order_items_quantity__10__1",
+   "jaffle_dbt.marts.dbt_utils_expression_is_true_fct_order_items_line_amount_quantity_unit_price",
+   "jaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country",
+   "jaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_order_items_order_id__product_id",
+   "jaffle_dbt.marts.not_null_fct_order_items_order_item_key",
+   "jaffle_dbt.marts.unique_fct_order_items_order_item_key"
+  ],
+  "y_nested": [
+   "jaffle_dbt.marts.customer_segments",
+   "jaffle_dbt.marts.dim_customers.v1",
+   "jaffle_dbt.marts.dim_customers.v2",
+   "jaffle_dbt.marts.fct_monthly_revenue",
+   "jaffle_dbt.marts.fct_order_items",
+   "jaffle_dbt.assert_paid_orders_match_items",
+   "jaffle_dbt.marts.dbt_utils_accepted_range_dim_customers_v1_lifetime_value__0",
+   "jaffle_dbt.marts.dbt_utils_accepted_range_dim_customers_v2_lifetime_value__0",
+   "jaffle_dbt.marts.dbt_utils_accepted_range_fct_order_items_quantity__10__1",
+   "jaffle_dbt.marts.dbt_utils_expression_is_true_fct_order_items_line_amount_quantity_unit_price",
+   "jaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country",
+   "jaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_order_items_order_id__product_id",
+   "jaffle_dbt.marts.not_null_customer_segments_customer_id",
+   "jaffle_dbt.marts.not_null_fct_order_items_order_item_key",
+   "jaffle_dbt.marts.unique_customer_segments_customer_id",
+   "jaffle_dbt.marts.unique_fct_order_items_order_item_key"
+  ],
+  "y_union_exclude_many": [
+   "jaffle_dbt.marts.customer_segments",
+   "jaffle_dbt.marts.dim_customers.v1",
+   "jaffle_dbt.marts.dim_customers.v2"
+  ],
+  "y_string_ops": [
+   "jaffle_dbt.marts.customer_segments",
+   "jaffle_dbt.marts.dim_customers.v1",
+   "jaffle_dbt.marts.dim_customers.v2",
+   "jaffle_dbt.marts.fct_monthly_revenue",
+   "jaffle_dbt.marts.fct_order_items",
+   "jaffle_dbt.marts.fct_orders",
+   "jaffle_dbt.intermediate.int_orders__enriched",
+   "jaffle_dbt.intermediate.int_orders__payment_methods_pivoted",
+   "jaffle_dbt.intermediate.int_payments__successful",
+   "jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers",
+   "jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__order_items",
+   "jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders",
+   "jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products",
+   "jaffle_dbt.staging.stripe.stg_stripe__payments",
+   "jaffle_dbt.country_regions",
+   "source:jaffle_dbt.jaffle_shop.customers",
+   "source:jaffle_dbt.jaffle_shop.order_items",
+   "source:jaffle_dbt.jaffle_shop.orders",
+   "source:jaffle_dbt.jaffle_shop.products",
+   "source:jaffle_dbt.stripe.payments",
+   "jaffle_dbt.staging.jaffle_shop.accepted_values_stg_jaffle_shop__orders_status__placed__shipped__completed__return_pending__returned",
+   "jaffle_dbt.staging.stripe.accepted_values_stg_stripe__payments_payment_method__credit_card__coupon__bank_transfer__gift_card",
+   "jaffle_dbt.staging.stripe.accepted_values_stg_stripe__payments_status__success__fail",
+   "jaffle_dbt.assert_paid_orders_match_items",
+   "jaffle_dbt.assert_payments_match_order_totals",
+   "jaffle_dbt.marts.dbt_utils_accepted_range_dim_customers_v1_lifetime_value__0",
+   "jaffle_dbt.marts.dbt_utils_accepted_range_dim_customers_v2_lifetime_value__0",
+   "jaffle_dbt.marts.dbt_utils_accepted_range_fct_order_items_quantity__10__1",
+   "jaffle_dbt.marts.dbt_utils_expression_is_true_fct_order_items_line_amount_quantity_unit_price",
+   "jaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country",
+   "jaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_order_items_order_id__product_id",
+   "jaffle_dbt.marts.is_positive_fct_orders_True__amount",
+   "jaffle_dbt.staging.jaffle_shop.is_positive_stg_jaffle_shop__order_items_quantity",
+   "jaffle_dbt.staging.jaffle_shop.is_positive_stg_jaffle_shop__products_price",
+   "jaffle_dbt.staging.stripe.is_positive_stg_stripe__payments_amount",
+   "jaffle_dbt.not_null_country_regions_country",
+   "jaffle_dbt.marts.not_null_customer_segments_customer_id",
+   "jaffle_dbt.marts.not_null_fct_order_items_order_item_key",
+   "jaffle_dbt.marts.not_null_fct_orders_order_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__order_items_order_item_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__orders_customer_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__orders_order_id",
+   "jaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__products_product_id",
+   "jaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id",
+   "jaffle_dbt.staging.jaffle_shop.relationships_stg_jaffle_shop__orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_",
+   "jaffle_dbt.staging.jaffle_shop.source_not_null_jaffle_shop_customers_id",
+   "jaffle_dbt.staging.jaffle_shop.source_not_null_jaffle_shop_order_items_id",
+   "jaffle_dbt.staging.jaffle_shop.source_not_null_jaffle_shop_orders_id",
+   "jaffle_dbt.staging.jaffle_shop.source_not_null_jaffle_shop_products_id",
+   "jaffle_dbt.staging.stripe.source_not_null_stripe_payments_id",
+   "jaffle_dbt.staging.jaffle_shop.source_unique_jaffle_shop_customers_id",
+   "jaffle_dbt.staging.jaffle_shop.source_unique_jaffle_shop_order_items_id",
+   "jaffle_dbt.staging.jaffle_shop.source_unique_jaffle_shop_orders_id",
+   "jaffle_dbt.staging.jaffle_shop.source_unique_jaffle_shop_products_id",
+   "jaffle_dbt.staging.stripe.source_unique_stripe_payments_id",
+   "jaffle_dbt.unique_country_regions_country",
+   "jaffle_dbt.marts.unique_customer_segments_customer_id",
+   "jaffle_dbt.marts.unique_fct_order_items_order_item_key",
+   "jaffle_dbt.marts.unique_fct_orders_order_id",
+   "jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id",
+   "jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__order_items_order_item_id",
+   "jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__orders_order_id",
+   "jaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__products_product_id",
+   "jaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id"
+  ],
+  "y_test_type": [
+   "jaffle_dbt.assert_paid_orders_match_items",
+   "jaffle_dbt.assert_payments_match_order_totals"
+  ]
+ }
+}

@@ -187,3 +187,22 @@ describe('demo selectors (real dbt 1.11.16 on ch16 with the same selectors.yml l
     expect(run('one_key').output).toEqual(['jaffle_dbt.marts.fct_monthly_revenue', 'jaffle_dbt.marts.fct_order_items', 'jaffle_dbt.marts.fct_order_items_daily', 'jaffle_dbt.marts.fct_orders']);
   });
 });
+
+import { Project as ProjectClass } from '../../src/lib/selector/project';
+
+describe('YAML selector forms vs real dbt 1.11.16 (tag ch18 + extra selectors)', () => {
+  const fx = JSON.parse(readFileSync(`${SITE}tests/selector/fixtures/yaml-selectors-ch18.json`, 'utf8')) as {
+    yml: string; selectors: { name: string; definition: unknown }[]; real: Record<string, string[]>;
+  };
+  const base = loadProject('jaffle', 'ch18');
+  const selectors = { ...base.selectors };
+  for (const s of fx.selectors) selectors[s.name] = s;
+  const p = new ProjectClass({ ...base.dag, selectors, selectors_yml: (base.dag.selectors_yml ?? '') + fx.yml }, base.extras);
+  for (const [name, lines] of Object.entries(fx.real)) {
+    it(name, () => {
+      const r = runCommand(p, `dbt -q ls --selector ${name}`, { clock: '00:00:00' });
+      expect(r.error).toBeNull();
+      expect(r.output).toEqual(lines);
+    });
+  }
+});

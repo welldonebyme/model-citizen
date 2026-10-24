@@ -215,27 +215,58 @@ def parse_ls_output(lines: list[str]) -> dict:
     return {"nodes": nodes, "logs": logs, "error": "\n".join(err) or None, "partial": partial, "found_line": found}
 
 
+RESULT_LINE_RE = re.compile(r"^(\d+) of (\d+) (OK created|OK loaded|OK snapshotted|ERROR creating|ERROR snapshotting|"
+                            r"ERROR loading|PASS|FAIL \d+|WARN \d+|ERROR) (.+?)(?: \.+ | \.*\s*\[|\s*$)")
+
+
+def _result_desc(kind: str, rest: str) -> str:
+    rest = re.sub(r"\s*\.{2,}.*$", "", rest).strip()
+    if kind in ("OK created", "ERROR creating"):
+        return rest
+    if kind in ("OK loaded", "ERROR loading"):
+        return rest if rest.startswith("seed file ") else "seed file " + rest
+    if kind in ("OK snapshotted", "ERROR snapshotting"):
+        return "snapshot " + rest
+    return ("unit_test " if "::" in rest else "test ") + rest
+
+
 def parse_run_output(lines: list[str]) -> dict:
+    """Nodes of a dbt build/run/test/seed/snapshot log: one per 'N of M' index (START/SKIP/NO-OP lines, and the
+    result line when the START line was elided). Run hooks ('hook: ...', numbered separately) are left out."""
     idx: dict[int, dict] = {}
+    fallback: dict[int, dict] = {}
     total = None
     summary = None
     for l in lines:
         s = l.strip()
         m = TS_RE.match(l)
-        msg = m.group(2) if m else s
+        msg = (m.group(2) if m else s).strip()
         sm = SUMMARY_RE.search(msg)
         if sm:
             summary = dict(zip(["pass", "warn", "error", "skip", "no_op", "total"], map(int, sm.groups())))
-        if msg.lstrip().startswith("Batch "):
+        if msg.startswith("Batch "):
             continue
-        nm = NODE_LINE_RE.match(msg.strip())
-        if not nm:
+        nm = NODE_LINE_RE.match(msg)
+        if nm:
+            i, n, status, desc = int(nm.group(1)), int(nm.group(2)), nm.group(3), nm.group(4).strip()
+            desc = re.sub(r"\s*\.{2,}.*$", "", desc).strip()
+            if desc.startswith("hook:"):
+                continue
+            total = n
+            if i not in idx:
+                idx[i] = {"index": i, "status": status, "desc": desc}
             continue
-        i, n, status, desc = int(nm.group(1)), int(nm.group(2)), nm.group(3), nm.group(4).strip()
-        desc = re.sub(r"\s*\.{2,}.*$", "", desc).strip()
-        total = n
-        if i not in idx:
-            idx[i] = {"index": i, "status": status, "desc": desc}
+        rm = RESULT_LINE_RE.match(msg)
+        if rm and not rm.group(4).startswith("hook:"):
+            i, n = int(rm.group(1)), int(rm.group(2))
+            if i not in fallback:
+                fallback[i] = {"index": i, "status": rm.group(3).split()[0], "desc": _result_desc(rm.group(3), rm.group(4)),
+                               "from_result_line": True}
+            if total is None:
+                total = n
+    for i, f in fallback.items():
+        if i not in idx and (total is None or i <= total):
+            idx[i] = f
     nodes = [idx[k] for k in sorted(idx)]
     return {"nodes": nodes, "total": total, "summary": summary,
             "complete": total is not None and len(nodes) == total}
@@ -243,11 +274,12 @@ def parse_run_output(lines: list[str]) -> dict:
 
 def canon_desc(desc: str) -> str:
     """'sql view model dbt_adnane.x' / 'relation dbt_adnane.x' -> 'rel:dbt_adnane.x', 'test t' -> 'test:t' ..."""
-    d = desc.strip()
+    d = re.sub(r" due to .*$", "", desc.strip())   # "relation x due to ephemeral model status 'skipped'"
+    if d.startswith("unit_test "):
+        # START lines say "model::test", some SKIP lines only "test": keep the test name
+        return "unit_test:" + d[10:].strip().split("::")[-1]
     if d.startswith("test "):
         return "test:" + d[5:].strip()
-    if d.startswith("unit_test "):
-        return "unit_test:" + d[10:].strip()
     if d.startswith("exposure "):
         return "exposure:" + d[9:].strip()
     if d.startswith("relation "):

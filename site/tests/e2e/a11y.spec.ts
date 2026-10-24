@@ -63,6 +63,15 @@ for (const scheme of ['light', 'dark'] as const) {
       await axe(page, 'attempt page');
     });
 
+    test('lesson checkpoints: question and feedback', async ({ page }) => {
+      await page.goto('test/checkpoints/ch07-s4/');
+      await expect(page.locator('.qz-checkpoints .qz-q')).toBeVisible();
+      await axe(page, 'checkpoints');
+      await page.getByRole('button', { name: 'I do not know: show the answer' }).click();
+      await expect(page.getByRole('region', { name: 'Feedback' })).toBeVisible();
+      await axe(page, 'checkpoints feedback');
+    });
+
     test('drills: builder and a running drill', async ({ page }) => {
       await page.goto('practice/drills/');
       await expect(page.getByText(/questions match/)).toBeVisible();

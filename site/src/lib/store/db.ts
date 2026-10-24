@@ -17,6 +17,7 @@ export interface Settings {
   domcExtraOption: boolean;  // show one more option after a DOMC item is decided (like the real exam)
   domcEarlyEnd: boolean;     // end a DOMC item as soon as it is decided (Caveon rule); practice can turn it off
   notebookReread?: string;   // YYYY-MM-DD when the learner last re-read the whole error notebook
+  examPauseOnClose?: boolean; // mock exams: stop the timer while the page is closed (default: the time keeps passing, like the real exam)
   updatedAt: number;
 }
 

@@ -19,10 +19,37 @@ const SOURCES: { id: SourceKey; label: string }[] = [
 ];
 const SIZES = [10, 20, 30, 65, 0];
 
-interface Props { bankUrl: string }
+interface Props {
+  /** small index of every question (practice/drills/index.json) */
+  indexUrl: string;
+  /** base urls of the per-chapter and per-mock question files */
+  chapterDataBase: string;
+  mockDataBase: string;
+}
 
-export default function DrillsApp({ bankUrl }: Props) {
-  const [bank, setBank] = useState<Question[] | null>(null);
+/** The index rows carry only what filtering needs; they are not full questions. */
+type Item = Pick<Question, 'id' | 'format' | 'source' | 'objective' | 'topic'> & { difficulty?: unknown };
+
+/** Loads the full questions of the picked ids, one file per chapter or mock, in the picked order. */
+async function loadQuestions(ids: string[], items: Map<string, Item>, chapterBase: string, mockBase: string): Promise<Question[]> {
+  const files = new Set<string>();
+  for (const id of ids) {
+    const s = items.get(id)?.source;
+    if (s?.kind === 'chapter') files.add(`${chapterBase}ch${String(s.chapter).padStart(2, '0')}.json`);
+    else if (s?.kind === 'mock') files.add(`${mockBase}mock${s.mock}.json`);
+  }
+  const byId = new Map<string, Question>();
+  await Promise.all([...files].map(async (f) => {
+    const r = await fetch(f);
+    if (!r.ok) throw new Error(`${f}: ${r.status}`);
+    for (const q of ((await r.json()) as { questions: Question[] }).questions) byId.set(q.id, q);
+  }));
+  return ids.map((id) => byId.get(id)).filter((q): q is Question => !!q);
+}
+
+export default function DrillsApp({ indexUrl, chapterDataBase, mockDataBase }: Props) {
+  const [bank, setBank] = useState<Question[] | null>(null);   // index rows, typed as questions for the filters
+  const [starting, setStarting] = useState(false);
   const [loadError, setLoadError] = useState('');
   const [history, setHistory] = useState<{ seen: Set<string>; mistakes: Set<string> }>({ seen: new Set(), mistakes: new Set() });
   const [mode, setMode] = useState<Mode>('practice');
@@ -33,12 +60,12 @@ export default function DrillsApp({ bankUrl }: Props) {
   const [msg, setMsg] = useState('');
 
   useEffect(() => {
-    fetch(bankUrl).then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
-      .then((d: { questions: Question[] }) => setBank(d.questions))
+    fetch(indexUrl).then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then((d: { items: Item[] }) => setBank(d.items as Question[]))
       .catch(() => setLoadError('The questions could not be loaded. Check your connection, then reload the page.'));
     answerHistory().then(setHistory).catch(() => undefined);
     getSettings().then((s) => setRules({ earlyEnd: s.domcEarlyEnd, extraOption: s.domcExtraOption })).catch(() => undefined);
-  }, [bankUrl]);
+  }, [indexUrl]);
 
   const effective: DrillFilter = useMemo(() => (mode === 'domc' ? { ...f, formats: ['domc'] } : f), [mode, f]);
   const matching = useMemo(() => (bank ? filterBank(bank, effective, history) : []), [bank, effective, history]);
@@ -58,12 +85,22 @@ export default function DrillsApp({ bankUrl }: Props) {
     try { await saveSettings({ domcEarlyEnd: next.earlyEnd, domcExtraOption: next.extraOption }); } catch { /* storage blocked: the choice still applies to this drill */ }
   };
 
-  const start = () => {
+  const start = async () => {
     if (!matching.length) { setMsg('No question matches these filters. Remove a filter to get questions.'); return; }
+    if (starting) return;
     const seed = Math.floor(Math.random() * 1e9);
-    const n = mode === 'speed' && size === 0 ? matching.length : size;
-    setRun({ questions: pick(matching, n, seed), seed, mode });
-    window.scrollTo({ top: 0 });
+    const ids = pick(matching, size, seed).map((q) => q.id);
+    setStarting(true);
+    setMsg('');
+    try {
+      const questions = await loadQuestions(ids, new Map((bank ?? []).map((q) => [q.id, q as Item])), chapterDataBase, mockDataBase);
+      setRun({ questions, seed, mode });
+      window.scrollTo({ top: 0 });
+    } catch {
+      setMsg('The questions could not be loaded. Check your connection, then try again.');
+    } finally {
+      setStarting(false);
+    }
   };
 
   if (run) {
@@ -194,7 +231,7 @@ export default function DrillsApp({ bankUrl }: Props) {
         <select id="dr-size" value={size} onChange={(e) => setSize(Number(e.target.value))}>
           {SIZES.map((n) => <option key={n} value={n}>{n === 0 ? 'All' : n}</option>)}
         </select>
-        <button type="submit" className="btn btn-primary" aria-disabled={!bank || matching.length === 0 || undefined}>Start the drill</button>
+        <button type="submit" className="btn btn-primary" aria-disabled={!bank || matching.length === 0 || starting || undefined}>{starting ? 'Loading the questions…' : 'Start the drill'}</button>
         <p id="dr-count" className="dr-count" role="status">
           {loadError || (bank === null ? 'Loading the questions…' : matching.length === 0 ? 'No question matches these filters.' : matching.length === 1 ? '1 question matches.' : `${matching.length} questions match. You get ${size === 0 || size >= matching.length ? 'all of them' : size}, in a random order.`)}
         </p>

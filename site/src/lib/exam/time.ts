@@ -16,7 +16,7 @@ export function mss(ms: number): string {
 
 /** Spoken form for screen readers and text: "1 hour 47 minutes", "12 minutes", "45 seconds". */
 export function spoken(ms: number): string {
-  const s = Math.max(0, Math.round(ms / 1000));
+  const s = Math.max(0, Math.ceil(ms / 1000 - 1e-9)); // rounded up like clock(): 119 min 59.5 s left reads "2 hours"
   const h = Math.floor(s / 3600);
   const m = Math.floor((s % 3600) / 60);
   if (h) return `${h} hour${h > 1 ? 's' : ''}${m ? ` ${m} minute${m > 1 ? 's' : ''}` : ''}`;

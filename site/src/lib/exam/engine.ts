@@ -21,6 +21,29 @@ export interface Attempt extends ExamAttempt {
   timeUp?: boolean;
   /** rules used for DOMC in this attempt */
   domcRules?: { earlyEnd: boolean; extraOption: boolean };
+  /** exam mode: 'wall' = the time keeps passing while the page is closed (like the real exam), 'pause' = it stops */
+  clock?: 'wall' | 'pause';
+  /** wall-clock time (ms) when elapsedMs was last measured */
+  clockAt?: number;
+}
+
+/**
+ * Time used so far, seen from `now`. With the realistic clock, the time the page was closed counts too.
+ * Older attempts (no clock field) keep the time they had.
+ */
+export function elapsedAt(a: Attempt, now: number): number {
+  if (a.mode !== 'exam' || a.clock !== 'wall' || a.status !== 'active') return a.elapsedMs;
+  const since = a.clockAt ?? a.updatedAt;
+  return a.elapsedMs + Math.max(0, now - since);
+}
+
+/**
+ * The attempt as it is at `now`, for a resume: the time on the current question up to the close is kept,
+ * the elapsed time is brought up to date, and the time away is not given to any question.
+ */
+export function catchUp(a: Attempt, now: number): Attempt {
+  const e = Math.min(elapsedAt(a, now), a.mode === 'exam' ? a.durationMs : Number.MAX_SAFE_INTEGER);
+  return { ...accrue(a, a.elapsedMs), elapsedMs: e, markMs: e, clockAt: now };
 }
 
 export function newAttemptId(mock: number, now: number): string {
@@ -30,6 +53,8 @@ export function newAttemptId(mock: number, now: number): string {
 export function newAttempt(opts: {
   mock: number; mode: 'exam' | 'practice'; questions: Question[]; now: number; seed?: number; durationMs?: number;
   domcRules: { earlyEnd: boolean; extraOption: boolean };
+  /** exam mode: stop the timer while the page is closed (Settings); default: the time keeps passing */
+  pauseOnClose?: boolean;
 }): Attempt {
   const seed = opts.seed ?? (Math.floor(Math.random() * 2 ** 31) >>> 0);
   const domc: Record<string, DomcStored> = {};
@@ -55,6 +80,8 @@ export function newAttempt(opts: {
     markMs: 0,
     checked: [],
     domcRules: opts.domcRules,
+    clock: opts.mode === 'exam' && !opts.pauseOnClose ? 'wall' : 'pause',
+    clockAt: opts.now,
   };
 }
 

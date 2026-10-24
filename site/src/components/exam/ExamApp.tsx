@@ -10,7 +10,7 @@ import { getSettings, DEFAULT_SETTINGS } from '../../lib/store/db';
 import { domcJudge, type DomcRules } from '../../lib/exam/domc';
 import {
   newAttempt, goTo, setResponse, setDomc, toggleFlag, markChecked, finishAttempt, progressOf, responseOf, domcOf,
-  isComplete, blanksOf, remainingMs, EXAM_MINUTES, type Attempt,
+  isComplete, blanksOf, remainingMs, catchUp, elapsedAt, EXAM_MINUTES, type Attempt,
 } from '../../lib/exam/engine';
 import { activeAttempt, abandonAttempt, listAttempts, makeSaver, saveAttempt } from '../../lib/exam/persist';
 import { recordMany, recordOutcome } from '../../lib/exam/learning';
@@ -49,6 +49,8 @@ export default function ExamApp(props: ExamAppProps) {
   const [confirm, setConfirm] = useState<'submit' | 'restart' | null>(null);
   const [notice, setNotice] = useState('');
   const [saveError, setSaveError] = useState('');
+  const [pauseOnClose, setPauseOnClose] = useState(false);
+  const [now, setNow] = useState(() => Date.now());
   const aRef = useRef<Attempt | null>(null);
   aRef.current = a;
   const clockRef = useRef({ base: 0, since: 0, running: false });
@@ -74,9 +76,15 @@ export default function ExamApp(props: ExamAppProps) {
         const [s, act, all] = await Promise.all([getSettings(), activeAttempt(mock.n), listAttempts()]);
         if (!live) return;
         setRules({ earlyEnd: true, extraOption: s.domcExtraOption });
+        setPauseOnClose(!!s.examPauseOnClose);
         setHistory(all.filter((x) => x.status === 'finished'));
         const usable = act && act.questionIds.every((id) => byId.has(id)) ? act : undefined;
         if (act && !usable) await abandonAttempt(act.id); // the questions changed since: cannot resume
+        if (usable && usable.mode === 'exam' && elapsedAt(usable, Date.now()) >= usable.durationMs) {
+          // the time ran out while the page was closed (realistic clock): submit, like the real exam
+          submitCaughtUp(usable);
+          return;
+        }
         if (usable) { setPending(usable); setPhase('resume'); } else setPhase('start');
       } catch {
         if (live) setPhase('nostorage');
@@ -89,7 +97,7 @@ export default function ExamApp(props: ExamAppProps) {
   const commit = useCallback((fn: (x: Attempt) => Attempt) => {
     const cur = aRef.current;
     if (!cur) return;
-    const next = fn({ ...cur, elapsedMs: elapsed() });
+    const next = fn({ ...cur, elapsedMs: elapsed(), clockAt: Date.now() });
     aRef.current = next;
     setA(next);
     saver.push(next);
@@ -97,8 +105,8 @@ export default function ExamApp(props: ExamAppProps) {
 
   useEffect(() => {
     if (phase !== 'running' && phase !== 'review') return;
-    const t = setInterval(() => { const cur = aRef.current; if (cur) saver.push({ ...cur, elapsedMs: elapsed() }); }, 5000);
-    const flush = () => { const cur = aRef.current; if (cur && cur.status === 'active') { saver.push({ ...cur, elapsedMs: elapsed() }); saver.flush(); } };
+    const t = setInterval(() => { const cur = aRef.current; if (cur) saver.push({ ...cur, elapsedMs: elapsed(), clockAt: Date.now() }); }, 5000);
+    const flush = () => { const cur = aRef.current; if (cur && cur.status === 'active') { saver.push({ ...cur, elapsedMs: elapsed(), clockAt: Date.now() }); saver.flush(); } };
     const onVis = () => { if (document.visibilityState === 'hidden') flush(); };
     window.addEventListener('pagehide', flush);
     document.addEventListener('visibilitychange', onVis);
@@ -111,7 +119,7 @@ export default function ExamApp(props: ExamAppProps) {
       if (pending) await abandonAttempt(pending.id);
       const s = await getSettings().catch(() => DEFAULT_SETTINGS);
       const domcRules = mode === 'exam' ? { earlyEnd: true, extraOption: s.domcExtraOption } : { earlyEnd: s.domcEarlyEnd, extraOption: s.domcExtraOption };
-      const fresh = newAttempt({ mock: mock.n, mode, questions, now: Date.now(), durationMs: mode === 'exam' ? durationMs : 0, domcRules });
+      const fresh = newAttempt({ mock: mock.n, mode, questions, now: Date.now(), durationMs: mode === 'exam' ? durationMs : 0, domcRules, pauseOnClose: !!s.examPauseOnClose });
       setRules(domcRules);
       await saveAttempt(fresh);
       aRef.current = fresh;
@@ -125,9 +133,30 @@ export default function ExamApp(props: ExamAppProps) {
     }
   };
 
+  // While the resume prompt is shown, a realistic clock keeps going: show it, and submit at 0.
+  useEffect(() => {
+    if (phase !== 'resume' || !pending || pending.mode !== 'exam' || pending.clock !== 'wall') return;
+    const t = setInterval(() => {
+      const n = Date.now();
+      setNow(n);
+      if (elapsedAt(pending, n) >= pending.durationMs) { clearInterval(t); setPending(null); submitCaughtUp(pending); }
+    }, 1000);
+    return () => clearInterval(t);
+  });
+
+  function submitCaughtUp(x: Attempt) {
+    const r = catchUp(x, Date.now());
+    if (r.domcRules) setRules(r.domcRules);
+    aRef.current = r;
+    setA(r);
+    clockRef.current = { base: r.elapsedMs, since: Date.now(), running: false };
+    finishRef.current(true, true);
+  }
+
   const resume = () => {
     if (!pending) return;
-    const r = { ...pending, markMs: pending.elapsedMs };
+    const r = catchUp(pending, Date.now());
+    if (r.mode === 'exam' && r.elapsedMs >= r.durationMs) { setPending(null); submitCaughtUp(pending); return; }
     if (r.domcRules) setRules(r.domcRules);
     aRef.current = r;
     setA(r);
@@ -137,7 +166,7 @@ export default function ExamApp(props: ExamAppProps) {
     focusQuestion();
   };
 
-  const finish = useCallback(async (timeUp: boolean) => {
+  const finish = useCallback(async (timeUp: boolean, whileClosed = false) => {
     const cur = aRef.current;
     if (!cur || cur.status !== 'active') return;
     const e = elapsed();
@@ -161,10 +190,12 @@ export default function ExamApp(props: ExamAppProps) {
     } catch {
       setSaveError('The result could not be saved in this browser (storage is blocked). You can still read it here.');
     }
-    setNotice(timeUp ? 'Time is up. Your answers were submitted automatically.' : '');
+    setNotice(whileClosed ? 'The time ran out while the page was closed, like on the real exam. Your answers were submitted automatically.' : timeUp ? 'Time is up. Your answers were submitted automatically.' : '');
     setPhase('results');
     window.scrollTo({ top: 0 });
   }, [elapsed, questions, saver, byId]);
+  const finishRef = useRef(finish);
+  finishRef.current = finish;
 
   // ---------------------------------------------------------------- navigation
   function focusQuestion() {
@@ -226,8 +257,15 @@ export default function ExamApp(props: ExamAppProps) {
               <p>
                 Started on {dateTime(pending.startedAt)} in {pending.mode === 'exam' ? 'exam' : 'practice'} mode.
                 {' '}{prog.answered} of {questions.length} questions answered.
-                {pending.mode === 'exam' ? ` ${spoken(remainingMs(pending))} left (${clock(remainingMs(pending))}).` : ` Time used: ${clock(pending.elapsedMs)}.`}
+                {pending.mode === 'exam' ? ` ${spoken(remainingMs(pending, elapsedAt(pending, now)))} left (${clock(remainingMs(pending, elapsedAt(pending, now)))}).` : ` Time used: ${clock(pending.elapsedMs)}.`}
               </p>
+              {pending.mode === 'exam' && (
+                <p className="ex-muted ex-small">
+                  {pending.clock === 'wall'
+                    ? 'The timer kept running while the page was closed, like on the real exam. It is still running now.'
+                    : 'The timer was paused while the page was closed (your setting when you started).'}
+                </p>
+              )}
               <p className="ex-row">
                 <button type="button" className="ex-btn ex-btn-primary" onClick={resume}>Resume where you stopped</button>
                 <button type="button" className="ex-btn" onClick={() => setConfirm('restart')}>Start again</button>
@@ -252,7 +290,11 @@ export default function ExamApp(props: ExamAppProps) {
                   <li>One question per screen. No feedback until the end.</li>
                   <li>Flag questions for review and come back to them with the navigator.</li>
                   <li>DOMC: options come one at a time; an answered option cannot be changed. A question can end early.</li>
-                  <li>Every answer and the time left are saved. If you close the page, the timer stops and you can resume later.</li>
+                  <li>Every answer and the time left are saved.{' '}
+                    {pauseOnClose
+                      ? 'If you close the page, the timer stops (your setting) and you can resume later.'
+                      : 'If you close the page, the time keeps passing, like on the real exam: come back before the end, or your answers are submitted when the time is over.'}
+                  </li>
                 </ul>
                 <button type="button" className="ex-btn ex-btn-primary" onClick={() => begin('exam')}>Start in exam mode</button>
               </section>
@@ -268,7 +310,8 @@ export default function ExamApp(props: ExamAppProps) {
             </div>
           )}
           <p className="ex-muted ex-small">
-            DOMC settings: {rules.extraOption ? 'one extra option can appear after a question is decided, like on the real exam' : 'no extra option after a question is decided'}. <a href={settingsHref}>Change it in Settings</a>.
+            DOMC settings: {rules.extraOption ? 'one extra option can appear after a question is decided, like on the real exam' : 'no extra option after a question is decided'}.
+            {' '}Timer: {pauseOnClose ? 'it stops when you close the page' : 'it keeps running when you close the page'}. <a href={settingsHref}>Change these in Settings</a>.
             {' '}Tip from the book: read every DOMC stem twice, and never leave a question empty: a blank is always wrong.
           </p>
         </div>

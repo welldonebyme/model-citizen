@@ -15,7 +15,7 @@ const total = allQuestions().length;
       <p>Build your own quiz from the {total} questions of the book: chapter quizzes and mock exams. Choose what to train, then answer with feedback after each question. Your mistakes go to your error notebook.</p>
       {questionSource.chapters === 'fixtures' && <p class="sample-note">Sample questions: the full question bank is not converted yet.</p>}
     </header>
-    <DrillsApp client:only="react" bankUrl={url('practice/drills/bank.json')}>
+    <DrillsApp client:only="react" indexUrl={url('practice/drills/index.json')} chapterDataBase={url('quiz/data/')} mockDataBase={url('exams/data/')}>
       <p slot="fallback" class="fallback">Loading the drill builder…</p>
     </DrillsApp>
   </div>

@@ -3,6 +3,8 @@ import { expect, test } from '@playwright/test';
 import { feedback } from './helpers';
 
 test('DOMC training: only DOMC questions, exam-like order without letters', async ({ page }) => {
+  const requests: string[] = [];
+  page.on('request', (r) => { if (r.url().endsWith('.json')) requests.push(new URL(r.url()).pathname); });
   await page.goto('practice/drills/');
   await expect(page.getByText(/questions match/)).toBeVisible();
   await page.getByRole('radio', { name: /DOMC training/ }).check();
@@ -11,6 +13,9 @@ test('DOMC training: only DOMC questions, exam-like order without letters', asyn
   await page.getByRole('button', { name: 'Start the drill' }).click();
   await expect(page.locator('.qz-q')).toHaveAttribute('data-format', 'domc');
   await expect(page.getByText('Option 1', { exact: true })).toBeVisible();
+  // a small index first, then only the chapter and mock files that hold the picked questions
+  expect(requests[0]).toBe('/model-citizen/practice/drills/index.json');
+  expect(requests.slice(1).every((p) => /\/(quiz\/data\/ch\d\d|exams\/data\/mock\d)\.json$/.test(p))).toBe(true);
   for (let i = 0; i < 8 && !(await feedback(page).count()); i++) await page.keyboard.press('y');
   await expect(feedback(page)).toBeVisible();
   await expect(page.locator('.qz-domc-review .qz-letter').first()).toHaveText('A'); // letters come back in the review

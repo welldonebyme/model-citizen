@@ -3,7 +3,7 @@ import { describe, expect, it, beforeEach } from 'vitest';
 import type { Question } from '../../src/lib/content-types';
 import fixtures from '../../src/dev/fixtures/questions.json';
 import { domcCurrent, domcInit, domcJudge, domcResponse, domcShown, fromStored, toStored } from '../../src/lib/exam/domc';
-import { accrue, blanksOf, finishAttempt, goTo, isComplete, newAttempt, progressOf, setDomc, setResponse, toggleFlag, scoreOf, remainingMs } from '../../src/lib/exam/engine';
+import { accrue, blanksOf, catchUp, elapsedAt, finishAttempt, goTo, isComplete, newAttempt, progressOf, setDomc, setResponse, toggleFlag, scoreOf, remainingMs } from '../../src/lib/exam/engine';
 import { breakdown, checkpoints, outcomesOf, pacing, verdict, weakest, questionTopic } from '../../src/lib/exam/results';
 import { filterBank, pick, EMPTY_FILTER, questionObjectives } from '../../src/lib/exam/bank';
 import { describeKey, describeResponse, plain } from '../../src/lib/exam/describe';
@@ -124,6 +124,24 @@ describe('exam attempt', () => {
     expect(done.status).toBe('finished');
     expect(done.score).toEqual({ correct: 4, total: 11, pct: 36.4 });
     expect(scoreOf(done, qs).correct).toBe(4);
+  });
+  it('realistic clock: the time keeps passing while the page is closed (unless paused in Settings)', () => {
+    const wall = { ...fresh(), elapsedMs: 600_000, markMs: 590_000, clockAt: 10_000, current: 0 };
+    expect(wall.clock).toBe('wall');
+    expect(elapsedAt(wall, 10_000 + 1_800_000)).toBe(2_400_000); // closed for 30 minutes
+    const back = catchUp(wall, 10_000 + 1_800_000);
+    expect(back.elapsedMs).toBe(2_400_000);
+    expect(back.markMs).toBe(2_400_000);
+    expect(back.timeByQuestion['m1-q01']).toBe(10_000); // only the time on the page counts for the question
+    expect(remainingMs(back)).toBe(120 * 60_000 - 2_400_000);
+    expect(catchUp(wall, 10_000 + 10 * 3600_000).elapsedMs).toBe(wall.durationMs); // never more than the exam
+    const paused = { ...newAttempt({ mock: 1, mode: 'exam', questions: qs, now: 0, seed: 1, domcRules: rulesEarly, pauseOnClose: true }), elapsedMs: 600_000 };
+    expect(paused.clock).toBe('pause');
+    expect(elapsedAt(paused, 99_999_999)).toBe(600_000);
+    const practice = newAttempt({ mock: 1, mode: 'practice', questions: qs, now: 0, seed: 1, domcRules: rulesEarly });
+    expect(practice.clock).toBe('pause');
+    const old = { ...fresh(), clock: undefined, elapsedMs: 5_000 }; // attempts saved before this setting existed
+    expect(elapsedAt(old, 99_999_999)).toBe(5_000);
   });
   it('counts blanks of fill questions', () => {
     expect(blanksOf(byId('m1-q03'))).toBe(2);

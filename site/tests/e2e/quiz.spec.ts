@@ -55,3 +55,28 @@ test('chapter quiz: feedback, error notebook, review queue, score and retry', as
   await expect(page.locator('#qz-q-h')).toHaveText(new RegExp(`Question 1 of ${total - 1}`));
   await expect(page.getByText('retry 1')).toBeVisible();
 });
+
+test('chapter quiz: the session survives a reload, and a finished quiz is marked done', async ({ page }) => {
+  await page.goto('quiz/ch16/');
+  const total = Number((await page.locator('.qz-of').textContent())!.replace(/\D/g, ''));
+  await page.getByRole('button', { name: 'I do not know: show the answer' }).click();   // Q1 wrong
+  await page.getByRole('button', { name: 'Next question' }).click();
+  await expect(page.locator('#qz-q-h')).toHaveText(/Question 2/);
+  await page.reload();
+  await expect(page.locator('#qz-q-h')).toHaveText(new RegExp(`Question 2 of ${total}`));
+  await expect(page.getByRole('button', { name: 'Question 1, not correct' })).toBeVisible();
+
+  // finish: jump to the last question and see the score
+  await page.getByRole('button', { name: `Question ${total}`, exact: true }).click();
+  await page.getByRole('button', { name: 'I do not know: show the answer' }).click();
+  await page.getByRole('button', { name: 'See your score' }).click();
+  await expect(page.getByRole('heading', { name: 'Your score' })).toBeVisible();
+  const progress = await idb<{ id: string; kind: string; ref: string; status: string; data: { score: number; total: number } }>(page, 'progress');
+  expect(progress).toEqual([expect.objectContaining({ id: 'chapter:ch16', kind: 'chapter', ref: 'ch16', status: 'done', data: expect.objectContaining({ score: 0, total }) })]);
+
+  // a finished quiz starts fresh next time, and shows the last result
+  await page.reload();
+  await expect(page.locator('#qz-q-h')).toHaveText(new RegExp(`Question 1 of ${total}`));
+  await expect(page.locator('.qz-last')).toContainText(`Last finished on`);
+  await expect(page.locator('.qz-last')).toContainText(`0 of ${total}`);
+});

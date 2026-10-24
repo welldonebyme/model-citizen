@@ -1,0 +1,20 @@
+---
+// Test page (e2e build only): the end of a lesson with its checkpoints, mounted the way the lesson page will.
+import Base from '../../../src/layouts/Base.astro';
+import LessonCheckpoints from '../../../src/components/quiz/LessonCheckpoints';
+import { checkpointMap } from '../checkpoint-map';
+
+export function getStaticPaths() {
+  const map = checkpointMap();
+  return ['ch07-s2', 'ch07-s4', 'ch07-s5', 'ch16-s1'].filter((id) => map[id]).map((id) => ({ params: { lesson: id }, props: { id, ids: map[id] } }));
+}
+const { id, ids } = Astro.props as { id: string; ids: string[] };
+const chapterId = id.split('-')[0];
+---
+<Base title={`Checkpoints ${id} (test)`}>
+  <div class="wrap" style="padding-block: 32px; max-width: 900px">
+    <h1>Lesson {id} (test page)</h1>
+    <p>The end of the lesson text.</p>
+    <LessonCheckpoints client:visible chapterId={chapterId} questionIds={ids} />
+  </div>
+</Base>

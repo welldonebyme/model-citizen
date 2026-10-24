@@ -30,7 +30,7 @@ const lessonHref = url(`learn/${id}/`);
       <p>{quiz.questions.length} questions in the real exam formats ({formats.join(', ')}). You get feedback after each answer. Your mistakes go to your error notebook and come back in your reviews.</p>
       {questionSource.chapters === 'fixtures' && <p class="sample-note">Sample questions: the full question bank is not converted yet.</p>}
     </header>
-    <QuizApp client:only="react" chapterNumber={quiz.number} chapterTitle={title} questions={quiz.questions} lessonHref={lessonHref}>
+    <QuizApp client:only="react" chapterId={quiz.id} chapterNumber={quiz.number} chapterTitle={title} questions={quiz.questions} lessonHref={lessonHref}>
       <p slot="fallback" class="loading">Loading the quiz…</p>
     </QuizApp>
     <noscript><p class="loading">The quiz needs JavaScript. Turn it on in your browser to answer the questions.</p></noscript>

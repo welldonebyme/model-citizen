@@ -245,3 +245,22 @@
 /* hotspot: lines as wide as the longest line, so the highlight covers the whole line when the code scrolls */
 .qz-hotspot .mc-code-body code { display: inline-block; min-width: 100%; }
 @media (pointer: coarse) { .qz-yn-btn kbd, .qz-keys-hint { display: none; } }
+.qz-last { margin: 0 0 var(--s4); font-size: var(--fs-sm); color: var(--text); }
+
+/* ------------------------------------------------------------ lesson checkpoints (compact) */
+.qz-checkpoints { margin: var(--s8) 0 var(--s6); padding: 18px 20px 20px; border-radius: var(--r-panel); background: var(--quiz-bg); border: 1px solid var(--quiz-line); max-width: 860px; }
+.qz-cp-head h2 { font-size: var(--fs-lg); color: var(--ink); margin-bottom: 4px; }
+.qz-cp-sub { margin: 0 0 var(--s4); font-size: var(--fs-sm); color: var(--text); }
+.qz-compact .qz-progress { margin-bottom: var(--s3); }
+.qz-compact .qz-progress h3 { font-size: var(--fs-md); }
+.qz-compact .qz-progress h3:focus { outline: none; }
+.qz-compact .qz-progress h3:focus-visible { outline: 3px solid var(--focus); outline-offset: 4px; }
+.qz-compact .qz-card { padding: var(--s5); box-shadow: none; }
+.qz-compact .qz-stem { font-size: var(--fs-body); }
+.qz-compact .qz-feedback { margin-top: var(--s5); }
+.qz-compact .qz-dots button { min-width: 30px; height: 30px; }
+.qz-compact.qz-summary h3 { font-size: var(--fs-md); }
+.qz-compact.qz-summary h3:focus { outline: none; }
+.qz-compact .qz-score { font-size: var(--fs-lg); }
+.qz-compact .qz-score b { font-size: var(--fs-xl); }
+@media (max-width: 640px) { .qz-checkpoints { padding: 14px 12px 16px; margin-inline: -4px; } .qz-compact .qz-card { padding: var(--s4) var(--s3); } }

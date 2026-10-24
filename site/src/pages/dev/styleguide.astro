@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
-import Blocks from '../../components/content/Blocks.astro';
+import { StaticBlocks } from '../../components/content/StaticBlocks';
+import { figuresFor } from '../../lib/figures';
 import { sampleBlocks } from '../../dev/sample';
 ---
 <Base title="Style guide" section="none">
@@ -15,7 +16,7 @@ import { sampleBlocks } from '../../dev/sample';
       <span class="pill pill-lab">In your browser</span><span class="pill pill-quiz">8 questions</span><span class="pill pill-review">4 cards</span><span class="pill pill-trap">Trap</span>
       <div class="seg" data-os-switch role="group" aria-label="Your computer"><button data-os-value="mac" aria-pressed="true">macOS</button><button data-os-value="win" aria-pressed="false">Windows</button><button data-os-value="wsl" aria-pressed="false">WSL</button></div>
     </div>
-    <article class="prose"><Blocks blocks={sampleBlocks} /></article>
+    <article class="prose"><StaticBlocks blocks={sampleBlocks} figures={figuresFor(sampleBlocks)} /></article>
   </div>
 </Base>
 <style>

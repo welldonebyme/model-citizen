@@ -1,5 +1,6 @@
 /* Base styles: reset, typography, controls. Component styles live next to their components. */
 @import "./tokens.css";
+@import "./content.css";
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + 16px); }

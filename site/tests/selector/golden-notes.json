@@ -22,13 +22,13 @@
   {
    "id": "book-ch10-004",
    "verdict": "other-state",
-   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch09 prints exactly the golden output",
+   "reason": "valid output recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch09 prints exactly the golden output",
    "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
   },
   {
    "id": "book-ch10-005",
    "verdict": "other-state",
-   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch11 prints exactly the golden output",
+   "reason": "valid output recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch11 prints exactly the golden output",
    "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
   },
   {
@@ -147,37 +147,37 @@
   {
    "id": "log-ch17-004",
    "verdict": "other-state",
-   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
+   "reason": "valid output recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
    "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
   },
   {
    "id": "log-ch17-005",
    "verdict": "other-state",
-   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
+   "reason": "valid output recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
    "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
   },
   {
    "id": "log-ch17-006",
    "verdict": "other-state",
-   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
+   "reason": "valid output recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
    "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
   },
   {
    "id": "log-ch17-007",
    "verdict": "other-state",
-   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
+   "reason": "valid output recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
    "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
   },
   {
    "id": "log-ch17-008",
    "verdict": "other-state",
-   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
+   "reason": "valid output recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
    "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
   },
   {
    "id": "log-ch17-009",
    "verdict": "other-state",
-   "reason": "valid output, recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
+   "reason": "valid output recorded at another state of the project than the tag's final commit: the log was taken at another state of the project: the engine on tag ch16 prints exactly the golden output",
    "checked_with": "engine on the DAG of that tag (exported from real dbt parse)"
   },
   {
@@ -226,5 +226,33 @@
    "verdict": "not-simulated",
    "reason": "state demo with a NEW model fct_daily_revenue (added then removed in Chapter 24): the node is in no tag, so it cannot be simulated"
   }
- ]
+ ],
+ "summary": {
+  "golden_entries": 435,
+  "evaluated": 432,
+  "by_status": {
+   "match-real": 26,
+   "match": 397,
+   "match-other-state": 8,
+   "mismatch": 1
+  },
+  "by_origin": {
+   "builder-log": {
+    "match-real": 15,
+    "match": 218,
+    "match-other-state": 6,
+    "mismatch": 1
+   },
+   "capstone-log": {
+    "match": 50,
+    "match-real": 1
+   },
+   "book": {
+    "match": 129,
+    "match-real": 10,
+    "match-other-state": 2
+   }
+  },
+  "golden_file_read": "converter/golden/dbt-ls.json as of 2026-10-24 03:28 (verification fields of golden_verify.py used)"
+ }
 }

@@ -351,6 +351,9 @@ function execute(project: Project, parsed: ParsedCommand, opts: RunOptions, res:
   if (parsed.argv.some((w) => w === '-m' || w === '--models' || w === '--model')) {
     if (warnOrError('ModelParamUsageDeprecation', DEPRECATION_MODELS, true, 'version')) res.endLogs.push(DEPRECATION_SUMMARY('ModelParamUsageDeprecation'));
   }
+  if (parsed.argv.some((w) => w.startsWith('#'))) {
+    res.notes.push('A word that starts with # was passed to dbt: interactive zsh (macOS) does not treat # as a comment (Chapter 2). bash and PowerShell do.');
+  }
   const inline = args.other.inline as string | undefined;
   if (inline !== undefined && (args.select || args.selector)) {
     throw new DbtError('Unhandled', `inline: not allowed with argument ${args.select ? 'select' : 'selector'}`);

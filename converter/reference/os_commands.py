@@ -170,9 +170,11 @@ RULES = [
          test={"pwsh": "Copy-Item data/products.csv p_copy.csv; Get-Content p_copy.csv -TotalCount 2",
                "zsh": "cp data/products.csv p_copy2.csv; head -2 p_copy2.csv", "compare": "equal"}),
     dict(id="cp-R", category="files", zsh="cp -R ~/Documents/Adnane/dbt-bible/labs/data ~/dbt-course/practice/",
-         powershell=r"Copy-Item -Recurse <kit>\data $HOME\dbt-course\practice\ ", count_re=r"^cp -R",
-         notes="Like cp -R, Copy-Item -Recurse into an existing folder creates <folder>\\data.",
-         test={"pwsh": "New-Item -ItemType Directory -Force dst1 | Out-Null; Copy-Item -Recurse data dst1/; Get-ChildItem dst1/data -Name | Sort-Object",
+         powershell=r"Copy-Item -Recurse -Force <kit>\data $HOME\dbt-course\practice\ ", count_re=r"^cp -R",
+         notes="Like cp -R, Copy-Item -Recurse into an existing folder creates <folder>\\data. -Force: without it, "
+               "copying a folder a second time fails with 'An item with the specified name ... already exists' "
+               "(found by the replay of Chapter 2 after the kit setup).",
+         test={"pwsh": "New-Item -ItemType Directory -Force dst1 | Out-Null; Copy-Item -Recurse -Force data dst1/; Copy-Item -Recurse -Force data dst1/; Get-ChildItem dst1/data -Name | Sort-Object",
                "zsh": "mkdir -p dst2; cp -R data dst2/; ls dst2/data", "compare": "equal"}),
     dict(id="mv", category="files", zsh="mv a.sql b.sql", powershell="Move-Item a.sql b.sql", count_re=r"^mv ",
          test={"pwsh": "Set-Content -Path m1.txt -Value 'x'; Move-Item m1.txt m2.txt; Test-Path m2.txt", "expect": "True"}),

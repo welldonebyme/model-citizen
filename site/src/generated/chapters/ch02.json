@@ -3767,7 +3767,7 @@
              "text": "(.venv) $ cp -R ~/dbt-course/kit/data ~/dbt-course/practice/\n(.venv) $ cp ~/dbt-course/kit/setup.sql ~/dbt-course/practice/\n(.venv) $ cd ~/dbt-course/practice\n(.venv) $ ls\ndata      setup.sql",
              "textBook": "(.venv) $ cp -R ~/Documents/Adnane/dbt-bible/labs/data ~/dbt-course/practice/\n(.venv) $ cp ~/Documents/Adnane/dbt-bible/labs/setup.sql ~/dbt-course/practice/\n(.venv) $ cd ~/dbt-course/practice\n(.venv) $ ls\ndata      setup.sql",
              "variants": {
-              "win": "(.venv) PS> Copy-Item -Recurse $HOME\\dbt-course\\kit\\data $HOME\\dbt-course\\practice\\\n(.venv) PS> Copy-Item $HOME\\dbt-course\\kit\\setup.sql $HOME\\dbt-course\\practice\\\n(.venv) PS> cd $HOME\\dbt-course\\practice\n(.venv) PS> Get-ChildItem -Name\ndata      setup.sql"
+              "win": "(.venv) PS> Copy-Item -Recurse -Force $HOME\\dbt-course\\kit\\data $HOME\\dbt-course\\practice\\\n(.venv) PS> Copy-Item $HOME\\dbt-course\\kit\\setup.sql $HOME\\dbt-course\\practice\\\n(.venv) PS> cd $HOME\\dbt-course\\practice\n(.venv) PS> Get-ChildItem -Name\ndata      setup.sql"
              }
             }
            ]

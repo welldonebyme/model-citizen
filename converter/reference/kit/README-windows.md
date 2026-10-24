@@ -24,6 +24,13 @@ winget install --id Git.Git -e              # git
 winget install DuckDB.cli                   # the DuckDB command-line tool (optional, used in the book)
 ```
 
+Recommended (not required): PowerShell 7, the newer PowerShell. A few commands of the course need it
+(the website says so next to them); Windows PowerShell 5.1, built into Windows, works for everything else:
+
+```powershell
+winget install --id Microsoft.PowerShell -e   # then use "PowerShell 7" from the Start menu
+```
+
 Then **close PowerShell and open it again** (new programs are found only in a new window). Check:
 
 ```powershell
@@ -143,7 +150,7 @@ dbt commands (`dbt run`, `dbt ls -s "tag:finance"`, ...) are the same. These she
 | `DBT_TARGET=prod dbt compile` (one command) | `$env:DBT_TARGET = "prod"; dbt compile; Remove-Item Env:DBT_TARGET` |
 | `echo $?` | `$LASTEXITCODE` |
 | `mkdir -p a/b` | `New-Item -ItemType Directory -Force a\b` |
-| `cp -R a b` | `Copy-Item -Recurse a b` |
+| `cp -R a b` | `Copy-Item -Recurse -Force a b` |
 | `rm -rf target` | `Remove-Item -Recurse -Force target` |
 | `cat file` / `head -5 file` | `Get-Content file` / `Get-Content file -TotalCount 5` |
 | `grep text file` | `Select-String text file` |

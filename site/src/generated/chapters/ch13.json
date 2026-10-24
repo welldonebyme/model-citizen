@@ -3924,7 +3924,7 @@
          "text": "$ cp -r ~/dbt-course/kit/updates ~/dbt-course/practice/\n$ ls ~/dbt-course/practice/updates\nREADME.md      day2.sql       fresh_load.sql",
          "textBook": "$ cp -r ~/Documents/Adnane/dbt-bible/labs/updates ~/dbt-course/practice/\n$ ls ~/dbt-course/practice/updates\nREADME.md      day2.sql       fresh_load.sql",
          "variants": {
-          "win": "PS> Copy-Item -Recurse $HOME\\dbt-course\\kit\\updates $HOME\\dbt-course\\practice\\\nPS> Get-ChildItem -Name $HOME\\dbt-course\\practice\\updates\nREADME.md      day2.sql       fresh_load.sql"
+          "win": "PS> Copy-Item -Recurse -Force $HOME\\dbt-course\\kit\\updates $HOME\\dbt-course\\practice\\\nPS> Get-ChildItem -Name $HOME\\dbt-course\\practice\\updates\nREADME.md      day2.sql       fresh_load.sql"
          }
         },
         {
@@ -4800,7 +4800,7 @@
          "t": "code",
          "text": "$ mkdir -p ~/dbt-course/throwaway\n$ cp -R ~/dbt-course/practice ~/dbt-course/jaffle_dbt ~/dbt-course/throwaway/\n$ cd ~/dbt-course/throwaway/jaffle_dbt",
          "variants": {
-          "win": "PS> New-Item -ItemType Directory -Force $HOME\\dbt-course\\throwaway\nPS> Copy-Item -Recurse $HOME\\dbt-course\\practice, $HOME\\dbt-course\\jaffle_dbt $HOME\\dbt-course\\throwaway\\\nPS> cd $HOME\\dbt-course\\throwaway\\jaffle_dbt"
+          "win": "PS> New-Item -ItemType Directory -Force $HOME\\dbt-course\\throwaway\nPS> Copy-Item -Recurse -Force $HOME\\dbt-course\\practice, $HOME\\dbt-course\\jaffle_dbt $HOME\\dbt-course\\throwaway\\\nPS> cd $HOME\\dbt-course\\throwaway\\jaffle_dbt"
          }
         },
         {

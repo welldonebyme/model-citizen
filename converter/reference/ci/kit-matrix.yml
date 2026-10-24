@@ -11,6 +11,8 @@
 #   4. tag ch07 of the reference project: `dbt build` prints the summary of reference/builder-logs/ch07.md
 #   5. the 9 bug patches apply at ch21 (Windows: real CRLF working tree with Git for Windows)
 #   6. tag ch25 on a fresh database: dbt deps, pandas, the fresh-database rule of Chapter 19, final summary
+#   7. (windows-latest) every Windows variant of the website's chapters, replayed under pwsh and compared with
+#      the macOS results in converter/golden/win-replay.json (converter/tools/win_replay.py --win-only)
 # Status: written and reviewed on macOS; never executed on GitHub (the same steps were run locally on macOS
 # with bash and with pwsh 7.6, see converter/reference/test_kits.sh and test_kits_pwsh.ps1).
 name: kit-matrix
@@ -22,6 +24,10 @@ on:
       - "site/public/kits/**"
       - "converter/reference/kit/**"
       - "converter/reference/build_kits.py"
+      - "converter/overrides/os-commands.yaml"
+      - "converter/build/oscmd.py"
+      - "converter/tools/win_replay.py"
+      - "site/src/generated/chapters/**"
       - ".github/workflows/kit-matrix.yml"
 
 jobs:
@@ -181,6 +187,26 @@ jobs:
           cd ~/dbt-course/reference/jaffle_dbt
           git checkout -q ch21
           for p in ~/dbt-course/kit/bugs/*.patch; do git apply --check "$p" && echo "OK $(basename "$p")"; done
+
+      # ------------------------------------------------------------------ 7. the website's Windows commands
+      # Replays every Windows (PowerShell) variant of the chapters, exactly as the website shows it (no macOS
+      # adaptation), with the real DuckDB CLI, and compares each command with the macOS (zsh) result recorded in
+      # converter/golden/win-replay.json (converter/tools/win_replay.py). Fails if a block behaves differently.
+      - name: Replay the website's Windows commands under PowerShell 7
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          uv venv --python 3.12 converter/.venv
+          uv pip install --python converter/.venv/Scripts/python.exe pyyaml
+          converter/.venv/Scripts/python.exe -m converter.tools.win_replay --win-only --home $HOME --real-duckdb `
+            --fail-on-differs --out "$env:RUNNER_TEMP/win-replay-windows.json" --work "$env:RUNNER_TEMP/replay"
+      - name: Keep the replay report
+        if: always() && runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: win-replay-windows
+          path: ${{ runner.temp }}/win-replay-windows.json
+          if-no-files-found: ignore
 
       # ------------------------------------------------------------------ 6. ch25 on a fresh database
       - name: ch25 on a fresh database (Windows)

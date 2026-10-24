@@ -241,11 +241,13 @@ rules:
 - id: cp-R
   category: files
   zsh: cp -R ~/Documents/Adnane/dbt-bible/labs/data ~/dbt-course/practice/
-  powershell: 'Copy-Item -Recurse <kit>\data $HOME\dbt-course\practice\ '
+  powershell: 'Copy-Item -Recurse -Force <kit>\data $HOME\dbt-course\practice\ '
   wsl: same as macOS/zsh (bash in Ubuntu)
   book_lines: 2
   tested: 'pwsh 7.6.8 on macOS: output equals zsh output (5 line(s))'
-  notes: Like cp -R, Copy-Item -Recurse into an existing folder creates <folder>\data.
+  notes: 'Like cp -R, Copy-Item -Recurse into an existing folder creates <folder>\data. -Force: without it, copying a folder
+    a second time fails with ''An item with the specified name ... already exists'' (found by the replay of Chapter 2 after
+    the kit setup).'
 - id: mv
   category: files
   zsh: mv a.sql b.sql
@@ -515,8 +517,10 @@ rules:
   wsl: same as macOS/zsh (bash in Ubuntu)
   book_lines: 106
   tested: 'pwsh 7.6.8 on macOS: output equals zsh output (1 line(s))'
-  notes: 'Unquoted, PowerShell splits a,b into two arguments (dbt then builds a UNION instead of an intersection) and reads
-    @name as splatting: quote such arguments (and { } ( )). The quoted form works in zsh too.'
+  notes: 'PowerShell reads an unquoted @name as splatting: the argument silently disappears (checked in pwsh 7.6: dbt then
+    receives -s without a value). An unquoted a,b is an array expression for PowerShell: pwsh 7.6 still passes ''a,b'' as
+    one argument (checked), Windows PowerShell 5.1 is untested. { } ( ) start script blocks / expressions. Quote such arguments:
+    the quoted form works in zsh too.'
 - id: git-install
   category: install
   zsh: xcode-select --install (Git comes with the command line tools)
@@ -635,7 +639,7 @@ transforms:
   win: New-Item -ItemType Directory {{paths:p}}
 - rule: cp-R
   match: cp -[rR] (?P<src>.+) (?P<dst>\S+)
-  win: Copy-Item -Recurse {{paths:src}} {{path:dst}}
+  win: Copy-Item -Recurse -Force {{paths:src}} {{path:dst}}
 - rule: cp
   match: cp (?P<src>[^-].*) (?P<dst>\S+)
   win: Copy-Item {{paths:src}} {{path:dst}}

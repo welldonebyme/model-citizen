@@ -252,10 +252,20 @@
   "format": "fill",
   "formatLabel": "Fill in the blank",
   "id": "q-ch17-03",
-  "key": null,
-  "keyNote": "the key lists alternatives: 'append_new_columns or fail.'",
+  "key": {
+   "blanks": [
+    [
+     "append_new_columns"
+    ],
+    [
+     "fail"
+    ]
+   ],
+   "unordered": true
+  },
+  "keyNote": "Two values joined by 'or' ('set on_schema_change to ___ or ___'): either order is right. Verified in dbt 1.11.16 config validation.",
   "keyRaw": "\\textbf{\\code{append\\_new\\_columns} or \\code{fail}.}",
-  "keyStatus": "todo",
+  "keyStatus": "override",
   "source": {
    "chapter": 17,
    "kind": "chapter",
@@ -1124,12 +1134,13 @@
   "id": "q-ch17-12",
   "key": {
    "accepted": [
-    "v"
+    "v",
+    "version"
    ]
   },
-  "keyNote": "alternative answers mentioned after the key: '(version works too)'",
+  "keyNote": "Book: 'v (version works too)'; ref() reads the kwarg version or v.",
   "keyRaw": "\\textbf{\\code{v}}",
-  "keyStatus": "todo",
+  "keyStatus": "override",
   "source": {
    "chapter": 17,
    "kind": "chapter",

@@ -509,12 +509,13 @@
   "id": "q-ch14-06",
   "key": {
    "accepted": [
-    "--full-refresh"
+    "--full-refresh",
+    "-f"
    ]
   },
-  "keyNote": "alternative answers mentioned after the key: '(or its short form -f)'",
+  "keyNote": "Book: '--full-refresh or its short form -f'; dbt run --help lists -f.",
   "keyRaw": "\\textbf{\\code{--full-refresh}}",
-  "keyStatus": "todo",
+  "keyStatus": "override",
   "source": {
    "chapter": 14,
    "kind": "chapter",

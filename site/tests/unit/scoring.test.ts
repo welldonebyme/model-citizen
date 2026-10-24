@@ -67,3 +67,22 @@ describe('seededShuffle', () => {
     expect([...a].sort()).toEqual(['A', 'B', 'C', 'D', 'E']);
   });
 });
+
+describe('fill-in details found by the question re-solve', () => {
+  it('accepts a long dash typed by a phone for --', () => {
+    const f = q('fill', { accepted: ['--full-refresh', '-f'] });
+    expect(grade(f, { format: 'fill', text: '—full-refresh' }).correct).toBe(true);
+    expect(grade(f, { format: 'fill', text: '–full-refresh' }).correct).toBe(true);
+    expect(grade(f, { format: 'fill', text: '-f' }).correct).toBe(true);
+  });
+  it('unordered blanks accept both orders but not the same value twice', () => {
+    const f = { ...q('fill', { blanks: [['append_new_columns'], ['fail']], unordered: true } as never), blanks: 2 } as Question;
+    expect(grade(f, { format: 'fill', text: '', parts: ['append_new_columns', 'fail'] }).correct).toBe(true);
+    expect(grade(f, { format: 'fill', text: '', parts: ['fail', 'append_new_columns'] }).correct).toBe(true);
+    expect(grade(f, { format: 'fill', text: '', parts: ['fail', 'fail'] }).correct).toBe(false);
+  });
+  it('ordered blanks stay ordered', () => {
+    const f = { ...q('fill', { blanks: [['3'], ['2']] }), blanks: 2 } as Question;
+    expect(grade(f, { format: 'fill', text: '', parts: ['2', '3'] }).correct).toBe(false);
+  });
+});

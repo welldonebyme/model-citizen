@@ -1292,12 +1292,12 @@
      "blocks": [
       {
        "c": [
-        "Here is a real failure that you will reproduce in ",
+        "Here is a real failure that you will reproduce in the lab \"Nine bugs, nine messages\" of ",
         {
-         "href": "/learn/ch22/ch22-s2/#lab-dbg-bugs",
-         "label": "lab:dbg-bugs",
+         "href": "/learn/ch22/ch22-s2/",
+         "label": "sec:dbg-families",
          "t": "ref",
-         "text": "Lab 22.1"
+         "text": "Section 22.2"
         },
         " (bug 3: a typo in a column name). Read it slowly, block by block."
        ],
@@ -1606,14 +1606,7 @@
          "t": "code",
          "v": "git apply -R <file>"
         },
-        " removes it again. Every message below was produced by these patches on dbt-core 1.11.16 with dbt-duckdb 1.11.0. You will apply them yourself in ",
-        {
-         "href": "/learn/ch22/ch22-s2/#lab-dbg-bugs",
-         "label": "lab:dbg-bugs",
-         "t": "ref",
-         "text": "Lab 22.1"
-        },
-        "."
+        " removes it again. Every message below was produced by these patches on dbt-core 1.11.16 with dbt-duckdb 1.11.0. You will apply them yourself in the lab \"Nine bugs, nine messages\" later in this section."
        ],
        "t": "p"
       },
@@ -6930,12 +6923,12 @@
            "t": "ref",
            "text": "Chapter 3"
           },
-          "). You will do the complete merge in ",
+          "). You will do the complete merge in the lab \"Project flags, the safe way\" of ",
           {
-           "href": "/learn/ch22/ch22-s5/#lab-dbg-flags",
-           "label": "lab:dbg-flags",
+           "href": "/learn/ch22/ch22-s5/",
+           "label": "sec:dbg-flags",
            "t": "ref",
-           "text": "Lab 22.4"
+           "text": "Section 22.5"
           },
           "."
          ],

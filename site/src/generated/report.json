@@ -232,7 +232,7 @@
   },
   {
    "check": "flagged keys (keys-todo.yaml)",
-   "detail": "11 flagged: q-ch05-04, q-ch06-12, q-ch10-20, q-ch12-03, q-ch14-06, q-ch17-03, q-ch17-12, q-ch22-13, q-ch26-03, q-ch26-16, m2-q30",
+   "detail": "0 flagged: ",
    "ok": true
   },
   {
@@ -257,7 +257,7 @@
   },
   {
    "check": "every ref resolves",
-   "detail": "1086 refs; ",
+   "detail": "1084 refs; ",
    "ok": true
   },
   {
@@ -277,24 +277,7 @@
   }
  ],
  "bookConsistency": [],
- "bookErrors": [
-  "parts/part2/ch10-configuration.tex:1009: '--vars' is written outside \\code, so the PDF prints an en dash ('–vars'); the website keeps '--vars'",
-  "parts/part9/ch27-exam-strategy.tex:953: '--state' is written outside \\code, so the PDF prints an en dash ('–state'); the website keeps '--state'",
-  "parts/part9/ch27-exam-strategy.tex:953: '--defer-state' is written outside \\code, so the PDF prints an en dash ('–defer-state'); the website keeps '--defer-state'",
-  "parts/part9/ch33-mock3-answers.tex:353: '--empty' is written outside \\code, so the PDF prints an en dash ('–empty'); the website keeps '--empty'",
-  "parts/part9/ch33-mock3-answers.tex:344: '--empty' is written outside \\code, so the PDF prints an en dash ('–empty'); the website keeps '--empty'",
-  "parts/part9/ch33-mock3-answers.tex:776: '--empty' is written outside \\code, so the PDF prints an en dash ('–empty'); the website keeps '--empty'",
-  "parts/part9/ch33-mock3-answers.tex:861: '--sample' is written outside \\code, so the PDF prints an en dash ('–sample'); the website keeps '--sample'",
-  "appendices/coverage.tex:29: '--empty' is written outside \\code, so the PDF prints an en dash ('–empty'); the website keeps '--empty'",
-  "appendices/coverage.tex:30: '--sample' is written outside \\code, so the PDF prints an en dash ('–sample'); the website keeps '--sample'",
-  "appendices/coverage.tex:38: '--defer' is written outside \\code, so the PDF prints an en dash ('–defer'); the website keeps '--defer'",
-  "appendices/coverage.tex:47: '--defer' is written outside \\code, so the PDF prints an en dash ('–defer'); the website keeps '--defer'",
-  "chapters/ch22.json: \\ref{lab:dbg-bugs} prints a number that is not a lab number in the PDF (\\label inside labbox); website text: 'Lab 22.1'",
-  "chapters/ch22.json: \\ref{lab:dbg-bugs} prints a number that is not a lab number in the PDF (\\label inside labbox); website text: 'Lab 22.1'",
-  "chapters/ch22.json: \\ref{lab:dbg-flags} prints a number that is not a lab number in the PDF (\\label inside labbox); website text: 'Lab 22.4'",
-  "chapters/ch23.json: \\ref{lab:pip-break} prints a number that is not a lab number in the PDF (\\label inside labbox); website text: 'Lab 23.1'",
-  "chapters/ch23.json: \\ref{lab:pip-break} prints a number that is not a lab number in the PDF (\\label inside labbox); website text: 'Lab 23.1'"
- ],
+ "bookErrors": [],
  "figures": [
   {
    "chapter": 0,
@@ -873,75 +856,20 @@
    "sha1": "dfec63860c18665a98e40d17f2b3c8fd16f45ed1"
   }
  ],
- "flaggedKeys": [
-  {
-   "format": "fill",
-   "id": "q-ch05-04",
-   "reason": "alternative answers mentioned after the key: '(single or double)'",
-   "where": "parts/part1/ch05-yaml-jinja-python.tex:1302"
-  },
-  {
-   "format": "fill",
-   "id": "q-ch06-12",
-   "reason": "alternative answers mentioned after the key: '(short form -s)'",
-   "where": "parts/part2/ch06-first-project.tex:1594"
-  },
-  {
-   "format": "fill",
-   "id": "q-ch10-20",
-   "reason": "alternative answers mentioned after the key: '(the docs write it DBT_ENV_SECRET; both answers mean the same prefix)'",
-   "where": "parts/part2/ch10-configuration.tex:1868"
-  },
-  {
-   "format": "fill",
-   "id": "q-ch12-03",
-   "reason": "alternative answers mentioned after the key: '(short form -f)'",
-   "where": "parts/part2/ch12-seeds-analyses.tex:1010"
-  },
-  {
-   "format": "fill",
-   "id": "q-ch14-06",
-   "reason": "alternative answers mentioned after the key: '(or its short form -f)'",
-   "where": "parts/part2/ch14-incremental-microbatch.tex:1971"
-  },
-  {
-   "format": "fill",
-   "id": "q-ch17-03",
-   "reason": "the key lists alternatives: 'append_new_columns or fail.'",
-   "where": "parts/part3/ch17-governance.tex:1740"
-  },
-  {
-   "format": "fill",
-   "id": "q-ch17-12",
-   "reason": "alternative answers mentioned after the key: '(version works too)'",
-   "where": "parts/part3/ch17-governance.tex:1834"
-  },
-  {
-   "format": "fill",
-   "id": "q-ch22-13",
-   "reason": "alternative answers mentioned after the key: '(or --log-level debug)'",
-   "where": "parts/part6/ch22-debugging.tex:1670"
-  },
-  {
-   "format": "fill",
-   "id": "q-ch26-03",
-   "reason": "fill-in answer does not start with a bold value",
-   "where": "parts/part8/ch26-capstone.tex:2009"
-  },
-  {
-   "format": "hotspot",
-   "id": "q-ch26-16",
-   "reason": "hotspot without line numbers (listing or embedded)",
-   "where": "parts/part8/ch26-capstone.tex:2109"
-  },
-  {
-   "format": "fill",
-   "id": "m2-q30",
-   "reason": "1 value for 2 blanks in the stem",
-   "where": "parts/part9/ch30-mock2.tex:703"
-  }
+ "flaggedKeys": [],
+ "overridesApplied": [
+  "q-ch05-04",
+  "q-ch06-12",
+  "q-ch10-20",
+  "q-ch12-03",
+  "q-ch14-06",
+  "q-ch17-03",
+  "q-ch17-12",
+  "q-ch22-13",
+  "q-ch26-03",
+  "q-ch26-14",
+  "m2-q30"
  ],
- "overridesApplied": [],
  "pathRewrites": {
   "applied": [
    {
@@ -2955,6 +2883,7 @@
    "code:dbtcode": 1,
    "code:outputcode": 75,
    "code:plaincode": 1,
+   "code:sqlcode": 1,
    "code:yamlcode": 2,
    "env:answers": 1,
    "env:center": 4,
@@ -3064,8 +2993,8 @@
   "chapters": 37,
   "figures": 64,
   "glossaryTerms": 305,
-  "keysFlagged": 11,
-  "keysOverridden": 0,
+  "keysFlagged": 0,
+  "keysOverridden": 11,
   "keysParsed": 671,
   "labs": 118,
   "lessons": 311,

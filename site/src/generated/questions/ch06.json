@@ -1159,12 +1159,13 @@
   "id": "q-ch06-12",
   "key": {
    "accepted": [
-    "--skip-profile-setup"
+    "--skip-profile-setup",
+    "-s"
    ]
   },
-  "keyNote": "alternative answers mentioned after the key: '(short form -s)'",
+  "keyNote": "Book: '--skip-profile-setup (short form -s)'; dbt init --help in 1.11.16 lists -s.",
   "keyRaw": "\\textbf{\\code{-{}-skip-profile-setup}}",
-  "keyStatus": "todo",
+  "keyStatus": "override",
   "source": {
    "chapter": 6,
    "kind": "chapter",

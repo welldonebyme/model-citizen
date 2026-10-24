@@ -1,0 +1,48 @@
+# Answer keys decided by hand (lead review of the independent re-solve, 2026-10-24; evidence in
+# tools/qa/resolve-verdicts.json). Each entry is pinned to the question's hash: if the book text changes,
+# the converter stops and asks for a new decision instead of applying a stale key.
+keys:
+  q-ch05-04:
+    hash: dc32bab0780a
+    key: {accepted: ["Quotes", "quotation marks", "quote marks", "single or double quotes", "double or single quotes", "double quotes", "single quotes"]}
+    note: "Book: 'Quotes (single or double)'. Either quote type works (checked with PyYAML), so one type or the generic word is right."
+  q-ch06-12:
+    hash: 526654982e43
+    key: {accepted: ["--skip-profile-setup", "-s"]}
+    note: "Book: '--skip-profile-setup (short form -s)'; dbt init --help in 1.11.16 lists -s."
+  q-ch10-20:
+    hash: 1d53fb703423
+    key: {accepted: ["DBT_ENV_SECRET_", "DBT_ENV_SECRET"]}
+    note: "Book answer accepts both: DBT_ENV_SECRET_ and the docs spelling DBT_ENV_SECRET (dbt matches the prefix with startswith)."
+  q-ch12-03:
+    hash: 097e935f1239
+    key: {accepted: ["--full-refresh", "-f"]}
+    note: "Book: '--full-refresh (short form -f)'; dbt seed --help lists -f."
+  q-ch14-06:
+    hash: 5aa388cd272e
+    key: {accepted: ["--full-refresh", "-f"]}
+    note: "Book: '--full-refresh or its short form -f'; dbt run --help lists -f."
+  q-ch17-03:
+    hash: 188703d6f16b
+    key: {blanks: [["append_new_columns"], ["fail"]], unordered: true}
+    note: "Two values joined by 'or' ('set on_schema_change to ___ or ___'): either order is right. Verified in dbt 1.11.16 config validation."
+  q-ch17-12:
+    hash: 901c94862b22
+    key: {accepted: ["v", "version"]}
+    note: "Book: 'v (version works too)'; ref() reads the kwarg version or v."
+  q-ch22-13:
+    hash: 2dee497459e0
+    key: {accepted: ["--debug", "--log-level debug", "--log-level=debug"]}
+    note: "Book: '--debug (or --log-level debug)'. All three print the SQL in the console with dbt 1.11.16."
+  q-ch26-03:
+    hash: 36da04066794
+    key: {blanks: [["--event-time-start"], ["--event-time-end"], ["2026-01-01", "2026-01-01 00:00:00", "2026-01-01T00:00:00"]]}
+    note: "Book answer is not bold-led. End is exclusive (verified with dbt 1.11.16); the three timestamp spellings are the same instant."
+  q-ch26-14:
+    hash: 9baaa59e90a4
+    key: {blanks: [["now", "today", "the current time", "current time", "now()", "the current date", "current date"], ["dictionary", "dict", "python dictionary", "fixed window", "fixed time window"]]}
+    note: "Book key now / dictionary; the same chapter says 'counts from today' and calls the dict form a 'fixed window', so both are accepted."
+  m2-q30:
+    hash: fd66f95c316e
+    key: {blanks: [["test"], ["test"]]}
+    note: "The stem says both blanks take the same word: the test block opens with test and closes with endtest."

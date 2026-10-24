@@ -4198,7 +4198,12 @@
            "t": "code",
            "v": "snapshot"
           },
-          "): \"No such option: --empty\"."
+          "): \"",
+          {
+           "t": "code",
+           "v": "No such option: --empty"
+          },
+          "\"."
          ],
          "t": "p"
         }
@@ -4387,7 +4392,12 @@
      "t": "ref",
      "text": "Chapter 16"
     },
-    " (the --empty flag); ",
+    " (the ",
+    {
+     "t": "code",
+     "v": "--empty"
+    },
+    " flag); ",
     {
      "href": "/learn/ch13/",
      "label": "ch:snapshots",
@@ -11787,7 +11797,12 @@
      "t": "ref",
      "text": "Chapter 16"
     },
-    " (--empty)"
+    " (",
+    {
+     "t": "code",
+     "v": "--empty"
+    },
+    ")"
    ],
    "source": {
     "kind": "mock",
@@ -13142,7 +13157,12 @@
      "t": "ref",
      "text": "Chapter 16"
     },
-    " (--sample)"
+    " (",
+    {
+     "t": "code",
+     "v": "--sample"
+    },
+    ")"
    ],
    "source": {
     "kind": "mock",

@@ -249,10 +249,24 @@
   "format": "fill",
   "formatLabel": "Fill in the blank",
   "id": "q-ch26-03",
-  "key": null,
-  "keyNote": "fill-in answer does not start with a bold value",
+  "key": {
+   "blanks": [
+    [
+     "--event-time-start"
+    ],
+    [
+     "--event-time-end"
+    ],
+    [
+     "2026-01-01",
+     "2026-01-01 00:00:00",
+     "2026-01-01T00:00:00"
+    ]
+   ]
+  },
+  "keyNote": "Book answer is not bold-led. End is exclusive (verified with dbt 1.11.16); the three timestamp spellings are the same instant.",
   "keyRaw": "\\code{-{}-event-time-start}, \\code{-{}-event-time-end}, \\code{2026-01-01}. The end is exclusive, so 2026-01-01 stops after 31 December.\nUsing \\code{2025-12-31} as the end would rebuild 30 December only.",
-  "keyStatus": "todo",
+  "keyStatus": "override",
   "source": {
    "chapter": 26,
    "kind": "chapter",
@@ -1282,15 +1296,26 @@
   "key": {
    "blanks": [
     [
-     "now"
+     "now",
+     "today",
+     "the current time",
+     "current time",
+     "now()",
+     "the current date",
+     "current date"
     ],
     [
-     "dictionary"
+     "dictionary",
+     "dict",
+     "python dictionary",
+     "fixed window",
+     "fixed time window"
     ]
    ]
   },
+  "keyNote": "Book key now / dictionary; the same chapter says 'counts from today' and calls the dict form a 'fixed window', so both are accepted.",
   "keyRaw": "\\textbf{now}",
-  "keyStatus": "ok",
+  "keyStatus": "override",
   "source": {
    "chapter": 26,
    "kind": "chapter",
@@ -1411,7 +1436,13 @@
   "explanation": [
    {
     "c": [
-     "The compiled text is ",
+     {
+      "c": [
+       "Line 5."
+      ],
+      "t": "b"
+     },
+     " The compiled text is ",
      {
       "t": "code",
       "v": "round(amount_paid - amount_refunded * rate_to_eur, 2)"
@@ -1442,12 +1473,16 @@
    }
   ],
   "format": "hotspot",
-  "formatLabel": "Hotspot — which part",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch26-c92",
+   "lines": 6,
+   "numbering": "text"
+  },
   "id": "q-ch26-16",
-  "key": null,
-  "keyNote": "hotspot without line numbers (listing or embedded)",
-  "keyRaw": "The compiled text is \\code{round(amount\\_paid - amount\\_refunded * rate\\_to\\_eur, 2)}: only \\code{amount\\_refunded} is multiplied, because \\code{*}\ncomes before \\code{-}. Fix: \\code{round((\\{\\{ amount \\}\\}) * \\{\\{ rate\\_column \\}\\}, 2)}. A macro pastes text, so protect every argument with parentheses.",
-  "keyStatus": "todo",
+  "key": 5,
+  "keyRaw": "\\textbf{Line 5.}",
+  "keyStatus": "ok",
   "source": {
    "chapter": 26,
    "kind": "chapter",
@@ -1456,19 +1491,30 @@
   "stem": [
    {
     "c": [
-     "A macro is ",
+     "The first version of the macro ",
+     {
+      "t": "code",
+      "v": "convert_to_eur"
+     },
+     " was ",
      {
       "t": "code",
       "v": "round({{ amount }} * {{ rate_column }}, 2)"
      },
-     ". It is called with ",
+     ". Below is the end of the compiled SQL of ",
      {
       "t": "code",
-      "v": "convert_to_eur('amount_paid - amount_refunded')"
+      "v": "int_orders__enriched"
      },
-     ". Which part of the compiled expression is wrong, and how do you fix the macro?"
+     ". The EUR net revenue is far too high, and nothing fails. Which line causes it?"
     ],
     "t": "p"
+   },
+   {
+    "id": "ch26-c92",
+    "lang": "sql",
+    "t": "code",
+    "text": "1  select\n2      *,\n3      amount_paid - amount_refunded                            as net_amount,\n4      round(order_total * rate_to_eur, 2)                      as order_total_eur,\n5      round(amount_paid - amount_refunded * rate_to_eur, 2)    as net_amount_eur\n6  from joined"
    }
   ]
  },

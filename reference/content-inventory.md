@@ -7,7 +7,7 @@
 | mock_questions_total | 195 |
 | labs_total | 118 |
 | tikz_figures_total | 64 |
-| code_blocks_total | 1927 |
+| code_blocks_total | 1928 |
 | traps | 145 |
 | glossary_terms | 305 |
 
@@ -39,7 +39,7 @@
 | 23 | Pipelines, Failures and dbt clone | 6 | 4 | 18 | 66 | 2 | 1.4, 3.1, 4.1, 4.2 |
 | 24 | State, Defer and dbt retry | 10 | 5 | 19 | 69 | 3 | 3.4, 4.1, 4.2, 7.1, 7.2 |
 | 25 | Environments, Jobs and CI/CD | 8 | 3 | 18 | 27 | 1 | 1.12, 3.4, 5.3, 7.1, CP0-GIT |
-| 26 | Capstone Project: ShopFlow | 20 | 15 | 17 | 91 | 1 | 1.1, 1.10, 1.11, 1.12, 1.13, 1.14, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.2, 5.1, 5.2, 5.3, 6.1, 6.2, 7.1, 7.2, CP0-CLI, CP0-GIT, CP0-SQL |
+| 26 | Capstone Project: ShopFlow | 20 | 15 | 17 | 92 | 1 | 1.1, 1.10, 1.11, 1.12, 1.13, 1.14, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.1, 2.2, 2.3, 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.2, 5.1, 5.2, 5.3, 6.1, 6.2, 7.1, 7.2, CP0-CLI, CP0-GIT, CP0-SQL |
 | 27 | Exam Strategy and the Top Traps | 9 | 0 | 0 | 1 | 3 |  |
 | 28 | Mock Exam 1 | 1 | 0 | 65 | 39 | 0 |  |
 | 29 | Mock Exam 1: Answers and Explanations | 2 | 0 | 65 | 0 | 0 |  |

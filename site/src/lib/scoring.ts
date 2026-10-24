@@ -18,12 +18,33 @@ export interface Grade {
   parts?: Record<string, boolean>;
 }
 
+/** For unordered blanks: the assignment of values to blanks that makes the most values right (n is small). */
+function bestAssignment(acc: string[][], values: string[]): boolean[] {
+  let best: boolean[] = values.map(() => false);
+  const used = new Array(acc.length).fill(false);
+  const cur: boolean[] = [];
+  const go = (i: number) => {
+    if (i === values.length) { if (cur.filter(Boolean).length > best.filter(Boolean).length) best = cur.slice(); return; }
+    let placed = false;
+    for (let b = 0; b < acc.length; b++) {
+      if (used[b] || !acc[b].includes(values[i])) continue;
+      placed = true; used[b] = true; cur[i] = true; go(i + 1); used[b] = false;
+    }
+    if (!placed) { cur[i] = false; go(i + 1); }
+  };
+  go(0);
+  return best;
+}
+
 /** Normalises a typed answer: trims, collapses spaces, removes wrapping quotes or backticks, lower case. */
 export function normaliseFill(s: string): string {
   return s
     .normalize('NFKC')
     .replace(/[‘’]/g, "'").replace(/[“”]/g, '"')
     .trim()
+    // phones and word processors turn a typed "--" into a long dash: treat it as the flag prefix
+    .replace(/^[\u2013\u2014]/, '--')
+    .replace(/[\u2010\u2011]/g, '-')
     .replace(/^[`'"]+|[`'".]+$/g, '')
     .replace(/\s+/g, ' ')
     .replace(/\s*([(),=])\s*/g, '$1')
@@ -35,7 +56,7 @@ export function isAnswered(r: Response | undefined | null): boolean {
   switch (r.format) {
     case 'mc': return !!r.choice;
     case 'ms': return r.choices.length > 0;
-    case 'fill': return r.text.trim().length > 0;
+    case 'fill': return r.text.trim().length > 0 || (r.parts ?? []).some((p) => (p ?? '').trim().length > 0);
     case 'match': return Object.keys(r.pairs).length > 0;
     case 'hotspot': return r.line != null;
     case 'order': return r.order.length > 0;
@@ -55,13 +76,20 @@ export function grade(q: Question, r: Response | undefined | null): Grade {
       return { correct: picked.size === key.size && [...picked].every((c) => key.has(c)), answered: true, parts };
     }
     case 'fill': {
-      const k = q.key as { accepted?: string[]; blanks?: string[][] };
+      const k = q.key as { accepted?: string[]; blanks?: string[][]; unordered?: boolean };
       if (k.blanks) {
         // several blanks: each one is checked against its own accepted values
-        const values = r.parts ?? r.text.split(',');
+        const values = (r.parts ?? r.text.split(',')).map((v) => normaliseFill(v ?? ''));
+        const acc = k.blanks.map((a) => a.map(normaliseFill));
         const parts: Record<string, boolean> = {};
-        k.blanks.forEach((acc, i) => { parts[String(i + 1)] = acc.map(normaliseFill).includes(normaliseFill(values[i] ?? '')); });
-        return { correct: Object.values(parts).every(Boolean), answered: true, parts };
+        if (k.unordered) {
+          // "X or Y": the values may be given in any order, each blank used once
+          const best = bestAssignment(acc, values);
+          values.forEach((_, i) => { parts[String(i + 1)] = best[i]; });
+        } else {
+          acc.forEach((a, i) => { parts[String(i + 1)] = a.includes(values[i] ?? ''); });
+        }
+        return { correct: Object.values(parts).length === acc.length && Object.values(parts).every(Boolean), answered: true, parts };
       }
       const accepted = (k.accepted ?? []).map(normaliseFill);
       return { correct: accepted.includes(normaliseFill(r.text)), answered: true };

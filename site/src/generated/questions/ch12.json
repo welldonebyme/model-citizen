@@ -185,12 +185,13 @@
   "id": "q-ch12-03",
   "key": {
    "accepted": [
-    "--full-refresh"
+    "--full-refresh",
+    "-f"
    ]
   },
-  "keyNote": "alternative answers mentioned after the key: '(short form -f)'",
+  "keyNote": "Book: '--full-refresh (short form -f)'; dbt seed --help lists -f.",
   "keyRaw": "\\textbf{\\code{-{}-full-refresh}}",
-  "keyStatus": "todo",
+  "keyStatus": "override",
   "source": {
    "chapter": 12,
    "kind": "chapter",

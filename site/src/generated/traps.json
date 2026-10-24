@@ -4933,7 +4933,12 @@
     "t": "code",
     "v": "manifest.json"
    },
-   "), otherwise: \"--state or --defer-state are required\". Existing relations are not recreated unless you add ",
+   "), otherwise: \"",
+   {
+    "t": "code",
+    "v": "--state or --defer-state are required"
+   },
+   "\". Existing relations are not recreated unless you add ",
    {
     "t": "code",
     "v": "--full-refresh"

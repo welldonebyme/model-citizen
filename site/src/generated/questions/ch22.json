@@ -1364,12 +1364,14 @@
   "id": "q-ch22-13",
   "key": {
    "accepted": [
-    "--debug"
+    "--debug",
+    "--log-level debug",
+    "--log-level=debug"
    ]
   },
-  "keyNote": "alternative answers mentioned after the key: '(or --log-level debug)'",
+  "keyNote": "Book: '--debug (or --log-level debug)'. All three print the SQL in the console with dbt 1.11.16.",
   "keyRaw": "\\textbf{\\code{-{}-debug}}",
-  "keyStatus": "todo",
+  "keyStatus": "override",
   "source": {
    "chapter": 22,
    "kind": "chapter",

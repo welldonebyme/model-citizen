@@ -127,7 +127,8 @@ type Question = {
   hotspot?: { codeId: string; lines: number };
   key: string | string[] | Record<string, string> | Record<string, boolean> | number | { accepted: string[] };
        // mc "B" | ms ["A","C"] | order ["B","D","A","E","C"] | match {"1":"b",...} | domc {"A":true,...}
-       // hotspot 9 (line) | fill {accepted:["identifier"]}
+       // hotspot 9 (line) | fill {accepted:["identifier"]} | several blanks {blanks:[[...],[...]], unordered?: true}
+       // unordered: the blank values may be given in any order ("set X to ___ or ___")
   keyRaw: string;                           // the key exactly as written in the book (for audits)
   explanation: Block[];                     // full book explanation
   whyWrong?: { option: string; c: Inline[] }[];  // mocks: "why the others are wrong" items when present

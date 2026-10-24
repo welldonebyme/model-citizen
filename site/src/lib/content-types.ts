@@ -56,7 +56,7 @@ export type Question = {
   options?: { id: string; c: Inline[] }[];
   match?: { left: { id: string; c: Inline[] }[]; right: { id: string; c: Inline[] }[] };
   hotspot?: { codeId: string; lines: number };
-  key: string | string[] | Record<string, string> | Record<string, boolean> | number | { accepted: string[] } | { blanks: string[][] };
+  key: string | string[] | Record<string, string> | Record<string, boolean> | number | { accepted: string[] } | { blanks: string[][]; unordered?: boolean };
   keyRaw: string;
   /** fill in the blank with several blanks: their number (key is { blanks: accepted values per blank }) */
   blanks?: number;

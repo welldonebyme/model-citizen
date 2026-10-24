@@ -6810,10 +6810,19 @@
    "format": "fill",
    "formatLabel": "Fill in the blank",
    "id": "m2-q30",
-   "key": null,
-   "keyNote": "1 value for 2 blanks in the stem",
+   "key": {
+    "blanks": [
+     [
+      "test"
+     ],
+     [
+      "test"
+     ]
+    ]
+   },
+   "keyNote": "The stem says both blanks take the same word: the test block opens with test and closes with endtest.",
    "keyRaw": "test",
-   "keyStatus": "todo",
+   "keyStatus": "override",
    "objective": "5.1",
    "review": [
     {

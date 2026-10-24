@@ -84,7 +84,13 @@ def expected_ok(q: dict, printed: str) -> tuple[bool, str]:
     if f == "hotspot":
         return bool(re.match(rf"^Line {k}\b", p)), f"Line {k}"
     if f == "fill":
-        vals = k["accepted"] if "accepted" in k else [b[0] for b in k["blanks"]]
+        if "accepted" in k:
+            # hand-decided keys (overrides) add alternatives: the book's printed answer must be the first value
+            vals = k["accepted"][:1] if q.get("keyStatus") == "override" else k["accepted"]
+        else:
+            vals = [b[0] for b in k["blanks"]]
+            # "both blanks take the same word": the book prints the word once
+            vals = [v for i, v in enumerate(vals) if i == 0 or v != vals[i - 1]]
         pos = 0
         for v in vals:
             j = p.find(norm(v), pos)

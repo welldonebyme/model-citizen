@@ -2277,12 +2277,13 @@
   "id": "q-ch10-20",
   "key": {
    "accepted": [
-    "DBT_ENV_SECRET_"
+    "DBT_ENV_SECRET_",
+    "DBT_ENV_SECRET"
    ]
   },
-  "keyNote": "alternative answers mentioned after the key: '(the docs write it DBT_ENV_SECRET; both answers mean the same prefix)'",
+  "keyNote": "Book answer accepts both: DBT_ENV_SECRET_ and the docs spelling DBT_ENV_SECRET (dbt matches the prefix with startswith).",
   "keyRaw": "\\textbf{\\code{DBT\\_ENV\\_SECRET\\_}}",
-  "keyStatus": "todo",
+  "keyStatus": "override",
   "source": {
    "chapter": 10,
    "kind": "chapter",

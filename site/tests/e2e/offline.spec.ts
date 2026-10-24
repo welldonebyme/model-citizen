@@ -33,7 +33,9 @@ test('save the course, then study offline', async ({ page, context }) => {
   expect(keys.filter((k) => k.startsWith('mc-offline'))).toEqual([]);
 
   await context.setOffline(true);
+  // after deleting the copy, nothing comes from it any more (a host's normal HTTP cache may still answer:
+  // GitHub Pages lets browsers keep pages for 10 minutes)
   const res = await page.goto('learn/ch09/ch09-s3/').catch(() => null);
-  expect(res === null || res.status() === 503).toBe(true);
+  expect(res === null || res.status() === 503 || !res.fromServiceWorker()).toBe(true);
   await context.setOffline(false);
 });

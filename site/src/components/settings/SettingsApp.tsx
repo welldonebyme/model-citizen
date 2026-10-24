@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { db, getSettings, saveSettings, today, type Os, type Rhythm, type Settings } from '../../lib/store/db';
 import { downloadProgress, importProgress, validateProgressFile, ImportError } from '../../lib/store/transfer';
 import { RHYTHMS, calendar } from '../../lib/planner';
+import OfflinePanel from './OfflinePanel';
 
 function setLocal(key: string, v: string | null) {
   try { if (v === null) localStorage.removeItem(key); else localStorage.setItem(key, v); } catch { /* not saved */ }
@@ -133,6 +134,8 @@ export default function SettingsApp() {
         <label className="st-check"><input type="checkbox" checked={s.domcExtraOption} onChange={(e) => patch({ domcExtraOption: e.target.checked })} /> DOMC: show one more option after the question is decided, so the end does not tell you if you were right</label>
         <label className="st-check"><input type="checkbox" checked={!!s.examPauseOnClose} onChange={(e) => patch({ examPauseOnClose: e.target.checked || undefined })} /> Pause the timer when I close the page (on the real exam, the time keeps passing: leave this off to practise like the real exam)</label>
       </section>
+
+      <OfflinePanel />
 
       <section className="panel st-sec st-danger" aria-labelledby="dz-h">
         <h2 id="dz-h">Start again</h2>

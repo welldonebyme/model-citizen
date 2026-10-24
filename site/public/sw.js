@@ -11,7 +11,7 @@
  * Old caches of a rule are removed by the feature itself (see pruneEngineCaches in src/lib/dbt/engine-cache.ts),
  * because only the page knows which version is current.
  */
-const SW_VERSION = 2; // 2: SQL labs rules (sections 2 and 3)
+const SW_VERSION = 3; // 2: SQL labs rules (sections 2 and 3); 3: offline reading (section 4)
 const BASE = new URL('./', self.location).pathname; // "/model-citizen/" on GitHub Pages, "/" elsewhere
 
 const RULES = [
@@ -58,7 +58,29 @@ const RULES = [
     strategy: 'cache-first',
   },
   // ---------------------------------------------------------------------------------------------------------
+  // Section 4: offline reading (owner: lead, src/lib/offline.ts). OFF unless the learner turns on "Keep the
+  // course available offline" in Settings, which creates the marker cache below and saves the files listed in
+  // offline-manifest.json. When on: hashed build files are served cache first; pages and their data network
+  // first, with the saved copy when the network fails. When off, these rules let every request through.
+  {
+    id: 'offline-assets',
+    match: (url) => url.pathname.startsWith(BASE + '_assets/'),
+    cacheName: () => 'mc-offline-assets',
+    strategy: 'offline-cache-first',
+  },
+  {
+    id: 'offline-pages',
+    match: (url, request) => !/\.(zip|pdf)$/.test(url.pathname) && (request.mode === 'navigate'
+      || /^(figures|quiz\/data|exams\/data|practice\/drills|pagefind|delight)\//.test(url.pathname.slice(BASE.length))),
+    cacheName: () => 'mc-offline-pages',
+    strategy: 'offline-network-first',
+  },
 ];
+const OFFLINE_MARKER = 'mc-offline-on';
+let offlineOn = null; // null = not read yet since this worker started
+const readOffline = () => caches.has(OFFLINE_MARKER).then((v) => (offlineOn = v), () => (offlineOn = false));
+readOffline();
+const OFFLINE_PAGE = '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Offline | Model Citizen</title><body style="font:16px/1.5 system-ui,sans-serif;max-width:36rem;margin:15vh auto;padding:0 16px;color:#16213B;background:#F3F5F9"><h1>You are offline</h1><p>This page was not saved on this device yet. Pages you have opened, and the whole course if you saved it in Settings, still work without a connection.</p><p><a href="' + BASE + '">Go to Today</a></p>';
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -88,6 +110,26 @@ async function cacheFirst(rule, url, request) {
   return response;
 }
 
+async function offlineCacheFirst(rule, url, request) {
+  if (!(await readOffline())) return fetch(request);
+  return cacheFirst(rule, url, request);
+}
+
+async function offlineNetworkFirst(rule, url, request) {
+  if (!(await readOffline())) return fetch(request);
+  const cache = await caches.open(rule.cacheName(url));
+  try {
+    const response = await fetch(request);
+    if (response.ok && response.status === 200 && response.type === 'basic') cache.put(request, response.clone()).catch(() => {});
+    return response;
+  } catch (err) {
+    const hit = await cache.match(request, { ignoreSearch: true, ignoreVary: true });
+    if (hit) return hit;
+    if (request.mode === 'navigate') return new Response(OFFLINE_PAGE, { status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+    throw err;
+  }
+}
+
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
@@ -101,6 +143,9 @@ self.addEventListener('fetch', (event) => {
   const rule = RULES.find((r) => r.match(url, request));
   if (!rule) return; // not ours: the browser handles it as if there were no service worker
   if (rule.strategy === 'cache-first') event.respondWith(cacheFirst(rule, url, request));
+  else if (offlineOn === false) return; // offline reading is off: the browser handles the request
+  else if (rule.strategy === 'offline-cache-first') event.respondWith(offlineCacheFirst(rule, url, request));
+  else if (rule.strategy === 'offline-network-first') event.respondWith(offlineNetworkFirst(rule, url, request));
 });
 
 self.addEventListener('message', (event) => {
@@ -110,4 +155,6 @@ self.addEventListener('message', (event) => {
   // a page loaded with a hard reload (Shift+Reload, or some automated browsers) is not controlled: take it back,
   // so the Web Workers it starts use the caches above (sw-register.ts asks for it before a heavy engine starts)
   if (event.data && event.data.type === 'mc:claim') event.waitUntil(self.clients.claim());
+  // Settings turned offline reading on or off (the marker cache changed): read it again
+  if (event.data && event.data.type === 'mc:offline') event.waitUntil(readOffline());
 });

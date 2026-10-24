@@ -31,6 +31,10 @@ import SettingsApp from '../../components/settings/SettingsApp';
   :global(.st-radio input), :global(.st-check input) { accent-color: var(--accent); width: 18px; height: 18px; flex: none; transform: translateY(3px); }
   :global(.st-grid2) { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   :global(.st-muted) { color: var(--muted); }
+  :global(.st-ok) { max-width: 70ch; }
+  :global(.st-sec .st-row) { margin-top: 12px; }
+  :global(.st-progress) { display: flex; align-items: center; gap: 12px; margin-top: 12px; font-size: var(--fs-sm); color: var(--muted); }
+  :global(.st-progress progress) { width: min(360px, 60vw); height: 10px; accent-color: var(--accent); }
   :global(.st-danger) { border-color: var(--trap-line); }
   @media (max-width: 600px) { :global(.st-grid2) { grid-template-columns: 1fr; } }
 </style>

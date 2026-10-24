@@ -151,9 +151,12 @@ function bashCommand(cmd: string): string {
 }
 
 /** Shell blocks: lines starting with "$ " are commands; other lines are output. */
+/** A shell prompt at the start of a line: "$", "(.venv) $", "PS>", "PS C:\\Users\\me>", or a ">" continuation. */
+const PROMPT = /^((?:\([^)]*\)\s*)?(?:\$|PS>|PS [^>]*>)|>)\s(.*)$/;
+
 export function bashLines(text: string): { cmd: boolean; html: string }[] {
   return text.split('\n').map((line) => {
-    const m = line.match(/^(\$|PS>|>)\s(.*)$/);
+    const m = line.match(PROMPT);
     if (m) return { cmd: true, html: `<span class="tok-prompt">${esc(m[1])}</span> ${bashCommand(m[2])}` };
     return { cmd: false, html: `<span class="tok-out">${esc(line)}</span>` };
   });
@@ -161,7 +164,7 @@ export function bashLines(text: string): { cmd: boolean; html: string }[] {
 
 export function commandsOnly(text: string): string {
   const lines = text.split('\n');
-  const cmds = lines.filter((l) => /^(\$|PS>)\s/.test(l)).map((l) => l.replace(/^(\$|PS>)\s/, ''));
+  const cmds = lines.map((l) => l.match(PROMPT)).filter((m): m is RegExpMatchArray => !!m && m[1] !== '>').map((m) => m[2]);
   return cmds.length ? cmds.join('\n') : text;
 }
 

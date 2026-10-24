@@ -5,6 +5,8 @@ import { Inline } from '../../../../components/content/Inline';
 import OsSwitch from '../../../../components/ui/OsSwitch.astro';
 import LessonCheckpoints from '../../../../components/quiz/LessonCheckpoints';
 import SqlWorkspace from '../../../../components/labs/SqlWorkspace';
+import DbtWorkspace from '../../../../components/dbt/DbtWorkspace';
+import { dbtCommands } from '../../../../components/content/CodeBlock';
 import sqlMeta from '../../../../lib/sql/book-sql-meta.json';
 import { lessons, neighbours, routes, partName } from '../../../../lib/content';
 import { figuresFor } from '../../../../lib/figures';
@@ -24,14 +26,24 @@ const steps = lesson.steps;
 const isLast = !next || next.chapter.id !== chapter.id;
 // The SQL workspace (DuckDB in the browser) sits in a right column when the lesson has book SQL it can run.
 const codeIds: string[] = [];
+const dbtLines: string[] = [];
 const walkCode = (bs: Block[]) => bs.forEach((b) => {
-  if (b.t === 'code') codeIds.push(b.id);
+  if (b.t === 'code') { codeIds.push(b.id); if (b.lang === 'bash') dbtLines.push(...dbtCommands(b.text)); }
   if (b.t === 'callout' || b.t === 'lab') walkCode(b.blocks);
   if (b.t === 'list') b.items.forEach((it) => walkCode(it.blocks));
 });
 walkCode(allBlocks);
-const sqlExamples = codeIds.filter((id) => id in (sqlMeta as { examples: Record<string, unknown> }).examples);
-const hasWork = sqlExamples.length > 0;
+// The dbt workspace (real dbt in the browser) on every lesson of Chapters 6 to 25 with a lab or a dbt command,
+// starting from the chapter's start state, and on the capstone milestones 26.2 to 26.16 (m00 to m14).
+// Labs without any dbt command do not need it (ch13-lab3/4, ch19-lab4, ch25-lab1/3).
+const NO_DBT_LABS = new Set(['ch13-lab3', 'ch13-lab4', 'ch19-lab4', 'ch25-lab1', 'ch25-lab3']);
+const milestone = chapter.id === 'ch26' ? lesson.titleText.match(/^Milestone (m\d\d) /)?.[1] : undefined;
+const dbtPreset = milestone ? `${milestone}-start`
+  : chapter.number >= 6 && chapter.number <= 25 && (dbtLines.length > 0 || lesson.labs.some((l) => !NO_DBT_LABS.has(l))) ? `${chapter.id}-start` : undefined;
+const dbtSuggestions = [...new Set(dbtLines)].filter((c) => c.length <= 60).slice(0, 3);
+const sqlExamples = dbtPreset ? [] : codeIds.filter((id) => id in (sqlMeta as { examples: Record<string, unknown> }).examples);
+const hasWork = !!dbtPreset || sqlExamples.length > 0;
+const labHref = lesson.labs[0] ? `${url(routes.lesson(lesson, chapter.id))}#${lesson.labs[0]}` : undefined;
 ---
 <Base title={`${lesson.number} ${lesson.titleText}`} section="path" description={`Lesson ${lesson.number} of the Model Citizen dbt course: ${lesson.titleText}.`}>
   <div class="lessonbar">
@@ -102,7 +114,14 @@ const hasWork = sqlExamples.length > 0;
           : next && <a class="pg next" href={url(routes.lesson(next.lesson, next.chapter.id))}><span>Next lesson</span><b>{next.lesson.number} {next.lesson.titleText}</b></a>}
       </nav>
     </article>
-    {hasWork && (
+    {dbtPreset && (
+      <aside class="work" aria-label="dbt workspace" data-dbt-workspace>
+        <div class="work-in">
+          <DbtWorkspace client:visible preset={dbtPreset} title={milestone ? `ShopFlow workspace, ${milestone}` : `Chapter ${chapter.number} workspace`} onMachineHref={labHref} suggestions={dbtSuggestions} />
+        </div>
+      </aside>
+    )}
+    {sqlExamples.length > 0 && (
       <aside class="work" aria-label="SQL workspace" data-sql-workspace>
         <div class="work-in">
           <SqlWorkspace client:idle heading="Try it here" description={`The practice database runs in your browser. Press "Run in workspace" on any example of this lesson, or write your own query.`} initialCodeId={sqlExamples[0]} />

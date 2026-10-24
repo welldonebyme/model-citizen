@@ -30,6 +30,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.4",
   "options": [
    {
     "c": [
@@ -97,7 +98,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "choose": 2,
@@ -149,6 +151,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "1.10",
   "options": [
    {
     "c": [
@@ -220,7 +223,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -253,6 +257,7 @@
   },
   "keyRaw": "\\textbf{NULL.}",
   "keyStatus": "ok",
+  "objective": "1.10",
   "source": {
    "chapter": 13,
    "kind": "chapter",
@@ -274,7 +279,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -397,6 +403,7 @@
     }
    ]
   },
+  "objective": "1.10",
   "source": {
    "chapter": 13,
    "kind": "chapter",
@@ -409,7 +416,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -447,6 +455,7 @@
   "key": 6,
   "keyRaw": "\\textbf{Line 6.}",
   "keyStatus": "ok",
+  "objective": "1.10",
   "source": {
    "chapter": 13,
    "kind": "chapter",
@@ -466,7 +475,8 @@
     "t": "code",
     "text": "snapshots:\n  - name: orders_snapshot\n    relation: source('jaffle_shop', 'orders')\n    config:\n      schema: snapshots\n      unique_key: user_id\n      strategy: check\n      check_cols: ['status']"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -494,6 +504,7 @@
   ],
   "keyRaw": "\\textbf{B, D, C, A.}",
   "keyStatus": "ok",
+  "objective": "1.10",
   "options": [
    {
     "c": [
@@ -554,7 +565,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -592,6 +604,7 @@
   },
   "keyRaw": "\\textbf{YES, YES, NO, YES.}",
   "keyStatus": "ok",
+  "objective": "1.10",
   "options": [
    {
     "c": [
@@ -654,7 +667,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -692,6 +706,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.10",
   "options": [
    {
     "c": [
@@ -755,7 +770,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -793,6 +809,7 @@
   "key": "A",
   "keyRaw": "\\textbf{A.}",
   "keyStatus": "ok",
+  "objective": "1.10",
   "options": [
    {
     "c": [
@@ -846,7 +863,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -881,6 +899,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.10",
   "options": [
    {
     "c": [
@@ -939,7 +958,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -977,6 +997,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.10",
   "options": [
    {
     "c": [
@@ -1049,7 +1070,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1087,6 +1109,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.10",
   "options": [
    {
     "c": [
@@ -1163,7 +1186,8 @@
     "t": "code",
     "text": "{% snapshot orders_snapshot %}\n{{ config(target_schema='snapshots', unique_key='id',\n          strategy='timestamp', updated_at='updated_at') }}\nselect * from {{ source('shop', 'orders') }}\n{% endsnapshot %}"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "choose": 2,
@@ -1190,6 +1214,7 @@
   ],
   "keyRaw": "\\textbf{B and C.}",
   "keyStatus": "ok",
+  "objective": "1.10",
   "options": [
    {
     "c": [
@@ -1244,7 +1269,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1272,6 +1298,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.4",
   "options": [
    {
     "c": [
@@ -1322,7 +1349,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1360,6 +1388,7 @@
   },
   "keyRaw": "\\textbf{YES, YES, NO, YES.}",
   "keyStatus": "ok",
+  "objective": "1.12",
   "options": [
    {
     "c": [
@@ -1417,7 +1446,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -1453,6 +1483,7 @@
   },
   "keyRaw": "\\textbf{\\code{dbt\\_valid\\_to\\_current}}",
   "keyStatus": "ok",
+  "objective": "1.10",
   "source": {
    "chapter": 13,
    "kind": "chapter",
@@ -1479,7 +1510,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1512,6 +1544,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.10",
   "options": [
    {
     "c": [
@@ -1567,7 +1600,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1605,6 +1639,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.4",
   "options": [
    {
     "c": [
@@ -1672,6 +1707,7 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  }
 ]

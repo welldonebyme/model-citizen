@@ -76,6 +76,30 @@ def apply_overrides(drafts_by_id: dict[str, Draft], overrides: Path) -> list[str
     return applied
 
 
+def load_question_map(overrides: Path, chapter_qids: list[str], lesson_ids: set[str], objective_ids: set[str]) -> dict:
+    """overrides/question-map.yaml: chapter quiz question -> {lesson, objective, ...} (agent-mapped, reviewed).
+    Every chapter question must be in it, with an existing lesson of its own chapter and a known objective."""
+    p = overrides / "question-map.yaml"
+    data = (yaml.safe_load(p.read_text()) or {}).get("questions") or {} if p.exists() else {}
+    problems = []
+    for qid, e in data.items():
+        if qid not in chapter_qids:
+            problems.append(f"unknown chapter question {qid}")
+            continue
+        if e.get("lesson") not in lesson_ids:
+            problems.append(f"{qid}: unknown lesson {e.get('lesson')!r}")
+        elif e["lesson"].split("-")[0] != qid.split("-")[1]:
+            problems.append(f"{qid}: lesson {e['lesson']} is in another chapter")
+        if e.get("objective") not in objective_ids:
+            problems.append(f"{qid}: unknown objective {e.get('objective')!r}")
+    missing = [q for q in chapter_qids if q not in data]
+    if missing:
+        problems.append(f"{len(missing)} chapter questions are not mapped: {', '.join(missing[:10])}")
+    if problems:
+        raise ConvertError("overrides/question-map.yaml: " + "; ".join(problems[:20]))
+    return data
+
+
 def todo_entry(qid: str, d: Draft) -> dict:
     e = {"id": qid, "where": d.where, "format": d.format, "formatLabel": d.format_label, "hash": qhash(d),
          "reason": d.key_reason, "keyRaw": d.key_raw,
@@ -202,6 +226,17 @@ def assemble(res: BuildResult, book: Path, rules: Path, overrides: Path) -> tupl
             q_sources[qid] = {"kind": "mock", "mock": m, "n": i}
             mock_ids[m].append(qid)
     info["overrides"] = apply_overrides(drafts_by_id, overrides)
+    chapter_qids = [qid for qid, src in q_sources.items() if src["kind"] == "chapter"]
+    lesson_ids = {l["id"] for r in res.chapters for l in r.chapter["lessons"]}
+    qmap = load_question_map(overrides, chapter_qids, lesson_ids, all_ids(res.objectives))
+    for qid in chapter_qids:                     # mocks keep the objective of their \mockkey
+        drafts_by_id[qid].objective = qmap[qid]["objective"]
+    for r in res.chapters:                       # inline checkpoints: the lesson's questions, in quiz order
+        n = len(r.drafts)
+        mapped = [f"q-{r.seg.id}-{i:02d}" for i in range(1, n + 1)]
+        for lesson in r.chapter["lessons"]:
+            lesson["checkpoints"] = [q for q in mapped if qmap[q]["lesson"] == lesson["id"]]
+    info["questionMap"] = qmap
     for qid, d in drafts_by_id.items():
         q = question_json(d, qid, q_sources[qid])
         if d.key_status in ("ok", "override"):
@@ -268,6 +303,10 @@ def assemble(res: BuildResult, book: Path, rules: Path, overrides: Path) -> tupl
     objs, cov = build_coverage(res.chapters, res.objectives, mocks_json, tctx)
     info["problems"] += check_coverage_appendix(objs, chapters["appB"].chapter)
     files["objectives.json"] = objs
+    for qid in chapter_qids:                     # chapter questions per objective (from the question map)
+        oid = qmap[qid]["objective"]
+        if oid in cov["objectives"]:
+            cov["objectives"][oid]["chapterQuestions"].append(qid)
     files["coverage.json"] = cov
     info["problems"] += check_mock_tables(res, mocks_json)
     files["traps.json"] = [{k: v for k, v in t.items() if k != "lesson"} for t in res.state.traps]

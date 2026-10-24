@@ -113,6 +113,7 @@ creates it (result: `converter/golden/kit-paths.json`).
 | `figures/overrides/<id>.tex` | converter | site version of a figure's TikZ source (ch02-fig1: the kit's folders), used while the book figure keeps its `% book-sha1` |
 | `overrides/keys.yaml` | reviewers | resolved answer keys (hash-protected); absent = none |
 | `overrides/keys-todo.yaml` | generated | keys the converter could not parse with certainty |
+| `overrides/question-map.yaml` | reviewers | chapter question -> lesson + objective (487; `check` requires all) -> `Question.objective`, `Lesson.checkpoints`, `coverage.chapterQuestions` |
 
 ## Checks (`check`)
 

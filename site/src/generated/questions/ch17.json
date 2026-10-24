@@ -35,6 +35,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "2.1",
   "options": [
    {
     "c": [
@@ -113,7 +114,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "choose": 2,
@@ -150,6 +152,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "2.1",
   "options": [
    {
     "c": [
@@ -212,7 +215,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "blanks": 2,
@@ -266,6 +270,7 @@
   "keyNote": "Two values joined by 'or' ('set on_schema_change to ___ or ___'): either order is right. Verified in dbt 1.11.16 config validation.",
   "keyRaw": "\\textbf{\\code{append\\_new\\_columns} or \\code{fail}.}",
   "keyStatus": "override",
+  "objective": "2.1",
   "source": {
    "chapter": 17,
    "kind": "chapter",
@@ -291,7 +296,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -329,6 +335,7 @@
   "key": 8,
   "keyRaw": "\\textbf{Line 8.}",
   "keyStatus": "ok",
+  "objective": "2.1",
   "source": {
    "chapter": 17,
    "kind": "chapter",
@@ -353,7 +360,8 @@
     "t": "code",
     "text": "version: 2\n\nmodels:\n  - name: fct_payments_daily\n    config:\n      materialized: incremental\n      unique_key: payment_date\n      on_schema_change: sync_all_columns\n      contract:\n        enforced: true\n    columns:\n      - name: payment_date\n        data_type: date\n      - name: amount\n        data_type: decimal(16, 2)"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -466,6 +474,7 @@
     }
    ]
   },
+  "objective": "2.3",
   "source": {
    "chapter": 17,
    "kind": "chapter",
@@ -478,7 +487,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -508,6 +518,7 @@
   ],
   "keyRaw": "\\textbf{B, E, C, D, A, F.}",
   "keyStatus": "ok",
+  "objective": "2.1",
   "options": [
    {
     "c": [
@@ -573,7 +584,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -616,6 +628,7 @@
   },
   "keyRaw": "\\textbf{NO, YES, YES, YES.}",
   "keyStatus": "ok",
+  "objective": "2.2",
   "options": [
    {
     "c": [
@@ -677,7 +690,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -700,6 +714,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "3.1",
   "options": [
    {
     "c": [
@@ -782,7 +797,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -820,6 +836,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "3.1",
   "options": [
    {
     "c": [
@@ -884,7 +901,8 @@
     "t": "code",
     "text": "  | column_name  | definition_type | contract_type | mismatch_reason       |\n  | ------------ | --------------- | ------------- | --------------------- |\n  | region       |                 | VARCHAR       | missing in definition |\n  | sales_region | VARCHAR         |               | missing in contract   |"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -919,6 +937,7 @@
   "key": "D",
   "keyRaw": "\\textbf{D.}",
   "keyStatus": "ok",
+  "objective": "2.3",
   "options": [
    {
     "c": [
@@ -977,7 +996,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "choose": 2,
@@ -1004,6 +1024,7 @@
   ],
   "keyRaw": "\\textbf{B and D.}",
   "keyStatus": "ok",
+  "objective": "2.1",
   "options": [
    {
     "c": [
@@ -1093,7 +1114,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "blanks": 1,
@@ -1141,6 +1163,7 @@
   "keyNote": "Book: 'v (version works too)'; ref() reads the kwarg version or v.",
   "keyRaw": "\\textbf{\\code{v}}",
   "keyStatus": "override",
+  "objective": "2.2",
   "source": {
    "chapter": 17,
    "kind": "chapter",
@@ -1170,7 +1193,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -1193,6 +1217,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "2.1",
   "options": [
    {
     "c": [
@@ -1238,7 +1263,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -1276,6 +1302,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "2.2",
   "options": [
    {
     "c": [
@@ -1334,7 +1361,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -1367,6 +1395,7 @@
   },
   "keyRaw": "\\textbf{YES, NO, YES, YES.}",
   "keyStatus": "ok",
+  "objective": "2.3",
   "options": [
    {
     "c": [
@@ -1420,7 +1449,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -1458,6 +1488,7 @@
   "key": "A",
   "keyRaw": "\\textbf{A.}",
   "keyStatus": "ok",
+  "objective": "2.1",
   "options": [
    {
     "c": [
@@ -1571,7 +1602,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -1614,6 +1646,7 @@
   "key": 9,
   "keyRaw": "\\textbf{Line 9.}",
   "keyStatus": "ok",
+  "objective": "2.1",
   "source": {
    "chapter": 17,
    "kind": "chapter",
@@ -1633,7 +1666,8 @@
     "t": "code",
     "text": "version: 2\n\ngroups:\n  - name: finance\n    owner:\n      email: finance-data@jaffle.example\n  - name: ops\n    owner:\n      slack: \"#ops-data\"\n\nmodels:\n  - name: fct_payouts\n    config:\n      group: ops\n      access: private"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -1755,6 +1789,7 @@
     }
    ]
   },
+  "objective": "2.2",
   "source": {
    "chapter": 17,
    "kind": "chapter",
@@ -1767,7 +1802,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -1790,6 +1826,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "2.1",
   "options": [
    {
     "c": [
@@ -1853,6 +1890,7 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  }
 ]

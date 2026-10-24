@@ -57,6 +57,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "CP0-CLI",
   "options": [
    {
     "c": [
@@ -174,6 +175,7 @@
   ],
   "keyRaw": "\\textbf{B, D, E, C, A.}",
   "keyStatus": "ok",
+  "objective": "1.4",
   "options": [
    {
     "c": [
@@ -238,7 +240,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -275,6 +278,7 @@
   },
   "keyRaw": "\\textbf{\\code{profile}.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "source": {
    "chapter": 6,
    "kind": "chapter",
@@ -301,7 +305,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -349,6 +354,7 @@
   "key": 1,
   "keyRaw": "\\textbf{Line 1.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "source": {
    "chapter": 6,
    "kind": "chapter",
@@ -368,7 +374,8 @@
     "t": "code",
     "text": "name: 'jaffle-shop'\nversion: '2.1.0'\nprofile: 'jaffle_shop'\nmodel-paths: [\"models\"]\nclean-targets:\n  - \"target\""
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -502,6 +509,7 @@
     }
    ]
   },
+  "objective": "3.2",
   "source": {
    "chapter": 6,
    "kind": "chapter",
@@ -514,7 +522,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "choose": 2,
@@ -551,6 +560,7 @@
   ],
   "keyRaw": "\\textbf{A and D.}",
   "keyStatus": "ok",
+  "objective": "CP0-GIT",
   "options": [
    {
     "c": [
@@ -658,6 +668,7 @@
   },
   "keyRaw": "\\textbf{YES, NO, YES, NO.}",
   "keyStatus": "ok",
+  "objective": "1.4",
   "options": [
    {
     "c": [
@@ -711,7 +722,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -749,6 +761,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "CP0-CLI",
   "options": [
    {
     "c": [
@@ -904,6 +917,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "3.2",
   "options": [
    {
     "c": [
@@ -961,7 +975,8 @@
     "t": "code",
     "text": "create table \"analytics\".\"dbt_lina\".\"orders__dbt_tmp\" as (\n    select ..."
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -984,6 +999,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "3.1",
   "options": [
    {
     "c": [
@@ -1047,7 +1063,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -1070,6 +1087,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.4",
   "options": [
    {
     "c": [
@@ -1128,7 +1146,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -1166,6 +1185,7 @@
   "keyNote": "Book: '--skip-profile-setup (short form -s)'; dbt init --help in 1.11.16 lists -s.",
   "keyRaw": "\\textbf{\\code{-{}-skip-profile-setup}}",
   "keyStatus": "override",
+  "objective": "1.4",
   "source": {
    "chapter": 6,
    "kind": "chapter",
@@ -1187,7 +1207,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1215,6 +1236,7 @@
   "key": "D",
   "keyRaw": "\\textbf{D.}",
   "keyStatus": "ok",
+  "objective": "CP0-CLI",
   "options": [
    {
     "c": [
@@ -1314,6 +1336,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "CP0-CLI",
   "options": [
    {
     "c": [
@@ -1430,6 +1453,7 @@
   },
   "keyRaw": "\\textbf{NO, YES, YES, YES.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -1501,7 +1525,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1544,6 +1569,7 @@
   "key": 2,
   "keyRaw": "\\textbf{Line 2.}",
   "keyStatus": "ok",
+  "objective": "CP0-CLI",
   "source": {
    "chapter": 6,
    "kind": "chapter",
@@ -1610,6 +1636,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "3.1",
   "options": [
    {
     "c": [
@@ -1677,7 +1704,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "choose": 2,
@@ -1709,6 +1737,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "CP0-GIT",
   "options": [
    {
     "c": [

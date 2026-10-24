@@ -30,6 +30,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "options": [
    {
     "c": [
@@ -98,7 +99,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -121,6 +123,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "options": [
    {
     "c": [
@@ -178,7 +181,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -219,6 +223,7 @@
   },
   "keyRaw": "\\textbf{\\code{\\_\\_dbt\\_\\_cte\\_\\_int\\_payments\\_\\_successful}}",
   "keyStatus": "ok",
+  "objective": "3.2",
   "source": {
    "chapter": 8,
    "kind": "chapter",
@@ -249,7 +254,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -366,6 +372,7 @@
     }
    ]
   },
+  "objective": "1.2",
   "source": {
    "chapter": 8,
    "kind": "chapter",
@@ -378,7 +385,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -426,6 +434,7 @@
   "key": 8,
   "keyRaw": "\\textbf{Line 8.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "source": {
    "chapter": 8,
    "kind": "chapter",
@@ -450,7 +459,8 @@
     "t": "code",
     "text": "name: 'jaffle_dbt'\nprofile: 'jaffle_dbt'\n\nmodels:\n  jaffle_dbt:\n    staging:\n      +materialized: view\n    mart:\n      +materialized: table"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "choose": 2,
@@ -482,6 +492,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "options": [
    {
     "c": [
@@ -530,7 +541,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -568,6 +580,7 @@
   },
   "keyRaw": "\\textbf{NO, YES, NO, YES.}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "options": [
    {
     "c": [
@@ -641,7 +654,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -670,6 +684,7 @@
   ],
   "keyRaw": "\\textbf{C, E, B, D, A.}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "options": [
    {
     "c": [
@@ -734,7 +749,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -772,6 +788,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -854,7 +871,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -877,6 +895,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "options": [
    {
     "c": [
@@ -929,7 +948,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -962,6 +982,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.8",
   "options": [
    {
     "c": [
@@ -1010,7 +1031,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1033,6 +1055,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "options": [
    {
     "c": [
@@ -1092,7 +1115,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 2,
@@ -1148,6 +1172,7 @@
   },
   "keyRaw": "\\textbf{\\code{on\\_configuration\\_change}}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "source": {
    "chapter": 8,
    "kind": "chapter",
@@ -1168,7 +1193,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1206,6 +1232,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "3.2",
   "options": [
    {
     "c": [
@@ -1268,7 +1295,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -1291,6 +1319,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B (7).}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "options": [
    {
     "c": [
@@ -1339,7 +1368,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1372,6 +1402,7 @@
   },
   "keyRaw": "\\textbf{YES, NO, YES, YES.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -1435,7 +1466,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1478,6 +1510,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "options": [
    {
     "c": [
@@ -1543,7 +1576,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1593,6 +1627,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -1660,6 +1695,7 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  }
 ]

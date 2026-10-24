@@ -25,6 +25,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "3.4",
   "options": [
    {
     "c": [
@@ -79,7 +80,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -119,6 +121,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "6.2",
   "options": [
    {
     "c": [
@@ -193,7 +196,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "choose": 2,
@@ -220,6 +224,7 @@
   ],
   "keyRaw": "\\textbf{B and C.}",
   "keyStatus": "ok",
+  "objective": "5.3",
   "options": [
    {
     "c": [
@@ -273,7 +278,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "blanks": 1,
@@ -306,6 +312,7 @@
   },
   "keyRaw": "\\textbf{empty}",
   "keyStatus": "ok",
+  "objective": "1.12",
   "source": {
    "chapter": 25,
    "kind": "chapter",
@@ -336,7 +343,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -404,6 +412,7 @@
     }
    ]
   },
+  "objective": "3.4",
   "source": {
    "chapter": 25,
    "kind": "chapter",
@@ -416,7 +425,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -452,6 +462,7 @@
   ],
   "keyRaw": "\\textbf{B, D, C, A, E.}",
   "keyStatus": "ok",
+  "objective": "3.4",
   "options": [
    {
     "c": [
@@ -506,7 +517,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -554,6 +566,7 @@
   "key": 6,
   "keyRaw": "\\textbf{Line 6.}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "source": {
    "chapter": 25,
    "kind": "chapter",
@@ -573,7 +586,8 @@
     "t": "code",
     "text": "      - name: Get the production manifest\n        run: cp /artifacts/manifest.json prod-artifacts/\n      - name: Install packages\n        run: dbt deps\n      - name: Build the changes\n        run: dbt build --select state:modified+ --state prod-artifacts --target ci"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -602,6 +616,7 @@
   },
   "keyRaw": "\\textbf{YES, NO, YES, NO, YES.}",
   "keyStatus": "ok",
+  "objective": "3.4",
   "options": [
    {
     "c": [
@@ -650,7 +665,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -673,6 +689,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -744,7 +761,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -787,6 +805,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.12",
   "options": [
    {
     "c": [
@@ -850,7 +869,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "choose": 2,
@@ -902,6 +922,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "1.12",
   "options": [
    {
     "c": [
@@ -971,7 +992,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -1002,6 +1024,7 @@
   },
   "keyRaw": "\\textbf{\\code{DBT\\_ENV\\_SECRET\\_}}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "source": {
    "chapter": 25,
    "kind": "chapter",
@@ -1018,7 +1041,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1041,6 +1065,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "options": [
    {
     "c": [
@@ -1079,7 +1104,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -1123,6 +1149,7 @@
   },
   "keyRaw": "\\textbf{YES, NO, YES, YES, NO.}",
   "keyStatus": "ok",
+  "objective": "CP0-GIT",
   "options": [
    {
     "c": [
@@ -1243,6 +1270,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "options": [
    {
     "c": [
@@ -1293,7 +1321,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -1378,6 +1407,7 @@
     }
    ]
   },
+  "objective": "5.3",
   "source": {
    "chapter": 25,
    "kind": "chapter",
@@ -1390,7 +1420,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -1413,6 +1444,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.3",
   "options": [
    {
     "c": [
@@ -1451,7 +1483,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -1506,6 +1539,7 @@
   "key": "A",
   "keyRaw": "\\textbf{A.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -1576,6 +1610,7 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  }
 ]

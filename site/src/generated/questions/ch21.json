@@ -30,6 +30,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "6.2",
   "options": [
    {
     "c": [
@@ -80,7 +81,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "blanks": 3,
@@ -126,6 +128,7 @@
   },
   "keyRaw": "\\textbf{minute, hour, day.}",
   "keyStatus": "ok",
+  "objective": "6.2",
   "source": {
    "chapter": 21,
    "kind": "chapter",
@@ -165,7 +168,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "explanation": [
@@ -208,6 +212,7 @@
   "key": 9,
   "keyRaw": "\\textbf{Line 9.}",
   "keyStatus": "ok",
+  "objective": "6.2",
   "source": {
    "chapter": 21,
    "kind": "chapter",
@@ -231,7 +236,8 @@
     "t": "code",
     "text": "version: 2\n\nsources:\n  - name: crm\n    config:\n      loaded_at_field: _synced_at\n      freshness:\n        warn_after: {count: 12, period: hour}\n        error_after: {count: 2, period: week}\n    tables:\n      - name: accounts\n      - name: contacts\n        config:\n          freshness: null"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "explanation": [
@@ -264,6 +270,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "6.2",
   "options": [
    {
     "c": [
@@ -322,7 +329,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "choose": 2,
@@ -363,6 +371,7 @@
   ],
   "keyRaw": "\\textbf{A and B.}",
   "keyStatus": "ok",
+  "objective": "6.2",
   "options": [
    {
     "c": [
@@ -441,7 +450,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "explanation": [
@@ -554,6 +564,7 @@
     }
    ]
   },
+  "objective": "6.2",
   "source": {
    "chapter": 21,
    "kind": "chapter",
@@ -571,7 +582,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "explanation": [
@@ -610,6 +622,7 @@
   ],
   "keyRaw": "\\textbf{C, B, D, E, A.}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "options": [
    {
     "c": [
@@ -677,7 +690,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -720,6 +734,7 @@
   },
   "keyRaw": "\\textbf{NO, YES, YES, NO.}",
   "keyStatus": "ok",
+  "objective": "6.2",
   "options": [
    {
     "c": [
@@ -785,7 +800,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "explanation": [
@@ -813,6 +829,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "6.2",
   "options": [
    {
     "c": [
@@ -888,7 +905,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "explanation": [
@@ -911,6 +929,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "6.2",
   "options": [
    {
     "c": [
@@ -1000,7 +1019,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "explanation": [
@@ -1048,6 +1068,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "6.1",
   "options": [
    {
     "c": [
@@ -1110,7 +1131,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "choose": 2,
@@ -1157,6 +1179,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "6.1",
   "options": [
    {
     "c": [
@@ -1221,7 +1244,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "explanation": [
@@ -1259,6 +1283,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "6.1",
   "options": [
    {
     "c": [
@@ -1303,7 +1328,8 @@
     "t": "code",
     "text": "$ dbt run --select exposure:monthly_revenue_dashboard"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "blanks": 1,
@@ -1339,6 +1365,7 @@
   },
   "keyRaw": "\\textbf{\\code{+exposure:monthly\\_revenue\\_dashboard}}",
   "keyStatus": "ok",
+  "objective": "6.1",
   "source": {
    "chapter": 21,
    "kind": "chapter",
@@ -1365,7 +1392,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "explanation": [
@@ -1423,6 +1451,7 @@
   "key": 7,
   "keyRaw": "\\textbf{Line 7.}",
   "keyStatus": "ok",
+  "objective": "6.1",
   "source": {
    "chapter": 21,
    "kind": "chapter",
@@ -1446,7 +1475,8 @@
     "t": "code",
     "text": "version: 2\n\nexposures:\n  - name: weekly_sales\n    label: Weekly sales\n    type: dashboard\n    maturity: critical\n    url: https://bi.example.com/weekly\n    depends_on:\n      - ref('fct_orders')\n    owner:\n      email: sales-data@example.com"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "explanation": [
@@ -1474,6 +1504,7 @@
   },
   "keyRaw": "\\textbf{YES, YES, YES, NO.}",
   "keyStatus": "ok",
+  "objective": "6.1",
   "options": [
    {
     "c": [
@@ -1545,7 +1576,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "explanation": [
@@ -1573,6 +1605,7 @@
   "key": "A",
   "keyRaw": "\\textbf{A.}",
   "keyStatus": "ok",
+  "objective": "6.2",
   "options": [
    {
     "c": [
@@ -1630,7 +1663,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "explanation": [
@@ -1668,6 +1702,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "options": [
    {
     "c": [
@@ -1759,7 +1794,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -1782,6 +1818,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "6.2",
   "options": [
    {
     "c": [
@@ -1839,7 +1876,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "explanation": [
@@ -1897,6 +1935,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "6.2",
   "options": [
    {
     "c": [
@@ -1976,6 +2015,7 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  }
 ]

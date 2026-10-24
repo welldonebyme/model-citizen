@@ -106,7 +106,9 @@ type Lesson = {
   minutes: number;     // READING time only: words/130 (prose, callouts, tables, lab text, inline code) + code lines/8
                        // + output lines/20 + 1 per figure, rounded UP to the next 5 (min 5)
   labMinutes: number;  // hands-on effort: 10 per lab + 2 per numbered lab step, rounded up to 5 (0 without a lab)
-  labs: string[]; objectives: string[]; checkpoints: string[] /* question ids mapped to this lesson (override file) */;
+  labs: string[]; objectives: string[];
+  checkpoints: string[]; // ids of the chapter quiz questions mapped to this lesson by overrides/question-map.yaml,
+                         // in quiz order (may be empty)
 };
 ```
 
@@ -119,7 +121,8 @@ type Question = {
   source: { kind: "chapter"; chapter: number; n: number } | { kind: "mock"; mock: 1 | 2 | 3; n: number };
   format: Format; formatLabel: string;     // label as printed, e.g. "Multiple select — choose 2"
   choose?: number;                          // ms
-  objective?: string;                       // mocks: from \mockkey; chapters: from coverage/override
+  objective?: string;                       // always set. mocks: from \mockkey; chapter questions: from
+                                            // overrides/question-map.yaml (agent-mapped, reviewed; never guessed)
   topic?: number;                           // 1..7 (mocks: blueprint)
   stem: Block[];                            // may contain code blocks / tables; hotspot code has lineNumbers
   options?: { id: string; c: Inline[] }[];  // mc, ms, domc, order (A, B, C...)
@@ -219,7 +222,9 @@ its chapter; the PDF prints an unrelated counter there, see report.json bookErro
   titles come from dbt-bible/tools/make_coverage.py (plain text, no TeX ligatures); `title` is null for tags the book
   never defines (CP0-CLI, CP0-DATA, CP0-YAML, CP0-JINJA, CP0-PY, EXAM, PLAN, ALL).
 - `coverage.json`: `{objectives: {id: {chapters, lessons, labs, mockQuestions, chapterQuestions}}, gaps: []}`
-  (make_coverage.py logic; chapterQuestions stays empty until an override maps chapter questions to objectives).
+  (make_coverage.py logic; `chapterQuestions` = the chapter questions that overrides/question-map.yaml maps to the
+  objective, in book order; questions mapped to CP0-CLI/CP0-DATA/CP0-YAML/CP0-JINJA/CP0-PY or PLAN/EXAM/ALL carry
+  the objective but have no coverage entry).
 - `mocks/mockN.json`: `{id, mock, title, chapter, answersChapter, minutes: 120, questions, formats, topics}`.
 - `plan.json`: `{source, intro, columns, weeks: [{week, bible, official, checkpoint}], rhythms: [{rhythm, how}],
   session: [{minutes, activity}], readiness: {intro, conditions: Block[][]}}`.

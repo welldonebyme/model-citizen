@@ -45,6 +45,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "options": [
    {
     "c": [
@@ -96,7 +97,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "choose": 2,
@@ -153,6 +155,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "options": [
    {
     "c": [
@@ -212,7 +215,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "blanks": 2,
@@ -278,6 +282,7 @@
   },
   "keyRaw": "\\textbf{\\code{arguments}}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "source": {
    "chapter": 18,
    "kind": "chapter",
@@ -308,7 +313,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -351,6 +357,7 @@
   "key": 11,
   "keyRaw": "\\textbf{Line 11.}",
   "keyStatus": "ok",
+  "objective": "3.3",
   "source": {
    "chapter": 18,
    "kind": "chapter",
@@ -375,7 +382,8 @@
     "t": "code",
     "text": "version: 2\nmodels:\n  - name: stg_stripe__payments\n    columns:\n      - name: payment_id\n        data_tests:\n          - unique\n      - name: status\n        data_tests:\n          - accepted_values:\n              values: ['success', 'fail']\n              config:\n                severity: warn"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -495,6 +503,7 @@
     }
    ]
   },
+  "objective": "5.2",
   "source": {
    "chapter": 18,
    "kind": "chapter",
@@ -507,7 +516,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -536,6 +546,7 @@
   ],
   "keyRaw": "\\textbf{B, C, D, A, E.}",
   "keyStatus": "ok",
+  "objective": "5.3",
   "options": [
    {
     "c": [
@@ -600,7 +611,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -663,6 +675,7 @@
   },
   "keyRaw": "\\textbf{YES, NO, NO, NO.}",
   "keyStatus": "ok",
+  "objective": "5.2",
   "options": [
    {
     "c": [
@@ -735,7 +748,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -778,6 +792,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "options": [
    {
     "c": [
@@ -852,7 +867,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -875,6 +891,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.2",
   "options": [
    {
     "c": [
@@ -973,7 +990,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -1016,6 +1034,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "4.1",
   "options": [
    {
     "c": [
@@ -1079,7 +1098,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 4
  },
  {
   "explanation": [
@@ -1112,6 +1132,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.2",
   "options": [
    {
     "c": [
@@ -1190,7 +1211,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "blanks": 1,
@@ -1232,6 +1254,7 @@
   },
   "keyRaw": "\\textbf{\\code{not\\_negative}.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "source": {
    "chapter": 18,
    "kind": "chapter",
@@ -1262,7 +1285,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -1295,6 +1319,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "options": [
    {
     "c": [
@@ -1363,7 +1388,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "choose": 2,
@@ -1410,6 +1436,7 @@
   ],
   "keyRaw": "\\textbf{A and B.}",
   "keyStatus": "ok",
+  "objective": "5.2",
   "options": [
    {
     "c": [
@@ -1509,7 +1536,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -1557,6 +1585,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.2",
   "options": [
    {
     "c": [
@@ -1623,7 +1652,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -1694,6 +1724,7 @@
   },
   "keyRaw": "\\textbf{YES, NO, NO, YES, YES.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "options": [
    {
     "c": [
@@ -1768,7 +1799,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -1791,6 +1823,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.2",
   "options": [
    {
     "c": [
@@ -1839,7 +1872,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -1892,6 +1926,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.3",
   "options": [
    {
     "c": [
@@ -1954,7 +1989,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -1982,6 +2018,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.2",
   "options": [
    {
     "c": [
@@ -2037,7 +2074,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -2085,6 +2123,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.2",
   "options": [
    {
     "c": [
@@ -2145,6 +2184,7 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  }
 ]

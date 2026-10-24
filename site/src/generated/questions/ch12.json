@@ -20,6 +20,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.4",
   "options": [
    {
     "c": [
@@ -58,7 +59,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -96,6 +98,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.4",
   "options": [
    {
     "c": [
@@ -154,7 +157,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -192,6 +196,7 @@
   "keyNote": "Book: '--full-refresh (short form -f)'; dbt seed --help lists -f.",
   "keyRaw": "\\textbf{\\code{-{}-full-refresh}}",
   "keyStatus": "override",
+  "objective": "1.4",
   "source": {
    "chapter": 12,
    "kind": "chapter",
@@ -217,7 +222,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "choose": 2,
@@ -264,6 +270,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -373,7 +380,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -406,6 +414,7 @@
   },
   "keyRaw": "\\textbf{YES, NO, YES, YES.}",
   "keyStatus": "ok",
+  "objective": "1.4",
   "options": [
    {
     "c": [
@@ -466,7 +475,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -586,6 +596,7 @@
     }
    ]
   },
+  "objective": "1.4",
   "source": {
    "chapter": 12,
    "kind": "chapter",
@@ -598,7 +609,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -633,6 +645,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -711,7 +724,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -754,6 +768,7 @@
   "key": 3,
   "keyRaw": "\\textbf{Line 3.}",
   "keyStatus": "ok",
+  "objective": "3.3",
   "source": {
    "chapter": 12,
    "kind": "chapter",
@@ -773,7 +788,8 @@
     "t": "code",
     "text": "version: 2\n\nmodels:\n  - name: country_regions\n    config:\n      column_types:\n        country: varchar\n    columns:\n      - name: country\n        data_tests:\n          - unique"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -806,6 +822,7 @@
   ],
   "keyRaw": "\\textbf{D, B, C, A.}",
   "keyStatus": "ok",
+  "objective": "1.4",
   "options": [
    {
     "c": [
@@ -881,7 +898,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -924,6 +942,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.4",
   "options": [
    {
     "c": [
@@ -982,7 +1001,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1015,6 +1035,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -1078,7 +1099,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -1109,6 +1131,7 @@
   },
   "keyRaw": "\\textbf{\\code{delimiter}}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "source": {
    "chapter": 12,
    "kind": "chapter",
@@ -1134,7 +1157,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1177,6 +1201,7 @@
   },
   "keyRaw": "\\textbf{YES, NO, NO, YES.}",
   "keyStatus": "ok",
+  "objective": "1.4",
   "options": [
    {
     "c": [
@@ -1240,7 +1265,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1278,6 +1304,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.4",
   "options": [
    {
     "c": [
@@ -1344,7 +1371,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1367,6 +1395,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "options": [
    {
     "c": [
@@ -1410,7 +1439,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "choose": 2,
@@ -1447,6 +1477,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "3.2",
   "options": [
    {
     "c": [
@@ -1510,7 +1541,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -1608,6 +1640,7 @@
     }
    ]
   },
+  "objective": "1.6",
   "source": {
    "chapter": 12,
    "kind": "chapter",
@@ -1620,6 +1653,7 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  }
 ]

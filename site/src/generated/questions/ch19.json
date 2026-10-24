@@ -34,6 +34,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "options": [
    {
     "c": [
@@ -72,7 +73,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "blanks": 3,
@@ -151,6 +153,7 @@
   },
   "keyRaw": "\\textbf{\\code{unit\\_tests}}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "source": {
    "chapter": 19,
    "kind": "chapter",
@@ -175,7 +178,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -253,6 +257,7 @@
   "key": 6,
   "keyRaw": "\\textbf{Line 6.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "source": {
    "chapter": 19,
    "kind": "chapter",
@@ -282,7 +287,8 @@
     "t": "code",
     "text": "unit_tests:\n  - name: test_pivot\n    model: int_orders__payment_methods_pivoted\n    given:\n      - input: ref('int_payments__successful')\n        format: dict\n        rows:\n          - {payment_id: 1, order_id: 10, payment_method: coupon, amount: 5.00}\n    expect:\n      rows:\n        - {order_id: 10, coupon_amount: 5.00}"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -388,6 +394,7 @@
     }
    ]
   },
+  "objective": "5.1",
   "source": {
    "chapter": 19,
    "kind": "chapter",
@@ -400,7 +407,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -443,6 +451,7 @@
   ],
   "keyRaw": "\\textbf{C, E, B, D, A.}",
   "keyStatus": "ok",
+  "objective": "5.3",
   "options": [
    {
     "c": [
@@ -511,7 +520,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -555,6 +565,7 @@
   },
   "keyRaw": "\\textbf{NO, YES, YES, NO, YES.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "options": [
    {
     "c": [
@@ -613,7 +624,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -641,6 +653,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "options": [
    {
     "c": [
@@ -685,7 +698,8 @@
     "t": "code",
     "text": "@@,payment_id,amount\n-> ,1         ,12.50->125.00"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -718,6 +732,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "options": [
    {
     "c": [
@@ -782,7 +797,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -815,6 +831,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "options": [
    {
     "c": [
@@ -863,7 +880,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -886,6 +904,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "options": [
    {
     "c": [
@@ -944,7 +963,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "choose": 2,
@@ -976,6 +996,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "5.3",
   "options": [
    {
     "c": [
@@ -1044,7 +1065,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -1082,6 +1104,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "4.1",
   "options": [
    {
     "c": [
@@ -1165,7 +1188,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 4
  },
  {
   "explanation": [
@@ -1193,6 +1217,7 @@
   "key": "A",
   "keyRaw": "\\textbf{A.}",
   "keyStatus": "ok",
+  "objective": "1.12",
   "options": [
    {
     "c": [
@@ -1266,7 +1291,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -1307,6 +1333,7 @@
   },
   "keyRaw": "\\textbf{\\code{sql}}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "source": {
    "chapter": 19,
    "kind": "chapter",
@@ -1327,7 +1354,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -1360,6 +1388,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "2.2",
   "options": [
    {
     "c": [
@@ -1422,7 +1451,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -1460,6 +1490,7 @@
   },
   "keyRaw": "\\textbf{YES, YES, NO, NO.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "options": [
    {
     "c": [
@@ -1513,7 +1544,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -1536,6 +1568,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.1",
   "options": [
    {
     "c": [
@@ -1584,7 +1617,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -1607,6 +1641,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "5.3",
   "options": [
    {
     "c": [
@@ -1650,6 +1685,7 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 5
  }
 ]

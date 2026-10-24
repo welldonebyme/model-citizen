@@ -30,6 +30,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "options": [
    {
     "c": [
@@ -83,7 +84,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -111,6 +113,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.11",
   "options": [
    {
     "c": [
@@ -173,7 +176,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -213,6 +217,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.11",
   "options": [
    {
     "c": [
@@ -308,7 +313,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "choose": 2,
@@ -345,6 +351,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "1.14",
   "options": [
    {
     "c": [
@@ -426,7 +433,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -457,6 +465,7 @@
   },
   "keyRaw": "\\textbf{\\code{ignore}}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "source": {
    "chapter": 14,
    "kind": "chapter",
@@ -478,7 +487,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -516,6 +526,7 @@
   "keyNote": "Book: '--full-refresh or its short form -f'; dbt run --help lists -f.",
   "keyRaw": "\\textbf{\\code{--full-refresh}}",
   "keyStatus": "override",
+  "objective": "1.2",
   "source": {
    "chapter": 14,
    "kind": "chapter",
@@ -542,7 +553,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -641,6 +653,7 @@
     }
    ]
   },
+  "objective": "1.2",
   "source": {
    "chapter": 14,
    "kind": "chapter",
@@ -658,7 +671,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -793,6 +807,7 @@
     }
    ]
   },
+  "objective": "1.11",
   "source": {
    "chapter": 14,
    "kind": "chapter",
@@ -805,7 +820,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -839,6 +855,7 @@
   ],
   "keyRaw": "\\textbf{B, D, E, C, A.}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "options": [
    {
     "c": [
@@ -910,7 +927,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -965,6 +983,7 @@
   ],
   "keyRaw": "\\textbf{B, D, C, A.}",
   "keyStatus": "ok",
+  "objective": "7.2",
   "options": [
    {
     "c": [
@@ -1023,7 +1042,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -1091,6 +1111,7 @@
   "key": 7,
   "keyRaw": "\\textbf{Line 7.}",
   "keyStatus": "ok",
+  "objective": "1.14",
   "source": {
    "chapter": 14,
    "kind": "chapter",
@@ -1110,7 +1131,8 @@
     "t": "code",
     "text": "{{\n    config(\n        materialized='incremental',\n        incremental_strategy='microbatch',\n        event_time='event_at',\n        begin='2024-01-01',\n        batch_size='week',\n        lookback=2\n    )\n}}\nselect * from {{ ref('stg_events') }}"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1163,6 +1185,7 @@
   "key": 7,
   "keyRaw": "\\textbf{Line 7.}",
   "keyStatus": "ok",
+  "objective": "1.12",
   "source": {
    "chapter": 14,
    "kind": "chapter",
@@ -1187,7 +1210,8 @@
     "t": "code",
     "text": "{{ config(materialized='incremental', unique_key='event_id') }}\n\nselect *\nfrom {{ ref('stg_events') }}\n\n{% if is_incremental() %}\nwhere loaded_at > (select max(loaded_at) from {{ this }})\n{% endif %}"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1221,6 +1245,7 @@
   },
   "keyRaw": "\\textbf{YES, NO, YES, NO, YES.}",
   "keyStatus": "ok",
+  "objective": "1.14",
   "options": [
    {
     "c": [
@@ -1298,7 +1323,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1346,6 +1372,7 @@
   },
   "keyRaw": "\\textbf{NO, YES, YES, NO.}",
   "keyStatus": "ok",
+  "objective": "1.11",
   "options": [
    {
     "c": [
@@ -1428,7 +1455,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1456,6 +1484,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "options": [
    {
     "c": [
@@ -1504,7 +1533,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1539,6 +1569,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.11",
   "options": [
    {
     "c": [
@@ -1587,7 +1618,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1615,6 +1647,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.11",
   "options": [
    {
     "c": [
@@ -1670,7 +1703,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "choose": 2,
@@ -1712,6 +1746,7 @@
   ],
   "keyRaw": "\\textbf{A and B.}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "options": [
    {
     "c": [
@@ -1798,7 +1833,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1821,6 +1857,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.14",
   "options": [
    {
     "c": [
@@ -1883,7 +1920,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -1939,6 +1977,7 @@
   },
   "keyRaw": "\\textbf{\\code{merge}}",
   "keyStatus": "ok",
+  "objective": "1.11",
   "source": {
    "chapter": 14,
    "kind": "chapter",
@@ -1960,6 +1999,7 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  }
 ]

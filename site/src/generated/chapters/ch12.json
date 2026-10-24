@@ -251,7 +251,9 @@
    "anchors": [
     "sec-sa-seeds-what"
    ],
-   "checkpoints": [],
+   "checkpoints": [
+    "q-ch12-01"
+   ],
    "id": "ch12-s1",
    "labMinutes": 0,
    "label": "sec:sa-seeds-what",
@@ -748,7 +750,9 @@
    "anchors": [
     "sec-sa-dbt-seed"
    ],
-   "checkpoints": [],
+   "checkpoints": [
+    "q-ch12-02"
+   ],
    "id": "ch12-s3",
    "labMinutes": 10,
    "label": "sec:sa-dbt-seed",
@@ -1463,7 +1467,14 @@
    "anchors": [
     "sec-sa-configs"
    ],
-   "checkpoints": [],
+   "checkpoints": [
+    "q-ch12-04",
+    "q-ch12-07",
+    "q-ch12-10",
+    "q-ch12-11",
+    "q-ch12-12",
+    "q-ch12-17"
+   ],
    "id": "ch12-s4",
    "labMinutes": 0,
    "label": "sec:sa-configs",
@@ -2072,7 +2083,10 @@
    "anchors": [
     "sec-sa-full-refresh"
    ],
-   "checkpoints": [],
+   "checkpoints": [
+    "q-ch12-03",
+    "q-ch12-13"
+   ],
    "id": "ch12-s5",
    "labMinutes": 0,
    "label": "sec:sa-full-refresh",
@@ -2383,7 +2397,9 @@
    "anchors": [
     "sec-sa-properties"
    ],
-   "checkpoints": [],
+   "checkpoints": [
+    "q-ch12-08"
+   ],
    "id": "ch12-s6",
    "labMinutes": 0,
    "label": "sec:sa-properties",
@@ -2534,7 +2550,11 @@
    "anchors": [
     "sec-sa-dag"
    ],
-   "checkpoints": [],
+   "checkpoints": [
+    "q-ch12-09",
+    "q-ch12-14",
+    "q-ch12-15"
+   ],
    "id": "ch12-s7",
    "labMinutes": 10,
    "label": "sec:sa-dag",
@@ -3079,7 +3099,10 @@
    "anchors": [
     "sec-sa-analyses"
    ],
-   "checkpoints": [],
+   "checkpoints": [
+    "q-ch12-05",
+    "q-ch12-16"
+   ],
    "id": "ch12-s8",
    "labMinutes": 0,
    "label": "sec:sa-analyses",
@@ -3635,7 +3658,9 @@
    "anchors": [
     "sec-sa-compare"
    ],
-   "checkpoints": [],
+   "checkpoints": [
+    "q-ch12-06"
+   ],
    "id": "ch12-s9",
    "labMinutes": 10,
    "label": "sec:sa-compare",

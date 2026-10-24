@@ -40,6 +40,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "7.2",
   "options": [
    {
     "c": [
@@ -95,7 +96,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -138,6 +140,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "options": [
    {
     "c": [
@@ -201,7 +204,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "choose": 2,
@@ -248,6 +252,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "options": [
    {
     "c": [
@@ -329,7 +334,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "blanks": 1,
@@ -372,6 +378,7 @@
   },
   "keyRaw": "\\textbf{relation}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "source": {
    "chapter": 24,
    "kind": "chapter",
@@ -407,7 +414,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -500,6 +508,7 @@
     }
    ]
   },
+  "objective": "7.1",
   "source": {
    "chapter": 24,
    "kind": "chapter",
@@ -512,7 +521,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -580,6 +590,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "options": [
    {
     "c": [
@@ -658,7 +669,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -697,6 +709,7 @@
   },
   "keyRaw": "\\textbf{NO, YES, YES, NO, YES.}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "options": [
    {
     "c": [
@@ -756,7 +769,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -785,6 +799,7 @@
   ],
   "keyRaw": "\\textbf{D, B, C, A, E.}",
   "keyStatus": "ok",
+  "objective": "7.2",
   "options": [
    {
     "c": [
@@ -849,7 +864,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -887,6 +903,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "7.2",
   "options": [
    {
     "c": [
@@ -950,7 +967,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -988,6 +1006,7 @@
   "key": 4,
   "keyRaw": "\\textbf{Line 4.}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "source": {
    "chapter": 24,
    "kind": "chapter",
@@ -1007,7 +1026,8 @@
     "t": "code",
     "text": "dbt deps\nmkdir -p prod-artifacts\ncp /shared/prod/manifest.json prod-artifacts/\ndbt build --select state:modified --defer --state prod-artifacts --target ci"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -1045,6 +1065,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "7.2",
   "options": [
    {
     "c": [
@@ -1105,7 +1126,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "blanks": 1,
@@ -1143,6 +1165,7 @@
   },
   "keyRaw": "\\textbf{defer-state}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "source": {
    "chapter": 24,
    "kind": "chapter",
@@ -1163,7 +1186,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "choose": 2,
@@ -1220,6 +1244,7 @@
   ],
   "keyRaw": "\\textbf{B and D.}",
   "keyStatus": "ok",
+  "objective": "7.2",
   "options": [
    {
     "c": [
@@ -1284,7 +1309,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -1317,6 +1343,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "options": [
    {
     "c": [
@@ -1390,7 +1417,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -1449,6 +1477,7 @@
   },
   "keyRaw": "\\textbf{YES, NO, YES, NO, YES.}",
   "keyStatus": "ok",
+  "objective": "7.2",
   "options": [
    {
     "c": [
@@ -1522,7 +1551,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -1640,6 +1670,7 @@
     }
    ]
   },
+  "objective": "7.1",
   "source": {
    "chapter": 24,
    "kind": "chapter",
@@ -1652,7 +1683,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -1675,6 +1707,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "4.2",
   "options": [
    {
     "c": [
@@ -1734,7 +1767,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 4
  },
  {
   "explanation": [
@@ -1762,6 +1796,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "options": [
    {
     "c": [
@@ -1807,7 +1842,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -1855,6 +1891,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "7.1",
   "options": [
    {
     "c": [
@@ -1928,6 +1965,7 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  }
 ]

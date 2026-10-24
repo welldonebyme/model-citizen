@@ -11,7 +11,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from .build import keys as K
-from .config import BOOK, INVENTORY, OUT, RULES
+from .config import BOOK, INVENTORY, OUT, OVERRIDES, RULES
 from .tex.macros import CODE_ENVS
 from .tex.nodes import Cmd, Env, walk
 from .tex.parser import Parser
@@ -261,7 +261,36 @@ def run_checks(files: dict[str, object], inventory: dict, book: Path = BOOK) -> 
     check_ligature_artefacts(files, R)
     check_escape_accounting(files, chapters, book, R)
     check_paths(files, book, R)
+    check_question_map(files, R)
     return R
+
+
+def check_question_map(files, R: Results, path: Path = OVERRIDES / "question-map.yaml") -> None:
+    """overrides/question-map.yaml vs the generated files: ids, lessons, objectives, coverage of every chapter
+    question, and the objective / checkpoints that the build derived from it."""
+    import yaml
+    qmap = (yaml.safe_load(path.read_text()) or {}).get("questions") or {}
+    chapter_qs = {q["id"]: q for k, v in files.items() if k.startswith("questions/") for q in v}
+    lessons = {l["id"]: l for k, v in files.items() if k.startswith("chapters/") for l in v["lessons"]}
+    objectives = {o["id"] for o in files.get("objectives.json", [])}
+    unknown = [q for q in qmap if q not in chapter_qs]
+    bad_lesson = [f"{q}->{e.get('lesson')}" for q, e in qmap.items() if e.get("lesson") not in lessons]
+    bad_obj = [f"{q}->{e.get('objective')}" for q, e in qmap.items() if e.get("objective") not in objectives]
+    missing = [q for q in chapter_qs if q not in qmap]
+    R.add("question map: every id is a chapter question", not unknown, ", ".join(unknown[:20]))
+    R.add("question map: every lesson exists", not bad_lesson, ", ".join(bad_lesson[:20]))
+    R.add("question map: every objective is a known id", not bad_obj, ", ".join(bad_obj[:20]))
+    R.add("question map: every chapter question is mapped", not missing,
+          f"{len(qmap)} mapped, {len(chapter_qs)} chapter questions; missing: " + ", ".join(missing[:20]))
+    wrong_obj = [q for q, x in chapter_qs.items() if q in qmap and x.get("objective") != qmap[q].get("objective")]
+    R.add("chapter questions carry the objective of the map", not wrong_obj, ", ".join(wrong_obj[:20]))
+    wrong_cp = []
+    for lid, l in lessons.items():
+        want = sorted((q for q, e in qmap.items() if e.get("lesson") == lid and q in chapter_qs),
+                      key=lambda q: chapter_qs[q]["source"]["n"])
+        if l.get("checkpoints") != want:
+            wrong_cp.append(lid)
+    R.add("lesson checkpoints = the mapped questions in quiz order", not wrong_cp, ", ".join(wrong_cp[:20]))
 
 
 AUDIT_FIELDS = {"textBook", "titleBook", "keyRaw"}

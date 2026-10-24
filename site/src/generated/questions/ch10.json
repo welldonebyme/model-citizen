@@ -42,6 +42,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -161,7 +162,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "choose": 2,
@@ -213,6 +215,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -284,7 +287,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -331,6 +335,7 @@
   },
   "keyRaw": "\\textbf{\\code{dbt\\_sara\\_finance}.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "source": {
    "chapter": 10,
    "kind": "chapter",
@@ -369,7 +374,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -505,6 +511,7 @@
     }
    ]
   },
+  "objective": "1.6",
   "source": {
    "chapter": 10,
    "kind": "chapter",
@@ -517,7 +524,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -573,6 +581,7 @@
   ],
   "keyRaw": "\\textbf{c, f, d, e, b, a, g.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -657,7 +666,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -700,6 +710,7 @@
   "key": 9,
   "keyRaw": "\\textbf{Line 9.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "source": {
    "chapter": 10,
    "kind": "chapter",
@@ -719,7 +730,8 @@
     "t": "code",
     "text": "name: 'shop'\nprofile: 'shop'\nmodels:\n  shop:\n    staging:\n      +materialized: view\n    marts:\n      +materialized: table\n      persist_docs:\n        relation: true\n        columns: true\n      +tags: ['marts']"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -769,6 +781,7 @@
   },
   "keyRaw": "\\textbf{NO, YES, YES, NO.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -847,7 +860,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -870,6 +884,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -955,7 +970,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1008,6 +1024,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -1073,7 +1090,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1113,6 +1131,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.9",
   "options": [
    {
     "c": [
@@ -1218,7 +1237,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1256,6 +1276,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.9",
   "options": [
    {
     "c": [
@@ -1325,7 +1346,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1353,6 +1375,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -1438,7 +1461,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -1489,6 +1513,7 @@
   },
   "keyRaw": "\\textbf{\\code{post\\_hook}}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "source": {
    "chapter": 10,
    "kind": "chapter",
@@ -1513,7 +1538,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1546,6 +1572,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -1612,7 +1639,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "choose": 2,
@@ -1669,6 +1697,7 @@
   ],
   "keyRaw": "\\textbf{A and B.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -1771,7 +1800,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1814,6 +1844,7 @@
   },
   "keyRaw": "\\textbf{NO, YES, YES, NO.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -1889,7 +1920,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1927,6 +1959,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -2017,7 +2050,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -2060,6 +2094,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -2140,7 +2175,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -2173,6 +2209,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -2241,7 +2278,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -2284,6 +2322,7 @@
   "keyNote": "Book answer accepts both: DBT_ENV_SECRET_ and the docs spelling DBT_ENV_SECRET (dbt matches the prefix with startswith).",
   "keyRaw": "\\textbf{\\code{DBT\\_ENV\\_SECRET\\_}}",
   "keyStatus": "override",
+  "objective": "1.6",
   "source": {
    "chapter": 10,
    "kind": "chapter",
@@ -2315,6 +2354,7 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  }
 ]

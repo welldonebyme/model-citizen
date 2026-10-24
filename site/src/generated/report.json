@@ -289,6 +289,36 @@
    "check": "no generated text names the author's folders",
    "detail": "",
    "ok": true
+  },
+  {
+   "check": "question map: every id is a chapter question",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "question map: every lesson exists",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "question map: every objective is a known id",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "question map: every chapter question is mapped",
+   "detail": "487 mapped, 487 chapter questions; missing: ",
+   "ok": true
+  },
+  {
+   "check": "chapter questions carry the objective of the map",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "lesson checkpoints = the mapped questions in quiz order",
+   "detail": "",
+   "ok": true
   }
  ],
  "bookConsistency": [],

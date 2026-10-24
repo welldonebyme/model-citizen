@@ -40,6 +40,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "4.1",
   "options": [
    {
     "c": [
@@ -105,7 +106,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 4
  },
  {
   "choose": 2,
@@ -142,6 +144,7 @@
   ],
   "keyRaw": "\\textbf{B and C.}",
   "keyStatus": "ok",
+  "objective": "1.11",
   "options": [
    {
     "c": [
@@ -215,7 +218,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 3,
@@ -267,6 +271,7 @@
   "keyNote": "Book answer is not bold-led. End is exclusive (verified with dbt 1.11.16); the three timestamp spellings are the same instant.",
   "keyRaw": "\\code{-{}-event-time-start}, \\code{-{}-event-time-end}, \\code{2026-01-01}. The end is exclusive, so 2026-01-01 stops after 31 December.\nUsing \\code{2025-12-31} as the end would rebuild 30 December only.",
   "keyStatus": "override",
+  "objective": "1.14",
   "source": {
    "chapter": 26,
    "kind": "chapter",
@@ -289,7 +294,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -332,6 +338,7 @@
   "key": 8,
   "keyRaw": "\\textbf{Line 8.}",
   "keyStatus": "ok",
+  "objective": "5.2",
   "source": {
    "chapter": 26,
    "kind": "chapter",
@@ -350,7 +357,8 @@
     "t": "code",
     "text": "1  - relationships:\n2      name: orders_customer_exists\n3      arguments:\n4        to: ref('stg_shopflow_app__customers')\n5        field: customer_id\n6      config:\n7        warn_if: \">0\"\n8        error_if: \">10\"\n9        store_failures: true"
    }
-  ]
+  ],
+  "topic": 5
  },
  {
   "explanation": [
@@ -383,6 +391,7 @@
   },
   "keyRaw": "\\textbf{NO, NO, YES, YES.}",
   "keyStatus": "ok",
+  "objective": "1.2",
   "options": [
    {
     "c": [
@@ -436,7 +445,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -481,6 +491,7 @@
   ],
   "keyRaw": "\\textbf{b, f, d, c, e, a.}",
   "keyStatus": "ok",
+  "objective": "3.4",
   "options": [
    {
     "c": [
@@ -546,7 +557,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -666,6 +678,7 @@
     }
    ]
   },
+  "objective": "1.10",
   "source": {
    "chapter": 26,
    "kind": "chapter",
@@ -678,7 +691,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -701,6 +715,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.6",
   "options": [
    {
     "c": [
@@ -771,7 +786,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -794,6 +810,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "2.1",
   "options": [
    {
     "c": [
@@ -867,7 +884,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -920,6 +938,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "7.2",
   "options": [
    {
     "c": [
@@ -980,7 +999,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 7
  },
  {
   "explanation": [
@@ -1018,6 +1038,7 @@
   },
   "keyRaw": "\\textbf{NO, YES, YES, NO.}",
   "keyStatus": "ok",
+  "objective": "4.2",
   "options": [
    {
     "c": [
@@ -1070,7 +1091,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 4
  },
  {
   "choose": 2,
@@ -1112,6 +1134,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "2.2",
   "options": [
    {
     "c": [
@@ -1169,7 +1192,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  },
  {
   "explanation": [
@@ -1207,6 +1231,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "6.1",
   "options": [
    {
     "c": [
@@ -1260,7 +1285,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "blanks": 2,
@@ -1316,6 +1342,7 @@
   "keyNote": "Book key now / dictionary; the same chapter says 'counts from today' and calls the dict form a 'fixed window', so both are accepted.",
   "keyRaw": "\\textbf{now}",
   "keyStatus": "override",
+  "objective": "1.13",
   "source": {
    "chapter": 26,
    "kind": "chapter",
@@ -1342,7 +1369,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1375,6 +1403,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "6.2",
   "options": [
    {
     "c": [
@@ -1430,7 +1459,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 6
  },
  {
   "explanation": [
@@ -1483,6 +1513,7 @@
   "key": 5,
   "keyRaw": "\\textbf{Line 5.}",
   "keyStatus": "ok",
+  "objective": "3.2",
   "source": {
    "chapter": 26,
    "kind": "chapter",
@@ -1516,7 +1547,8 @@
     "t": "code",
     "text": "1  select\n2      *,\n3      amount_paid - amount_refunded                            as net_amount,\n4      round(order_total * rate_to_eur, 2)                      as order_total_eur,\n5      round(amount_paid - amount_refunded * rate_to_eur, 2)    as net_amount_eur\n6  from joined"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -1559,6 +1591,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "2.3",
   "options": [
    {
     "c": [
@@ -1630,6 +1663,7 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 2
  }
 ]

@@ -35,6 +35,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "CP0-YAML",
   "options": [
    {
     "c": [
@@ -113,6 +114,7 @@
   "key": 10,
   "keyRaw": "\\textbf{Line 10.}",
   "keyStatus": "ok",
+  "objective": "3.3",
   "source": {
    "chapter": 5,
    "kind": "chapter",
@@ -132,7 +134,8 @@
     "t": "code",
     "text": "version: 2\n\nmodels:\n  - name: stg_customers\n    description: One row per customer\n    config:\n      materialized: view\n    columns:\n      - name: customer_id\n        description: Primary key: unique per customer\n        data_tests:\n          - unique\n          - not_null"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -190,6 +193,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "CP0-YAML",
   "options": [
    {
     "c": [
@@ -292,6 +296,7 @@
   "keyNote": "Book: 'Quotes (single or double)'. Either quote type works (checked with PyYAML), so one type or the generic word is right.",
   "keyRaw": "\\textbf{Quotes}",
   "keyStatus": "override",
+  "objective": "CP0-YAML",
   "source": {
    "chapter": 5,
    "kind": "chapter",
@@ -427,6 +432,7 @@
     }
    ]
   },
+  "objective": "CP0-JINJA",
   "source": {
    "chapter": 5,
    "kind": "chapter",
@@ -471,6 +477,7 @@
   ],
   "keyRaw": "\\textbf{A and C.}",
   "keyStatus": "ok",
+  "objective": "CP0-JINJA",
   "options": [
    {
     "c": [
@@ -594,6 +601,7 @@
   ],
   "keyRaw": "\\textbf{C, B, E, D, A.}",
   "keyStatus": "ok",
+  "objective": "3.2",
   "options": [
    {
     "c": [
@@ -673,7 +681,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -706,6 +715,7 @@
   },
   "keyRaw": "\\textbf{NO, YES, NO, YES.}",
   "keyStatus": "ok",
+  "objective": "CP0-JINJA",
   "options": [
    {
     "c": [
@@ -796,6 +806,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B (0).}",
   "keyStatus": "ok",
+  "objective": "CP0-JINJA",
   "options": [
    {
     "c": [
@@ -877,6 +888,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "3.2",
   "options": [
    {
     "c": [
@@ -936,7 +948,8 @@
     "t": "code",
     "text": "select {{ order_dat }} from {{ ref('stg_orders') }}"
    }
-  ]
+  ],
+  "topic": 3
  },
  {
   "explanation": [
@@ -974,6 +987,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "CP0-JINJA",
   "options": [
    {
     "c": [
@@ -1057,6 +1071,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "CP0-YAML",
   "options": [
    {
     "c": [
@@ -1153,6 +1168,7 @@
   "key": "C",
   "keyRaw": "\\textbf{C.}",
   "keyStatus": "ok",
+  "objective": "1.8",
   "options": [
    {
     "c": [
@@ -1196,7 +1212,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "explanation": [
@@ -1219,6 +1236,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "1.8",
   "options": [
    {
     "c": [
@@ -1262,7 +1280,8 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 1
  },
  {
   "blanks": 1,
@@ -1298,6 +1317,7 @@
   },
   "keyRaw": "\\textbf{\\code{|}}",
   "keyStatus": "ok",
+  "objective": "CP0-YAML",
   "source": {
    "chapter": 5,
    "kind": "chapter",
@@ -1359,6 +1379,7 @@
   "key": "B",
   "keyRaw": "\\textbf{B.}",
   "keyStatus": "ok",
+  "objective": "3.3",
   "options": [
    {
     "c": [
@@ -1416,6 +1437,7 @@
     ],
     "t": "p"
    }
-  ]
+  ],
+  "topic": 3
  }
 ]

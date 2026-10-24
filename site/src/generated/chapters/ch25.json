@@ -122,7 +122,9 @@
    "anchors": [
     "sec-envci-environments"
    ],
-   "checkpoints": [],
+   "checkpoints": [
+    "q-ch25-18"
+   ],
    "id": "ch25-s1",
    "labMinutes": 0,
    "label": "sec:envci-environments",
@@ -633,7 +635,9 @@
    "anchors": [
     "sec-envci-workflow"
    ],
-   "checkpoints": [],
+   "checkpoints": [
+    "q-ch25-06"
+   ],
    "id": "ch25-s2",
    "labMinutes": 0,
    "label": "sec:envci-workflow",
@@ -778,7 +782,15 @@
    "anchors": [
     "sec-envci-platform"
    ],
-   "checkpoints": [],
+   "checkpoints": [
+    "q-ch25-01",
+    "q-ch25-02",
+    "q-ch25-05",
+    "q-ch25-08",
+    "q-ch25-09",
+    "q-ch25-12",
+    "q-ch25-13"
+   ],
    "id": "ch25-s3",
    "labMinutes": 0,
    "label": "sec:envci-platform",
@@ -1968,7 +1980,13 @@
     "sec-envci-gha",
     "sec-envci-empty"
    ],
-   "checkpoints": [],
+   "checkpoints": [
+    "q-ch25-04",
+    "q-ch25-07",
+    "q-ch25-10",
+    "q-ch25-11",
+    "q-ch25-14"
+   ],
    "id": "ch25-s4",
    "labMinutes": 30,
    "label": "sec:envci-gha",
@@ -3836,7 +3854,10 @@
    "anchors": [
     "sec-envci-tests"
    ],
-   "checkpoints": [],
+   "checkpoints": [
+    "q-ch25-03",
+    "q-ch25-16"
+   ],
    "id": "ch25-s6",
    "labMinutes": 0,
    "label": "sec:envci-tests",
@@ -4222,7 +4243,10 @@
    "anchors": [
     "sec-envci-prod"
    ],
-   "checkpoints": [],
+   "checkpoints": [
+    "q-ch25-15",
+    "q-ch25-17"
+   ],
    "id": "ch25-s7",
    "labMinutes": 0,
    "label": "sec:envci-prod",

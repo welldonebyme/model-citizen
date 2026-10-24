@@ -47,7 +47,7 @@ export function calendar(rhythm: Rhythm): { planWeeks: number[]; part?: 1 | 2 }[
   return STANDARD_WEEKS.map((w) => ({ planWeeks: [w.week] }));
 }
 
-export interface PlanLesson { id: string; chapter: string; minutes: number; title: string; number: string; labs: string[]; half?: 'a' | 'b' }
+export interface PlanLesson { id: string; chapter: string; minutes: number; labMinutes?: number; title: string; number: string; labs: string[]; half?: 'a' | 'b' }
 
 /** Lessons of the course grouped by calendar week, then split over the study days of that week by minutes. */
 export function schedule(lessons: PlanLesson[], rhythm: Rhythm): string[][] {
@@ -139,11 +139,9 @@ export function mission(m: MissionInput): { items: MissionItem[]; behind: number
   const items: MissionItem[] = [];
   if (m.dueCards > 0) items.push({ kind: 'review', title: `Spaced review, ${m.dueCards} ${m.dueCards === 1 ? 'card' : 'cards'}`, minutes: 10 });
   for (const l of read) items.push({ kind: 'read', title: `${l.number} ${l.title}`, minutes: l.minutes, refs: [l.id] });
-  const labs = read.flatMap((l) => l.labs);
-  // Labs: about 50 minutes in the book's session, shared between today's labs (at most 3).
-  const todayLabs = labs.slice(0, 3);
-  const perLab = todayLabs.length ? Math.max(15, Math.round(Math.min(25, 50 / todayLabs.length) / 5) * 5) : 0;
-  for (const lab of todayLabs) items.push({ kind: 'lab', title: m.labTitles?.get(lab) ?? 'The lab of this lesson', minutes: perLab, refs: [lab] });
+  // Labs: the lesson's lab time from the converter (shared between its labs), at most 3 labs a day.
+  const todayLabs = read.flatMap((l) => l.labs.map((lab) => ({ lab, mins: l.labMinutes ? Math.max(10, Math.round(l.labMinutes / l.labs.length / 5) * 5) : 25 }))).slice(0, 3);
+  for (const { lab, mins } of todayLabs) items.push({ kind: 'lab', title: m.labTitles?.get(lab) ?? 'The lab of this lesson', minutes: mins, refs: [lab] });
   // Quiz: when today's reading finishes a chapter (or a chapter is finished but its quiz not taken).
   const finished = new Set<string>();
   for (const [cid] of m.chapterQuiz) {

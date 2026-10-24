@@ -53,7 +53,7 @@ const isLast = !next || next.chapter.id !== chapter.id;
 
     <article class="read" data-pagefind-body>
       <header class="lesson-head">
-        <p class="kicker">Lesson {lesson.number}, about {lesson.minutes} minutes</p>
+        <p class="kicker">Lesson {lesson.number}, about {lesson.minutes} minutes of reading{lesson.labMinutes ? `, ${lesson.labMinutes} minutes of lab` : ''}</p>
         <h1 data-pagefind-meta="title"><Inline c={lesson.title} /></h1>
         <span hidden data-pagefind-meta="section">Chapter {chapter.number}, {chapter.title}</span>
         {lesson.objectives.length > 0 && (

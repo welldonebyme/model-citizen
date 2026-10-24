@@ -40,7 +40,7 @@ export type Block =
 export type Step = { id: string; title: Inline[]; titleText: string; anchor?: string; blocks: Block[] };
 export type Lesson = {
   id: string; number: string; title: Inline[]; titleText: string; label?: string; anchors: string[];
-  steps: Step[]; minutes: number; labs: string[]; objectives: string[]; checkpoints: string[];
+  steps: Step[]; minutes: number; labMinutes?: number; labs: string[]; objectives: string[]; checkpoints: string[];
 };
 export type Chapter = {
   id: string; number: number; part: number; partTitle: string; title: string; label: string;

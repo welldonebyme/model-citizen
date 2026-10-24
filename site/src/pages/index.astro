@@ -21,7 +21,7 @@ for (const qs of Object.values(QFILES)) for (const q of qs) if (q.objective) que
 for (const m of Object.values(MFILES)) for (const q of m.questions ?? []) if (q.objective) questionObjectives[q.id] = q.objective;
 
 const planLessons: PlanLesson[] = lessons.map(({ chapter, lesson }) => ({
-  id: lesson.id, chapter: chapter.id, minutes: lesson.minutes, title: lesson.titleText, number: lesson.number, labs: lesson.labs,
+  id: lesson.id, chapter: chapter.id, minutes: lesson.minutes, labMinutes: lesson.labMinutes, title: lesson.titleText, number: lesson.number, labs: lesson.labs,
   half: chapter.id === 'ch04' ? (Number(lesson.number.split('.')[1]) <= 9 ? 'a' : 'b') : undefined,
 }));
 const lessonPaths = Object.fromEntries(lessons.map(({ chapter, lesson }) => [lesson.id, routes.lesson(lesson, chapter.id)]));

@@ -94,6 +94,9 @@
 }
 @container (max-width: 420px) {
   .mcl { --mcl-pad: 14px; }
+}
+/* the file name stays, like in the dbt workspace and the playground; only a very narrow column drops it */
+@container (max-width: 330px) {
   .mcl-bar .mcl-file { display: none; }
 }
 
@@ -178,3 +181,13 @@
 @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .mcl-page, :root:not([data-theme="dark"]) .mcl { --tok-cmt: #687185; } }
 :root[data-theme="light"] .mcl-page, :root[data-theme="light"] .mcl { --tok-cmt: #687185; }
 .mcl-grid-wrap:focus-visible, .mcl-out pre:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; }
+
+/* ---------------------------------------------------------------- reference viewer (ReferenceViewer.tsx) */
+/* One column that never grows wider than the page: long diff lines scroll inside their block, the tags and
+   the switches wrap (on a phone the page itself never scrolls sideways). */
+div.rv { grid-template-columns: minmax(0, 1fr); }
+div.rv > * { min-width: 0; }
+.rv-bar > .seg { flex-wrap: wrap; max-width: 100%; }
+.rv-summary a, .rv-tree button { overflow-wrap: anywhere; }
+.rv-hunk { max-width: 100%; }
+@media (max-width: 600px) { .rv-bar { flex-direction: column; align-items: flex-start; } }

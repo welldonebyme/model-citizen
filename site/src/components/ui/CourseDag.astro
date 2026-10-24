@@ -1,6 +1,8 @@
 ---
 // The course drawn as a DAG of its parts: each part depends on the ones before it, like models in a project.
 // Progress is filled in on the client (data-part-node, --p) by lib/path-progress.ts.
+// Two drawings of the same graph: left to right on wider screens, and top to bottom on phones (0 → I, II, then
+// III, IV and V side by side, then VI → VII, VIII → IX). The phone drawing copies the progress of the wide one.
 import { parts, partName, routes } from '../../lib/content';
 import { url } from '../../lib/url';
 
@@ -10,7 +12,8 @@ const { compact = false } = Astro.props;
 const SHORT: Record<number, string> = { 0: 'Start here', 1: 'Foundations', 2: 'Building with dbt', 3: 'Governance', 4: 'Testing', 5: 'Docs, freshness', 6: 'Debugging', 7: 'State and CI', 8: 'Capstone', 9: 'Exam mastery' };
 // Column layout: 0 → I → II → (III, IV, V in parallel) → VI → VII → VIII → IX
 const COL: Record<number, [number, number]> = { 0: [0, 1], 1: [1, 1], 2: [2, 1], 3: [3, 0], 4: [3, 1], 5: [3, 2], 6: [4, 1], 7: [5, 1], 8: [6, 1], 9: [7, 1] };
-const W = 132, H = 58, GX = 34, ROWH = 72, PAD = 6;
+// labels end at least 12 px before the node's right edge (its output port)
+const W = 140, H = 58, GX = 26, ROWH = 72, PAD = 6;
 const x = (c: number) => PAD + c * (W + GX);
 const y = (r: number) => PAD + r * ROWH;
 const present = parts.filter((p) => p.part in COL);
@@ -24,9 +27,37 @@ const edges = EDGES.filter(([a, b]) => has(a) && has(b)).map(([a, b]) => {
 const width = PAD * 2 + 8 * W + 7 * GX;
 const height = PAD * 2 + 2 * ROWH + H;
 const firstChapter = (n: number) => present.find((p) => p.part === n)?.chapters[0];
+
+// Phone drawing (348 units wide, drawn at about 1:1 in a phone column)
+const VW = 348;
+type VNode = { x: number; y: number; w: number; h: number; lines: string[] };
+const R = [6, 88, 170, 266, 348];
+const V: Record<number, VNode> = {
+  0: { x: 6, y: R[0], w: 150, h: 52, lines: ['Start here'] },
+  1: { x: 192, y: R[0], w: 150, h: 52, lines: ['Foundations'] },
+  2: { x: 74, y: R[1], w: 200, h: 52, lines: ['Building with dbt'] },
+  3: { x: 6, y: R[2], w: 106, h: 66, lines: ['Governance'] },
+  4: { x: 121, y: R[2], w: 106, h: 66, lines: ['Testing'] },
+  5: { x: 236, y: R[2], w: 106, h: 66, lines: ['Docs,', 'freshness'] },
+  6: { x: 6, y: R[3], w: 150, h: 52, lines: ['Debugging'] },
+  7: { x: 192, y: R[3], w: 150, h: 52, lines: ['State and CI'] },
+  8: { x: 192, y: R[4], w: 150, h: 52, lines: ['Capstone'] },
+  9: { x: 6, y: R[4], w: 150, h: 52, lines: ['Exam mastery'] },
+};
+const vHeight = R[4] + 52 + 6;
+// each edge leaves from a side (r = right, l = left, b = bottom) and enters a side (l, r, t = top)
+const vSide: Record<string, [string, string]> = { '0-1': ['r', 'l'], '6-7': ['r', 'l'], '8-9': ['l', 'r'] };
+const at = (n: VNode, s: string): [number, number] => s === 'r' ? [n.x + n.w, n.y + n.h / 2] : s === 'l' ? [n.x, n.y + n.h / 2] : s === 'b' ? [n.x + n.w / 2, n.y + n.h] : [n.x + n.w / 2, n.y];
+const vEdges = EDGES.filter(([a, b]) => has(a) && has(b)).map(([a, b]) => {
+  const [sa, sb] = vSide[`${a}-${b}`] ?? ['b', 't'];
+  const [x1, y1] = at(V[a], sa), [x2, y2] = at(V[b], sb);
+  const d = sa === 'b' ? `M${x1} ${y1} C ${x1} ${(y1 + y2) / 2}, ${x2} ${(y1 + y2) / 2}, ${x2} ${y2}` : `M${x1} ${y1} L ${x2} ${y2}`;
+  return { a, b, d, ends: [[x1, y1], [x2, y2]] as [number, number][] };
+});
+const vPorts = [...new Map(vEdges.flatMap((e) => e.ends).map((p) => [p.join(','), p])).values()];
 ---
 <div class:list={['dag', { compact }]}>
-  <svg viewBox={`0 0 ${width} ${height}`} role="group" aria-label="Course map: Part 0 to Part IX. Each part depends on the ones before it.">
+  <svg class="dag-h" viewBox={`0 0 ${width} ${height}`} role="group" aria-label="Course map: Part 0 to Part IX. Each part depends on the ones before it.">
     {edges.map((e) => <path class="edge" d={e.d} data-edge-from={e.a} data-edge-to={e.b} />)}
     {present.map((p) => {
       const [c, r] = COL[p.part];
@@ -36,10 +67,10 @@ const firstChapter = (n: number) => present.find((p) => p.part === n)?.chapters[
         <a href={ch ? url(routes.chapter(ch)) : '#'} class="node-link" aria-label={`${partName(p.part)}: ${p.title}`}>
           <g class="node" transform={`translate(${x(c)},${y(r)})`} data-part-node={p.part} data-lessons={lessonsCount}>
             <rect class="box" width={W} height={H} rx="12" />
-            <text class="k" x="13" y="20">{partName(p.part)}</text>
-            <text class="t" x="13" y="38">{SHORT[p.part] ?? p.title}</text>
-            <rect class="bar-bg" x="13" y="46" width={W - 26} height="4" rx="2" />
-            <rect class="bar" x="13" y="46" width="0" height="4" rx="2" data-bar-w={W - 26} />
+            <text class="k" x="12" y="20">{partName(p.part)}</text>
+            <text class="t" x="12" y="38">{SHORT[p.part] ?? p.title}</text>
+            <rect class="bar-bg" x="12" y="46" width={W - 24} height="4" rx="2" />
+            <rect class="bar" x="12" y="46" width="0" height="4" rx="2" data-bar-w={W - 24} />
             {p.part !== 0 && <circle class="port" cx="0" cy={H / 2} r="4" />}
             {p.part !== 9 && <circle class="port" cx={W} cy={H / 2} r="4" />}
           </g>
@@ -47,21 +78,70 @@ const firstChapter = (n: number) => present.find((p) => p.part === n)?.chapters[
       );
     })}
   </svg>
+  <svg class="dag-v" viewBox={`0 0 ${VW} ${vHeight}`} role="group" aria-label="Course map: Part 0 to Part IX, from top to bottom. Each part depends on the ones before it.">
+    {vEdges.map((e) => <path class="edge" d={e.d} />)}
+    {present.map((p) => {
+      const n = V[p.part];
+      const ch = firstChapter(p.part);
+      const small = n.w < 120;
+      const barY = n.h - 10;
+      return (
+        <a href={ch ? url(routes.chapter(ch)) : '#'} class="node-link" aria-label={`${partName(p.part)}: ${p.title}`}>
+          <g class:list={['node', { small }]} transform={`translate(${n.x},${n.y})`} data-mirror-part={p.part}>
+            <rect class="box" width={n.w} height={n.h} rx="11" />
+            <text class="k" x="11" y="18">{partName(p.part)}</text>
+            {n.lines.map((l, i) => <text class="t" x="11" y={35 + i * 15}>{l}</text>)}
+            <rect class="bar-bg" x="11" y={barY} width={n.w - 22} height="4" rx="2" />
+            <rect class="bar" x="11" y={barY} width="0" height="4" rx="2" data-bar-w={n.w - 22} />
+          </g>
+        </a>
+      );
+    })}
+    {vPorts.map(([cx, cy]) => <circle class="port" cx={cx} cy={cy} r="4" />)}
+  </svg>
 </div>
+
+<script>
+  // The phone drawing copies the state and the bar of each part from the wide drawing (lib/path-progress.ts
+  // fills the wide one, also when an island draws the map later).
+  function sync(dag: Element) {
+    dag.querySelectorAll<SVGGElement>('[data-mirror-part]').forEach((g) => {
+      const src = dag.querySelector<SVGGElement>(`[data-part-node="${g.dataset.mirrorPart}"]`);
+      if (!src) return;
+      if (src.dataset.state) g.dataset.state = src.dataset.state; else delete g.dataset.state;
+      const from = src.querySelector<SVGRectElement>('.bar'), to = g.querySelector<SVGRectElement>('.bar');
+      if (from && to) to.setAttribute('width', String(Math.round((Number(from.getAttribute('width')) / Number(from.dataset.barW || 1)) * Number(to.dataset.barW))));
+    });
+  }
+  document.querySelectorAll('.dag').forEach(sync);
+  new MutationObserver((records) => {
+    const dags = new Set<Element>();
+    for (const r of records) { const d = (r.target as Element).closest?.('.dag'); if (d && (r.target as Element).closest('.dag-h')) dags.add(d); }
+    dags.forEach(sync);
+  }).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['data-state', 'width'] });
+</script>
 
 <style>
   .dag { overflow-x: auto; }
-  svg { display: block; width: 100%; min-width: 960px; height: auto; }
-  .compact svg { min-width: 900px; }
+  svg { display: block; width: 100%; height: auto; }
+  .dag-h { min-width: 960px; }
+  .compact .dag-h { min-width: 900px; }
+  .dag-v { display: none; max-width: 420px; margin-inline: auto; }
+  @media (max-width: 700px) {
+    .dag { overflow: visible; }
+    .dag-h { display: none; }
+    .dag-v { display: block; }
+  }
   .edge { fill: none; stroke: var(--line-strong); stroke-width: 2; }
   .edge[data-done] { stroke: var(--ink); }
   .node .box { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1.5; transition: fill .2s; }
   .node text { fill: var(--ink); font-family: var(--sans); }
   .node .k { font-size: 12px; font-weight: 500; opacity: .78; }
-  .node .t { font-size: 14.5px; font-weight: 700; }
+  .node .t { font-size: 14px; font-weight: 700; }
+  .dag-v .node.small .t { font-size: 13.5px; }
   .node .bar-bg { fill: var(--line); }
   .node .bar { fill: var(--accent); }
-  .node .port { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1.5; }
+  .port { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1.5; }
   .node[data-state="done"] .box { fill: var(--ink); stroke: var(--ink); }
   .node[data-state="done"] text { fill: var(--surface); }
   .node[data-state="done"] .bar-bg { fill: color-mix(in srgb, var(--surface) 30%, transparent); }

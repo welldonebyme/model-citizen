@@ -30,9 +30,9 @@ const mockLabel = (q: string) => { const m = q.match(/^m(\d)-q(\d+)$/); return m
                 return (
                   <tr id={`obj-${o.id}`} data-obj={o.id}>
                     <th scope="row"><span class="mc-obj">{o.id}</span> <span class="ot">{o.title}</span></th>
-                    <td>{ls.map((l) => <a class="lk" href={url(routes.lesson(l!.lesson, l!.chapter.id))}>{l!.lesson.number}</a>)}</td>
-                    <td>{labs.map((x) => <a class="lk" href={url(routes.lesson(x.ref!.lesson, x.ref!.chapter.id)) + '#' + x.id}>{x.id.replace(/^ch(\d+)-lab(\d+)$/, (_m, a, b) => `${Number(a)}.${b}`)}</a>)}</td>
-                    <td class="mq">{mq.map(mockLabel).join(', ')}</td>
+                    <td data-label="Lessons"><span class="cell">{ls.length === 0 && <span class="none">none</span>}{ls.map((l) => <a class="lk" href={url(routes.lesson(l!.lesson, l!.chapter.id))}>{l!.lesson.number}</a>)}</span></td>
+                    <td data-label="Labs"><span class="cell">{labs.length === 0 && <span class="none">none</span>}{labs.map((x) => <a class="lk" href={url(routes.lesson(x.ref!.lesson, x.ref!.chapter.id)) + '#' + x.id}>{x.id.replace(/^ch(\d+)-lab(\d+)$/, (_m, a, b) => `${Number(a)}.${b}`)}</a>)}</span></td>
+                    <td class="mq" data-label="Mock questions"><span class="cell">{mq.length ? mq.map(mockLabel).join(', ') : <span class="none">none</span>}</span></td>
                   </tr>
                 );
               })}
@@ -51,7 +51,23 @@ const mockLabel = (q: string) => { const m = q.match(/^m(\d)-q(\d+)$/); return m
   tr:target > * { background: var(--accent-soft); }
   th[scope="row"] { min-width: 260px; font-weight: 400; }
   .ot { color: var(--ink); font-weight: 600; }
-  .lk { display: inline-block; margin: 0 6px 4px 0; font-size: var(--fs-sm); font-variant-numeric: tabular-nums; }
+  /* lesson and lab links: targets of at least 24 x 24 px (32 px on a phone) */
+  .lk { display: inline-flex; align-items: center; justify-content: center; min-width: 32px; min-height: 26px; margin: 0 4px 4px 0; padding: 0 6px; border: 1px solid var(--line); border-radius: var(--r-chip); background: var(--surface); font-size: var(--fs-sm); font-variant-numeric: tabular-nums; text-decoration: none; }
+  .lk:hover { border-color: var(--accent); }
   .mq { font-size: var(--fs-sm); color: var(--muted); min-width: 140px; }
+  .none { color: var(--muted); font-size: var(--fs-sm); }
   .empty { color: var(--muted); }
+  /* phones: one card per objective, with labelled rows (Lessons, Labs, Mock questions) instead of four columns */
+  @media (max-width: 700px) {
+    .cv .mc-table-wrap { overflow: visible; border: 0; background: none; }
+    .cv table, .cv tbody, .cv tr, .cv th, .cv td { display: block; }
+    .cv thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .cv tr { margin-bottom: 12px; border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface); }
+    .cv tr > * { border: 0; padding: 4px 14px; }
+    .cv th[scope="row"] { min-width: 0; padding-top: 12px; }
+    .cv td { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: 8px; align-items: baseline; }
+    .cv td:last-child { padding-bottom: 12px; }
+    .cv td::before { content: attr(data-label); font-size: var(--fs-xs); font-weight: 700; color: var(--muted); }
+    .lk { min-height: 32px; min-width: 40px; }
+  }
 </style>

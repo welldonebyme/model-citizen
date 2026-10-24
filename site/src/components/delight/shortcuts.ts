@@ -11,20 +11,28 @@ export function openShortcuts() {
   import('./shortcuts-dialog').then((m) => m.showShortcuts());
 }
 
+/** The last step J or K jumped to, while the page scrolls there (a smooth scroll takes a moment). */
+let lastJump: { i: number; at: number } | null = null;
+
 /** Lesson pages: moves to the next (1) or previous (-1) step, puts the focus on its heading. */
 export function moveStep(dir: 1 | -1): boolean {
   const steps = Array.from(document.querySelectorAll<HTMLElement>('[data-step]'));
   if (!steps.length) return false;
   const pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
-  const line = pad + 100; // reading line, a little below where a step starts after a jump
+  // where a step's top lands after a jump: below the sticky bars (scroll-padding) and its own scroll-margin
+  const landing = (s: HTMLElement) => pad + (parseFloat(getComputedStyle(s).scrollMarginTop) || 0);
   let cur = -1;
-  steps.forEach((s, i) => { if (s.getBoundingClientRect().top <= line) cur = i; });
-  // K inside a step (its start already scrolled away) goes back to its start; at its start, to the previous one
-  const i = dir === 1 ? cur + 1 : cur >= 0 && steps[cur].getBoundingClientRect().top < pad - 24 ? cur : cur - 1;
+  steps.forEach((s, i) => { if (s.getBoundingClientRect().top <= landing(s) + 24) cur = i; });
+  // K inside a step (its start already scrolled away) goes back to its start; at its start, to the previous one.
+  // Right after a jump (the page may still be scrolling), J and K count from the step jumped to.
+  const recent = lastJump && Date.now() - lastJump.at < 1200 ? lastJump.i : null;
+  const i = recent !== null ? recent + dir
+    : dir === 1 ? cur + 1 : cur >= 0 && steps[cur].getBoundingClientRect().top < landing(steps[cur]) - 24 ? cur : cur - 1;
   if (i < 0 || i >= steps.length) return false;
   const target = steps[i];
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  lastJump = { i, at: Date.now() };
   const h = target.querySelector<HTMLElement>('h2, h3');
   if (h) {
     if (!h.hasAttribute('tabindex')) h.tabIndex = -1;

@@ -2,16 +2,21 @@
 import Base from '../../layouts/Base.astro';
 import { url } from '../../lib/url';
 import { glossary, traps, objectives } from '../../lib/reference';
+import { questionObjectives } from '../../lib/course-facts';
 import { existsSync, statSync } from 'node:fs';
 import { publicPath } from '../../lib/paths';
 // The book PDF is in the site only when the build includes it (scripts/sync-assets.mjs, MC_INCLUDE_PDF=1).
 const pdfFile = publicPath('pdf', 'dbt-bible.pdf');
 const pdf = existsSync(pdfFile) ? `${(statSync(pdfFile).size / 1024 / 1024).toFixed(1)} MB` : null;
+// The objectives the course tests: the exam's objectives and the prerequisites that have questions (the same set
+// as the Today and Progress pages), not the study-method pseudo-objectives (EXAM, PLAN, ALL).
+const tested = new Set(Object.values(questionObjectives));
+const objectiveCount = objectives.filter((o) => /^(CP0-[A-Z]+|\d+\.\d+)$/.test(o.id) && tested.has(o.id)).length;
 const cards = [
   { href: 'reference/glossary/', title: 'English–French glossary', text: `${glossary.length || 305} terms with their French translation and the chapter where they first appear.` },
   { href: 'practice/traps/', title: 'The top exam traps', text: `${traps.length || 145} confusions that cost points, each with the truth and where the book explains it.` },
   { href: 'reference/cheatsheets/', title: 'Cheat sheets', text: 'Commands, selection syntax, configurations and YAML skeletons on clean, printable pages.' },
-  { href: 'reference/coverage/', title: 'Coverage matrix', text: `Every official objective (${objectives.length || 33} with the prerequisites) with the lessons, labs and mock questions that cover it, and your mastery.` },
+  { href: 'reference/coverage/', title: 'Coverage matrix', text: `Every official objective (${objectiveCount || 37} with the prerequisites) with the lessons, labs and mock questions that cover it, and your mastery.` },
 ];
 ---
 <Base title="Reference" section="reference">

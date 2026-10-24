@@ -1,0 +1,54 @@
+---
+// Shown for any address of the site that does not exist (GitHub Pages serves 404.html; so does astro preview).
+// Shared links get old or cut short in chat apps: the page offers the way back, and the chapter or lesson the
+// address points to when its chapter still exists.
+import Base from '../layouts/Base.astro';
+import { url } from '../lib/url';
+import { chapters, routes } from '../lib/content';
+
+const known = Object.fromEntries(chapters.map((c) => [c.id, { title: `Chapter ${c.number}, ${c.title}`, href: url(routes.chapter(c)), lessons: c.lessons.map((l) => l.id) }]));
+---
+<Base title="Page not found" section="none" description="This address is not part of Model Citizen.">
+  <div class="wrap wrap-read nf">
+    <p class="code" aria-hidden="true">404</p>
+    <h1>This page is not here</h1>
+    <p class="lead">The link may be old, or it was cut short when it was shared. Nothing you saved is lost: your progress stays in this browser.</p>
+    <p class="asked" hidden data-nf-asked>You asked for <code class="mc-ic" data-nf-path></code>.</p>
+    <p class="hint" hidden data-nf-hint>It looks like a link to <a href="#" data-nf-link></a>.</p>
+    <ul class="ways">
+      <li><a class="btn btn-primary" href={url('')}>Go to Today</a></li>
+      <li><a class="btn btn-quiet" href={url('path/')}>Open your path</a></li>
+      <li><button type="button" class="btn btn-quiet" data-search-open>Search the course</button></li>
+    </ul>
+    <p class="more">Were you sent a challenge by a friend? Open <a href={url('practice/challenge/')}>the friend challenge</a> and ask them for the full link.</p>
+  </div>
+  <script type="application/json" id="nf-chapters" set:html={JSON.stringify(known)} />
+  <script>
+    import { url } from '../lib/url';
+    // Show the address that was asked for, and the chapter (or lesson) it points to when it exists.
+    const base = url('');
+    const path = decodeURIComponent(location.pathname).replace(base, '/');
+    const asked = document.querySelector<HTMLElement>('[data-nf-asked]');
+    const pathEl = document.querySelector<HTMLElement>('[data-nf-path]');
+    if (asked && pathEl && path.length > 1) { pathEl.textContent = path.length > 80 ? `${path.slice(0, 79)}…` : path; asked.hidden = false; }
+    const m = path.match(/(?:^|\/)(ch\d{2}|app[A-C])(?:\/(ch\d{2}-s\d+|app[A-C]-s\d+))?/i);
+    const map = JSON.parse(document.getElementById('nf-chapters')?.textContent || '{}') as Record<string, { title: string; href: string; lessons: string[] }>;
+    const ch = m ? map[m[1].toLowerCase().replace(/^app(.)/, (_x, l: string) => `app${l.toUpperCase()}`)] : undefined;
+    const hint = document.querySelector<HTMLElement>('[data-nf-hint]');
+    const link = document.querySelector<HTMLAnchorElement>('[data-nf-link]');
+    if (ch && hint && link) {
+      const lesson = m?.[2] && ch.lessons.includes(m[2].toLowerCase()) ? m[2].toLowerCase() : null;
+      link.href = lesson ? `${ch.href}${lesson}/` : ch.href;
+      link.textContent = lesson ? `lesson ${lesson.replace(/^ch0?(\d+)-s(\d+)$/, '$1.$2')} of ${ch.title}` : ch.title;
+      hint.hidden = false;
+    }
+  </script>
+</Base>
+<style>
+  .nf { padding-block: 56px 24px; }
+  .code { margin: 0 0 4px; font: 800 4.5rem/1 var(--sans); letter-spacing: -0.04em; color: var(--accent); }
+  .lead { font-size: var(--fs-lg); color: var(--text); margin-top: 12px; }
+  .asked, .hint { color: var(--text); }
+  .ways { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; margin: 24px 0; padding: 0; }
+  .more { color: var(--muted); font-size: var(--fs-md); }
+</style>

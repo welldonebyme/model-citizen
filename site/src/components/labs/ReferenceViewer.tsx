@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { highlight, type Lang } from '../../lib/highlight';
 import { url } from '../../lib/url';
+import './labs.css';
 
 export interface TagInfo { tag: string; prev: string | null; message: string; subject: string }
 export interface RepoInfo { id: 'jaffle' | 'shopflow'; name: string; label: string; tags: TagInfo[]; spoiler: boolean }
@@ -49,6 +50,9 @@ export default function ReferenceViewer({ repos }: { repos: RepoInfo[] }) {
     wants.then((d) => { if (!off) setData(d); }).catch(() => { if (!off) setData({ error: 'This reference file could not be loaded. Check your connection and reload the page.' }); });
     return () => { off = true; };
   }, [repo.id, tag, view, hidden, info?.prev]);
+
+  // code that scrolls sideways gets a keyboard stop (lib/chrome.ts), also when it is drawn after the page load
+  useEffect(() => { document.dispatchEvent(new CustomEvent('mc:content')); }, [data, view, file]);
 
   const files = data.tree?.files ?? [];
   const selected = useMemo(() => files.find((f) => f.path === file) ?? files.find((f) => /models\//.test(f.path) && !f.binary) ?? files[0], [files, file]);

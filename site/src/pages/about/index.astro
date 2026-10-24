@@ -1,9 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { url } from '../../lib/url';
+import { existsSync } from 'node:fs';
+import { publicPath } from '../../lib/paths';
+// The book PDF ships only when the build includes it (scripts/sync-assets.mjs, MC_INCLUDE_PDF=1), like on the Reference page.
+const hasPdf = existsSync(publicPath('pdf', 'dbt-bible.pdf'));
 ---
 <Base title="How to use this site" section="none" description="How Model Citizen works: the plan, lessons, labs, mock exams, your progress file, and the practice kit for macOS and Windows.">
-  <div class="wrap about">
+  <div class="wrap wrap-read about">
     <h1>How to use this site</h1>
     <p class="lead">Model Citizen is a free, unofficial course to prepare the dbt Analytics Engineering Certification (dbt Core 1.11). It follows a verified study book, chapter by chapter. You need nothing to start: open the site in Edge, Chrome, Safari or Firefox.</p>
 
@@ -48,13 +52,15 @@ import { url } from '../../lib/url';
 
     <section>
       <h2>About this course</h2>
-      <p>The content comes from <i>The dbt Analytics Engineering Bible</i>, a study book written for this certification and checked by running every lab on dbt Core 1.11.16 with DuckDB. You can download the full book as a PDF from the <a href={url('reference/')}>Reference</a> page.</p>
+      <p>The content comes from <i>The dbt Analytics Engineering Bible</i>, a study book written for this certification and checked by running every lab on dbt Core 1.11.16 with DuckDB. {hasPdf
+        ? <>You can download the full book as a PDF from the <a href={url('reference/')}>Reference</a> page.</>
+        : <>The book itself is not published on this site: it is available from its author.</>}</p>
       <p class="disc">Unofficial study guide. Not affiliated with or endorsed by dbt Labs. dbt is a trademark of dbt Labs, Inc. The mock exams are original questions, not official exam questions.</p>
     </section>
   </div>
 </Base>
 <style>
-  .about { padding-block: 40px 16px; max-width: 820px; }
+  .about { padding-block: 40px 16px; }
   .lead { font-size: var(--fs-lg); color: var(--text); }
   section { margin-top: 32px; }
   h2 { margin-bottom: 10px; }

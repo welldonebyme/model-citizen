@@ -4,6 +4,7 @@ import { url } from './url';
 type PFResult = { id: string; data: () => Promise<{ url: string; excerpt: string; meta: { title?: string; section?: string } }> };
 type PF = { search: (q: string) => Promise<{ results: PFResult[] }>; init?: () => Promise<void>; options?: (o: { baseUrl: string }) => Promise<void> };
 
+const PAGE = 12;
 let pf: PF | null = null;
 let dialog: HTMLDialogElement | null = null;
 
@@ -30,27 +31,50 @@ function build(): HTMLDialogElement {
       <button type="submit" class="mc-search-close" value="close" aria-label="Close search">Esc</button>
     </form>
     <p class="mc-search-status" role="status" aria-live="polite"></p>
-    <ol id="mc-search-results" class="mc-search-results"></ol>`;
+    <div class="mc-search-list">
+      <ol id="mc-search-results" class="mc-search-results"></ol>
+      <button type="button" class="btn btn-quiet btn-small mc-search-more" hidden></button>
+    </div>`;
   document.body.appendChild(d);
   const input = d.querySelector('input')!;
   const list = d.querySelector('ol')!;
   const status = d.querySelector('.mc-search-status')!;
   let timer = 0;
   let seq = 0;
+  const more = d.querySelector<HTMLButtonElement>('.mc-search-more')!;
+  let results: PFResult[] = [];
+  let shown = 0;
+  // 12 results at a time; "Show more results" adds the next ones (their data loads only then)
+  const page = async (my: number) => {
+    const next = await Promise.all(results.slice(shown, shown + PAGE).map((r) => r.data()));
+    if (my !== seq) return;
+    list.insertAdjacentHTML('beforeend', next.map((r, i) => `<li><a href="${r.url}" data-i="${shown + i}"><b>${escapeHtml(r.meta.title ?? r.url)}</b>${r.meta.section ? `<span class="mc-search-sec">${escapeHtml(r.meta.section)}</span>` : ''}<span class="mc-search-ex">${r.excerpt}</span></a></li>`).join(''));
+    shown += next.length;
+    more.hidden = shown >= results.length;
+    if (!more.hidden) more.textContent = `Show more results (${results.length - shown} more)`;
+  };
   input.addEventListener('input', () => {
     clearTimeout(timer);
     timer = window.setTimeout(async () => {
       const q = input.value.trim();
       const my = ++seq;
-      if (!q) { list.innerHTML = ''; status.textContent = ''; return; }
+      if (!q) { list.innerHTML = ''; status.textContent = ''; more.hidden = true; return; }
       const engine = await load();
       if (!engine) { status.textContent = 'Search is available on the published site (the index is built with the site).'; return; }
       const res = await engine.search(q);
-      const top = await Promise.all(res.results.slice(0, 12).map((r) => r.data()));
       if (my !== seq) return;
-      status.textContent = res.results.length ? `${res.results.length} results` : `No results for "${q}". Try a shorter word, or the English name of a command.`;
-      list.innerHTML = top.map((r, i) => `<li><a href="${r.url}" data-i="${i}"><b>${escapeHtml(r.meta.title ?? r.url)}</b>${r.meta.section ? `<span class="mc-search-sec">${escapeHtml(r.meta.section)}</span>` : ''}<span class="mc-search-ex">${r.excerpt}</span></a></li>`).join('');
+      results = res.results;
+      shown = 0;
+      list.innerHTML = '';
+      more.hidden = true;
+      status.textContent = results.length ? `${results.length} ${results.length === 1 ? 'result' : 'results'}` : `No results for "${q}". Try a shorter word, or the English name of a command.`;
+      await page(my);
     }, 120);
+  });
+  more.addEventListener('click', async () => {
+    const first = shown;
+    await page(seq);
+    (list.querySelector(`a[data-i="${first}"]`) as HTMLElement | null)?.focus();
   });
   input.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown') { e.preventDefault(); (list.querySelector('a') as HTMLElement | null)?.focus(); }
@@ -58,7 +82,7 @@ function build(): HTMLDialogElement {
   list.addEventListener('keydown', (e) => {
     const a = document.activeElement as HTMLElement;
     const li = a?.closest('li');
-    if (e.key === 'ArrowDown') { e.preventDefault(); (li?.nextElementSibling?.querySelector('a') as HTMLElement | null)?.focus(); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); ((li?.nextElementSibling?.querySelector('a') as HTMLElement | null) ?? (more.hidden ? null : more))?.focus(); }
     if (e.key === 'ArrowUp') { e.preventDefault(); const prev = li?.previousElementSibling?.querySelector('a') as HTMLElement | null; (prev ?? input).focus(); }
   });
   d.addEventListener('click', (e) => { if (e.target === d) d.close(); });

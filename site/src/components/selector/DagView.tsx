@@ -34,6 +34,21 @@ function clip(s: string, max: number): string {
   return s.length <= max ? s : `${s.slice(0, max - 1)}…`;
 }
 
+/**
+ * Node names lose their middle, not their end: the end tells staging models apart
+ * ("stg_jaffle_…__order_items", "stg_jaffle_…__orders"). Both parts start or end at a _ or . when they can.
+ */
+export function clipMiddle(s: string, max: number): string {
+  if (s.length <= max) return s;
+  let tail = s.slice(-Math.ceil((max - 1) * 0.55));
+  const t = tail.search(/[_.]/);
+  if (t > 0 && tail.length - t >= 6) tail = tail.slice(t);
+  let head = s.slice(0, max - 1 - tail.length);
+  const h = Math.max(head.lastIndexOf('_'), head.lastIndexOf('.'));
+  if (h >= head.length * 0.6) head = head.slice(0, h + 1);
+  return `${head}…${tail}`;
+}
+
 export default function DagView({ layout, states, labelOf, picked, onPick, isTest, focus }: Props) {
   const vp = useRef<HTMLDivElement>(null);
   const refs = useRef(new Map<string, SVGGElement>());
@@ -51,7 +66,8 @@ export default function DagView({ layout, states, labelOf, picked, onPick, isTes
     const kFit = Math.min(1, (w - 16) / layout.width, (h - 16) / Math.max(layout.height, 1));
     const k = all ? Math.max(0.15, kFit) : Math.max(kFit, w < 600 ? 0.62 : 0.8);
     const tx = layout.width * k < w ? (w - layout.width * k) / 2 : 8;
-    const ty = layout.height * k < h ? (h - layout.height * k) / 2 : 8;
+    // the graph starts at the top of the canvas (the empty space goes below it)
+    const ty = 12;
     setView({ k, tx, ty });
   }, [layout]);
 
@@ -75,7 +91,8 @@ export default function DagView({ layout, states, labelOf, picked, onPick, isTes
     const inside = x0 * v.k + v.tx >= 0 && x1 * v.k + v.tx <= w && y0 * v.k + v.ty >= 0 && y1 * v.k + v.ty <= h;
     if (inside) return;
     const k = Math.max(w < 600 ? 0.5 : 0.62, Math.min(v.k, (w - 32) / (x1 - x0), (h - 32) / (y1 - y0)));
-    setView({ k, tx: w / 2 - ((x0 + x1) / 2) * k, ty: (h + 40) / 2 - ((y0 + y1) / 2) * k });
+    // the graph stays at the top of the canvas when the selection fits below it; otherwise the selection does
+    setView({ k, tx: w / 2 - ((x0 + x1) / 2) * k, ty: y1 * k + 12 <= h - 16 ? 12 : 16 - y0 * k });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusKey, layout]);
 
@@ -232,11 +249,11 @@ export default function DagView({ layout, states, labelOf, picked, onPick, isTes
                 <rect className="ring" x={-4} y={-4} width={n.w + 8} height={n.h + 8} rx={14} />
                 <rect className="box" width={n.w} height={n.h} rx={n.small ? 8 : 11} />
                 {n.small ? (
-                  <text className="t" x={12} y={n.h / 2 + 4}>{clip(lab.title, maxChars)}</text>
+                  <text className="t" x={12} y={n.h / 2 + 4}>{clipMiddle(lab.title, maxChars)}</text>
                 ) : (
                   <>
                     <text className="k" x={12} y={17}>{clip(lab.kind, 30)}</text>
-                    <text className="t" x={12} y={34}>{clip(lab.title, maxChars)}</text>
+                    <text className="t" x={12} y={34}>{clipMiddle(lab.title, maxChars)}</text>
                   </>
                 )}
                 <circle className="port" cx={0} cy={n.h / 2} r={3.5} />

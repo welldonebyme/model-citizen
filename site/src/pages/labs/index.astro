@@ -30,6 +30,8 @@ const capKit = size('kits/shopflow-capstone-kit.zip');
     <div class="tools">
       <a class="tool panel" href={url('labs/dbt/')}><h2>dbt terminal in your browser</h2><p>Real dbt-core 1.11.16 with DuckDB, running in this page. Pick a chapter and run <code class="mc-ic">dbt build</code> with nothing installed.</p></a>
       <a class="tool panel" href={url('labs/sql/')}><h2>SQL playground</h2><p>The practice database (jaffle_shop and stripe) in your browser. Every SQL example of Chapter 4, with the book's result to compare.</p></a>
+      <a class="tool panel" href={url('labs/yaml/')}><h2>YAML playground</h2><p>See at once what dbt and Python read from your YAML, or the exact error with its line. Fix the broken files of Chapters 5 and 22.</p></a>
+      <a class="tool panel" href={url('labs/jinja/')}><h2>Jinja playground</h2><p>Write a template, compile it like <code class="mc-ic">dbt compile</code>, then run the SQL it becomes. Loops, macros and whitespace from Chapters 5 and 11.</p></a>
       <a class="tool panel" href={url('labs/selectors/')}><h2>Node selection and lineage</h2><p>Type <code class="mc-ic">--select</code> expressions on the real DAG of the project and see exactly what <code class="mc-ic">dbt ls</code> prints.</p></a>
       <a class="tool panel" href={url('labs/capstone/')}><h2>Capstone: ShopFlow</h2><p>Build a real project on your computer in 15 milestones. A board with every requirement to tick, hints, output checks and the solutions.</p></a>
       <a class="tool panel" href={url('labs/reference/')}><h2>Compare with the reference</h2><p>The reference project at every chapter tag, and what each chapter changed. The capstone solutions stay hidden until you ask.</p></a>

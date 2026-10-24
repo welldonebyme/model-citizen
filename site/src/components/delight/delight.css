@@ -153,9 +153,16 @@
 .dl-pomo-settings > label:not(.dl-check) { display: grid; gap: 4px; font-size: var(--fs-sm); font-weight: 700; color: var(--ink); }
 .dl-pomo-settings p { margin: 0; }
 @media (max-width: 640px) {
-  .dl-pomo { right: 12px; bottom: 12px; }
+  .dl-pomo { right: 10px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
   .dl-pomo-panel { position: fixed; right: 12px; left: 12px; bottom: 72px; width: auto; }
+  /* not running: a smaller button, so it hides less of what is under it */
+  .dl-pomo[data-phase="idle"] .dl-pomo-btn { height: 40px; min-width: 40px; padding: 0 3px; }
+  .dl-pomo[data-phase="idle"] .dl-pomo-btn svg { width: 30px; height: 30px; }
 }
+/* the end of every page scrolls clear of the button */
+body:has(.dl-pomo) .site-footer { padding-bottom: 64px; }
+/* not during the first-visit setup of the Today page */
+body:has(.t-onb) .dl-pomo[data-phase="idle"] { display: none; }
 @media print { .dl-pomo, .dl-toasts { display: none !important; } }
 
 /* ---------- explain it back ---------- */

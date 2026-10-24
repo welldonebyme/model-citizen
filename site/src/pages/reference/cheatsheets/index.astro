@@ -7,7 +7,7 @@ import { figuresFor } from '../../../lib/figures';
 const sheets = cheatsheets?.lessons ?? [];
 ---
 <Base title="Cheat sheets" section="reference">
-  <div class="wrap cs" data-pagefind-body>
+  <div class="wrap wrap-read cs" data-pagefind-body>
     <header class="head">
       <h1 data-pagefind-meta="title">Cheat sheets</h1>
       <p class="lead">Short summaries to review before a mock exam. Print them (Ctrl + P): the site menu is hidden on paper.</p>
@@ -23,7 +23,7 @@ const sheets = cheatsheets?.lessons ?? [];
   </div>
 </Base>
 <style>
-  .cs { padding-block: 40px 16px; max-width: 980px; }
+  .cs { padding-block: 40px 16px; }
   .lead { color: var(--muted); font-size: var(--fs-lg); }
   .toc ol { columns: 2; padding-left: 1.2em; margin: 16px 0 0; }
   .toc li { margin: 3px 0; }
@@ -31,5 +31,5 @@ const sheets = cheatsheets?.lessons ?? [];
   .sheet h2 { margin-bottom: 8px; }
   .sub { margin: 20px 0 6px; font-size: var(--fs-lg); }
   .empty { color: var(--muted); }
-  @media print { .sheet { break-before: page; border: 0; } .cs { max-width: none; } }
+  @media print { .sheet { break-before: page; border: 0; } .cs > * { max-width: none; } }
 </style>

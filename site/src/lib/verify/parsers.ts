@@ -2,7 +2,7 @@
 // with the book's expected output. Tolerant of timestamps, thread order, colours, Windows line endings,
 // PowerShell or zsh prompts, and extra blank lines. Pure functions, no backend.
 
-export type OutputKind = 'dbt_summary' | 'dbt_version' | 'dbt_ls' | 'git_status' | 'git_status_short' | 'git_log_oneline' | 'table' | 'unknown';
+export type OutputKind = 'dbt_summary' | 'dbt_version' | 'dbt_ls' | 'file_list' | 'git_status' | 'git_status_short' | 'git_log_oneline' | 'table' | 'unknown';
 
 const ANSI = /\x1b\[[0-9;]*[A-Za-z]/g;
 const TS = /^\d{2}:\d{2}:\d{2}(?:\.\d+)?\s{1,2}/;
@@ -66,6 +66,28 @@ export function parseDbtLs(text: string): string[] {
     .sort();
 }
 
+/* ---------- file listings: find | sort (macOS, WSL), Get-ChildItem -Recurse -Name | Sort-Object (PowerShell) ---------- */
+// One path per line, with / or \. The book prints the macOS form ("jaffle_dbt", "jaffle_dbt/.gitignore", ...);
+// PowerShell prints the same files relative to the folder ("analyses\.gitkeep"), sorted another way. So paths
+// are compared as sets, with / for \, without "./", and without the folder the listing starts from.
+const PROMPT_LINE = /^\s*(?:\([^)]*\)\s*)?(?:\$|%|>|PS\b[^>]*>)\s/;
+const PATH_LINE = /^[\w.@+~-]+(?:[\\/][\w.@+~-]+)*[\\/]?$/;
+
+/** The paths of a file listing, or null when the text is not one (a line that is not a path, or no folder at all). */
+export function parseFileList(text: string): string[] | null {
+  const lines = clean(text).map((l) => l.trim()).filter((l) => l && !PROMPT_LINE.test(l));
+  if (!lines.length || !lines.every((l) => PATH_LINE.test(l)) || !lines.some((l) => /[\\/]./.test(l))) return null;
+  return lines.map((l) => l.replace(/\\/g, '/').replace(/^(\.\/)+/, '').replace(/\/+$/, '')).filter((l) => l && l !== '.');
+}
+
+/** The folder a listing starts from: find prints it on its own line ("jaffle_dbt"), then every path below it. */
+function listRoot(paths: string[]): string | null {
+  const root = paths.find((p) => !p.includes('/'));
+  return root && paths.every((p) => p === root || p.startsWith(`${root}/`)) && paths.length > 1 ? root : null;
+}
+const underRoot = (paths: string[], root: string | null) =>
+  root && paths.every((p) => p === root || p.startsWith(`${root}/`)) ? paths.filter((p) => p !== root).map((p) => p.slice(root.length + 1)) : paths;
+
 /* ---------- git ---------- */
 export interface GitStatus { branch: string | null; clean: boolean; sections: string[]; files: { state: string | null; path: string }[] }
 export function parseGitStatus(text: string): GitStatus | null {
@@ -125,6 +147,7 @@ export function detect(text: string): OutputKind {
   if (/^[ MADRCU?!]{2} \S/m.test(t) && t.split('\n').every((l) => !l.trim() || /^[ MADRCU?!]{2} \S/.test(l))) return 'git_status_short';
   if (/^[*|\\/ ]*[0-9a-f]{7,40} \S/m.test(t) && t.split('\n').every((l) => !l.trim() || /^[*|\\/ ]*[0-9a-f]{7,40}( |$)|^[|\\/ ]+$/.test(l))) return 'git_log_oneline';
   if (parseTable(t)) return 'table';
+  if (parseFileList(t)) return 'file_list';
   if (parseDbtLs(t).length && t.split('\n').filter((l) => l.trim()).length === parseDbtLs(t).length) return 'dbt_ls';
   return 'unknown';
 }
@@ -173,6 +196,19 @@ export function compareOutput(expectedText: string, actualText: string): Verdict
       if (missing.length) msgs.push(`Missing compared with the book: ${missing.join(', ')}.`);
       if (extra.length) msgs.push(`Not in the book: ${extra.join(', ')}.`);
       return { ok: !msgs.length, kind: 'dbt_ls', messages: msgs.length ? msgs : [`Same ${a.size} nodes as the book.`] };
+    }
+    case 'file_list': {
+      const exp = parseFileList(expectedText)!;
+      const got = parseFileList(actualText);
+      if (!got) return { ok: false, kind, messages: ['The pasted text is not a plain list of files. Run the command exactly as shown (on Windows with -Name) and paste only what it printed.'] };
+      const root = listRoot(exp);
+      const e = new Set(underRoot(exp, root));
+      const a = new Set(underRoot(got, root));
+      const missing = [...e].filter((x) => !a.has(x));
+      const extra = [...a].filter((x) => !e.has(x));
+      if (missing.length) msgs.push(`Missing compared with the book: ${missing.join(', ')}.`);
+      if (extra.length) msgs.push(`Not in the book: ${extra.join(', ')}.`);
+      return { ok: !msgs.length, kind, messages: msgs.length ? msgs : [`Same ${e.size} files and folders as the book${root ? ` in ${root}` : ''}. The order and the \\ or / between folders do not matter.`] };
     }
     case 'table': {
       const e = parseTable(expectedText)!;

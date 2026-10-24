@@ -5,6 +5,7 @@ import { expect, test } from '@playwright/test';
 
 const PAGES = [
   '', 'path/', 'learn/ch00/', 'learn/ch00/ch00-s1/', 'learn/ch02/ch02-s3/', 'learn/ch04/ch04-s3/', 'learn/ch07/ch07-s2/',
+  'learn/ch01/ch01-s6/', 'learn/ch05/ch05-s2/', 'learn/ch09/ch09-s2/', 'learn/ch19/ch19-s1/',
   'learn/ch14/ch14-s4/', 'learn/ch22/ch22-s2/', 'learn/ch26/ch26-s4/', 'learn/ch28/', 'learn/appA/',
   'quiz/', 'quiz/ch07/', 'exams/', 'exams/exam-day/',
   'practice/', 'practice/traps/', 'practice/flashcards/', 'practice/notebook/', 'practice/drills/', 'practice/challenge/',

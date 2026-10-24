@@ -274,7 +274,18 @@ def run_checks(files: dict[str, object], inventory: dict, book: Path = BOOK) -> 
     check_paths(files, book, R)
     check_question_map(files, R)
     check_os_variants(site_files, R)
+    check_shipped(R)
     return R
+
+
+def check_shipped(R: Results) -> None:
+    """No shipped download names the author's folders: the two kit zips (unzipped, git bundles cloned, every ref and
+    commit message), site/public/presets, site/public/reference and site/public/data (tools/check_shipped.py)."""
+    from .tools.check_shipped import SCANNED_DIRS, scan
+    hits, n = scan()
+    R.add("no shipped file names the author's folders (/Users/mac, Documents/Adnane, dbt-bible/)", not hits,
+          f"{n['zip_members']} kit zip members ({n['bundles']} git bundles) + {n['files']} files in site/public/"
+          f"{{{','.join(SCANNED_DIRS)}}}; " + "; ".join(hits[:20]))
 
 
 def check_os_variants(files, R: Results, path: Path = OVERRIDES / "os-commands.yaml") -> None:

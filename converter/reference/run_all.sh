@@ -16,7 +16,7 @@ uv run --no-project --python 3.12 converter/reference/export_repos.py          #
 "$PY" -I converter/reference/export_dags.py --work "$WORK/dag"                 # 2. site/src/generated/dag
 uv run --no-project --python 3.12 converter/reference/golden_extract.py        # 3a. converter/golden (extract)
 "$PY" -I converter/reference/golden_verify.py --work "$WORK/verify"            # 3b. re-run every entry (~45 min)
-uv run --no-project --python 3.12 converter/reference/build_kits.py            # 4. site/public/kits
+converter/.venv/bin/python converter/reference/build_kits.py               # 4. site/public/kits (book path rules: converter rewriter)
 bash converter/reference/test_kits.sh "$WORK/kit-e2e" --full                   # 5. macOS / Linux end to end
 pwsh -NoProfile -File converter/reference/test_kits_pwsh.ps1 -Work "$WORK/kit-pwsh"   # 5. setup.ps1 under pwsh
 "$PY" -I converter/reference/os_commands.py                                    # 6. converter/overrides/os-commands.yaml

@@ -90,8 +90,8 @@ C:\Users\<you>\dbt-course\           (= $HOME\dbt-course)
     practice\               its own copy of the raw database
 ```
 
-The book's folder `~/Documents/Adnane/dbt-bible/labs` (the "bible folder") is the kit folder
-`$HOME\dbt-course\kit` (the website already shows the paths rewritten; README.md section 6 has the full table).
+The book's `labs` folder (the "bible folder") is the kit folder `$HOME\dbt-course\kit` (the website already
+shows the paths rewritten; README.md section 6 has the full table).
 When the book says `~/dbt-course`, use `$HOME\dbt-course`. When it says `~/.dbt/profiles.yml`, use
 `$HOME\.dbt\profiles.yml` (you create it in Chapter 6; the setup never touches it).
 

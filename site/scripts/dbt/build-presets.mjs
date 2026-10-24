@@ -13,6 +13,10 @@
 //
 // Usage: node scripts/dbt/build-presets.mjs        (needs ../dbt-bible next to the repository, and the network
 //        once for the two package tarballs, cached in .cache/dbt-presets/)
+//
+// Text files copied from the book (setup.sql, updates/*) get the book path rules of converter/rules/paths.yaml
+// (via converter/tools/book_paths.py, the rules the converter and the kits use), so no preset names the author's
+// folders; `python -m converter check` fails if one does.
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -33,6 +37,16 @@ const OUT = path.join(SITE, 'public', 'presets', 'dbt');
 const CACHE = path.join(SITE, '.cache', 'dbt-presets');
 
 const sha256 = (buf) => crypto.createHash('sha256').update(buf).digest('hex');
+
+// ---- book path rules (converter/rules/paths.yaml, applied by the converter's own rewriter) -------------------------
+const PYTHON = process.env.MC_PYTHON || [path.join(ACADEMY, 'converter', '.venv', 'bin', 'python'), path.join(ACADEMY, 'converter', '.venv', 'Scripts', 'python.exe')].find((p) => fs.existsSync(p)) || 'python3';
+const TEXT_FROM_BOOK = /\.(md|sql|ya?ml|sh|ps1|py|txt)$/;
+/** entries [{ name, data }] -> the same entries, text files with the book path rules applied. */
+function bookPaths(entries) {
+  const texts = Object.fromEntries(entries.filter((e) => TEXT_FROM_BOOK.test(e.name)).map((e) => [e.name, e.data.toString('utf8')]));
+  const out = JSON.parse(execFileSync(PYTHON, ['-m', 'converter.tools.book_paths'], { cwd: ACADEMY, input: JSON.stringify(texts), encoding: 'utf8', stdio: ['pipe', 'pipe', 'inherit'] }));
+  return entries.map((e) => (e.name in out ? { name: e.name, data: Buffer.from(out[e.name], 'utf8') } : e));
+}
 const log = (...a) => console.log('[dbt-presets]', ...a);
 
 // ---- dbt packages: the exact tarballs `dbt deps` downloads for package-lock.yml (hub -> GitHub codeload) ----------
@@ -228,7 +242,7 @@ async function main() {
   const practice = [{ name: 'setup.sql', data: fs.readFileSync(path.join(LABS, 'setup.sql')) }];
   for (const f of fs.readdirSync(path.join(LABS, 'data')).filter((f) => f.endsWith('.csv'))) practice.push({ name: 'data/' + f, data: fs.readFileSync(path.join(LABS, 'data', f)) });
   for (const f of fs.readdirSync(path.join(LABS, 'updates')).filter((f) => /\.(sql|md)$/.test(f))) practice.push({ name: 'updates/' + f, data: fs.readFileSync(path.join(LABS, 'updates', f)) });
-  const practiceBundle = writeJson('jaffle/practice.json', { files: encodeFiles(practice) });
+  const practiceBundle = writeJson('jaffle/practice.json', { files: encodeFiles(bookPaths(practice)) });
   const profiles = {
     ch06: goldenOutput('ch06.md', 'cat ~/.dbt/profiles.yml'),
     ch10: goldenOutput('ch10.md', 'cat ~/.dbt/profiles.yml'),
@@ -278,7 +292,7 @@ async function main() {
     const shopData = [{ name: 'setup.sql', data: fs.readFileSync(path.join(CAPSTONE, 'setup.sql')) }];
     for (const f of fs.readdirSync(path.join(CAPSTONE, 'data')).filter((f) => f.endsWith('.csv'))) shopData.push({ name: 'data/' + f, data: fs.readFileSync(path.join(CAPSTONE, 'data', f)) });
     for (const f of fs.readdirSync(path.join(CAPSTONE, 'updates')).filter((f) => f.endsWith('.sql'))) shopData.push({ name: 'updates/' + f, data: fs.readFileSync(path.join(CAPSTONE, 'updates', f)) });
-    const dataBundle = writeJson('shopflow/data.json', { files: encodeFiles(shopData) });
+    const dataBundle = writeJson('shopflow/data.json', { files: encodeFiles(bookPaths(shopData)) });
     const mtags = execFileSync('git', ['-C', SHOP_REPO, 'tag', '--list', 'm*'], { encoding: 'utf8' }).split('\n').filter(Boolean).sort();
     const minfo = {};
     const shopProfiles = {};

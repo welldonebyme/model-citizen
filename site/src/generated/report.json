@@ -334,6 +334,11 @@
    "check": "every OS note (os-notes.yaml) appears once, after its anchor",
    "detail": "32 notes (27 Windows, 5 WSL); problems: ",
    "ok": true
+  },
+  {
+   "check": "no shipped file names the author's folders (/Users/mac, Documents/Adnane, dbt-bible/)",
+   "detail": "52 kit zip members (2 git bundles) + 122 files in site/public/{presets,reference,data}; ",
+   "ok": true
   }
  ],
  "bookConsistency": [],

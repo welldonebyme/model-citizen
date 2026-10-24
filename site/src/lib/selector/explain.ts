@@ -117,13 +117,15 @@ export function explain(project: Project, r: CommandResult): ExplainLine[] {
       lines.push({ part: '(no --select)', text: 'dbt starts from every node: fqn:* source:* exposure:* metric:* semantic_model:* (unit tests come with fqn:*).', level });
       return;
     }
+    const size = r.groupResults.get(g)?.size;
+    const sizeText = size === undefined ? undefined : `= ${plural(size, 'node')}`;
     if (g.kind === 'union' && g.components.length > 1) {
-      lines.push({ part: 'space', text: 'union: a node is kept if it matches at least one of these items', level });
+      lines.push({ part: 'space', text: 'union: a node is kept if it matches at least one of these items', count: sizeText, level });
       g.components.forEach((c) => walk(c, level + 1));
       return;
     }
     if (g.kind === 'intersection' && g.components.length > 1) {
-      lines.push({ part: typeof g.raw === 'string' ? g.raw : 'intersection', text: 'comma = intersection: only the nodes that match every part', level });
+      lines.push({ part: typeof g.raw === 'string' ? g.raw : 'intersection', text: 'comma = intersection: only the nodes that match every part', count: sizeText, level });
       g.components.forEach((c) => walk(c, level + 1));
       return;
     }
@@ -156,7 +158,8 @@ export function explain(project: Project, r: CommandResult): ExplainLine[] {
   };
   if (args.resourceTypes.length || args.excludeResourceTypes.length || args.models) {
     const parts = [...args.resourceTypes.map((t) => `--resource-type ${t}`), ...args.excludeResourceTypes.map((t) => `--exclude-resource-type ${t}`)];
-    lines.push({ part: args.models ? '--models' : parts.join(' '), text: `final filter on the result: only ${types.join(', ')} ${types.length === 1 ? 'is' : 'are'} kept. It is not a selection: tests are not added for it.`, level: 0 });
+    const PL: Record<string, string> = { model: 'models', test: 'data tests', unit_test: 'unit tests', source: 'sources', seed: 'seeds', snapshot: 'snapshots', exposure: 'exposures', analysis: 'analyses', metric: 'metrics', saved_query: 'saved queries', semantic_model: 'semantic models', function: 'functions' };
+    lines.push({ part: args.models ? '--models' : parts.join(' '), text: `final filter on the result: only ${types.map((t) => PL[t] ?? t).join(', ')} are kept. It is not a selection: no test is added for it.`, level: 0 });
   } else if (typeText[cmd]) {
     lines.push({ part: `dbt ${cmd}`, text: typeText[cmd], level: 0 });
   }

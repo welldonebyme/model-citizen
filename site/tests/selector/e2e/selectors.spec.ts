@@ -21,6 +21,8 @@ for (const scheme of ['light', 'dark'] as const) {
     page.on('pageerror', (e) => errors.push(e.message));
     await open(page, scheme);
     await expect(page.locator('.msl-term pre')).toContainText('jaffle_dbt.marts.fct_orders');
+    // no horizontal page scroll (phone included)
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
     await page.screenshot({ path: `${SHOTS}/${info.project.name}-${scheme}-top.png`, fullPage: false });
     await page.screenshot({ path: `${SHOTS}/${info.project.name}-${scheme}-full.png`, fullPage: true });
     const a = await axe(page);

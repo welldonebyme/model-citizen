@@ -167,3 +167,23 @@ describe('challenges', () => {
     expect(checkChallenge(p, c, 'fct_orders int_orders__enriched int_orders__payment_methods_pivoted').message).toContain('Right nodes, but');
   });
 });
+
+import { withDemoSelectors } from '../../src/lib/selector/demo-selectors';
+
+describe('demo selectors (real dbt 1.11.16 on ch16 with the same selectors.yml lines)', () => {
+  const p = withDemoSelectors(loadProject('jaffle', 'ch16'));
+  const run = (s: string) => runCommand(p, `dbt ls --selector ${s} --resource-type model`, { clock: '00:00:00' });
+  it('CLI-style strings with a space or a comma select nothing', () => {
+    expect(run('cli_union').output).toEqual([]);
+    expect(run('cli_union').logs.map((l) => l.text)).toContain('No nodes selected!');
+    expect(run('cli_intersection').output).toEqual([]);
+    expect(run('cli_union').notes.join(' ')).toContain('ONE criterion');
+  });
+  it('graph operators and the one-key form work', () => {
+    expect(run('cli_parents').output).toEqual([
+      'jaffle_dbt.marts.fct_orders', 'jaffle_dbt.intermediate.int_orders__enriched', 'jaffle_dbt.intermediate.int_orders__payment_methods_pivoted',
+      'jaffle_dbt.intermediate.int_payments__successful', 'jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers',
+      'jaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders', 'jaffle_dbt.staging.stripe.stg_stripe__payments']);
+    expect(run('one_key').output).toEqual(['jaffle_dbt.marts.fct_monthly_revenue', 'jaffle_dbt.marts.fct_order_items', 'jaffle_dbt.marts.fct_order_items_daily', 'jaffle_dbt.marts.fct_orders']);
+  });
+});

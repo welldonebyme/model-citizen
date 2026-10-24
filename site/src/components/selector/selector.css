@@ -9,7 +9,8 @@
 .msl-small { font-size: var(--fs-sm); }
 
 /* controls */
-.msl-controls { display: grid; gap: 12px; padding: 16px 18px; }
+.msl-controls { display: grid; gap: 12px; padding: 16px 18px; min-width: 0; }
+.msl-controls > * { min-width: 0; }
 .msl-row { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; }
 .msl-field { display: grid; gap: 4px; min-width: 0; }
 .msl-field > span, .msl-legend { font-size: var(--fs-xs); font-weight: 700; color: var(--muted); letter-spacing: .01em; }
@@ -17,7 +18,9 @@
 .msl-select { padding-right: 28px; max-width: min(100%, 420px); }
 .msl-input { width: 100%; }
 .msl-mono { font-family: var(--mono); }
-.msl-cmd { display: flex; gap: 8px; align-items: stretch; }
+.msl-cmd { display: flex; gap: 8px; align-items: stretch; min-width: 0; }
+.msl-cmd .msl-input { min-width: 0; }
+.msl-row > .msl-field { max-width: 100%; }
 .msl-cmd .msl-input { flex: 1; font-family: var(--mono); font-size: 0.95rem; min-height: 46px; border-width: 1.5px; border-color: var(--ink); }
 .msl-cmd .msl-input:focus-visible { outline: 3px solid var(--focus); outline-offset: 1px; }
 .msl-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 40px; padding: 6px 14px; border-radius: var(--r-ctl); border: 1px solid var(--line-strong); background: var(--surface); color: var(--ink); font-weight: 700; font-size: var(--fs-sm); white-space: nowrap; }
@@ -186,6 +189,7 @@
   .msl-ch-list { max-height: 260px; }
   .msl-viewport { height: 440px; }
   .msl-cmd { flex-direction: column; }
+  .msl-row > .msl-field, .msl-select { width: 100%; max-width: 100%; }
   .msl-controls, .msl-pad { padding: 14px; }
   .msl-explain li { grid-template-columns: minmax(0, 1fr); }
   .msl-explain .c { grid-column: 1; }

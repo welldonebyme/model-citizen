@@ -7,6 +7,7 @@ import type { Project } from '../../lib/selector/project';
 import { scenariosFor } from '../../lib/selector/scenarios';
 import { buildCommandLine, parseCommandLine, type Shell } from '../../lib/selector/cli';
 import { runCommand, type CommandResult } from '../../lib/selector/tasks';
+import { withDemoSelectors } from '../../lib/selector/demo-selectors';
 import DagView from './DagView';
 import Details from './Details';
 import NodeList from './NodeList';
@@ -18,7 +19,7 @@ import './selector.css';
 const DEFAULT_PROJECT = 'jaffle-ch16';
 const DEFAULT_CMD = 'dbt ls -s +fct_orders --resource-type model';
 
-interface Example { cmd: string; title: string }
+interface Example { cmd: string; title: string; trap?: boolean }
 const EXAMPLES: Record<'jaffle' | 'shopflow', Example[]> = {
   jaffle: [
     { cmd: 'dbt ls -s +fct_orders --resource-type model', title: 'all parents' },
@@ -26,15 +27,16 @@ const EXAMPLES: Record<'jaffle' | 'shopflow', Example[]> = {
     { cmd: 'dbt ls -s 2+dim_customers --resource-type model', title: 'two levels up' },
     { cmd: 'dbt ls -s @int_orders__enriched --resource-type model', title: 'the @ operator' },
     { cmd: 'dbt ls -s "tag:staging,+fct_monthly_revenue" --resource-type model', title: 'intersection' },
-    { cmd: 'dbt ls -s "tag:finance, tag:marketing" --resource-type model', title: 'comma + space trap' },
+    { cmd: 'dbt ls -s "tag:finance, tag:marketing" --resource-type model', title: 'comma + space trap', trap: true },
     { cmd: 'dbt ls -s tag:marts --exclude fct_orders+ --resource-type model', title: 'exclude a branch' },
     { cmd: 'dbt ls -s path:models/staging/stripe', title: 'path: with sources and tests' },
     { cmd: 'dbt ls -s source:stripe+ --resource-type model', title: 'below a source' },
-    { cmd: 'dbt ls -s stg_jaffle_shop__*', title: 'zsh eats the star' },
+    { cmd: 'dbt ls -s stg_jaffle_shop__*', title: 'zsh eats the star', trap: true },
     { cmd: 'dbt ls --selector nightly --resource-type model', title: 'YAML selector' },
-    { cmd: 'dbt ls -s selector:nightly', title: 'not in 1.11' },
+    { cmd: 'dbt ls -s selector:nightly', title: 'not in 1.11', trap: true },
+    { cmd: 'dbt ls --selector cli_union --resource-type model', title: 'YAML string trap (adds the book demo selectors)', trap: true },
     { cmd: 'dbt build -s stg_stripe__payments+', title: 'build order' },
-    { cmd: 'dbt ls -s state:modified+ --state prod-artifacts', title: 'state (needs --state)' },
+    { cmd: 'dbt ls -s state:modified+ --state prod-artifacts', title: 'state (needs --state)', trap: true },
   ],
   shopflow: [
     { cmd: 'dbt ls -s +fct_orders --resource-type model', title: 'all parents' },
@@ -42,7 +44,7 @@ const EXAMPLES: Record<'jaffle' | 'shopflow', Example[]> = {
     { cmd: 'dbt ls -s group:marketing', title: 'a group' },
     { cmd: 'dbt ls -s +exposure:weekly_revenue_dashboard --resource-type model', title: 'what an exposure needs' },
     { cmd: 'dbt ls --selector nightly --resource-type model', title: 'YAML selector' },
-    { cmd: 'dbt build --selector ci_slim --state prod-artifacts', title: 'slim CI' },
+    { cmd: 'dbt build --selector ci_slim --state prod-artifacts', title: 'slim CI', trap: true },
     { cmd: 'dbt ls -s version:latest --resource-type model', title: 'latest versions' },
   ],
 };
@@ -70,7 +72,9 @@ const TYPE_CHOICES = ['model', 'test', 'unit_test', 'source', 'seed', 'snapshot'
 
 export default function SelectorLab() {
   const [projectId, setProjectId] = useState(DEFAULT_PROJECT);
-  const [project, setProject] = useState<Project | null>(null);
+  const [baseProject, setProject] = useState<Project | null>(null);
+  const [demo, setDemo] = useState(false);
+  const project = useMemo(() => (baseProject && demo ? withDemoSelectors(baseProject) : baseProject), [baseProject, demo]);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [cmd, setCmd] = useState(DEFAULT_CMD);
   const [shell, setShell] = useState<Shell>('zsh');
@@ -154,10 +158,11 @@ export default function SelectorLab() {
     }), edges);
   }, [project, visible]);
 
+  // the view moves to show what the selection touched: selected, hidden by --resource-type, or excluded
   const focusIds = useMemo(() => {
     if (!result || !layout) return [] as string[];
-    return [...result.selected, ...result.selectedUnitTests].filter((id) => layout.nodes.has(id));
-  }, [result, layout]);
+    return [...states.entries()].filter(([id, x]) => x.state !== 'none' && layout.nodes.has(id)).map(([id]) => id).sort();
+  }, [result, layout, states]);
 
   const labeler = useCallback((id: string) => labelOf(project!, id), [project]);
   const isTest = useCallback((id: string) => { const t = project?.nodes.get(id)?.resource_type; return t === 'test' || t === 'unit_test'; }, [project]);
@@ -194,7 +199,17 @@ export default function SelectorLab() {
     { label: 'Practice project jaffle_dbt (book chapters)', items: TAGS.filter((t) => t.key === 'jaffle') },
     { label: 'Capstone shopflow_dbt (milestones)', items: TAGS.filter((t) => t.key === 'shopflow') },
   ];
-  const examples = EXAMPLES[(project?.key as 'jaffle' | 'shopflow') ?? 'jaffle'];
+  // examples that make sense at this tag: traps always (if their nodes exist), others only when they select something
+  const examples = useMemo(() => {
+    if (!baseProject) return [] as Example[];
+    const list = EXAMPLES[(baseProject.key as 'jaffle' | 'shopflow') ?? 'jaffle'];
+    return list.filter((x) => {
+      if (x.cmd.includes('--selector') && !baseProject.dag.selectors_yml) return false;
+      if (x.trap) return !x.cmd.includes('--state') || !!baseProject.extras?.state_prev;
+      const r = runCommand(baseProject, x.cmd, { shell: 'powershell', previous: null });
+      return !r.error && r.selected.length > 0 && !r.logs.some((l) => l.text.includes('does not match'));
+    });
+  }, [baseProject]);
   const usesState = !!parsed?.args.state;
 
   const counts = useMemo(() => {
@@ -219,7 +234,7 @@ export default function SelectorLab() {
           </form>
           <div className="msl-examples" role="group" aria-label="Examples from the book">
             <span className="msl-legend">Try:</span>
-            {examples.map((x) => <button key={x.cmd} type="button" className="msl-chip" onClick={() => setCmd(x.cmd)} title={x.title}>{x.cmd.replace(/^dbt /, '')}</button>)}
+            {examples.map((x) => <button key={x.cmd} type="button" className="msl-chip" onClick={() => { if (x.cmd.includes('--selector cli_')) setDemo(true); setCmd(x.cmd); }} title={x.title}>{x.cmd.replace(/^dbt /, '')}</button>)}
           </div>
           <div className="msl-row">
             <label className="msl-field">
@@ -265,6 +280,7 @@ export default function SelectorLab() {
                   {project?.selectorNames.map((s) => <option key={s} value={s}>{s}</option>)}
                 </select>
               </label>
+              <label className="msl-toggle"><input type="checkbox" checked={demo} onChange={(e) => setDemo(e.target.checked)} disabled={!baseProject?.dag.selectors_yml} /> Add the 4 demo selectors of Chapter 16 to selectors.yml (cli_union, cli_intersection, cli_parents, one_key)</label>
               <fieldset className="msl-fieldset"><legend className="msl-legend">--resource-type</legend>
                 <div className="msl-checks">
                   {TYPE_CHOICES.map((t) => (

@@ -30,8 +30,8 @@ interface Props {
 /** The index rows carry only what filtering needs; they are not full questions. */
 type Item = Pick<Question, 'id' | 'format' | 'source' | 'objective' | 'topic'> & { difficulty?: unknown };
 
-/** Loads the full questions of the picked ids, one file per chapter or mock, in the picked order. */
-async function loadQuestions(ids: string[], items: Map<string, Item>, chapterBase: string, mockBase: string): Promise<Question[]> {
+/** Loads the full questions of the picked ids, one file per chapter or mock, in the picked order (also used by the friend challenge). */
+export async function loadQuestions(ids: string[], items: Map<string, Item>, chapterBase: string, mockBase: string): Promise<Question[]> {
   const files = new Set<string>();
   for (const id of ids) {
     const s = items.get(id)?.source;

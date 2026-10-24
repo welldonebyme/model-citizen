@@ -1,0 +1,21 @@
+---
+// Everything the delight features need on every page, in one line for the Base layout (full chrome only):
+//   import DelightChrome from '../components/delight/DelightChrome.astro';
+//   {chrome === 'full' && <DelightChrome />}
+// = the celebration host (badges, levels), the focus timer launcher, and the "?" keyboard shortcuts.
+import CelebrationHost from './CelebrationHost';
+import PomodoroLauncher from './PomodoroLauncher';
+
+interface Props {
+  /** where "See your badges" goes; default: the Today page (#badges) */
+  badgesHref?: string;
+  /** false hides the focus timer on this page */
+  timer?: boolean;
+}
+const { badgesHref, timer = true } = Astro.props;
+---
+<CelebrationHost client:idle badgesHref={badgesHref} />
+{timer && <PomodoroLauncher client:idle />}
+<script>
+  import './shortcuts';
+</script>

@@ -1,0 +1,37 @@
+---
+// Friend challenge: the same questions, in the same order, for two people, from a short link.
+// Each person answers in their own browser; results stay local; a "share your score" text to copy.
+import Base from '../../../layouts/Base.astro';
+import ChallengeApp from '../../../components/delight/ChallengeApp';
+import { chapterQuizzes, mocks } from '../../../lib/questions';
+import { chapters as bookChapters } from '../../../lib/content';
+import { CHAPTER_TITLES } from '../../../lib/exam/objectives';
+import { url } from '../../../lib/url';
+
+const titleOf = (n: number) => bookChapters.find((c) => c.number === n)?.title ?? CHAPTER_TITLES[n] ?? `Chapter ${n}`;
+const chapters = chapterQuizzes().map((q) => ({ n: q.number, title: titleOf(q.number), count: q.questions.length }));
+const mockList = mocks().map((m) => ({ n: m.n, count: m.questions.length }));
+---
+<Base title="Friend challenge" section="practice" description="Challenge a friend: the same questions in the same order, from a short link. Each person answers in their own browser.">
+  <div class="wrap ch-page">
+    <nav class="crumb" aria-label="Breadcrumb"><a href={url('practice/')}>Practice</a><span aria-hidden="true">/</span><b>Friend challenge</b></nav>
+    <header class="head">
+      <h1>Friend challenge</h1>
+      <p>Choose some questions, then send the link to a friend. You both get exactly the same questions, in the same order. Each of you answers in your own browser: no account, nothing is sent, the results stay with you. At the end, copy your score and send it.</p>
+    </header>
+    <ChallengeApp client:only="react" indexUrl={url('practice/drills/index.json')} chapterDataBase={url('quiz/data/')} mockDataBase={url('exams/data/')} chapters={chapters} mocks={mockList}>
+      <p slot="fallback" class="fallback">Loading the challenge…</p>
+    </ChallengeApp>
+    <noscript><p class="fallback">The challenge needs JavaScript. Turn it on in your browser to answer the questions.</p></noscript>
+  </div>
+</Base>
+
+<style>
+  .ch-page { padding-block: var(--s7) var(--s9); }
+  .crumb { display: flex; gap: 8px; font-size: var(--fs-sm); color: var(--muted); margin-bottom: var(--s4); }
+  .crumb a { color: var(--muted); }
+  .crumb b { color: var(--ink); }
+  .head { max-width: 760px; margin-bottom: var(--s6); }
+  .head h1 { margin-bottom: var(--s3); }
+  .fallback { color: var(--muted); }
+</style>

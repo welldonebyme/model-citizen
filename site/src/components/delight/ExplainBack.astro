@@ -1,0 +1,20 @@
+---
+// "Explain it back" for a chapter page. Usage (chapter page frontmatter has the chapter `c`):
+//   import ExplainBack from '../../../components/delight/ExplainBack.astro';
+//   <ExplainBack chapter={c} />
+// Shows nothing for chapters without a "The idea in 3 sentences" box (mock exams, appendices).
+import type { Block, Chapter } from '../../lib/content-types';
+import ExplainBackApp from './ExplainBackApp';
+
+interface Props { chapter: Chapter; headingLevel?: 2 | 3 }
+const { chapter, headingLevel = 2 } = Astro.props;
+const box = (kind: 'idea' | 'why') => {
+  const b = chapter.intro.find((x) => x.t === 'callout' && x.kind === kind) as (Block & { t: 'callout' }) | undefined;
+  return b?.blocks;
+};
+const idea = box('idea');
+const why = box('why');
+---
+{idea && (
+  <ExplainBackApp client:visible chapterId={chapter.id} chapterNumber={chapter.number} chapterTitle={chapter.title} idea={idea} why={why} headingLevel={headingLevel} />
+)}

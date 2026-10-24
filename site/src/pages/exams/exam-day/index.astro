@@ -1,0 +1,94 @@
+---
+// Exam day: countdown, the book's last-7-days plan and exam-day checklist (Chapter 27), the four booking
+// conditions (Part 0) and the exam facts (Part 0, "Logistics"). Every text comes from the book's
+// generated content; the island adds the countdown, the saved ticks and the learner's status.
+import Base from '../../../layouts/Base.astro';
+import ExamDayApp, { type ExamDayProps } from '../../../components/delight/ExamDayApp';
+import { chapters } from '../../../lib/content';
+import type { Block, Cell, Inline } from '../../../lib/content-types';
+import { daysOfLabel } from '../../../lib/exam-day';
+import { chapterQuiz, labSteps } from '../../../lib/course-facts';
+import { isCapstoneLab } from '../../../lib/lab-steps';
+import { url } from '../../../lib/url';
+
+const PLAN = import.meta.glob('../../../generated/plan.json', { eager: true, import: 'default' }) as Record<string, { readiness?: { conditions: Block[][]; intro: Block[] } }>;
+const plan = Object.values(PLAN)[0];
+
+const ch27 = chapters.find((c) => c.id === 'ch27');
+const ch00 = chapters.find((c) => c.id === 'ch00');
+const lesson = (id: string) => ch27?.lessons.find((l) => l.id === id) ?? ch00?.lessons.find((l) => l.id === id);
+const inl = (c: Cell['c'] | undefined): Inline[] => {
+  if (!c) return [];
+  const first = c[0] as unknown;
+  if (first && typeof first === 'object' && (first as { t?: string }).t === 'p') return (c as Block[]).flatMap((b) => (b.t === 'p' ? b.c : []));
+  return c as Inline[];
+};
+const text = (c: Inline[]): string => c.map((n) => (typeof n === 'string' ? n : 'v' in n ? n.v : 'text' in n ? n.text : 'c' in n ? text(n.c as Inline[]) : '')).join('');
+
+// The last 7 days (27.7)
+const s7 = lesson('ch27-s7');
+const s7blocks = s7?.steps[0]?.blocks ?? [];
+const weekIntro = (s7blocks.find((b) => b.t === 'p') as { c: Inline[] } | undefined)?.c ?? [];
+const table = s7blocks.find((b) => b.t === 'table') as Extract<Block, { t: 'table' }> | undefined;
+const head = (table?.head?.[0] ?? []).map((cell) => text(inl(cell.c)));
+const week: ExamDayProps['week'] = (table?.rows ?? []).map((r) => {
+  const day = text(inl(r[0]?.c));
+  const n = daysOfLabel(day);
+  return { id: n === null ? day : `d${n}`, day, days: n, what: inl(r[1]?.c), done: inl(r[2]?.c) };
+});
+const trap = (s7blocks.find((b) => b.t === 'callout' && b.kind === 'trap') as Extract<Block, { t: 'callout' }> | undefined)?.blocks ?? [];
+
+// Exam-day checklist (27.8)
+const s8 = lesson('ch27-s8');
+const checklistIntro = ((s8?.steps[0]?.blocks ?? []).find((b) => b.t === 'p') as { c: Inline[] } | undefined)?.c ?? [];
+const groups: ExamDayProps['groups'] = (s8?.steps.slice(1) ?? []).map((st, gi) => {
+  const list = st.blocks.find((b) => b.t === 'list') as Extract<Block, { t: 'list' }> | undefined;
+  return { id: `g${gi + 1}`, title: st.titleText, items: (list?.items ?? []).map((it, ii) => ({ id: `g${gi + 1}-${ii + 1}`, c: it.blocks.flatMap((b) => (b.t === 'p' ? b.c : [])) })) };
+});
+
+// The exam facts (Part 0, 0.5 "Logistics")
+const logistics = lesson('ch00-s5')?.steps.flatMap((s) => s.blocks).find((b) => b.t === 'table' && text(inl(b.head?.[0]?.[0]?.c)) === 'Item') as Extract<Block, { t: 'table' }> | undefined;
+const WANTED = ['Length', 'Duration', 'Passing score', 'Open book?', 'Delivery', 'Browser', 'Results', 'Cancel / reschedule'];
+const facts: ExamDayProps['facts'] = WANTED.flatMap((w) => {
+  const r = logistics?.rows.find((row) => text(inl(row[0]?.c)) === w);
+  return r ? [{ item: w, details: inl(r[1]?.c) }] : [];
+});
+
+// Booking conditions (Part 0, 0.7)
+const readinessIntro = (plan?.readiness?.intro?.[0] as { c: Inline[] } | undefined)?.c ?? [];
+const readinessAfter = (plan?.readiness?.intro?.[1] as { c: Inline[] } | undefined)?.c ?? [];
+const conditions = (plan?.readiness?.conditions ?? []).map((bs) => bs.flatMap((b) => (b.t === 'p' ? b.c : [])));
+
+const capstoneSteps = Object.fromEntries(Object.entries(labSteps).filter(([id]) => isCapstoneLab(id)));
+
+const props: ExamDayProps = {
+  weekIntro, weekHead: head, week, trap, checklistIntro, groups, facts, readinessIntro, readinessAfter, conditions, chapterQuiz, capstoneSteps, capstoneMilestones: 15,
+  links: {
+    week: url('learn/ch27/ch27-s7/'), checklist: url('learn/ch27/ch27-s8/'), after: url('learn/ch27/ch27-s9/'), logistics: url('learn/ch00/ch00-s5/'),
+    quizzes: url('quiz/'), capstone: url('labs/capstone/'), mocks: url('exams/'), notebook: url('practice/notebook/'), settings: url('settings/'),
+    traps: url('practice/traps/'), cheatsheets: url('reference/cheatsheets/'), drills: url('practice/drills/'), flashcards: url('practice/flashcards/'),
+  },
+};
+const complete = week.length === 8 && groups.length === 3;
+---
+<Base title="Exam day" section="exams" description="Countdown to your exam, the book's last-7-days plan and exam-day checklist (Talview, ID, room, browser), and the four conditions to book the exam.">
+  <div class="wrap ed-page">
+    <nav class="crumb" aria-label="Breadcrumb"><a href={url('exams/')}>Mock exams</a><span aria-hidden="true">/</span><b>Exam day</b></nav>
+    <header class="ed-intro">
+      <h1>Exam day</h1>
+      <p>The last week before the exam and the exam itself, from <a href={url('learn/ch27/')}>Chapter 27</a> of the book. Tick what you have done: your ticks are saved in this browser and in your progress file.</p>
+      {!complete && <p class="ed-warn">Part of Chapter 27 could not be read from the book content. Read the chapter itself.</p>}
+    </header>
+    <ExamDayApp client:load {...props} />
+  </div>
+</Base>
+
+<style>
+  .ed-page { padding-block: var(--s7) var(--s9); }
+  .crumb { display: flex; gap: 8px; font-size: var(--fs-sm); color: var(--muted); margin-bottom: var(--s4); }
+  .crumb a { color: var(--muted); }
+  .crumb b { color: var(--ink); }
+  .ed-intro { max-width: 760px; margin-bottom: var(--s6); }
+  .ed-intro h1 { margin-bottom: var(--s3); }
+  .ed-warn { display: inline-block; font-size: var(--fs-sm); padding: 4px 10px; border-radius: var(--r-chip); background: var(--warn-bg); color: var(--warn); }
+</style>

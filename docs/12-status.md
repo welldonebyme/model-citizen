@@ -1,4 +1,4 @@
-# 12 — Status (2026-10-24, end of the build)
+# 12 — Status (2026-10-24, end of the build and of the review fixes)
 
 Nothing is published and no remote exists: the site, the kits and the git history are only on this Mac.
 Quality-gate results are in `13-qa-report.md`; decisions in `10-decisions.md`; book corrections in
@@ -7,9 +7,11 @@ Quality-gate results are in `13-qa-report.md`; decisions in `10-decisions.md`; b
 ## What the site has
 - **Today**: first-visit setup, the book's plan (3 rhythms), today's mission, the four booking conditions,
   streak, exam countdown, mastery per objective, XP and badges, the course map.
-- **Path, chapters, lessons** (311 lessons): steps with "I understood this", OS switch (macOS / Windows / WSL,
-  171 PowerShell variants, 32 OS notes), labs with ticks (every lab can be finished), checkpoints from the
-  question bank, French glossary tooltips, figures that follow the theme, focus mode, explain it back.
+- **Path, chapters, lessons** (311 lessons): steps with "I understood this", OS switch (macOS / Windows / WSL:
+  every shell block has its Windows form, plus Windows notes wherever a lesson shows macOS-only output), 117 labs
+  with ticks (every lab can be finished), a "Get the course files" box before lab 1.6, checkpoints from the
+  question bank, French glossary tooltips, figures sized to be readable (and an Enlarge view), focus mode,
+  explain it back.
 - **Workspaces in lessons**: real dbt-core 1.11.16 in the browser on 134 lessons (Chapters 6-25 and the
   capstone milestones), DuckDB SQL on the 15 SQL lessons; "Run in workspace" / "Try in the browser terminal"
   buttons; paste-to-verify on terminal outputs and capstone checkpoints.
@@ -34,11 +36,18 @@ Quality-gate results are in `13-qa-report.md`; decisions in `10-decisions.md`; b
 Windows PowerShell 5.1 itself, Edge on Windows, iOS Safari, phones beyond emulation, and whether GitHub Pages
 serves `.wasm` compressed (affects the first start of the dbt and SQL labs, not correctness).
 
+## Reviews
+Four independent reviews (design, a Windows beginner on weeks 1 and 4, exam realism, functional) found 87
+confirmed issues; 81 are fixed, 5 partly, 1 left (the book's week-1 time estimates). Details in
+`13-qa-report.md` section 6.
+
 ## How to work on it
 - Build: `npm --prefix site run build` (with search) or `build:fast` (no search index). Preview:
   `npm --prefix site run preview` (port 4322).
 - Converter: `converter/.venv/bin/python -m converter build` then `check`.
 - Tests: `npm --prefix site test`, `npm --prefix site run e2e`, `npm --prefix site run test:selector`,
   `npm --prefix site run e2e:labs`, `npm --prefix site run e2e:dbt`, `npm --prefix site run qa:links`.
+- Several agents building at once: each builds into its own `--outDir` and port, then runs
+  `node scripts/offline-manifest.mjs <outDir>` (and pagefind for search), never into `site/dist`.
 - Kits: `converter/reference/run_all.sh`; the dbt presets come from the local `dbt-bible` repositories
   (`npm --prefix site run dbt:presets`), so they cannot be rebuilt in CI.

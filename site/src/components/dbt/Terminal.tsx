@@ -81,7 +81,7 @@ export function Terminal({ model, prompt, promptTitle, running, disabled, histor
   const [value, setValue] = useState('');
   const [histPos, setHistPos] = useState<number | null>(null);
   const draft = useRef('');
-  const input = useRef<HTMLInputElement>(null);
+  const input = useRef<HTMLTextAreaElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
   const stick = useRef(true);
   const [copied, setCopied] = useState<string | null>(null);
@@ -111,9 +111,10 @@ export function Terminal({ model, prompt, promptTitle, running, disabled, histor
     onRun(line);
   }, [value, running, disabled, onRun]);
 
-  const onKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const onKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const k = e.key;
-    if (k === 'Enter') { e.preventDefault(); submit(); return; }
+    // Enter runs; Shift+Enter starts a new line inside a command (a quoted --inline query of several lines)
+    if (k === 'Enter' && !e.shiftKey) { e.preventDefault(); submit(); return; }
     if ((e.ctrlKey || e.metaKey) && k.toLowerCase() === 'l') { e.preventDefault(); model.clear(); return; }
     if (e.ctrlKey && k.toLowerCase() === 'c') {
       const el = input.current;
@@ -126,7 +127,7 @@ export function Terminal({ model, prompt, promptTitle, running, disabled, histor
       return;
     }
     if (k === 'ArrowUp' || k === 'ArrowDown') {
-      if (!history.length) return;
+      if (!history.length || value.includes('\n')) return; // in a command of several lines the arrows move the cursor
       e.preventDefault();
       let pos = histPos;
       if (k === 'ArrowUp') {
@@ -180,11 +181,12 @@ export function Terminal({ model, prompt, promptTitle, running, disabled, histor
         </div>
         <form className="t-input-row" onSubmit={(e) => { e.preventDefault(); submit(); }}>
           <label className="t-prompt" htmlFor={`${label.replace(/\W+/g, '-')}-input`} title={promptTitle}>{prompt}</label>
-          <input
+          <textarea
             id={`${label.replace(/\W+/g, '-')}-input`}
             ref={input}
             className="t-input"
-            type="text"
+            rows={Math.min(6, value.split('\n').length)}
+            style={{ resize: 'none', overflow: value.split('\n').length > 6 ? 'auto' : 'hidden', display: 'block', lineHeight: 'inherit', alignSelf: 'flex-start' }}
             value={value}
             onChange={(e) => { setValue(e.target.value); setHistPos(null); }}
             onKeyDown={onKey}
@@ -200,7 +202,7 @@ export function Terminal({ model, prompt, promptTitle, running, disabled, histor
           />
         </form>
       </div>
-      <p className="visually-hidden" id={`${label.replace(/\W+/g, '-')}-hint`}>Enter runs the command. Up and Down arrows: earlier commands. Control L clears the screen.</p>
+      <p className="visually-hidden" id={`${label.replace(/\W+/g, '-')}-hint`}>Enter runs the command. Shift Enter starts a new line in the same command. Up and Down arrows: earlier commands. Control L clears the screen.</p>
       <p className="visually-hidden" role="status" aria-live="polite">{copied ?? status ?? ''}</p>
       {copied && <p className="t-toast" aria-hidden="true">{copied}</p>}
     </section>

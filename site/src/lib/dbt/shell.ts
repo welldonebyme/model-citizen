@@ -2,7 +2,13 @@
 // Windows steps use). Pure functions: no file system, no Python. Used by session.ts and the unit tests.
 //
 // Supported: words, 'single' and "double" quotes, backslash escapes, $VAR ${VAR} $? $env:VAR expansion, ~ at the
-// start of a word, # comments, A=b prefixes, && || ; | < > >> 2> 2>&1, and a pasted "$ " or "PS> " prompt.
+// start of a word, # comments, A=b prefixes, && || ; | < > >> 2> 2>&1, and a pasted "$ ", "(.venv) $ " or "PS> " prompt.
+//
+// Windows: the lessons show PowerShell forms (cd $HOME\dbt-course, Copy-Item a, b dest\, '' inside '...').
+// A line that looks like PowerShell (a Verb-Noun cmdlet, $env:, $LASTEXITCODE, $name = ...) is read with
+// PowerShell's rules: a backslash is a plain character, ` is the escape, '' inside single quotes is one quote.
+// In bash lines a backslash escapes only shell characters ($ " ' \ ` | & ; < > ( ) #), so Windows paths such as
+// models\staging\x.sql keep their backslashes too; the session turns them into / when it resolves a path.
 
 export type Redirect =
   | { kind: 'in'; path: string }
@@ -32,9 +38,16 @@ export function stripPrompt(line: string): string {
   return line.replace(/^\s*(?:\([^)]*\)\s*)?(?:\$|PS>|PS [^>]*>|>)\s+/, '');
 }
 
-function readVar(s: string, i: number, ctx: ExpandContext): { value: string; next: number } | null {
+const PS_CMDLET = /(^|[\s|;(])(Get|Set|Add|New|Remove|Copy|Move|Rename|Select|Sort|ForEach|Where|Measure|Out|Write|Clear|Invoke|ConvertFrom|ConvertTo|Test|Join|Split|Resolve)-[A-Z][A-Za-z]+/;
+/** True when a line uses PowerShell syntax (then PowerShell quoting rules apply). */
+export function isPowerShellLine(line: string): boolean {
+  return PS_CMDLET.test(line) || /\$env:|\$LASTEXITCODE|\$PWD\\|\$HOME\\/i.test(line) || /^\s*\$[A-Za-z_]\w*\s*=/.test(stripPrompt(line));
+}
+
+function readVar(s: string, i: number, ctx: ExpandContext, ps = false): { value: string; next: number } | null {
   // s[i] === '$'
   const c = s[i + 1];
+  if (ps && (c === '_' && !/[A-Za-z0-9]/.test(s[i + 2] ?? '') || c === '(')) return null; // $_ and $( ) stay as written
   if (c === '?') return { value: ctx.vars('?') ?? '0', next: i + 2 };
   if (c === '{') {
     const end = s.indexOf('}', i + 2);
@@ -52,7 +65,7 @@ function readVar(s: string, i: number, ctx: ExpandContext): { value: string; nex
   return null;
 }
 
-export function tokenize(input: string, ctx: ExpandContext): { ok: true; toks: Tok[] } | { ok: false; error: string } {
+export function tokenize(input: string, ctx: ExpandContext, ps = isPowerShellLine(input)): { ok: true; toks: Tok[] } | { ok: false; error: string } {
   const s = input;
   const toks: Tok[] = [];
   let i = 0;
@@ -65,8 +78,8 @@ export function tokenize(input: string, ctx: ExpandContext): { ok: true; toks: T
   };
   while (i < s.length) {
     const c = s[i];
-    if (c === ' ' || c === '\t') { flush(); i++; continue; }
-    if (c === '#' && cur === null) break; // comment (bash and PowerShell)
+    if (c === ' ' || c === '\t' || c === '\n' || c === '\r') { flush(); i++; continue; }
+    if (c === '#' && cur === null) { const nl = s.indexOf('\n', i); if (nl < 0) break; i = nl; continue; } // comment (bash and PowerShell)
     // operators ("2>" only at the start of a word: in "a2>b", the 2 belongs to the word)
     const two = s.slice(i, i + 2);
     if (cur === null && two === '2>') {
@@ -79,11 +92,19 @@ export function tokenize(input: string, ctx: ExpandContext): { ok: true; toks: T
     if (c === '&') return { ok: false, error: 'Running a command in the background (&) is not available in this terminal.' };
     if (cur === null) cur = '';
     if (c === "'") {
-      const end = s.indexOf("'", i + 1);
-      if (end < 0) return { ok: false, error: 'Missing closing quote (\').' };
-      cur += s.slice(i + 1, end);
+      let j = i + 1;
+      let text = '';
+      for (;;) {
+        const end = s.indexOf("'", j);
+        if (end < 0) return { ok: false, error: 'Missing closing quote (\').' };
+        text += s.slice(j, end);
+        if (ps && s[end + 1] === "'") { text += "'"; j = end + 2; continue; } // PowerShell: '' is one quote
+        j = end + 1;
+        break;
+      }
+      cur += text;
       quoted = true;
-      i = end + 1;
+      i = j;
       continue;
     }
     if (c === '"') {
@@ -93,10 +114,11 @@ export function tokenize(input: string, ctx: ExpandContext): { ok: true; toks: T
       while (i < s.length) {
         const d = s[i];
         if (d === '"') { closed = true; i++; break; }
-        if (d === '\\' && i + 1 < s.length && '"\\$`'.includes(s[i + 1])) { cur += s[i + 1]; i += 2; continue; }
-        if (d === '`' && i + 1 < s.length && s[i + 1] === '"') { cur += '"'; i += 2; continue; } // PowerShell escape
+        // bash: \ escapes " \ $ ` ; but "C:\dir\" (a Windows path ending with \) keeps its last quote
+        if (!ps && d === '\\' && i + 1 < s.length && '"\\$`'.includes(s[i + 1]) && !(s[i + 1] === '"' && s.indexOf('"', i + 2) < 0)) { cur += s[i + 1]; i += 2; continue; }
+        if (d === '`' && i + 1 < s.length && '"$`'.includes(s[i + 1])) { cur += s[i + 1]; i += 2; continue; } // PowerShell escape
         if (d === '$') {
-          const v = readVar(s, i, ctx);
+          const v = readVar(s, i, ctx, ps);
           if (v) { cur += v.value; i = v.next; continue; }
         }
         cur += d;
@@ -105,9 +127,13 @@ export function tokenize(input: string, ctx: ExpandContext): { ok: true; toks: T
       if (!closed) return { ok: false, error: 'Missing closing quote (").' };
       continue;
     }
-    if (c === '\\' && i + 1 < s.length) { cur += s[i + 1]; i += 2; continue; }
+    // a backslash escapes shell characters in bash; otherwise it is a Windows path separator, kept as written
+    if (c === '\\' && !ps && i + 1 < s.length && '$\'"`\\|&;<>()# '.includes(s[i + 1])) {
+      cur += s[i + 1]; i += 2; continue;
+    }
+    if (c === '\\') { cur += '\\'; i++; continue; }
     if (c === '$') {
-      const v = readVar(s, i, ctx);
+      const v = readVar(s, i, ctx, ps);
       if (v) { cur += v.value; i = v.next; continue; }
     }
     if (c === '~' && cur === '' && (i + 1 === s.length || s[i + 1] === '/' || s[i + 1] === ' ')) {
@@ -198,24 +224,33 @@ export function splitList(line: string): { ok: true; items: { op: ListItem['op']
     start = end + width;
     return true;
   };
+  const ps = isPowerShellLine(s);
   while (i < s.length) {
     const c = s[i];
     if (c === "'") { const e = s.indexOf("'", i + 1); if (e < 0) return { ok: false, error: "Missing closing quote (')." }; i = e + 1; wordStart = false; continue; }
     if (c === '"') {
       i++;
-      while (i < s.length && s[i] !== '"') i += s[i] === '\\' || s[i] === '`' ? 2 : 1;
+      while (i < s.length && s[i] !== '"') {
+        const esc = s[i] === '`' || (!ps && s[i] === '\\' && !(s[i + 1] === '"' && s.indexOf('"', i + 2) < 0));
+        i += esc ? 2 : 1;
+      }
       if (i >= s.length) return { ok: false, error: 'Missing closing quote (").' };
       i++; wordStart = false; continue;
     }
-    if (c === '\\') { i += 2; wordStart = false; continue; }
-    if (c === '#' && wordStart) break;
+    if (c === '\\') { i += !ps && '$\'"`\\|&;<>()#'.includes(s[i + 1] ?? '') ? 2 : 1; wordStart = false; continue; }
+    if (c === '#' && wordStart) { // a comment, up to the end of the line
+      const nl = s.indexOf('\n', i);
+      if (nl < 0) break;
+      if (s.slice(start, i).trim()) { items.push({ op, text: s.slice(start, i) }); op = ';'; }
+      start = nl + 1; i = nl + 1; wordStart = true; continue;
+    }
     const two = s.slice(i, i + 2);
     if (two === '&&' || two === '||') {
       if (!push(i, two as ListItem['op'], 2)) return { ok: false, error: `A command is missing before ${two}` };
       i += 2; wordStart = true; continue;
     }
-    if (c === ';') {
-      if (!push(i, ';', 1)) return { ok: false, error: 'A command is missing before ;' };
+    if (c === ';' || c === '\n') { // a new line outside quotes ends a command, like ;
+      if (!push(i, ';', 1)) { if (c === '\n') { start = i + 1; i++; wordStart = true; continue; } return { ok: false, error: 'A command is missing before ;' }; }
       i++; wordStart = true; continue;
     }
     wordStart = c === ' ' || c === '\t' || c === '|' || c === '(' || c === '>' || c === '<';
@@ -227,13 +262,34 @@ export function splitList(line: string): { ok: true; items: { op: ListItem['op']
   return { ok: true, items };
 }
 
-/** PowerShell `$env:NAME = "value"` (the book's Windows form of `export NAME=value`). */
+/** PowerShell `$env:NAME = "value"` (the book's Windows form of `export NAME=value`). Value as written. */
 export function parsePowerShellEnv(line: string): { name: string; value: string } | null {
   const m = stripPrompt(line).match(/^\s*\$env:([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*;?\s*$/);
   if (!m) return null;
   let v = m[2];
   if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
   return { name: m[1], value: v };
+}
+
+/**
+ * PowerShell assignment `$env:NAME = <value>` or `$name = <value>`. The value is expanded with PowerShell's
+ * quoting rules ("$HOME\dbt-course" -> /home/pyodide\dbt-course). Returns null if the line is not one.
+ */
+export function parsePowerShellAssign(line: string, ctx: ExpandContext): { env: boolean; name: string; value: string } | { error: string } | null {
+  const m = stripPrompt(line).match(/^\s*\$(env:)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/);
+  if (!m) return null;
+  const tk = tokenize(m[3], ctx, true);
+  if (!tk.ok) return { error: tk.error };
+  const words = tk.toks.filter((t) => t.t === 'word').map((t) => (t as { v: string }).v);
+  if (tk.toks.some((t) => t.t === 'op')) return { error: 'This terminal can only set a variable to a value (a text or a number), not to the result of a command.' };
+  return { env: !!m[1], name: m[2], value: words.join(' ') };
+}
+
+/** A PowerShell expression typed alone ($LASTEXITCODE, $env:X, $HOME, $?): PowerShell prints its value. */
+export function powerShellExpression(line: string): string | null {
+  const m = stripPrompt(line).replace(/\s+#.*$/, '').match(/^\s*\$(\?|env:[A-Za-z_]\w*|[A-Za-z_]\w*|\{[^}]+\})\s*$/);
+  if (!m) return null;
+  return m[1].replace(/^env:/, '').replace(/^\{|\}$/g, '');
 }
 
 /** Quote a word for display, so that a command shown in the terminal can be typed again. */

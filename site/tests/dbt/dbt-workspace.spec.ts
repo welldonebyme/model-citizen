@@ -165,3 +165,74 @@ test('capstone: m08 end prepares (snapshots, day2) and its unit tests parse (lib
   const q = await run(page, 'duckdb ../shopflow-data/shopflow.duckdb -c "select count(*) as n from shopflow_app.orders"');
   expect(q.lines.join('\n')).toMatch(/│\s+3040\s+│/); // day 2 applied (3000 + 40 new orders)
 });
+
+test('Windows: the PowerShell forms of the lessons work in the terminal (review F12) @long', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'shell features are the same code in every browser');
+  await page.addInitScript(() => { try { localStorage.setItem('mc:os', 'win'); } catch { /* ignore */ } });
+  await startWorkspace(page, 'ch07-start');
+  let r = await run(page, 'cd $HOME\\dbt-course\\jaffle_dbt');
+  expect(r.code).toBe(0);
+  r = await run(page, 'New-Item -ItemType Directory -Force $HOME\\.dbt');
+  expect(r.lines.join('\n')).not.toContain('pyodide.dbt');
+  expect(r.code).toBe(0);
+  r = await run(page, 'New-Item -ItemType Directory -Force models\\staging\\jaffle_shop, models\\marts');
+  expect(r.code).toBe(0);
+  r = await run(page, 'Get-ChildItem -Recurse -Name models | Sort-Object');
+  expect(r.lines).toEqual(['marts', 'staging', 'staging/jaffle_shop']);
+  r = await run(page, 'dbt ls');
+  r = await run(page, '$LASTEXITCODE');
+  expect(r.lines).toEqual(['0']);
+  r = await run(page, "dbt debug | Select-String -CaseSensitive 'path:|Connection test' | ForEach-Object Line");
+  expect(r.lines.join('\n')).toMatch(/path: \.\.\/practice\/practice\.duckdb[\s\S]*Connection test: \[OK connection ok\]/);
+  r = await run(page, '$env:DBT_DUCKDB_PATH = "$PWD\\..\\practice\\practice.duckdb"; echo $env:DBT_DUCKDB_PATH; Remove-Item Env:DBT_DUCKDB_PATH');
+  expect(r.lines).toEqual(['/home/pyodide/dbt-course/jaffle_dbt/../practice/practice.duckdb']);
+  r = await run(page, "Get-Content dbt_project.yml -TotalCount 1");
+  expect(r.lines.length).toBe(1);
+});
+
+test('offline: a workspace used once online starts again without a connection (review F6) @long', async ({ page, context, browserName }) => {
+  test.skip(browserName !== 'chromium', 'context.setOffline + service worker: Chromium');
+  test.setTimeout(15 * 60_000);
+  // the lead's opt-in offline reading (Settings) keeps the pages and scripts; the engine keeps its own files
+  await page.goto('settings/');
+  await page.getByRole('button', { name: 'Save the course for offline use' }).click();
+  await expect(page.getByText('An offline copy is saved in this browser.')).toBeVisible({ timeout: 10 * 60_000 });
+  await startWorkspace(page, 'ch07-start');
+  await run(page, 'dbt ls');
+  await page.waitForTimeout(1500);
+  await context.setOffline(true);
+  await page.reload();
+  const info = await startWorkspace(page, 'ch07-start').catch(async (e) => { console.log(await page.locator('.dbt-ws').innerText()); throw e; });
+  expect(info.cold).toBe(false);
+  await expect(page.locator('.t-log')).toContainText('Your saved workspace for Chapter 7 is back');
+  const r = await run(page, 'dbt parse');
+  expect(r.lines.join('\n')).toContain('Performance info');
+  await context.setOffline(false);
+});
+
+test('offline with nothing saved: a plain message instead of "Failed to fetch" (review F6)', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'one browser is enough');
+  await page.route('**/engines/dbt/current.json', (r) => r.abort('internetdisconnected'));
+  await page.route('**/presets/dbt/index.json', (r) => r.abort('internetdisconnected'));
+  await page.goto('labs/dbt/?preset=ch07-start');
+  await expect(page.getByText('dbt needs an internet connection the first time').first()).toBeVisible();
+  await expect(page.getByText('Failed to fetch')).toHaveCount(0);
+  await expect(page.getByText('Chapter 7, start of the labs', { exact: false }).first()).toBeVisible();
+  await expect(page.getByText(/about \.\.\. MB/)).toHaveCount(0);
+});
+
+test('Windows switch: "Try in the browser terminal" takes the PowerShell form shown in the lesson (review F12)', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'plain DOM: one browser is enough');
+  await page.addInitScript(() => { try { localStorage.setItem('mc:os', 'win'); } catch { /* ignore */ } });
+  await page.goto('learn/ch16/ch16-s12/');
+  await page.locator('.dbt-ws').scrollIntoViewIfNeeded();
+  const block = page.locator('[data-code]', { hasText: 'empty_check.duckdb dbt build --empty' }).first();
+  const btn = block.getByRole('button', { name: 'Try in the browser terminal' });
+  await expect(btn).toBeVisible();
+  await btn.click();
+  await expect(page.locator('.dbt-start-queued code')).toHaveText('$env:DBT_DUCKDB_PATH = "../practice/empty_check.duckdb"; dbt build --empty; Remove-Item Env:DBT_DUCKDB_PATH');
+  // macOS switch: the bash form
+  await page.evaluate(() => { document.documentElement.dataset.os = 'mac'; });
+  await btn.click();
+  await expect(page.locator('.dbt-start-queued code')).toHaveText('DBT_DUCKDB_PATH=../practice/empty_check.duckdb dbt build --empty');
+});

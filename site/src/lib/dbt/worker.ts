@@ -4,7 +4,7 @@
 import runtimeSource from './runtime/mc_dbt.py?raw';
 import { Session } from './session.ts';
 import { PY_ENV, bootPackages, createBridge, installBytecode, installRuntime, type PyodideLike } from './host.ts';
-import { trackFetchProgress } from './engine-cache.ts';
+import { fetchJsonWithCopy, trackFetchProgress } from './engine-cache.ts';
 import * as store from './persist.ts';
 import { makeZip } from './zip.ts';
 import type { EngineManifest, ExecContext, Io, PresetIndex, Progress, WorkerEvent, WorkerRequest, WorkspaceMeta } from './types.ts';
@@ -120,11 +120,8 @@ async function boot(msg: Extract<WorkerRequest, { type: 'boot' }>) {
   session = new Session({
     fs: py!.FS,
     py: bridge,
-    loadBundle: async (rel) => {
-      const r = await fetch(presetsBase + rel);
-      if (!r.ok) throw new Error(`cannot load ${rel} (HTTP ${r.status})`);
-      return r.json();
-    },
+    // preset bundles: from the network, with a copy kept for offline use (reset a chapter without a connection)
+    loadBundle: (rel) => fetchJsonWithCopy(presetsBase + rel),
   });
   index = msg.presets;
   const t4 = performance.now();

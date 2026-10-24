@@ -1,6 +1,7 @@
 // The terminal session: a small shell around real dbt and the duckdb module, on Pyodide's virtual file system.
 // No browser API here, so the same code runs in the Web Worker and in Node (preset checks, golden tests).
-import { globToRegExp, parseLine, parsePowerShellEnv, quoteWord, splitList, type Pipeline, type SimpleCommand } from './shell.ts';
+import { globToRegExp, parseLine, parsePowerShellAssign, powerShellExpression, quoteWord, splitList, stripPrompt, type Pipeline, type SimpleCommand } from './shell.ts';
+import { PowerShell, renderLine, renderingIo } from './powershell.ts';
 import type { Bundle, ExecContext, FileEntry, Io, Preset, ProjectInfo } from './types.ts';
 
 /** The part of Emscripten's FS used here (Pyodide exposes it as pyodide.FS). */
@@ -41,9 +42,13 @@ export interface SessionOptions {
 const KEEP_ON_CHECKOUT = new Set(['target', 'logs', 'dbt_packages', 'prod-artifacts', 'ci_db']);
 const DBT_COMMANDS = new Set(['build', 'clean', 'clone', 'compile', 'debug', 'deps', 'docs', 'init', 'list', 'ls', 'parse',
   'retry', 'run', 'run-operation', 'seed', 'show', 'snapshot', 'source', 'test', 'environment', 'sl', 'invocation']);
-const ON_MACHINE = new Set(['python', 'python3', 'pip', 'pip3', 'uv', 'brew', 'winget', 'code', 'source', 'sudo', 'apt',
-  'apt-get', 'curl', 'wget', 'ssh', 'npm', 'node', 'docker', 'gh', 'zsh', 'bash', 'pwsh', 'powershell', 'vim', 'nano', 'nvim']);
-const FILTERS = new Set(['grep', 'head', 'tail', 'wc', 'sort', 'uniq', 'cat', 'select-string']);
+const ON_MACHINE = new Set(['python', 'python3', 'py', 'pip', 'pip3', 'uv', 'brew', 'winget', 'code', 'source', 'sudo', 'apt',
+  'apt-get', 'curl', 'wget', 'ssh', 'npm', 'node', 'docker', 'gh', 'zsh', 'bash', 'pwsh', 'powershell', 'vim', 'nano', 'nvim', 'jq']);
+const FILTERS = new Set(['grep', 'head', 'tail', 'wc', 'sort', 'uniq', 'cat',
+  // PowerShell (powershell.ts)
+  'select-string', 'sls', 'select-object', 'sort-object', 'foreach-object', '%', 'measure-object', 'set-content', 'add-content',
+  'out-file', 'where-object', '?', 'convertfrom-json', 'convertto-json']);
+const PS_LISTS = new Set(['copy-item', 'move-item', 'remove-item', 'new-item']);
 const ANSI = /\x1b\[[0-9;]*m/g;
 
 export function decodeBundleFile(v: string | { b64: string }): string | Uint8Array {
@@ -97,6 +102,7 @@ export class Session {
   private oldCwd: string | null = null;
   private sink: Io | null = null;
   private loadBundle: SessionOptions['loadBundle'];
+  private powershell: PowerShell;
 
   constructor(opts: SessionOptions) {
     this.fs = opts.fs;
@@ -105,6 +111,7 @@ export class Session {
     this.course = this.home + '/dbt-course';
     this.cwd = this.course;
     this.loadBundle = opts.loadBundle;
+    this.powershell = new PowerShell(this);
   }
 
   // ---- output from Python (Pyodide stdout/stderr callbacks call these) ----------------------------------------
@@ -113,6 +120,7 @@ export class Session {
 
   // ---- paths and files -----------------------------------------------------------------------------------------
   resolve(p: string, from = this.cwd): string {
+    p = p.replace(/\\/g, '/'); // Windows paths (models\staging\x.sql, $HOME\.dbt): same files here
     if (p === '~') return this.home;
     if (p.startsWith('~/')) p = this.home + p.slice(1);
     return normalize(p.startsWith('/') ? p : from + '/' + p);
@@ -236,6 +244,12 @@ export class Session {
     if (name === '?' || name === 'LASTEXITCODE') return String(this.lastExit);
     if (name === 'HOME') return this.home;
     if (name === 'PWD') return this.cwd;
+    if ((name === 'TEMP' || name === 'TMP') && !this.env[name]) {
+      // Windows' temporary folder ($env:TEMP): a folder of the home here
+      const t = this.home + '/.temp';
+      if (!this.exists(t)) this.fs.mkdirTree(t);
+      return t;
+    }
     return this.env[name] ?? this.vars[name];
   }
 
@@ -257,13 +271,41 @@ export class Session {
   }
 
   /** One part of a list: variables are expanded now (after the previous parts ran). */
-  private async execOne(text: string, io: Io, ctx: ExecContext): Promise<number> {
-    const ps = parsePowerShellEnv(text);
-    if (ps) {
-      this.env[ps.name] = ps.value;
+  private async execOne(text: string, io0: Io, ctx: ExecContext): Promise<number> {
+    const io = renderingIo(io0); // PowerShell objects (Select-String matches, ...) shown as PowerShell shows them
+    const expand = { home: this.home, vars: (n: string) => this.lookup(n) };
+    // PowerShell: an expression alone prints its value ($LASTEXITCODE, $env:DBT_DUCKDB_PATH, $HOME, $?)
+    const expr = powerShellExpression(text);
+    if (expr !== null) {
+      if (expr === '?') io.out(this.lastExit === 0 ? 'True' : 'False');
+      else {
+        const v = this.lookup(expr);
+        if (v !== undefined && v !== '') io.out(v);
+      }
+      return this.lastExit;
+    }
+    // PowerShell: (command).Count counts what the command prints; (Get-Command x).Source needs the computer
+    const paren = stripPrompt(text).trim().replace(/\s+#.*$/, '').match(/^\((.+)\)\.(Count|Length|Source|Path)$/);
+    if (paren) {
+      if (/^(Count|Length)$/.test(paren[2])) {
+        const cap = capture(io0, { merge: false });
+        await this.execOne(paren[1], cap.io, ctx);
+        for (const e of cap.errs) io.err(e);
+        io.out(String(cap.lines.length));
+        return 0;
+      }
+      io.note({ tone: 'warn', text: `${paren[1].trim()} asks where a program is installed on your computer. In this browser terminal, dbt is built in (dbt-core 1.11.16); git and python run on your computer.` });
+      return 1;
+    }
+    // PowerShell variables: $env:NAME = "value" (an environment variable, like export) and $name = "value"
+    const assign = parsePowerShellAssign(text, expand);
+    if (assign) {
+      if ('error' in assign) { io.err(assign.error); return 1; }
+      if (assign.env) this.env[assign.name] = assign.value.replace(/\\/g, '/'); // a Windows path: the same path here
+      else this.vars[assign.name] = assign.value;
       return 0;
     }
-    const parsed = parseLine(text, { home: this.home, vars: (n) => this.lookup(n) });
+    const parsed = parseLine(text, expand);
     if (!parsed.ok) {
       io.err(parsed.error);
       return 2;
@@ -274,21 +316,25 @@ export class Session {
   }
 
   private async runPipeline(p: Pipeline, io: Io, ctx: ExecContext): Promise<number> {
-    if (p.cmds.length === 1) return this.runSimple(p.cmds[0], io, ctx, undefined);
+    if (p.cmds.length === 1) return this.runSimple(p.cmds[0], io, ctx, undefined, false);
     let input: string | undefined;
     let code = 0;
     for (let i = 0; i < p.cmds.length; i++) {
       const c = p.cmds[i];
       const last = i === p.cmds.length - 1;
+      if (i > 0 && ON_MACHINE.has((c.argv[0] ?? '').toLowerCase())) {
+        io.note({ tone: 'warn', text: `${c.argv[0]} runs on your computer, not in this browser terminal. Run the part before | alone to see its output here.` });
+        return 127;
+      }
       if (i > 0 && !FILTERS.has((c.argv[0] ?? '').toLowerCase())) {
-        io.err(`${c.argv[0]}: only grep, head, tail, sort, uniq and wc can come after | in this terminal.`);
+        io.err(`${c.argv[0]}: only grep, head, tail, sort, uniq, wc (and Select-String, Select-Object, Sort-Object, ForEach-Object, Measure-Object, Set-Content) can come after | in this terminal.`);
         return 1;
       }
       if (last) {
-        code = await this.runSimple(c, io, ctx, input);
+        code = await this.runSimple(c, io, ctx, input, false);
       } else {
         const cap = capture(io, { merge: false });
-        code = await this.runSimple(c, cap.io, ctx, input);
+        code = await this.runSimple(c, cap.io, ctx, input, true);
         for (const e of cap.errs) io.err(e);
         input = cap.lines.join('\n') + (cap.lines.length ? '\n' : '');
       }
@@ -296,7 +342,7 @@ export class Session {
     return code;
   }
 
-  private async runSimple(c: SimpleCommand, io: Io, ctx: ExecContext, stdin: string | undefined): Promise<number> {
+  private async runSimple(c: SimpleCommand, io: Io, ctx: ExecContext, stdin: string | undefined, piped: boolean): Promise<number> {
     // variable assignments alone: shell variables (not exported, as in bash)
     if (c.argv.length === 0) {
       for (const [k, v] of c.assigns) this.vars[k] = v;
@@ -318,15 +364,16 @@ export class Session {
       else if (r.fd === 1) outFile = { path: r.path, append: r.append };
       else errFile = { path: r.path, append: r.append };
     }
-    if (!outFile && !errFile && !merge) return this.runCommand(c, io, ctx, stdin);
+    if (!outFile && !errFile && !merge) return this.runCommand(c, io, ctx, stdin, piped);
     const cap = capture(io, { merge });
-    const code = await this.runCommand(c, cap.io, ctx, stdin);
+    const code = await this.runCommand(c, cap.io, ctx, stdin, piped);
     const flushTo = (f: { path: string; append: boolean } | null, lines: string[], fallback: (l: string) => void) => {
       if (!f) { lines.forEach(fallback); return; }
       if (f.path === '/dev/null' || f.path.toLowerCase() === '$null') return;
       const abs = this.resolve(f.path);
       if (!this.inHome(abs)) { io.err(`${f.path}: Permission denied`); return; }
-      const text = lines.join('\n') + (lines.length ? '\n' : '');
+      const shown = lines.flatMap(renderLine);
+      const text = shown.join('\n') + (shown.length ? '\n' : '');
       this.write(abs, f.append && this.exists(abs) ? this.readText(abs) + text : text);
     };
     flushTo(outFile, cap.lines, io.out);
@@ -334,22 +381,30 @@ export class Session {
     return code;
   }
 
-  private async runCommand(c: SimpleCommand, io: Io, ctx: ExecContext, stdin: string | undefined): Promise<number> {
-    const [name0, ...args] = c.argv;
+  private async runCommand(c: SimpleCommand, io: Io, ctx: ExecContext, stdin: string | undefined, piped: boolean): Promise<number> {
+    const [name0, ...args0] = c.argv;
     const name = name0.toLowerCase();
     const onceEnv = Object.fromEntries(c.assigns);
+    // PowerShell lists: Copy-Item a, b dest\  ->  a b dest\
+    const args = PS_LISTS.has(name) ? args0.flatMap((a) => a.split(',')).map((a) => a.trim()).filter(Boolean) : args0;
     try {
+      const ps = await this.powershell.run(name, args, io, stdin, piped);
+      if (ps !== null) return ps;
+      if (/(^|[\\/])activate(\.ps1|\.bat|\.fish)?$/i.test(name0) || (name === 'source' && /activate/i.test(args.join(' ')))) {
+        io.note({ text: 'Not needed here: this terminal already runs dbt (dbt-core 1.11.16 with dbt-duckdb 1.11.0). On your computer, this command turns on the virtual environment.' });
+        return 0;
+      }
       switch (name) {
         case 'dbt': return await this.dbt(args, { ...this.env, ...onceEnv }, io, ctx);
         case 'duckdb': return this.duckdb(args, io, ctx, stdin);
         case 'apply': return this.apply(args, io, ctx);
         case 'cd': case 'set-location': case 'chdir': return this.cd(args, io);
         case 'pwd': case 'get-location': io.out(this.cwd); return 0;
-        case 'ls': case 'dir': case 'get-childitem': case 'gci': return this.ls(args, io, name !== 'ls');
-        case 'cat': case 'type': case 'get-content': case 'gc': return this.cat(args, io, stdin, name.startsWith('get') || name === 'gc');
+        case 'ls': return this.ls(args, io, false);
+        case 'cat': return this.cat(args, io, stdin, false);
         case 'head': return this.headTail(args, io, stdin, 'head');
         case 'tail': return this.headTail(args, io, stdin, 'tail');
-        case 'grep': case 'select-string': return this.grep(args, io, stdin, name === 'select-string');
+        case 'grep': return this.grep(args, io, stdin, false);
         case 'wc': return this.wc(args, io, stdin);
         case 'sort': return this.sortUniq(args, io, stdin, 'sort');
         case 'uniq': return this.sortUniq(args, io, stdin, 'uniq');
@@ -556,7 +611,7 @@ export class Session {
   }
 
   // ---- files -----------------------------------------------------------------------------------------------------------
-  private checkPath(arg: string, io: Io, cmd: string): string | null {
+  checkPath(arg: string, io: Io, cmd: string): string | null {
     const abs = this.resolve(arg);
     if (!this.inHome(abs)) {
       io.err(`${cmd}: ${arg}: this terminal only works with the files in your home folder (~).`);
@@ -566,7 +621,7 @@ export class Session {
   }
 
   /** Expand * and ? in the last path segment of each argument (like the shell does). */
-  private glob(args: string[]): string[] {
+  glob(args: string[]): string[] {
     const out: string[] = [];
     for (const a of args) {
       if (!/[*?]/.test(a)) { out.push(a); continue; }
@@ -991,6 +1046,7 @@ export class Session {
       ['ls  cat  head  tail  grep', 'look at files and outputs (grep, head, tail, wc, sort also after |)'],
       ['cd  pwd  mkdir  cp  mv  rm', 'move around and change files (only inside ~)'],
       ['export NAME=value', 'set an environment variable for dbt (PowerShell: $env:NAME = "value")'],
+      ['Windows (PowerShell) forms', 'cd $HOME\\dbt-course, Get-ChildItem -Name, Get-Content, Select-String ... | ForEach-Object Line, Copy-Item, New-Item, Remove-Item, $LASTEXITCODE'],
       ['open <file>.html', 'open an HTML file in a new tab (for example target/static_index.html)'],
       ['clear', 'clear the screen (or Ctrl+L)'],
     ];

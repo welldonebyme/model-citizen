@@ -60,3 +60,41 @@ export async function allCached(urls: string[], cacheNames: string[]): Promise<b
     return false;
   }
 }
+
+/** Raised when the network fails and there is no saved copy: the first start needs a connection. */
+export class OfflineError extends Error {
+  constructor(message = 'dbt needs an internet connection the first time: connect, then start again. After one start it also works offline.') {
+    super(message);
+    this.name = 'OfflineError';
+  }
+}
+
+/**
+ * GET a small JSON file that must stay fresh online (which engine is current, the preset index, a preset bundle):
+ * from the network (revalidated), and keep a copy in Cache Storage; when the network fails, use the last copy.
+ */
+export async function fetchJsonWithCopy<T>(url: string, cacheName = 'mc-dbt-meta'): Promise<T> {
+  let res: Response | null = null;
+  try {
+    res = await fetch(url, { cache: 'no-cache' });
+  } catch {
+    res = null; // offline, or the server cannot be reached
+  }
+  if (res?.ok) {
+    try {
+      const c = await caches.open(cacheName);
+      await c.put(url, res.clone());
+    } catch {
+      /* Cache Storage blocked: no offline copy, online works anyway */
+    }
+    return res.json() as Promise<T>;
+  }
+  try {
+    const hit = await (await caches.open(cacheName)).match(url);
+    if (hit) return hit.json() as Promise<T>;
+  } catch {
+    /* no Cache Storage */
+  }
+  if (!res) throw new OfflineError();
+  throw new Error(`HTTP ${res.status} for ${new URL(url, typeof location !== 'undefined' ? location.href : 'http://x/').pathname}`);
+}

@@ -8,7 +8,7 @@
 //   await engine.cancel();                           // stop a long command: terminate the worker, start again
 import { url } from '../url';
 import { ensureServiceWorker } from '../sw-register';
-import { pruneEngineCaches } from './engine-cache';
+import { OfflineError, fetchJsonWithCopy, pruneEngineCaches } from './engine-cache';
 import type { EngineManifest, ExecContext, FileEntry, Note, PresetIndex, Progress, WorkerEvent, WorkerRequest, WorkspaceMeta } from './types';
 
 export interface OutputHandlers {
@@ -54,11 +54,13 @@ let manifestPromise: Promise<EngineManifest> | null = null;
 let presetsPromise: Promise<PresetIndex> | null = null;
 
 /** The engine manifest (public/engines/dbt/current.json): versions, file list and sizes. */
+// Online these two files are always revalidated (a new deploy = a new engine id); offline the last copy is used,
+// so an engine that was started once starts again without a connection (the service worker keeps its files).
 export function loadManifest(): Promise<EngineManifest> {
   if (!manifestPromise) {
-    manifestPromise = fetch(url('engines/dbt/current.json'), { cache: 'no-cache' }).then((r) => {
-      if (!r.ok) throw new Error(`The dbt engine is missing from this build (HTTP ${r.status}).`);
-      return r.json();
+    manifestPromise = fetchJsonWithCopy<EngineManifest>(new URL(url('engines/dbt/current.json'), location.href).href).catch((e) => {
+      if (e instanceof OfflineError) throw e;
+      throw new Error(`The dbt engine is missing from this build (${(e as Error).message}).`);
     });
     manifestPromise.catch(() => { manifestPromise = null; });
   }
@@ -68,13 +70,22 @@ export function loadManifest(): Promise<EngineManifest> {
 /** The preset index (public/presets/dbt/index.json). */
 export function loadPresets(): Promise<PresetIndex> {
   if (!presetsPromise) {
-    presetsPromise = fetch(url('presets/dbt/index.json'), { cache: 'no-cache' }).then((r) => {
-      if (!r.ok) throw new Error(`The lab presets are missing (HTTP ${r.status}).`);
-      return r.json();
+    presetsPromise = fetchJsonWithCopy<PresetIndex>(new URL(url('presets/dbt/index.json'), location.href).href).catch((e) => {
+      if (e instanceof OfflineError) throw e;
+      throw new Error(`The lab presets are missing from this build (${(e as Error).message}).`);
     });
     presetsPromise.catch(() => { presetsPromise = null; });
   }
   return presetsPromise;
+}
+
+/** "ch07-start" -> "Chapter 7, start of the labs" (shown before the preset index is loaded). */
+export function presetTitleFromId(id: string): string {
+  const ch = id.match(/^ch(\d\d)-(start|end)$/);
+  if (ch) return `Chapter ${Number(ch[1])}, ${ch[2]} of the labs`;
+  const m = id.match(/^(m\d\d)-(start|end)$/);
+  if (m) return `Capstone milestone ${m[1]}, ${m[2]}`;
+  return id;
 }
 
 /** Workspace id for a preset: one per chapter or milestone ("ch07-start" and "ch07-end" share "jaffle-ch07"). */

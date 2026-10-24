@@ -214,6 +214,7 @@ function tagFacts(entries) {
     python: names.some((n) => n.startsWith('models/') && n.endsWith('.py')),
     snapshots: names.some((n) => n.startsWith('snapshots/') && /\.(yml|sql)$/.test(n)),
     unitTests: entries.some((e) => /\.ya?ml$/.test(e.name) && /^unit_tests:/m.test(e.data.toString('utf8'))),
+    models: names.some((n) => n.startsWith('models/') && /\.(sql|py)$/.test(n)),
   };
 }
 
@@ -267,7 +268,8 @@ async function main() {
       const summary = [];
       summary.push(t ? `Project files: the reference project at tag ${t}${state === 'start' ? ` (the end of Chapter ${filesN})` : ''}.` : 'No project yet: you create it with dbt init jaffle_dbt --skip-profile-setup.');
       summary.push(DATA_TEXT[data]);
-      if (t) summary.push(`Models already built with ${build(filesN)}${info.packages ? ' (packages installed from a saved copy)' : ''}.`);
+      if (t && info.models) summary.push(`Models already built with ${build(filesN)}${info.packages ? ' (packages installed from a saved copy)' : ''}.`);
+      else if (t) summary.push(state === 'start' ? 'No models yet: you create them in this chapter.' : 'No models: the example models of dbt init were deleted at the end of the chapter, so dbt finds nothing to build yet.');
       if (prod) summary.push('Production built (--target prod) and its artifacts saved in prod-artifacts/.');
       summary.push(`Profile ~/.dbt/profiles.yml as in Chapter ${Number(profileAt(n, state).slice(2))}.`);
       presets.push(finishPreset({
@@ -333,7 +335,8 @@ async function main() {
           t ? `Project files: the reference solution at tag ${t}${state === 'start' ? ` (the end of milestone ${t})` : ''}.` : 'No project yet: you create it with dbt init shopflow_dbt --skip-profile-setup.',
           `${dataText.join(', then ')}.${data.day2 && (prod ? minfo.m13 : info)?.snapshots ? ' Snapshots have their history.' : ''}`,
         ];
-        if (t) summary.push(`Models already built with ${info.unitTests ? 'dbt build --exclude-resource-type unit_test' : 'dbt build'}${info.packages ? ' (dbt_utils installed from a saved copy)' : ''}.`);
+        if (t && info.models) summary.push(`Models already built with ${info.unitTests ? 'dbt build --exclude-resource-type unit_test' : 'dbt build'}${info.packages ? ' (dbt_utils installed from a saved copy)' : ''}.`);
+        else if (t) summary.push(state === 'start' ? 'No models yet: you create them in this milestone.' : 'No models yet: this milestone adds no model (the first models come in m02).');
         if (prod) summary.push('Production built from main before the feature (m13 without is_bounce) with --selector nightly, artifacts in prod-artifacts/.');
         const profileKey = (info ?? minfo.m00).profile;
         presets.push(finishPreset({

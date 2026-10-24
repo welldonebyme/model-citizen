@@ -51,6 +51,16 @@ describe('dbt presets', () => {
     expect(index.presets.find((p) => p.id === 'ch14-end')!.python).toBe(false);
   });
 
+  it('says "Models already built" only when the project has models (review F25)', () => {
+    const summary = (id: string) => index.presets.find((p) => p.id === id)!.summary.join(' ');
+    expect(summary('ch07-start')).toContain('No models yet: you create them in this chapter.');
+    expect(summary('ch07-start')).not.toContain('Models already built');
+    expect(summary('ch06-end')).not.toContain('Models already built');
+    expect(summary('ch08-start')).toContain('Models already built with dbt build');
+    expect(summary('m01-end')).toContain('No models yet');
+    expect(summary('m02-end')).toContain('Models already built');
+  });
+
   it('profiles come from the golden logs (dev and prod; ci from Chapter 24)', () => {
     const j = index.projects.jaffle.profiles;
     expect(j.ch06).toContain('path: ../practice/practice.duckdb');

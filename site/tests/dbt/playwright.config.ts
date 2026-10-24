@@ -5,6 +5,10 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const PORT = Number(process.env.DBT_E2E_PORT ?? 4322);
+// a private build (so other builds of dist/ cannot change the site under the tests):
+//   node scripts/dbt/build-engine.mjs --quiet && node scripts/sync-assets.mjs && npx astro build --outDir node_modules/.dist-dbt
+//   DBT_E2E_OUTDIR=node_modules/.dist-dbt DBT_E2E_PORT=4343 npx playwright test -c tests/dbt/playwright.config.ts
+const OUTDIR = process.env.DBT_E2E_OUTDIR;
 
 export default defineConfig({
   testDir: '.',
@@ -27,7 +31,7 @@ export default defineConfig({
     { name: 'webkit', use: { ...devices['Desktop Safari'], viewport: { width: 1360, height: 950 } } },
   ],
   webServer: {
-    command: 'npm run preview',
+    command: OUTDIR ? `npx astro preview --outDir ${OUTDIR} --port ${PORT} --host 127.0.0.1 --ignore-lock` : 'npm run preview',
     cwd: '../..',
     url: `http://127.0.0.1:${PORT}/model-citizen/`,
     reuseExistingServer: true,

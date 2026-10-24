@@ -12,8 +12,9 @@
 // workspace is on the page; clicking it sends `mc:dbt-try` (detail: { commands: string[] }) to document. Any code
 // can send that event: the workspace puts the first command in its prompt (it never runs it by itself).
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { DbtEngine, loadManifest, loadPresets, workspaceFor, type OutputHandlers } from '../../lib/dbt/client';
+import { DbtEngine, loadManifest, loadPresets, presetTitleFromId, workspaceFor, type OutputHandlers } from '../../lib/dbt/client';
 import { listMeta } from '../../lib/dbt/persist';
+import { dbtCommandLines } from '../../lib/dbt/commands';
 import { TerminalModel, type TermBlock } from '../../lib/dbt/terminal-model';
 import type { EngineManifest, Preset, PresetIndex, Progress, WorkspaceMeta } from '../../lib/dbt/types';
 import { Terminal, type TerminalHandle } from './Terminal';
@@ -68,7 +69,16 @@ function installTryButtons() {
   document.addEventListener('click', (e) => {
     const b = (e.target as HTMLElement).closest<HTMLElement>('[data-dbt-try]');
     if (!b) return;
-    const commands = (b.dataset.dbtTry ?? '').split('\n').map((s) => s.trim()).filter(Boolean);
+    let commands = (b.dataset.dbtTry ?? '').split('\n').map((s) => s.trim()).filter(Boolean);
+    // the commands of the pane the learner sees: the Windows pane shows PowerShell forms, and a command can go
+    // on over several lines (a quoted --inline query)
+    const os = document.documentElement.dataset.os || 'mac';
+    const panes = [...(b.closest('[data-code]')?.querySelectorAll<HTMLElement>('pre.mc-code-body') ?? [])];
+    const pane = panes.find((p) => !p.dataset.osOnly || p.dataset.osOnly.split(' ').includes(os)) ?? panes[0];
+    if (pane) {
+      const shown = dbtCommandLines(pane.textContent ?? '');
+      if (shown.length) commands = shown;
+    }
     if (commands.length) document.dispatchEvent(new CustomEvent('mc:dbt-try', { detail: { commands } }));
   });
 }
@@ -162,9 +172,10 @@ export default function DbtWorkspace({ preset: presetId, workspace, layout = 'co
     model.end(b);
   }, [model]);
 
-  const openWorkspace = useCallback(async (mode: 'continue' | 'reset', which: string) => {
-    if (!index) return;
-    const p = index.presets.find((x) => x.id === which);
+  const openWorkspace = useCallback(async (mode: 'continue' | 'reset', which: string, idxArg?: PresetIndex) => {
+    const idx = idxArg ?? index;
+    if (!idx) return;
+    const p = idx.presets.find((x) => x.id === which);
     if (!p) { setError(`Unknown preset ${which}`); setPhase('error'); return; }
     setPhase('opening');
     setError(null);
@@ -183,7 +194,7 @@ export default function DbtWorkspace({ preset: presetId, workspace, layout = 'co
     }
     setNoPersist(r.persist === false);
     if (r.restored) {
-      sys(`Your saved workspace for ${p.label} is back (saved ${when(r.meta!.updatedAt)}). It started from: ${index.presets.find((x) => x.id === r.meta!.preset)?.title ?? r.meta!.preset}.`);
+      sys(`Your saved workspace for ${p.label} is back (saved ${when(r.meta!.updatedAt)}). It started from: ${idx.presets.find((x) => x.id === r.meta!.preset)?.title ?? r.meta!.preset}.`);
       if (r.presetChanged) note(`The starting files of this ${p.project === 'shopflow' ? 'milestone' : 'chapter'} were updated on the site since you started. Use "Reset" in the Workspace menu to get them (your changes would be replaced).`, 'warn');
     } else if (r.ok) {
       sys(`Ready: ${p.title}${p.chapterTitle ? ` (${p.chapterTitle})` : ''}. Prepared in ${((r.prepareMs ?? 0) / 1000).toFixed(1)} s.`);
@@ -212,13 +223,17 @@ export default function DbtWorkspace({ preset: presetId, workspace, layout = 'co
     setPhase('booting');
     setError(null);
     try {
+      // the manifest or the presets could not be loaded on arrival (offline, no saved copy): try again now
+      const [m, idx] = await Promise.all([manifest ?? loadManifest(), index ?? loadPresets()]);
+      if (!manifest) setManifest(m);
+      if (!index) setIndex(idx);
       await engine.boot((p) => setProgress(p));
-      await openWorkspace('continue', saved?.preset ?? presetId);
+      await openWorkspace('continue', saved?.preset ?? presetId, idx);
     } catch (e) {
       setError((e as Error).message);
       setPhase('error');
     }
-  }, [engine, openWorkspace, presetId, saved]);
+  }, [engine, index, manifest, openWorkspace, presetId, saved]);
 
   // the engine was already started by another workspace of this page: open directly
   useEffect(() => {
@@ -385,7 +400,7 @@ export default function DbtWorkspace({ preset: presetId, workspace, layout = 'co
       <header className="dbt-ws-head">
         <div className="dbt-ws-titles">
           <h2 className="dbt-ws-title">{title}</h2>
-          <p className="dbt-ws-sub">{preset ? `${preset.title}${preset.chapterTitle ? `: ${preset.chapterTitle}` : ''}` : presetId}</p>
+          <p className="dbt-ws-sub">{preset ? `${preset.title}${preset.chapterTitle ? `: ${preset.chapterTitle}` : ''}` : presetTitleFromId(presetId)}</p>
         </div>
         {phase === 'ready' && (
           <div className="dbt-ws-menu">
@@ -427,16 +442,18 @@ export default function DbtWorkspace({ preset: presetId, workspace, layout = 'co
               {!saved && <ul>{preset.summary.map((s) => <li key={s}>{s}</li>)}</ul>}
             </div>
           )}
-          <p className="dbt-start-size">
-            {cached ? 'Already downloaded: it starts from your browser\'s cache (a few seconds).' : `First start: about ${downloadMb} MB to download (${diskMb} MB once unpacked). Later starts use your browser's cache.`}
-          </p>
+          {manifest && (
+            <p className="dbt-start-size">
+              {cached ? 'Already downloaded: it starts from your browser\'s cache (a few seconds).' : `First start: about ${downloadMb} MB to download (${diskMb} MB once unpacked). Later starts use your browser's cache.`}
+            </p>
+          )}
           {small && (
             <p className="dbt-warn">This works best on a computer. dbt here needs about 300 MB of memory: on a phone or a small tablet it can be slow, or the page can reload. You can still try.</p>
           )}
           {queued.length > 0 && <p className="dbt-start-queued">After the start, this command is ready in the terminal: <code>{queued[0]}</code></p>}
           {error && <p className="dbt-error" role="alert">{error}</p>}
           <div className="dbt-start-actions">
-            <button type="button" className="btn btn-primary" onClick={start} disabled={!manifest || !index}>Start dbt in your browser</button>
+            <button type="button" className="btn btn-primary" onClick={start} disabled={(!manifest || !index) && !error}>{error && (!manifest || !index) ? 'Try again' : 'Start dbt in your browser'}</button>
             {error && manifest && (
               <button type="button" className="btn btn-quiet" onClick={async () => {
                 // a damaged download in the cache: remove the engine files kept by this browser, then start again

@@ -1,0 +1,946 @@
+{
+ "id": "ch28",
+ "intro": [
+  {
+   "c": [
+    "This is the first of three full practice exams. It has 65 questions, like the real dbt Analytics Engineering Certification exam. The level is close to the real exam. Every scenario uses the practice project you built in Parts II to VII: ",
+    {
+     "t": "code",
+     "v": "jaffle_dbt"
+    },
+    ", with its sources ",
+    {
+     "t": "code",
+     "v": "jaffle_shop"
+    },
+    " and ",
+    {
+     "t": "code",
+     "v": "stripe"
+    },
+    ", its staging models, and the marts ",
+    {
+     "t": "code",
+     "v": "fct_orders"
+    },
+    ", ",
+    {
+     "t": "code",
+     "v": "dim_customers"
+    },
+    " and ",
+    {
+     "t": "code",
+     "v": "fct_monthly_revenue"
+    },
+    "."
+   ],
+   "t": "p"
+  },
+  {
+   "c": [
+    "Every answer was checked on a real dbt Core 1.11 project (with DuckDB), or in the official dbt documentation when the behaviour depends on another data platform."
+   ],
+   "t": "p"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      {
+       "c": [
+        "How to take this mock exam"
+       ],
+       "t": "b"
+      }
+     ],
+     "t": "p"
+    },
+    {
+     "items": [
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Time:"
+           ],
+           "t": "b"
+          },
+          " 120 minutes for 65 questions. Use a timer. That is less than 2 minutes per question, so do not stay too long on one question."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "No help:"
+           ],
+           "t": "b"
+          },
+          " no notes, no book, no internet, no terminal. You are in exam conditions."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Answer everything:"
+           ],
+           "t": "b"
+          },
+          " a wrong answer costs nothing more than a blank answer. If you do not know, eliminate the wrong options and choose."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Formats:"
+           ],
+           "t": "b"
+          },
+          " each question starts with its format in brackets. ",
+          {
+           "c": [
+            "[Multiple select — choose 2]"
+           ],
+           "t": "sf"
+          },
+          " means exactly two correct options. ",
+          {
+           "c": [
+            "[Matching]"
+           ],
+           "t": "sf"
+          },
+          " means one letter for each number. ",
+          {
+           "c": [
+            "[Build list — put in order]"
+           ],
+           "t": "sf"
+          },
+          " means you write the letters in the correct order. ",
+          {
+           "c": [
+            "[Hotspot — which line]"
+           ],
+           "t": "sf"
+          },
+          " means you give one line number."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "DOMC (Discrete Option Multiple Choice):"
+           ],
+           "t": "b"
+          },
+          " on the real exam, the options appear ",
+          {
+           "c": [
+            "one at a time"
+           ],
+           "t": "i"
+          },
+          ", and you answer YES or NO to each one. You cannot go back. To simulate this on paper, cover the options with a sheet of paper. Show option A only, decide YES or NO, write it, then move the sheet to show option B, and so on. Never change an earlier answer."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Record your answers"
+           ],
+           "t": "b"
+          },
+          " on the answer sheet at the end of this chapter."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Then"
+           ],
+           "t": "b"
+          },
+          " go to ",
+          {
+           "href": "/learn/ch29/",
+           "label": "ch:mock1-answers",
+           "t": "ref",
+           "text": "Chapter 29"
+          },
+          " to score yourself and read every explanation, also for the questions you got right."
+         ],
+         "t": "p"
+        }
+       ]
+      }
+     ],
+     "kind": "ul",
+     "t": "list"
+    }
+   ],
+   "kind": "tip",
+   "t": "callout"
+  },
+  {
+   "ids": [
+    "m1-q01",
+    "m1-q02",
+    "m1-q03",
+    "m1-q04",
+    "m1-q05",
+    "m1-q06",
+    "m1-q07",
+    "m1-q08",
+    "m1-q09",
+    "m1-q10",
+    "m1-q11",
+    "m1-q12",
+    "m1-q13",
+    "m1-q14",
+    "m1-q15",
+    "m1-q16",
+    "m1-q17",
+    "m1-q18",
+    "m1-q19",
+    "m1-q20",
+    "m1-q21",
+    "m1-q22",
+    "m1-q23",
+    "m1-q24",
+    "m1-q25",
+    "m1-q26",
+    "m1-q27",
+    "m1-q28",
+    "m1-q29",
+    "m1-q30",
+    "m1-q31",
+    "m1-q32",
+    "m1-q33",
+    "m1-q34",
+    "m1-q35",
+    "m1-q36",
+    "m1-q37",
+    "m1-q38",
+    "m1-q39",
+    "m1-q40",
+    "m1-q41",
+    "m1-q42",
+    "m1-q43",
+    "m1-q44",
+    "m1-q45",
+    "m1-q46",
+    "m1-q47",
+    "m1-q48",
+    "m1-q49",
+    "m1-q50",
+    "m1-q51",
+    "m1-q52",
+    "m1-q53",
+    "m1-q54",
+    "m1-q55",
+    "m1-q56",
+    "m1-q57",
+    "m1-q58",
+    "m1-q59",
+    "m1-q60",
+    "m1-q61",
+    "m1-q62",
+    "m1-q63",
+    "m1-q64",
+    "m1-q65"
+   ],
+   "t": "quiz"
+  }
+ ],
+ "kind": "mock",
+ "label": "ch:mock1",
+ "lessons": [
+  {
+   "anchors": [],
+   "checkpoints": [],
+   "id": "ch28-s1",
+   "labs": [],
+   "minutes": 5,
+   "number": "",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Write your answer next to each number. For DOMC questions, write YES or NO for each letter (for example ",
+        {
+         "t": "code",
+         "v": "A-Y B-N C-Y"
+        },
+        "). For Matching, write pairs (",
+        {
+         "t": "code",
+         "v": "1-C 2-A ..."
+        },
+        "). For Build list, write the letters in order (",
+        {
+         "t": "code",
+         "v": "B D A C"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Mock Exam 1 — date: ",
+             {
+              "t": "blank"
+             },
+             "  start: ",
+             {
+              "t": "blank"
+             },
+             "  end: ",
+             {
+              "t": "blank"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "colspan": 5,
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Q1 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q14 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q27 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q40 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q53 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q2 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q15 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q28 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q41 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q54 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q3 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q16 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q29 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q42 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q55 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q4 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q17 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q30 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q43 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q56 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q5 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q18 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q31 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q44 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q57 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q6 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q19 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q32 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q45 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q58 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q7 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q20 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q33 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q46 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q59 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q8 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q21 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q34 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q47 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q60 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q9 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q22 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q35 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q48 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q61 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q10 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q23 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q36 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q49 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q62 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q11 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q24 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q37 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q50 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q63 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q12 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q25 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q38 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q51 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q64 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q13 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q26 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q39 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q52 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q65 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "When you have finished (or when the 120 minutes are over), go to ",
+        {
+         "href": "/learn/ch29/",
+         "label": "ch:mock1-answers",
+         "t": "ref",
+         "text": "Chapter 29"
+        },
+        " and score your answers."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch28-s1-0",
+     "title": [
+      "Answer sheet"
+     ],
+     "titleText": "Answer sheet"
+    }
+   ],
+   "title": [
+    "Answer sheet"
+   ],
+   "titleText": "Answer sheet"
+  }
+ ],
+ "minutes": 5,
+ "mock": 1,
+ "number": 28,
+ "objectives": [],
+ "part": 9,
+ "partLabel": "Part IX",
+ "partTitle": "Exam Mastery",
+ "printed": "28",
+ "quiz": [],
+ "quizSections": [],
+ "summary": [],
+ "title": "Mock Exam 1"
+}

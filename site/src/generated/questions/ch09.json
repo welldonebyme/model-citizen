@@ -1,0 +1,1438 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " One place per rule, reused everywhere. A is the classic wrong belief (trap T56). C and D confuse DRY with avoiding repeated words; tests are attached to many models and that is fine."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch09-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "All the business logic is written in one large model, so it is in one place."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Each piece of logic is defined once (a model, a macro) and reused with ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " or a macro call."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Models must not use CTEs, to avoid repeating the word ",
+     {
+      "t": "code",
+      "v": "with"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Each test is written only once in the whole project."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "What does DRY mean in a dbt project?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A."
+      ],
+      "t": "b"
+     },
+     " Staging is the only entry point of raw data. B and C work technically but break the structure (trap T40). D: intermediate models read staging models with ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch09-02",
+  "key": "A",
+  "keyRaw": "\\textbf{A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Staging models only, one per source table."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Mart models, because they are closest to the business."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Any model that needs raw data."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Intermediate models, so that staging stays simple."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "In the recommended structure, which models should call ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "stg_stripe__payments"
+       }
+      ],
+      "t": "b"
+     },
+     " (source and entity separated by a double underscore)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch09-03",
+  "key": {
+   "accepted": [
+    "stg_stripe__payments"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{stg\\_stripe\\_\\_payments}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "Following the convention of this book, the staging model of the table ",
+     {
+      "t": "code",
+      "v": "payments"
+     },
+     " of the source ",
+     {
+      "t": "code",
+      "v": "stripe"
+     },
+     " is called ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-d, 3-a, 4-b."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch09-04",
+  "key": {
+   "1": "c",
+   "2": "d",
+   "3": "a",
+   "4": "b"
+  },
+  "keyRaw": "\\textbf{1-c, 2-d, 3-a, 4-b.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      "staging"
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      "intermediate"
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      "marts"
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      "sources"
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "Business entities at a clear grain, usually tables, read by BI tools."
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "Raw tables loaded by another tool, declared in YAML."
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "One model per raw table: renames, casts, simple calculations; usually views."
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "Purpose-built steps (joins, new grain, isolated logic), not exposed to end users."
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each layer with its description."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 6."
+      ],
+      "t": "b"
+     },
+     " A mart reads a source directly: it should ",
+     {
+      "t": "code",
+      "v": "ref('stg_stripe__payments')"
+     },
+     " (which also renames ",
+     {
+      "t": "code",
+      "v": "orderid"
+     },
+     " and converts cents). Line 3 is correct (",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " to staging). Lines 9–10 only use the CTEs."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch09-c49",
+   "lines": 13,
+   "numbering": "listing"
+  },
+  "id": "q-ch09-05",
+  "key": 6,
+  "keyRaw": "\\textbf{Line 6.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "This mart model runs without error. Which line breaks the recommended DAG rules?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch09-c49",
+    "lang": "dbt",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "with\norders as (\n    select * from {{ ref('stg_jaffle_shop__orders') }}\n),\npayments as (\n    select * from {{ source('stripe', 'payments') }}\n),\nfinal as (\n    select orders.order_id, sum(payments.amount) as amount\n    from orders left join payments on orders.order_id = payments.orderid\n    group by 1\n)\nselect * from final"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and B."
+      ],
+      "t": "b"
+     },
+     " A is a root model with hidden (hard-coded) dependencies; B is a backward dependency. C and E are normal (marts and intermediate models combine several inputs). D is the recommended structure."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch09-06",
+  "key": [
+   "A",
+   "B"
+  ],
+  "keyRaw": "\\textbf{A and B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A model with no parents that reads raw tables."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A staging model with an arrow coming from a mart model."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A mart that refs two intermediate models."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "One staging model for each source table."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "An intermediate model with two parents."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two observations in a lineage graph are warning signs?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C, D, B, E, A."
+      ],
+      "t": "b"
+     },
+     " Migrate, sources, CTE groupings, split into models, audit. (In practice you audit after each step too, as we did.)"
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch09-07",
+  "key": [
+   "C",
+   "D",
+   "B",
+   "E",
+   "A"
+  ],
+  "keyRaw": "\\textbf{C, D, B, E, A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Audit the new result against the legacy one, in both directions."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Reorganise the query into import, logical and final CTEs."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Copy the legacy query into a model unchanged and make it run."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Replace the hard-coded table names by ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     "."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Move cleaning into staging and shared logic into intermediate models; keep a thin final model."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "Put these refactoring steps in the order of the dbt method:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, NO, YES."
+      ],
+      "t": "b"
+     },
+     " One direction misses extra rows. ",
+     {
+      "t": "code",
+      "v": "EXCEPT"
+     },
+     " removes duplicates (",
+     {
+      "t": "code",
+      "v": "EXCEPT ALL"
+     },
+     " keeps them), so duplicates can hide: compare counts too. ",
+     {
+      "t": "code",
+      "v": "EXCEPT"
+     },
+     " compares columns by position."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch09-08",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": false,
+   "D": true
+  },
+  "keyRaw": "\\textbf{NO, YES, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "If ",
+     {
+      "t": "code",
+      "v": "legacy except new"
+     },
+     " returns no rows, the two models are identical."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Empty ",
+     {
+      "t": "code",
+      "v": "EXCEPT"
+     },
+     " results in both directions plus equal row counts are strong evidence of equality."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "EXCEPT"
+     },
+     " keeps duplicate rows, so duplicates always show up as differences."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The two queries must return the same columns in the same order."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about auditing a refactoring with SQL:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " dbt never drops relations it no longer manages. A is the common wrong belief. C: backups exist only during a swap. D: nothing changes the view."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch09-09",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt dropped it at the end of the build."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It still exists, with its last definition; you must drop it yourself."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt renamed it to ",
+     {
+      "t": "code",
+      "v": "legacy_x__dbt_backup"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It is now empty."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "You delete ",
+     {
+      "t": "code",
+      "v": "models/legacy/legacy_x.sql"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " is green. What about the view ",
+     {
+      "t": "code",
+      "v": "legacy_x"
+     },
+     " in your development schema?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Only ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " create edges. A: views have parents like any model. C: graph operators work on every node. D: tests have nothing to do with edges."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch09-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The model is a view, and views have no parents."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The tables are hard-coded, so dbt does not know they are dependencies."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     " operator only works on mart models."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The sources are not tested."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt ls --select +legacy_monthly_revenue+"
+     },
+     " prints only the model itself, although the model reads three raw tables. Why?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " dbt does not enforce layer rules (only cycles). A and C describe checks that dbt does not do. D: dbt never rewrites your SQL."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch09-11",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It fails with \"sources can only be used in staging models\"."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It runs the model normally; the problem is the project structure, not an error."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It prints a warning and skips the model."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It replaces the source by the staging model automatically."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "A mart model selects from ",
+     {
+      "t": "code",
+      "v": "{{ source('stripe', 'payments') }}"
+     },
+     ". What does ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " do?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " DRY: one definition, two ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     "s. A keeps two copies that will drift. C destroys modularity. D changes the materialization, not the duplication."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch09-12",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Keep both CTEs but add a comment pointing to the other model."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Put the sum in one model (for example an intermediate model) and ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " it from both marts."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Merge the two marts into one big model."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Turn both marts into views."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "Two marts each contain a CTE that sums the successful payments per order. What is the best refactoring?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " A cycle has no build order; dbt refuses to run (trap T41). A, B and D describe behaviours that do not exist."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch09-13",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt builds ",
+     {
+      "t": "code",
+      "v": "stg_customers"
+     },
+     " first, then ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt builds each model twice until the results are stable."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt stops before running anything: \"Found a cycle\"."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt builds them, but the docs lineage graph shows an error."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "stg_customers"
+     },
+     " contains ",
+     {
+      "t": "code",
+      "v": "{{ ref('dim_customers') }}"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     " refs ",
+     {
+      "t": "code",
+      "v": "stg_customers"
+     },
+     ". What happens when you run ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "verb"
+      ],
+      "t": "b"
+     },
+     " (for example ",
+     {
+      "t": "code",
+      "v": "enriched"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "pivoted"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "joined"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "summed_to_customer"
+     },
+     ")."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch09-14",
+  "key": {
+   "accepted": [
+    "verb"
+   ]
+  },
+  "keyRaw": "\\textbf{verb}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "Our intermediate models follow the pattern ",
+     {
+      "t": "code",
+      "v": "int_<entity>s__<…>s"
+     },
+     ", as in ",
+     {
+      "t": "code",
+      "v": "int_orders__enriched"
+     },
+     ". The last part of the name is a ",
+     {
+      "t": "blank"
+     },
+     " that says what the model does."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The legacy result is your audit baseline until the end. A is not a reason. C is false. D: nothing is automatic; you point the BI tool to the new model yourself."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch09-15",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It is faster to type."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The legacy model stays untouched, so you can compare its result with the new models at every step."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt cannot edit an existing model."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The new model automatically replaces the old one in the BI tool."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "Why does dbt Labs recommend refactoring ",
+     {
+      "c": [
+       "alongside"
+      ],
+      "t": "i"
+     },
+     " rather than ",
+     {
+      "c": [
+       "in place"
+      ],
+      "t": "i"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Clean once, at the entry point, so every model downstream gets the same names and units. A repeats the logic. C hides it from dbt. D: seeds are for small static data."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch09-16",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "In every mart that uses payments."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "In the staging model of the payments table."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "In the BI tool."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "In a seed."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "Where should the renaming of ",
+     {
+      "t": "code",
+      "v": "orderid"
+     },
+     " to ",
+     {
+      "t": "code",
+      "v": "order_id"
+     },
+     " and the conversion of cents to dollars live?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, YES, NO."
+      ],
+      "t": "b"
+     },
+     " Staging renames, casts and does simple calculations. Joins and aggregations change the grain: they belong in intermediate or mart models."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch09-17",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": false
+  },
+  "keyRaw": "\\textbf{YES, NO, YES, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Renaming a column."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Joining orders with customers."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Casting a text column to a date."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Aggregating orders by month."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "Does this belong in a staging model?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Intermediate models are internal building blocks; dashboards read marts. C would make the model impossible to query at all. D duplicates the logic outside dbt."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch09-18",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Fine: intermediate models are designed for dashboards."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Intermediate models are not meant for end users; build or use a mart that exposes this data."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Make the intermediate model ephemeral so the dashboard is faster."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Copy its SQL into the BI tool."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "A BI developer wants to build a dashboard directly on ",
+     {
+      "t": "code",
+      "v": "int_orders__enriched"
+     },
+     ". What is the best answer?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A."
+      ],
+      "t": "b"
+     },
+     " The guide's intermediate pattern is ",
+     {
+      "t": "code",
+      "v": "int_<entity>s_<verb>s"
+     },
+     ", with a single underscore (our project's double underscore is a team choice, also valid). B is a staging name, and staging does not aggregate. C has no ",
+     {
+      "t": "code",
+      "v": "int_"
+     },
+     " prefix and no verb. D: ",
+     {
+      "t": "code",
+      "v": "dim_"
+     },
+     " is a mart prefix, for an entity, not for an intermediate step."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch09-19",
+  "key": "A",
+  "keyRaw": "\\textbf{A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "int_orders_summed_to_customer.sql"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders_summed.sql"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "intermediate__orders__customer.sql"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dim_orders_summed.sql"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 9,
+   "kind": "chapter",
+   "n": 19
+  },
+  "stem": [
+   {
+    "c": [
+     "A team follows the dbt Labs structure guide to the letter. Which file name matches the guide's convention for a business-wide intermediate model that sums orders per customer?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

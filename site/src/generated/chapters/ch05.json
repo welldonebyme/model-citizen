@@ -1,0 +1,5939 @@
+{
+ "id": "ch05",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "Reading and writing YAML without fear: indentation, lists, quoting, multi-line text."
+     ],
+     "id": "CP0-YAML"
+    },
+    {
+     "c": [
+      "Jinja basics: expressions, statements, comments, variables, filters, ",
+      {
+       "t": "code",
+       "v": "if"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "for"
+      },
+      ", macros."
+     ],
+     "id": "CP0-JINJA"
+    },
+    {
+     "c": [
+      "Just enough Python to read and write a simple dbt Python model."
+     ],
+     "id": "CP0-PY"
+    },
+    {
+     "c": [
+      "First contact with ",
+      {
+       "t": "code",
+       "v": ".yml"
+      },
+      " errors: how to read the line and column in an error message."
+     ],
+     "id": "3.3"
+    },
+    {
+     "c": [
+      "The idea of ",
+      {
+       "c": [
+        "compiled code"
+       ],
+       "t": "i"
+      },
+      ": what dbt sends to the warehouse after Jinja is rendered."
+     ],
+     "id": "3.2"
+    },
+    {
+     "c": [
+      "A first look at ",
+      {
+       "t": "code",
+       "v": "dbt_project.yml"
+      },
+      " and the other YAML files of a dbt project."
+     ],
+     "id": "1.6"
+    },
+    {
+     "c": [
+      "DRY code with Jinja loops and macros."
+     ],
+     "id": "1.3"
+    },
+    {
+     "c": [
+      "A preview of Python models."
+     ],
+     "id": "1.8"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "A dbt project is not only SQL. Open any real project and you will see three other languages around the SQL:"
+     ],
+     "t": "p"
+    },
+    {
+     "items": [
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "YAML"
+           ],
+           "t": "b"
+          },
+          " files that describe and configure everything (sources, tests, documentation, settings);"
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Jinja"
+           ],
+           "t": "b"
+          },
+          " code inside the SQL files, between curly braces, that makes the SQL dynamic;"
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "sometimes ",
+          {
+           "c": [
+            "Python"
+           ],
+           "t": "b"
+          },
+          " files, for the few transformations that are hard to write in SQL."
+         ],
+         "t": "p"
+        }
+       ]
+      }
+     ],
+     "kind": "ul",
+     "t": "list"
+    },
+    {
+     "c": [
+      "Many exam questions show a piece of YAML or a model with Jinja and ask: \"Why does this fail?\", \"What will the compiled SQL look like?\", \"Which line is wrong?\". A large part of debugging in dbt (exam topic 3) is reading YAML errors and compiled SQL. You do not need to be an expert in these languages. You need to be ",
+      {
+       "c": [
+        "comfortable"
+       ],
+       "t": "i"
+      },
+      ": read them easily and avoid the classic mistakes. This chapter gives you exactly that, and nothing more."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "YAML is a simple text format for configuration, where indentation shows what belongs to what. Jinja is a template language: dbt runs it first to ",
+      {
+       "c": [
+        "write"
+       ],
+       "t": "i"
+      },
+      " the final SQL, and only then sends that SQL to the warehouse. Python in dbt is used for a few models that return a table (a DataFrame), and it runs inside the data platform, like SQL does."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:yaml-jinja-python",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-yjp-overview"
+   ],
+   "checkpoints": [],
+   "id": "ch05-s1",
+   "label": "sec:yjp-overview",
+   "labs": [],
+   "minutes": 5,
+   "number": "5.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Before we start, look at where each language lives in a dbt project. You will meet every one of these files again in Part II."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "The three languages of a dbt project. YAML files (dbt_project.yml, _models.yml, sources.yml) describe and configure: they are settings for the models. SQL + Jinja files (stg_orders.sql) transform and become compiled SQL. Python files (my_model.py) also transform, but rarely. The compiled SQL and the Python code go to the data warehouse (DuckDB on your laptop, Snowflake, BigQuery, Databricks…).",
+       "id": "ch05-fig1",
+       "src": "figures/ch05-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Language"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it does in dbt"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Where you see it"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "YAML"
+          ]
+         },
+         {
+          "c": [
+           "Configuration and description: which tables are sources, which tests to run, descriptions for the documentation, project settings."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".yml"
+           },
+           " files"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Jinja"
+          ]
+         },
+         {
+          "c": [
+           "Makes SQL dynamic: references to other models, loops, conditions, reusable macros."
+          ]
+         },
+         {
+          "c": [
+           "Inside ",
+           {
+            "t": "code",
+            "v": ".sql"
+           },
+           " files, between ",
+           {
+            "t": "code",
+            "v": "{{ }}"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "{% %}"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Python"
+          ]
+         },
+         {
+          "c": [
+           "An alternative to SQL for a few models (statistics, machine learning, complex text work)."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".py"
+           },
+           " files in ",
+           {
+            "t": "code",
+            "v": "models/"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch05-s1-0",
+     "title": [
+      "Three small languages around SQL"
+     ],
+     "titleText": "Three small languages around SQL"
+    }
+   ],
+   "title": [
+    "Three small languages around SQL"
+   ],
+   "titleText": "Three small languages around SQL"
+  },
+  {
+   "anchors": [
+    "sec-yjp-yaml",
+    "sec-yjp-yaml-errors",
+    "sec-yjp-dbt-yaml"
+   ],
+   "checkpoints": [],
+   "id": "ch05-s2",
+   "label": "sec:yjp-yaml",
+   "labs": [
+    "ch05-lab1"
+   ],
+   "minutes": 40,
+   "number": "5.2",
+   "objectives": [
+    "CP0-YAML",
+    "3.3"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "en": [
+          "YAML"
+         ],
+         "fr": "YAML (format de configuration)",
+         "id": "term-yaml",
+         "t": "term"
+        },
+        " is a way to write structured information in a plain text file. The name means \"YAML Ain't Markup Language\". It was designed to be easy for humans to read, much easier than JSON or XML."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Think of an ID card. It has labels (\"Name\", \"Date of birth\", \"Address\") and a value next to each label. The address itself has smaller parts (street, city, postal code) that belong to it. YAML is exactly that: labels, values, and parts that belong to other parts. The only special thing is ",
+          {
+           "c": [
+            "how"
+           ],
+           "t": "i"
+          },
+          " you show that a part belongs to something: you move it to the right, with spaces."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "dbt uses YAML for everything that is ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " transformation logic: the project settings, the connection to the warehouse, the list of sources, the tests, the descriptions, the packages. This idea has a name: ",
+        {
+         "en": [
+          "configuration as code"
+         ],
+         "fr": "configuration sous forme de code",
+         "id": "term-configuration-as-code",
+         "t": "term"
+        },
+        ". Because the configuration is text, it lives in Git, it can be reviewed in a pull request, and it has a history, exactly like your SQL."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch05-s2-1",
+     "number": "5.2.1",
+     "title": [
+      "What YAML is and why dbt uses it"
+     ],
+     "titleText": "What YAML is and why dbt uses it"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The basic unit of YAML is a ",
+        {
+         "en": [
+          "key-value pair"
+         ],
+         "fr": "paire clé–valeur",
+         "id": "term-key-value-pair",
+         "t": "term"
+        },
+        ": a key, a colon, ",
+        {
+         "c": [
+          "one space"
+         ],
+         "t": "b"
+        },
+        ", and a value."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c1",
+       "lang": "yaml",
+       "t": "code",
+       "text": "first_name: Lina\ncountry: Spain\norders: 3\nis_active: true",
+       "title": "customer.yml"
+      },
+      {
+       "c": [
+        "When a program reads this file, it gets a ",
+        {
+         "en": [
+          "mapping"
+         ],
+         "fr": "dictionnaire / table associative",
+         "id": "term-mapping",
+         "t": "term"
+        },
+        " (a set of keys with their values). In Python it would be ",
+        {
+         "t": "code",
+         "v": "{'first_name': 'Lina', 'country': 'Spain', 'orders': 3, 'is_active': True}"
+        },
+        ". Notice that YAML guessed the types: ",
+        {
+         "t": "code",
+         "v": "3"
+        },
+        " became a number and ",
+        {
+         "t": "code",
+         "v": "true"
+        },
+        " became a boolean."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch05-s2-2",
+     "number": "5.2.2",
+     "title": [
+      "Key–value pairs"
+     ],
+     "titleText": "Key–value pairs"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "To say that some keys belong to another key, you write them on the next lines, ",
+        {
+         "c": [
+          "indented"
+         ],
+         "t": "b"
+        },
+        " (moved to the right) with spaces. Everything at the same indentation level belongs to the same parent."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c2",
+       "lang": "yaml",
+       "t": "code",
+       "text": "customer:\n  first_name: Lina\n  address:\n    city: Madrid\n    postal_code: \"28001\"\n  country: Spain",
+       "title": "customer.yml"
+      },
+      {
+       "c": [
+        "Here ",
+        {
+         "t": "code",
+         "v": "city"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "postal_code"
+        },
+        " belong to ",
+        {
+         "t": "code",
+         "v": "address"
+        },
+        ", and ",
+        {
+         "t": "code",
+         "v": "address"
+        },
+        " belongs to ",
+        {
+         "t": "code",
+         "v": "customer"
+        },
+        ". ",
+        {
+         "t": "code",
+         "v": "country"
+        },
+        " is back at the level of ",
+        {
+         "t": "code",
+         "v": "first_name"
+        },
+        ", so it belongs to ",
+        {
+         "t": "code",
+         "v": "customer"
+        },
+        ", not to ",
+        {
+         "t": "code",
+         "v": "address"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Three rules you must never forget:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Spaces only, never tabs."
+             ],
+             "t": "b"
+            },
+            " A tab character is forbidden for indentation in YAML."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Be consistent."
+             ],
+             "t": "b"
+            },
+            " dbt projects use ",
+            {
+             "c": [
+              "2 spaces"
+             ],
+             "t": "b"
+            },
+            " per level. Children of the same parent must start in exactly the same column."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Indentation is meaning."
+             ],
+             "t": "b"
+            },
+            " Moving a line two spaces to the left or right changes ",
+            {
+             "c": [
+              "what it belongs to"
+             ],
+             "t": "i"
+            },
+            ", even if the file is still valid."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "In VS Code, look at the bottom-right corner of the window: it shows \"Spaces: 2\" or \"Tab Size\". Click it and choose ",
+          {
+           "c": [
+            "Indent Using Spaces"
+           ],
+           "t": "i"
+          },
+          ", size 2. Also turn on ",
+          {
+           "c": [
+            "View → Appearance → Render Whitespace"
+           ],
+           "t": "i"
+          },
+          " to see dots for spaces and arrows for tabs. With the YAML extension installed, VS Code also underlines many errors in red before you even run dbt."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s2-3",
+     "number": "5.2.3",
+     "title": [
+      "Nesting with indentation"
+     ],
+     "titleText": "Nesting with indentation"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "list"
+         ],
+         "fr": "liste",
+         "id": "term-list",
+         "t": "term"
+        },
+        " is a series of items. Each item starts with a dash and a space (",
+        {
+         "t": "code",
+         "v": "- "
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c3",
+       "lang": "yaml",
+       "t": "code",
+       "text": "payment_methods:\n  - credit_card\n  - bank_transfer\n  - coupon"
+      },
+      {
+       "c": [
+        "Now the most important pattern of this chapter. In dbt, almost everything is a ",
+        {
+         "c": [
+          "list of mappings"
+         ],
+         "t": "b"
+        },
+        ": a list where each item is a small group of keys. The first key of each item is usually ",
+        {
+         "t": "code",
+         "v": "name"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c4",
+       "lang": "yaml",
+       "t": "code",
+       "text": "models:\n  - name: stg_orders\n    description: \"One row per order\"\n  - name: stg_customers\n    description: \"One row per customer\"",
+       "title": "a list of mappings"
+      },
+      {
+       "c": [
+        "Read it like this: ",
+        {
+         "t": "code",
+         "v": "models"
+        },
+        " is a list with two items. The dash opens a new item. The keys ",
+        {
+         "t": "code",
+         "v": "name"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "description"
+        },
+        " under the same dash belong to the same item. Look at the alignment: ",
+        {
+         "t": "code",
+         "v": "description"
+        },
+        " starts in the same column as ",
+        {
+         "t": "code",
+         "v": "name"
+        },
+        " (not under the dash). If you load this file with Python, you get:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c5",
+       "lang": "plain",
+       "t": "code",
+       "text": "{'models': [{'name': 'stg_orders', 'description': 'One row per order'},\n            {'name': 'stg_customers', 'description': 'One row per customer'}]}"
+      },
+      {
+       "c": [
+        "The square brackets ",
+        {
+         "t": "code",
+         "v": "[ ]"
+        },
+        " are the list, the curly braces ",
+        {
+         "t": "code",
+         "v": "{ }"
+        },
+        " are the mappings inside it. Once you can \"see\" this structure in YAML, every dbt properties file becomes easy to read."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "This \"list of mappings starting with ",
+          {
+           "t": "code",
+           "v": "- name:"
+          },
+          "\" is everywhere in dbt: the models in a properties file, the columns of a model, the sources and their tables, the exposures. The tests of a column and the packages are lists too, but their items start differently (",
+          {
+           "t": "code",
+           "v": "- unique"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "- package: ..."
+          },
+          "). When a YAML error appears in dbt, nine times out of ten the problem is a dash or a key that is not aligned with its siblings."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s2-4",
+     "number": "5.2.4",
+     "title": [
+      "Lists, and lists of mappings"
+     ],
+     "titleText": "Lists, and lists of mappings"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "YAML also accepts a compact style, borrowed from JSON. Lists use square brackets and mappings use curly braces:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c6",
+       "lang": "yaml",
+       "t": "code",
+       "text": "tags: [daily, finance]\nconfig: {materialized: table, schema: marts}"
+      },
+      {
+       "c": [
+        "This is exactly the same as:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c7",
+       "lang": "yaml",
+       "t": "code",
+       "text": "tags:\n  - daily\n  - finance\nconfig:\n  materialized: table\n  schema: marts"
+      },
+      {
+       "c": [
+        "dbt users often write short lists inline, for example ",
+        {
+         "t": "code",
+         "v": "data_tests: [unique, not_null]"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "values: ['placed', 'shipped']"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch05-s2-5",
+     "number": "5.2.5",
+     "title": [
+      "The inline (flow) style"
+     ],
+     "titleText": "The inline (flow) style"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A single value (not a list, not a mapping) is called a ",
+        {
+         "en": [
+          "scalar"
+         ],
+         "fr": "scalaire (valeur simple)",
+         "id": "term-scalar",
+         "t": "term"
+        },
+        ". YAML tries to guess its type. Most of the time this is helpful. Sometimes it is a trap. The table below was produced by loading each line with Python's YAML library (the same library family dbt uses):"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "You write"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "YAML reads"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Comment"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "status: completed"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the text ",
+           {
+            "t": "code",
+            "v": "\"completed\""
+           }
+          ]
+         },
+         {
+          "c": [
+           "Quotes are optional for simple text."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "count: 300"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the number 300"
+          ]
+         },
+         {
+          "c": [
+           "An integer."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "enabled: true"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the boolean ",
+           {
+            "t": "code",
+            "v": "True"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Also ",
+           {
+            "t": "code",
+            "v": "false"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "enabled: yes"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the boolean ",
+           {
+            "t": "code",
+            "v": "True"
+           },
+           " (!)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "yes"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "no"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "on"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "off"
+           },
+           " are booleans too."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "answer: 'yes'"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the text ",
+           {
+            "t": "code",
+            "v": "\"yes\""
+           }
+          ]
+         },
+         {
+          "c": [
+           "Quotes keep it as text."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "version: 1.10"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the number 1.1 (!)"
+          ]
+         },
+         {
+          "c": [
+           "The trailing zero disappears. Quote versions: ",
+           {
+            "t": "code",
+            "v": "'1.10'"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "zip: 01234"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the number 668 (!)"
+          ]
+         },
+         {
+          "c": [
+           "A leading 0 means octal (base 8) in YAML 1.1."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "zip: '01234'"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the text ",
+           {
+            "t": "code",
+            "v": "\"01234\""
+           }
+          ]
+         },
+         {
+          "c": [
+           "Quote codes with leading zeros."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "value: null"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "value: ~"
+           }
+          ]
+         },
+         {
+          "c": [
+           "nothing (",
+           {
+            "t": "code",
+            "v": "None"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "Like ",
+           {
+            "t": "code",
+            "v": "NULL"
+           },
+           " in SQL."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "value:"
+           },
+           " (nothing after)"
+          ]
+         },
+         {
+          "c": [
+           "nothing (",
+           {
+            "t": "code",
+            "v": "None"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "An empty value is also null."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Values that look like booleans or numbers."
+           ],
+           "t": "b"
+          },
+          " If a list of accepted values contains ",
+          {
+           "t": "code",
+           "v": "yes"
+          },
+          "/",
+          {
+           "t": "code",
+           "v": "no"
+          },
+          " or codes like ",
+          {
+           "t": "code",
+           "v": "01"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "02"
+          },
+          ", YAML will silently turn them into booleans or numbers, and your test will compare the wrong things. When a value must be text, ",
+          {
+           "c": [
+            "quote it"
+           ],
+           "t": "b"
+          },
+          ": ",
+          {
+           "t": "code",
+           "v": "values: ['yes', 'no']"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "country_code: '01'"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s2-6",
+     "number": "5.2.6",
+     "title": [
+      "Scalars: strings, numbers, booleans and null"
+     ],
+     "titleText": "Scalars: strings, numbers, booleans and null"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Quotes are optional for simple text, but ",
+        {
+         "c": [
+          "required"
+         ],
+         "t": "b"
+        },
+        " in these cases:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "The value contains a ",
+            {
+             "c": [
+              "colon followed by a space"
+             ],
+             "t": "b"
+            },
+            " (",
+            {
+             "t": "code",
+             "v": ": "
+            },
+            ") or a ",
+            {
+             "c": [
+              "space followed by #"
+             ],
+             "t": "b"
+            },
+            " (",
+            {
+             "t": "code",
+             "v": " #"
+            },
+            ", which starts a comment). For example, ",
+            {
+             "t": "code",
+             "v": "description: Payments: from Stripe"
+            },
+            " breaks; write ",
+            {
+             "t": "code",
+             "v": "description: \"Payments: from Stripe\""
+            },
+            " instead."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The value ",
+            {
+             "c": [
+              "starts"
+             ],
+             "t": "b"
+            },
+            " with a special character: ",
+            {
+             "t": "code",
+             "v": "{ [ * & ! % @ `"
+            },
+            " or a quote. ",
+            {
+             "t": "code",
+             "v": "where: *all"
+            },
+            " breaks (the star starts an ",
+            {
+             "c": [
+              "alias"
+             ],
+             "t": "i"
+            },
+            ", see below)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The value contains ",
+            {
+             "c": [
+              "Jinja"
+             ],
+             "t": "b"
+            },
+            ". A value that starts with ",
+            {
+             "t": "code",
+             "v": "{{"
+            },
+            " looks like an inline mapping to YAML. ",
+            {
+             "t": "code",
+             "v": "schema: {{ target.schema }}"
+            },
+            " breaks; write ",
+            {
+             "t": "code",
+             "v": "schema: \"{{ target.schema }}\""
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The value must stay text but looks like a boolean, a number, or null: ",
+            {
+             "t": "code",
+             "v": "'yes'"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "'1.10'"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "'01234'"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "'null'"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "You can use double quotes (",
+        {
+         "t": "code",
+         "v": "\"...\""
+        },
+        ") or single quotes (",
+        {
+         "t": "code",
+         "v": "'...'"
+        },
+        "). The difference only matters for special sequences: inside double quotes, ",
+        {
+         "t": "code",
+         "v": "\\n"
+        },
+        " means \"new line\"; inside single quotes, a backslash is just a backslash. In dbt files, both are common. Pick one style and stay consistent."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Unquoted Jinja in YAML."
+           ],
+           "t": "b"
+          },
+          " This is a classic exam distractor and a classic real bug. Every value that contains ",
+          {
+           "t": "code",
+           "v": "{{ ... }}"
+          },
+          " must be inside quotes:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c8",
+         "lang": "yaml",
+         "t": "code",
+         "text": "schema: \"{{ target.schema }}\"                     # correct\nwhere: \"order_date >= '{{ var('start_date') }}'\" # correct\nschema: {{ target.schema }}                       # WRONG: parsing error"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s2-7",
+     "number": "5.2.7",
+     "title": [
+      "When you must use quotes"
+     ],
+     "titleText": "When you must use quotes"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Long descriptions are easier to write on several lines. YAML has two symbols for that:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "|"
+            },
+            " (",
+            {
+             "en": [
+              "literal block"
+             ],
+             "fr": "bloc littéral",
+             "id": "term-literal-block",
+             "t": "term"
+            },
+            ") ",
+            {
+             "c": [
+              "keeps"
+             ],
+             "t": "b"
+            },
+            " the line breaks;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": ">"
+            },
+            " (",
+            {
+             "en": [
+              "folded block"
+             ],
+             "fr": "bloc replié",
+             "id": "term-folded-block",
+             "t": "term"
+            },
+            ") ",
+            {
+             "c": [
+              "folds"
+             ],
+             "t": "b"
+            },
+            " the lines into one long line (line breaks become spaces)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "id": "ch05-c9",
+       "lang": "yaml",
+       "t": "code",
+       "text": "literal: |\n  line one\n  line two\nfolded: >\n  line one\n  line two"
+      },
+      {
+       "c": [
+        "Loaded with Python, this gives ",
+        {
+         "t": "code",
+         "v": "literal = \"line one\\nline two\\n\""
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "folded = \"line one line two\\n\""
+        },
+        ". In dbt you will often see ",
+        {
+         "t": "code",
+         "v": "description: >"
+        },
+        " for long descriptions, or ",
+        {
+         "t": "code",
+         "v": "|"
+        },
+        " when you want to keep a list or a small SQL example readable in the documentation site."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch05-s2-8",
+     "number": "5.2.8",
+     "title": [
+      "Multi-line strings"
+     ],
+     "titleText": "Multi-line strings"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "comment"
+         ],
+         "fr": "commentaire",
+         "id": "term-comment",
+         "t": "term"
+        },
+        " starts with ",
+        {
+         "t": "code",
+         "v": "#"
+        },
+        " and continues to the end of the line. YAML ignores it. Use comments to explain ",
+        {
+         "c": [
+          "why"
+         ],
+         "t": "i"
+        },
+        " a setting exists."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "YAML can reuse a block with an ",
+          {
+           "en": [
+            "anchor"
+           ],
+           "fr": "ancre",
+           "id": "term-anchor",
+           "t": "term"
+          },
+          " (",
+          {
+           "t": "code",
+           "v": "&name"
+          },
+          ") and an ",
+          {
+           "c": [
+            "alias"
+           ],
+           "t": "b"
+          },
+          " (",
+          {
+           "t": "code",
+           "v": "*name"
+          },
+          "). The special key ",
+          {
+           "t": "code",
+           "v": "<<"
+          },
+          " merges the anchored mapping into another one:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c10",
+         "lang": "yaml",
+         "t": "code",
+         "text": "base: &base\n  materialized: view\n  schema: staging\nmodel_a:\n  <<: *base          # copy everything from \"base\"...\n  schema: marts      # ...then override one key"
+        },
+        {
+         "c": [
+          "Loaded, ",
+          {
+           "t": "code",
+           "v": "model_a"
+          },
+          " becomes ",
+          {
+           "t": "code",
+           "v": "{materialized: view, schema: marts}"
+          },
+          ". You will rarely write this yourself, but you may see it in big projects that repeat the same test settings. It also explains why a value starting with ",
+          {
+           "t": "code",
+           "v": "*"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "&"
+          },
+          " must be quoted."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "deep",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s2-9",
+     "number": "5.2.9",
+     "title": [
+      "Comments, anchors and aliases"
+     ],
+     "titleText": "Comments, anchors and aliases"
+    },
+    {
+     "anchor": "sec-yjp-yaml-errors",
+     "blocks": [
+      {
+       "c": [
+        "When a YAML file is broken, the program that reads it stops and prints an error with a ",
+        {
+         "c": [
+          "line"
+         ],
+         "t": "b"
+        },
+        " and a ",
+        {
+         "c": [
+          "column"
+         ],
+         "t": "b"
+        },
+        ". Learning to read these messages saves hours. Here are real messages from the most common mistakes."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Mistake 1: a tab instead of spaces."
+         ],
+         "t": "b"
+        },
+        " Line 5 below starts with a tab character (invisible here). dbt answers:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c11",
+       "lang": "output",
+       "t": "code",
+       "text": "Parsing Error\n  Error reading jaffle_practice: staging/_stg_models.yml - Runtime Error\n    Syntax error near line 5\n    ------------------------------\n    2  |\n    3  | models:\n    4  |   - name: stg_orders\n    5  |     description: \"Orders\"\n\n    Raw Error:\n    ------------------------------\n    while scanning a plain scalar\n      in \"<unicode string>\", line 4, column 11\n    found a tab character that violates indentation\n      in \"<unicode string>\", line 5, column 1",
+       "title": "dbt parse"
+      },
+      {
+       "c": [
+        "dbt shows the file, a few lines around the problem (with line numbers), and the \"Raw Error\" from the YAML reader. The key sentence is ",
+        {
+         "c": [
+          "found a tab character that violates indentation … line 5, column 1"
+         ],
+         "t": "i"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Mistake 2: missing space after the colon."
+         ],
+         "t": "b"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "- name:stg_orders"
+        },
+        " (no space) is not a key–value pair for YAML: it is one piece of text, ",
+        {
+         "t": "code",
+         "v": "\"name:stg_orders\""
+        },
+        ". The error appears on the ",
+        {
+         "c": [
+          "next"
+         ],
+         "t": "i"
+        },
+        " line, when YAML finds a real key where it did not expect one:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c12",
+       "lang": "output",
+       "t": "code",
+       "text": "    Syntax error near line 5\n    ------------------------------\n    2  |\n    3  | models:\n    4  |   - name:stg_orders\n    5  |     description: \"Orders\"\n\n    Raw Error:\n    ------------------------------\n    mapping values are not allowed in this context\n      in \"<unicode string>\", line 5, column 16",
+       "title": "dbt parse"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Mistake 3: unquoted Jinja."
+         ],
+         "t": "b"
+        }
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c13",
+       "lang": "output",
+       "t": "code",
+       "text": "    Syntax error near line 6\n    ------------------------------\n    3  | models:\n    4  |   - name: stg_orders\n    5  |     config:\n    6  |       schema: {{ target.schema }}\n\n    Raw Error:\n    ------------------------------\n    while constructing a mapping\n      in \"<unicode string>\", line 6, column 15\n    found unhashable key\n      in \"<unicode string>\", line 6, column 16",
+       "title": "dbt parse"
+      },
+      {
+       "c": [
+        "The message is strange (\"unhashable key\") because YAML tried to read ",
+        {
+         "t": "code",
+         "v": "{{ target.schema }}"
+        },
+        " as an inline mapping inside another mapping. You do not need to understand the words: when you see Jinja on the reported line, add quotes."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Mistake 4: a colon inside a value."
+         ],
+         "t": "b"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "description: Payments: from Stripe"
+        },
+        " gives ",
+        {
+         "c": [
+          "mapping values are not allowed in this context"
+         ],
+         "t": "i"
+        },
+        ", with the column pointing at the second colon. (Python's ",
+        {
+         "t": "code",
+         "v": "yaml.safe_load"
+        },
+        ", which you will use in the lab below, says the same thing with other words: ",
+        {
+         "c": [
+          "mapping values are not allowed here"
+         ],
+         "t": "i"
+        },
+        ".)"
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Mistake 5: a duplicated key."
+         ],
+         "t": "b"
+        },
+        " This one gives ",
+        {
+         "c": [
+          "no error at all"
+         ],
+         "t": "b"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c14",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nmodels:\n  - name: stg_orders\n    description: \"First\"\n    description: \"Second\"",
+       "title": "models/staging/_stg_models.yml"
+      },
+      {
+       "c": [
+        "A plain YAML reader keeps the last value (",
+        {
+         "t": "code",
+         "v": "\"Second\""
+        },
+        ") and silently forgets the first one. dbt 1.11 also keeps ",
+        {
+         "t": "code",
+         "v": "\"Second\""
+        },
+        " and continues, but it at least prints a warning:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c15",
+       "lang": "output",
+       "t": "code",
+       "text": "[WARNING][DuplicateYAMLKeysDeprecation]: Deprecated functionality\nDuplicate key 'description' in \"<unicode string>\", line 6, column 5 in file\n`models/staging/_stg_models.yml`",
+       "title": "dbt parse"
+      },
+      {
+       "c": [
+        "A warning does not stop dbt, so it is easy to miss. A duplicated key can hide a configuration you thought was active: read the warnings, not only the errors."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "How to read any YAML error, in 4 steps."
+           ],
+           "t": "b"
+          },
+          " (1) Find the file name. (2) Go to the reported line. (3) If the line looks fine, look at the line ",
+          {
+           "c": [
+            "above"
+           ],
+           "t": "i"
+          },
+          ": the real mistake is often one line earlier (a missing space, a bad indentation, an open quote). (4) Check the column: it points at the character where the reader gave up."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Valid YAML is not always valid dbt."
+           ],
+           "t": "b"
+          },
+          " A file can be perfect YAML and still be rejected by dbt, because dbt also checks the ",
+          {
+           "c": [
+            "shape"
+           ],
+           "t": "i"
+          },
+          " of the data. For example, ",
+          {
+           "t": "code",
+           "v": "config:"
+          },
+          " must contain a mapping. If it contains a piece of text, dbt says something like ",
+          {
+           "c": [
+            "at path ['config']: … is not of type 'object'"
+           ],
+           "t": "i"
+          },
+          ". You will practise this in the lab below."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s2-10",
+     "number": "5.2.10",
+     "title": [
+      "Reading YAML error messages"
+     ],
+     "titleText": "Reading YAML error messages"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "en": [
+          "JSON"
+         ],
+         "fr": "JSON",
+         "id": "term-json",
+         "t": "term"
+        },
+        " is another text format for the same kind of data (mappings and lists). It uses braces, brackets and quotes everywhere, and no indentation rules. YAML is a superset of JSON: a JSON file is (almost always) valid YAML."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "You will meet JSON in dbt as ",
+        {
+         "en": [
+          "artifact"
+         ],
+         "fr": "artefact (fichier produit par dbt)",
+         "id": "term-artifact",
+         "t": "term"
+        },
+        " files that dbt writes in the ",
+        {
+         "t": "code",
+         "v": "target/"
+        },
+        " folder after each command, for example ",
+        {
+         "t": "code",
+         "v": "manifest.json"
+        },
+        ", which describes every node of your project. Here is a small real extract for a model:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c16",
+       "lang": "plain",
+       "t": "code",
+       "text": "\"model.jaffle_practice.stg_orders\": {\n  \"resource_type\": \"model\",\n  \"name\": \"stg_orders\",\n  \"schema\": \"dbt_adnane\",\n  \"depends_on\": {\n    \"macros\": [],\n    \"nodes\": [\n      \"source.jaffle_practice.jaffle_shop.orders\"\n    ]\n  }\n}",
+       "title": "target/manifest.json (extract)"
+      },
+      {
+       "c": [
+        "You can already read it: a mapping with keys, one of which (",
+        {
+         "t": "code",
+         "v": "depends_on"
+        },
+        ") contains a list of the nodes this model needs. Chapter 24 (State, defer and retry) uses these files a lot."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch05-s2-11",
+     "number": "5.2.11",
+     "title": [
+      "YAML and JSON"
+     ],
+     "titleText": "YAML and JSON"
+    },
+    {
+     "anchor": "sec-yjp-dbt-yaml",
+     "blocks": [
+      {
+       "c": [
+        "You will study each of these files in detail later. For now, practise ",
+        {
+         "c": [
+          "reading"
+         ],
+         "t": "i"
+        },
+        " them. Each one below was checked with dbt Core 1.11 (",
+        {
+         "t": "code",
+         "v": "dbt parse"
+        },
+        " ran without errors)."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "1. ",
+          {
+           "t": "code",
+           "v": "dbt_project.yml"
+          }
+         ],
+         "t": "b"
+        },
+        ": the identity card of the project. One per project, at the root."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c17",
+       "lang": "yaml",
+       "t": "code",
+       "text": "name: 'jaffle_practice'          # project name: lowercase, underscores\nversion: '1.0.0'\nconfig-version: 2\n\nprofile: 'jaffle_practice'       # which connection in profiles.yml to use\n\nmodel-paths: [\"models\"]          # where dbt looks for models\nseed-paths: [\"seeds\"]\n\nmodels:\n  jaffle_practice:               # must match the project name above\n    staging:                     # folder models/staging/\n      +materialized: view        # \"+\" marks a config\n    marts:\n      +materialized: table",
+       "title": "dbt_project.yml"
+      },
+      {
+       "c": [
+        "Notice how indentation follows the ",
+        {
+         "c": [
+          "folders"
+         ],
+         "t": "i"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "models"
+        },
+        " → project name → folder → setting. The ",
+        {
+         "t": "code",
+         "v": "+"
+        },
+        " in front of ",
+        {
+         "t": "code",
+         "v": "materialized"
+        },
+        " tells dbt \"this is a configuration, not a folder name\". Chapter 10 explains why."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "2. A properties file"
+         ],
+         "t": "b"
+        },
+        ": describes and tests models. Any name ending in ",
+        {
+         "t": "code",
+         "v": ".yml"
+        },
+        " inside ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c18",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nmodels:\n  - name: stg_orders\n    description: \"One row per order, cleaned.\"\n    columns:\n      - name: order_id\n        description: \"Primary key of the order.\"\n        data_tests:\n          - unique\n          - not_null\n      - name: status\n        data_tests:\n          - accepted_values:\n              arguments:\n                values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']",
+       "title": "models/staging/_stg_models.yml"
+      },
+      {
+       "c": [
+        "Read it level by level: a list of models; one model with a list of columns; each column with a list of tests. ",
+        {
+         "t": "code",
+         "v": "unique"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "not_null"
+        },
+        " are simple items; ",
+        {
+         "t": "code",
+         "v": "accepted_values"
+        },
+        " is a mapping because it needs ",
+        {
+         "c": [
+          "arguments"
+         ],
+         "t": "i"
+        },
+        " (the list of allowed values)."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Older tutorials write ",
+          {
+           "t": "code",
+           "v": "values:"
+          },
+          " directly under ",
+          {
+           "t": "code",
+           "v": "accepted_values:"
+          },
+          ", without ",
+          {
+           "t": "code",
+           "v": "arguments:"
+          },
+          ". dbt 1.11 still accepts that old style but prints a deprecation warning (",
+          {
+           "t": "code",
+           "v": "MissingArgumentsPropertyInGenericTestDeprecation"
+          },
+          "). Also, old projects use ",
+          {
+           "t": "code",
+           "v": "tests:"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": "data_tests:"
+          },
+          "; ",
+          {
+           "t": "code",
+           "v": "data_tests:"
+          },
+          " is the current name (since dbt 1.8). Chapter 18 covers tests in depth."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "3. A sources file"
+         ],
+         "t": "b"
+        },
+        ": declares the raw tables that dbt did not build."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c19",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nsources:\n  - name: jaffle_shop            # a name you choose for this group\n    schema: jaffle_shop          # where the raw tables live\n    tables:\n      - name: orders\n      - name: customers\n  - name: stripe\n    schema: stripe\n    tables:\n      - name: payments",
+       "title": "models/staging/_sources.yml"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "4. ",
+          {
+           "t": "code",
+           "v": "packages.yml"
+          }
+         ],
+         "t": "b"
+        },
+        ": other people's dbt code that your project uses (Chapter 11)."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c20",
+       "lang": "yaml",
+       "t": "code",
+       "text": "packages:\n  - package: dbt-labs/dbt_utils\n    version: [\">=1.3.0\", \"<2.0.0\"]",
+       "title": "packages.yml"
+      },
+      {
+       "c": [
+        "The version is a list of two conditions, written inline and quoted (because ",
+        {
+         "t": "code",
+         "v": ">"
+        },
+        " at the start of a value is special)."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "5. ",
+          {
+           "t": "code",
+           "v": "profiles.yml"
+          }
+         ],
+         "t": "b"
+        },
+        ": how to connect to the warehouse. It usually lives ",
+        {
+         "c": [
+          "outside"
+         ],
+         "t": "b"
+        },
+        " the project, in ",
+        {
+         "t": "code",
+         "v": "~/.dbt/profiles.yml"
+        },
+        ", because it can contain passwords."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c21",
+       "lang": "yaml",
+       "t": "code",
+       "text": "jaffle_practice:                 # same name as \"profile:\" in dbt_project.yml\n  target: dev                    # the default target\n  outputs:\n    dev:\n      type: duckdb\n      path: practice.duckdb      # the database file\n      schema: dbt_adnane         # your personal development schema\n      threads: 4",
+       "title": "~/.dbt/profiles.yml"
+      },
+      {
+       "blocks": [
+        {
+         "head": [
+          [
+           {
+            "c": [
+             {
+              "c": [
+               "File"
+              ],
+              "t": "b"
+             }
+            ],
+            "header": true
+           },
+           {
+            "c": [
+             {
+              "c": [
+               "Purpose"
+              ],
+              "t": "b"
+             }
+            ],
+            "header": true
+           },
+           {
+            "c": [
+             {
+              "c": [
+               "Chapter"
+              ],
+              "t": "b"
+             }
+            ],
+            "header": true
+           }
+          ]
+         ],
+         "rows": [
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "dbt_project.yml"
+             }
+            ]
+           },
+           {
+            "c": [
+             "Project name, paths, default configurations per folder"
+            ]
+           },
+           {
+            "c": [
+             "6, 10"
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "profiles.yml"
+             }
+            ]
+           },
+           {
+            "c": [
+             "Connections (targets) to the warehouse"
+            ]
+           },
+           {
+            "c": [
+             "6"
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "models/**/*.yml"
+             }
+            ]
+           },
+           {
+            "c": [
+             "Sources, model descriptions, tests, contracts, versions"
+            ]
+           },
+           {
+            "c": [
+             "7, 17–21"
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "packages.yml"
+             }
+            ]
+           },
+           {
+            "c": [
+             "Packages to install with ",
+             {
+              "t": "code",
+              "v": "dbt deps"
+             }
+            ]
+           },
+           {
+            "c": [
+             "11"
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "snapshots/*.yml"
+             }
+            ]
+           },
+           {
+            "c": [
+             "Snapshots defined in YAML (dbt 1.9+)"
+            ]
+           },
+           {
+            "c": [
+             "13"
+            ]
+           }
+          ]
+         ],
+         "t": "table"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " find and fix three mistakes, using only the error messages."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Open a terminal, go to your practice folder and activate your Python environment (",
+          {
+           "href": "/learn/ch02/",
+           "label": "ch:cli",
+           "t": "ref",
+           "text": "Chapter 2"
+          },
+          "):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c22",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cd ~/dbt-course/practice\n$ source ../.venv/bin/activate"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Create a file ",
+          {
+           "t": "code",
+           "v": "broken.yml"
+          },
+          " with exactly this content (copy the spaces carefully; line 11 has 5 spaces before the dash):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c23",
+         "lang": "yaml",
+         "lineNumbers": true,
+         "t": "code",
+         "text": "version: 2\n\nmodels:\n  - name: stg_payments\n    description: Payments from Stripe: one row per payment\n    columns:\n      - name: payment_id\n        data_tests:\n          - unique\n          - not_null\n     - name: amount_usd\n        description: \"Amount in dollars\"\n      - name: status\n        data_tests:\n          - accepted_values:\n              arguments:\n                values: [success, fail]\n    config:\n      schema:{{ target.schema }}",
+         "title": "broken.yml"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Ask Python to read it. PyYAML is already installed in your environment (dbt needs it):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c24",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ python -c \"import yaml; yaml.safe_load(open('broken.yml')); print('valid YAML')\""
+        },
+        {
+         "c": [
+          "The last lines of the answer are:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c25",
+         "lang": "output",
+         "t": "code",
+         "text": "yaml.scanner.ScannerError: mapping values are not allowed here\n  in \"broken.yml\", line 5, column 38"
+        },
+        {
+         "c": [
+          "Column 38 is the second colon (",
+          {
+           "t": "code",
+           "v": "Stripe:"
+          },
+          "). Fix: put the description in quotes. Run the command again."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " New error:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c26",
+         "lang": "output",
+         "t": "code",
+         "text": "yaml.parser.ParserError: while parsing a block mapping\n  in \"broken.yml\", line 4, column 5\nexpected <block end>, but found '<block sequence start>'\n  in \"broken.yml\", line 11, column 6"
+        },
+        {
+         "c": [
+          "Line 11, column 6: the dash of ",
+          {
+           "t": "code",
+           "v": "amount_usd"
+          },
+          " is one space to the left of its siblings. Fix: 6 spaces before the dash, like line 7 and line 13."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Run again. This time Python prints ",
+          {
+           "t": "code",
+           "v": "valid YAML"
+          },
+          "… but the file is ",
+          {
+           "c": [
+            "still wrong"
+           ],
+           "t": "i"
+          },
+          ". Print what Python understood for the config:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c27",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ python -c \"import yaml; print(yaml.safe_load(open('broken.yml'))['models'][0]['config'])\"\nschema:{{ target.schema }}"
+        },
+        {
+         "c": [
+          "Because there is no space after ",
+          {
+           "t": "code",
+           "v": "schema:"
+          },
+          ", the whole line is one piece of text, not a key–value pair. dbt would refuse it (\"",
+          {
+           "t": "code",
+           "v": "config"
+          },
+          " is not of type object\"). Fix line 19: ",
+          {
+           "t": "code",
+           "v": "schema: \"{{ target.schema }}\""
+          },
+          " (space after the colon ",
+          {
+           "c": [
+            "and"
+           ],
+           "t": "i"
+          },
+          " quotes around the Jinja). While you are there, quote the accepted values too: ",
+          {
+           "t": "code",
+           "v": "values: ['success', 'fail']"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result."
+           ],
+           "t": "b"
+          },
+          " Both commands now succeed, and ",
+          {
+           "t": "code",
+           "v": "config"
+          },
+          " is a real mapping:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c28",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ python -c \"import yaml; yaml.safe_load(open('broken.yml')); print('valid YAML')\"\nvalid YAML\n$ python -c \"import yaml; print(yaml.safe_load(open('broken.yml'))['models'][0]['config'])\"\n{'schema': '{{ target.schema }}'}"
+        },
+        {
+         "c": [
+          "Compare with Step 5: before the fix, Python printed a plain text; now it prints a dictionary with one key, ",
+          {
+           "t": "code",
+           "v": "schema"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch05-lab1",
+       "objectives": [
+        "CP0-YAML",
+        "3.3"
+       ],
+       "t": "lab",
+       "title": [
+        "Fix a broken YAML file"
+       ]
+      }
+     ],
+     "id": "ch05-s2-12",
+     "number": "5.2.12",
+     "title": [
+      "The YAML files of a dbt project (a preview)"
+     ],
+     "titleText": "The YAML files of a dbt project (a preview)"
+    }
+   ],
+   "title": [
+    "YAML: configuration you can read"
+   ],
+   "titleText": "YAML: configuration you can read"
+  },
+  {
+   "anchors": [
+    "sec-yjp-jinja",
+    "sec-yjp-compile"
+   ],
+   "checkpoints": [],
+   "id": "ch05-s3",
+   "label": "sec:yjp-jinja",
+   "labs": [
+    "ch05-lab2",
+    "ch05-lab3"
+   ],
+   "minutes": 45,
+   "number": "5.3",
+   "objectives": [
+    "CP0-JINJA",
+    "1.3"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "en": [
+          "Jinja"
+         ],
+         "fr": "Jinja (moteur de templates)",
+         "id": "term-jinja",
+         "t": "term"
+        },
+        " is a ",
+        {
+         "en": [
+          "template"
+         ],
+         "fr": "modèle (gabarit)",
+         "id": "term-template",
+         "t": "term"
+        },
+        " language. A template is a text with holes. A program fills the holes and produces the final text. This step is called ",
+        {
+         "en": [
+          "rendering"
+         ],
+         "fr": "rendu (génération du texte final)",
+         "id": "term-rendering",
+         "t": "term"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Remember a \"mail merge\" in a word processor: you write one letter, \"Dear {first_name}, your order {order_id} has shipped\", and the program produces one letter per customer. Jinja does the same with SQL: you write one model with holes and logic, and dbt produces the final SQL. The warehouse only ever receives the final, plain SQL."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s3-1",
+     "number": "5.3.1",
+     "title": [
+      "The idea: templates"
+     ],
+     "titleText": "The idea: templates"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Jinja code is always inside one of three pairs of delimiters. Learn them by heart; the exam uses them constantly."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Delimiter"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Name"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it does"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{{ ... }}"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "en": [
+             "expression"
+            ],
+            "fr": "expression",
+            "id": "term-expression",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Prints"
+            ],
+            "t": "b"
+           },
+           " a value into the text. Example: ",
+           {
+            "t": "code",
+            "v": "{{ ref('stg_orders') }}"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{% ... %}"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "en": [
+             "statement"
+            ],
+            "fr": "instruction (bloc de logique)",
+            "id": "term-statement",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Does"
+            ],
+            "t": "b"
+           },
+           " something, prints nothing: ",
+           {
+            "t": "code",
+            "v": "set"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "if"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "for"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "macro"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{# ... #}"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Jinja comment"
+          ]
+         },
+         {
+          "c": [
+           "Removed completely during rendering. Never reaches the warehouse."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "A memory trick: ",
+        {
+         "c": [
+          "double braces say"
+         ],
+         "t": "b"
+        },
+        " something (they output), ",
+        {
+         "c": [
+          "percent signs do"
+         ],
+         "t": "b"
+        },
+        " something (they act), ",
+        {
+         "c": [
+          "hashes hide"
+         ],
+         "t": "b"
+        },
+        " something (comments)."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A SQL comment ",
+          {
+           "t": "code",
+           "v": "-- like this"
+          },
+          " is different from a Jinja comment ",
+          {
+           "t": "code",
+           "v": "{# like this #}"
+          },
+          ". The SQL comment stays in the compiled SQL and is sent to the warehouse (which ignores it). The Jinja comment disappears before. Important consequence: Jinja code inside a SQL comment is ",
+          {
+           "c": [
+            "still executed"
+           ],
+           "t": "i"
+          },
+          " by dbt. To disable a line that contains Jinja, use a Jinja comment."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s3-2",
+     "number": "5.3.2",
+     "title": [
+      "The three delimiters"
+     ],
+     "titleText": "The three delimiters"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "You create a variable with ",
+        {
+         "t": "code",
+         "v": "{% set name = value %}"
+        },
+        " and print it with ",
+        {
+         "t": "code",
+         "v": "{{ name }}"
+        },
+        ". Below, each example shows a template, then the text that Jinja produced (rendered with the real Jinja library)."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c29",
+       "lang": "jinja",
+       "t": "code",
+       "text": "{% set shop_name = \"jaffle shop\" %}\n{% set min_amount = 1000 %}\n-- report for {{ shop_name | upper }}\nselect * from stripe.payments where amount >= {{ min_amount }}",
+       "title": "template"
+      },
+      {
+       "id": "ch05-c30",
+       "lang": "output",
+       "t": "code",
+       "text": "\n\n-- report for JAFFLE SHOP\nselect * from stripe.payments where amount >= 1000",
+       "title": "rendered"
+      },
+      {
+       "c": [
+        "Two things to notice. First, the two ",
+        {
+         "t": "code",
+         "v": "set"
+        },
+        " lines print nothing, but they leave ",
+        {
+         "c": [
+          "empty lines"
+         ],
+         "t": "b"
+        },
+        ": the line breaks after them are still in the text (we will remove them with whitespace control, below). Second, ",
+        {
+         "t": "code",
+         "v": "| upper"
+        },
+        " changed the text: that is a ",
+        {
+         "c": [
+          "filter"
+         ],
+         "t": "i"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch05-s3-3",
+     "number": "5.3.3",
+     "title": [
+      "Variables and ",
+      {
+       "t": "code",
+       "v": "set"
+      }
+     ],
+     "titleText": "Variables and set"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "filter"
+         ],
+         "fr": "filtre",
+         "id": "term-filter",
+         "t": "term"
+        },
+        " transforms a value. You write it after a vertical bar ",
+        {
+         "t": "code",
+         "v": "|"
+        },
+        ". You can chain several filters."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c31",
+       "lang": "jinja",
+       "t": "code",
+       "text": "{% set cols = [\"id\", \"first_name\", \"email\"] %}\n{% set settings = {\"schema\": \"jaffle_shop\", \"table\": \"customers\"} %}\nselect {{ cols | join(\", \") }}\nfrom {{ settings[\"schema\"] }}.{{ settings.table }}\n-- {{ cols | length }} columns\n-- {{ missing_var | default(\"fallback\") }}\n-- {{ \"stg-orders\" | replace(\"-\", \"_\") }} / {{ \"ORDERS\" | lower }}",
+       "title": "template"
+      },
+      {
+       "id": "ch05-c32",
+       "lang": "output",
+       "t": "code",
+       "text": "\n\nselect id, first_name, email\nfrom jaffle_shop.customers\n-- 3 columns\n-- fallback\n-- stg_orders / orders",
+       "title": "rendered"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Filter"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Effect"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "upper"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "lower"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Change the case of a text."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "join(\", \")"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Glue the items of a list into one text, with a separator. Very useful for column lists."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "length"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Number of items in a list (or characters in a text)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "default(\"x\")"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Use ",
+           {
+            "t": "code",
+            "v": "\"x\""
+           },
+           " if the value is undefined."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "replace(\"a\", \"b\")"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Replace a piece of text."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "This example also shows ",
+        {
+         "c": [
+          "lists"
+         ],
+         "t": "b"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "[ ... ]"
+        },
+        ") and ",
+        {
+         "c": [
+          "dictionaries"
+         ],
+         "t": "b"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "{ ... }"
+        },
+        ") in Jinja. They work like in Python and YAML: ",
+        {
+         "t": "code",
+         "v": "settings[\"schema\"]"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "settings.table"
+        },
+        " both read a key. To glue texts together, use the tilde operator: ",
+        {
+         "t": "code",
+         "v": "{{ 'stg_' ~ 'orders' }}"
+        },
+        " renders ",
+        {
+         "t": "code",
+         "v": "stg_orders"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch05-s3-4",
+     "number": "5.3.4",
+     "title": [
+      "Filters"
+     ],
+     "titleText": "Filters"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch05-c33",
+       "lang": "jinja",
+       "t": "code",
+       "text": "{% set target_name = \"dev\" %}\nselect * from jaffle_shop.orders\n{% if target_name == \"dev\" %}\nwhere order_date >= '2025-12-01'   -- small data while developing\n{% elif target_name == \"ci\" %}\nwhere order_date >= '2025-11-01'\n{% else %}\n-- production: all rows\n{% endif %}",
+       "title": "template"
+      },
+      {
+       "id": "ch05-c34",
+       "lang": "output",
+       "t": "code",
+       "text": "\nselect * from jaffle_shop.orders\n\nwhere order_date >= '2025-12-01'   -- small data while developing",
+       "title": "rendered"
+      },
+      {
+       "c": [
+        "Only the branch whose condition is true is written. Every ",
+        {
+         "t": "code",
+         "v": "if"
+        },
+        " must be closed by ",
+        {
+         "t": "code",
+         "v": "{% endif %}"
+        },
+        ". Comparisons use ",
+        {
+         "t": "code",
+         "v": "=="
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "!="
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "<"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": ">"
+        },
+        ", and you combine conditions with ",
+        {
+         "t": "code",
+         "v": "and"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "or"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "not"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "This exact pattern is common in real projects: use less data in development to save time and money. In dbt, the variable is not set by hand: dbt gives you ",
+          {
+           "t": "code",
+           "v": "target.name"
+          },
+          ", the name of the target you are running against. You will write ",
+          {
+           "t": "code",
+           "v": "{% if target.name == 'dev' %}"
+          },
+          " in Chapter 10. (dbt also has a built-in flag for this purpose, ",
+          {
+           "t": "code",
+           "v": "--sample"
+          },
+          ", covered in Chapter 16.)"
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s3-5",
+     "number": "5.3.5",
+     "title": [
+      "Conditions: ",
+      {
+       "t": "code",
+       "v": "if"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "elif"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "else"
+      }
+     ],
+     "titleText": "Conditions: if, elif, else"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "t": "code",
+         "v": "for"
+        },
+        " loop repeats a block once per item of a list. This is how you avoid writing the same SQL line many times: the ",
+        {
+         "en": [
+          "DRY principle"
+         ],
+         "fr": "principe DRY : ne pas se répéter",
+         "id": "term-dry-principle",
+         "t": "term"
+        },
+        " (\"Don't Repeat Yourself\")."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Here is a first try at a classic dbt example: one column per payment method."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c35",
+       "lang": "jinja",
+       "t": "code",
+       "text": "{% set methods = [\"credit_card\", \"coupon\", \"bank_transfer\", \"gift_card\"] %}\nselect\n    orderid as order_id,\n    {% for m in methods %}\n    sum(case when paymentmethod = '{{ m }}' then amount else 0 end)\n        as {{ m }}_amount,\n    {% endfor %}\nfrom stripe.payments\nwhere status = 'success'\ngroup by orderid",
+       "title": "pivot_broken.sql (template)"
+      },
+      {
+       "id": "ch05-c36",
+       "lang": "output",
+       "t": "code",
+       "text": "\nselect\n    orderid as order_id,\n\n    sum(case when paymentmethod = 'credit_card' then amount else 0 end)\n        as credit_card_amount,\n\n    sum(case when paymentmethod = 'coupon' then amount else 0 end)\n        as coupon_amount,\n\n    sum(case when paymentmethod = 'bank_transfer' then amount else 0 end)\n        as bank_transfer_amount,\n\n    sum(case when paymentmethod = 'gift_card' then amount else 0 end)\n        as gift_card_amount,\n\nfrom stripe.payments\nwhere status = 'success'\ngroup by orderid",
+       "title": "rendered"
+      },
+      {
+       "c": [
+        "Two problems. The output is full of empty lines (ugly, but harmless). And the last column ends with a comma just before ",
+        {
+         "t": "code",
+         "v": "from"
+        },
+        ": a ",
+        {
+         "c": [
+          "trailing comma"
+         ],
+         "t": "b"
+        },
+        ". PostgreSQL and many other databases reject it with a syntax error. (DuckDB happens to accept it, but never rely on that: your SQL must work on every warehouse.)"
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Inside a ",
+        {
+         "t": "code",
+         "v": "for"
+        },
+        " loop, Jinja gives you a special variable called ",
+        {
+         "t": "code",
+         "v": "loop"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Variable"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "loop.index"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Position of the current item, starting at 1."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "loop.index0"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Position starting at 0."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "loop.first"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "true"
+           },
+           " for the first item only."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "loop.last"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "true"
+           },
+           " for the last item only."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "The fix: write the comma ",
+        {
+         "c": [
+          "only if this is not the last item"
+         ],
+         "t": "i"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "{% if not loop.last %},{% endif %}"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch05-s3-6",
+     "number": "5.3.6",
+     "title": [
+      "Loops: ",
+      {
+       "t": "code",
+       "v": "for"
+      },
+      ", and the trailing-comma problem"
+     ],
+     "titleText": "Loops: for, and the trailing-comma problem"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A minus sign just inside a delimiter, ",
+        {
+         "t": "code",
+         "v": "{%-"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "-%}"
+        },
+        ", removes the spaces and line breaks on that side of the tag. ",
+        {
+         "t": "code",
+         "v": "{%- ... %}"
+        },
+        " eats the whitespace ",
+        {
+         "c": [
+          "before"
+         ],
+         "t": "i"
+        },
+        " the tag; ",
+        {
+         "t": "code",
+         "v": "{% ... -%}"
+        },
+        " eats the whitespace ",
+        {
+         "c": [
+          "after"
+         ],
+         "t": "i"
+        },
+        " it. This is called ",
+        {
+         "en": [
+          "whitespace control"
+         ],
+         "fr": "contrôle des espaces",
+         "id": "term-whitespace-control",
+         "t": "term"
+        },
+        ". It only changes how the compiled SQL ",
+        {
+         "c": [
+          "looks"
+         ],
+         "t": "i"
+        },
+        "; it does not change the logic or the result of the query. One caution: if it removes the only space between two words, they are glued together (for example ",
+        {
+         "t": "code",
+         "v": "from orderswhere"
+        },
+        ") and the SQL breaks. Check the compiled SQL."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Here is the corrected pivot, with the comma fix and whitespace control:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c37",
+       "lang": "jinja",
+       "t": "code",
+       "text": "{%- set methods = [\"credit_card\", \"coupon\", \"bank_transfer\", \"gift_card\"] -%}\nselect\n    orderid as order_id,\n    {%- for m in methods %}\n    sum(case when paymentmethod = '{{ m }}' then amount else 0 end)\n        as {{ m }}_amount\n    {%- if not loop.last %},{% endif %}\n    {%- endfor %}\nfrom stripe.payments\nwhere status = 'success'\ngroup by orderid\norder by orderid",
+       "title": "pivot.sql (template)"
+      },
+      {
+       "id": "ch05-c38",
+       "lang": "output",
+       "t": "code",
+       "text": "select\n    orderid as order_id,\n    sum(case when paymentmethod = 'credit_card' then amount else 0 end)\n        as credit_card_amount,\n    sum(case when paymentmethod = 'coupon' then amount else 0 end)\n        as coupon_amount,\n    sum(case when paymentmethod = 'bank_transfer' then amount else 0 end)\n        as bank_transfer_amount,\n    sum(case when paymentmethod = 'gift_card' then amount else 0 end)\n        as gift_card_amount\nfrom stripe.payments\nwhere status = 'success'\ngroup by orderid\norder by orderid",
+       "title": "rendered"
+      },
+      {
+       "c": [
+        "Clean SQL, no trailing comma. And when the business adds a fifth payment method, you change ",
+        {
+         "c": [
+          "one"
+         ],
+         "t": "i"
+        },
+        " list, not four lines."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Another way to avoid the trailing comma: build the list of expressions and use the ",
+          {
+           "t": "code",
+           "v": "join"
+          },
+          " filter, or put the comma at the ",
+          {
+           "c": [
+            "start"
+           ],
+           "t": "i"
+          },
+          " of each generated line after the first one (",
+          {
+           "t": "code",
+           "v": "{% if not loop.first %},{% endif %}"
+          },
+          "). All three are correct. Do not try to remember complex whitespace rules: write the template, run ",
+          {
+           "t": "code",
+           "v": "dbt compile"
+          },
+          ", look at the result, adjust."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s3-7",
+     "number": "5.3.7",
+     "title": [
+      "Whitespace control"
+     ],
+     "titleText": "Whitespace control"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "macro"
+         ],
+         "fr": "macro (fonction Jinja réutilisable)",
+         "id": "term-macro",
+         "t": "term"
+        },
+        " is a reusable piece of Jinja, like a function. You define it once with arguments, then call it with ",
+        {
+         "t": "code",
+         "v": "{{ ... }}"
+        },
+        " wherever you need it."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c39",
+       "lang": "jinja",
+       "t": "code",
+       "text": "{% macro cents_to_dollars(column_name, decimals=2) -%}\n    round({{ column_name }} / 100, {{ decimals }})\n{%- endmacro %}\nselect\n    id as payment_id,\n    {{ cents_to_dollars('amount') }} as amount_usd,\n    {{ cents_to_dollars('amount', 0) }} as amount_usd_rounded\nfrom stripe.payments",
+       "title": "template"
+      },
+      {
+       "id": "ch05-c40",
+       "lang": "output",
+       "t": "code",
+       "text": "\nselect\n    id as payment_id,\n    round(amount / 100, 2) as amount_usd,\n    round(amount / 100, 0) as amount_usd_rounded\nfrom stripe.payments",
+       "title": "rendered"
+      },
+      {
+       "c": [
+        "Notes:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "decimals=2"
+            },
+            " is a ",
+            {
+             "c": [
+              "default value"
+             ],
+             "t": "b"
+            },
+            ": if you do not pass the argument, it is 2."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The argument ",
+            {
+             "t": "code",
+             "v": "'amount'"
+            },
+            " is in quotes: you pass the ",
+            {
+             "c": [
+              "name"
+             ],
+             "t": "i"
+            },
+            " of the column as text, and the macro writes it into the SQL."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A macro returns ",
+            {
+             "c": [
+              "text"
+             ],
+             "t": "i"
+            },
+            " (SQL). It does not compute anything itself; the warehouse does the computing later."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "Running the rendered SQL on the practice database (first rows, ordered by ",
+        {
+         "t": "code",
+         "v": "payment_id"
+        },
+        "):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c41",
+       "lang": "output",
+       "t": "code",
+       "text": "+------------+------------+--------------------+\n| payment_id | amount_usd | amount_usd_rounded |\n+------------+------------+--------------------+\n|          1 |        5.0 |                5.0 |\n|          2 |       25.2 |               25.0 |\n|          3 |       19.5 |               20.0 |\n|          4 |       43.5 |               44.0 |\n+------------+------------+--------------------+"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "In dbt, macros live in ",
+          {
+           "t": "code",
+           "v": ".sql"
+          },
+          " files in the ",
+          {
+           "t": "code",
+           "v": "macros/"
+          },
+          " folder, and every model of the project can call them. The ",
+          {
+           "t": "code",
+           "v": "cents_to_dollars"
+          },
+          " macro is a classic of the official dbt courses. Packages such as ",
+          {
+           "t": "code",
+           "v": "dbt_utils"
+          },
+          " are mostly big collections of macros written by others (Chapter 11). Macros are the main tool for the DRY principle in dbt (exam objective 1.3)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s3-8",
+     "number": "5.3.8",
+     "title": [
+      "Macros: functions for SQL"
+     ],
+     "titleText": "Macros: functions for SQL"
+    },
+    {
+     "blocks": [
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Braces inside a statement."
+           ],
+           "t": "b"
+          },
+          " Inside ",
+          {
+           "t": "code",
+           "v": "{% ... %}"
+          },
+          " you are already \"in Jinja\". Do not add ",
+          {
+           "t": "code",
+           "v": "{{ }}"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c42",
+         "lang": "jinja",
+         "t": "code",
+         "text": "{% if target.name == 'prod' %}          -- correct\n{% if {{ target.name }} == 'prod' %}    -- WRONG"
+        },
+        {
+         "c": [
+          "dbt stops with a compilation error: ",
+          {
+           "c": [
+            "expected token ':', got '}'"
+           ],
+           "t": "i"
+          },
+          ". Same rule inside a macro call: ",
+          {
+           "t": "code",
+           "v": "{{ cents_to_dollars('amount') }}"
+          },
+          ", never ",
+          {
+           "t": "code",
+           "v": "{{ cents_to_dollars({{ col }}) }}"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "An undefined variable becomes an empty text, silently."
+           ],
+           "t": "b"
+          },
+          " If you write ",
+          {
+           "t": "code",
+           "v": "select {{ my_colum }} from t"
+          },
+          " with a typo, dbt compiles ",
+          {
+           "t": "code",
+           "v": "select from t"
+          },
+          " without complaining. The error only appears later, when the ",
+          {
+           "c": [
+            "warehouse"
+           ],
+           "t": "i"
+          },
+          " rejects the SQL. Lesson for debugging (Chapter 22): when the database error makes no sense, look at the ",
+          {
+           "c": [
+            "compiled"
+           ],
+           "t": "b"
+          },
+          " SQL, not at your model file."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Quotes around text values in SQL."
+           ],
+           "t": "b"
+          },
+          " Jinja prints the raw text. In ",
+          {
+           "t": "code",
+           "v": "paymentmethod = '{{ m }}'"
+          },
+          ", the single quotes are needed so that the SQL receives ",
+          {
+           "t": "code",
+           "v": "'coupon'"
+          },
+          " (a text) and not ",
+          {
+           "t": "code",
+           "v": "coupon"
+          },
+          " (which SQL would read as a column name)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "set"
+            },
+            " inside a loop does not survive the loop."
+           ],
+           "t": "b"
+          },
+          " This template renders ",
+          {
+           "t": "code",
+           "v": "total=0"
+          },
+          ", not ",
+          {
+           "t": "code",
+           "v": "total=6"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c43",
+         "lang": "jinja",
+         "t": "code",
+         "text": "{% set total = 0 %}\n{% for x in [1, 2, 3] %}{% set total = total + x %}{% endfor %}\ntotal={{ total }}"
+        },
+        {
+         "c": [
+          "Each loop turn has its own copy of the variable. The usual workaround is a ",
+          {
+           "t": "code",
+           "v": "namespace"
+          },
+          ": ",
+          {
+           "t": "code",
+           "v": "{% set ns = namespace(total=0) %}"
+          },
+          " then ",
+          {
+           "t": "code",
+           "v": "{% set ns.total = ns.total + x %}"
+          },
+          " inside the loop; ",
+          {
+           "t": "code",
+           "v": "{{ ns.total }}"
+          },
+          " then renders 6. You will rarely need it, but it explains strange results in advanced macros."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "deep",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s3-9",
+     "number": "5.3.9",
+     "title": [
+      "Common Jinja mistakes"
+     ],
+     "titleText": "Common Jinja mistakes"
+    },
+    {
+     "anchor": "sec-yjp-compile",
+     "blocks": [
+      {
+       "c": [
+        "This is the most important idea of the section, and a frequent exam topic: ",
+        {
+         "c": [
+          "Jinja is rendered by dbt, on your machine (or on the dbt platform), before anything is sent to the warehouse."
+         ],
+         "t": "b"
+        },
+        " The warehouse never sees a single curly brace."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "From a model file to the warehouse in five steps: model file (.sql, SQL + Jinja) → dbt renders Jinja (ref, loops…) → compiled SQL in target/compiled/ (a plain select) → dbt wraps it (create view as…, in target/run/) → the warehouse executes plain SQL. dbt compile stops after the compiled SQL; dbt run does everything.",
+       "id": "ch05-fig2",
+       "src": "figures/ch05-fig2.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "Here is what it looks like with a tiny real project. The model file:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c44",
+       "lang": "dbt",
+       "t": "code",
+       "text": "select id as order_id, user_id as customer_id, order_date, status\nfrom {{ source('jaffle_shop', 'orders') }}",
+       "title": "models/staging/stg_orders.sql"
+      },
+      {
+       "c": [
+        "and the command ",
+        {
+         "t": "code",
+         "v": "dbt compile"
+        },
+        " (which renders Jinja but builds nothing in the warehouse):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c45",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt compile --select stg_orders\n...\nCompiled node 'stg_orders' is:\nselect id as order_id, user_id as customer_id, order_date, status\nfrom \"practice\".\"jaffle_shop\".\"orders\""
+      },
+      {
+       "c": [
+        "The Jinja call ",
+        {
+         "t": "code",
+         "v": "{{ source('jaffle_shop', 'orders') }}"
+        },
+        " became the full name of the table: database ",
+        {
+         "t": "code",
+         "v": "practice"
+        },
+        ", schema ",
+        {
+         "t": "code",
+         "v": "jaffle_shop"
+        },
+        ", table ",
+        {
+         "t": "code",
+         "v": "orders"
+        },
+        ". The same compiled file is saved in ",
+        {
+         "t": "code",
+         "v": "target/compiled/"
+        },
+        ". When you run ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        ", dbt does the same rendering and then wraps the ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        " in the right ",
+        {
+         "t": "code",
+         "v": "create"
+        },
+        " statement (Chapter 8) before sending it."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Two habits that will save you in the exam and in real life:"
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "To check what a model ",
+              {
+               "c": [
+                "really"
+               ],
+               "t": "i"
+              },
+              " does, read its compiled SQL (",
+              {
+               "t": "code",
+               "v": "dbt compile"
+              },
+              ", or the \"Compile\" button in dbt Studio)."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "When the warehouse returns an error, the line numbers refer to the ",
+              {
+               "c": [
+                "compiled"
+               ],
+               "t": "b"
+              },
+              " SQL, not to your file with Jinja."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ul",
+         "t": "list"
+        },
+        {
+         "c": [
+          "Exam objective 3.2 (\"Troubleshooting using compiled code\") is exactly this."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s3-10",
+     "number": "5.3.10",
+     "title": [
+      "Compile, then run: how dbt uses Jinja"
+     ],
+     "titleText": "Compile, then run: how dbt uses Jinja"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt adds its own functions and variables to Jinja. You do not need to learn them now; just recognise the names."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Name"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it gives you"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Chapter"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ref('model')"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The full name of another model, and a dependency in the DAG."
+          ]
+         },
+         {
+          "c": [
+           "7"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "source('src', 'table')"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The full name of a raw table declared in a sources file, and a dependency."
+          ]
+         },
+         {
+          "c": [
+           "7"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "config(...)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Configuration written at the top of a model (materialization, schema, tags…)."
+          ]
+         },
+         {
+          "c": [
+           "10"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "var('name')"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A project variable, set in ",
+           {
+            "t": "code",
+            "v": "dbt_project.yml"
+           },
+           " or with ",
+           {
+            "t": "code",
+            "v": "--vars"
+           },
+           " on the command line."
+          ]
+         },
+         {
+          "c": [
+           "10"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "env_var('NAME')"
+           }
+          ]
+         },
+         {
+          "c": [
+           "An environment variable of the machine (often used for secrets)."
+          ]
+         },
+         {
+          "c": [
+           "10"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "target"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Information about the current connection: ",
+           {
+            "t": "code",
+            "v": "target.name"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "target.schema"
+           },
+           "…"
+          ]
+         },
+         {
+          "c": [
+           "10"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "this"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The full name of the model being built (used in incremental models)."
+          ]
+         },
+         {
+          "c": [
+           "14"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "is_incremental()"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "true"
+           },
+           " when an incremental model is adding new rows to an existing table."
+          ]
+         },
+         {
+          "c": [
+           "14"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "log('text', info=true)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Prints a message in the dbt logs (debugging)."
+          ]
+         },
+         {
+          "c": [
+           "11, 22"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "run_query('sql')"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Runs a query during compilation and returns the result (advanced macros)."
+          ]
+         },
+         {
+          "c": [
+           "11"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "adapter"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Functions specific to your warehouse (for example, get the columns of a table)."
+          ]
+         },
+         {
+          "c": [
+           "11"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " see with your own eyes what Jinja produces, without dbt."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "~/dbt-course/practice"
+          },
+          ", with the environment activated, create ",
+          {
+           "t": "code",
+           "v": "render.py"
+          },
+          ". The Jinja library is already installed (dbt depends on it)."
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c46",
+         "lang": "python",
+         "t": "code",
+         "text": "# render.py -- render a Jinja template file and print the result\n# usage: python render.py my_template.sql\nimport sys\nfrom jinja2 import Template\n\ntext = open(sys.argv[1]).read()\nprint(Template(text).render())",
+         "title": "~/dbt-course/practice/render.py"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Create ",
+          {
+           "t": "code",
+           "v": "hello.sql"
+          },
+          " with the first example of ",
+          {
+           "href": "/learn/ch05/ch05-s3/",
+           "label": "sec:yjp-jinja",
+           "t": "ref",
+           "text": "Section 5.3"
+          },
+          " (the ",
+          {
+           "t": "code",
+           "v": "shop_name"
+          },
+          " template) and run:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c47",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ python render.py hello.sql"
+        },
+        {
+         "c": [
+          "You should see the two empty lines and ",
+          {
+           "t": "code",
+           "v": "-- report for JAFFLE SHOP"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Change ",
+          {
+           "t": "code",
+           "v": "{% set %}"
+          },
+          " to ",
+          {
+           "t": "code",
+           "v": "{%- set %}"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "%}"
+          },
+          " to ",
+          {
+           "t": "code",
+           "v": "-%}"
+          },
+          " on the first two lines. Render again. Which empty lines disappeared?"
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Write a template that uses ",
+          {
+           "t": "code",
+           "v": "{% if %}"
+          },
+          " to add ",
+          {
+           "t": "code",
+           "v": "limit 10"
+          },
+          " only when a variable ",
+          {
+           "t": "code",
+           "v": "env"
+          },
+          " equals ",
+          {
+           "t": "code",
+           "v": "\"dev\""
+          },
+          ". Create the variable on the first line with ",
+          {
+           "t": "code",
+           "v": "{% set env = \"dev\" %}"
+          },
+          " and render. Then change it to ",
+          {
+           "t": "code",
+           "v": "\"prod\""
+          },
+          " and render again."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result."
+           ],
+           "t": "b"
+          },
+          " You can predict the rendered text ",
+          {
+           "c": [
+            "before"
+           ],
+           "t": "i"
+          },
+          " running the script. That is the skill the exam tests."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch05-lab2",
+       "objectives": [
+        "CP0-JINJA"
+       ],
+       "t": "lab",
+       "title": [
+        "Render Jinja templates yourself"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " write DRY SQL with a ",
+          {
+           "t": "code",
+           "v": "for"
+          },
+          " loop, compile it, and run the result in DuckDB."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Save the corrected template ",
+          {
+           "t": "code",
+           "v": "pivot.sql"
+          },
+          " from the whitespace section (the one with ",
+          {
+           "t": "code",
+           "v": "loop.last"
+          },
+          ")."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Render it into a plain SQL file, then look at it:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c48",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ python render.py pivot.sql > pivot_compiled.sql\n$ cat pivot_compiled.sql"
+        },
+        {
+         "c": [
+          "This is ",
+          {
+           "c": [
+            "your"
+           ],
+           "t": "i"
+          },
+          " compiled SQL, exactly like the files dbt writes in ",
+          {
+           "t": "code",
+           "v": "target/compiled/"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Run the compiled SQL against the practice database:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c49",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ duckdb practice.duckdb < pivot_compiled.sql"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (first rows; DuckDB draws nicer lines than this book):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch05-c50",
+         "lang": "output",
+         "t": "code",
+         "text": "+----------+--------------------+---------------+----------------------+------------------+\n| order_id | credit_card_amount | coupon_amount | bank_transfer_amount | gift_card_amount |\n+----------+--------------------+---------------+----------------------+------------------+\n|        1 |               2520 |           500 |                    0 |                0 |\n|        2 |               1950 |             0 |                    0 |                0 |\n|        3 |               4350 |             0 |                    0 |                0 |\n|        4 |                750 |             0 |                    0 |                0 |\n|        5 |               2330 |             0 |                    0 |                0 |\n|        6 |                  0 |             0 |                    0 |             1500 |\n+----------+--------------------+---------------+----------------------+------------------+"
+        },
+        {
+         "c": [
+          "290 rows in total: one per order with at least one successful payment (the 10 ",
+          {
+           "t": "code",
+           "v": "placed"
+          },
+          " orders have no payment yet). Order 1 was paid with a coupon (500 cents) plus a credit card (2520 cents)."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4 (challenge)."
+           ],
+           "t": "b"
+          },
+          " Add ",
+          {
+           "t": "code",
+           "v": "'paypal'"
+          },
+          " to the list and render again. The query still works (the new column is all zeros). Then change the template so the amounts are in dollars, using the ",
+          {
+           "t": "code",
+           "v": "cents_to_dollars"
+          },
+          " macro from this chapter."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch05-lab3",
+       "objectives": [
+        "CP0-JINJA",
+        "1.3"
+       ],
+       "t": "lab",
+       "title": [
+        "Generate the payment pivot with a loop and run it"
+       ]
+      }
+     ],
+     "id": "ch05-s3-11",
+     "number": "5.3.11",
+     "title": [
+      "The dbt Jinja toolbox (preview)"
+     ],
+     "titleText": "The dbt Jinja toolbox (preview)"
+    }
+   ],
+   "title": [
+    "Jinja: SQL that writes SQL"
+   ],
+   "titleText": "Jinja: SQL that writes SQL"
+  },
+  {
+   "anchors": [
+    "sec-yjp-python"
+   ],
+   "checkpoints": [],
+   "id": "ch05-s4",
+   "label": "sec:yjp-python",
+   "labs": [],
+   "minutes": 10,
+   "number": "5.4",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "SQL is excellent for selecting, joining and aggregating. Some tasks are painful in SQL: advanced statistics, machine learning (forecasts, clustering), complex text processing, calling a library someone already wrote. Since dbt 1.3, a model can also be a Python file. Python models are a small part of the exam (objective 1.8), and Chapter 15 covers them. You only need enough Python to read and write a simple one."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch05-s4-1",
+     "number": "5.4.1",
+     "title": [
+      "Why Python in a SQL tool?"
+     ],
+     "titleText": "Why Python in a SQL tool?"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch05-c51",
+       "lang": "python",
+       "t": "code",
+       "text": "# basics.py -- the Python you need for dbt\nshop = \"jaffle shop\"          # a string (str)\nn_orders = 300                # an integer (int)\navg_amount = 23.75            # a decimal number (float)\nis_open = True                # a boolean (bool)\nnothing = None                # \"no value\", like NULL in SQL\n\nmethods = [\"credit_card\", \"coupon\", \"gift_card\"]   # a list\norder = {\"id\": 1, \"status\": \"completed\"}           # a dictionary (dict)\n\nprint(type(shop), type(n_orders), type(is_open))\nprint(methods[0], len(methods))\nprint(order[\"status\"])\nprint(f\"{shop.upper()} has {n_orders} orders\")\n\ndef cents_to_dollars(cents, decimals=2):\n    \"\"\"Convert an amount in cents to dollars.\"\"\"\n    return round(cents / 100, decimals)\n\nprint(cents_to_dollars(2520))\nfor m in methods:\n    if m == \"coupon\":\n        continue\n    print(\"method:\", m)",
+       "title": "basics.py"
+      },
+      {
+       "id": "ch05-c52",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ python basics.py\n<class 'str'> <class 'int'> <class 'bool'>\ncredit_card 3\ncompleted\nJAFFLE SHOP has 300 orders\n25.2\nmethod: credit_card\nmethod: gift_card"
+      },
+      {
+       "c": [
+        "What to remember:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Indentation is syntax"
+             ],
+             "t": "b"
+            },
+            " in Python too: the body of a function, an ",
+            {
+             "t": "code",
+             "v": "if"
+            },
+            " or a ",
+            {
+             "t": "code",
+             "v": "for"
+            },
+            " is indented (4 spaces by convention), and a colon ",
+            {
+             "t": "code",
+             "v": ":"
+            },
+            " opens the block. Same discipline as YAML."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Lists start at index 0: ",
+            {
+             "t": "code",
+             "v": "methods[0]"
+            },
+            " is the first item."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "f\"...\""
+            },
+            " is an ",
+            {
+             "en": [
+              "f-string"
+             ],
+             "fr": "f-string (texte formaté)",
+             "id": "term-f-string",
+             "t": "term"
+            },
+            ": values inside ",
+            {
+             "t": "code",
+             "v": "{ }"
+            },
+            " are inserted into the text, a bit like Jinja's ",
+            {
+             "t": "code",
+             "v": "{{ }}"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "def"
+            },
+            " defines a function, ",
+            {
+             "t": "code",
+             "v": "return"
+            },
+            " gives back its result. A default argument (",
+            {
+             "t": "code",
+             "v": "decimals=2"
+            },
+            ") works like in a Jinja macro."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "import"
+            },
+            " loads a library: ",
+            {
+             "t": "code",
+             "v": "import duckdb"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "import pandas as pd"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "True"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "False"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "None"
+            },
+            " start with a capital letter in Python. In YAML you write ",
+            {
+             "t": "code",
+             "v": "true"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "false"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "null"
+            },
+            "; in Jinja, ",
+            {
+             "t": "code",
+             "v": "true"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "false"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "none"
+            },
+            ". (Careful: in YAML, ",
+            {
+             "t": "code",
+             "v": "none"
+            },
+            " is just the text ",
+            {
+             "t": "code",
+             "v": "\"none\""
+            },
+            ".)"
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch05-s4-2",
+     "number": "5.4.2",
+     "title": [
+      "The basics in one script"
+     ],
+     "titleText": "The basics in one script"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "DataFrame"
+         ],
+         "fr": "DataFrame (table en mémoire)",
+         "id": "term-dataframe",
+         "t": "term"
+        },
+        " is a table inside a program: rows and named columns, like a SQL result. The best-known DataFrame library is ",
+        {
+         "c": [
+          "pandas"
+         ],
+         "t": "b"
+        },
+        "; on Spark and Databricks you use ",
+        {
+         "c": [
+          "PySpark"
+         ],
+         "t": "b"
+        },
+        "; on Snowflake, ",
+        {
+         "c": [
+          "Snowpark"
+         ],
+         "t": "b"
+        },
+        ". DuckDB has its own, called a ",
+        {
+         "c": [
+          "relation"
+         ],
+         "t": "i"
+        },
+        ". They all work the same way: you call ",
+        {
+         "c": [
+          "methods"
+         ],
+         "t": "b"
+        },
+        " on the table, one after the other. This style is called ",
+        {
+         "en": [
+          "method chaining"
+         ],
+         "fr": "chaînage de méthodes",
+         "id": "term-method-chaining",
+         "t": "term"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c53",
+       "lang": "python",
+       "t": "code",
+       "text": "# explore.py -- read the practice database from Python\nimport duckdb\n\ncon = duckdb.connect(\"practice.duckdb\", read_only=True)\n\npayments = con.table(\"stripe.payments\")          # a relation: like a lazy table\nresult = (\n    payments\n    .filter(\"status = 'success'\")                 # keep successful payments\n    .aggregate(\"paymentmethod, count(*) as n_payments, sum(amount) / 100 as total_usd\",\n               \"paymentmethod\")                   # group by paymentmethod\n    .order(\"total_usd desc\")\n)\nresult.show()",
+       "title": "explore.py"
+      },
+      {
+       "id": "ch05-c54",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ python explore.py"
+      },
+      {
+       "id": "ch05-c55",
+       "lang": "output",
+       "t": "code",
+       "text": "+---------------+------------+-----------+\n| paymentmethod | n_payments | total_usd |\n|    varchar    |   int64    |  double   |\n+---------------+------------+-----------+\n| credit_card   |        204 |    3477.2 |\n| bank_transfer |         48 |     787.5 |\n| coupon        |         45 |     451.3 |\n| gift_card     |         20 |     288.4 |\n+---------------+------------+-----------+"
+      },
+      {
+       "c": [
+        "Read the chain from top to bottom, like SQL clauses: ",
+        {
+         "t": "code",
+         "v": "filter"
+        },
+        " is the ",
+        {
+         "t": "code",
+         "v": "where"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "aggregate"
+        },
+        " is the ",
+        {
+         "t": "code",
+         "v": "select … group by"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "order"
+        },
+        " is the ",
+        {
+         "t": "code",
+         "v": "order by"
+        },
+        ". The parentheses around the whole chain only allow us to write it on several lines."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "If you get an error saying the database file is locked, close the DuckDB command line first (",
+          {
+           "t": "code",
+           "v": ".quit"
+          },
+          "): a database opened for writing by one program cannot be opened by another one at the same time."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s4-3",
+     "number": "5.4.3",
+     "title": [
+      "DataFrames and method chaining"
+     ],
+     "titleText": "DataFrames and method chaining"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A dbt Python model is a ",
+        {
+         "t": "code",
+         "v": ".py"
+        },
+        " file in the ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        " folder with a function called ",
+        {
+         "t": "code",
+         "v": "model"
+        },
+        ". dbt calls it and gives it two things: ",
+        {
+         "t": "code",
+         "v": "dbt"
+        },
+        " (to reference other models and set configuration) and ",
+        {
+         "t": "code",
+         "v": "session"
+        },
+        " (the connection to the data platform). The function must ",
+        {
+         "c": [
+          "return a DataFrame"
+         ],
+         "t": "b"
+        },
+        "; dbt saves it as a table. This one was tested with dbt Core 1.11 and DuckDB:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch05-c56",
+       "lang": "python",
+       "t": "code",
+       "text": "def model(dbt, session):\n    dbt.config(materialized=\"table\")\n\n    payments = dbt.source(\"stripe\", \"payments\")\n\n    # with dbt-duckdb, \"payments\" is a DuckDB relation\n    return (\n        payments\n        .filter(\"status = 'success'\")\n        .aggregate(\"paymentmethod, count(*) as n_payments\", \"paymentmethod\")\n    )",
+       "title": "models/staging/payments_by_method.py"
+      },
+      {
+       "id": "ch05-c57",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt run\n...\n1 of 2 OK created python table model dbt_adnane.payments_by_method .... [OK in 0.14s]"
+      },
+      {
+       "c": [
+        "Compare with SQL models:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt.ref(\"model\")"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "dbt.source(\"src\", \"table\")"
+            },
+            " replace ",
+            {
+             "t": "code",
+             "v": "{{ ref() }}"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "{{ source() }}"
+            },
+            ", and create the same dependencies in the DAG."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt.config(...)"
+            },
+            " replaces ",
+            {
+             "t": "code",
+             "v": "{{ config(...) }}"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Python models can only be materialized as ",
+            {
+             "t": "code",
+             "v": "table"
+            },
+            " or ",
+            {
+             "t": "code",
+             "v": "incremental"
+            },
+            " (no views, no ephemeral)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Where does the Python code run?"
+           ],
+           "t": "b"
+          },
+          " Not on your laptop when you use a cloud warehouse. dbt sends the code to the data platform, which runs it next to the data: Snowpark on Snowflake, PySpark on Databricks, a Dataproc or BigQuery DataFrames service on BigQuery. With DuckDB, the \"platform\" is the DuckDB engine running inside dbt's own process. That is why the type of DataFrame (Snowpark, PySpark, pandas, DuckDB relation) depends on your adapter. Only some adapters support Python models."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "No Jinja in Python models."
+           ],
+           "t": "b"
+          },
+          " In a Python model, ",
+          {
+           "t": "code",
+           "v": "{{ }}"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "{% %}"
+          },
+          " are not part of the language. We tested it: even a ",
+          {
+           "c": [
+            "comment"
+           ],
+           "t": "i"
+          },
+          " like ",
+          {
+           "t": "code",
+           "v": "# like {{ source('stripe', 'payments') }} in SQL"
+          },
+          " inside a ",
+          {
+           "t": "code",
+           "v": ".py"
+          },
+          " model made ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          " stop with a ",
+          {
+           "c": [
+            "Parsing Error"
+           ],
+           "t": "i"
+          },
+          ": ",
+          {
+           "c": [
+            "No jinja in python model code is allowed"
+           ],
+           "t": "i"
+          },
+          ". Use ",
+          {
+           "t": "code",
+           "v": "dbt.ref()"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "dbt.source()"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "dbt.config()"
+          },
+          " instead."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch05-s4-4",
+     "number": "5.4.4",
+     "title": [
+      "A first look at a dbt Python model"
+     ],
+     "titleText": "A first look at a dbt Python model"
+    }
+   ],
+   "title": [
+    "Just enough Python"
+   ],
+   "titleText": "Just enough Python"
+  }
+ ],
+ "minutes": 125,
+ "number": 5,
+ "objectives": [
+  "CP0-JINJA",
+  "CP0-PY",
+  "CP0-YAML",
+  "1.3",
+  "1.6",
+  "1.8",
+  "3.2",
+  "3.3"
+ ],
+ "part": 1,
+ "partLabel": "Part I",
+ "partTitle": "Foundations Refresh",
+ "printed": "5",
+ "quiz": [
+  "q-ch05-01",
+  "q-ch05-02",
+  "q-ch05-03",
+  "q-ch05-04",
+  "q-ch05-05",
+  "q-ch05-06",
+  "q-ch05-07",
+  "q-ch05-08",
+  "q-ch05-09",
+  "q-ch05-10",
+  "q-ch05-11",
+  "q-ch05-12",
+  "q-ch05-13",
+  "q-ch05-14",
+  "q-ch05-15",
+  "q-ch05-16"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-yjp-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch05-01",
+      "q-ch05-02",
+      "q-ch05-03",
+      "q-ch05-04",
+      "q-ch05-05",
+      "q-ch05-06",
+      "q-ch05-07",
+      "q-ch05-08",
+      "q-ch05-09",
+      "q-ch05-10",
+      "q-ch05-11",
+      "q-ch05-12",
+      "q-ch05-13",
+      "q-ch05-14",
+      "q-ch05-15",
+      "q-ch05-16"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch05-01",
+    "q-ch05-02",
+    "q-ch05-03",
+    "q-ch05-04",
+    "q-ch05-05",
+    "q-ch05-06",
+    "q-ch05-07",
+    "q-ch05-08",
+    "q-ch05-09",
+    "q-ch05-10",
+    "q-ch05-11",
+    "q-ch05-12",
+    "q-ch05-13",
+    "q-ch05-14",
+    "q-ch05-15",
+    "q-ch05-16"
+   ],
+   "label": "sec:yjp-quiz",
+   "number": "5.5",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "YAML = keys, values and lists; ",
+        {
+         "c": [
+          "indentation (spaces, never tabs) shows belonging"
+         ],
+         "t": "b"
+        },
+        ". dbt projects use 2 spaces."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The dbt pattern is the ",
+        {
+         "c": [
+          "list of mappings"
+         ],
+         "t": "b"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "- name: ..."
+        },
+        " followed by keys aligned with ",
+        {
+         "t": "code",
+         "v": "name"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Quote values that contain ",
+        {
+         "t": "code",
+         "v": ": "
+        },
+        ", start with special characters, contain ",
+        {
+         "c": [
+          "Jinja"
+         ],
+         "t": "b"
+        },
+        ", or look like booleans/numbers (",
+        {
+         "t": "code",
+         "v": "'yes'"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "'01234'"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "'1.10'"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "YAML errors give a ",
+        {
+         "c": [
+          "line and column"
+         ],
+         "t": "b"
+        },
+        "; the real mistake is often on the line ",
+        {
+         "c": [
+          "above"
+         ],
+         "t": "i"
+        },
+        ". Valid YAML can still be invalid for dbt."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Jinja: ",
+        {
+         "t": "code",
+         "v": "{{ }}"
+        },
+        " prints, ",
+        {
+         "t": "code",
+         "v": "{% %}"
+        },
+        " acts, ",
+        {
+         "t": "code",
+         "v": "{# #}"
+        },
+        " hides. Never put ",
+        {
+         "t": "code",
+         "v": "{{ }}"
+        },
+        " inside ",
+        {
+         "t": "code",
+         "v": "{% %}"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Loops make SQL DRY; use ",
+        {
+         "t": "code",
+         "v": "loop.last"
+        },
+        " (or ",
+        {
+         "t": "code",
+         "v": "join"
+        },
+        ") to avoid the trailing comma; ",
+        {
+         "t": "code",
+         "v": "{%- -%}"
+        },
+        " only cleans whitespace."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Macros are reusable Jinja functions that return SQL text."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt ",
+        {
+         "c": [
+          "renders Jinja first"
+         ],
+         "t": "b"
+        },
+        ", writes the compiled SQL to ",
+        {
+         "t": "code",
+         "v": "target/compiled/"
+        },
+        ", then sends plain SQL. Debug with the compiled SQL."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "An undefined Jinja variable renders as empty text, silently."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A Python model defines ",
+        {
+         "t": "code",
+         "v": "model(dbt, session)"
+        },
+        ", uses ",
+        {
+         "t": "code",
+         "v": "dbt.ref"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "dbt.source"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "dbt.config"
+        },
+        ", returns a DataFrame, and runs on the data platform. No Jinja inside."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "YAML, Jinja and Just Enough Python"
+}

@@ -1,0 +1,1981 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A: ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " never checks freshness (trap T132). C: ",
+     {
+      "t": "code",
+      "v": "dbt freshness"
+     },
+     " belongs to the newer dbt v2 engine; dbt Core 1.11 answers \"No such command 'freshness\"'. D: source tests check the content, not the load time."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch21-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt freshness"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt test --select source:*"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "In dbt Core 1.11, which command checks the freshness of your sources?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 3,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "minute, hour, day."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "week"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "month"
+     },
+     " stop the parse."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch21-02",
+  "key": {
+   "blanks": [
+    [
+     "minute"
+    ],
+    [
+     "hour"
+    ],
+    [
+     "day"
+    ]
+   ]
+  },
+  "keyRaw": "\\textbf{minute, hour, day.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "warn_after"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "error_after"
+     },
+     ", the key ",
+     {
+      "t": "code",
+      "v": "period"
+     },
+     " accepts exactly three values: ",
+     {
+      "t": "blank"
+     },
+     ", ",
+     {
+      "t": "blank"
+     },
+     " and ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 9."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "period: week"
+     },
+     " is not allowed (\"Field \"error_after\" … has invalid value {'count': 2, 'period': 'week'}\"). Line 14 is valid: ",
+     {
+      "t": "code",
+      "v": "freshness: null"
+     },
+     " switches the check off for ",
+     {
+      "t": "code",
+      "v": "contacts"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch21-c59",
+   "lines": 14,
+   "numbering": "listing"
+  },
+  "id": "q-ch21-03",
+  "key": 9,
+  "keyRaw": "\\textbf{Line 9.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " fails on this file. Which line is the cause?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch21-c59",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "version: 2\n\nsources:\n  - name: crm\n    config:\n      loaded_at_field: _synced_at\n      freshness:\n        warn_after: {count: 12, period: hour}\n        error_after: {count: 2, period: week}\n    tables:\n      - name: accounts\n      - name: contacts\n        config:\n          freshness: null"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A table overrides only the keys it sets; ",
+     {
+      "t": "code",
+      "v": "error_after"
+     },
+     " is inherited (trap T134). A forgets inheritance; C ignores the override; D confuses a block with ",
+     {
+      "t": "code",
+      "v": "freshness: null"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch21-04",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Warn after 6 hours; no error threshold."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Warn after 6 hours; error after 24 hours."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Warn after 12 hours; error after 24 hours (the source wins)."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "None: a table-level block switches freshness off for the table."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "A source has ",
+     {
+      "t": "code",
+      "v": "warn_after: {count: 12, period: hour}"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "error_after: {count: 24, period: hour}"
+     },
+     ". One of its tables has only ",
+     {
+      "t": "code",
+      "v": "freshness: {warn_after: {count: 6, period: hour}}"
+     },
+     " under its ",
+     {
+      "t": "code",
+      "v": "config:"
+     },
+     ". Which thresholds apply to that table?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and B."
+      ],
+      "t": "b"
+     },
+     " dbt must know ",
+     {
+      "c": [
+       "when"
+      ],
+      "t": "i"
+     },
+     " rows were loaded and ",
+     {
+      "c": [
+       "what"
+      ],
+      "t": "i"
+     },
+     " is too old. C is optional. D is a good idea but does not configure freshness. E is a documentation config and does not even exist for sources."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch21-05",
+  "key": [
+   "A",
+   "B"
+  ],
+  "keyRaw": "\\textbf{A and B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "loaded_at_field"
+     },
+     " (or a ",
+     {
+      "t": "code",
+      "v": "loaded_at_query"
+     },
+     ")."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "warn_after"
+     },
+     " or an ",
+     {
+      "t": "code",
+      "v": "error_after"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "filter"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " test on the load-time column."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     " on the source."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "The adapter cannot read warehouse metadata for freshness. Which two things must be configured for dbt to check a source table?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-d, 3-b, 4-a."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch21-06",
+  "key": {
+   "1": "c",
+   "2": "d",
+   "3": "b",
+   "4": "a"
+  },
+  "keyRaw": "\\textbf{1-c, 2-d, 3-b, 4-a.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "PASS"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "WARN"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "ERROR STALE"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "ERROR"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "The check itself failed (runtime error, for example a wrong column name)."
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "The newest row is older than ",
+      {
+       "t": "code",
+       "v": "error_after"
+      },
+      "."
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "The newest row is younger than ",
+      {
+       "t": "code",
+       "v": "warn_after"
+      },
+      "."
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "Older than ",
+      {
+       "t": "code",
+       "v": "warn_after"
+      },
+      " but younger than ",
+      {
+       "t": "code",
+       "v": "error_after"
+      },
+      "."
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each result of ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     " with its meaning."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C, B, D, E, A."
+      ],
+      "t": "b"
+     },
+     " Previous state, saved outside ",
+     {
+      "t": "code",
+      "v": "target/"
+     },
+     "; new data; current state; selection. Without the second full check, ",
+     {
+      "t": "code",
+      "v": "target/sources.json"
+     },
+     " would not show the new data."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch21-07",
+  "key": [
+   "C",
+   "B",
+   "D",
+   "E",
+   "A"
+  ],
+  "keyRaw": "\\textbf{C, B, D, E, A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build --select source_status:fresher+ --state prev/"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Copy ",
+     {
+      "t": "code",
+      "v": "target/sources.json"
+     },
+     " into ",
+     {
+      "t": "code",
+      "v": "prev/"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Run a full ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The loader writes new rows into some raw tables."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Run a full ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     " again."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "You want to rebuild only the models whose sources received new data. Put the steps in order:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, YES, NO."
+      ],
+      "t": "b"
+     },
+     " Freshness is a separate command. A ",
+     {
+      "t": "code",
+      "v": "WARN"
+     },
+     " exits with 0; only ",
+     {
+      "t": "code",
+      "v": "ERROR STALE"
+     },
+     " or a runtime ",
+     {
+      "t": "code",
+      "v": "ERROR"
+     },
+     " gives 1 (we measured both)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch21-08",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": true,
+   "D": false
+  },
+  "keyRaw": "\\textbf{NO, YES, YES, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " checks the freshness of the sources it reads."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "filter"
+     },
+     " adds a ",
+     {
+      "t": "code",
+      "v": "WHERE"
+     },
+     " clause to the freshness query."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "freshness: null"
+     },
+     " on a table switches the check off for that table, even if its source has a freshness block."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "WARN"
+     },
+     " result makes ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     " end with exit code 1."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about source freshness in dbt 1.11:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The checkbox runs ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     " as the first step and does not break the following steps. A describes an explicit first step. C: the checkbox runs first, not last. D: the checkbox works on its own (a job only needs one real command)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch21-09",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The job stops before ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", because freshness failed."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Freshness runs first and reports the stale source, then ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " still runs."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Freshness runs after ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", because checkboxes always run last."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Nothing: the checkbox only works when ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     " is also a step."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "A dbt platform job has the ",
+     {
+      "c": [
+       "Run source freshness"
+      ],
+      "t": "b"
+     },
+     " checkbox ticked and one step, ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ". The raw orders are two days old and ",
+     {
+      "t": "code",
+      "v": "error_after"
+     },
+     " is 24 hours. What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " As an explicit step, a stale source makes the step fail, and the following steps do not run. A lets the build run anyway. C runs the check too late to protect anything. D changes warnings of the build into errors, it does not check freshness."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch21-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Tick ",
+     {
+      "c": [
+       "Run source freshness"
+      ],
+      "t": "b"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     " as the ",
+     {
+      "c": [
+       "first"
+      ],
+      "t": "i"
+     },
+     " step, before ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     " as the ",
+     {
+      "c": [
+       "last"
+      ],
+      "t": "i"
+     },
+     " step, after ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "--warn-error"
+     },
+     " to ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "The finance team prefers no new numbers at all to numbers built on stale data. How do you set up the production job?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " The five types are ",
+     {
+      "t": "code",
+      "v": "dashboard"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "notebook"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "analysis"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "ml"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "application"
+     },
+     " (trap T138)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch21-11",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dashboard"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ml"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "report"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "application"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "Which value is ",
+     {
+      "c": [
+       "not"
+      ],
+      "t": "b"
+     },
+     " a valid exposure ",
+     {
+      "t": "code",
+      "v": "type"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "url"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "maturity"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "label"
+     },
+     " are optional (",
+     {
+      "t": "code",
+      "v": "depends_on"
+     },
+     " is \"expected\", but not required by the parser)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch21-12",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "type"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "url"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "owner"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "maturity"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "label"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two properties are required for every exposure, besides ",
+     {
+      "t": "code",
+      "v": "name"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " An exposure is never run; ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " would show it as ",
+     {
+      "t": "code",
+      "v": "NO-OP"
+     },
+     ". A needs ",
+     {
+      "t": "code",
+      "v": "+exposure:…"
+     },
+     ". B: dbt does not talk to the BI tool. D: the selector is valid."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch21-13",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It builds every model the dashboard depends on."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It refreshes the dashboard in the BI tool."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Nothing: it prints \"Nothing to do\", because an exposure is not a model."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It fails with a selection error."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "What does this command do?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch21-c60",
+    "lang": "bash",
+    "t": "code",
+    "text": "$ dbt run --select exposure:monthly_revenue_dashboard"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "+exposure:monthly_revenue_dashboard"
+       }
+      ],
+      "t": "b"
+     },
+     " (the exposure and all its parents; the exposure itself is a ",
+     {
+      "t": "code",
+      "v": "NO-OP"
+     },
+     ")."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch21-14",
+  "key": {
+   "accepted": [
+    "+exposure:monthly_revenue_dashboard"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{+exposure:monthly\\_revenue\\_dashboard}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "To build and test everything that the exposure ",
+     {
+      "t": "code",
+      "v": "monthly_revenue_dashboard"
+     },
+     " needs, you run ",
+     {
+      "t": "code",
+      "v": "dbt build --select"
+     },
+     " ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 7."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "maturity"
+     },
+     " accepts only ",
+     {
+      "t": "code",
+      "v": "high"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "medium"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "low"
+     },
+     " (\"is not valid under any of the given schemas\"). Line 12 is fine: an owner needs a ",
+     {
+      "t": "code",
+      "v": "name"
+     },
+     " or an ",
+     {
+      "t": "code",
+      "v": "email"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch21-c61",
+   "lines": 12,
+   "numbering": "listing"
+  },
+  "id": "q-ch21-15",
+  "key": 7,
+  "keyRaw": "\\textbf{Line 7.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " rejects this exposure. Which line is the cause?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch21-c61",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "version: 2\n\nexposures:\n  - name: weekly_sales\n    label: Weekly sales\n    type: dashboard\n    maturity: critical\n    url: https://bi.example.com/weekly\n    depends_on:\n      - ref('fct_orders')\n    owner:\n      email: sales-data@example.com"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, YES, YES, NO."
+      ],
+      "t": "b"
+     },
+     " Exposures are documentation and selection nodes; nothing is materialized for them."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch21-16",
+  "key": {
+   "A": true,
+   "B": true,
+   "C": true,
+   "D": false
+  },
+  "keyRaw": "\\textbf{YES, YES, YES, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "They appear in the lineage graph and on the documentation site."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "An ",
+     {
+      "t": "code",
+      "v": "owner"
+     },
+     " with only an ",
+     {
+      "t": "code",
+      "v": "email"
+     },
+     " (no ",
+     {
+      "t": "code",
+      "v": "name"
+     },
+     ") is accepted."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "depends_on"
+     },
+     " can contain a ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     " as well as ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " creates a view for each exposure."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about exposures:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A."
+      ],
+      "t": "b"
+     },
+     " Freshness looks only at the newest load time. B needs row-count checks, C depends on your job runs (trap T136), D needs a ",
+     {
+      "t": "code",
+      "v": "unique"
+     },
+     " test."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch21-17",
+  "key": "A",
+  "keyRaw": "\\textbf{A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The newest row of the table was loaded more recently than ",
+     {
+      "t": "code",
+      "v": "warn_after"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Every row expected from today's load has arrived."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The models built on this source are up to date."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The table has no duplicate orders."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     " reports ",
+     {
+      "t": "code",
+      "v": "PASS"
+     },
+     " for ",
+     {
+      "t": "code",
+      "v": "jaffle_shop.orders"
+     },
+     ". What does this prove?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A partial freshness run rewrites ",
+     {
+      "t": "code",
+      "v": "target/sources.json"
+     },
+     "; the next comparison only sees ",
+     {
+      "t": "code",
+      "v": "stripe.payments"
+     },
+     ". A and D are false, and C is false too: the status does not matter, only ",
+     {
+      "t": "code",
+      "v": "max_loaded_at"
+     },
+     " is compared."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch21-18",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "source_status:fresher"
+     },
+     " only works for one source at a time."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The partial check replaced ",
+     {
+      "t": "code",
+      "v": "target/sources.json"
+     },
+     " with a file that contains only ",
+     {
+      "t": "code",
+      "v": "stripe.payments"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "jaffle_shop.orders"
+     },
+     " had a ",
+     {
+      "t": "code",
+      "v": "WARN"
+     },
+     ", and warnings are never \"fresher\"."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     " operator does not follow sources."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "You ran ",
+     {
+      "t": "code",
+      "v": "dbt source freshness --select source:stripe"
+     },
+     ", then ",
+     {
+      "t": "code",
+      "v": "dbt ls -s source_status:fresher+ --state prev/"
+     },
+     ". New rows had arrived in both ",
+     {
+      "t": "code",
+      "v": "stripe.payments"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "jaffle_shop.orders"
+     },
+     ", but no child of ",
+     {
+      "t": "code",
+      "v": "jaffle_shop.orders"
+     },
+     " is listed (except the ones that also read payments). Why?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " They are mutually exclusive; we got exactly this Parsing Error. A, B and D describe behaviours dbt does not have."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch21-19",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt uses the query and ignores the field."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt uses the field and ignores the query."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " fails: \"Cannot specify both loaded_at_field and loaded_at_query at table level.\""
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt checks both and keeps the older time."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 19
+  },
+  "stem": [
+   {
+    "c": [
+     "A table has both ",
+     {
+      "t": "code",
+      "v": "loaded_at_field: _loaded_at"
+     },
+     " and a ",
+     {
+      "t": "code",
+      "v": "loaded_at_query"
+     },
+     " under its ",
+     {
+      "t": "code",
+      "v": "config:"
+     },
+     ". What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A: ",
+     {
+      "t": "code",
+      "v": "run_results.json"
+     },
+     " is written by ",
+     {
+      "t": "code",
+      "v": "run"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "build"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "test"
+     },
+     "… C: ",
+     {
+      "t": "code",
+      "v": "freshness.json"
+     },
+     " belongs to dbt v2, and ",
+     {
+      "t": "code",
+      "v": "--state"
+     },
+     " reads a previous state. D: the console and the log also show the results, but the JSON artifact is ",
+     {
+      "t": "code",
+      "v": "target/sources.json"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch21-20",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/run_results.json"
+     },
+     "; with ",
+     {
+      "t": "code",
+      "v": "--target-path"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/sources.json"
+     },
+     "; with ",
+     {
+      "t": "code",
+      "v": "--output"
+     },
+     " (",
+     {
+      "t": "code",
+      "v": "-o"
+     },
+     ")."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/freshness.json"
+     },
+     "; with ",
+     {
+      "t": "code",
+      "v": "--state"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "logs/dbt.log"
+     },
+     " only; it writes no JSON file."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 21,
+   "kind": "chapter",
+   "n": 20
+  },
+  "stem": [
+   {
+    "c": [
+     "Where does ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     " write its results by default, and how do you change the path?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

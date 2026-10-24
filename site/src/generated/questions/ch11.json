@@ -1,0 +1,1946 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " dbt reads every ",
+     {
+      "t": "code",
+      "v": ".sql"
+     },
+     " file of ",
+     {
+      "t": "code",
+      "v": "macro-paths"
+     },
+     ". A: macros in ",
+     {
+      "t": "code",
+      "v": "models/"
+     },
+     " are not the convention, and a model file must be a model. C: any file name works, and many files are allowed. D: ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " configures, it does not define macros."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch11-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "In any ",
+     {
+      "t": "code",
+      "v": ".sql"
+     },
+     " file of the ",
+     {
+      "t": "code",
+      "v": "models/"
+     },
+     " folder that starts with ",
+     {
+      "t": "code",
+      "v": "{% macro"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "In the ",
+     {
+      "t": "code",
+      "v": ".sql"
+     },
+     " files of the folders listed in ",
+     {
+      "t": "code",
+      "v": "macro-paths"
+     },
+     " (default ",
+     {
+      "t": "code",
+      "v": "macros/"
+     },
+     ")."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Only in a file called ",
+     {
+      "t": "code",
+      "v": "macros.sql"
+     },
+     " at the root of the project."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ", under the key ",
+     {
+      "t": "code",
+      "v": "macros:"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "By default, where does dbt look for macro definitions?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "dbt_utils"
+       }
+      ],
+      "t": "b"
+     },
+     ": package macros are called with the package name (the ",
+     {
+      "t": "code",
+      "v": "name:"
+     },
+     " of the package's ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     "), not with the hub path ",
+     {
+      "t": "code",
+      "v": "dbt-labs/dbt_utils"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch11-02",
+  "key": {
+   "accepted": [
+    "dbt_utils"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{dbt\\_utils}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "The package ",
+     {
+      "t": "code",
+      "v": "dbt-labs/dbt_utils"
+     },
+     " is installed. To call its surrogate key macro in a model you write ",
+     {
+      "t": "code",
+      "v": "{{ "
+     },
+     {
+      "t": "blank"
+     },
+     {
+      "t": "code",
+      "v": ".generate_surrogate_key(['order_id', 'product_id']) }}"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " Every command checks that the declared packages are installed and stops with this message (trap T34). A: dbt Core never installs packages by itself (only dbt platform jobs and dbt Studio run ",
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     " for you). B and D: the check happens before anything is built."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch11-03",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt downloads the package automatically, then builds."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt builds every model that does not use the package and skips the others."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt stops with \"dbt found 1 package(s) specified in packages.yml, but only 0 package(s) installed in dbt_packages\" (or a similar count)."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt builds everything; the error appears only in models that call ",
+     {
+      "t": "code",
+      "v": "audit_helper"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "A colleague adds ",
+     {
+      "t": "code",
+      "v": "audit_helper"
+     },
+     " to ",
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     ", pushes, and you pull. You run ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ". What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     " says what you accept, ",
+     {
+      "t": "code",
+      "v": "package-lock.yml"
+     },
+     " what was installed; both are your project's decisions. B, D, E are generated or downloaded: they are in ",
+     {
+      "t": "code",
+      "v": ".gitignore"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch11-04",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "packages.yml"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The folder ",
+     {
+      "t": "code",
+      "v": "dbt_packages/"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "package-lock.yml"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The folder ",
+     {
+      "t": "code",
+      "v": "target/"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "logs/dbt.log"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "Which files of the project should be committed to Git?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-d, 3-a, 4-e, 5-b."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch11-05",
+  "key": {
+   "1": "c",
+   "2": "d",
+   "3": "a",
+   "4": "e",
+   "5": "b"
+  },
+  "keyRaw": "\\textbf{1-c, 2-d, 3-a, 4-e, 5-b.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "package:"
+      },
+      " + ",
+      {
+       "t": "code",
+       "v": "version:"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "git:"
+      },
+      " + ",
+      {
+       "t": "code",
+       "v": "revision:"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "local:"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "private:"
+      },
+      " + ",
+      {
+       "t": "code",
+       "v": "provider:"
+      }
+     ],
+     "id": "4"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "tarball:"
+      },
+      " + ",
+      {
+       "t": "code",
+       "v": "name:"
+      }
+     ],
+     "id": "5"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "A folder on the same machine"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "A ",
+      {
+       "t": "code",
+       "v": ".tar.gz"
+      },
+      " archive downloaded from a URL"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "The dbt Package hub"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "Any Git repository, at a tag, branch or commit"
+     ],
+     "id": "d"
+    },
+    {
+     "c": [
+      "A private repository reached through the dbt platform's Git integration"
+     ],
+     "id": "e"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each ",
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     " entry with the source it uses."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " dbt takes the newest version that satisfies every condition of the range. A: dbt does not choose the lowest. C: 2.0.0 is excluded by ",
+     {
+      "t": "code",
+      "v": "<2.0.0"
+     },
+     ". D: ranges are the recommended form for hub packages."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch11-06",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "1.3.0, the lowest allowed version."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "1.4.1, the newest version inside the range."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "2.0.0, the newest version."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "None: a range is not allowed for hub packages."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     " contains ",
+     {
+      "t": "code",
+      "v": "version: [\">=1.3.0\", \"<2.0.0\"]"
+     },
+     " for dbt_utils. The hub offers 1.2.0, 1.3.0, 1.4.1 and 2.0.0, and there is no lock file. Which version does ",
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     " install?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, YES, NO, YES."
+      ],
+      "t": "b"
+     },
+     " Ignoring the lock file sacrifices reproducible builds: your CI and your colleague could get other versions. Use ",
+     {
+      "t": "code",
+      "v": "--upgrade"
+     },
+     " when you ",
+     {
+      "c": [
+       "decide"
+      ],
+      "t": "i"
+     },
+     " to upgrade."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch11-07",
+  "key": {
+   "A": true,
+   "B": true,
+   "C": false,
+   "D": true
+  },
+  "keyRaw": "\\textbf{YES, YES, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It records the exact version (or commit) that was installed for each package."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It is written by ",
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It should be listed in ",
+     {
+      "t": "code",
+      "v": ".gitignore"
+     },
+     ", so that every developer gets the newest versions."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt deps --upgrade"
+     },
+     " resolves the ranges again and rewrites it."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "package-lock.yml"
+     },
+     ":"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 5."
+      ],
+      "t": "b"
+     },
+     " During parsing ",
+     {
+      "t": "code",
+      "v": "run_query"
+     },
+     " has no result to give, so the call on line 5 fails with ",
+     {
+      "t": "code",
+      "v": "'None' has no attribute 'table'"
+     },
+     ". Wrap lines 5 and 6 (or at least line 5, with an ",
+     {
+      "t": "code",
+      "v": "else"
+     },
+     " that sets an empty list) in the guard. Line 3 is fine: the ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " must even be seen at parse time. Lines 2, 4, 6 only build text or return."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch11-c106",
+   "lines": 7,
+   "numbering": "listing"
+  },
+  "id": "q-ch11-08",
+  "key": 5,
+  "keyRaw": "\\textbf{Line 5.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "This macro is called from a model. ",
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     " fails during parsing with ",
+     {
+      "t": "code",
+      "v": "'None' has no attribute 'table'"
+     },
+     ". Which line must be protected by ",
+     {
+      "t": "code",
+      "v": "{% if execute %}"
+     },
+     "?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch11-c106",
+    "lang": "dbt",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "{% macro get_statuses() %}\n    {% set query %}\n        select distinct status from {{ ref('stg_jaffle_shop__orders') }}\n    {% endset %}\n    {% set statuses = run_query(query).columns[0].values() %}\n    {{ return(statuses) }}\n{% endmacro %}"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B, D, A, C, E."
+      ],
+      "t": "b"
+     },
+     " Declare the package, install it (",
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     " also writes the lock file), call the macro with its namespace, build and check the compiled SQL, and commit once it works. Calling the macro before ",
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     " fails (the package is missing)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch11-09",
+  "key": [
+   "B",
+   "D",
+   "A",
+   "C",
+   "E"
+  ],
+  "keyRaw": "\\textbf{B, D, A, C, E.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Call the macro with the package namespace in the model."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Add the package and a version range to ",
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Run ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " (or ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     ") and check the compiled SQL."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Run ",
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     "."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Commit ",
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "package-lock.yml"
+     },
+     "."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "Put these steps in order to start using a new hub package in a model:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Too many arguments is a parsing error (",
+     {
+      "t": "code",
+      "v": "takes not more than 2 argument(s)"
+     },
+     "). A and D: Jinja does not drop or reorder arguments. C: dbt stops before any SQL exists. (Too ",
+     {
+      "c": [
+       "few"
+      ],
+      "t": "i"
+     },
+     " arguments, on the contrary, is silent.)"
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch11-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The extra argument is ignored."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt stops: the macro \"takes not more than 2 argument(s)\"."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The SQL is compiled with ",
+     {
+      "t": "code",
+      "v": "'x'"
+     },
+     " at the end, and the warehouse fails."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt uses ",
+     {
+      "t": "code",
+      "v": "'x'"
+     },
+     " as the scale."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "The macro is ",
+     {
+      "t": "code",
+      "v": "{% macro cents_to_dollars(column_name, scale=2) %}"
+     },
+     ". A model calls ",
+     {
+      "t": "code",
+      "v": "{{ cents_to_dollars('amount', 2, 'x') }}"
+     },
+     ". What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     " renders Jinja; ",
+     {
+      "t": "code",
+      "v": "dependencies.yml"
+     },
+     " does not (trap T35), and ",
+     {
+      "t": "code",
+      "v": "DBT_ENV_SECRET_"
+     },
+     " variables are allowed only in ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     ". C: ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " has no ",
+     {
+      "t": "code",
+      "v": "packages:"
+     },
+     " key. D: ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " holds connections, not packages."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch11-11",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dependencies.yml"
+     },
+     ", because it is a dependency."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     ", because only this file renders Jinja."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ", under ",
+     {
+      "t": "code",
+      "v": "packages:"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     ", because it contains a secret."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "A team stores a private Git package URL with a token: ",
+     {
+      "t": "code",
+      "v": "git: \"https://{{ env_var('DBT_ENV_SECRET_GIT_CREDENTIAL') }}@github.com/acme/dbt_macros.git\""
+     },
+     ". In which file must this entry be?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "{{ }}"
+     },
+     " prints the list as text (23 characters); a loop over a text loops over its characters. Use ",
+     {
+      "t": "code",
+      "v": "return()"
+     },
+     " (trap T26). C: there is no error, which is why the bug is hard to see."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch11-12",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The two payment methods."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The characters of the text ",
+     {
+      "t": "code",
+      "v": "['coupon', 'gift_card']"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Nothing: a compilation error stops dbt."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The rows of a query result."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "A macro ends with ",
+     {
+      "t": "code",
+      "v": "{{ methods }}"
+     },
+     " where ",
+     {
+      "t": "code",
+      "v": "methods"
+     },
+     " is the list ",
+     {
+      "t": "code",
+      "v": "['coupon', 'gift_card']"
+     },
+     ". A model loops ",
+     {
+      "t": "code",
+      "v": "{% for m in my_macro() %}"
+     },
+     ". What does the loop iterate over?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "run-operation"
+       }
+      ],
+      "t": "b"
+     },
+     ". Example: ",
+     {
+      "t": "code",
+      "v": "dbt run-operation print_row_counts --args '{materializations: [view]}'"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch11-13",
+  "key": {
+   "accepted": [
+    "run-operation"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{run-operation}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "The command that executes the macro ",
+     {
+      "t": "code",
+      "v": "print_row_counts"
+     },
+     " alone, outside any model, is ",
+     {
+      "t": "code",
+      "v": "dbt "
+     },
+     {
+      "t": "blank"
+     },
+     {
+      "t": "code",
+      "v": " print_row_counts"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "this"
+     },
+     " is the full relation name: database, schema, identifier. A is only ",
+     {
+      "t": "code",
+      "v": "this.identifier"
+     },
+     ". C: ",
+     {
+      "t": "code",
+      "v": "this"
+     },
+     " is not a ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     ". D would be the prod schema with this project's ",
+     {
+      "t": "code",
+      "v": "generate_schema_name"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch11-14",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "fct_orders"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "\"practice\".\"dbt_adnane\".\"fct_orders\""
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ref('fct_orders')"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "\"practice\".\"marts\".\"fct_orders\""
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "In the dev target (schema ",
+     {
+      "t": "code",
+      "v": "dbt_adnane"
+     },
+     ", database ",
+     {
+      "t": "code",
+      "v": "practice"
+     },
+     "), what does ",
+     {
+      "t": "code",
+      "v": "{{ this }}"
+     },
+     " render inside ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     ", whose ",
+     {
+      "t": "code",
+      "v": "generate_schema_name"
+     },
+     " keeps everything in the target schema in dev?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, YES, NO."
+      ],
+      "t": "b"
+     },
+     " dbt ignores ",
+     {
+      "t": "code",
+      "v": "dispatch"
+     },
+     " in installed packages; only the root project counts. ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "source"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "config"
+     },
+     " are context functions, not dispatched macros."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch11-15",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": true,
+   "D": false
+  },
+  "keyRaw": "\\textbf{NO, YES, YES, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "dispatch:"
+     },
+     " block in an installed package's ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " changes the search order of your project."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "default__<name>"
+     },
+     " is the implementation used when no adapter-specific version is found."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "On DuckDB, ",
+     {
+      "t": "code",
+      "v": "duckdb__<name>"
+     },
+     " is preferred over ",
+     {
+      "t": "code",
+      "v": "default__<name>"
+     },
+     " in the same package."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " can be replaced with a ",
+     {
+      "t": "code",
+      "v": "dispatch"
+     },
+     " config."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about dispatch:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " We saw the warning ",
+     {
+      "t": "code",
+      "v": "is not pinned, using HEAD (default branch)"
+     },
+     ". A: ",
+     {
+      "t": "code",
+      "v": "revision"
+     },
+     " is optional (but strongly recommended). B and D: dbt never guesses a tag and never asks."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch11-16",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It fails: ",
+     {
+      "t": "code",
+      "v": "revision"
+     },
+     " is required."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It installs the last tag of the repository."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It installs the default branch (HEAD) and warns that the package is not pinned."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It asks you which branch to use."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     " contains a Git package without ",
+     {
+      "t": "code",
+      "v": "revision"
+     },
+     ". What does ",
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     " do?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and D."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt_packages/"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "target/"
+     },
+     " are deleted. B: ",
+     {
+      "t": "code",
+      "v": "dbt clean"
+     },
+     " never touches the warehouse. C: the lock file is not in ",
+     {
+      "t": "code",
+      "v": "clean-targets"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch11-17",
+  "key": [
+   "A",
+   "D"
+  ],
+  "keyRaw": "\\textbf{A and D.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "You must run ",
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     " before the next ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The tables and views of your dev schema were dropped."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "package-lock.yml"
+     },
+     " was deleted."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The compiled SQL of the last run is gone."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "clean-targets"
+     },
+     " is ",
+     {
+      "t": "code",
+      "v": "[\"target\", \"dbt_packages\"]"
+     },
+     ". After ",
+     {
+      "t": "code",
+      "v": "dbt clean"
+     },
+     ", which statements are true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Jinja is rendered before SQL exists, so the ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " inside the ",
+     {
+      "t": "code",
+      "v": "--"
+     },
+     " comment is resolved and the missing model breaks the compilation (trap T23). Use ",
+     {
+      "t": "code",
+      "v": "{# #}"
+     },
+     " to hide Jinja. A, C, D: the problem is in dbt, before the warehouse."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch11-18",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Nothing: the line is a SQL comment."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt fails, because the ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " is rendered even inside the SQL comment and points to a missing model."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt builds, but prints a warning."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The warehouse fails on the comment."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "A model contains the line ",
+     {
+      "t": "code",
+      "v": "-- select * from {{ ref('legacy_orders') }}"
+     },
+     ", and the model ",
+     {
+      "t": "code",
+      "v": "legacy_orders"
+     },
+     " was deleted. What happens when you run ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-b, 2-d, 3-a, 4-c."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch11-19",
+  "key": {
+   "1": "b",
+   "2": "d",
+   "3": "a",
+   "4": "c"
+  },
+  "keyRaw": "\\textbf{1-b, 2-d, 3-a, 4-c.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "execute"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "this"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "graph"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "target"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "Every node of the project, as a dictionary"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "True"
+      },
+      " only when dbt is executing nodes, not while parsing"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "Information about the connection, such as its name and schema"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "The relation of the node being built"
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 11,
+   "kind": "chapter",
+   "n": 19
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each context item with what it gives you."
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

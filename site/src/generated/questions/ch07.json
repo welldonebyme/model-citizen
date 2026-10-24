@@ -1,0 +1,1743 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Without ",
+     {
+      "t": "code",
+      "v": "schema"
+     },
+     ", the schema is the source name (",
+     {
+      "t": "code",
+      "v": "crm"
+     },
+     "); without ",
+     {
+      "t": "code",
+      "v": "database"
+     },
+     ", the target database (",
+     {
+      "t": "code",
+      "v": "analytics"
+     },
+     "); the ",
+     {
+      "t": "code",
+      "v": "identifier"
+     },
+     " replaces the table name. A forgets the identifier. C uses the target schema, which sources never do. D puts the names in the wrong places."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch07-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "analytics.crm.accounts"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "analytics.crm.accounts_v2"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "analytics.dbt_adnane.accounts_v2"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "crm.accounts.accounts_v2"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "This file is the only declaration of the source ",
+     {
+      "t": "code",
+      "v": "crm"
+     },
+     ". The target database is ",
+     {
+      "t": "code",
+      "v": "analytics"
+     },
+     ". What does ",
+     {
+      "t": "code",
+      "v": "{{ source('crm', 'accounts') }}"
+     },
+     " compile to (ignoring quotes)?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch07-c57",
+    "lang": "yaml",
+    "t": "code",
+    "text": "sources:\n  - name: crm\n    tables:\n      - name: accounts\n        identifier: accounts_v2"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "table."
+      ],
+      "t": "b"
+     },
+     " For example ",
+     {
+      "t": "code",
+      "v": "source('stripe', 'payments')"
+     },
+     ": source ",
+     {
+      "t": "code",
+      "v": "stripe"
+     },
+     ", table ",
+     {
+      "t": "code",
+      "v": "payments"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch07-02",
+  "key": {
+   "accepted": [
+    "table"
+   ]
+  },
+  "keyRaw": "\\textbf{table.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     " takes two arguments: the source name and the ",
+     {
+      "t": "blank"
+     },
+     " name, both as written in the YAML file."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 5."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "raw_payments.refunds"
+     },
+     " is plain text for dbt. Line 2 (",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     ") and line 8 (",
+     {
+      "t": "code",
+      "v": "source"
+     },
+     ") both create edges."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch07-c58",
+   "lines": 10,
+   "numbering": "listing"
+  },
+  "id": "q-ch07-03",
+  "key": 5,
+  "keyRaw": "\\textbf{Line 5.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "Which line creates ",
+     {
+      "c": [
+       "no"
+      ],
+      "t": "i"
+     },
+     " dependency in the DAG?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch07-c58",
+    "lang": "dbt",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "with orders as (\n    select * from {{ ref('stg_shop__orders') }}\n),\nrefunds as (\n    select * from raw_payments.refunds\n),\ncustomers as (\n    select * from {{ source('shop', 'customers') }}\n)\nselect ..."
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " With no ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     ", the report has no parent in the DAG and can start first; on the second run the table exists, which hides the bug. A: threads do not create dependencies. C: ",
+     {
+      "t": "code",
+      "v": "fct_sales"
+     },
+     " is a model, so ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " is the right function, not ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     ". D: dbt creates the tables in order when the dependencies are declared."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch07-04",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The warehouse was slow; add more threads."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt does not know that ",
+     {
+      "t": "code",
+      "v": "rpt_daily_sales"
+     },
+     " depends on ",
+     {
+      "t": "code",
+      "v": "fct_sales"
+     },
+     ", so it may run it first; use ",
+     {
+      "t": "code",
+      "v": "ref('fct_sales')"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "fct_sales"
+     },
+     " must be declared as a source."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "CI schemas never contain tables on the first run; this is expected."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "A model ",
+     {
+      "t": "code",
+      "v": "rpt_daily_sales"
+     },
+     " contains ",
+     {
+      "t": "code",
+      "v": "from analytics.fct_sales"
+     },
+     ". In a brand-new CI schema, the first ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " fails on ",
+     {
+      "t": "code",
+      "v": "rpt_daily_sales"
+     },
+     " with \"table does not exist\"; the second build passes. What is the best explanation?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " Renaming and casting are the job of staging. B and D are business logic and aggregation (marts or intermediate models). E: staging models read one source table each, not other staging models."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch07-05",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Renaming ",
+     {
+      "t": "code",
+      "v": "id"
+     },
+     " to ",
+     {
+      "t": "code",
+      "v": "customer_id"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Joining orders with payments to compute revenue."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Converting an amount in cents to a decimal amount in dollars."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Aggregating payments per customer."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Reading another staging model with ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " to enrich it."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two practices belong in a staging model?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-b, 2-c, 3-d, 4-a."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch07-06",
+  "key": {
+   "1": "b",
+   "2": "c",
+   "3": "d",
+   "4": "a"
+  },
+  "keyRaw": "\\textbf{1-b, 2-c, 3-d, 4-a.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "_stripe__sources.yml"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "_stripe__models.yml"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "stg_stripe__payments.sql"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "fct_orders.sql"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "One row per order, built from two staging models"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "Declares the raw Stripe tables"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "Descriptions and tests of the Stripe staging model"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "The only model that reads ",
+      {
+       "t": "code",
+       "v": "source('stripe', 'payments')"
+      }
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each file with its role in our project."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B, D, A, E, C."
+      ],
+      "t": "b"
+     },
+     " Declare the table, verify it exists through ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     ", write the staging model, add its tests, build it (models and tests). D could also come after A, but checking the declaration before writing SQL saves time."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch07-07",
+  "key": [
+   "B",
+   "D",
+   "A",
+   "E",
+   "C"
+  ],
+  "keyRaw": "\\textbf{B, D, A, E, C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Write ",
+     {
+      "t": "code",
+      "v": "stg_stripe__refunds.sql"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "source('stripe', 'refunds')"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "refunds"
+     },
+     " under ",
+     {
+      "t": "code",
+      "v": "tables:"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "_stripe__sources.yml"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Run ",
+     {
+      "t": "code",
+      "v": "dbt build --select stg_stripe__refunds"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Check it with ",
+     {
+      "t": "code",
+      "v": "dbt show --inline \"select count(*) from {{ source('stripe', 'refunds') }}\""
+     },
+     "."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "unique"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " on ",
+     {
+      "t": "code",
+      "v": "refund_id"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "_stripe__models.yml"
+     },
+     "."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "A new raw table ",
+     {
+      "t": "code",
+      "v": "stripe.refunds"
+     },
+     " has arrived. Put the steps in a sensible order."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, YES, NO, NO."
+      ],
+      "t": "b"
+     },
+     " B: ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " becomes the relation built for the target of this command (",
+     {
+      "t": "code",
+      "v": "dbt_adnane"
+     },
+     " in dev, ",
+     {
+      "t": "code",
+      "v": "prod"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "--target prod"
+     },
+     "). Raw tables are read with ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     ". dbt finds dependencies from ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     " calls during parsing, not from ",
+     {
+      "t": "code",
+      "v": "from"
+     },
+     " clauses (that is why hard-coded names are invisible)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch07-08",
+  "key": {
+   "A": true,
+   "B": true,
+   "C": false,
+   "D": false
+  },
+  "keyRaw": "\\textbf{YES, YES, NO, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It creates an edge between two nodes of the DAG."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It compiles to the relation of that model in the current environment (target)."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It is the right function to read a raw table declared under ",
+     {
+      "t": "code",
+      "v": "sources:"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt finds dependencies by reading the ",
+     {
+      "t": "code",
+      "v": "from"
+     },
+     " clauses of the SQL."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     ":"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " An unknown ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " is a compilation error: dbt cannot parse the project, so it builds nothing, whatever the selection. A: the selection does not help. C: ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " points to a model, not to a table you create by hand. D: ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " errors talk about nodes; a missing source gives \"depends on a source named\"."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch07-09",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Only ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " fails; ",
+     {
+      "t": "code",
+      "v": "stg_customers"
+     },
+     " is built."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Nothing is built: the project cannot be parsed until the ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "fct_orders.sql"
+     },
+     " is fixed."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The warehouse has no table ",
+     {
+      "t": "code",
+      "v": "stg_order"
+     },
+     "; create it by hand."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The source ",
+     {
+      "t": "code",
+      "v": "stg_order"
+     },
+     " is missing from the sources YAML."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run --select stg_customers"
+     },
+     " stops with ",
+     {
+      "t": "code",
+      "v": "Compilation Error … depends on a node named 'stg_order' which was not found"
+     },
+     ", in ",
+     {
+      "t": "code",
+      "v": "fct_orders.sql"
+     },
+     ". What is true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A DAG cannot contain a cycle; dbt refuses to run. A is trap T41. C would be a duplicate-name error. D is normal and allowed."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch07-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The two models will be built twice, once in each order."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The two models depend on each other through ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     ", so no build order exists."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The two models have the same name in different folders."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The models read the same source table."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "dbt prints ",
+     {
+      "t": "code",
+      "v": "Found a cycle: model.shop.dim_customers --> model.shop.fct_orders"
+     },
+     ". What does it mean?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The SQL was compiled with the declared names; the warehouse did not find the table. dbt does not check sources against the warehouse before running. A: a wrong target schema would affect models, not the raw schema of a source. C: the model was found and run. D: a raw table must be read with ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch07-11",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     ": the schema is wrong."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "In the sources YAML: the table ",
+     {
+      "t": "code",
+      "v": "name"
+     },
+     " (or ",
+     {
+      "t": "code",
+      "v": "identifier"
+     },
+     ") does not match the real table."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "model-paths"
+     },
+     " is wrong."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "In the staging model: it must use ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " instead of ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     " succeed, but ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " fails on a staging model with ",
+     {
+      "t": "code",
+      "v": "Catalog Error: Table with name payment does not exist! Did you mean \"payments\"?"
+     },
+     ". Where is the mistake most likely?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "identifier."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch07-12",
+  "key": {
+   "accepted": [
+    "identifier"
+   ]
+  },
+  "keyRaw": "\\textbf{identifier.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "In a sources YAML, the table property ",
+     {
+      "t": "blank"
+     },
+     " gives the real table name when it differs from the ",
+     {
+      "t": "code",
+      "v": "name"
+     },
+     " used in ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     " on the right selects the model and all its descendants, and the tests attached to them. A describes ",
+     {
+      "t": "code",
+      "v": "+stg…"
+     },
+     " (upstream). C forgets ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     " (a grandchild). D: ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__customers"
+     },
+     " and the others are not downstream."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch07-13",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Only ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     " and the source ",
+     {
+      "t": "code",
+      "v": "jaffle_shop.orders"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     ", its tests, ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " only."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Every model of the project."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "In our project, what does this command list?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch07-c59",
+    "lang": "bash",
+    "t": "code",
+    "text": "$ dbt ls --select stg_jaffle_shop__orders+"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A: ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " creates views too. C: every command that connects needs a profile. D: the order is the DAG order, never alphabetical."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch07-14",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " is the only command that creates views."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Tests run right after each model, so the children of a model with a failing test are skipped instead of being built on bad data."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " does not need a profile."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " runs the models in alphabetical order, which is faster."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "What is the main advantage of ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " over ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " followed by ",
+     {
+      "t": "code",
+      "v": "dbt test"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 9."
+      ],
+      "t": "b"
+     },
+     " The semicolon ends the statement inside dbt's ",
+     {
+      "t": "code",
+      "v": "create … as ( … )"
+     },
+     ", which gives a syntax error. Remove it."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch07-c60",
+   "lines": 9,
+   "numbering": "listing"
+  },
+  "id": "q-ch07-15",
+  "key": 9,
+  "keyRaw": "\\textbf{Line 9.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "This model fails at run time with a syntax error. Which line is the cause?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch07-c60",
+    "lang": "dbt",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "with orders as (\n    select * from {{ ref('stg_shop__orders') }}\n),\nfinal as (\n    select customer_id, count(*) as number_of_orders\n    from orders\n    group by customer_id\n)\nselect * from final;"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "generate"
+     },
+     " writes the files, ",
+     {
+      "t": "code",
+      "v": "serve"
+     },
+     " starts a local web server (trap T36). C prints JSON, not a picture. D: there is no such flag."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch07-16",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt docs generate"
+     },
+     " only; it opens the browser."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt docs generate"
+     },
+     ", then ",
+     {
+      "t": "code",
+      "v": "dbt docs serve"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt ls --output json"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt compile --lineage"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "You want to see the lineage graph of your dbt Core project in a browser. What do you run?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, YES, NO, YES."
+      ],
+      "t": "b"
+     },
+     " A hard-coded name creates no edge, so Catalog cannot connect the two models."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch07-17",
+  "key": {
+   "A": true,
+   "B": true,
+   "C": false,
+   "D": true
+  },
+  "keyRaw": "\\textbf{YES, YES, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The Studio IDE shows a Lineage tab for the open model."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Catalog needs at least one successful job run in a production or staging environment."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A model that reads ",
+     {
+      "t": "code",
+      "v": "analytics.fct_orders"
+     },
+     " by name appears connected to ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " in Catalog."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Catalog was formerly called dbt Explorer."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about lineage in the dbt platform:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B and D."
+      ],
+      "t": "b"
+     },
+     " Both look at the real warehouse. A, C and E never check that the table exists: parse and compile only read your files, and debug only tests the connection."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch07-18",
+  "key": [
+   "B",
+   "D"
+  ],
+  "keyRaw": "\\textbf{B and D.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " succeeds."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt show --inline \"select count(*) from {{ source('jaffle_shop', 'orders') }}\""
+     },
+     " returns a number."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt debug"
+     },
+     " says ",
+     {
+      "t": "code",
+      "v": "All checks passed!"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Comparing ",
+     {
+      "t": "code",
+      "v": "dbt ls --select \"source:*\""
+     },
+     " with a query on ",
+     {
+      "t": "code",
+      "v": "information_schema.tables"
+     },
+     "."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     " prints ",
+     {
+      "t": "code",
+      "v": "\"practice\".\"jaffle_shop\".\"orders\""
+     },
+     "."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 7,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two actions really ",
+     {
+      "c": [
+       "verify"
+      ],
+      "t": "i"
+     },
+     " that the declared source ",
+     {
+      "t": "code",
+      "v": "jaffle_shop.orders"
+     },
+     " matches an existing table?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

@@ -1,0 +1,1134 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "practice"
+     },
+     " is a relative path from the current folder. A looks for ",
+     {
+      "t": "code",
+      "v": "/practice"
+     },
+     " at the root of the disk; C looks for a folder literally named ",
+     {
+      "t": "code",
+      "v": "..practice"
+     },
+     ", which does not exist; D lists the folder but does not move you."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch02-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "cd /practice"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "cd practice"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "cd ..practice"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ls practice"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 2,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "You are in ",
+     {
+      "t": "code",
+      "textBook": "/Users/mac/dbt-course",
+      "v": "/Users/you/dbt-course"
+     },
+     ". Which command moves you to ",
+     {
+      "t": "code",
+      "textBook": "/Users/mac/dbt-course/practice",
+      "v": "/Users/you/dbt-course/practice"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "pwd"
+      ],
+      "t": "b"
+     },
+     " (print working directory)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch02-02",
+  "key": {
+   "accepted": [
+    "pwd"
+   ]
+  },
+  "keyRaw": "\\textbf{pwd}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 2,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "The command that prints the current working directory is ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A single ",
+     {
+      "t": "code",
+      "v": ">"
+     },
+     " replaces the content. A describes ",
+     {
+      "t": "code",
+      "v": ">>"
+     },
+     ". C and D are wrong: the shell overwrites without asking."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch02-03",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Adds ",
+     {
+      "t": "code",
+      "v": "x"
+     },
+     " as line 11."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Replaces the whole content with ",
+     {
+      "t": "code",
+      "v": "x"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Fails because the file exists."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Prints ",
+     {
+      "t": "code",
+      "v": "x"
+     },
+     " on the screen and leaves the file unchanged."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 2,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "What does ",
+     {
+      "t": "code",
+      "v": "echo \"x\" > notes.txt"
+     },
+     " do if ",
+     {
+      "t": "code",
+      "v": "notes.txt"
+     },
+     " already contains 10 lines?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-e, 3-a, 4-b, 5-d."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch02-04",
+  "key": {
+   "1": "c",
+   "2": "e",
+   "3": "a",
+   "4": "b",
+   "5": "d"
+  },
+  "keyRaw": "\\textbf{1-c, 2-e, 3-a, 4-b, 5-d.}",
+  "keyStatus": "ok",
+  "match": {
+   "inline": true,
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "~"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "."
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": ".."
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "|"
+      }
+     ],
+     "id": "4"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "*"
+      }
+     ],
+     "id": "5"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "the parent folder"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "send output to the next command"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "your home folder"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "any characters"
+     ],
+     "id": "d"
+    },
+    {
+     "c": [
+      "the current folder"
+     ],
+     "id": "e"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 2,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each symbol with its meaning:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A new terminal does not have the venv active. A is dangerous and installs outside the venv; C changes the version (the exam needs 1.11); D does not activate anything."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch02-05",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Reinstall dbt with ",
+     {
+      "t": "code",
+      "v": "sudo"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Activate the virtual environment with ",
+     {
+      "t": "code",
+      "v": "source .venv/bin/activate"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Upgrade to the latest dbt version."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Restart the computer."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 2,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "You open a new terminal and type ",
+     {
+      "t": "code",
+      "v": "dbt --version"
+     },
+     ". The answer is ",
+     {
+      "t": "code",
+      "v": "zsh: command not found: dbt"
+     },
+     ", although you installed dbt yesterday. What is the most likely fix?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " 0 = success (so B is wrong); every program returns an exit code, not only dbt (D is wrong)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch02-06",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "An exit code of 0 means the command succeeded."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "An exit code of 0 means the command failed."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "CI systems use a non-zero exit code to mark a job as failed."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Exit codes only exist for dbt commands."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 2,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Which statements about exit codes are true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " We study the exam's version. A, C and D are false."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch02-07",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Because 1.11 is faster."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Because the certification exam is based on dbt Core 1.11."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Because the latest version does not support DuckDB."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Because ",
+     {
+      "t": "code",
+      "v": "uv"
+     },
+     " cannot install newer versions."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 2,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "Why do we install ",
+     {
+      "t": "code",
+      "v": "dbt-core~=1.11.0"
+     },
+     " instead of the latest dbt version?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "c, d, b, a, e."
+      ],
+      "t": "b"
+     },
+     " Create the folder, create the venv, activate it, install, then check."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch02-08",
+  "key": [
+   "C",
+   "D",
+   "B",
+   "A",
+   "E"
+  ],
+  "keyRaw": "\\textbf{c, d, b, a, e.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "uv pip install \"dbt-core~=1.11.0\" \"dbt-duckdb~=1.11.0\""
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "source .venv/bin/activate"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "mkdir -p ~/dbt-course && cd ~/dbt-course"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "uv venv --python 3.12 .venv"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt --version"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 2,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "Put these setup steps in a correct order:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Secrets go in environment variables. A, C and D would expose the password to anyone who can read the code."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch02-09",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Directly in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ", committed to git."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "In an environment variable, read with ",
+     {
+      "t": "code",
+      "v": "env_var()"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "In a SQL comment in the model."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "In the name of the schema."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 2,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "Where should a database password used by dbt be kept?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A: YES, B: NO, C: YES, D: YES, E: YES."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "models/"
+     },
+     " is your source code and must be committed; the others are generated or local."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch02-10",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": true,
+   "E": true
+  },
+  "keyRaw": "\\textbf{A: YES, B: NO, C: YES, D: YES, E: YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "models/"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "logs/"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_packages/"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": ".venv/"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 2,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "In a dbt project, should git ignore this folder (list it in ",
+     {
+      "t": "code",
+      "v": ".gitignore"
+     },
+     " instead of committing it)?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 4."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "rm -r"
+     },
+     " removes recursively. Line 3 only renames."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch02-c28",
+   "lines": 5,
+   "numbering": "text"
+  },
+  "id": "q-ch02-11",
+  "key": 4,
+  "keyRaw": "\\textbf{Line 4.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 2,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "Which line deletes a folder and everything inside it?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch02-c28",
+    "lang": "plain",
+    "t": "code",
+    "text": "1  mkdir -p data/raw\n2  cp -R data backup\n3  mv backup old_backup\n4  rm -r old_backup\n5  ls -la"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "&&"
+     },
+     " continues only after success (exit code 0). A would need ",
+     {
+      "t": "code",
+      "v": ";"
+     },
+     " instead of ",
+     {
+      "t": "code",
+      "v": "&&"
+     },
+     "; C describes ",
+     {
+      "t": "code",
+      "v": "||"
+     },
+     " (\"or\"); D is false: ",
+     {
+      "t": "code",
+      "v": "&&"
+     },
+     " works in zsh and bash."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch02-12",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Always."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Only if ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " returns exit code 0."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Only if ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " fails."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Never, ",
+     {
+      "t": "code",
+      "v": "&&"
+     },
+     " is not valid in zsh."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 2,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build && echo \"deploy\""
+     },
+     ": when is ",
+     {
+      "t": "code",
+      "v": "deploy"
+     },
+     " printed?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A."
+      ],
+      "t": "b"
+     },
+     " Warnings are reported but do not make the command fail (only ",
+     {
+      "t": "code",
+      "v": "--warn-error"
+     },
+     " would change that). B is wrong because a warning is not a failure; C and D are wrong because the exit code is not a count and does not depend on threads."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch02-13",
+  "key": "A",
+  "keyRaw": "\\textbf{A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "0, because warnings do not fail the command."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "1, because a test found rows."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "3, the number of bad rows."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It depends on the number of threads."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 2,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "A test configured with ",
+     {
+      "t": "code",
+      "v": "severity: warn"
+     },
+     " finds 3 bad rows during ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " (run with no extra flags). Everything else succeeds. What exit code does dbt return?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "-a"
+      ],
+      "t": "b"
+     },
+     " (for example ",
+     {
+      "t": "code",
+      "v": "ls -la"
+     },
+     ")."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch02-14",
+  "key": {
+   "accepted": [
+    "-a"
+   ]
+  },
+  "keyRaw": "\\textbf{-a}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 2,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "To see hidden files such as ",
+     {
+      "t": "code",
+      "v": ".env"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "ls"
+     },
+     ", add the option ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

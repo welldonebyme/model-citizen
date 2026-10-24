@@ -1,0 +1,1415 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Indentation expresses belonging (nesting). A is wrong: changing indentation changes the meaning. C is wrong: execution order comes from the DAG (",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     "/",
+     {
+      "t": "code",
+      "v": "source"
+     },
+     "), not from YAML layout. D is wrong: types are decided by how the value is written (quotes, digits, ",
+     {
+      "t": "code",
+      "v": "true"
+     },
+     "…)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch05-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Nothing; it only makes the file easier to read."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Which keys and items belong to which parent."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The order in which dbt executes the models."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Which values are text and which are numbers."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "In a YAML file, what does indentation tell the reader?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 10."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "Primary key: unique per customer"
+     },
+     " contains a colon followed by a space, so YAML thinks a new mapping starts in the middle of the value (",
+     {
+      "c": [
+       "mapping values are not allowed in this context, line 10, column 33"
+      ],
+      "t": "i"
+     },
+     "). Fix: quote the description. Line 5 is fine: it has no colon inside the value."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch05-c58",
+   "lines": 13,
+   "numbering": "listing"
+  },
+  "id": "q-ch05-02",
+  "key": 10,
+  "keyRaw": "\\textbf{Line 10.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Which line makes this file fail to load?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch05-c58",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "version: 2\n\nmodels:\n  - name: stg_customers\n    description: One row per customer\n    config:\n      materialized: view\n    columns:\n      - name: customer_id\n        description: Primary key: unique per customer\n        data_tests:\n          - unique\n          - not_null"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "yes"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "no"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "on"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "off"
+     },
+     " are booleans in the YAML version used by dbt's reader. A would need quotes (",
+     {
+      "t": "code",
+      "v": "'no'"
+     },
+     "). C would need ",
+     {
+      "t": "code",
+      "v": "null"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "~"
+     },
+     ". D: the file is valid."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch05-03",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The text ",
+     {
+      "t": "code",
+      "v": "\"no\""
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The boolean ",
+     {
+      "t": "code",
+      "v": "false"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "null"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A parsing error."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "A properties file contains ",
+     {
+      "t": "code",
+      "v": "enabled: no"
+     },
+     ". What value does dbt receive?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Quotes"
+      ],
+      "t": "b"
+     },
+     " (single or double): ",
+     {
+      "t": "code",
+      "v": "schema: \"{{ target.schema }}\""
+     },
+     ". Without them, YAML reads ",
+     {
+      "t": "code",
+      "v": "{"
+     },
+     " as the start of an inline mapping and fails."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch05-04",
+  "key": {
+   "accepted": [
+    "Quotes"
+   ]
+  },
+  "keyNote": "alternative answers mentioned after the key: '(single or double)'",
+  "keyRaw": "\\textbf{Quotes}",
+  "keyStatus": "todo",
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "In a YAML file, a value that contains Jinja, such as ",
+     {
+      "t": "code",
+      "v": "{{ target.schema }}"
+     },
+     ", must be written inside ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-b, 2-c, 3-a."
+      ],
+      "t": "b"
+     },
+     " Double braces ",
+     {
+      "c": [
+       "say"
+      ],
+      "t": "i"
+     },
+     " (print), percent signs ",
+     {
+      "c": [
+       "do"
+      ],
+      "t": "i"
+     },
+     " (logic), hashes ",
+     {
+      "c": [
+       "hide"
+      ],
+      "t": "i"
+     },
+     " (comments)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch05-05",
+  "key": {
+   "1": "b",
+   "2": "c",
+   "3": "a"
+  },
+  "keyRaw": "\\textbf{1-b, 2-c, 3-a.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "{{ ... }}"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "{% ... %}"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "{# ... #}"
+      }
+     ],
+     "id": "3"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "A comment, removed during rendering"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "Prints a value into the SQL"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "Logic that prints nothing (",
+      {
+       "t": "code",
+       "v": "set"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "if"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "for"
+      },
+      ")"
+     ],
+     "id": "c"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each delimiter with its role."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " Both make sure no comma follows the last item. B only removes spaces and line breaks; the comma stays. D: ",
+     {
+      "t": "code",
+      "v": "loop.index0"
+     },
+     " is a position, not a test. E removes the columns completely."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch05-06",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "{% if not loop.last %},{% endif %}"
+     },
+     " instead of a fixed comma."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Use whitespace control ",
+     {
+      "t": "code",
+      "v": "{%- -%}"
+     },
+     " on the ",
+     {
+      "t": "code",
+      "v": "for"
+     },
+     " tag."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Build the expressions as a list and use the ",
+     {
+      "t": "code",
+      "v": "join(\", \")"
+     },
+     " filter."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Replace ",
+     {
+      "t": "code",
+      "v": "loop.last"
+     },
+     " by ",
+     {
+      "t": "code",
+      "v": "loop.index0"
+     },
+     "."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Put the whole loop inside a Jinja comment."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "for"
+     },
+     " loop generates one column per payment method, and the compiled SQL ends with a comma just before ",
+     {
+      "t": "code",
+      "v": "from"
+     },
+     ". Which two changes fix it?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C, B, E, D, A."
+      ],
+      "t": "b"
+     },
+     " Parse the project, render Jinja, save the compiled ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     ", wrap it in DDL, execute in the warehouse. (",
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     " stops after E.)"
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch05-07",
+  "key": [
+   "C",
+   "B",
+   "E",
+   "D",
+   "A"
+  ],
+  "keyRaw": "\\textbf{C, B, E, D, A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The warehouse executes the statement and creates the table or view."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt renders the Jinja (",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "source"
+     },
+     ", loops…)."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt reads the project files and parses the YAML."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt wraps the compiled ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     " in a ",
+     {
+      "t": "code",
+      "v": "create"
+     },
+     " statement."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "dbt writes the compiled ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "target/compiled/"
+     },
+     "."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "Put these steps of ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " for one SQL model in the right order:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, NO, YES."
+      ],
+      "t": "b"
+     },
+     " The warehouse only receives plain SQL. ",
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     " renders without building models (it may still connect to the warehouse to read metadata, but it creates nothing). Whitespace control only changes the layout of the text. Reuse is the purpose of macros."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch05-08",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": false,
+   "D": true
+  },
+  "keyRaw": "\\textbf{NO, YES, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The data warehouse executes the Jinja code."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     " renders Jinja and shows the SQL without building any model in the warehouse."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Whitespace control (",
+     {
+      "t": "code",
+      "v": "{%-"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "-%}"
+     },
+     ") can change the rows returned by a query."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A macro defined once can be called from many models."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about Jinja in dbt:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B (0)."
+      ],
+      "t": "b"
+     },
+     " A ",
+     {
+      "t": "code",
+      "v": "set"
+     },
+     " inside a ",
+     {
+      "t": "code",
+      "v": "for"
+     },
+     " loop changes a copy that disappears at the end of each turn. You would need a ",
+     {
+      "t": "code",
+      "v": "namespace"
+     },
+     " to get 6. C and D are wrong: there is no error and nothing keeps the last value."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch05-09",
+  "key": "B",
+  "keyRaw": "\\textbf{B (0).}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "6"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "0"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "3"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A compilation error."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "What does this template render?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch05-c59",
+    "lang": "jinja",
+    "t": "code",
+    "text": "{% set total = 0 %}\n{% for x in [1, 2, 3] %}{% set total = total + x %}{% endfor %}\n{{ total }}"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " In dbt, an undefined variable renders as an empty text, silently. The problem appears only when the warehouse reads ",
+     {
+      "t": "code",
+      "v": "select from …"
+     },
+     ". A is what many people expect, but it is not dbt's behaviour. B and D: dbt never guesses or creates columns."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch05-10",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt stops at compilation with \"order_dat is undefined\"."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt replaces the typo by ",
+     {
+      "t": "code",
+      "v": "order_date"
+     },
+     " automatically."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt compiles ",
+     {
+      "t": "code",
+      "v": "select from …"
+     },
+     "; the warehouse then returns a syntax error."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The model builds, with an empty column."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "A model contains this line, with a typo (no variable ",
+     {
+      "t": "code",
+      "v": "order_dat"
+     },
+     " exists). What happens when you run it?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch05-c60",
+    "lang": "dbt",
+    "t": "code",
+    "text": "select {{ order_dat }} from {{ ref('stg_orders') }}"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " Inside ",
+     {
+      "t": "code",
+      "v": "{% %}"
+     },
+     " you are already in Jinja, so no braces (A is the classic mistake). B: ",
+     {
+      "t": "code",
+      "v": "if"
+     },
+     " is a statement, it needs ",
+     {
+      "t": "code",
+      "v": "{% %}"
+     },
+     ". D is a comment: it does nothing."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch05-11",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "{% if {{ target.name }} == 'prod' %}"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "{{ if target.name == 'prod' }}"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "{% if target.name == 'prod' %}"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "{# if target.name == 'prod' #}"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "Which line is valid Jinja?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Quotes keep the leading zero as text. A is wrong: YAML 1.1 reads a leading 0 as an octal number, and dbt really gives ",
+     {
+      "t": "code",
+      "v": "{{ var('zip_code') }}"
+     },
+     " = 668. C loses the zero. D: ",
+     {
+      "t": "code",
+      "v": ">"
+     },
+     " is for folded multi-line text; here it even causes a YAML error."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch05-12",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Nothing to do; YAML keeps it as written."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Write ",
+     {
+      "t": "code",
+      "v": "zip_code: '01234'"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Write ",
+     {
+      "t": "code",
+      "v": "zip_code: 1234"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Write ",
+     {
+      "t": "code",
+      "v": "zip_code: >01234"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ", a project variable is written ",
+     {
+      "t": "code",
+      "v": "zip_code: 01234"
+     },
+     ". What is the safest way to keep the value ",
+     {
+      "t": "code",
+      "v": "01234"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " dbt saves the returned DataFrame as a table. A is a SQL model idea. B: the function must return the data. D: configuration is set with ",
+     {
+      "t": "code",
+      "v": "dbt.config()"
+     },
+     ", not returned."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch05-13",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A SQL string."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Nothing; it writes the table itself."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A DataFrame (or the equivalent object of the platform)."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A dictionary of configurations."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "What must the ",
+     {
+      "t": "code",
+      "v": "model"
+     },
+     " function of a dbt Python model return?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The code is sent to Snowflake and runs there with Snowpark. A: dbt only orchestrates. C: dbt (Core or the dbt platform) only sends the code; the Python runs in Snowflake. D: Snowflake is one of the adapters that support Python models."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch05-14",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "On the laptop of the developer who ran ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Inside Snowflake, next to the data (Snowpark)."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "On the dbt Labs servers, then the result is uploaded."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Python models cannot run on Snowflake."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "Your project runs on Snowflake. Where is the code of a Python model executed?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "|"
+       }
+      ],
+      "t": "b"
+     },
+     " (literal block). ",
+     {
+      "t": "code",
+      "v": ">"
+     },
+     " would fold the lines into one line."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch05-15",
+  "key": {
+   "accepted": [
+    "|"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{|}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "To keep the line breaks of a long multi-line ",
+     {
+      "t": "code",
+      "v": "description"
+     },
+     " in YAML, you start the value with the symbol ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Without the space, ",
+     {
+      "t": "code",
+      "v": "name:stg_orders"
+     },
+     " is just text; YAML then finds ",
+     {
+      "t": "code",
+      "v": "description:"
+     },
+     " on the next line where it did not expect a key, and reports ",
+     {
+      "c": [
+       "mapping values are not allowed"
+      ],
+      "t": "i"
+     },
+     " on that next line. Always write a space after the colon."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch05-16",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The key ",
+     {
+      "t": "code",
+      "v": "name"
+     },
+     " with the value ",
+     {
+      "t": "code",
+      "v": "stg_orders"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "One piece of text, ",
+     {
+      "t": "code",
+      "v": "\"name:stg_orders\""
+     },
+     ", which usually causes an error on the next line."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "An empty mapping."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A list with two items."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 5,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "- name:stg_orders"
+     },
+     " is written without a space after the colon. What does YAML read?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

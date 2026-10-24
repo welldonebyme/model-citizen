@@ -1,0 +1,1432 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " dbt saves the returned DataFrame as the table. A is a SQL model idea. C: configs are set with ",
+     {
+      "t": "code",
+      "v": "dbt.config()"
+     },
+     ". D: you return the data; dbt and the platform write the table."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch15-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A SQL ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     " statement as a string."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "One DataFrame (of a type supported by the platform)."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A dictionary with the configs of the model."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Nothing: the function writes the table itself with ",
+     {
+      "t": "code",
+      "v": "session"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "What must the ",
+     {
+      "t": "code",
+      "v": "model"
+     },
+     " function of a dbt Python model return?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B and D."
+      ],
+      "t": "b"
+     },
+     " Python models support ",
+     {
+      "t": "code",
+      "v": "table"
+     },
+     " (default) and ",
+     {
+      "t": "code",
+      "v": "incremental"
+     },
+     " only. A fails (",
+     {
+      "c": [
+       "only supports languages ['sql']"
+      ],
+      "t": "i"
+     },
+     "). C is not supported. E is SQL only."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch15-02",
+  "key": [
+   "B",
+   "D"
+  ],
+  "keyRaw": "\\textbf{B and D.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "view"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "table"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ephemeral"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "incremental"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "materialized_view"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two materializations can a Python model use?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "session"
+       }
+      ],
+      "t": "b"
+     },
+     " — the platform connection (Snowpark session, Spark session, DuckDB connection)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch15-03",
+  "key": {
+   "accepted": [
+    "session"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{session}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "Complete the signature of a Python model: ",
+     {
+      "t": "code",
+      "v": "def model(dbt, "
+     },
+     {
+      "t": "blank"
+     },
+     {
+      "t": "code",
+      "v": "):"
+     }
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-d, 3-b, 4-a."
+      ],
+      "t": "b"
+     },
+     " With DuckDB the \"platform\" is embedded in the dbt process."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch15-04",
+  "key": {
+   "1": "c",
+   "2": "d",
+   "3": "b",
+   "4": "a"
+  },
+  "keyRaw": "\\textbf{1-c, 2-d, 3-b, 4-a.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      "Snowflake"
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      "Databricks"
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      "BigQuery"
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      "DuckDB"
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "Inside the dbt process, on the machine that runs dbt."
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "Dataproc (serverless or a cluster) or BigQuery DataFrames."
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "Snowpark, in a stored procedure in the warehouse."
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "PySpark on an all-purpose, job or serverless cluster."
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each platform with where the code of a Python model runs."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 6."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt.ref(parent)"
+     },
+     " uses a variable; dbt needs literal arguments to find dependencies at parse time (",
+     {
+      "c": [
+       "Error when trying to literal_eval an arg to dbt.ref()"
+      ],
+      "t": "i"
+     },
+     "). Line 5 alone is fine; line 7 is ordinary pandas."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch15-c38",
+   "lines": 8,
+   "numbering": "listing"
+  },
+  "id": "q-ch15-05",
+  "key": 6,
+  "keyRaw": "\\textbf{Line 6.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " fails on this file. Which line causes the error?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch15-c38",
+    "lang": "python",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "import pandas as pd\n\ndef model(dbt, session):\n    dbt.config(materialized=\"table\")\n    parent = \"dim_customers\"\n    customers = dbt.ref(parent).df()\n    customers[\"is_buyer\"] = customers[\"number_of_orders\"] > 0\n    return customers"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B, D, A, C."
+      ],
+      "t": "b"
+     },
+     " Parse (static analysis), compile and send, run the function, save the DataFrame (then post-hooks and, in ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", tests)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch15-06",
+  "key": [
+   "B",
+   "D",
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{B, D, A, C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The platform runs ",
+     {
+      "t": "code",
+      "v": "model(dbt, session)"
+     },
+     " and gets a DataFrame."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt reads the file and finds ",
+     {
+      "t": "code",
+      "v": "dbt.ref()"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "dbt.config()"
+     },
+     " calls without running the code."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The DataFrame is saved as the model's table."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt appends its helper code (resolved refs, configs, ",
+     {
+      "t": "code",
+      "v": "this"
+     },
+     ") and sends the code to the platform."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Put in order what happens when ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " builds a Python table model."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, NO, YES."
+      ],
+      "t": "b"
+     },
+     " Data tests query the resulting table. Unit tests and contracts are SQL-only. SQL models can ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " Python models."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch15-07",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": false,
+   "D": true
+  },
+  "keyRaw": "\\textbf{YES, NO, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Generic data tests such as ",
+     {
+      "t": "code",
+      "v": "unique"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " can be declared in YAML and run on it."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A unit test can mock its inputs with ",
+     {
+      "t": "code",
+      "v": "given"
+     },
+     " rows."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A model contract (",
+     {
+      "t": "code",
+      "v": "contract: {enforced: true}"
+     },
+     ") can be enforced."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A SQL model can select from it with ",
+     {
+      "t": "code",
+      "v": "{{ ref() }}"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "For a Python model:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "c": [
+       "Materialization \"materialization_view_default\" only supports languages ['sql']; got \"python\""
+      ],
+      "t": "i"
+     },
+     ". A: a view cannot hold Python. B and D: dbt never changes the materialization by itself."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch15-08",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt creates a view that calls the Python function when queried."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt silently builds a table instead."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The run fails: the view materialization only supports SQL."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt builds an ephemeral model instead."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "A colleague sets ",
+     {
+      "t": "code",
+      "v": "dbt.config(materialized=\"view\")"
+     },
+     " in a Python model. What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " Any Jinja delimiter in a ",
+     {
+      "t": "code",
+      "v": ".py"
+     },
+     " model, even in a comment, gives ",
+     {
+      "c": [
+       "No jinja in python model code is allowed"
+      ],
+      "t": "i"
+     },
+     ". A is wrong for Python models. B: Python files are not rendered. D: a Parsing Error stops the whole command."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch15-09",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Nothing special: comments are ignored."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The comment is rendered by Jinja and becomes a table name."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt stops with a Parsing Error: no Jinja is allowed in Python model code."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Only this model fails; the others build normally."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "A Python model contains the comment ",
+     {
+      "t": "code",
+      "v": "# same as {{ source('shop', 'orders') }}"
+     },
+     ". What happens when you run ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " An ephemeral model has no relation to read (dbt injects a SQL CTE into the Python code, which then fails). A: ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     " is for sources and needs two arguments. C is meaningless. D: it fails."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch15-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Call ",
+     {
+      "t": "code",
+      "v": "dbt.source(\"int_payments\")"
+     },
+     " instead."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Materialize ",
+     {
+      "t": "code",
+      "v": "int_payments"
+     },
+     " as a view or table, because a Python model cannot read an ephemeral model."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "packages=[\"ephemeral\"]"
+     },
+     " to the Python model."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Nothing: this works in dbt 1.11."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "int_payments"
+     },
+     " is an ephemeral SQL model. A Python model calls ",
+     {
+      "t": "code",
+      "v": "dbt.ref(\"int_payments\")"
+     },
+     ". What is the best fix?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt.is_incremental"
+     },
+     " is an attribute of the ",
+     {
+      "t": "code",
+      "v": "dbt"
+     },
+     " object. A is not defined in Python models. B is Jinja (forbidden). D reads a config, not the run state."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch15-11",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "if is_incremental():"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "if {{ is_incremental() }}:"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "if dbt.is_incremental:"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "if dbt.config.get(\"incremental\"):"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "In an incremental Python model, how do you know whether this is an incremental run?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The ",
+     {
+      "t": "code",
+      "v": "packages"
+     },
+     " config lists the libraries the platform installs (from Snowflake's Anaconda channel). A: ",
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     " is for dbt packages (Chapter 11). C: the code does not run on the laptop. D: only listed packages are installed."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch15-12",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     ", then run ",
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "In the model's ",
+     {
+      "t": "code",
+      "v": "packages"
+     },
+     " config, so Snowflake installs it when the model runs."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "requirements.txt"
+     },
+     " on the developer's laptop only."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Nowhere: every Python library is available on Snowflake."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "Your Snowflake Python model uses scikit-learn. Where do you declare it?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": ".df()"
+     },
+     " turns DECIMAL into pandas ",
+     {
+      "t": "code",
+      "v": "float64"
+     },
+     ", and the table is created from the DataFrame. A: other platforms have their own conversions; it is not a dbt rule. C: Python models cannot have contracts. D: DuckDB has DECIMAL (the parent uses it)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch15-13",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt always converts decimals to doubles in Python models, on every platform."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The value went through pandas, which stores it as a 64-bit float."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The contract of the Python model changed the type."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "DuckDB has no DECIMAL type."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "With dbt-duckdb, ",
+     {
+      "t": "code",
+      "v": "dim_customers.lifetime_value"
+     },
+     " is ",
+     {
+      "t": "code",
+      "v": "DECIMAL(38,2)"
+     },
+     ". In the table of a Python model that reads it with ",
+     {
+      "t": "code",
+      "v": ".df()"
+     },
+     " and returns the DataFrame, the column is ",
+     {
+      "t": "code",
+      "v": "DOUBLE"
+     },
+     ". Why?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " Libraries and methods that SQL lacks. B is plain SQL. D and E are impossible for Python models."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch15-14",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The model trains or applies a machine-learning model with scikit-learn."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The model joins two staging models and sums the amounts."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The model needs a statistical method that SQL does not offer."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The model must be materialized as a view."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "The model must have a unit test."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two are good reasons to write a model in Python rather than SQL?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "config.get"
+       }
+      ],
+      "t": "b"
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "dbt.config.get(\"loyal_threshold\")"
+     },
+     " returns 100."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch15-15",
+  "key": {
+   "accepted": [
+    "config.get"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{config.get}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "The YAML config of a Python model contains ",
+     {
+      "t": "code",
+      "v": "loyal_threshold: 100"
+     },
+     ". Inside the model, you read it with ",
+     {
+      "t": "code",
+      "v": "dbt."
+     },
+     {
+      "t": "blank"
+     },
+     {
+      "t": "code",
+      "v": "(\"loyal_threshold\")"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " With DuckDB the code runs in your venv, so the library must be installed there. A only matters on platforms that install packages (Snowflake, Databricks). C is for dbt packages. D would break the model."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch15-16",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "packages=[\"pandas\"]"
+     },
+     " to ",
+     {
+      "t": "code",
+      "v": "dbt.config()"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Install pandas in the Python environment that runs dbt (for example ",
+     {
+      "t": "code",
+      "v": "uv pip install pandas"
+     },
+     ")."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Add pandas to ",
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     " and run ",
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Rename the file to ",
+     {
+      "t": "code",
+      "v": ".sql"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "On DuckDB, ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " fails with ",
+     {
+      "c": [
+       "ModuleNotFoundError: No module named 'pandas'"
+      ],
+      "t": "i"
+     },
+     " in a Python model. What is the fix?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt show --select"
+     },
+     " runs the compiled code as SQL, and for a Python model that code is Python (we got a parser error). ",
+     {
+      "t": "code",
+      "v": "--inline"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " queries the built table. C and D: these flags do not exist."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch15-17",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt show -s customer_segments"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt show --inline \"select * from {{ ref('customer_segments') }}\""
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt compile -s customer_segments --preview"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run -s customer_segments --show"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 15,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "You want to preview the rows of the Python model ",
+     {
+      "t": "code",
+      "v": "customer_segments"
+     },
+     " after building it. Which command works?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

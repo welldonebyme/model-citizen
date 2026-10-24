@@ -1,0 +1,4138 @@
+{
+ "id": "ch15",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "Creating Python models: a ",
+      {
+       "t": "code",
+       "v": ".py"
+      },
+      " file in ",
+      {
+       "t": "code",
+       "v": "models/"
+      },
+      " with ",
+      {
+       "t": "code",
+       "v": "def model(dbt, session)"
+      },
+      " that returns a DataFrame; ",
+      {
+       "t": "code",
+       "v": "dbt.ref"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt.source"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt.config"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt.config.get"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt.this"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt.is_incremental"
+      },
+      "."
+     ],
+     "id": "1.8"
+    },
+    {
+     "c": [
+      "Where the Python code runs (Snowpark on Snowflake, clusters on Databricks, Dataproc or BigFrames on BigQuery, the dbt process itself with DuckDB), which DataFrame types each platform returns, and the ",
+      {
+       "t": "code",
+       "v": "packages"
+      },
+      " config."
+     ],
+     "id": "1.8"
+    },
+    {
+     "c": [
+      "The materializations a Python model can use (",
+      {
+       "t": "code",
+       "v": "table"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "incremental"
+      },
+      ") and the ones it cannot (",
+      {
+       "t": "code",
+       "v": "view"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "ephemeral"
+      },
+      ")."
+     ],
+     "id": "1.2"
+    },
+    {
+     "c": [
+      "Testing Python models: data tests yes, unit tests no."
+     ],
+     "id": "5.1"
+    },
+    {
+     "c": [
+      "Model contracts are not supported for Python models."
+     ],
+     "id": "2.1"
+    },
+    {
+     "c": [
+      "Reading the typical errors: Jinja in a ",
+      {
+       "t": "code",
+       "v": ".py"
+      },
+      " file, non-literal arguments, a missing Python package, a view materialization."
+     ],
+     "id": "3.1"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "The marketing team wants every customer in a segment (",
+      {
+       "c": [
+        "no orders"
+       ],
+       "t": "i"
+      },
+      ", ",
+      {
+       "c": [
+        "new"
+       ],
+       "t": "i"
+      },
+      ", ",
+      {
+       "c": [
+        "regular"
+       ],
+       "t": "i"
+      },
+      ", ",
+      {
+       "c": [
+        "loyal"
+       ],
+       "t": "i"
+      },
+      ") and in a value tier (",
+      {
+       "c": [
+        "bronze"
+       ],
+       "t": "i"
+      },
+      ", ",
+      {
+       "c": [
+        "silver"
+       ],
+       "t": "i"
+      },
+      ", ",
+      {
+       "c": [
+        "gold"
+       ],
+       "t": "i"
+      },
+      ", ",
+      {
+       "c": [
+        "platinum"
+       ],
+       "t": "i"
+      },
+      ": the four quarters of lifetime value). Could you do it in SQL? Yes, with ",
+      {
+       "t": "code",
+       "v": "case when"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "ntile(4)"
+      },
+      ". But tomorrow they will ask for a clustering algorithm, a sales forecast or a fuzzy match of company names, and SQL has no good answer for those. Python has thousands of libraries for exactly these tasks."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "Since version 1.3, dbt lets a model be a Python file. It lives in the same DAG, uses the same ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      " logic, is tested with the same data tests, and still runs ",
+      {
+       "c": [
+        "inside the data platform"
+       ],
+       "t": "i"
+      },
+      " (with a cloud warehouse, not on your laptop). Python models are a small exam objective (1.8), but the questions are precise: what the function must return, which materializations are allowed, why Jinja fails, where the code runs, what you cannot do with a Python model. In this chapter you write the project's first Python model, ",
+      {
+       "t": "code",
+       "v": "customer_segments"
+      },
+      ", see each rule happen, and learn when ",
+      {
+       "c": [
+        "not"
+       ],
+       "t": "i"
+      },
+      " to use Python."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "A Python model is a ",
+      {
+       "t": "code",
+       "v": ".py"
+      },
+      " file in ",
+      {
+       "t": "code",
+       "v": "models/"
+      },
+      " that defines ",
+      {
+       "t": "code",
+       "v": "model(dbt, session)"
+      },
+      ": it reads its inputs with ",
+      {
+       "t": "code",
+       "v": "dbt.ref()"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "dbt.source()"
+      },
+      ", sets its configuration with ",
+      {
+       "t": "code",
+       "v": "dbt.config()"
+      },
+      ", and returns one DataFrame that dbt saves as a table. dbt sends the code to the data platform, which runs it with its own Python engine (Snowpark, PySpark, BigFrames, or, with DuckDB, the dbt process itself), so the type of DataFrame and the way to install libraries depend on the platform. Python models can only be ",
+      {
+       "t": "code",
+       "v": "table"
+      },
+      " or ",
+      {
+       "t": "code",
+       "v": "incremental"
+      },
+      ", cannot contain Jinja, cannot have unit tests or contracts, and should be used only when Python does something that SQL cannot do well."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:python-models",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-py-why"
+   ],
+   "checkpoints": [],
+   "id": "ch15-s1",
+   "label": "sec:py-why",
+   "labs": [],
+   "minutes": 5,
+   "number": "15.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt's own advice is clear: if you can write a transformation equally well in SQL or in Python, ",
+        {
+         "c": [
+          "write it in SQL"
+         ],
+         "t": "b"
+        },
+        ". SQL models are faster to run, cheaper, easier to read for most analysts, and they support every dbt feature (views, ephemeral models, unit tests, contracts…). Choose Python when:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "you need a ",
+            {
+             "c": [
+              "library"
+             ],
+             "t": "b"
+            },
+            ": machine learning (scikit-learn), forecasting, statistics, text processing, geographic calculations;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "the logic is ",
+            {
+             "c": [
+              "much shorter and clearer"
+             ],
+             "t": "b"
+            },
+            " in Python, for example ten lines of pandas instead of hundreds of lines of Jinja-generated SQL;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "you need an algorithm that SQL cannot express well (iterative calculations, clustering, fuzzy matching)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Think of a restaurant kitchen. SQL is the big oven: it cooks almost everything, quickly, for many guests, and every cook knows how to use it. A Python model is a special machine, like a pasta maker. It is wonderful for one job, slower to set up, and only some cooks know how to use it. You do not make toast in the pasta maker. And both machines are ",
+          {
+           "c": [
+            "in the same kitchen"
+           ],
+           "t": "i"
+          },
+          " (the data platform): the ingredients never leave it."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "SQL model"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Python model"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "File"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".sql"
+           },
+           " in ",
+           {
+            "t": "code",
+            "v": "models/"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".py"
+           },
+           " in ",
+           {
+            "t": "code",
+            "v": "models/"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Logic"
+          ]
+         },
+         {
+          "c": [
+           "a ",
+           {
+            "t": "code",
+            "v": "select"
+           },
+           " statement (+ Jinja)"
+          ]
+         },
+         {
+          "c": [
+           "a function ",
+           {
+            "t": "code",
+            "v": "model(dbt, session)"
+           },
+           " that returns a DataFrame"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Dependencies"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{{ ref() }}"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "{{ source() }}"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt.ref()"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "dbt.source()"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Config in the file"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{{ config(...) }}"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt.config(...)"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Materializations"
+          ]
+         },
+         {
+          "c": [
+           "view, table, incremental, ephemeral, materialized view"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "table, incremental only"
+            ],
+            "t": "b"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Data tests / unit tests"
+          ]
+         },
+         {
+          "c": [
+           "yes / yes"
+          ]
+         },
+         {
+          "c": [
+           "yes / ",
+           {
+            "c": [
+             "no"
+            ],
+            "t": "b"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Contracts"
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "no"
+            ],
+            "t": "b"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Runs on"
+          ]
+         },
+         {
+          "c": [
+           "every adapter"
+          ]
+         },
+         {
+          "c": [
+           "only adapters that support Python (Snowflake, Databricks, BigQuery, DuckDB…)"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch15-s1-1",
+     "number": "15.1.1",
+     "title": [
+      "SQL first, Python when it really helps"
+     ],
+     "titleText": "SQL first, Python when it really helps"
+    }
+   ],
+   "title": [
+    "Why (and when) Python models"
+   ],
+   "titleText": "Why (and when) Python models"
+  },
+  {
+   "anchors": [
+    "sec-py-anatomy"
+   ],
+   "checkpoints": [],
+   "id": "ch15-s2",
+   "label": "sec:py-anatomy",
+   "labs": [],
+   "minutes": 5,
+   "number": "15.2",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "Python model"
+         ],
+         "fr": "modèle Python",
+         "id": "term-python-model",
+         "t": "term"
+        },
+        " is a file in ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        " (any sub-folder). The file name is the model name: ",
+        {
+         "t": "code",
+         "v": "models/marts/customer_segments.py"
+        },
+        " creates the model ",
+        {
+         "t": "code",
+         "v": "customer_segments"
+        },
+        ". Inside, dbt looks for one function with exactly this signature:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch15-c1",
+       "lang": "python",
+       "t": "code",
+       "text": "def model(dbt, session):\n    dbt.config(materialized=\"table\")\n    customers = dbt.ref(\"dim_customers\")\n    return customers",
+       "title": "the minimal Python model"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt"
+            },
+            ": an object that dbt passes in, with the methods you need to talk to the project (below)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "session"
+            },
+            ": the connection to the data platform: a Snowpark ",
+            {
+             "t": "code",
+             "v": "Session"
+            },
+            " on Snowflake, a ",
+            {
+             "t": "code",
+             "v": "SparkSession"
+            },
+            " on Databricks, a DuckDB connection with dbt-duckdb. You use it to run SQL or create DataFrames yourself."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "return"
+            },
+            ": ",
+            {
+             "c": [
+              "one DataFrame"
+             ],
+             "t": "b"
+            },
+            ". dbt saves it as the model's table. Returning nothing, a list or a SQL string is an error."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "You can write other functions and imports in the same file (our model defines a small ",
+        {
+         "t": "code",
+         "v": "segment()"
+        },
+        " helper), but you cannot import a function from another model file."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch15-s2-1",
+     "number": "15.2.1",
+     "title": [
+      "The ",
+      {
+       "t": "code",
+       "v": "model"
+      },
+      " function"
+     ],
+     "titleText": "The model function"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Code"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it does"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt.ref(\"model_name\")"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Returns a DataFrame that reads a model, seed or snapshot. Creates a DAG edge, like ",
+           {
+            "t": "code",
+            "v": "{{ ref() }}"
+           },
+           ". Versions: ",
+           {
+            "t": "code",
+            "v": "dbt.ref(\"m\", v=2)"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt.source(\"src\", \"table\")"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Returns a DataFrame that reads a source table. Creates a DAG edge."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt.config(key=value, ...)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Sets configs for this model, like ",
+           {
+            "t": "code",
+            "v": "{{ config() }}"
+           },
+           " in SQL."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt.config.get(\"key\")"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Reads a config value (also custom keys set in YAML)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt.config.meta_get(\"key\")"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Reads a value from the model's ",
+           {
+            "t": "code",
+            "v": "meta"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt.this"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The model's own relation (",
+           {
+            "t": "code",
+            "v": "dbt.this.database"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": ".schema"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": ".identifier"
+           },
+           "); useful in incremental models."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt.is_incremental"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "True"
+           },
+           " during an incremental run (an attribute: no parentheses)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch15-s2-2",
+     "number": "15.2.2",
+     "title": [
+      "The ",
+      {
+       "t": "code",
+       "v": "dbt"
+      },
+      " object"
+     ],
+     "titleText": "The dbt object"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "c": [
+          "Rule 1: no Jinja at all."
+         ],
+         "t": "b"
+        },
+        " dbt does not render a ",
+        {
+         "t": "code",
+         "v": ".py"
+        },
+        " file with Jinja. It does not just ignore ",
+        {
+         "t": "code",
+         "v": "{{ }}"
+        },
+        ": it refuses the file. We put a harmless ",
+        {
+         "c": [
+          "comment"
+         ],
+         "t": "i"
+        },
+        " in our model, ",
+        {
+         "t": "code",
+         "v": "# in SQL we would write {{ ref(\"dim_customers\") }}"
+        },
+        ", and ran it:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch15-c2",
+       "lang": "output",
+       "t": "code",
+       "text": "22:13:04  Running with dbt=1.11.16\n22:13:04  Registered adapter: duckdb=1.11.0\n22:13:04  Encountered an error:\nParsing Error in model customer_segments (models/marts/customer_segments.py)\n  No jinja in python model code is allowed"
+      },
+      {
+       "c": [
+        "A Parsing Error stops the whole command, for every model, not only this one."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Rule 2: literal arguments only."
+         ],
+         "t": "b"
+        },
+        " dbt finds the dependencies and configs of a Python model ",
+        {
+         "c": [
+          "without running it"
+         ],
+         "t": "i"
+        },
+        ": it reads the code (static analysis, with Python's ",
+        {
+         "t": "code",
+         "v": "ast"
+        },
+        " module) and looks for ",
+        {
+         "t": "code",
+         "v": "dbt.ref(...)"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt.source(...)"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt.config(...)"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "dbt.config.get(...)"
+        },
+        ". So their arguments must be written directly in the call (a ",
+        {
+         "en": [
+          "literal"
+         ],
+         "fr": "valeur littérale",
+         "id": "term-literal",
+         "t": "term"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "\"table\""
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "42"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "[\"a\", \"b\"]"
+        },
+        "), not a variable. We tried:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch15-c3",
+       "lang": "python",
+       "t": "code",
+       "text": "def model(dbt, session):\n    mat = \"table\"\n    dbt.config(materialized=mat)\n    return dbt.ref(\"dim_customers\")"
+      },
+      {
+       "id": "ch15-c4",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "Parsing Error\n  Error when trying to literal_eval an arg to dbt.ref(), dbt.source(), dbt.config() or dbt.config.get()\n  malformed node or string on line 3: <ast.Name object at 0x10d9efc50>\n  https://docs.python.org/3/library/ast.html#ast.literal_eval\n  In dbt python model, `dbt.ref`, `dbt.source`, `dbt.config`, `dbt.config.get` function args only support Python literal structures"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"I can write ",
+            {
+             "t": "code",
+             "v": "{{ ref('x') }}"
+            },
+            " in a ",
+            {
+             "t": "code",
+             "v": ".py"
+            },
+            " model.\""
+           ],
+           "t": "b"
+          },
+          " No: ",
+          {
+           "c": [
+            "No jinja in python model code is allowed"
+           ],
+           "t": "i"
+          },
+          ", even in a comment. Use ",
+          {
+           "t": "code",
+           "v": "dbt.ref(\"x\")"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "dbt.source(\"a\", \"b\")"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "dbt.config(...)"
+          },
+          ", with literal arguments. Dynamic values (a variable, the target name) go in the YAML config, where Jinja is allowed, and you read them with ",
+          {
+           "t": "code",
+           "v": "dbt.config.get()"
+          },
+          " (",
+          {
+           "href": "/learn/ch15/ch15-s5/",
+           "label": "sec:py-config",
+           "t": "ref",
+           "text": "Section 15.5"
+          },
+          "). Trap T81 in ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch15-s2-3",
+     "number": "15.2.3",
+     "title": [
+      "Two rules that surprise SQL people"
+     ],
+     "titleText": "Two rules that surprise SQL people"
+    }
+   ],
+   "title": [
+    "Anatomy of a Python model"
+   ],
+   "titleText": "Anatomy of a Python model"
+  },
+  {
+   "anchors": [
+    "sec-py-platforms"
+   ],
+   "checkpoints": [],
+   "id": "ch15-s3",
+   "label": "sec:py-platforms",
+   "labs": [],
+   "minutes": 5,
+   "number": "15.3",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "When you run a SQL model, dbt sends SQL text to the warehouse, and the warehouse does the work. A Python model works the same way: ",
+        {
+         "c": [
+          "dbt sends Python code to the data platform"
+         ],
+         "t": "b"
+        },
+        ", and the platform runs it next to the data. dbt itself only prepares the code and waits."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "How a Python model runs: customer_segments.py (your function) → dbt adds helper code (ref, config, this) → the Python code is sent to the data platform, which runs model(dbt, session) and gets a DataFrame → the platform saves it as the table customer_segments.",
+       "id": "ch15-fig1",
+       "src": "figures/ch15-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Platform"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Where the Python runs"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "DataFrames"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Libraries"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Snowflake"
+          ]
+         },
+         {
+          "c": [
+           "Snowpark, inside a (temporary) stored procedure in your warehouse"
+          ]
+         },
+         {
+          "c": [
+           "Snowpark DataFrame; pandas also accepted"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "packages"
+           },
+           " from Snowflake's Anaconda channel, installed when the model runs"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Databricks"
+          ]
+         },
+         {
+          "c": [
+           "PySpark on a cluster; ",
+           {
+            "t": "code",
+            "v": "submission_method"
+           },
+           ": ",
+           {
+            "t": "code",
+            "v": "all_purpose_cluster"
+           },
+           " (default), ",
+           {
+            "t": "code",
+            "v": "job_cluster"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "serverless_cluster"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "workflow_job"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Spark DataFrame; pandas and pandas-on-Spark accepted"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "packages"
+           },
+           " installed on the executing cluster"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "BigQuery"
+          ]
+         },
+         {
+          "c": [
+           "Dataproc (",
+           {
+            "t": "code",
+            "v": "submission_method"
+           },
+           ": ",
+           {
+            "t": "code",
+            "v": "serverless"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "cluster"
+           },
+           ", with a ",
+           {
+            "t": "code",
+            "v": "gcs_bucket"
+           },
+           ") or BigQuery DataFrames (",
+           {
+            "t": "code",
+            "v": "bigframes"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "Spark or BigFrames DataFrame; pandas accepted"
+          ]
+         },
+         {
+          "c": [
+           "per submission method"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "DuckDB (this book)"
+          ]
+         },
+         {
+          "c": [
+           "inside the dbt process on your computer (DuckDB is an embedded database)"
+          ]
+         },
+         {
+          "c": [
+           "DuckDB relation; pandas (and Arrow) accepted"
+          ]
+         },
+         {
+          "c": [
+           "whatever is installed in your Python environment"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "On Snowflake, dbt wraps your code in a ",
+        {
+         "en": [
+          "stored procedure"
+         ],
+         "fr": "procédure stockée",
+         "id": "term-stored-procedure",
+         "t": "term"
+        },
+        " (a program stored and executed inside the database), runs it, and removes it. Three consequences for the exam:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "With a cloud warehouse, Python models do ",
+            {
+             "c": [
+              "not"
+             ],
+             "t": "b"
+            },
+            " run on the developer's laptop, nor on dbt Labs' servers: the code runs in the platform, next to the data. dbt (Core or the dbt platform) only orchestrates."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt.ref()"
+            },
+            " returns the platform's own DataFrame type. Code written with Snowpark methods does not run on Databricks without changes, and vice versa. pandas is the common language, but it works on one machine, so it is slow on very large data."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Not every adapter supports Python models. Check the adapter's documentation."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch15-s3-0",
+     "title": [
+      "Where does the Python code run?"
+     ],
+     "titleText": "Where does the Python code run?"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "On Snowflake and Databricks you list the third-party libraries your model needs, and the platform installs them:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch15-c5",
+       "lang": "python",
+       "t": "code",
+       "text": "def model(dbt, session):\n    dbt.config(\n        materialized=\"table\",\n        packages=[\"scikit-learn\", \"numpy==1.23.1\"],\n    )\n    ...",
+       "title": "example for Snowflake or Databricks (not for our DuckDB project)"
+      },
+      {
+       "c": [
+        "On Snowflake the packages come from the Anaconda channel that Snowflake provides (an administrator must accept its terms once); dbt always adds ",
+        {
+         "t": "code",
+         "v": "snowflake-snowpark-python"
+        },
+        ". On Databricks they are installed on the cluster that runs the model. Platform-specific configs exist too (for example ",
+        {
+         "t": "code",
+         "v": "python_version"
+        },
+        " on Snowflake, ",
+        {
+         "t": "code",
+         "v": "submission_method"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "job_cluster_config"
+        },
+        " on Databricks, ",
+        {
+         "t": "code",
+         "v": "gcs_bucket"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "dataproc_region"
+        },
+        " on BigQuery); you only need to recognise them."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "With DuckDB"
+         ],
+         "t": "b"
+        },
+        ", the model runs in the same Python process as dbt. There is nothing to install remotely: the libraries come from the virtual environment where you installed dbt. ",
+        {
+         "t": "code",
+         "v": "packages"
+        },
+        " is accepted (it is a normal model config, default ",
+        {
+         "t": "code",
+         "v": "[]"
+        },
+        ") but it installs nothing. That is why, in the lab, ",
+        {
+         "c": [
+          "you"
+         ],
+         "t": "i"
+        },
+        " install pandas with ",
+        {
+         "t": "code",
+         "v": "uv pip"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "How dbt-duckdb saves your DataFrame."
+           ],
+           "t": "b"
+          },
+          " The file ",
+          {
+           "t": "code",
+           "v": "customer_segments.py"
+          },
+          " under ",
+          {
+           "t": "code",
+           "v": "target/run/"
+          },
+          " is the code that really ran. At the end, dbt-duckdb adds this function, called with the DataFrame your ",
+          {
+           "t": "code",
+           "v": "model()"
+          },
+          " returned:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c6",
+         "lang": "python",
+         "small": true,
+         "t": "code",
+         "text": "def materialize(df, con):\n    ...\n    tmp_name = '__dbt_python_model_df_' + 'customer_segments__dbt_tmp'\n    con.register(tmp_name, df)\n\n    con.execute('create table \"practice\".\"dbt_adnane\".\"customer_segments__dbt_tmp\" as select * from ' + tmp_name)\n\n    con.unregister(tmp_name)"
+        },
+        {
+         "c": [
+          "DuckDB registers the DataFrame as a temporary view, and a plain ",
+          {
+           "t": "code",
+           "v": "create table … as select *"
+          },
+          " turns it into a table. Then dbt swaps ",
+          {
+           "t": "code",
+           "v": "customer_segments__dbt_tmp"
+          },
+          " with the old table and runs the post-hooks, exactly as for a SQL table model. On Snowflake the equivalent step is Snowpark's ",
+          {
+           "t": "code",
+           "v": "save_as_table"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "deep",
+       "t": "callout"
+      }
+     ],
+     "id": "ch15-s3-1",
+     "number": "15.3.1",
+     "title": [
+      "The ",
+      {
+       "t": "code",
+       "v": "packages"
+      },
+      " config"
+     ],
+     "titleText": "The packages config"
+    }
+   ],
+   "title": [
+    "Where does the Python code run?"
+   ],
+   "titleText": "Where does the Python code run?"
+  },
+  {
+   "anchors": [
+    "sec-py-lab"
+   ],
+   "checkpoints": [],
+   "id": "ch15-s4",
+   "label": "sec:py-lab",
+   "labs": [
+    "ch15-lab1"
+   ],
+   "minutes": 25,
+   "number": "15.4",
+   "objectives": [
+    "1.2",
+    "1.8",
+    "5.1"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The model reads ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " and adds two columns:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "segment"
+            },
+            ": ",
+            {
+             "t": "code",
+             "v": "no orders"
+            },
+            " (0 orders), ",
+            {
+             "t": "code",
+             "v": "loyal"
+            },
+            " (4 or more orders, ",
+            {
+             "c": [
+              "or"
+             ],
+             "t": "i"
+            },
+            " a lifetime value of at least 100 dollars), ",
+            {
+             "t": "code",
+             "v": "regular"
+            },
+            " (2 or 3 orders), ",
+            {
+             "t": "code",
+             "v": "new"
+            },
+            " (1 order);"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "value_tier"
+            },
+            ": among customers who ordered, the quarter of lifetime value they belong to (",
+            {
+             "t": "code",
+             "v": "bronze"
+            },
+            " for the lowest 25%, then ",
+            {
+             "t": "code",
+             "v": "silver"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "gold"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "platinum"
+            },
+            "); ",
+            {
+             "t": "code",
+             "v": "none"
+            },
+            " for customers without orders."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "id": "ch15-c7",
+       "lang": "python",
+       "t": "code",
+       "text": "import pandas as pd\n\n\ndef model(dbt, session):\n    # configs can be set here (like config() in SQL) or in a properties file\n    dbt.config(materialized=\"table\")\n\n    # dbt.ref() returns a DuckDB relation; .df() turns it into a pandas DataFrame\n    customers = dbt.ref(\"dim_customers\").df()\n\n    def segment(row):\n        if row[\"number_of_orders\"] == 0:\n            return \"no orders\"\n        if row[\"number_of_orders\"] >= 4 or row[\"lifetime_value\"] >= 100:\n            return \"loyal\"\n        if row[\"number_of_orders\"] >= 2:\n            return \"regular\"\n        return \"new\"\n\n    customers[\"segment\"] = customers.apply(segment, axis=1)\n\n    # value tier: quartiles of lifetime value among customers who ordered\n    buyers = customers[\"number_of_orders\"] > 0\n    customers[\"value_tier\"] = \"none\"\n    customers.loc[buyers, \"value_tier\"] = pd.qcut(\n        customers.loc[buyers, \"lifetime_value\"].rank(method=\"first\"),\n        q=4,\n        labels=[\"bronze\", \"silver\", \"gold\", \"platinum\"],\n    ).astype(str)\n\n    return customers[\n        [\"customer_id\", \"country\", \"number_of_orders\", \"lifetime_value\", \"segment\", \"value_tier\"]\n    ]",
+       "title": "models/marts/customer_segments.py"
+      },
+      {
+       "c": [
+        "Line by line:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "import pandas as pd"
+            },
+            ": the library we need. Imports are allowed (and usual) at the top of the file."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt.config(materialized=\"table\")"
+            },
+            ": the model is a table. This is the default for Python models; writing it makes it explicit."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt.ref(\"dim_customers\")"
+            },
+            " returns a DuckDB relation (a lazy query). ",
+            {
+             "t": "code",
+             "v": ".df()"
+            },
+            " runs it and gives a pandas DataFrame. On Snowflake you would call ",
+            {
+             "t": "code",
+             "v": ".to_pandas()"
+            },
+            " on a Snowpark DataFrame instead."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "customers.apply(segment, axis=1)"
+            },
+            " calls ",
+            {
+             "t": "code",
+             "v": "segment()"
+            },
+            " once per row (",
+            {
+             "t": "code",
+             "v": "axis=1"
+            },
+            " means \"row by row\") and stores the result in a new column."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "pd.qcut(…, q=4, labels=…)"
+            },
+            " cuts values into 4 groups of equal size (quartiles). We rank the values first (",
+            {
+             "t": "code",
+             "v": "rank(method=\"first\")"
+            },
+            ") so that equal amounts never make two groups collapse."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "return customers[[…]]"
+            },
+            " keeps six columns. The returned DataFrame ",
+            {
+             "c": [
+              "is"
+             ],
+             "t": "i"
+            },
+            " the model."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " add the project's first Python model, see what happens without pandas, install it, build and test the model."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 0."
+           ],
+           "t": "b"
+          },
+          " As always: ",
+          {
+           "t": "code",
+           "v": "cd ~/dbt-course && source .venv/bin/activate && cd jaffle_dbt"
+          },
+          ", DuckDB command line closed, ",
+          {
+           "t": "code",
+           "v": "git status --short"
+          },
+          " empty (Chapter 14 is committed)."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Create ",
+          {
+           "t": "code",
+           "v": "models/marts/customer_segments.py"
+          },
+          " with the code above."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Describe the model and test its key: add this entry at the end of ",
+          {
+           "t": "code",
+           "v": "models/marts/_marts__models.yml"
+          },
+          " (under ",
+          {
+           "t": "code",
+           "v": "models:"
+          },
+          ", aligned with the other ",
+          {
+           "t": "code",
+           "v": "- name:"
+          },
+          " entries, after one blank line as between the other entries):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c8",
+         "lang": "yaml",
+         "t": "code",
+         "text": "  - name: customer_segments\n    description: One row per customer with a marketing segment and a value tier (Python model, pandas).\n    config:\n      tags: ['marketing']\n    columns:\n      - name: customer_id\n        description: Primary key.\n        data_tests:\n          - unique\n          - not_null\n      - name: segment\n        description: no orders, new, regular or loyal.",
+         "title": "models/marts/_marts__models.yml (new entry at the end)"
+        },
+        {
+         "c": [
+          "Yes: a Python model is described and tested in YAML exactly like a SQL model."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Check that dbt sees a Python model and its two tests:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c9",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt ls -s customer_segments+ --output json --output-keys name resource_type language"
+        },
+        {
+         "id": "ch15-c10",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "22:32:30  Found 14 models, 2 analyses, 1 seed, 2 snapshots, 14 data tests, 5 sources, 669 macros\n{\"name\": \"customer_segments\", \"resource_type\": \"model\", \"language\": \"python\"}\n{\"name\": \"not_null_customer_segments_customer_id\", \"resource_type\": \"test\", \"language\": \"sql\"}\n{\"name\": \"unique_customer_segments_customer_id\", \"resource_type\": \"test\", \"language\": \"sql\"}"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Build the model and everything upstream:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c11",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --select +customer_segments"
+        },
+        {
+         "c": [
+          "Your virtual environment (Chapter 2) contains dbt and DuckDB, but not pandas. So the first build fails on the Python model:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c12",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "22:18:40  16 of 19 OK created sql table model dbt_adnane.dim_customers ................... [OK in 0.04s]\n22:18:40  17 of 19 START python table model dbt_adnane.customer_segments ................. [RUN]\n22:18:41  17 of 19 ERROR creating python table model dbt_adnane.customer_segments ........ [ERROR in 0.07s]\n22:18:41  18 of 19 SKIP test not_null_customer_segments_customer_id ...................... [SKIP]\n22:18:41  19 of 19 SKIP test unique_customer_segments_customer_id ........................ [SKIP]\n...\n22:18:41  Failure in model customer_segments (models/marts/customer_segments.py)\n22:18:41    Runtime Error in model customer_segments (models/marts/customer_segments.py)\n  Python model failed:\n  Traceback (most recent call last):\n    File \"/Users/you/dbt-course/.venv/lib/python3.12/site-packages/dbt/adapters/duckdb/environments/__init__.py\", line 278, in run_python_job\n      spec.loader.exec_module(module)\n    ...\n      import pandas as pd\n  ModuleNotFoundError: No module named 'pandas'\n...\n22:18:41  Done. PASS=16 WARN=0 ERROR=1 SKIP=2 NO-OP=0 TOTAL=19",
+         "textBook": "22:18:40  16 of 19 OK created sql table model dbt_adnane.dim_customers ................... [OK in 0.04s]\n22:18:40  17 of 19 START python table model dbt_adnane.customer_segments ................. [RUN]\n22:18:41  17 of 19 ERROR creating python table model dbt_adnane.customer_segments ........ [ERROR in 0.07s]\n22:18:41  18 of 19 SKIP test not_null_customer_segments_customer_id ...................... [SKIP]\n22:18:41  19 of 19 SKIP test unique_customer_segments_customer_id ........................ [SKIP]\n...\n22:18:41  Failure in model customer_segments (models/marts/customer_segments.py)\n22:18:41    Runtime Error in model customer_segments (models/marts/customer_segments.py)\n  Python model failed:\n  Traceback (most recent call last):\n    File \"/Users/mac/dbt-course/.venv/lib/python3.12/site-packages/dbt/adapters/duckdb/environments/__init__.py\", line 278, in run_python_job\n      spec.loader.exec_module(module)\n    ...\n      import pandas as pd\n  ModuleNotFoundError: No module named 'pandas'\n...\n22:18:41  Done. PASS=16 WARN=0 ERROR=1 SKIP=2 NO-OP=0 TOTAL=19"
+        },
+        {
+         "c": [
+          "Read it like any dbt failure (Chapter 22): the model is an ",
+          {
+           "t": "code",
+           "v": "ERROR"
+          },
+          ", its tests are ",
+          {
+           "t": "code",
+           "v": "SKIP"
+          },
+          "ped, and the last line of the traceback says why: ",
+          {
+           "c": [
+            "No module named 'pandas'"
+           ],
+           "t": "i"
+          },
+          ". On DuckDB, your venv ",
+          {
+           "c": [
+            "is"
+           ],
+           "t": "i"
+          },
+          " the Python runtime."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Install pandas in the active venv (the version numbers may be newer for you):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c13",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ uv pip install pandas\n...\nInstalled 2 packages in 40ms\n + numpy==2.5.4\n + pandas==3.0.6"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6."
+           ],
+           "t": "b"
+          },
+          " Build again:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c14",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --select +customer_segments"
+        },
+        {
+         "id": "ch15-c15",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "21:02:33  1 of 19 START sql view model dbt_adnane.stg_jaffle_shop__customers ............. [RUN]\n...\n21:02:34  16 of 19 OK created sql table model dbt_adnane.dim_customers ................... [OK in 0.04s]\n21:02:34  17 of 19 START python table model dbt_adnane.customer_segments ................. [RUN]\n21:02:34  17 of 19 OK created python table model dbt_adnane.customer_segments ............ [OK in 0.37s]\n21:02:34  18 of 19 START test not_null_customer_segments_customer_id ..................... [RUN]\n21:02:34  19 of 19 START test unique_customer_segments_customer_id ....................... [RUN]\n21:02:34  18 of 19 PASS not_null_customer_segments_customer_id ........................... [PASS in 0.02s]\n21:02:34  19 of 19 PASS unique_customer_segments_customer_id ............................. [PASS in 0.02s]\n21:02:34\n21:02:34  Finished running 1 incremental model, 1 seed, 2 table models, 10 data tests, 5 view models in 0 hours 0 minutes and 0.87 seconds (0.87s).\n21:02:34\n21:02:34  Completed successfully\n21:02:34\n21:02:34  Done. PASS=19 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=19"
+        },
+        {
+         "c": [
+          "Notice the words ",
+          {
+           "t": "code",
+           "v": "python table model"
+          },
+          ", and that the summary counts it among the \"2 table models\". (The first run after the install can take several seconds instead of 0.37s: Python loads pandas for the first time.)"
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 7."
+           ],
+           "t": "b"
+          },
+          " Look at the segments, then at the tiers (",
+          {
+           "t": "code",
+           "v": "dbt show"
+          },
+          " prints 5 rows by default, hence ",
+          {
+           "t": "code",
+           "v": "--limit"
+          },
+          "):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c16",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt show --inline \"select segment, count(*) as n_customers, round(avg(lifetime_value), 2) as avg_lifetime_value, min(number_of_orders) as min_orders, max(number_of_orders) as max_orders from {{ ref('customer_segments') }} group by segment order by min_orders\" --limit 20\n$ dbt show --inline \"select value_tier, count(*) as n_customers, min(lifetime_value) as min_value, max(lifetime_value) as max_value from {{ ref('customer_segments') }} group by value_tier order by min_value\" --limit 20"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 8."
+           ],
+           "t": "b"
+          },
+          " In the DuckDB command line, look at the column types of the new table:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c17",
+         "lang": "sql",
+         "t": "code",
+         "text": "select column_name, data_type\nfrom information_schema.columns\nwhere table_schema = 'dbt_adnane' and table_name = 'customer_segments'\norder by ordinal_position;"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (Steps 7 and 8; the ",
+          {
+           "t": "code",
+           "v": "Found"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "Concurrency"
+          },
+          " lines are cut):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c18",
+         "lang": "output",
+         "t": "code",
+         "text": "Previewing inline node:\n| segment   | n_customers | avg_lifetime_value | min_orders | max_orders |\n| --------- | ----------- | ------------------ | ---------- | ---------- |\n| no orders |           9 |               0.00 |          0 |          0 |\n| new       |          11 |              18.51 |          1 |          1 |\n| regular   |          36 |              42.91 |          2 |          3 |\n| loyal     |          44 |              83.61 |          4 |          8 |\n\nPreviewing inline node:\n| value_tier | n_customers | min_value | max_value |\n| ---------- | ----------- | --------- | --------- |\n| none       |           9 |       0.0 |       0.0 |\n| bronze     |          23 |       3.0 |      32.5 |\n| silver     |          23 |      32.7 |      52.2 |\n| gold       |          22 |      53.7 |      81.4 |\n| platinum   |          23 |      83.5 |     167.9 |\n\n+------------------+-----------+\n| column_name      | data_type |\n+------------------+-----------+\n| customer_id      | INTEGER   |\n| country          | VARCHAR   |\n| number_of_orders | BIGINT    |\n| lifetime_value   | DOUBLE    |\n| segment          | VARCHAR   |\n| value_tier       | VARCHAR   |\n+------------------+-----------+"
+        },
+        {
+         "c": [
+          "100 customers in total (9 + 11 + 36 + 44): the 9 without orders are the ones left after day 2. The tiers split the 91 buyers into four groups of 22 or 23. A SQL query read the Python model with ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          ": SQL and Python models mix freely in the DAG."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch15-lab1",
+       "objectives": [
+        "1.8",
+        "1.2",
+        "5.1"
+       ],
+       "t": "lab",
+       "title": [
+        "Build the customer_segments Python model"
+       ]
+      }
+     ],
+     "id": "ch15-s4-0",
+     "title": [
+      "Your first Python model: ",
+      {
+       "t": "code",
+       "v": "customer_segments"
+      }
+     ],
+     "titleText": "Your first Python model: customer_segments"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "target/compiled/jaffle_dbt/models/marts/customer_segments.py"
+        },
+        " starts with your code, unchanged, and then dbt appends its own helper code. An excerpt:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch15-c19",
+       "lang": "python",
+       "small": true,
+       "t": "code",
+       "text": "# This part is user provided model code\n# you will need to copy the next section to run the code\n# COMMAND ----------\n# this part is dbt logic for get ref work, do not modify\n\ndef ref(*args, **kwargs):\n    refs = {\"dim_customers\": \"\\\"practice\\\".\\\"dbt_adnane\\\".\\\"dim_customers\\\"\"}\n    key = '.'.join(args)\n    ...\nconfig_dict = {}\n...\nclass this:\n    \"\"\"dbt.this() or dbt.this.identifier\"\"\"\n    database = \"practice\"\n    schema = \"dbt_adnane\"\n    identifier = \"customer_segments\"\n...\nclass dbtObj:\n    def __init__(self, load_df_function) -> None:\n        self.source = lambda *args: source(*args, dbt_load_df_function=load_df_function)\n        self.ref = lambda *args, **kwargs: ref(*args, **kwargs, dbt_load_df_function=load_df_function)\n        self.config = config\n        self.this = this()\n        self.is_incremental = False"
+      },
+      {
+       "c": [
+        "This is the \"compiled code\" of a Python model (objective 3.2): instead of turning Jinja into SQL, dbt writes the resolved table names into a small dictionary (",
+        {
+         "t": "code",
+         "v": "refs"
+        },
+        "), the values of the configs that your code reads with ",
+        {
+         "t": "code",
+         "v": "dbt.config.get()"
+        },
+        " into ",
+        {
+         "t": "code",
+         "v": "config_dict"
+        },
+        " (empty here: our model reads none), and the current relation into ",
+        {
+         "t": "code",
+         "v": "this"
+        },
+        ". It also explains the static-analysis rule: dbt had to know ",
+        {
+         "t": "code",
+         "v": "\"dim_customers\""
+        },
+        " ",
+        {
+         "c": [
+          "before"
+         ],
+         "t": "i"
+        },
+        " running your function, to fill ",
+        {
+         "t": "code",
+         "v": "refs"
+        },
+        ". And ",
+        {
+         "t": "code",
+         "v": "is_incremental"
+        },
+        " is a plain attribute, ",
+        {
+         "t": "code",
+         "v": "False"
+        },
+        " here because the model is a table."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch15-s4-1",
+     "number": "15.4.1",
+     "title": [
+      "What dbt really ran"
+     ],
+     "titleText": "What dbt really ran"
+    }
+   ],
+   "title": [
+    "Your first Python model: ",
+    {
+     "t": "code",
+     "v": "customer_segments"
+    }
+   ],
+   "titleText": "Your first Python model: customer_segments"
+  },
+  {
+   "anchors": [
+    "sec-py-config"
+   ],
+   "checkpoints": [],
+   "id": "ch15-s5",
+   "label": "sec:py-config",
+   "labs": [],
+   "minutes": 5,
+   "number": "15.5",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "You can configure a Python model in the same three places as a SQL model, with the same precedence (the most specific wins):"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "In ",
+              {
+               "t": "code",
+               "v": "dbt_project.yml"
+              }
+             ],
+             "t": "b"
+            },
+            ", by folder. Our model sits in ",
+            {
+             "t": "code",
+             "v": "models/marts/"
+            },
+            ", so it inherits the marts configs of Chapter 10. We checked with ",
+            {
+             "t": "code",
+             "v": "dbt ls -s customer_segments --resource-type model --output json --output-keys name config"
+            },
+            ": ",
+            {
+             "t": "code",
+             "v": "'materialized': 'table'"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "'schema': 'marts'"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "'tags': ['marts', 'marketing']"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "'meta': {'owner': 'analytics-engineering'}"
+            },
+            ", and the post-hook ",
+            {
+             "t": "code",
+             "v": "analyze {{ this }}"
+            },
+            ", which really ran after the Python model (",
+            {
+             "t": "code",
+             "v": "analyze \"practice\".\"dbt_adnane\".\"customer_segments\""
+            },
+            " in ",
+            {
+             "t": "code",
+             "v": "logs/dbt.log"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "In a properties YAML file"
+             ],
+             "t": "b"
+            },
+            ", under ",
+            {
+             "t": "code",
+             "v": "config:"
+            },
+            " (Step 2 added ",
+            {
+             "t": "code",
+             "v": "tags: ['marketing']"
+            },
+            "). Here Jinja ",
+            {
+             "c": [
+              "is"
+             ],
+             "t": "i"
+            },
+            " allowed, because it is YAML, not Python."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "In the ",
+              {
+               "t": "code",
+               "v": ".py"
+              },
+              " file"
+             ],
+             "t": "b"
+            },
+            ", with ",
+            {
+             "t": "code",
+             "v": "dbt.config(...)"
+            },
+            " (literal values only)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      }
+     ],
+     "id": "ch15-s5-0",
+     "title": [
+      "Configuring a Python model"
+     ],
+     "titleText": "Configuring a Python model"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "How do you give a Python model the target name, a variable or a threshold? Put it in the YAML config (Jinja works there) and read it with ",
+        {
+         "t": "code",
+         "v": "dbt.config.get()"
+        },
+        ". We tested this demo model (not part of the project):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch15-c20",
+       "lang": "yaml",
+       "t": "code",
+       "text": "models:\n  - name: py_config_demo\n    config:\n      loyal_threshold: 100\n      target_name: \"{{ target.name }}\"",
+       "title": "models/demo/_demo.yml (throwaway)"
+      },
+      {
+       "id": "ch15-c21",
+       "lang": "python",
+       "t": "code",
+       "text": "def model(dbt, session):\n    dbt.config(materialized=\"table\")\n    threshold = dbt.config.get(\"loyal_threshold\")\n    target_name = dbt.config.get(\"target_name\")\n    customers = dbt.ref(\"dim_customers\")\n    return customers.filter(f\"lifetime_value >= {threshold}\").aggregate(\n        f\"'{target_name}' as target_name, {threshold} as threshold, count(*) as n_customers\"\n    )",
+       "title": "models/demo/py_config_demo.py (throwaway)"
+      },
+      {
+       "id": "ch15-c22",
+       "lang": "output",
+       "t": "code",
+       "text": "+-------------+-----------+-------------+\n| target_name | threshold | n_customers |\n+-------------+-----------+-------------+\n| dev         |       100 |          13 |\n+-------------+-----------+-------------+"
+      },
+      {
+       "c": [
+        "The compiled file showed the values dbt passed: ",
+        {
+         "t": "code",
+         "v": "config_dict = {'loyal_threshold': 100, 'target_name': 'dev'}"
+        },
+        ". This demo also shows that a Python model does not have to use pandas: with dbt-duckdb, ",
+        {
+         "t": "code",
+         "v": "dbt.ref()"
+        },
+        " returns a DuckDB relation with methods such as ",
+        {
+         "t": "code",
+         "v": "filter()"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "aggregate()"
+        },
+        " (",
+        {
+         "href": "/learn/ch05/",
+         "label": "ch:yaml-jinja-python",
+         "t": "ref",
+         "text": "Chapter 5"
+        },
+        "), and you can return that relation directly."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch15-s5-1",
+     "number": "15.5.1",
+     "title": [
+      "Passing dynamic values: ",
+      {
+       "t": "code",
+       "v": "dbt.config.get()"
+      }
+     ],
+     "titleText": "Passing dynamic values: dbt.config.get()"
+    }
+   ],
+   "title": [
+    "Configuring a Python model"
+   ],
+   "titleText": "Configuring a Python model"
+  },
+  {
+   "anchors": [
+    "sec-py-materializations"
+   ],
+   "checkpoints": [],
+   "id": "ch15-s6",
+   "label": "sec:py-materializations",
+   "labs": [],
+   "minutes": 5,
+   "number": "15.6",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Every run rebuilds the table from the returned DataFrame, like a SQL table model."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch15-s6-1",
+     "number": "15.6.1",
+     "title": [
+      {
+       "t": "code",
+       "v": "table"
+      },
+      " (the default)"
+     ],
+     "titleText": "table (the default)"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "An incremental Python model receives the same help as a SQL one: ",
+        {
+         "t": "code",
+         "v": "dbt.is_incremental"
+        },
+        " tells you whether the table already exists (and ",
+        {
+         "t": "code",
+         "v": "--full-refresh"
+        },
+        " is not set), and ",
+        {
+         "t": "code",
+         "v": "dbt.this"
+        },
+        " points to it. You filter the input yourself, then return only the new or changed rows; dbt merges them using ",
+        {
+         "t": "code",
+         "v": "unique_key"
+        },
+        " and the adapter's incremental strategy (Chapter 14). We tested this model in a throwaway copy:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch15-c23",
+       "lang": "python",
+       "t": "code",
+       "text": "def model(dbt, session):\n    dbt.config(materialized=\"incremental\", unique_key=\"order_id\")\n\n    orders = dbt.ref(\"stg_jaffle_shop__orders\")\n\n    if dbt.is_incremental:\n        # only the rows loaded after the newest row already in the table\n        max_loaded = session.sql(f\"select max(loaded_at) from {dbt.this}\").fetchone()[0]\n        orders = orders.filter(f\"loaded_at > '{max_loaded}'\")\n\n    return orders.select(\"order_id, status, loaded_at\")",
+       "title": "models/demo/orders_loaded_py.py (throwaway)"
+      },
+      {
+       "c": [
+        "The first run printed ",
+        {
+         "t": "code",
+         "v": "START python incremental model dbt_adnane.orders_loaded_py"
+        },
+        " and created 320 rows (max ",
+        {
+         "t": "code",
+         "v": "loaded_at"
+        },
+        " 2026-01-04 16:13:00). We inserted one new raw order (321, loaded 2026-01-05 10:00) and ran again: 321 rows, and the compiled code now said ",
+        {
+         "t": "code",
+         "v": "self.is_incremental = True"
+        },
+        ". Notice ",
+        {
+         "t": "code",
+         "v": "session.sql(...)"
+        },
+        ": the session is the platform connection (here DuckDB), and ",
+        {
+         "t": "code",
+         "v": "dbt.this"
+        },
+        " prints as the full relation name ",
+        {
+         "t": "code",
+         "v": "\"practice\".\"dbt_adnane\".\"orders_loaded_py\""
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch15-s6-2",
+     "number": "15.6.2",
+     "title": [
+      {
+       "t": "code",
+       "v": "incremental"
+      }
+     ],
+     "titleText": "incremental"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A view or an ephemeral model is only SQL text that another query reuses; a Python function cannot be stored that way. We changed our model to ",
+        {
+         "t": "code",
+         "v": "dbt.config(materialized=\"view\")"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch15-c24",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "21:02:56  1 of 1 START python view model dbt_adnane.customer_segments .................... [RUN]\n21:02:56  1 of 1 ERROR creating python view model dbt_adnane.customer_segments ........... [ERROR in 0.02s]\n...\n21:02:56  Failure in model customer_segments (models/marts/customer_segments.py)\n21:02:56    Runtime Error in model customer_segments (models/marts/customer_segments.py)\n  Materialization \"materialization_view_default\" only supports languages ['sql']; got \"python\""
+      },
+      {
+       "c": [
+        "With ",
+        {
+         "t": "code",
+         "v": "materialized=\"ephemeral\""
+        },
+        ", dbt 1.11.16 does not even complain at parse time: ",
+        {
+         "t": "code",
+         "v": "dbt run -s customer_segments"
+        },
+        " printed no model line at all (an ephemeral model is never built), and ",
+        {
+         "t": "code",
+         "v": "dbt build -s customer_segments"
+        },
+        " then failed on the two tests of the model with a SQL error, because dbt pasted the ",
+        {
+         "c": [
+          "Python"
+         ],
+         "t": "i"
+        },
+        " code into their SQL as a CTE:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch15-c25",
+       "lang": "output",
+       "t": "code",
+       "text": "  Parser Error: syntax error at or near \"import\"\n\n  LINE 16: import pandas as pd\n           ^"
+      },
+      {
+       "c": [
+        "Same with the opposite direction: a Python model that does ",
+        {
+         "t": "code",
+         "v": "dbt.ref()"
+        },
+        " on an ",
+        {
+         "c": [
+          "ephemeral SQL"
+         ],
+         "t": "i"
+        },
+        " model fails, because there is no table to read. We tried ",
+        {
+         "t": "code",
+         "v": "dbt.ref(\"int_payments__successful\")"
+        },
+        " (our ephemeral model of Chapter 8):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch15-c26",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:13:27    Runtime Error in model py_from_ephemeral (models/demo/py_from_ephemeral.py)\n  Python model failed:\n  ...\n      with\n      ^^^^\n  SyntaxError: invalid syntax"
+      },
+      {
+       "c": [
+        "dbt injected the SQL CTE (",
+        {
+         "t": "code",
+         "v": "with __dbt__cte__int_payments__successful as (…)"
+        },
+        ") at the top of the Python file. If a Python model needs that logic, materialize the parent as a view or a table."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"A Python model can be a view or ephemeral.\""
+           ],
+           "t": "b"
+          },
+          " Only ",
+          {
+           "t": "code",
+           "v": "table"
+          },
+          " (default) and ",
+          {
+           "t": "code",
+           "v": "incremental"
+          },
+          ". A view fails at run time (",
+          {
+           "c": [
+            "only supports languages ['sql']; got \"python\""
+           ],
+           "t": "i"
+          },
+          "): parsing succeeds, only this model errors, and the other models of the run still build (its tests and children are skipped). Ephemeral is not supported either. And a Python model cannot ",
+          {
+           "t": "code",
+           "v": "dbt.ref()"
+          },
+          " an ephemeral model. Traps T80 and T82 in ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch15-s6-3",
+     "number": "15.6.3",
+     "title": [
+      {
+       "t": "code",
+       "v": "view"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "ephemeral"
+      },
+      ": not supported"
+     ],
+     "titleText": "view and ephemeral: not supported"
+    }
+   ],
+   "title": [
+    "Materializations: table and incremental only"
+   ],
+   "titleText": "Materializations: table and incremental only"
+  },
+  {
+   "anchors": [
+    "sec-py-limits"
+   ],
+   "checkpoints": [],
+   "id": "ch15-s7",
+   "label": "sec:py-limits",
+   "labs": [],
+   "minutes": 5,
+   "number": "15.7",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Generic and singular data tests are SQL queries on the model's ",
+        {
+         "c": [
+          "table"
+         ],
+         "t": "i"
+        },
+        ", and the table of a Python model is a normal table. Your lab ran ",
+        {
+         "t": "code",
+         "v": "unique"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "not_null"
+        },
+        " on ",
+        {
+         "t": "code",
+         "v": "customer_segments"
+        },
+        " (both ",
+        {
+         "t": "code",
+         "v": "PASS"
+        },
+        "). Tests in ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " run after the Python model, and are skipped when it fails (Step 4)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch15-s7-1",
+     "number": "15.7.1",
+     "title": [
+      "Data tests: yes"
+     ],
+     "titleText": "Data tests: yes"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Unit tests (Chapter 19) work by replacing the model's inputs with fixed rows inside the model's ",
+        {
+         "c": [
+          "SQL"
+         ],
+         "t": "i"
+        },
+        ". A Python model has no SQL to rewrite. dbt 1.11.16 accepted our unit test definition for ",
+        {
+         "t": "code",
+         "v": "customer_segments"
+        },
+        " at parse time, but the run failed:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch15-c27",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:13:57  1 of 1 START unit_test customer_segments::test_customer_segments_loyal ......... [RUN]\n22:13:57  1 of 1 ERROR customer_segments::test_customer_segments_loyal ................... [ERROR in 0.06s]\n...\n  An error occurred during execution of unit test 'test_customer_segments_loyal'. There may be an error in the unit test definition: check the data types.\n   Runtime Error\n    Parser Error: syntax error at or near \"as\"\n    LINE 12:         import pandas as pd"
+      },
+      {
+       "c": [
+        "Unit tests support SQL models only. To test Python logic, use data tests on the result (or Python's own test tools outside dbt)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch15-s7-2",
+     "number": "15.7.2",
+     "title": [
+      "Unit tests: no"
+     ],
+     "titleText": "Unit tests: no"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Model contracts (Chapter 17) check the column names and types of a model ",
+        {
+         "c": [
+          "before"
+         ],
+         "t": "i"
+        },
+        " it is built, from its SQL. We added ",
+        {
+         "t": "code",
+         "v": "contract: {enforced: true}"
+        },
+        " with the six columns and their types to ",
+        {
+         "t": "code",
+         "v": "customer_segments"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch15-c28",
+       "lang": "output",
+       "t": "code",
+       "text": "Parsing Error\n  Contract enforcement failed for: (models/marts/customer_segments.py)\n  Language Error: Expected 'sql' but found 'python'"
+      },
+      {
+       "c": [
+        "A Parsing Error: the whole project stops. Contracts are for SQL models (table, view, incremental)."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"Unit tests and contracts work for every model.\""
+           ],
+           "t": "b"
+          },
+          " Not for Python models: a unit test on a Python model errors when it runs, and a contract on a Python model is a Parsing Error. Data tests, descriptions, tags, ",
+          {
+           "t": "code",
+           "v": "meta"
+          },
+          ", groups and access work normally. Traps T95 and T128 in ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch15-s7-3",
+     "number": "15.7.3",
+     "title": [
+      "Contracts: no"
+     ],
+     "titleText": "Contracts: no"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt show --select"
+        },
+        " runs a model's compiled code ",
+        {
+         "c": [
+          "as a query"
+         ],
+         "t": "i"
+        },
+        ". For a Python model, that code is Python:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch15-c29",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt show -s customer_segments"
+      },
+      {
+       "id": "ch15-c30",
+       "lang": "output",
+       "t": "code",
+       "text": "22:12:41  Encountered an error:\nRuntime Error\n  Runtime Error in model customer_segments (models/marts/customer_segments.py)\n    Parser Error: syntax error at or near \"pandas\"\n\n    LINE 4:   import pandas as pd\n                     ^"
+      },
+      {
+       "c": [
+        "Build the model first, then preview its table with ",
+        {
+         "t": "code",
+         "v": "dbt show --inline \"select * from {{ ref('customer_segments') }}\""
+        },
+        ", as in the lab."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch15-s7-4",
+     "number": "15.7.4",
+     "title": [
+      {
+       "t": "code",
+       "v": "dbt show"
+      },
+      " on a Python model"
+     ],
+     "titleText": "dbt show on a Python model"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "On a cloud platform, ",
+            {
+             "t": "code",
+             "v": "print()"
+            },
+            " output does not appear in dbt's logs (the code runs in the platform). Return debug information as a DataFrame, or use the platform's logs. (With dbt-duckdb the code runs inside the dbt process: we saw our ",
+            {
+             "t": "code",
+             "v": "print()"
+            },
+            " text in the terminal, but not in ",
+            {
+             "t": "code",
+             "v": "logs/dbt.log"
+            },
+            ".)"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "You cannot import functions from one model file into another."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Python models are usually slower and more expensive than SQL (a stored procedure, a cluster to start…), so keep them for the cases that need Python."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "SQL models (and tests, snapshots, exposures) can ",
+            {
+             "t": "code",
+             "v": "ref()"
+            },
+            " a Python model without any special syntax."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch15-s7-5",
+     "number": "15.7.5",
+     "title": [
+      "Other limits to know"
+     ],
+     "titleText": "Other limits to know"
+    }
+   ],
+   "title": [
+    "Testing, contracts and other limits"
+   ],
+   "titleText": "Testing, contracts and other limits"
+  },
+  {
+   "anchors": [
+    "sec-py-types"
+   ],
+   "checkpoints": [],
+   "id": "ch15-s8",
+   "label": "sec:py-types",
+   "labs": [
+    "ch15-lab2"
+   ],
+   "minutes": 15,
+   "number": "15.8",
+   "objectives": [
+    "1.8",
+    "3.1"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Compare ",
+        {
+         "t": "code",
+         "v": "lifetime_value"
+        },
+        " in the parent and in the Python model (DuckDB command line):"
+       ],
+       "t": "p"
+      },
+      {
+       "expected": "ch15-c32",
+       "id": "ch15-c31",
+       "lang": "sql",
+       "t": "code",
+       "text": "select table_name, column_name, data_type\nfrom information_schema.columns\nwhere table_schema = 'dbt_adnane'\n  and table_name in ('dim_customers', 'customer_segments')\n  and column_name in ('customer_id', 'number_of_orders', 'lifetime_value')\norder by table_name, column_name;"
+      },
+      {
+       "id": "ch15-c32",
+       "lang": "output",
+       "t": "code",
+       "text": "+-------------------+------------------+---------------+\n| table_name        | column_name      | data_type     |\n+-------------------+------------------+---------------+\n| customer_segments | customer_id      | INTEGER       |\n| customer_segments | lifetime_value   | DOUBLE        |\n| customer_segments | number_of_orders | BIGINT        |\n| dim_customers     | customer_id      | INTEGER       |\n| dim_customers     | lifetime_value   | DECIMAL(38,2) |\n| dim_customers     | number_of_orders | BIGINT        |\n+-------------------+------------------+---------------+"
+      },
+      {
+       "c": [
+        "The money column was an exact ",
+        {
+         "t": "code",
+         "v": "DECIMAL(38,2)"
+        },
+        " in ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " and became a ",
+        {
+         "t": "code",
+         "v": "DOUBLE"
+        },
+        " (a ",
+        {
+         "en": [
+          "floating-point number"
+         ],
+         "fr": "nombre à virgule flottante",
+         "id": "term-floating-point-number",
+         "t": "term"
+        },
+        ") in ",
+        {
+         "t": "code",
+         "v": "customer_segments"
+        },
+        ". The reason: ",
+        {
+         "t": "code",
+         "v": ".df()"
+        },
+        " converts the DECIMAL into pandas' ",
+        {
+         "t": "code",
+         "v": "float64"
+        },
+        ", and the table is created from the DataFrame. You can see it in the tiers output above, where values print as ",
+        {
+         "t": "code",
+         "v": "3.0"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "167.9"
+        },
+        " instead of ",
+        {
+         "t": "code",
+         "v": "3.00"
+        },
+        ". A floating-point number cannot store every decimal amount exactly (0.1 + 0.2 is not exactly 0.3), which matters for money."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "What to do:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "keep money calculations in SQL models when possible;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "if a Python model must return money, cast it back in a SQL model downstream (",
+            {
+             "t": "code",
+             "v": "cast(lifetime_value as decimal(16, 2))"
+            },
+            "), or build the column with an exact type inside the DataFrame before returning it;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "always check the column types of a new Python model, like Step 8 of the lab."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "The same kind of conversion happens on other platforms whenever data passes through pandas; the exact types depend on the adapter."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " recognise the three classic Python-model errors, then restore the file with Git."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 0."
+           ],
+           "t": "b"
+          },
+          " Your two files are not committed yet (the commit comes at the end of the chapter). Stage them, so that Git keeps a copy of the working version in its staging area (",
+          {
+           "href": "/learn/ch03/",
+           "label": "ch:git",
+           "t": "ref",
+           "text": "Chapter 3"
+          },
+          "):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c33",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git add models/marts\n$ git status --short\nM  models/marts/_marts__models.yml\nA  models/marts/customer_segments.py"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1 (view)."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "customer_segments.py"
+          },
+          ", change ",
+          {
+           "t": "code",
+           "v": "materialized=\"table\""
+          },
+          " to ",
+          {
+           "t": "code",
+           "v": "materialized=\"view\""
+          },
+          " and run ",
+          {
+           "t": "code",
+           "v": "dbt run -s customer_segments"
+          },
+          ". Expected: ",
+          {
+           "t": "code",
+           "v": "ERROR creating python view model"
+          },
+          " and ",
+          {
+           "c": [
+            "Materialization \"materialization_view_default\" only supports languages ['sql']; got \"python\""
+           ],
+           "t": "i"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2 (Jinja)."
+           ],
+           "t": "b"
+          },
+          " Restore ",
+          {
+           "t": "code",
+           "v": "table"
+          },
+          ", and replace the comment line about ",
+          {
+           "t": "code",
+           "v": ".df()"
+          },
+          " by ",
+          {
+           "t": "code",
+           "v": "# in SQL we would write {{ ref(\"dim_customers\") }}"
+          },
+          ". Run ",
+          {
+           "t": "code",
+           "v": "dbt run -s customer_segments"
+          },
+          ". Expected: ",
+          {
+           "c": [
+            "Parsing Error … No jinja in python model code is allowed"
+           ],
+           "t": "i"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3 (non-literal argument)."
+           ],
+           "t": "b"
+          },
+          " Remove that comment, then write ",
+          {
+           "t": "code",
+           "v": "name = \"dim_customers\""
+          },
+          " on its own line and change the next line to ",
+          {
+           "t": "code",
+           "v": "customers = dbt.ref(name).df()"
+          },
+          ". Run ",
+          {
+           "t": "code",
+           "v": "dbt parse"
+          },
+          ". Expected: ",
+          {
+           "c": [
+            "Error when trying to literal_eval an arg to dbt.ref() … function args only support Python literal structures"
+           ],
+           "t": "i"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Put the file back exactly as you staged it in Step 0, and rebuild:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c34",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git checkout -- models/marts/customer_segments.py\n$ dbt run -s customer_segments"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " of Step 4:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c35",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "21:02:59  1 of 1 START python table model dbt_adnane.customer_segments ................... [RUN]\n21:02:59  1 of 1 OK created python table model dbt_adnane.customer_segments .............. [OK in 0.32s]\n...\n21:02:59  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1"
+        },
+        {
+         "c": [
+          "(",
+          {
+           "t": "code",
+           "v": "git checkout -- <file>"
+          },
+          ", like ",
+          {
+           "t": "code",
+           "v": "git restore <file>"
+          },
+          ", copies the version from the staging area back into your folder. Without Step 0 the new file would be unknown to Git and the command would fail with ",
+          {
+           "c": [
+            "did not match any file(s) known to git"
+           ],
+           "t": "i"
+          },
+          ".)"
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch15-lab2",
+       "objectives": [
+        "1.8",
+        "3.1"
+       ],
+       "t": "lab",
+       "title": [
+        "Break the Python model on purpose"
+       ]
+      }
+     ],
+     "id": "ch15-s8-0",
+     "title": [
+      "Types change when data goes through pandas"
+     ],
+     "titleText": "Types change when data goes through pandas"
+    }
+   ],
+   "title": [
+    "Types change when data goes through pandas"
+   ],
+   "titleText": "Types change when data goes through pandas"
+  },
+  {
+   "anchors": [
+    "sec-py-platform-view"
+   ],
+   "checkpoints": [],
+   "id": "ch15-s9",
+   "label": "sec:py-platform-view",
+   "labs": [],
+   "minutes": 5,
+   "number": "15.9",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "In ",
+            {
+             "c": [
+              "dbt Studio"
+             ],
+             "t": "b"
+            },
+            " you write the ",
+            {
+             "t": "code",
+             "v": ".py"
+            },
+            " file in the editor and run it with ",
+            {
+             "t": "code",
+             "v": "dbt run"
+            },
+            " or ",
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            " in the command bar, exactly like a SQL model. The code still runs in your warehouse (Snowpark, Databricks, BigQuery), not in dbt's servers."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "In ",
+            {
+             "c": [
+              "jobs"
+             ],
+             "t": "b"
+            },
+            ", Python models are built in DAG order with the rest of the project; no special step is needed."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "In ",
+            {
+             "c": [
+              "dbt Catalog"
+             ],
+             "t": "b"
+            },
+            " and in the docs, Python models appear in the lineage like SQL models, with their description, columns and tests."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "A bug is hiding in our model."
+           ],
+           "t": "b"
+          },
+          " In Chapter 16 you will run ",
+          {
+           "t": "code",
+           "v": "dbt build --empty"
+          },
+          " on a new database. That command builds ",
+          {
+           "t": "code",
+           "v": "dim_customers"
+          },
+          " as an ",
+          {
+           "c": [
+            "empty"
+           ],
+           "t": "i"
+          },
+          " table, so ",
+          {
+           "t": "code",
+           "v": "dbt.ref(\"dim_customers\")"
+          },
+          " then gives our model an empty DataFrame, and ",
+          {
+           "t": "code",
+           "v": "pd.qcut"
+          },
+          " fails on it (",
+          {
+           "c": [
+            "Bin edges must be unique"
+           ],
+           "t": "i"
+          },
+          "). (",
+          {
+           "t": "code",
+           "v": "--empty"
+          },
+          " does not empty the inputs of the Python model itself: our ",
+          {
+           "t": "code",
+           "v": "dbt run --empty -s customer_segments"
+          },
+          " on the full database still built 100 rows; the problem is the empty parent.) Real code must handle empty inputs; Chapter 16 fixes the model. For now, keep the version above: it matches the reference tag ",
+          {
+           "t": "code",
+           "v": "ch15"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch15-s9-0",
+     "title": [
+      "Python models on the dbt platform, and a look ahead"
+     ],
+     "titleText": "Python models on the dbt platform, and a look ahead"
+    }
+   ],
+   "title": [
+    "Python models on the dbt platform, and a look ahead"
+   ],
+   "titleText": "Python models on the dbt platform, and a look ahead"
+  },
+  {
+   "anchors": [
+    "sec-py-commit"
+   ],
+   "checkpoints": [],
+   "id": "ch15-s10",
+   "label": "sec:py-commit",
+   "labs": [
+    "ch15-lab3"
+   ],
+   "minutes": 10,
+   "number": "15.10",
+   "objectives": [
+    "CP0-GIT",
+    "1.8"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Two files changed (already staged in Lab 2, Step 0). pandas lives in your venv, not in the project, so nothing else appears:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c36",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git status --short\nM  models/marts/_marts__models.yml\nA  models/marts/customer_segments.py\n$ git add models/marts\n$ git commit -m \"Chapter 15: Python model customer_segments\"\n[main 68a6bf2] Chapter 15: Python model customer_segments\n 2 files changed, 46 insertions(+)\n create mode 100644 models/marts/customer_segments.py"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Compare with the reference:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch15-c37",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git diff ref-ch15 --stat"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " no output if your project matches the reference tag ",
+          {
+           "t": "code",
+           "v": "ch15"
+          },
+          " (see ",
+          {
+           "href": "/learn/ch13/",
+           "label": "ch:snapshots",
+           "t": "ref",
+           "text": "Chapter 13"
+          },
+          ", ",
+          {
+           "href": "/learn/ch13/ch13-s13/",
+           "label": "sec:snap-commit",
+           "t": "ref",
+           "text": "Section 13.13"
+          },
+          ", if the ",
+          {
+           "t": "code",
+           "v": "ref-*"
+          },
+          " tags are missing). Otherwise ",
+          {
+           "t": "code",
+           "v": "git diff ref-ch15 -- models/marts/"
+          },
+          " shows the differences."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch15-lab3",
+       "objectives": [
+        "CP0-GIT",
+        "1.8"
+       ],
+       "t": "lab",
+       "title": [
+        "Commit Chapter 15 and compare with the reference"
+       ]
+      }
+     ],
+     "id": "ch15-s10-0",
+     "title": [
+      "Commit and compare"
+     ],
+     "titleText": "Commit and compare"
+    }
+   ],
+   "title": [
+    "Commit and compare"
+   ],
+   "titleText": "Commit and compare"
+  }
+ ],
+ "minutes": 110,
+ "number": 15,
+ "objectives": [
+  "1.2",
+  "1.8",
+  "2.1",
+  "3.1",
+  "5.1"
+ ],
+ "part": 2,
+ "partLabel": "Part II",
+ "partTitle": "Building with dbt",
+ "printed": "15",
+ "quiz": [
+  "q-ch15-01",
+  "q-ch15-02",
+  "q-ch15-03",
+  "q-ch15-04",
+  "q-ch15-05",
+  "q-ch15-06",
+  "q-ch15-07",
+  "q-ch15-08",
+  "q-ch15-09",
+  "q-ch15-10",
+  "q-ch15-11",
+  "q-ch15-12",
+  "q-ch15-13",
+  "q-ch15-14",
+  "q-ch15-15",
+  "q-ch15-16",
+  "q-ch15-17"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-py-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch15-01",
+      "q-ch15-02",
+      "q-ch15-03",
+      "q-ch15-04",
+      "q-ch15-05",
+      "q-ch15-06",
+      "q-ch15-07",
+      "q-ch15-08",
+      "q-ch15-09",
+      "q-ch15-10",
+      "q-ch15-11",
+      "q-ch15-12",
+      "q-ch15-13",
+      "q-ch15-14",
+      "q-ch15-15",
+      "q-ch15-16",
+      "q-ch15-17"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch15-01",
+    "q-ch15-02",
+    "q-ch15-03",
+    "q-ch15-04",
+    "q-ch15-05",
+    "q-ch15-06",
+    "q-ch15-07",
+    "q-ch15-08",
+    "q-ch15-09",
+    "q-ch15-10",
+    "q-ch15-11",
+    "q-ch15-12",
+    "q-ch15-13",
+    "q-ch15-14",
+    "q-ch15-15",
+    "q-ch15-16",
+    "q-ch15-17"
+   ],
+   "label": "sec:py-quiz",
+   "number": "15.11",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A Python model is a ",
+        {
+         "t": "code",
+         "v": ".py"
+        },
+        " file in ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        " with ",
+        {
+         "t": "code",
+         "v": "def model(dbt, session)"
+        },
+        " that returns ",
+        {
+         "c": [
+          "one DataFrame"
+         ],
+         "t": "b"
+        },
+        "; dbt saves it as a table."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Use ",
+        {
+         "t": "code",
+         "v": "dbt.ref()"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt.source()"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt.config()"
+        },
+        " (literal arguments only), ",
+        {
+         "t": "code",
+         "v": "dbt.config.get()"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt.this"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt.is_incremental"
+        },
+        ". ",
+        {
+         "c": [
+          "No Jinja"
+         ],
+         "t": "b"
+        },
+        " in the file, not even in comments."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The code runs ",
+        {
+         "c": [
+          "in the data platform"
+         ],
+         "t": "b"
+        },
+        ": Snowpark (Snowflake), PySpark clusters (Databricks), Dataproc or BigFrames (BigQuery), the dbt process itself (DuckDB). The DataFrame type follows the platform; pandas is widely accepted."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Libraries: the ",
+        {
+         "t": "code",
+         "v": "packages"
+        },
+        " config on Snowflake/Databricks; your own venv with DuckDB (",
+        {
+         "t": "code",
+         "v": "uv pip install pandas"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Materializations: ",
+        {
+         "t": "code",
+         "v": "table"
+        },
+        " (default) and ",
+        {
+         "t": "code",
+         "v": "incremental"
+        },
+        " only; no view, no ephemeral; a Python model cannot ",
+        {
+         "t": "code",
+         "v": "ref"
+        },
+        " an ephemeral model."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Data tests: yes. Unit tests: no. Contracts: no (Parsing Error). ",
+        {
+         "t": "code",
+         "v": "dbt show -s"
+        },
+        " fails on Python models; use ",
+        {
+         "t": "code",
+         "v": "--inline"
+        },
+        " with ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Configure in ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        " (folder configs and hooks apply), in YAML (Jinja allowed, read with ",
+        {
+         "t": "code",
+         "v": "dbt.config.get"
+        },
+        ") or in the file."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Data that goes through pandas can change type (DECIMAL became DOUBLE): check the types and cast money in SQL."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Prefer SQL when both are possible; use Python for libraries and algorithms that SQL cannot express well."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "Python Models"
+}

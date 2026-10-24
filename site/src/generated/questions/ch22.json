@@ -1,0 +1,1985 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "Encountered an error"
+     },
+     " before any ",
+     {
+      "t": "code",
+      "v": "START"
+     },
+     " line means dbt stopped while reading the project, and ",
+     {
+      "t": "code",
+      "v": "Parsing Error"
+     },
+     " + ",
+     {
+      "t": "code",
+      "v": "Syntax error near line"
+     },
+     " is the YAML reader. dbt parses ",
+     {
+      "c": [
+       "every"
+      ],
+      "t": "i"
+     },
+     " file, so the broken file can be unrelated to ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     ". A: a database error would come after ",
+     {
+      "t": "code",
+      "v": "START"
+     },
+     " and say ",
+     {
+      "t": "code",
+      "v": "Runtime Error"
+     },
+     "/",
+     {
+      "t": "code",
+      "v": "Database Error"
+     },
+     ". C: that is a ",
+     {
+      "t": "code",
+      "v": "Compilation Error"
+     },
+     ". D: connection problems say ",
+     {
+      "t": "code",
+      "v": "dbt was unable to connect"
+     },
+     " (or an IO/authentication error), not ",
+     {
+      "t": "code",
+      "v": "Parsing Error"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch22-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The warehouse refused the SQL of ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " at line 15."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A YAML file of the project is invalid; no SQL was sent, and the file may have nothing to do with ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "fct_orders.sql"
+     },
+     " has a Jinja block that is not closed."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The connection in ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " is broken; run ",
+     {
+      "t": "code",
+      "v": "dbt debug"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "A colleague runs ",
+     {
+      "t": "code",
+      "v": "dbt run -s fct_orders"
+     },
+     " and gets, right after ",
+     {
+      "t": "code",
+      "v": "Registered adapter"
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "Encountered an error: Parsing Error … Syntax error near line 15"
+     },
+     ". What is true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " DuckDB's ",
+     {
+      "t": "code",
+      "v": "Runtime Error … Binder Error"
+     },
+     " is the warehouse refusing the SQL; most adapters call it ",
+     {
+      "t": "code",
+      "v": "Database Error"
+     },
+     ". A and B are raised by dbt before any SQL is sent. D: in the documentation, a ",
+     {
+      "c": [
+       "Dependency Error"
+      ],
+      "t": "i"
+     },
+     " is a problem of the DAG itself (a cycle), found before any SQL is sent; a missing column is not one."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch22-02",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "Compilation Error"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "Parsing Error"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "Database Error"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "Dependency Error"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "On DuckDB a model fails with ",
+     {
+      "t": "code",
+      "v": "Runtime Error in model stg_x … Binder Error: Referenced column \"emial\" not found"
+     },
+     ". How is the same kind of failure labelled on Snowflake or BigQuery?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 1."
+      ],
+      "t": "b"
+     },
+     " Jinja runs before SQL, so the ",
+     {
+      "t": "code",
+      "v": "ref('fct_orders')"
+     },
+     " inside the SQL comment is executed and makes the staging model depend on a mart that already depends on it. Line 5 is a normal ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     " (sources cannot create cycles). Fix: delete line 1 or use ",
+     {
+      "t": "code",
+      "v": "{# #}"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch22-c71",
+   "lines": 12,
+   "numbering": "listing"
+  },
+  "id": "q-ch22-03",
+  "key": 1,
+  "keyRaw": "\\textbf{Line 1.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "After this change, ",
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " passes but ",
+     {
+      "t": "code",
+      "v": "dbt ls"
+     },
+     " fails with ",
+     {
+      "t": "code",
+      "v": "Found a cycle"
+     },
+     ". Which line creates the cycle?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch22-c71",
+    "lang": "dbt",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "-- depends_on: {{ ref('fct_orders') }}\nwith\n\nsource as (\n    select * from {{ source('stripe', 'payments') }}\n),\n\nrenamed as (\n    select id as payment_id, orderid as order_id from source\n)\n\nselect * from renamed",
+    "title": "models/staging/stripe/stg_stripe__payments.sql"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " A broken template and a missing ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " target are found while parsing. B and D are only found when the warehouse runs the SQL (",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "dbt show"
+     },
+     "). E: the cycle is found when the graph is linked (",
+     {
+      "t": "code",
+      "v": "dbt ls"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "compile"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "run"
+     },
+     "), not by ",
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     ", as bug 4 showed."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch22-04",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "{% if %}"
+     },
+     " block without ",
+     {
+      "t": "code",
+      "v": "{% endif %}"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A column name that does not exist in the source table."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ref('stg_orders')"
+     },
+     " when no model has that name."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A semicolon at the end of a model."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Two models that ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " each other."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two problems does ",
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " report?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "target/run/"
+       }
+      ],
+      "t": "b"
+     },
+     " (with the same sub-path as in ",
+     {
+      "t": "code",
+      "v": "target/compiled/"
+     },
+     "). The statement is also in ",
+     {
+      "t": "code",
+      "v": "logs/dbt.log"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch22-05",
+  "key": {
+   "accepted": [
+    "target/run/"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{target/run/}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "dbt writes the rendered ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     " of a model in ",
+     {
+      "t": "code",
+      "v": "target/compiled/"
+     },
+     ", and the complete statement that it executed (for example ",
+     {
+      "t": "code",
+      "v": "create view … as (…)"
+     },
+     ") in ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-d, 3-a, 4-e, 5-b."
+      ],
+      "t": "b"
+     },
+     " These are the exact messages of bugs 5, 1, 8, 2 and 4."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch22-06",
+  "key": {
+   "1": "c",
+   "2": "d",
+   "3": "a",
+   "4": "e",
+   "5": "b"
+  },
+  "keyRaw": "\\textbf{1-c, 2-d, 3-a, 4-e, 5-b.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "depends on a node named 'stg_orders' which was not found"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "Unexpected end of template … 'endif'"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "Parser Error: syntax error at or near \";\""
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "did not find expected '-' indicator"
+      }
+     ],
+     "id": "4"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "Found a cycle: … --> …"
+      }
+     ],
+     "id": "5"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "a semicolon at the end of the model"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "two models ",
+      {
+       "t": "code",
+       "v": "ref"
+      },
+      " each other (directly or not)"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "a ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      " to a model that does not exist"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "an ",
+      {
+       "t": "code",
+       "v": "if"
+      },
+      " block that is never closed"
+     ],
+     "id": "d"
+    },
+    {
+     "c": [
+      "wrong indentation in a YAML list"
+     ],
+     "id": "e"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each message with its most likely cause."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B, D, F, C, E, A."
+      ],
+      "t": "b"
+     },
+     " Reproduce, branch, fix, test with ",
+     {
+      "t": "code",
+      "v": "build"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     ", pull request with CI and review, merge. Fixing on ",
+     {
+      "t": "code",
+      "v": "main"
+     },
+     " or in production first skips the review and the tests."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch22-07",
+  "key": [
+   "B",
+   "D",
+   "F",
+   "C",
+   "E",
+   "A"
+  ],
+  "keyRaw": "\\textbf{B, D, F, C, E, A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Merge the pull request; the production job runs the new code."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Reproduce the error in your development target."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Run ",
+     {
+      "t": "code",
+      "v": "dbt build -s the_model+"
+     },
+     " in development."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Create a branch from an up-to-date ",
+     {
+      "t": "code",
+      "v": "main"
+     },
+     "."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Open a pull request and wait for the CI job and a review."
+    ],
+    "id": "E"
+   },
+   {
+    "c": [
+     "Fix the root cause in the model file."
+    ],
+    "id": "F"
+   }
+  ],
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "A model fails in production. Put the steps of a safe fix in order."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, YES, NO."
+      ],
+      "t": "b"
+     },
+     " The ",
+     {
+      "t": "code",
+      "v": "flags:"
+     },
+     " block applies to every invocation of the project. Behavior change flags exist only in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " (",
+     {
+      "t": "code",
+      "v": "No such option"
+     },
+     " on the command line). Precedence is CLI > environment > ",
+     {
+      "t": "code",
+      "v": "flags:"
+     },
+     " > default. Paths (",
+     {
+      "t": "code",
+      "v": "log-path"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "target-path"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "state"
+     },
+     ") are not accepted under ",
+     {
+      "t": "code",
+      "v": "flags:"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch22-08",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": false
+  },
+  "keyRaw": "\\textbf{YES, NO, YES, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "fail_fast: true"
+     },
+     " under ",
+     {
+      "t": "code",
+      "v": "flags:"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " makes every run of the project stop at the first failure."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "skip_nodes_if_on_run_start_fails"
+     },
+     " can be passed as ",
+     {
+      "t": "code",
+      "v": "--skip-nodes-if-on-run-start-fails"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "An environment variable overrides the same flag set under ",
+     {
+      "t": "code",
+      "v": "flags:"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "log-path"
+     },
+     " can be set under ",
+     {
+      "t": "code",
+      "v": "flags:"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about flags in dbt 1.11:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The environment variable is more specific than the project file. A: the project value loses to the environment. C and D: there is no conflict rule; precedence decides (we measured 60, 70 and 90 with the three levels)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch22-09",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "60"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "70"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "80 (the default), because the two settings conflict"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt stops with an error about two settings"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " contains ",
+     {
+      "t": "code",
+      "v": "flags: {printer_width: 60}"
+     },
+     ", the terminal has ",
+     {
+      "t": "code",
+      "v": "DBT_PRINTER_WIDTH=70"
+     },
+     ", and you type ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " with no option. Which width is used?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "error: \"all\""
+     },
+     " plus the exception in ",
+     {
+      "t": "code",
+      "v": "warn"
+     },
+     ". A: ",
+     {
+      "t": "code",
+      "v": "--warn-error"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "--warn-error-options"
+     },
+     " cannot be combined (",
+     {
+      "t": "code",
+      "v": "not allowed with argument warn_error"
+     },
+     "). B: ",
+     {
+      "t": "code",
+      "v": "include"
+     },
+     "/",
+     {
+      "t": "code",
+      "v": "exclude"
+     },
+     " are the deprecated names; worse, we tried this exact option and dbt stopped at once with ",
+     {
+      "t": "code",
+      "v": "Compilation Error [WARNING][WEOIncludeExcludeDeprecation]"
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "\"include\": \"all\""
+     },
+     " turned the deprecation warning itself into an error. D: ",
+     {
+      "t": "code",
+      "v": "warn"
+     },
+     " without ",
+     {
+      "t": "code",
+      "v": "error: \"all\""
+     },
+     " is rejected."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch22-10",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "--warn-error --warn-error-options"
+     },
+     {
+      "t": "code",
+      "v": " '{\"warn\": [\"NoNodesForSelectionCriteria\"]}'"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "--warn-error-options '{\"include\": \"all\", \"exclude\": [\"NoNodesForSelectionCriteria\"]}'"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "--warn-error-options '{\"error\": \"all\", \"warn\": [\"NoNodesForSelectionCriteria\"]}'"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "--warn-error-options '{\"warn\": [\"NoNodesForSelectionCriteria\"]}'"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "You want every warning to be an error, except the warning about an empty selection. Which option is valid in dbt 1.11?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "target/run"
+     },
+     " holds the executed DDL/DML and the debug log records every statement. A: ",
+     {
+      "t": "code",
+      "v": "target/compiled"
+     },
+     " only has the ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     ". C: the manifest stores the compiled code of nodes, not the materialization's ",
+     {
+      "t": "code",
+      "v": "merge"
+     },
+     ". D is false."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch22-11",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "target/compiled/"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "target/run/"
+     },
+     " and in ",
+     {
+      "t": "code",
+      "v": "logs/dbt.log"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "target/manifest.json"
+     },
+     " only."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Nowhere: dbt sends it without saving it."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "Where do you find the ",
+     {
+      "t": "code",
+      "v": "merge into …"
+     },
+     " statement that dbt ran for an incremental model?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The YAML schema validation (active for Snowflake, BigQuery, Databricks, Redshift in dbt 1.11) warns about the unknown key; a warning does not stop parsing, and the misspelled key is ignored, so the description is empty. A: the YAML is valid. C: dbt never guesses. D: true on DuckDB (silent), but not \"on any adapter\"."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch22-12",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "Parsing Error"
+     },
+     " stops the project."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A deprecation warning (",
+     {
+      "t": "code",
+      "v": "CustomKeyInObjectDeprecation"
+     },
+     "); parsing continues and the model has no description."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt corrects the key to ",
+     {
+      "t": "code",
+      "v": "description"
+     },
+     " automatically."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Nothing on any adapter: dbt never checks property names."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "On Snowflake with dbt 1.11, a properties file says ",
+     {
+      "t": "code",
+      "v": "desciption:"
+     },
+     " (typo) for a model. What happens at ",
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "--debug"
+       }
+      ],
+      "t": "b"
+     },
+     " (or ",
+     {
+      "t": "code",
+      "v": "--log-level debug"
+     },
+     "). ",
+     {
+      "t": "code",
+      "v": "-d"
+     },
+     " is the short form of ",
+     {
+      "t": "code",
+      "v": "--debug"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch22-13",
+  "key": {
+   "accepted": [
+    "--debug"
+   ]
+  },
+  "keyNote": "alternative answers mentioned after the key: '(or --log-level debug)'",
+  "keyRaw": "\\textbf{\\code{-{}-debug}}",
+  "keyStatus": "todo",
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "To see in the console the SQL statements that dbt sends, you add the flag ",
+     {
+      "t": "blank"
+     },
+     " (or its short form ",
+     {
+      "t": "code",
+      "v": "-d"
+     },
+     ")."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " If the bare ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     " runs, the SQL logic is fine and the failure is in what dbt does around it (read ",
+     {
+      "t": "code",
+      "v": "target/run"
+     },
+     " and the log). A: retrying the same thing gives the same error. C: a YAML problem stops dbt before any SQL. D: ",
+     {
+      "t": "code",
+      "v": "target/compiled"
+     },
+     " is rewritten at every compile or run."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch22-14",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The warehouse is unstable; run the model again."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The problem comes from what dbt adds around the SQL (materialization, hooks, a final semicolon, a contract, permissions on the target schema)."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The YAML file of the model is invalid."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The compiled SQL is outdated; ",
+     {
+      "t": "code",
+      "v": "target/compiled"
+     },
+     " is never refreshed."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "The compiled SQL of a failing model runs without any error when you paste it in the warehouse console. What does it tell you?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B and D."
+      ],
+      "t": "b"
+     },
+     " Both link the DAG. A: we saw ",
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " pass with the cycle. C: ",
+     {
+      "t": "code",
+      "v": "dbt debug"
+     },
+     " does not read the models. E: ",
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     " installs packages."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch22-15",
+  "key": [
+   "B",
+   "D"
+  ],
+  "keyRaw": "\\textbf{B and D.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt parse"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt ls -s stg_stripe__payments"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt debug"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt compile"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt deps"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "After bug 4 (a ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " inside a SQL comment), which two commands report ",
+     {
+      "t": "code",
+      "v": "Found a cycle"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, YES, NO."
+      ],
+      "t": "b"
+     },
+     " The file is written at debug level with every statement, and new runs are ",
+     {
+      "c": [
+       "appended"
+      ],
+      "t": "i"
+     },
+     ". ",
+     {
+      "t": "code",
+      "v": "-q"
+     },
+     " only quiets the console: we checked that ",
+     {
+      "t": "code",
+      "v": "dbt run -q"
+     },
+     " still added the ",
+     {
+      "t": "code",
+      "v": "create view"
+     },
+     " statement to the file."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch22-16",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": false
+  },
+  "keyRaw": "\\textbf{YES, NO, YES, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It contains the SQL statements sent to the warehouse."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It is emptied at the beginning of every command."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It is written at the ",
+     {
+      "t": "code",
+      "v": "debug"
+     },
+     " level, even when the console shows only info messages."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run -q"
+     },
+     " also stops dbt from writing to the file."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "logs/dbt.log"
+     },
+     " with the default settings:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A."
+      ],
+      "t": "b"
+     },
+     " In 1.11 the flag defaults to ",
+     {
+      "t": "code",
+      "v": "false"
+     },
+     ": the hook is reported as an error (exit code 1) but the models run. B is the behaviour with the flag set to ",
+     {
+      "t": "code",
+      "v": "true"
+     },
+     " (the default from 1.12, and what the reference project opts in to). C: dbt does not retry hooks. D: a failed hook is an error."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch22-17",
+  "key": "A",
+  "keyRaw": "\\textbf{A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The selected models still run; the command ends with an error for the hook."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "All selected models are skipped."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt retries the hook three times."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The hook failure is only a warning; the exit code is 0."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "Your project runs dbt 1.11 and does not set ",
+     {
+      "t": "code",
+      "v": "skip_nodes_if_on_run_start_fails"
+     },
+     ". An ",
+     {
+      "t": "code",
+      "v": "on-run-start"
+     },
+     " hook fails. What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-d, 3-a, 4-b."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt debug"
+     },
+     " checks files and connection; ",
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     " renders Jinja; ",
+     {
+      "t": "code",
+      "v": "dbt show"
+     },
+     " runs a preview; ",
+     {
+      "t": "code",
+      "v": "dbt ls"
+     },
+     " resolves selections."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch22-18",
+  "key": {
+   "1": "c",
+   "2": "d",
+   "3": "a",
+   "4": "b"
+  },
+  "keyRaw": "\\textbf{1-c, 2-d, 3-a, 4-b.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      "Can dbt connect to the warehouse with my profile?"
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      "What SQL does my Jinja produce?"
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      "Does my query run, and what do the first rows look like?"
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      "Which nodes does my selection match?"
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt show -s model"
+      }
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt ls -s …"
+      }
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt debug"
+      }
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt compile -s model"
+      }
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each question with the best tool."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " The graph-validation step checks that the DAG has no cycle; its error type is ",
+     {
+      "c": [
+       "Dependency Error"
+      ],
+      "t": "i"
+     },
+     " (dbt 1.11 prints only ",
+     {
+      "t": "code",
+      "v": "Found a cycle"
+     },
+     "). A: a Runtime Error happens when dbt starts (no project, no profile, no connection). B: Compilation Errors are Jinja, YAML or ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     "/",
+     {
+      "t": "code",
+      "v": "source"
+     },
+     " problems found while parsing. D: no SQL was sent to the warehouse."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch22-19",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Runtime Error"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Compilation Error"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Dependency Error"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Database Error"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 22,
+   "kind": "chapter",
+   "n": 19
+  },
+  "stem": [
+   {
+    "c": [
+     "The dbt documentation sorts errors into four types. A command stops with ",
+     {
+      "t": "code",
+      "v": "Found a cycle: model.x --> model.y --> model.x"
+     },
+     ". Which type is it?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

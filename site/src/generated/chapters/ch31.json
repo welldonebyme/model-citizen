@@ -1,0 +1,517 @@
+{
+ "id": "ch31",
+ "intro": [
+  {
+   "c": [
+    "This chapter corrects ",
+    {
+     "href": "/learn/ch30/",
+     "label": "ch:mock2",
+     "t": "ref",
+     "text": "Chapter 30"
+    },
+    ". First fill in the score table, then read ",
+    {
+     "c": [
+      "every"
+     ],
+     "t": "i"
+    },
+    " explanation, also for the questions you got right: a lucky guess is not knowledge. Each answer ends with the chapter to review."
+   ],
+   "t": "p"
+  },
+  {
+   "c": [
+    "How to score."
+   ],
+   "level": 4,
+   "t": "h"
+  },
+  {
+   "c": [
+    "A multiple select, matching, build list or DOMC question counts as correct only if ",
+    {
+     "c": [
+      "everything"
+     ],
+     "t": "i"
+    },
+    " is right (all pairs, the full order, every YES/NO). The real exam is stricter than you think on these formats, so train with the same rule."
+   ],
+   "t": "p"
+  }
+ ],
+ "kind": "mock-answers",
+ "label": "ch:mock2-answers",
+ "lessons": [
+  {
+   "anchors": [],
+   "checkpoints": [],
+   "id": "ch31-s1",
+   "labs": [],
+   "minutes": 5,
+   "number": "",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Topic"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Questions"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "c": [
+             "Correct / total"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "1. Developing dbt models"
+          ]
+         },
+         {
+          "c": [
+           "1, 2, 6, 8, 10, 11, 14, 16, 19, 22, 23, 25, 29, 32, 37, 40, 41, 45, 46, 49, 52, 54, 55, 60, 62, 63"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 26"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "2. Model governance"
+          ]
+         },
+         {
+          "c": [
+           "5, 15, 28, 33, 42, 51, 57"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 7"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "3. Debugging data modeling errors"
+          ]
+         },
+         {
+          "c": [
+           "3, 17, 18, 26, 36, 43, 44, 50"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 8"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "4. Managing data pipelines"
+          ]
+         },
+         {
+          "c": [
+           "9, 12, 27, 48, 58"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 5"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "5. Implementing dbt tests"
+          ]
+         },
+         {
+          "c": [
+           "13, 20, 24, 30, 34, 39, 47, 53, 65"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 9"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "6. Documentation and sources (exposures, freshness)"
+          ]
+         },
+         {
+          "c": [
+           "7, 31, 38, 61"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 4"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "7. State, deferral and retry"
+          ]
+         },
+         {
+          "c": [
+           "4, 21, 35, 56, 59, 64"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 6"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Total"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 65"
+          ]
+         }
+        ]
+       ],
+       "rules": [
+        7
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "80% or more (52+ correct)"
+               ],
+               "t": "b"
+              },
+              ": you are ready. Keep your level with the last mock exam and the cheat sheets."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "65% to 79% (43–51 correct)"
+               ],
+               "t": "b"
+              },
+              ": you are close. For every topic below 80%, re-read the chapters given in the \"Review\" lines and redo their labs."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Less than 65% (42 or fewer)"
+               ],
+               "t": "b"
+              },
+              ": do not book the exam yet. Redo the parts of the book where you lost the most points, then take this mock exam again in one week."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ul",
+         "t": "list"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout",
+       "title": [
+        {
+         "name": "info-circle",
+         "t": "icon"
+        },
+        " What your score means"
+       ]
+      }
+     ],
+     "id": "ch31-s1-0",
+     "title": [
+      "Score table"
+     ],
+     "titleText": "Score table"
+    }
+   ],
+   "title": [
+    "Score table"
+   ],
+   "titleText": "Score table"
+  }
+ ],
+ "minutes": 5,
+ "mock": 2,
+ "number": 31,
+ "objectives": [],
+ "part": 9,
+ "partLabel": "Part IX",
+ "partTitle": "Exam Mastery",
+ "printed": "31",
+ "quiz": [],
+ "quizSections": [
+  {
+   "blocks": [
+    {
+     "ids": [
+      "m2-q01",
+      "m2-q02",
+      "m2-q03",
+      "m2-q04",
+      "m2-q05",
+      "m2-q06",
+      "m2-q07",
+      "m2-q08",
+      "m2-q09",
+      "m2-q10",
+      "m2-q11",
+      "m2-q12",
+      "m2-q13",
+      "m2-q14",
+      "m2-q15",
+      "m2-q16",
+      "m2-q17",
+      "m2-q18",
+      "m2-q19",
+      "m2-q20",
+      "m2-q21",
+      "m2-q22",
+      "m2-q23",
+      "m2-q24",
+      "m2-q25",
+      "m2-q26",
+      "m2-q27",
+      "m2-q28",
+      "m2-q29",
+      "m2-q30",
+      "m2-q31",
+      "m2-q32",
+      "m2-q33",
+      "m2-q34",
+      "m2-q35",
+      "m2-q36",
+      "m2-q37",
+      "m2-q38",
+      "m2-q39",
+      "m2-q40",
+      "m2-q41",
+      "m2-q42",
+      "m2-q43",
+      "m2-q44",
+      "m2-q45",
+      "m2-q46",
+      "m2-q47",
+      "m2-q48",
+      "m2-q49",
+      "m2-q50",
+      "m2-q51",
+      "m2-q52",
+      "m2-q53",
+      "m2-q54",
+      "m2-q55",
+      "m2-q56",
+      "m2-q57",
+      "m2-q58",
+      "m2-q59",
+      "m2-q60",
+      "m2-q61",
+      "m2-q62",
+      "m2-q63",
+      "m2-q64",
+      "m2-q65"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "m2-q01",
+    "m2-q02",
+    "m2-q03",
+    "m2-q04",
+    "m2-q05",
+    "m2-q06",
+    "m2-q07",
+    "m2-q08",
+    "m2-q09",
+    "m2-q10",
+    "m2-q11",
+    "m2-q12",
+    "m2-q13",
+    "m2-q14",
+    "m2-q15",
+    "m2-q16",
+    "m2-q17",
+    "m2-q18",
+    "m2-q19",
+    "m2-q20",
+    "m2-q21",
+    "m2-q22",
+    "m2-q23",
+    "m2-q24",
+    "m2-q25",
+    "m2-q26",
+    "m2-q27",
+    "m2-q28",
+    "m2-q29",
+    "m2-q30",
+    "m2-q31",
+    "m2-q32",
+    "m2-q33",
+    "m2-q34",
+    "m2-q35",
+    "m2-q36",
+    "m2-q37",
+    "m2-q38",
+    "m2-q39",
+    "m2-q40",
+    "m2-q41",
+    "m2-q42",
+    "m2-q43",
+    "m2-q44",
+    "m2-q45",
+    "m2-q46",
+    "m2-q47",
+    "m2-q48",
+    "m2-q49",
+    "m2-q50",
+    "m2-q51",
+    "m2-q52",
+    "m2-q53",
+    "m2-q54",
+    "m2-q55",
+    "m2-q56",
+    "m2-q57",
+    "m2-q58",
+    "m2-q59",
+    "m2-q60",
+    "m2-q61",
+    "m2-q62",
+    "m2-q63",
+    "m2-q64",
+    "m2-q65"
+   ],
+   "kind": "mock-answers",
+   "number": "",
+   "title": [
+    "Answers"
+   ],
+   "titleText": "Answers"
+  }
+ ],
+ "summary": [],
+ "title": "Mock Exam 2: Answers and Explanations"
+}

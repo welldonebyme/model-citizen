@@ -1,0 +1,5048 @@
+{
+ "id": "ch25",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "Developing a fix and testing it ",
+      {
+       "c": [
+        "before"
+       ],
+       "t": "i"
+      },
+      " merging: branches, pull requests, a CI job that builds the change in an isolated schema, required checks."
+     ],
+     "id": "3.4"
+    },
+    {
+     "c": [
+      "Placing testing steps in the workflow: which tests run in development, in CI and in production."
+     ],
+     "id": "5.3"
+    },
+    {
+     "c": [
+      "Dry runs with ",
+      {
+       "t": "code",
+       "v": "--empty"
+      },
+      ": what they do, where they fit in CI, and their limits."
+     ],
+     "id": "1.12"
+    },
+    {
+     "c": [
+      "State in practice: CI jobs that compare with production and defer to it (",
+      {
+       "href": "/learn/ch24/",
+       "label": "ch:state-defer-retry",
+       "t": "ref",
+       "text": "Chapter 24"
+      },
+      ")."
+     ],
+     "id": "7.1"
+    },
+    {
+     "c": [
+      "The dev-to-prod workflow with Git (",
+      {
+       "href": "/learn/ch03/",
+       "label": "ch:git",
+       "t": "ref",
+       "text": "Chapter 3"
+      },
+      "), plus PR templates and branch protection."
+     ],
+     "id": "CP0-GIT"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "Until now, you ran every command yourself, on your laptop, when you wanted. A real data team cannot work like that. Dashboards are read every morning by people who never open dbt; they need production tables that are built on time, tested, and never broken by a half-finished change. Ten analytics engineers change the same project every day; each change must be checked automatically before it reaches production."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "This chapter puts the pieces together: ",
+      {
+       "c": [
+        "environments"
+       ],
+       "t": "i"
+      },
+      " (where code runs: your development schema, a CI schema, production), ",
+      {
+       "c": [
+        "jobs"
+       ],
+       "t": "i"
+      },
+      " (who runs dbt, when, with which commands) and ",
+      {
+       "c": [
+        "CI/CD"
+       ],
+       "t": "i"
+      },
+      " (every pull request is built and tested automatically, and what is merged is deployed). You will see how the dbt platform does it with buttons, then build the same thing yourself with dbt Core and GitHub Actions, and run it locally to prove that it works. On the exam, these topics appear as scenarios: \"a developer wants to test a fix before merging\", \"where should unit tests run?\", \"why is the CI job building nothing?\"."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "The same dbt code runs in several environments (development, CI, production) that differ only by their target: connection, schema, credentials and the Git branch they use. Changes travel from a feature branch to production through a pull request whose CI job builds only the modified models in a temporary schema, deferring the rest to production, and blocks the merge if anything fails. Production jobs run on a schedule or on events (merge, another job, API), and each kind of test has its place: unit tests in development and CI, data tests everywhere, source freshness in production."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:environments-ci",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-envci-environments"
+   ],
+   "checkpoints": [],
+   "id": "ch25-s1",
+   "label": "sec:envci-environments",
+   "labs": [],
+   "minutes": 5,
+   "number": "25.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "blocks": [
+        {
+         "c": [
+          "A restaurant has a test kitchen, a tasting table and the dining room. A cook invents a new dish in the test kitchen (development). Before the dish goes on the menu, the chef tastes it at the tasting table, with the real sauces of the restaurant (CI). Only then is it served in the dining room, every day at the same time (production). Same recipes, three places, three purposes."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "An ",
+        {
+         "en": [
+          "environment"
+         ],
+         "fr": "environnement",
+         "id": "term-environment",
+         "t": "term"
+        },
+        " is the set of settings that decides ",
+        {
+         "c": [
+          "how"
+         ],
+         "t": "i"
+        },
+        " and ",
+        {
+         "c": [
+          "where"
+         ],
+         "t": "i"
+        },
+        " dbt runs the project: which warehouse connection and credentials, which database and schema, which dbt version, which version of the code (Git branch). The project files are the same everywhere; only the environment changes. With dbt Core, an environment is mostly a ",
+        {
+         "c": [
+          "target"
+         ],
+         "t": "i"
+        },
+        " in ",
+        {
+         "t": "code",
+         "v": "profiles.yml"
+        },
+        " (",
+        {
+         "href": "/learn/ch10/",
+         "label": "ch:configuration",
+         "t": "ref",
+         "text": "Chapter 10"
+        },
+        "); in the dbt platform it is an object you configure in the web interface."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Development"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "CI"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Production"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Purpose"
+          ]
+         },
+         {
+          "c": [
+           "Write and try changes"
+          ]
+         },
+         {
+          "c": [
+           "Check a pull request before merge"
+          ]
+         },
+         {
+          "c": [
+           "Tables that people use"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Who runs dbt"
+          ]
+         },
+         {
+          "c": [
+           "You, by hand"
+          ]
+         },
+         {
+          "c": [
+           "Automatically, on each pull request"
+          ]
+         },
+         {
+          "c": [
+           "A scheduled or triggered job"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Code"
+          ]
+         },
+         {
+          "c": [
+           "Your feature branch"
+          ]
+         },
+         {
+          "c": [
+           "The pull request's branch"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "main"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Schema in our project"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_adnane"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_ci"
+           },
+           " (dbt platform: ",
+           {
+            "t": "code",
+            "v": "dbt_cloud_pr_…"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "prod"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "marts"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "snapshots"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Data"
+          ]
+         },
+         {
+          "c": [
+           "Same raw data, sometimes filtered"
+          ]
+         },
+         {
+          "c": [
+           "Production parents via defer"
+          ]
+         },
+         {
+          "c": [
+           "All the data"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Lifetime"
+          ]
+         },
+         {
+          "c": [
+           "As long as you need"
+          ]
+         },
+         {
+          "c": [
+           "Throwaway, dropped after the PR"
+          ]
+         },
+         {
+          "c": [
+           "Permanent"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "In our project the three environments share ",
+        {
+         "c": [
+          "one"
+         ],
+         "t": "i"
+        },
+        " DuckDB file and differ by schema. Large companies often go further: a separate database (or even a separate account) for development and CI, with less privileged credentials, so that a mistake in development can never touch production. The principle is the same."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch25-s1-0",
+     "title": [
+      "Three environments, one project"
+     ],
+     "titleText": "Three environments, one project"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Since ",
+        {
+         "href": "/learn/ch24/",
+         "label": "ch:state-defer-retry",
+         "t": "ref",
+         "text": "Chapter 24"
+        },
+        " your ",
+        {
+         "t": "code",
+         "v": "~/.dbt/profiles.yml"
+        },
+        " has three outputs:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch25-c1",
+       "lang": "yaml",
+       "t": "code",
+       "text": "jaffle_dbt:\n  target: dev\n  outputs:\n    dev:\n      type: duckdb\n      # DBT_DUCKDB_PATH lets CI (or a test) point to another file; the default is our practice database\n      path: \"{{ env_var('DBT_DUCKDB_PATH', '../practice/practice.duckdb') }}\"   # relative: run dbt from jaffle_dbt\n      schema: dbt_adnane\n      threads: 4\n    ci:\n      # an EMPTY schema used to check a change in isolation (Chapters 24-25)\n      type: duckdb\n      path: \"{{ env_var('DBT_DUCKDB_PATH', '../practice/practice.duckdb') }}\"\n      schema: dbt_ci\n      threads: 4\n    prod:\n      type: duckdb\n      path: \"{{ env_var('DBT_DUCKDB_PATH', '../practice/practice.duckdb') }}\"\n      schema: prod\n      threads: 4",
+       "title": "~/.dbt/profiles.yml"
+      },
+      {
+       "c": [
+        "(As in ",
+        {
+         "href": "/learn/ch24/",
+         "label": "ch:state-defer-retry",
+         "t": "ref",
+         "text": "Chapter 24"
+        },
+        ", the outputs of this chapter often leave out the first lines that every dbt command prints.) The ",
+        {
+         "t": "code",
+         "v": "target:"
+        },
+        " line chooses the default (",
+        {
+         "t": "code",
+         "v": "dev"
+        },
+        "); ",
+        {
+         "t": "code",
+         "v": "--target ci"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "--target prod"
+        },
+        " chooses another one. Our ",
+        {
+         "t": "code",
+         "v": "generate_schema_name"
+        },
+        " macro (",
+        {
+         "href": "/learn/ch10/",
+         "label": "ch:configuration",
+         "t": "ref",
+         "text": "Chapter 10"
+        },
+        ") uses the custom schemas (",
+        {
+         "t": "code",
+         "v": "marts"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "snapshots"
+        },
+        ") only in ",
+        {
+         "t": "code",
+         "v": "prod"
+        },
+        "; every other target puts everything in its own schema. ",
+        {
+         "t": "code",
+         "v": "dbt ls"
+        },
+        " shows where each model would be built:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch25-c2",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target dev -q\n$ dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target ci -q\n$ dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target prod -q"
+      },
+      {
+       "id": "ch25-c3",
+       "lang": "output",
+       "t": "code",
+       "text": "{\"name\": \"fct_orders\", \"relation_name\": \"\\\"practice\\\".\\\"dbt_adnane\\\".\\\"fct_orders\\\"\"}\n{\"name\": \"stg_jaffle_shop__orders\", \"relation_name\": \"\\\"practice\\\".\\\"dbt_adnane\\\".\\\"stg_jaffle_shop__orders\\\"\"}\n{\"name\": \"fct_orders\", \"relation_name\": \"\\\"practice\\\".\\\"dbt_ci\\\".\\\"fct_orders\\\"\"}\n{\"name\": \"stg_jaffle_shop__orders\", \"relation_name\": \"\\\"practice\\\".\\\"dbt_ci\\\".\\\"stg_jaffle_shop__orders\\\"\"}\n{\"name\": \"fct_orders\", \"relation_name\": \"\\\"practice\\\".\\\"marts\\\".\\\"fct_orders\\\"\"}\n{\"name\": \"stg_jaffle_shop__orders\", \"relation_name\": \"\\\"practice\\\".\\\"prod\\\".\\\"stg_jaffle_shop__orders\\\"\"}"
+      },
+      {
+       "c": [
+        "The code also knows where it runs, through ",
+        {
+         "t": "code",
+         "v": "target.name"
+        },
+        ": the development-only filter of the orders staging model (",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__orders"
+        },
+        ") and the production-only grants of the marts (",
+        {
+         "href": "/learn/ch10/",
+         "label": "ch:configuration",
+         "t": "ref",
+         "text": "Chapter 10"
+        },
+        ") both test it. Keep such logic small and explicit: every difference between environments is a place where \"it worked in dev\" can fail in production."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "target.name"
+            },
+            " is not the schema."
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "target.name"
+          },
+          " is the name of the output (",
+          {
+           "t": "code",
+           "v": "dev"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "ci"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "prod"
+          },
+          "); ",
+          {
+           "t": "code",
+           "v": "target.schema"
+          },
+          " is the schema of that output (",
+          {
+           "t": "code",
+           "v": "dbt_adnane"
+          },
+          "…). In the dbt platform you set the ",
+          {
+           "c": [
+            "target name"
+           ],
+           "t": "i"
+          },
+          " of a job (for example ",
+          {
+           "t": "code",
+           "v": "prod"
+          },
+          ") in the job settings, and the one of your development credentials in your profile; if your project tests ",
+          {
+           "t": "code",
+           "v": "target.name == 'prod'"
+          },
+          ", the production job must really use that name (trap T52)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch25-s1-1",
+     "number": "25.1.1",
+     "title": [
+      "The targets of the practice project"
+     ],
+     "titleText": "The targets of the practice project"
+    }
+   ],
+   "title": [
+    "Three environments, one project"
+   ],
+   "titleText": "Three environments, one project"
+  },
+  {
+   "anchors": [
+    "sec-envci-workflow"
+   ],
+   "checkpoints": [],
+   "id": "ch25-s2",
+   "label": "sec:envci-workflow",
+   "labs": [],
+   "minutes": 5,
+   "number": "25.2",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "href": "/learn/ch03/",
+         "label": "ch:git",
+         "t": "ref",
+         "text": "Chapter 3"
+        },
+        " taught the Git side (",
+        {
+         "href": "/learn/ch03/ch03-s8/",
+         "label": "sec:git-pr",
+         "t": "ref",
+         "text": "Sections 3.8"
+        },
+        " and ",
+        {
+         "href": "/learn/ch03/ch03-s9/",
+         "label": "sec:git-strategies",
+         "t": "ref",
+         "text": "3.9"
+        },
+        "). Here is the complete path of one dbt change, with the environment used at each step:"
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "The CI/CD workflow in eight steps, with the environment of each: 1. Branch from main; 2. Change + dbt build -s x+ (dev schema); 3. Commit, push, open PR; 4. CI job: slim CI build (CI schema; a red check means fix and push again, back to step 2); 5. Review + green check; 6. Merge into main; 7. Deploy: merge or scheduled job; 8. Production tables + artifacts (production), which are the state for the next CI run.",
+       "id": "ch25-fig1",
+       "src": "figures/ch25-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "This is also the answer to exam objective 3.4, \"developing and implementing a fix and testing it prior to merging\". When a bug is found in production:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Reproduce it in ",
+            {
+             "c": [
+              "development"
+             ],
+             "t": "i"
+            },
+            " (build the model in your schema, or read production through ",
+            {
+             "t": "code",
+             "v": "--defer"
+            },
+            " or a clone)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Create a branch and fix the code. Add a test that would have caught the bug (a data test, or a unit test for logic)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Run ",
+            {
+             "t": "code",
+             "v": "dbt build --select <model>+"
+            },
+            " in development: the model, its tests and everything downstream."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Push and open a pull request: the CI job runs the same checks in an isolated schema, against production parents."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "After review and a green check, merge. The deployment job builds the fix in production."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "c": [
+        "Never edit production directly, even \"just this once\" (traps T13 and T111)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch25-s2-0",
+     "title": [
+      "From a branch to production"
+     ],
+     "titleText": "From a branch to production"
+    }
+   ],
+   "title": [
+    "From a branch to production"
+   ],
+   "titleText": "From a branch to production"
+  },
+  {
+   "anchors": [
+    "sec-envci-platform"
+   ],
+   "checkpoints": [],
+   "id": "ch25-s3",
+   "label": "sec:envci-platform",
+   "labs": [],
+   "minutes": 5,
+   "number": "25.3",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The dbt platform (formerly dbt Cloud) gives every piece of this workflow a screen. The exam asks about them, even if you use dbt Core every day."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch25-s3-0",
+     "title": [
+      "Environments and jobs in the dbt platform"
+     ],
+     "titleText": "Environments and jobs in the dbt platform"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Each project can have ",
+        {
+         "c": [
+          "only one development environment"
+         ],
+         "t": "b"
+        },
+        ". It sets the dbt version (a release track) and the connection used by the Studio IDE and the dbt platform CLI. Each developer adds personal ",
+        {
+         "en": [
+          "credentials"
+         ],
+         "fr": "identifiants",
+         "id": "term-credential",
+         "t": "term"
+        },
+        " (",
+        {
+         "c": [
+          "Your profile"
+         ],
+         "t": "i"
+        },
+        " → ",
+        {
+         "c": [
+          "Credentials"
+         ],
+         "t": "i"
+        },
+        "): their own warehouse user and their own target schema, for example ",
+        {
+         "t": "code",
+         "v": "dbt_adnane"
+        },
+        ", and optionally a target name. So two developers never overwrite each other's tables. In the Studio IDE, Git is driven with buttons (",
+        {
+         "href": "/learn/ch03/ch03-s10/",
+         "label": "sec:git-studio",
+         "t": "ref",
+         "text": "Section 3.10"
+        },
+        "), and the ",
+        {
+         "c": [
+          "Defer to staging/production"
+         ],
+         "t": "b"
+        },
+        " toggle lets you build one model without building its parents (",
+        {
+         "href": "/learn/ch24/ch24-s6/",
+         "label": "sec:sdr-defer",
+         "t": "ref",
+         "text": "Section 24.6"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch25-s3-1",
+     "number": "25.3.1",
+     "title": [
+      "Development environment and credentials"
+     ],
+     "titleText": "Development environment and credentials"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "deployment environment"
+         ],
+         "fr": "environnement de déploiement",
+         "id": "term-deployment-environment",
+         "t": "term"
+        },
+        " runs ",
+        {
+         "c": [
+          "jobs"
+         ],
+         "t": "i"
+        },
+        ". There are three types:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Production"
+             ],
+             "t": "b"
+            },
+            ": the source of truth. At most ",
+            {
+             "c": [
+              "one"
+             ],
+             "t": "b"
+            },
+            " per project. Catalog, cross-project references and deferral use it."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Staging"
+             ],
+             "t": "b"
+            },
+            ": at most one; a pre-production place (for example built from a ",
+            {
+             "t": "code",
+             "v": "staging"
+            },
+            " branch) where developers can test deployments without touching production data. If it exists, Studio defers to it first."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "General"
+             ],
+             "t": "b"
+            },
+            ": any number, for other needs (one-off jobs, experiments)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "A deployment environment has its own connection details (database, schema), its own credentials (usually a service account, not a person), its dbt version, and optionally a custom branch (",
+        {
+         "c": [
+          "Only run on a custom branch"
+         ],
+         "t": "i"
+        },
+        "); by default jobs clone the default branch of the repository, usually ",
+        {
+         "t": "code",
+         "v": "main"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch25-s3-2",
+     "number": "25.3.2",
+     "title": [
+      "Deployment environments"
+     ],
+     "titleText": "Deployment environments"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "You read them with ",
+        {
+         "t": "code",
+         "v": "env_var()"
+        },
+        " exactly as with dbt Core (",
+        {
+         "href": "/learn/ch10/",
+         "label": "ch:configuration",
+         "t": "ref",
+         "text": "Chapter 10"
+        },
+        "). Their names must start with ",
+        {
+         "t": "code",
+         "v": "DBT_"
+        },
+        " (or ",
+        {
+         "t": "code",
+         "v": "DBT_ENV_SECRET_"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "DBT_ENV_CUSTOM_ENV_"
+        },
+        "). A value can be set at four levels; the higher level wins:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Priority"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Level"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Where"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "align": "c",
+          "c": [
+           "4 (highest)"
+          ]
+         },
+         {
+          "c": [
+           "Job override / personal override"
+          ]
+         },
+         {
+          "c": [
+           "Job settings, or your credentials for the Studio IDE"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "c",
+          "c": [
+           "3"
+          ]
+         },
+         {
+          "c": [
+           "Environment"
+          ]
+         },
+         {
+          "c": [
+           "The column of the environment in ",
+           {
+            "c": [
+             "Environment variables"
+            ],
+            "t": "i"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "align": "c",
+          "c": [
+           "2"
+          ]
+         },
+         {
+          "c": [
+           "Project default"
+          ]
+         },
+         {
+          "c": [
+           "The ",
+           {
+            "c": [
+             "Project default"
+            ],
+            "t": "i"
+           },
+           " column"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "c",
+          "c": [
+           "1 (lowest)"
+          ]
+         },
+         {
+          "c": [
+           "Default in the code"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "env_var('DBT_X', 'default')"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "A variable whose name starts with ",
+        {
+         "t": "code",
+         "v": "DBT_ENV_SECRET_"
+        },
+        " is hidden: it is scrubbed from logs and from the interface (and it can only be used in ",
+        {
+         "t": "code",
+         "v": "profiles.yml"
+        },
+        "-like connection settings and ",
+        {
+         "t": "code",
+         "v": "packages.yml"
+        },
+        ", trap T51). The platform also sets read-only variables such as ",
+        {
+         "t": "code",
+         "v": "DBT_CLOUD_ENVIRONMENT_TYPE"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "dev"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "staging"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "prod"
+        },
+        "; empty in a General environment), ",
+        {
+         "t": "code",
+         "v": "DBT_CLOUD_INVOCATION_CONTEXT"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "dev"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "staging"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "prod"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "ci"
+        },
+        "), ",
+        {
+         "t": "code",
+         "v": "DBT_CLOUD_JOB_ID"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "DBT_CLOUD_RUN_ID"
+        },
+        " and, for CI runs, ",
+        {
+         "t": "code",
+         "v": "DBT_CLOUD_PR_ID"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch25-s3-3",
+     "number": "25.3.3",
+     "title": [
+      "Environment variables in the dbt platform"
+     ],
+     "titleText": "Environment variables in the dbt platform"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "job"
+         ],
+         "fr": "job (tâche planifiée)",
+         "id": "term-job",
+         "t": "term"
+        },
+        " is a list of dbt commands plus settings plus a ",
+        {
+         "en": [
+          "trigger"
+         ],
+         "fr": "déclencheur",
+         "id": "term-trigger",
+         "t": "term"
+        },
+        ". A ",
+        {
+         "c": [
+          "deploy job"
+         ],
+         "t": "b"
+        },
+        " builds production."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Setting"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What to know"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Commands"
+          ]
+         },
+         {
+          "c": [
+           "A list of steps, ",
+           {
+            "t": "code",
+            "v": "dbt build"
+           },
+           " by default. ",
+           {
+            "t": "code",
+            "v": "dbt deps"
+           },
+           " runs automatically (do not add it). Steps are chained: if one step fails, the following steps do not run and the job ends with status ",
+           {
+            "c": [
+             "Error"
+            ],
+            "t": "i"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Generate docs on run"
+          ]
+         },
+         {
+          "c": [
+           "Checkbox: runs ",
+           {
+            "t": "code",
+            "v": "dbt docs generate"
+           },
+           " after the commands. If that step fails, the job can still succeed. Adding ",
+           {
+            "t": "code",
+            "v": "dbt docs generate"
+           },
+           " as a command instead makes a failure fail the job. (This checkbox belongs to jobs on dbt Core engine versions, the scope of the exam; the docs say that jobs on the new v2 engine need no docs step, because every run refreshes Catalog metadata.)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Run source freshness"
+          ]
+         },
+         {
+          "c": [
+           "Checkbox: runs ",
+           {
+            "t": "code",
+            "v": "dbt source freshness"
+           },
+           " ",
+           {
+            "c": [
+             "as the first step"
+            ],
+            "t": "i"
+           },
+           ". If it fails, the next steps still run and the job can succeed. As a command, a failing freshness step fails the job and stops the next steps (put it first to block a build on stale data)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Triggers"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Schedule"
+            ],
+            "t": "b"
+           },
+           ": every N hours, at specific hours, or a ",
+           {
+            "en": [
+             "cron expression"
+            ],
+            "fr": "expression cron",
+            "id": "term-cron-expression",
+            "t": "term"
+           },
+           ", always in ",
+           {
+            "c": [
+             "UTC"
+            ],
+            "t": "b"
+           },
+           "; ",
+           {
+            "c": [
+             "Run when another job finishes"
+            ],
+            "t": "b"
+           },
+           " (job chaining, Starter and Enterprise plans); the ",
+           {
+            "c": [
+             "API"
+            ],
+            "t": "b"
+           },
+           "; or ",
+           {
+            "c": [
+             "Run now"
+            ],
+            "t": "b"
+           },
+           " by hand."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Advanced"
+          ]
+         },
+         {
+          "c": [
+           "Target name, threads (4 by default), run timeout, environment variable overrides, dbt version (inherit the environment's), ",
+           {
+            "c": [
+             "Compare changes against"
+            ],
+            "t": "b"
+           },
+           " (deferral; ",
+           {
+            "c": [
+             "No deferral"
+            ],
+            "t": "i"
+           },
+           " by default for deploy jobs)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "A cron expression has five fields: minute, hour, day of month, month, day of week. ",
+        {
+         "t": "code",
+         "v": "0 5 * * *"
+        },
+        " = every day at 05:00 UTC; ",
+        {
+         "t": "code",
+         "v": "0 */2 * * 1-5"
+        },
+        " = every two hours on weekdays. A job that fails 100 times in a row is deactivated. Job ",
+        {
+         "en": [
+          "notifications"
+         ],
+         "fr": "notifications",
+         "id": "term-notification",
+         "t": "term"
+        },
+        " (email, Slack, Microsoft Teams) can be sent when a run succeeds, warns, fails or is canceled. A failed run can be restarted with ",
+        {
+         "c": [
+          "Rerun from failure"
+         ],
+         "t": "b"
+        },
+        " (= ",
+        {
+         "t": "code",
+         "v": "dbt retry"
+        },
+        ", ",
+        {
+         "href": "/learn/ch24/ch24-s8/",
+         "label": "sec:sdr-retry",
+         "t": "ref",
+         "text": "Section 24.8"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch25-s3-4",
+     "number": "25.3.4",
+     "title": [
+      "Deploy jobs"
+     ],
+     "titleText": "Deploy jobs"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "c": [
+          "CI job"
+         ],
+         "t": "b"
+        },
+        " (",
+        {
+         "en": [
+          "continuous integration"
+         ],
+         "fr": "intégration continue",
+         "id": "term-continuous-integration",
+         "t": "term"
+        },
+        ") runs when a pull request is opened against the branch of its environment, and again on every new commit pushed to it (draft pull requests only if you tick ",
+        {
+         "c": [
+          "Run on draft pull request"
+         ],
+         "t": "i"
+        },
+        "). Its main features:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "It builds into a ",
+            {
+             "en": [
+              "temporary schema"
+             ],
+             "fr": "schéma temporaire",
+             "id": "term-temporary-schema",
+             "t": "term"
+            },
+            " named ",
+            {
+             "t": "code",
+             "v": "dbt_cloud_pr_<job_id>_<pr_id>"
+            },
+            ", for example ",
+            {
+             "t": "code",
+             "v": "dbt_cloud_pr_1862_1704"
+            },
+            ". dbt drops it when the pull request is merged or closed (only with the native GitHub, GitLab or Azure DevOps integrations, and only if your ",
+            {
+             "t": "code",
+             "v": "generate_schema_name"
+            },
+            " keeps the ",
+            {
+             "t": "code",
+             "v": "dbt_cloud_pr_"
+            },
+            " prefix)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Default command: ",
+            {
+             "t": "code",
+             "v": "dbt build --select state:modified+"
+            },
+            ". ",
+            {
+             "c": [
+              "Compare changes against"
+             ],
+             "t": "b"
+            },
+            " defaults to the Production environment: this gives the state and the deferral of ",
+            {
+             "href": "/learn/ch24/",
+             "label": "ch:state-defer-retry",
+             "t": "ref",
+             "text": "Chapter 24"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The result is reported to the pull request as a check (green or red)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "CI runs do ",
+            {
+             "c": [
+              "not"
+             ],
+             "t": "b"
+            },
+            " use run slots, several pull requests are checked in parallel, and a new commit cancels the stale run of the same pull request."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Options: SQL linting (SQLFluff) before the build; with ",
+            {
+             "c": [
+              "Advanced CI"
+             ],
+             "t": "b"
+            },
+            " (Enterprise plans), ",
+            {
+             "c": [
+              "dbt compare"
+             ],
+             "t": "b"
+            },
+            " compares the data of the changed models with production (primary keys, rows, columns; it needs a primary key constraint or a uniqueness test) and shows the result in a ",
+            {
+             "c": [
+              "Compare"
+             ],
+             "t": "i"
+            },
+            " tab and as a comment on the pull request."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch25-s3-5",
+     "number": "25.3.5",
+     "title": [
+      "CI jobs"
+     ],
+     "titleText": "CI jobs"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "c": [
+          "merge job"
+         ],
+         "t": "b"
+        },
+        " runs when a pull request is ",
+        {
+         "c": [
+          "merged"
+         ],
+         "t": "i"
+        },
+        " into the environment's branch (",
+        {
+         "c": [
+          "Run on merge"
+         ],
+         "t": "i"
+        },
+        "). Default command: ",
+        {
+         "t": "code",
+         "v": "dbt build --select state:modified+"
+        },
+        ", deferring to its environment. Two uses: ",
+        {
+         "en": [
+          "continuous deployment"
+         ],
+         "fr": "déploiement continu",
+         "id": "term-continuous-deployment",
+         "t": "term"
+        },
+        " (what is merged is built in production at once) and keeping the production manifest fresh for the next CI runs (a merge job can even run only ",
+        {
+         "t": "code",
+         "v": "dbt parse --no-partial-parse"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "dbt compile"
+        },
+        " for that). Unlike CI runs, merge jobs use a run slot, and only one run of a merge job can be in progress."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Deploy job"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "CI job"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Merge job"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Trigger"
+          ]
+         },
+         {
+          "c": [
+           "Schedule, other job, API, by hand"
+          ]
+         },
+         {
+          "c": [
+           "PR opened or new commit"
+          ]
+         },
+         {
+          "c": [
+           "PR merged"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Default command"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt build"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt build -s state:modified+"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt build -s state:modified+"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Default deferral"
+          ]
+         },
+         {
+          "c": [
+           "No deferral"
+          ]
+         },
+         {
+          "c": [
+           "Production environment"
+          ]
+         },
+         {
+          "c": [
+           "Its environment"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Schema"
+          ]
+         },
+         {
+          "c": [
+           "The environment's"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_cloud_pr_<job>_<pr>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The environment's"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Uses a run slot"
+          ]
+         },
+         {
+          "c": [
+           "Yes"
+          ]
+         },
+         {
+          "c": [
+           "No"
+          ]
+         },
+         {
+          "c": [
+           "Yes"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "The checkbox is not the command."
+           ],
+           "t": "b"
+          },
+          " \"Run source freshness\" ticked = freshness runs first and its failure does ",
+          {
+           "c": [
+            "not"
+           ],
+           "t": "i"
+          },
+          " stop the job. ",
+          {
+           "t": "code",
+           "v": "dbt source freshness"
+          },
+          " as the first command = a stale source stops the job. Same idea for \"Generate docs on run\" versus a ",
+          {
+           "t": "code",
+           "v": "dbt docs generate"
+          },
+          " step. And remember: ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " never checks freshness by itself (trap T132)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch25-s3-6",
+     "number": "25.3.6",
+     "title": [
+      "Merge jobs"
+     ],
+     "titleText": "Merge jobs"
+    }
+   ],
+   "title": [
+    "Environments and jobs in the dbt platform"
+   ],
+   "titleText": "Environments and jobs in the dbt platform"
+  },
+  {
+   "anchors": [
+    "sec-envci-gha",
+    "sec-envci-empty"
+   ],
+   "checkpoints": [],
+   "id": "ch25-s4",
+   "label": "sec:envci-gha",
+   "labs": [
+    "ch25-lab1",
+    "ch25-lab2",
+    "ch25-lab3"
+   ],
+   "minutes": 55,
+   "number": "25.4",
+   "objectives": [
+    "CP0-GIT",
+    "1.12",
+    "3.4",
+    "5.3",
+    "7.1"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "With dbt Core there is no built-in scheduler and no CI job: you use a general tool. ",
+        {
+         "c": [
+          "GitHub Actions"
+         ],
+         "t": "b"
+        },
+        " is the one built into GitHub, and its vocabulary is small:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "A ",
+            {
+             "en": [
+              "workflow"
+             ],
+             "fr": "flux de travail (workflow)",
+             "id": "term-workflow",
+             "t": "term"
+            },
+            " is a YAML file in ",
+            {
+             "t": "code",
+             "v": ".github/workflows/"
+            },
+            ". GitHub reads every file there."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "on:"
+            },
+            " lists the events that start it (",
+            {
+             "t": "code",
+             "v": "pull_request"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "push"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "schedule"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "workflow_dispatch"
+            },
+            "…)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A workflow has ",
+            {
+             "c": [
+              "jobs"
+             ],
+             "t": "b"
+            },
+            "; each job runs on a fresh virtual machine, the ",
+            {
+             "en": [
+              "runner"
+             ],
+             "fr": "exécuteur",
+             "id": "term-runner",
+             "t": "term"
+            },
+            " (",
+            {
+             "t": "code",
+             "v": "runs-on: ubuntu-latest"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A job is a list of ",
+            {
+             "c": [
+              "steps"
+             ],
+             "t": "b"
+            },
+            ". A step either ",
+            {
+             "t": "code",
+             "v": "uses:"
+            },
+            " a ready-made action (for example ",
+            {
+             "t": "code",
+             "v": "actions/checkout"
+            },
+            ") or ",
+            {
+             "t": "code",
+             "v": "run:"
+            },
+            "s shell commands. A step fails when a command returns a non-zero exit code (dbt returns 1 when a node fails, 2 for errors such as a breaking contract), and then the job stops and the pull request gets a red cross."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "Our reference project uses DuckDB, so the CI job has no warehouse to connect to. It creates its own database from the raw CSV files, builds ",
+        {
+         "c": [
+          "production"
+         ],
+         "t": "i"
+        },
+        " from ",
+        {
+         "t": "code",
+         "v": "main"
+        },
+        " to get a state, then runs the slim CI build of ",
+        {
+         "href": "/learn/ch24/",
+         "label": "ch:state-defer-retry",
+         "t": "ref",
+         "text": "Chapter 24"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch25-s4-0",
+     "title": [
+      "CI for dbt Core with GitHub Actions"
+     ],
+     "titleText": "CI for dbt Core with GitHub Actions"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch25-c4",
+       "lang": "yaml",
+       "lineNumbers": true,
+       "t": "code",
+       "text": "# Slim CI for dbt Core + DuckDB.\n# On every pull request to main:\n#   1. build a fresh database with the raw data,\n#   2. build PRODUCTION from the main branch to get its manifest (the state),\n#   3. build only the models changed by the pull request (and their children)\n#      in the schema dbt_ci, deferring every other ref to production.\nname: dbt CI\n\non:\n  pull_request:\n    branches: [main]\n\njobs:\n  slim-ci:\n    runs-on: ubuntu-latest\n    env:\n      DBT_PROFILES_DIR: ${{ github.workspace }}/ci\n      DBT_DUCKDB_PATH: ${{ github.workspace }}/ci_db/practice.duckdb\n      DBT_USE_COLORS: \"false\"\n    steps:\n      - name: Check out the pull request (with the history, to find main)\n        uses: actions/checkout@v4\n        with:\n          fetch-depth: 0\n\n      - name: Set up Python\n        uses: actions/setup-python@v5\n        with:\n          python-version: \"3.12\"\n\n      - name: Install dbt\n        run: pip install \"dbt-core~=1.11.0\" \"dbt-duckdb~=1.11.0\" \"duckdb==1.5.6\" pandas\n\n      - name: Load the raw data into a fresh DuckDB file\n        run: python ci/load_raw.py \"$DBT_DUCKDB_PATH\"\n\n      - name: Build production from main (state to compare with)\n        run: |\n          git worktree add ../main origin/main\n          cd ../main\n          dbt deps\n          dbt build --target prod --exclude-resource-type unit_test\n          mkdir -p \"$GITHUB_WORKSPACE/prod-artifacts\"\n          cp target/manifest.json \"$GITHUB_WORKSPACE/prod-artifacts/\"\n\n      - name: Install packages\n        run: dbt deps\n\n      - name: List what the pull request changed\n        run: dbt ls --select state:modified+ --state prod-artifacts --target ci\n\n      # Unit tests read the columns of their inputs from the database. For a model that\n      # production does not have yet (a NEW incremental model whose unit test mocks `this`),\n      # there is nothing to defer to: create every changed relation first, empty.\n      - name: Create the changed relations, empty\n        run: dbt run --select state:modified+ --defer --state prod-artifacts --target ci --empty\n\n      - name: Build and test the changes (unit tests, models, data tests)\n        run: dbt build --select state:modified+ --defer --state prod-artifacts --target ci",
+       "title": ".github/workflows/ci.yml"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Lines"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "1–7"
+          ]
+         },
+         {
+          "c": [
+           "Comments and the name shown in the ",
+           {
+            "c": [
+             "Actions"
+            ],
+            "t": "i"
+           },
+           " tab and in the checks of the pull request."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "9–11"
+          ]
+         },
+         {
+          "c": [
+           "Start on every pull request whose ",
+           {
+            "c": [
+             "base"
+            ],
+            "t": "i"
+           },
+           " branch is ",
+           {
+            "t": "code",
+            "v": "main"
+           },
+           " (opened, and each new push to it)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "14–15"
+          ]
+         },
+         {
+          "c": [
+           "One job, ",
+           {
+            "t": "code",
+            "v": "slim-ci"
+           },
+           ", on a fresh Ubuntu machine. Its name is what you will mark as a required check."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "16–19"
+          ]
+         },
+         {
+          "c": [
+           "Environment variables for every step: dbt reads its profile from ",
+           {
+            "t": "code",
+            "v": "ci/"
+           },
+           " (not ",
+           {
+            "t": "code",
+            "v": "~/.dbt"
+           },
+           "), the profile reads the database path from ",
+           {
+            "t": "code",
+            "v": "DBT_DUCKDB_PATH"
+           },
+           ", and the logs have no colour codes. (The 1.11 docs write dbt's own variables with the new prefix, ",
+           {
+            "t": "code",
+            "v": "DBT_ENGINE_PROFILES_DIR"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "DBT_ENGINE_USE_COLORS"
+           },
+           "; the classic names used here still work.)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "21–24"
+          ]
+         },
+         {
+          "c": [
+           "Download the code of the pull request. ",
+           {
+            "t": "code",
+            "v": "fetch-depth: 0"
+           },
+           " downloads the whole history; the default (1 commit) would not contain ",
+           {
+            "t": "code",
+            "v": "origin/main"
+           },
+           ", needed at line 39."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "26–32"
+          ]
+         },
+         {
+          "c": [
+           "Install Python 3.12, then dbt with the same versions as on your laptop. Pinning versions makes CI reproducible."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "34–35"
+          ]
+         },
+         {
+          "c": [
+           "Create ",
+           {
+            "t": "code",
+            "v": "ci_db/practice.duckdb"
+           },
+           " with the raw tables (",
+           {
+            "t": "code",
+            "v": "ci/load_raw.py"
+           },
+           ", below)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "37–44"
+          ]
+         },
+         {
+          "c": [
+           "Get the ",
+           {
+            "c": [
+             "state"
+            ],
+            "t": "b"
+           },
+           ": check out ",
+           {
+            "t": "code",
+            "v": "main"
+           },
+           " in a second folder (",
+           {
+            "t": "code",
+            "v": "git worktree"
+           },
+           "), build production there (unit tests excluded, as in any production run), and keep its ",
+           {
+            "t": "code",
+            "v": "manifest.json"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "46–47"
+          ]
+         },
+         {
+          "c": [
+           "Install the packages of the pull request's code (",
+           {
+            "t": "code",
+            "v": "dbt_utils"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "audit_helper"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "49–50"
+          ]
+         },
+         {
+          "c": [
+           "Print what changed: useful when you read the log of a run."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "52–56"
+          ]
+         },
+         {
+          "c": [
+           "The ",
+           {
+            "t": "code",
+            "v": "--empty"
+           },
+           " dry run: create every changed relation with zero rows (",
+           {
+            "href": "/learn/ch25/ch25-s4/#sec-envci-empty",
+            "label": "sec:envci-empty",
+            "t": "ref",
+            "text": "Section 25.4.2"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "58–59"
+          ]
+         },
+         {
+          "c": [
+           "The slim CI build: changed nodes and their children, in ",
+           {
+            "t": "code",
+            "v": "dbt_ci"
+           },
+           ", parents deferred to production. If anything fails, the step and the check fail."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "The two helper files live in ",
+        {
+         "t": "code",
+         "v": "ci/"
+        },
+        ". The profile has only what CI needs, and no secret (DuckDB has no password):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch25-c5",
+       "lang": "yaml",
+       "t": "code",
+       "text": "# Profile used ONLY by the CI workflow (DBT_PROFILES_DIR points to this folder).\n# Your own profile stays in ~/.dbt/profiles.yml.\njaffle_dbt:\n  target: ci\n  outputs:\n    ci:\n      type: duckdb\n      path: \"{{ env_var('DBT_DUCKDB_PATH') }}\"\n      schema: dbt_ci\n      threads: 4\n    prod:\n      type: duckdb\n      path: \"{{ env_var('DBT_DUCKDB_PATH') }}\"\n      schema: prod\n      threads: 4",
+       "title": "ci/profiles.yml"
+      },
+      {
+       "id": "ch25-c6",
+       "lang": "python",
+       "t": "code",
+       "text": "\"\"\"Create a fresh practice database for CI from ci/raw/setup.sql.\n\n    python ci/load_raw.py <path/to/practice.duckdb>\n\nSame statements as `duckdb practice.duckdb < setup.sql`, for machines without\nthe DuckDB CLI (like a GitHub Actions runner). Keep the file name practice.duckdb:\nDuckDB uses the file name as the database name.\n\"\"\"\nimport os\nimport sys\nfrom pathlib import Path\n\nimport duckdb\n\ndb = Path(sys.argv[1]).resolve()\nraw = Path(__file__).resolve().parent / \"raw\"\ndb.parent.mkdir(parents=True, exist_ok=True)\ncon = duckdb.connect(str(db))\nos.chdir(raw)                      # setup.sql reads data/*.csv relative to its folder\nfor statement in duckdb.extract_statements((raw / \"setup.sql\").read_text()):\n    con.execute(statement)\ncon.close()\nprint(f\"raw data loaded into {db}\")",
+       "title": "ci/load_raw.py"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "On a real warehouse"
+           ],
+           "t": "b"
+          },
+          " (Snowflake, BigQuery, Databricks…) three things change. (1) No raw-data loading: CI reads the real sources. (2) No production rebuild: the CI job ",
+          {
+           "c": [
+            "downloads"
+           ],
+           "t": "i"
+          },
+          " the ",
+          {
+           "t": "code",
+           "v": "manifest.json"
+          },
+          " of the last production run (from the artifact storage of your orchestrator, a cloud bucket, or the dbt platform API). (3) Credentials come from encrypted repository secrets, for example ",
+          {
+           "t": "code",
+           "v": "env: SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}"
+          },
+          ", read in ",
+          {
+           "t": "code",
+           "v": "profiles.yml"
+          },
+          " with ",
+          {
+           "t": "code",
+           "v": "env_var()"
+          },
+          "; never commit a password. Also give each pull request its own schema, otherwise two pull requests overwrite each other in ",
+          {
+           "t": "code",
+           "v": "dbt_ci"
+          },
+          ". We tried a schema ",
+          {
+           "t": "code",
+           "v": "\"dbt_ci_pr_{{ env_var('PR_NUMBER', 'local') }}\""
+          },
+          " in the CI profile, with ",
+          {
+           "t": "code",
+           "v": "PR_NUMBER=42"
+          },
+          ": ",
+          {
+           "t": "code",
+           "v": "dbt ls"
+          },
+          " placed ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " in ",
+          {
+           "t": "code",
+           "v": "\"practice\".\"dbt_ci_pr_42\".\"fct_orders\""
+          },
+          ". In the workflow, the number would come from ",
+          {
+           "t": "code",
+           "v": "${{ github.event.number }}"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch25-s4-1",
+     "number": "25.4.1",
+     "title": [
+      "The workflow, line by line"
+     ],
+     "titleText": "The workflow, line by line"
+    },
+    {
+     "anchor": "sec-envci-empty",
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "--empty"
+        },
+        " (dbt 1.8+) runs the real SQL, but every ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " is replaced by a subquery that returns no row. On our model:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch25-c7",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt compile -s fct_monthly_revenue --empty -q"
+      },
+      {
+       "id": "ch25-c8",
+       "lang": "output",
+       "t": "code",
+       "text": "with\n\norders as (\n\n    select * from (select * from \"practice\".\"dbt_adnane\".\"int_orders__enriched\" where false limit 0)\n\n),\n..."
+      },
+      {
+       "c": [
+        "So a ",
+        {
+         "en": [
+          "dry run"
+         ],
+         "fr": "exécution à blanc",
+         "id": "term-dry-run",
+         "t": "term"
+        },
+        " with ",
+        {
+         "t": "code",
+         "v": "dbt run --empty"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "dbt build --empty"
+        },
+        " sends every statement to the warehouse, which checks the syntax, the column names, the types and the permissions, and creates every table and view with zero rows, almost for free. It is a cheap first step in CI: if a model is broken, you know in seconds, before paying for a full build. It is ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " a syntax check without the warehouse (trap T83): the warehouse really runs each statement."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Fact"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Detail (tested)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Commands"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "run"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "build"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "compile"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "snapshot"
+           },
+           ". ",
+           {
+            "t": "code",
+            "v": "dbt seed --empty"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "dbt test --empty"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "dbt ls --empty"
+           },
+           " fail with \"No such option '--empty'\"."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "What is emptied"
+          ]
+         },
+         {
+          "c": [
+           "Only ",
+           {
+            "t": "code",
+            "v": "ref()"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "source()"
+           },
+           ". A hard-coded table name is read in full. ",
+           {
+            "t": "code",
+            "v": "dbt build --empty"
+           },
+           " still loads seeds completely (trap T84)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Tests"
+          ]
+         },
+         {
+          "c": [
+           "Data tests run on the empty tables. Most generic tests (",
+           {
+            "t": "code",
+            "v": "unique"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "not_null"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "accepted_values"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "relationships"
+           },
+           ") pass, but a test that ",
+           {
+            "c": [
+             "expects"
+            ],
+            "t": "i"
+           },
+           " rows (for example a singular test that fails when a count is zero) can fail. Unit tests still run under ",
+           {
+            "t": "code",
+            "v": "dbt build --empty"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Incremental models"
+          ]
+         },
+         {
+          "c": [
+           "After ",
+           {
+            "t": "code",
+            "v": "--empty"
+           },
+           " the table exists, so the next run is incremental. A filter on ",
+           {
+            "t": "code",
+            "v": "max(...)"
+           },
+           " of an empty table needs ",
+           {
+            "t": "code",
+            "v": "coalesce"
+           },
+           " (our ",
+           {
+            "t": "code",
+            "v": "fct_orders"
+           },
+           " uses ",
+           {
+            "t": "code",
+            "v": "coalesce(max(loaded_at), '1900-01-01')"
+           },
+           ", trap T85)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch25-s4-2",
+     "number": "25.4.2",
+     "title": [
+      "The ",
+      {
+       "t": "code",
+       "v": "--empty"
+      },
+      " dry run"
+     ],
+     "titleText": "The --empty dry run"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "href": "/learn/ch19/",
+         "label": "ch:unit-tests",
+         "t": "ref",
+         "text": "Chapter 19"
+        },
+        " showed a surprise: a unit test reads the ",
+        {
+         "c": [
+          "columns"
+         ],
+         "t": "i"
+        },
+        " of its inputs from the database, and a unit test that mocks ",
+        {
+         "t": "code",
+         "v": "this"
+        },
+        " needs the model's own table. On a brand-new schema, the first ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " fails. In CI, the schema is always new. The builder of the reference project tested both cases."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Case 1, a changed model that production already has"
+         ],
+         "t": "b"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " gets a column ",
+        {
+         "t": "code",
+         "v": "is_paid"
+        },
+        "). On a brand-new ",
+        {
+         "t": "code",
+         "v": "dbt_ci"
+        },
+        " ",
+        {
+         "c": [
+          "without"
+         ],
+         "t": "i"
+        },
+        " the ",
+        {
+         "t": "code",
+         "v": "--empty"
+        },
+        " step, the build passed:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch25-c9",
+       "lang": "output",
+       "t": "code",
+       "text": "21:44:40  1 of 23 START unit_test fct_orders::test_fct_orders_full_refresh_keeps_all_rows  [RUN]\n21:44:40  1 of 23 PASS fct_orders::test_fct_orders_full_refresh_keeps_all_rows ........... [PASS in 0.09s]\n21:44:40  2 of 23 START unit_test fct_orders::test_fct_orders_incremental_keeps_only_new_rows  [RUN]\n21:44:40  2 of 23 PASS fct_orders::test_fct_orders_incremental_keeps_only_new_rows ....... [PASS in 0.05s]\n...\n21:44:41  Done. PASS=17 WARN=0 ERROR=0 SKIP=0 NO-OP=2 TOTAL=19"
+      },
+      {
+       "c": [
+        "With ",
+        {
+         "t": "code",
+         "v": "--defer"
+        },
+        ", when ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " is missing from ",
+        {
+         "t": "code",
+         "v": "dbt_ci"
+        },
+        ", dbt reads the columns of ",
+        {
+         "t": "code",
+         "v": "this"
+        },
+        " from the ",
+        {
+         "c": [
+          "production"
+         ],
+         "t": "i"
+        },
+        " relation. Defer saves the unit test."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Case 2, a NEW incremental model"
+         ],
+         "t": "b"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "fct_paid_orders"
+        },
+        ", with a unit test that mocks ",
+        {
+         "t": "code",
+         "v": "this"
+        },
+        "). Production does not have it, so there is nothing to defer to:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch25-c10",
+       "lang": "output",
+       "t": "code",
+       "text": "21:45:14  6 of 17 START unit_test fct_paid_orders::test_fct_paid_orders_incremental ...... [RUN]\n21:45:14  6 of 17 ERROR fct_paid_orders::test_fct_paid_orders_incremental ................ [ERROR in 0.11s]\n21:45:14  7 of 17 SKIP relation dbt_ci.fct_paid_orders ................................... [SKIP]\n...\n  Not able to get columns for unit test 'fct_paid_orders' from relation \"practice\".\"dbt_ci\".\"fct_paid_orders\" because the relation doesn't exist\n...\n21:45:14  Done. PASS=8 WARN=0 ERROR=1 SKIP=1 NO-OP=2 TOTAL=12"
+      },
+      {
+       "c": [
+        "With the ",
+        {
+         "t": "code",
+         "v": "dbt run --empty"
+        },
+        " step first, the same build ended ",
+        {
+         "t": "code",
+         "v": "Done. PASS=10 WARN=0 ERROR=0 SKIP=0 NO-OP=2 TOTAL=12"
+        },
+        ". That is why the workflow keeps the step: it costs a few seconds and makes every new model safe."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt run --empty"
+            },
+            ", not ",
+            {
+             "t": "code",
+             "v": "dbt build --empty"
+            },
+            ", as the first CI step."
+           ],
+           "t": "b"
+          },
+          " A ",
+          {
+           "t": "code",
+           "v": "build"
+          },
+          " also runs the unit tests, and the unit test of ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " mocks ",
+          {
+           "t": "code",
+           "v": "this"
+          },
+          ". On a brand-new database, ",
+          {
+           "t": "code",
+           "v": "dbt build --empty --target ci"
+          },
+          " (whole project, no defer) failed on that unit test because ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " did not exist yet: ",
+          {
+           "t": "code",
+           "v": "Done. PASS=50 WARN=0 ERROR=1 SKIP=18 NO-OP=0 TOTAL=69"
+          },
+          ". ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          " runs no tests, so it only creates the relations, and the real ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " that follows finds them."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " your repository gets the same CI files as the reference tag ",
+          {
+           "t": "code",
+           "v": "ch25"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "~/dbt-course/jaffle_dbt"
+          },
+          ", on ",
+          {
+           "t": "code",
+           "v": "main"
+          },
+          ", create the folders and copy the raw data (the same files as your practice database):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch25-c11",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ mkdir -p .github/workflows ci/raw/data\n$ cp ~/dbt-course/kit/labs/setup.sql ci/raw/\n$ cp ~/dbt-course/kit/labs/data/*.csv ci/raw/data/\n$ ls ci/raw ci/raw/data",
+         "textBook": "$ cd ~/dbt-course/jaffle_dbt\n$ mkdir -p .github/workflows ci/raw/data\n$ cp ~/Documents/Adnane/dbt-bible/labs/setup.sql ci/raw/\n$ cp ~/Documents/Adnane/dbt-bible/labs/data/*.csv ci/raw/data/\n$ ls ci/raw ci/raw/data"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Create ",
+          {
+           "t": "code",
+           "v": ".github/workflows/ci.yml"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "ci/profiles.yml"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "ci/load_raw.py"
+          },
+          " with exactly the contents shown above, and the pull request template of ",
+          {
+           "href": "/learn/ch25/ch25-s5/",
+           "label": "sec:envci-pr",
+           "t": "ref",
+           "text": "Section 25.5"
+          },
+          ". Add ",
+          {
+           "t": "code",
+           "v": "ci_db/"
+          },
+          " as the last line of ",
+          {
+           "t": "code",
+           "v": ".gitignore"
+          },
+          " (the CI database must never be committed)."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Check that the workflow is valid YAML and that the project still parses:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch25-c12",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ python -c \"import yaml; d=yaml.safe_load(open('.github/workflows/ci.yml')); print('top-level keys:', list(d.keys())); job=d['jobs']['slim-ci']; print('runs-on:', job['runs-on']); [print('step:', s.get('name'), '|', 'uses' if 'uses' in s else 'run') for s in job['steps']]\"\n$ tail -3 .gitignore && dbt parse --no-partial-parse"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Commit. (In a team, this file would arrive through a pull request too; here it must be on ",
+          {
+           "t": "code",
+           "v": "main"
+          },
+          " before the CI job can exist.)"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch25-c13",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git add .\n$ git commit -m 'CI: GitHub Actions slim CI workflow, PR template, CI profile and raw data loader'"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result."
+           ],
+           "t": "b"
+          },
+          " Step 1 lists ",
+          {
+           "t": "code",
+           "v": "data setup.sql"
+          },
+          " and the five CSV files (",
+          {
+           "t": "code",
+           "v": "customers.csv"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "order_items.csv"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "orders.csv"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "payments.csv"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "products.csv"
+          },
+          "). Step 3:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch25-c14",
+         "lang": "output",
+         "t": "code",
+         "text": "top-level keys: ['name', True, 'jobs']\nruns-on: ubuntu-latest\nstep: Check out the pull request (with the history, to find main) | uses\nstep: Set up Python | uses\nstep: Install dbt | run\nstep: Load the raw data into a fresh DuckDB file | run\nstep: Build production from main (state to compare with) | run\nstep: Install packages | run\nstep: List what the pull request changed | run\nstep: Create the changed relations, empty | run\nstep: Build and test the changes (unit tests, models, data tests) | run\nlogs/\nprod-artifacts/\nci_db/\n21:43:36  Running with dbt=1.11.16\n21:43:36  Registered adapter: duckdb=1.11.0\n21:43:38  Performance info: /Users/you/dbt-course/jaffle_dbt/target/perf_info.json",
+         "textBook": "top-level keys: ['name', True, 'jobs']\nruns-on: ubuntu-latest\nstep: Check out the pull request (with the history, to find main) | uses\nstep: Set up Python | uses\nstep: Install dbt | run\nstep: Load the raw data into a fresh DuckDB file | run\nstep: Build production from main (state to compare with) | run\nstep: Install packages | run\nstep: List what the pull request changed | run\nstep: Create the changed relations, empty | run\nstep: Build and test the changes (unit tests, models, data tests) | run\nlogs/\nprod-artifacts/\nci_db/\n21:43:36  Running with dbt=1.11.16\n21:43:36  Registered adapter: duckdb=1.11.0\n21:43:38  Performance info: /Users/mac/dbt-course/jaffle_dbt/target/perf_info.json"
+        },
+        {
+         "c": [
+          "Look at the second key: ",
+          {
+           "t": "code",
+           "v": "True"
+          },
+          ", not ",
+          {
+           "t": "code",
+           "v": "'on'"
+          },
+          ". PyYAML follows YAML 1.1, where ",
+          {
+           "t": "code",
+           "v": "on"
+          },
+          " (like ",
+          {
+           "t": "code",
+           "v": "yes"
+          },
+          ") is a boolean (",
+          {
+           "href": "/learn/ch05/",
+           "label": "ch:yaml-jinja-python",
+           "t": "ref",
+           "text": "Chapter 5"
+          },
+          "). GitHub reads the key correctly, so the workflow is fine; it is only a surprise when you parse it with Python."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Compare with the reference:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "git diff ref-ch25 --stat"
+          },
+          " (after fetching the tags again, as in ",
+          {
+           "href": "/learn/ch24/",
+           "label": "ch:state-defer-retry",
+           "t": "ref",
+           "text": "Chapter 24"
+          },
+          ") prints nothing when your files match."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch25-lab1",
+       "objectives": [
+        "3.4",
+        "5.3",
+        "1.12"
+       ],
+       "t": "lab",
+       "title": [
+        "Add the CI files to your project"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " prove that every command of the workflow works, by playing the GitHub runner yourself in a throwaway folder."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Clone your project (it plays the checkout of the pull request) and make a change on a branch:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch25-c15",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ mkdir -p ~/dbt-course/ci_run && cd ~/dbt-course/ci_run\n$ git clone -q ~/dbt-course/jaffle_dbt workspace && cd workspace\n$ git checkout -q -b feature/is-paid\n$ git branch -a"
+        },
+        {
+         "c": [
+          "In ",
+          {
+           "t": "code",
+           "v": "models/marts/fct_orders.sql"
+          },
+          ", add one line after ",
+          {
+           "t": "code",
+           "v": "orders.paid_amount as amount,"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch25-c16",
+         "lang": "dbt",
+         "t": "code",
+         "text": "        orders.paid_amount as amount,\n        orders.paid_amount > 0 as is_paid,\n        orders.loaded_at",
+         "title": "models/marts/fct_orders.sql (one new line)"
+        },
+        {
+         "id": "ch25-c17",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git commit -q -am 'fct_orders: add is_paid'"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Set the variables of the workflow (",
+          {
+           "t": "code",
+           "v": "env:"
+          },
+          " block). They live only in this terminal window:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch25-c18",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ export GITHUB_WORKSPACE=$PWD\n$ export DBT_PROFILES_DIR=$PWD/ci\n$ export DBT_DUCKDB_PATH=$PWD/ci_db/practice.duckdb"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Run the steps of the workflow in order (the checkout and the installation are already done on your laptop):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch25-c19",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ python ci/load_raw.py \"$DBT_DUCKDB_PATH\"\n$ git worktree add ../main origin/main\n$ cd ../main && dbt deps && dbt build --target prod --exclude-resource-type unit_test\n$ mkdir -p \"$GITHUB_WORKSPACE/prod-artifacts\" && cp target/manifest.json \"$GITHUB_WORKSPACE/prod-artifacts/\"\n$ cd \"$GITHUB_WORKSPACE\"\n$ dbt deps\n$ dbt ls --select state:modified+ --state prod-artifacts --target ci\n$ dbt run --select state:modified+ --defer --state prod-artifacts --target ci --empty\n$ dbt build --select state:modified+ --defer --state prod-artifacts --target ci"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Check the result with ",
+          {
+           "t": "code",
+           "v": "dbt show"
+          },
+          ", then clean up. Close the terminal (or ",
+          {
+           "t": "code",
+           "v": "unset GITHUB_WORKSPACE DBT_PROFILES_DIR DBT_DUCKDB_PATH"
+          },
+          "): with ",
+          {
+           "t": "code",
+           "v": "DBT_DUCKDB_PATH"
+          },
+          " still set, your next dbt commands would use the CI database!"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch25-c20",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt show --inline \"select is_paid, count(*) as n from {{ ref('fct_orders') }} group by 1 order by 1\" --target ci -q\n$ cd ~/dbt-course && rm -rf ci_run"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result."
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "git branch -a"
+          },
+          " shows ",
+          {
+           "t": "code",
+           "v": "* feature/is-paid"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "main"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "remotes/origin/HEAD -> origin/main"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "remotes/origin/main"
+          },
+          ". The loader prints ",
+          {
+           "t": "code",
+           "textBook": "raw data loaded into /Users/mac/dbt-course/ci_run/workspace/ci_db/practice.duckdb",
+           "v": "raw data loaded into /Users/you/dbt-course/ci_run/workspace/ci_db/practice.duckdb"
+          },
+          ". The production build ends with ",
+          {
+           "t": "code",
+           "v": "Done. PASS=61 WARN=1 ERROR=0 SKIP=0 NO-OP=2 TOTAL=64"
+          },
+          ". The list of changes:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch25-c21",
+         "lang": "output",
+         "t": "code",
+         "text": "exposure:jaffle_dbt.customer_segmentation_notebook\nexposure:jaffle_dbt.monthly_revenue_dashboard\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers.v1\njaffle_dbt.marts.dim_customers.v2\njaffle_dbt.marts.fct_orders\njaffle_dbt.assert_paid_orders_match_items\n...\nunit_test:jaffle_dbt.test_fct_orders_incremental_keeps_only_new_rows"
+        },
+        {
+         "c": [
+          "The ",
+          {
+           "t": "code",
+           "v": "--empty"
+          },
+          " run creates the four changed models with zero rows:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch25-c22",
+         "lang": "output",
+         "t": "code",
+         "text": "21:44:21  Concurrency: 4 threads (target='ci')\n21:44:21  1 of 4 START sql incremental model dbt_ci.fct_orders ........................... [RUN]\n21:44:21  1 of 4 OK created sql incremental model dbt_ci.fct_orders ...................... [OK in 0.08s]\n...\n21:44:21  4 of 4 OK created python table model dbt_ci.customer_segments .................. [OK in 0.29s]\n21:44:21  Done. PASS=4 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=4"
+        },
+        {
+         "c": [
+          "The slim CI build runs 4 unit tests, the 4 models, their 9 data tests and the 2 exposures:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch25-c23",
+         "lang": "output",
+         "t": "code",
+         "text": "21:44:24  1 of 23 START unit_test fct_orders::test_fct_orders_incremental_keeps_only_new_rows  [RUN]\n21:44:25  1 of 23 PASS fct_orders::test_fct_orders_incremental_keeps_only_new_rows ....... [PASS in 0.10s]\n...\n21:44:25  3 of 23 OK created sql incremental model dbt_ci.fct_orders ..................... [OK in 0.13s]\n...\n21:44:25  16 of 23 OK created python table model dbt_ci.customer_segments ................ [OK in 0.28s]\n...\n21:44:25  Finished running 2 exposures, 1 incremental model, 3 table models, 9 data tests, 4 unit tests in 0 hours 0 minutes and 1.02 seconds (1.02s).\n21:44:25  Completed successfully\n21:44:25  Done. PASS=17 WARN=0 ERROR=0 SKIP=0 NO-OP=2 TOTAL=19"
+        },
+        {
+         "c": [
+          "(The counter says \"of 23\" but 19 nodes are reported: do not worry about it.) The new column works on the 300 orders of the fresh CI database (no ",
+          {
+           "t": "code",
+           "v": "day2.sql"
+          },
+          " there):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch25-c24",
+         "lang": "output",
+         "t": "code",
+         "text": "| is_paid |   n |\n| ------- | --- |\n|   False |  10 |\n|    True | 290 |"
+        },
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " received all its rows after the empty step, thanks to the ",
+          {
+           "t": "code",
+           "v": "coalesce"
+          },
+          " in its incremental filter."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch25-lab2",
+       "objectives": [
+        "3.4",
+        "5.3",
+        "1.12",
+        "7.1"
+       ],
+       "t": "lab",
+       "title": [
+        "Run the CI job on your laptop"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "If you pushed ",
+          {
+           "t": "code",
+           "v": "jaffle_dbt"
+          },
+          " to GitHub, push ",
+          {
+           "t": "code",
+           "v": "main"
+          },
+          ", then push a branch with a small change and open a pull request. The ",
+          {
+           "c": [
+            "Checks"
+           ],
+           "t": "i"
+          },
+          " area of the pull request shows ",
+          {
+           "c": [
+            "dbt CI / slim-ci"
+           ],
+           "t": "b"
+          },
+          "; click ",
+          {
+           "c": [
+            "Details"
+           ],
+           "t": "i"
+          },
+          " to read the log of each step. Then, in ",
+          {
+           "c": [
+            "Settings"
+           ],
+           "t": "i"
+          },
+          " → ",
+          {
+           "c": [
+            "Branches"
+           ],
+           "t": "i"
+          },
+          " (or ",
+          {
+           "c": [
+            "Rules"
+           ],
+           "t": "i"
+          },
+          " → ",
+          {
+           "c": [
+            "Rulesets"
+           ],
+           "t": "i"
+          },
+          "), protect ",
+          {
+           "t": "code",
+           "v": "main"
+          },
+          ": require a pull request before merging and require the status check ",
+          {
+           "t": "code",
+           "v": "slim-ci"
+          },
+          " to pass. Push a broken change (for example a typo in a column name) and watch the merge button become blocked."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          "This lab was not executed by the authors of this book: every dbt and Git command of the workflow was run locally (previous lab), but not on GitHub's machines. If a step fails there, read its log: the error is printed exactly as on your laptop."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch25-lab3",
+       "objectives": [
+        "CP0-GIT",
+        "3.4"
+       ],
+       "t": "lab",
+       "title": [
+        "Optional: the real thing on GitHub"
+       ]
+      }
+     ],
+     "id": "ch25-s4-3",
+     "number": "25.4.3",
+     "title": [
+      "Why our workflow needs the ",
+      {
+       "t": "code",
+       "v": "--empty"
+      },
+      " step"
+     ],
+     "titleText": "Why our workflow needs the --empty step"
+    }
+   ],
+   "title": [
+    "CI for dbt Core with GitHub Actions"
+   ],
+   "titleText": "CI for dbt Core with GitHub Actions"
+  },
+  {
+   "anchors": [
+    "sec-envci-pr"
+   ],
+   "checkpoints": [],
+   "id": "ch25-s5",
+   "label": "sec:envci-pr",
+   "labs": [],
+   "minutes": 5,
+   "number": "25.5",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "pull request template"
+         ],
+         "fr": "modèle de pull request",
+         "id": "term-pull-request-template",
+         "t": "term"
+        },
+        " is a Markdown file that GitHub copies into the description of every new pull request. It reminds the author of the checks the team expects. Ours:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch25-c25",
+       "lang": "plain",
+       "t": "code",
+       "text": "## What does this pull request change?\n\n<!-- One or two sentences: which models, and why. -->\n\n## How was it tested?\n\n- [ ] `dbt build --select state:modified+` passes locally (dev)\n- [ ] New or changed models have tests (data tests and, for logic, unit tests)\n- [ ] Descriptions are up to date (`dbt docs generate` works)\n- [ ] I compared the results with production when a model changed\n      (for example with `audit_helper` or `except` queries)\n\n## Impact\n\n- [ ] Breaking change for downstream users? (contract, column removed or renamed)\n      If yes: new model version, deprecation_date on the old one\n- [ ] Exposures (dashboards, notebooks) affected:\n\n## Checklist\n\n- [ ] The CI job is green\n- [ ] Naming follows the project conventions (stg_ / int_ / fct_ / dim_)",
+       "title": ".github/pull_request_template.md"
+      },
+      {
+       "c": [
+        "The template asks people; ",
+        {
+         "en": [
+          "branch protection"
+         ],
+         "fr": "protection de branche",
+         "id": "term-branch-protection",
+         "t": "term"
+        },
+        " enforces. With a ",
+        {
+         "en": [
+          "required status check"
+         ],
+         "fr": "vérification obligatoire",
+         "id": "term-required-status-check",
+         "t": "term"
+        },
+        " on ",
+        {
+         "t": "code",
+         "v": "slim-ci"
+        },
+        ", GitHub refuses to merge a pull request whose CI job is red or still running. Add \"require at least one approval\" and nobody can push untested or unreviewed code to ",
+        {
+         "t": "code",
+         "v": "main"
+        },
+        ". The dbt platform's CI job reports its result as a check in the same way, so the protection rule works for both."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The template mirrors the topics of this book: tests (",
+          {
+           "href": "/learn/ch18/",
+           "label": "ch:data-tests",
+           "t": "ref",
+           "text": "Chapters 18"
+          },
+          " and ",
+          {
+           "href": "/learn/ch19/",
+           "label": "ch:unit-tests",
+           "t": "ref",
+           "text": "19"
+          },
+          "), documentation (",
+          {
+           "href": "/learn/ch20/",
+           "label": "ch:documentation",
+           "t": "ref",
+           "text": "Chapter 20"
+          },
+          "), comparison with ",
+          {
+           "t": "code",
+           "v": "audit_helper"
+          },
+          " (",
+          {
+           "href": "/learn/ch11/",
+           "label": "ch:jinja-macros-packages",
+           "t": "ref",
+           "text": "Chapter 11"
+          },
+          "), contracts and versions (",
+          {
+           "href": "/learn/ch17/",
+           "label": "ch:governance",
+           "t": "ref",
+           "text": "Chapter 17"
+          },
+          "), exposures (",
+          {
+           "href": "/learn/ch21/",
+           "label": "ch:freshness-exposures",
+           "t": "ref",
+           "text": "Chapter 21"
+          },
+          "). A good template is a checklist of the questions a reviewer would ask anyway."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch25-s5-0",
+     "title": [
+      "Pull request template and required checks"
+     ],
+     "titleText": "Pull request template and required checks"
+    }
+   ],
+   "title": [
+    "Pull request template and required checks"
+   ],
+   "titleText": "Pull request template and required checks"
+  },
+  {
+   "anchors": [
+    "sec-envci-tests"
+   ],
+   "checkpoints": [],
+   "id": "ch25-s6",
+   "label": "sec:envci-tests",
+   "labs": [],
+   "minutes": 5,
+   "number": "25.6",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Exam objective 5.3 asks you to place testing steps in the workflow. The rule of thumb: test logic early and cheaply, test data everywhere it can be wrong, and check the inputs before you build on them."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Check"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Dev"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "CI"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Prod"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Why"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Unit tests"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "no"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           "They test the code with fake rows; production data adds nothing. Exclude them: ",
+           {
+            "t": "code",
+            "v": "--exclude-resource-type unit_test"
+           },
+           " (or the variable ",
+           {
+            "t": "code",
+            "v": "DBT_ENGINE_EXCLUDE_RESOURCE_TYPES"
+           },
+           ", formerly ",
+           {
+            "t": "code",
+            "v": "DBT_EXCLUDE_RESOURCE_TYPES"
+           },
+           ", set to ",
+           {
+            "t": "code",
+            "v": "unit_test"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Data tests (generic, singular)"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           "The data changes every day; a test that passed yesterday can fail tonight."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Contracts and constraints"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           "Checked when the model is built, in every environment."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Source freshness"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "rarely"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "no"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           "It is about today's load of raw data: run it in the production job, first or last."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--empty"
+           },
+           " dry run"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "optional"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "no"
+          ]
+         },
+         {
+          "c": [
+           "Catches SQL errors in seconds, creates relations for unit tests."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Compare with production"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "by hand"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "–"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "audit_helper"
+           },
+           " by hand, or ",
+           {
+            "c": [
+             "dbt compare"
+            ],
+            "t": "i"
+           },
+           " (Advanced CI)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Inside one ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        ", the order is automatic: for each model, its unit tests run ",
+        {
+         "c": [
+          "before"
+         ],
+         "t": "i"
+        },
+        " it is built, its data tests ",
+        {
+         "c": [
+          "after"
+         ],
+         "t": "i"
+        },
+        ", and a failing data test makes dbt skip the children (",
+        {
+         "href": "/learn/ch23/",
+         "label": "ch:pipelines-clone",
+         "t": "ref",
+         "text": "Chapter 23"
+        },
+        "). Tests on sources run first, because sources are at the start of the DAG."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Unit tests in production"
+           ],
+           "t": "b"
+          },
+          " (trap T130). The production job should not run them: ",
+          {
+           "t": "code",
+           "v": "dbt build --exclude-resource-type unit_test"
+          },
+          ". And a CI job on a new schema needs the parents of each unit test to exist: ",
+          {
+           "t": "code",
+           "v": "--defer"
+          },
+          " covers models that production already has, the ",
+          {
+           "t": "code",
+           "v": "--empty"
+          },
+          " step covers new ones (trap T127)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch25-s6-0",
+     "title": [
+      "Where each kind of test runs"
+     ],
+     "titleText": "Where each kind of test runs"
+    }
+   ],
+   "title": [
+    "Where each kind of test runs"
+   ],
+   "titleText": "Where each kind of test runs"
+  },
+  {
+   "anchors": [
+    "sec-envci-prod"
+   ],
+   "checkpoints": [],
+   "id": "ch25-s7",
+   "label": "sec:envci-prod",
+   "labs": [],
+   "minutes": 5,
+   "number": "25.7",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A good production job answers five questions: ",
+        {
+         "c": [
+          "when"
+         ],
+         "t": "i"
+        },
+        " (schedule or event), ",
+        {
+         "c": [
+          "what"
+         ],
+         "t": "i"
+        },
+        " (commands and selection), ",
+        {
+         "c": [
+          "in which order"
+         ],
+         "t": "i"
+        },
+        ", ",
+        {
+         "c": [
+          "who is told"
+         ],
+         "t": "i"
+        },
+        " when it fails, and ",
+        {
+         "c": [
+          "how to recover"
+         ],
+         "t": "i"
+        },
+        ". A typical nightly job:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Step"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Command"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Why"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "align": "c",
+          "c": [
+           "1"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt source freshness"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Stop early if the raw data did not arrive (as a command, a stale ",
+           {
+            "t": "code",
+            "v": "error_after"
+           },
+           " fails the job)."
+          ]
+         }
+        ],
+        [
+         {
+          "align": "c",
+          "c": [
+           "2"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt build --exclude-resource-type unit_test"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Seeds, snapshots, models and data tests in DAG order (or ",
+           {
+            "t": "code",
+            "v": "--selector nightly"
+           },
+           ", ",
+           {
+            "href": "/learn/ch16/",
+            "label": "ch:commands-selection",
+            "t": "ref",
+            "text": "Chapter 16"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "align": "c",
+          "c": [
+           "3"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt docs generate"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Fresh documentation and ",
+           {
+            "t": "code",
+            "v": "catalog.json"
+           },
+           " (or the checkbox)."
+          ]
+         }
+        ],
+        [
+         {
+          "align": "c",
+          "c": [
+           "–"
+          ]
+         },
+         {
+          "c": [
+           "Notifications on failure; ",
+           {
+            "c": [
+             "Rerun from failure"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Somebody knows; the fix is followed by a retry, not a full rebuild."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "With dbt Core you need an orchestrator to run this: cron on a server, Airflow, Dagster, or GitHub Actions itself. A sketch of a scheduled workflow (it is ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " part of the practice project: our DuckDB file lives on your laptop, so a GitHub machine could not update it):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch25-c26",
+       "lang": "yaml",
+       "t": "code",
+       "text": "name: dbt production\non:\n  schedule:\n    - cron: \"0 5 * * *\"        # every day at 05:00 UTC\n  workflow_dispatch:            # plus a \"Run workflow\" button\njobs:\n  nightly:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-python@v5\n        with:\n          python-version: \"3.12\"\n      - run: pip install \"dbt-core~=1.11.0\" \"dbt-snowflake~=1.11.0\"\n      - run: dbt deps\n      - run: dbt source freshness\n      - run: dbt build --target prod --exclude-resource-type unit_test\n      - run: dbt docs generate --target prod\n      - name: Keep the artifacts (state for CI, retry, docs)\n        if: always()\n        uses: actions/upload-artifact@v4\n        with:\n          name: prod-artifacts\n          path: target/*.json",
+       "title": "sketch: .github/workflows/prod.yml (for a real warehouse)"
+      },
+      {
+       "c": [
+        "(We only checked that this file is valid YAML. The adapter name is an example; credentials would come from secrets.) The last step keeps the artifacts even when a previous step failed (",
+        {
+         "t": "code",
+         "v": "if: always()"
+        },
+        "): they are the state of your next CI runs, and the ",
+        {
+         "t": "code",
+         "v": "run_results.json"
+        },
+        " that ",
+        {
+         "t": "code",
+         "v": "dbt retry"
+        },
+        " needs."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch25-s7-0",
+     "title": [
+      "Designing the production job"
+     ],
+     "titleText": "Designing the production job"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "In the job above, the tables are replaced one by one. For some minutes, a dashboard can read a new ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " next to an old ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        ", and if a test fails in the middle, production is half new, half old. A ",
+        {
+         "en": [
+          "blue/green deployment"
+         ],
+         "fr": "déploiement bleu/vert",
+         "id": "term-blue-green-deployment",
+         "t": "term"
+        },
+        " avoids this: build and test everything in a second copy (\"green\"), and only when all tests pass, switch the users from the old copy (\"blue\") to the new one in one quick operation (for example a schema or database swap on Snowflake, or views that point to the new copy). ",
+        {
+         "t": "code",
+         "v": "dbt clone"
+        },
+        " helps on warehouses with zero-copy cloning (",
+        {
+         "href": "/learn/ch23/",
+         "label": "ch:pipelines-clone",
+         "t": "ref",
+         "text": "Chapter 23"
+        },
+        "). It is an advanced pattern; for the exam, know the idea and why teams use it: users never see a half-built or untested production."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch25-s7-1",
+     "number": "25.7.1",
+     "title": [
+      "Blue/green deployment"
+     ],
+     "titleText": "Blue/green deployment"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Warehouse time is money, and CI runs many times a day. The tools of the last chapters all reduce it:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Slim CI"
+             ],
+             "t": "b"
+            },
+            ": ",
+            {
+             "t": "code",
+             "v": "state:modified+"
+            },
+            " with ",
+            {
+             "t": "code",
+             "v": "--defer"
+            },
+            " builds a handful of models instead of the whole project."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "--empty"
+              }
+             ],
+             "t": "b"
+            },
+            " first: a broken model fails in seconds, with zero rows read."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Less data in development and CI"
+             ],
+             "t": "b"
+            },
+            ": a ",
+            {
+             "t": "code",
+             "v": "target.name"
+            },
+            " filter (our ",
+            {
+             "t": "code",
+             "v": "dev_start_date"
+            },
+            "), or ",
+            {
+             "t": "code",
+             "v": "--sample"
+            },
+            " (",
+            {
+             "href": "/learn/ch16/",
+             "label": "ch:commands-selection",
+             "t": "ref",
+             "text": "Chapter 16"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "dbt clone"
+              }
+             ],
+             "t": "b"
+            },
+            " of large incremental models into the CI schema instead of a full rebuild (zero-copy where supported)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "dbt retry"
+              }
+             ],
+             "t": "b"
+            },
+            " after a failure instead of a full rerun."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Incremental and microbatch models"
+             ],
+             "t": "b"
+            },
+            " for large tables (",
+            {
+             "href": "/learn/ch14/",
+             "label": "ch:incremental-microbatch",
+             "t": "ref",
+             "text": "Chapter 14"
+            },
+            "); sensible ",
+            {
+             "t": "code",
+             "v": "threads"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Clean up"
+             ],
+             "t": "b"
+            },
+            ": drop CI schemas when the pull request closes (the dbt platform does it for ",
+            {
+             "t": "code",
+             "v": "dbt_cloud_pr_"
+            },
+            " schemas)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Do not schedule more than needed"
+             ],
+             "t": "b"
+            },
+            ": a model read once a day does not need an hourly job."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "A deploy job with ",
+            {
+             "t": "code",
+             "v": "state:modified+"
+            },
+            " can build nothing."
+           ],
+           "t": "b"
+          },
+          " State selection sees code changes, not new data. A nightly job that selects ",
+          {
+           "t": "code",
+           "v": "state:modified+"
+          },
+          " and defers to itself finishes \"successfully\" with zero models on a night without merges. Production jobs select models normally; ",
+          {
+           "t": "code",
+           "v": "state:modified+"
+          },
+          " is for CI and merge jobs."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch25-s7-2",
+     "number": "25.7.2",
+     "title": [
+      "Controlling the cost"
+     ],
+     "titleText": "Controlling the cost"
+    }
+   ],
+   "title": [
+    "Designing the production job"
+   ],
+   "titleText": "Designing the production job"
+  }
+ ],
+ "minutes": 110,
+ "number": 25,
+ "objectives": [
+  "CP0-GIT",
+  "1.12",
+  "3.4",
+  "5.3",
+  "7.1"
+ ],
+ "part": 7,
+ "partLabel": "Part VII",
+ "partTitle": "State, CI and Deployment",
+ "printed": "25",
+ "quiz": [
+  "q-ch25-01",
+  "q-ch25-02",
+  "q-ch25-03",
+  "q-ch25-04",
+  "q-ch25-05",
+  "q-ch25-06",
+  "q-ch25-07",
+  "q-ch25-08",
+  "q-ch25-09",
+  "q-ch25-10",
+  "q-ch25-11",
+  "q-ch25-12",
+  "q-ch25-13",
+  "q-ch25-14",
+  "q-ch25-15",
+  "q-ch25-16",
+  "q-ch25-17",
+  "q-ch25-18"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-envci-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch25-01",
+      "q-ch25-02",
+      "q-ch25-03",
+      "q-ch25-04",
+      "q-ch25-05",
+      "q-ch25-06",
+      "q-ch25-07",
+      "q-ch25-08",
+      "q-ch25-09",
+      "q-ch25-10",
+      "q-ch25-11",
+      "q-ch25-12",
+      "q-ch25-13",
+      "q-ch25-14",
+      "q-ch25-15",
+      "q-ch25-16",
+      "q-ch25-17",
+      "q-ch25-18"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch25-01",
+    "q-ch25-02",
+    "q-ch25-03",
+    "q-ch25-04",
+    "q-ch25-05",
+    "q-ch25-06",
+    "q-ch25-07",
+    "q-ch25-08",
+    "q-ch25-09",
+    "q-ch25-10",
+    "q-ch25-11",
+    "q-ch25-12",
+    "q-ch25-13",
+    "q-ch25-14",
+    "q-ch25-15",
+    "q-ch25-16",
+    "q-ch25-17",
+    "q-ch25-18"
+   ],
+   "label": "sec:envci-quiz",
+   "number": "25.8",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "An environment = connection, credentials, schema, dbt version and Git branch. Same code everywhere; in dbt Core, mostly a target of ",
+        {
+         "t": "code",
+         "v": "profiles.yml"
+        },
+        ". Our project: ",
+        {
+         "t": "code",
+         "v": "dbt_adnane"
+        },
+        " (dev), ",
+        {
+         "t": "code",
+         "v": "dbt_ci"
+        },
+        " (CI), ",
+        {
+         "t": "code",
+         "v": "prod"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "marts"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "snapshots"
+        },
+        " (prod)."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Workflow: branch, change, ",
+        {
+         "t": "code",
+         "v": "dbt build -s x+"
+        },
+        " in dev, pull request, CI check, review, merge, deploy. Never fix production directly."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt platform: only one development environment per project (personal credentials and schema); deployment environments of type Production (max one), Staging (max one), General. Environment variables: job/personal override > environment > project default > code default; secrets start with ",
+        {
+         "t": "code",
+         "v": "DBT_ENV_SECRET_"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Deploy jobs: commands chained (a failed step stops the job), checkboxes \"Generate docs on run\" and \"Run source freshness\" do not fail the job; triggers: schedule (UTC, cron), another job, API; settings: target name, threads, deferral, timeout."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "CI jobs: on pull requests, schema ",
+        {
+         "t": "code",
+         "v": "dbt_cloud_pr_<job>_<pr>"
+        },
+        " dropped at close, ",
+        {
+         "t": "code",
+         "v": "dbt build -s state:modified+"
+        },
+        " deferring to Production, no run slot, Advanced CI ",
+        {
+         "c": [
+          "dbt compare"
+         ],
+         "t": "i"
+        },
+        ". Merge jobs: on merge, continuous deployment and fresh state."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt Core CI with GitHub Actions: checkout (",
+        {
+         "t": "code",
+         "v": "fetch-depth: 0"
+        },
+        "), install, get the production manifest, ",
+        {
+         "t": "code",
+         "v": "dbt deps"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "--empty"
+        },
+        " run, then ",
+        {
+         "t": "code",
+         "v": "dbt build --select state:modified+ --defer --state prod-artifacts --target ci"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "--empty"
+        },
+        " (run, build, compile, snapshot): real SQL on zero rows; catches errors cheaply and creates the relations that unit tests of new models need. Defer covers models that production already has."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Tests: unit tests in dev and CI only; data tests everywhere; freshness in production; PR template + required status check protect ",
+        {
+         "t": "code",
+         "v": "main"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Production job: freshness, ",
+        {
+         "t": "code",
+         "v": "build"
+        },
+        " without unit tests, docs, notifications, rerun from failure; blue/green for atomic releases; control cost with slim CI, ",
+        {
+         "t": "code",
+         "v": "--empty"
+        },
+        ", sampling, clone, retry and sensible schedules."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "Environments, Jobs and CI/CD"
+}

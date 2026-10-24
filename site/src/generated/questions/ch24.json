@@ -1,0 +1,1933 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Retry reads the statuses and the arguments of the previous command in ",
+     {
+      "t": "code",
+      "v": "run_results.json"
+     },
+     ". A: the manifest describes the project, not the results. C: ",
+     {
+      "t": "code",
+      "v": "sources.json"
+     },
+     " holds freshness results. D: ",
+     {
+      "t": "code",
+      "v": "catalog.json"
+     },
+     " holds column metadata from ",
+     {
+      "t": "code",
+      "v": "docs generate"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch24-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/manifest.json"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/run_results.json"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/sources.json"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/catalog.json"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "Which artifact does ",
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     " read to decide what to run?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " A ",
+     {
+      "t": "code",
+      "v": "state:"
+     },
+     " selector needs a comparison manifest, given with ",
+     {
+      "t": "code",
+      "v": "--state"
+     },
+     " (or ",
+     {
+      "t": "code",
+      "v": "DBT_ENGINE_STATE"
+     },
+     "). A: dbt never reads Git for this. B: dbt does not pick ",
+     {
+      "t": "code",
+      "v": "target/"
+     },
+     " by itself. D: it is an error, not a \"select all\"."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch24-02",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt compares with the last commit of the current Git branch."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt compares with ",
+     {
+      "t": "code",
+      "v": "target/manifest.json"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt stops with \"Got a state selector method, but no comparison manifest\"."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt selects every node."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "You run ",
+     {
+      "t": "code",
+      "v": "dbt ls -s state:modified"
+     },
+     " without ",
+     {
+      "t": "code",
+      "v": "--state"
+     },
+     " and without any state environment variable (",
+     {
+      "t": "code",
+      "v": "DBT_ENGINE_STATE"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "DBT_STATE"
+     },
+     "). What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " Tags are metadata, and a description counts only when ",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     " writes it to the warehouse. B is a config change (",
+     {
+      "t": "code",
+      "v": ".configs"
+     },
+     "), D is ",
+     {
+      "t": "code",
+      "v": ".macros"
+     },
+     ", E is ",
+     {
+      "t": "code",
+      "v": ".body"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch24-03",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Adding ",
+     {
+      "t": "code",
+      "v": "'daily'"
+     },
+     " to the ",
+     {
+      "t": "code",
+      "v": "tags"
+     },
+     " of a model."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Changing ",
+     {
+      "t": "code",
+      "v": "materialized: table"
+     },
+     " to ",
+     {
+      "t": "code",
+      "v": "materialized: view"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Changing the description of a staging model, without ",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Changing a macro used by the model."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Changing the SQL of the model."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "Compared with the production manifest, which two changes are ",
+     {
+      "c": [
+       "not"
+      ],
+      "t": "i"
+     },
+     " selected by ",
+     {
+      "t": "code",
+      "v": "state:modified"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "relation"
+      ],
+      "t": "b"
+     },
+     " (",
+     {
+      "t": "code",
+      "v": "state:modified.relation"
+     },
+     "). It compares the configured values, whatever the target or the ",
+     {
+      "t": "code",
+      "v": "generate_schema_name"
+     },
+     " macro produce. ",
+     {
+      "t": "code",
+      "v": ".configs"
+     },
+     " explicitly excludes these three keys."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch24-04",
+  "key": {
+   "accepted": [
+    "relation"
+   ]
+  },
+  "keyRaw": "\\textbf{relation}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "The sub-selector that catches a change of ",
+     {
+      "t": "code",
+      "v": "alias"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "schema"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "database"
+     },
+     " is ",
+     {
+      "t": "code",
+      "v": "state:modified."
+     },
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-b, 2-c, 3-a, 4-d."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch24-05",
+  "key": {
+   "1": "b",
+   "2": "c",
+   "3": "a",
+   "4": "d"
+  },
+  "keyRaw": "\\textbf{1-b, 2-c, 3-a, 4-d.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "state:new"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "state:modified"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "state:unmodified"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "state:old"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "Nodes that exist in the state manifest and have no change"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "Nodes whose unique ID is absent from the state manifest"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "New nodes plus changed existing nodes"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "Nodes whose unique ID exists in the state manifest"
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each selector with what it selects."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A failing data test ends with ",
+     {
+      "t": "code",
+      "v": "fail"
+     },
+     ", even though the summary counts it in ",
+     {
+      "t": "code",
+      "v": "ERROR"
+     },
+     ". Use ",
+     {
+      "t": "code",
+      "v": "result:fail"
+     },
+     " (plus ",
+     {
+      "t": "code",
+      "v": "result:skipped"
+     },
+     ") or simply ",
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     ". A describes what ",
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     " would do. C: selection never falls back to everything. D: ",
+     {
+      "t": "code",
+      "v": "result:"
+     },
+     " needs ",
+     {
+      "t": "code",
+      "v": "--state"
+     },
+     ", not ",
+     {
+      "t": "code",
+      "v": "--defer"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch24-06",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The failed test and its six skipped descendants run again."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Nothing is selected, because the failed test has the status ",
+     {
+      "t": "code",
+      "v": "fail"
+     },
+     ", not ",
+     {
+      "t": "code",
+      "v": "error"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The whole project runs again."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt refuses: ",
+     {
+      "t": "code",
+      "v": "result:"
+     },
+     " needs ",
+     {
+      "t": "code",
+      "v": "--defer"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " ends with ",
+     {
+      "t": "code",
+      "v": "Done. PASS=40 WARN=0 ERROR=1 SKIP=6"
+     },
+     ". The only problem was a data test that returned rows. You copy the artifacts to ",
+     {
+      "t": "code",
+      "v": "last/"
+     },
+     " and run ",
+     {
+      "t": "code",
+      "v": "dbt build -s result:error+ --state last"
+     },
+     ". What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, YES, NO, YES."
+      ],
+      "t": "b"
+     },
+     " Defer builds nothing (trap T141). It needs ",
+     {
+      "t": "code",
+      "v": "--state"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "--defer-state"
+     },
+     ": without them dbt stops with \"--state or --defer-state are required for deferral\". Selected nodes are always built in your schema."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch24-07",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": true,
+   "D": false,
+   "E": true
+  },
+  "keyRaw": "\\textbf{NO, YES, YES, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It builds the missing parents in your schema, using production data."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " to an unselected node that does not exist in your target resolves to the relation in the state manifest."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "With ",
+     {
+      "t": "code",
+      "v": "--favor-state"
+     },
+     ", unselected nodes are read from the state even if your schema has them."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It works without any manifest, by looking at the production schema directly."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Selected nodes are never deferred."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "--defer"
+     },
+     ":"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "D, B, C, A, E."
+      ],
+      "t": "b"
+     },
+     " The failed run writes the results, you diagnose, fix, retry, then check the retry ran only the failed and skipped nodes. Retrying before the fix (A before C) would only repeat the failure."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch24-08",
+  "key": [
+   "D",
+   "B",
+   "C",
+   "A",
+   "E"
+  ],
+  "keyRaw": "\\textbf{D, B, C, A, E.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Run ",
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Read the error message and the compiled SQL."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Fix the code and save the file."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The failed ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " writes ",
+     {
+      "t": "code",
+      "v": "run_results.json"
+     },
+     "."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Check that only the failed and skipped nodes ran."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "Put the steps of a correct recovery from a failed nightly ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " in order:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     " rewrote ",
+     {
+      "t": "code",
+      "v": "run_results.json"
+     },
+     " with successful results. A would be true without the compile (or with ",
+     {
+      "t": "code",
+      "v": "dbt ls"
+     },
+     ", which does not write the file). B: retry never re-runs everything. D: retry would re-run the failed nodes of the compile, and there are none."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch24-09",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It re-runs the failed model and the skipped nodes."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It re-runs the whole build."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It prints \"Nothing to do\", because ",
+     {
+      "t": "code",
+      "v": "run_results.json"
+     },
+     " now describes the successful compile."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It re-runs ",
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "After a failed ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", you run ",
+     {
+      "t": "code",
+      "v": "dbt compile -s my_model"
+     },
+     " to check the SQL, fix the model, then run ",
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     ". What does retry do?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 4."
+      ],
+      "t": "b"
+     },
+     " Without ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     " the children of the changed models are not built or tested, although a change can break them; slim CI uses ",
+     {
+      "t": "code",
+      "v": "state:modified+"
+     },
+     ". Lines 1 to 3 are fine: install packages, prepare the folder, copy the production manifest."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch24-c69",
+   "lines": 4,
+   "numbering": "listing"
+  },
+  "id": "q-ch24-10",
+  "key": 4,
+  "keyRaw": "\\textbf{Line 4.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "A CI script must build only the changed models and their children in an empty schema, reading every other parent from production. Which line is wrong?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch24-c69",
+    "lang": "plain",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "dbt deps\nmkdir -p prod-artifacts\ncp /shared/prod/manifest.json prod-artifacts/\ndbt build --select state:modified --defer --state prod-artifacts --target ci"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "--target"
+     },
+     " is kept from the failed command and a ",
+     {
+      "t": "code",
+      "v": "--target"
+     },
+     " on the retry command was ignored in our run (output ",
+     {
+      "t": "code",
+      "v": "target='ci'"
+     },
+     "). A is the intuition, but retry is designed to repeat the previous invocation. C: the saved target wins. D: the option is accepted, it just has no effect."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch24-11",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dev"
+     },
+     ", because the command line always wins."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ci"
+     },
+     ", because retry reuses the target of the failed command."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The default target of the profile."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "None: retry refuses ",
+     {
+      "t": "code",
+      "v": "--target"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build -s fct_orders --target ci --defer --state prod"
+     },
+     " fails on a typo. You fix it and run ",
+     {
+      "t": "code",
+      "v": "dbt retry --target dev"
+     },
+     ". Which target does the retry use (dbt Core 1.11)?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "defer-state"
+      ],
+      "t": "b"
+     },
+     " (",
+     {
+      "t": "code",
+      "v": "--defer-state"
+     },
+     "). Without it, deferral uses the folder of ",
+     {
+      "t": "code",
+      "v": "--state"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch24-12",
+  "key": {
+   "accepted": [
+    "defer-state"
+   ]
+  },
+  "keyRaw": "\\textbf{defer-state}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "The flag that gives deferral its own manifest folder, different from the folder used for state comparison, is ",
+     {
+      "t": "code",
+      "v": "--"
+     },
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B and D."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "compile"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "seed"
+     },
+     " execute nodes and write run results. ",
+     {
+      "t": "code",
+      "v": "ls"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "parse"
+     },
+     " only write the manifest; ",
+     {
+      "t": "code",
+      "v": "source freshness"
+     },
+     " writes ",
+     {
+      "t": "code",
+      "v": "sources.json"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch24-13",
+  "key": [
+   "B",
+   "D"
+  ],
+  "keyRaw": "\\textbf{B and D.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt ls"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt compile"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt parse"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt seed"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two commands write ",
+     {
+      "t": "code",
+      "v": "run_results.json"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " The model's code (with ",
+     {
+      "t": "code",
+      "v": "var(...)"
+     },
+     " inside) did not change, so it is not modified: a false negative. A and B: neither the body nor a config changed as written. D: ",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     " only matters for descriptions."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch24-14",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Yes, in ",
+     {
+      "t": "code",
+      "v": "state:modified.body"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Yes, in ",
+     {
+      "t": "code",
+      "v": "state:modified.configs"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "No: state comparison does not detect a new value of a var."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Only if ",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     " is enabled."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "A model uses ",
+     {
+      "t": "code",
+      "v": "{{ var('start_date') }}"
+     },
+     " in its SQL. You change only the value of ",
+     {
+      "t": "code",
+      "v": "start_date"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ". Is the model in ",
+     {
+      "t": "code",
+      "v": "state:modified"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, YES, NO, YES."
+      ],
+      "t": "b"
+     },
+     " Retryable statuses are error, fail, skipped and partial success; ",
+     {
+      "t": "code",
+      "v": "warn"
+     },
+     " only with ",
+     {
+      "t": "code",
+      "v": "--warn-error"
+     },
+     " on the retry command. ",
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     " has no ",
+     {
+      "t": "code",
+      "v": "--select"
+     },
+     " in 1.11. ",
+     {
+      "t": "code",
+      "v": "--threads"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "--vars"
+     },
+     " can be overridden."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch24-15",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": false,
+   "E": true
+  },
+  "keyRaw": "\\textbf{YES, NO, YES, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It re-runs nodes whose status was ",
+     {
+      "t": "code",
+      "v": "skipped"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It re-runs tests whose status was ",
+     {
+      "t": "code",
+      "v": "warn"
+     },
+     ", by default."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "For a microbatch model in ",
+     {
+      "t": "code",
+      "v": "partial success"
+     },
+     ", it re-runs only the failed batches."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "You can change the selection with ",
+     {
+      "t": "code",
+      "v": "dbt retry --select other_model"
+     },
+     "."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt retry --threads 1"
+     },
+     " changes the number of threads."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     " in dbt Core 1.11:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-b, 2-a, 3-d, 4-c."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "docs generate"
+     },
+     " also writes ",
+     {
+      "t": "code",
+      "v": "run_results.json"
+     },
+     ", which is why item 3 says \"but not catalog\"."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch24-16",
+  "key": {
+   "1": "b",
+   "2": "a",
+   "3": "d",
+   "4": "c"
+  },
+  "keyRaw": "\\textbf{1-b, 2-a, 3-d, 4-c.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "catalog.json"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "sources.json"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "run_results.json"
+      },
+      " (but not catalog)"
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "manifest.json"
+      },
+      " only"
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt source freshness"
+      }
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt docs generate"
+      }
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt parse"
+      }
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt run"
+      }
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each artifact with the only command (among these) that produces it."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Clone creates real objects (zero-copy clones or views) that tools outside dbt can query. A: defer creates nothing, it only rewrites refs inside dbt. C retries failures. D is a selector, not a way to create objects."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch24-17",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "--defer"
+     },
+     ", because it creates the parents as views."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt clone"
+     },
+     ", because it creates objects that a BI tool can query."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "state:unmodified"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "Your team wants to test a change of ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     " in a BI tool, on real tables, without rebuilding the whole project in the CI schema. Which tool fits best?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The toggle passes ",
+     {
+      "t": "code",
+      "v": "--defer"
+     },
+     " with the latest manifest of Staging if it exists, else Production. A: Git is not the state. C: CI runs are not used as the deferral state. D: deferral avoids building them."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch24-18",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "From your Git branch."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "From the latest successful run in the Staging environment if one exists, otherwise Production."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "From the last CI run of your pull request."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "They are built in your schema first."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "In the Studio IDE, the ",
+     {
+      "c": [
+       "Defer to staging/production"
+      ],
+      "t": "b"
+     },
+     " toggle is on. You build one changed model in your empty development schema. Where do its unbuilt parents come from?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "source_status:fresher"
+     },
+     " needs two ",
+     {
+      "t": "code",
+      "v": "sources.json"
+     },
+     ": the old one in the ",
+     {
+      "t": "code",
+      "v": "--state"
+     },
+     " folder and the new one in ",
+     {
+      "t": "code",
+      "v": "target/"
+     },
+     ". Without the old one, dbt stopped with \"No previous state comparison freshness results in sources.json\". A: the status (pass, warn, error) does not matter, only a later ",
+     {
+      "t": "code",
+      "v": "max_loaded_at"
+     },
+     ". C and D: dbt does not guess; it raises an error."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch24-19",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Every source whose freshness status is ",
+     {
+      "t": "code",
+      "v": "pass"
+     },
+     " is selected, with its descendants."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt stops with an error: there is no previous ",
+     {
+      "t": "code",
+      "v": "sources.json"
+     },
+     " to compare with."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Every source is considered fresher, because the state has no freshness results."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Nothing is selected, and the build ends successfully."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 24,
+   "kind": "chapter",
+   "n": 19
+  },
+  "stem": [
+   {
+    "c": [
+     "Your folder ",
+     {
+      "t": "code",
+      "v": "prod-artifacts/"
+     },
+     " holds only ",
+     {
+      "t": "code",
+      "v": "manifest.json"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "run_results.json"
+     },
+     ". You run ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     ", then ",
+     {
+      "t": "code",
+      "v": "dbt build -s source_status:fresher+ --state prod-artifacts"
+     },
+     ". What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

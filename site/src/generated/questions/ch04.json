@@ -1,0 +1,2730 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Only ",
+     {
+      "t": "code",
+      "v": "is null"
+     },
+     " tests for NULL. A returns zero rows without error (any comparison with NULL is unknown). C looks for an empty text, which is not the same as NULL. D is not valid for a text column."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "select * from jaffle_shop.customers where email = null"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "select * from jaffle_shop.customers where email is null"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "select * from jaffle_shop.customers where email = ''"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "select * from jaffle_shop.customers where not email"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 1,
+   "printed": 1,
+   "quiz": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "Which query returns the customers whose email is missing?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "count(email)"
+     },
+     " ignores NULLs; the ",
+     {
+      "t": "code",
+      "v": "where"
+     },
+     " in B removes them before counting. C counts all 100 rows. D counts the 6 countries."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch04-02",
+  "key": [
+   "A",
+   "B"
+  ],
+  "keyRaw": "\\textbf{A and B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "select count(email) from jaffle_shop.customers"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "select count(*) from jaffle_shop.customers where email is not null"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "select count(*) from jaffle_shop.customers"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "select count(distinct country) from jaffle_shop.customers"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 2,
+   "printed": 2,
+   "quiz": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two expressions return the number of customers that ",
+     {
+      "c": [
+       "have"
+      ],
+      "t": "i"
+     },
+     " an email (95)?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "having"
+       },
+       "."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "having"
+     },
+     " filters groups after ",
+     {
+      "t": "code",
+      "v": "group by"
+     },
+     ". An aggregate in ",
+     {
+      "t": "code",
+      "v": "where"
+     },
+     " is an error, because groups do not exist yet when ",
+     {
+      "t": "code",
+      "v": "where"
+     },
+     " runs."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch04-03",
+  "key": {
+   "accepted": [
+    "having"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{having}.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 3,
+   "printed": 3,
+   "quiz": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "You grouped orders by ",
+     {
+      "t": "code",
+      "v": "user_id"
+     },
+     " and want to keep only the customers with more than 5 orders. Complete: ",
+     {
+      "t": "code",
+      "v": "group by user_id ______ count(*) > 5"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY."
+      ],
+      "t": "b"
+     },
+     " (Then ",
+     {
+      "t": "code",
+      "v": "LIMIT"
+     },
+     ".) This is why standard SQL does not allow a select alias in ",
+     {
+      "t": "code",
+      "v": "where"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch04-04",
+  "key": [
+   "B",
+   "D",
+   "F",
+   "E",
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{FROM, WHERE, GROUP BY, HAVING, SELECT, ORDER BY.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "SELECT"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "FROM"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ORDER BY"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "WHERE"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "HAVING"
+     }
+    ],
+    "id": "E"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "GROUP BY"
+     }
+    ],
+    "id": "F"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 4,
+   "printed": 4,
+   "quiz": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "Put these clauses in the order in which the database ",
+     {
+      "c": [
+       "evaluates"
+      ],
+      "t": "i"
+     },
+     " them:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-a, 3-d, 4-b."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch04-05",
+  "key": {
+   "1": "c",
+   "2": "a",
+   "3": "d",
+   "4": "b"
+  },
+  "keyRaw": "\\textbf{1-c, 2-a, 3-d, 4-b.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "inner join"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "left join"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "full outer join"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "cross join"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "all customers, matching orders or NULLs"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "every customer combined with every order"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "only customers and orders that match"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "all rows of both sides, NULLs where there is no match"
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 5,
+   "printed": 5,
+   "quiz": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each join with the rows it keeps, for ",
+     {
+      "t": "code",
+      "v": "customers"
+     },
+     " (left) and ",
+     {
+      "t": "code",
+      "v": "orders"
+     },
+     " (right)."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 3."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "status"
+     },
+     " is neither in the ",
+     {
+      "t": "code",
+      "v": "group by"
+     },
+     " nor inside an aggregate. Line 7 is fine: ",
+     {
+      "t": "code",
+      "v": "order by"
+     },
+     " runs after ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     ", so it can use the alias ",
+     {
+      "t": "code",
+      "v": "n_orders"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch04-c85",
+   "lines": 7,
+   "numbering": "text"
+  },
+  "id": "q-ch04-06",
+  "key": 3,
+  "keyRaw": "\\textbf{Line 3.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 6,
+   "printed": 6,
+   "quiz": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "Which line causes an error?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch04-c85",
+    "lang": "sql",
+    "t": "code",
+    "text": "1  select\n2      user_id,\n3      status,\n4      count(*) as n_orders\n5  from jaffle_shop.orders\n6  group by user_id\n7  order by n_orders desc;"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A: YES. B: NO. C: YES. D: NO."
+      ],
+      "t": "b"
+     },
+     " A: ",
+     {
+      "t": "code",
+      "v": "between"
+     },
+     " includes both ends, and a ",
+     {
+      "t": "code",
+      "v": "DATE"
+     },
+     " has no time part. B: it is NULL (unknown). C: ",
+     {
+      "t": "code",
+      "v": "count(*)"
+     },
+     " counts rows, not values. D: the comparison with NULL makes the whole ",
+     {
+      "t": "code",
+      "v": "not in"
+     },
+     " unknown, so no row is returned."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch04-07",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": false
+  },
+  "keyRaw": "\\textbf{A: YES. B: NO. C: YES. D: NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "On a ",
+     {
+      "t": "code",
+      "v": "DATE"
+     },
+     " column, ",
+     {
+      "t": "code",
+      "v": "between '2025-03-01' and '2025-03-31'"
+     },
+     " includes March 31."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "null = null"
+     },
+     " returns true."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "count(*)"
+     },
+     " counts a row even if all its columns are NULL."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "where id not in (1, 2, null)"
+     },
+     " returns the row with ",
+     {
+      "t": "code",
+      "v": "id = 3"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 7,
+   "printed": 7,
+   "quiz": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "Is the statement true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Payments belong to orders, while items have the finer grain \"item line\"; the join repeats each payment. A, C and D are false: joins do not change types, ",
+     {
+      "t": "code",
+      "v": "sum"
+     },
+     " ignores NULLs, and the join does not filter on status."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-08",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The join changed the data type of ",
+     {
+      "t": "code",
+      "v": "amount"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Each payment is repeated once per item line of its order (fan-out)."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "sum"
+     },
+     " counts NULL values as zero."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The join removed the failed payments."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 8,
+   "printed": 8,
+   "quiz": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "You join ",
+     {
+      "t": "code",
+      "v": "stripe.payments"
+     },
+     " to ",
+     {
+      "t": "code",
+      "v": "jaffle_shop.order_items"
+     },
+     " on the order id, then compute ",
+     {
+      "t": "code",
+      "v": "sum(amount)"
+     },
+     ". The result is much bigger than the total of the payments table. What is the cause?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " With the filter in ",
+     {
+      "t": "code",
+      "v": "where"
+     },
+     ", unpaid orders have ",
+     {
+      "t": "code",
+      "v": "p.status = NULL"
+     },
+     " and are removed: the left join behaves like an inner join. A makes it worse (same 290 rows, now on purpose). C and D do not bring back the missing orders."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-09",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Replace ",
+     {
+      "t": "code",
+      "v": "left join"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "inner join"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Move ",
+     {
+      "t": "code",
+      "v": "p.status = 'success'"
+     },
+     " from the ",
+     {
+      "t": "code",
+      "v": "where"
+     },
+     " into the ",
+     {
+      "t": "code",
+      "v": "on"
+     },
+     " clause."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Replace ",
+     {
+      "t": "code",
+      "v": "sum(p.amount)"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "count(p.amount)"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "distinct"
+     },
+     " after ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 9,
+   "printed": 9,
+   "quiz": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "This query should list every order with its paid amount, including unpaid orders. It returns 290 rows instead of 300. What is the fix?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch04-c86",
+    "lang": "sql",
+    "t": "code",
+    "text": "select o.id, sum(p.amount) as paid\nfrom jaffle_shop.orders as o\nleft join stripe.payments as p on p.orderid = o.id\nwhere p.status = 'success'\ngroup by o.id;"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " One decimal operand makes the division decimal everywhere: 10.5. A gives 10 on Postgres. B is DuckDB-only syntax. D divides first (10 on Postgres) and casts too late."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-10",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "amount / 100"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "amount // 100"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "amount / 100.0"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "cast(amount / 100 as decimal(18, 2))"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 10,
+   "printed": 10,
+   "quiz": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "A staging model converts cents to dollars and must give the same result on Postgres, Snowflake and DuckDB. Which expression is safe for ",
+     {
+      "t": "code",
+      "v": "amount = 1050"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " The left join creates one row for customer 96 with NULL order columns; ",
+     {
+      "t": "code",
+      "v": "count(*)"
+     },
+     " counts it. ",
+     {
+      "t": "code",
+      "v": "count(o.id)"
+     },
+     " counts only real orders, giving 0. D always gives 1."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-11",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "0; nothing to fix."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "NULL; use ",
+     {
+      "t": "code",
+      "v": "coalesce(count(*), 0)"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "1; use ",
+     {
+      "t": "code",
+      "v": "count(o.id)"
+     },
+     " instead."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "1; use ",
+     {
+      "t": "code",
+      "v": "count(distinct c.id)"
+     },
+     " instead."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 11,
+   "printed": 11,
+   "quiz": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "You left join customers to orders and count orders per customer with ",
+     {
+      "t": "code",
+      "v": "count(*)"
+     },
+     ". Customer 96 never ordered. What number do you get for customer 96, and how do you fix it?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NULL."
+      ],
+      "t": "b"
+     },
+     " Dividing by NULL gives NULL instead of a division-by-zero error."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch04-12",
+  "key": {
+   "accepted": [
+    "NULL"
+   ]
+  },
+  "keyRaw": "\\textbf{NULL.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 12,
+   "printed": 12,
+   "quiz": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "The expression ",
+     {
+      "t": "code",
+      "v": "nullif(n_orders, 0)"
+     },
+     " returns _______ when ",
+     {
+      "t": "code",
+      "v": "n_orders"
+     },
+     " is 0, which is why ",
+     {
+      "t": "code",
+      "v": "revenue / nullif(n_orders, 0)"
+     },
+     " never fails."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "create or replace"
+     },
+     " drops and rebuilds the table, so the final state is the same every time: it is idempotent. A inserts the three rows a second time (every row twice). B and D fail the second time, because the table (or the schema) already exists."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-13",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "insert into sandbox.status_log select id, status from jaffle_shop.orders where id <= 3"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "create table sandbox.daily_revenue as select ..."
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "create or replace table sandbox.daily_revenue as select ..."
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "create schema sandbox"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 13,
+   "printed": 1,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "You run the same statement twice in a row. Which one ends in the same final state as running it once, with no error the second time?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " There is no previous row ",
+     {
+      "c": [
+       "in the partition"
+      ],
+      "t": "i"
+     },
+     ", so ",
+     {
+      "t": "code",
+      "v": "lag"
+     },
+     " returns NULL (or the default you give as third argument). A is wrong because ",
+     {
+      "t": "code",
+      "v": "partition by user_id"
+     },
+     " isolates each customer; C and D describe behaviours that do not exist."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-14",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The last order date of the previous customer"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "NULL"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The same ",
+     {
+      "t": "code",
+      "v": "order_date"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "An error, because there is no previous row"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 14,
+   "printed": 2,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "For the ",
+     {
+      "c": [
+       "first"
+      ],
+      "t": "i"
+     },
+     " order of each customer, what does ",
+     {
+      "t": "code",
+      "v": "lag(order_date) over (partition by user_id order by order_date)"
+     },
+     " return?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "b, d, a, c."
+      ],
+      "t": "b"
+     },
+     " Save the legacy result first, otherwise you have nothing to compare with. Then build the new structure: import CTEs at the top, then logical CTEs. The comparison comes last, when the new query is finished, and it must run in both directions (an extra row in the new result would pass a one-way check)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch04-15",
+  "key": [
+   "B",
+   "D",
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{b, d, a, c.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "replace the subqueries with logical CTEs"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "save the result of the legacy query"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "compare the old and new results with ",
+     {
+      "t": "code",
+      "v": "except"
+     },
+     " in both directions"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "move every raw table reference into an import CTE at the top"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 15,
+   "printed": 3,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "You refactor a legacy query. Put these steps in a sensible order:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " For customers without a completed order, the left join produces NULL in ",
+     {
+      "t": "code",
+      "v": "orders.status"
+     },
+     "; ",
+     {
+      "t": "code",
+      "v": "where orders.status = 'completed'"
+     },
+     " is then unknown and the row is dropped. Put the condition in the ",
+     {
+      "t": "code",
+      "v": "on"
+     },
+     " clause to keep all customers. A is wrong: ",
+     {
+      "t": "code",
+      "v": "distinct"
+     },
+     " counts each customer once, as wanted. C is false: a left join keeps at least all left rows. D: the orphan order has no customer at all, it cannot remove customers."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-16",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "count(distinct ...)"
+     },
+     " ignores customers who have several orders."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The ",
+     {
+      "t": "code",
+      "v": "where"
+     },
+     " clause removes the rows where ",
+     {
+      "t": "code",
+      "v": "orders.status"
+     },
+     " is NULL, so customers without a completed order disappear: the left join behaves like an inner join."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A left join always returns fewer rows than the left table."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The orphan order 159 removes 16 customers."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 16,
+   "printed": 4,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "This query returns 84 customers, although there are 100 customers:"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch04-c163",
+    "lang": "sql",
+    "t": "code",
+    "text": "select count(distinct customers.id)\nfrom jaffle_shop.customers as customers\nleft join jaffle_shop.orders as orders\n    on orders.user_id = customers.id\nwhere orders.status = 'completed';"
+   },
+   {
+    "c": [
+     "What is the best explanation?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "not exists"
+     },
+     " and the left join anti-join both work. C can never return a row: an inner join only keeps matches, so ",
+     {
+      "t": "code",
+      "v": "o.id"
+     },
+     " is never NULL. D fails because the scalar subquery returns many rows."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch04-17",
+  "key": [
+   "A",
+   "B"
+  ],
+  "keyRaw": "\\textbf{A and B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "select c.id from customers as c where not exists (select 1 from orders as o where o.user_id = c.id)"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "select c.id from customers as c left join orders as o on o.user_id = c.id where o.id is null"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "select c.id from customers as c inner join orders as o on o.user_id = c.id where o.id is null"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "select c.id from customers as c where c.id <> (select user_id from orders)"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 17,
+   "printed": 5,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Which queries correctly return the customers who ",
+     {
+      "c": [
+       "never"
+      ],
+      "t": "i"
+     },
+     " placed an order?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "3 not in (1, 2, null)"
+     },
+     " evaluates to NULL (unknown), and ",
+     {
+      "t": "code",
+      "v": "where"
+     },
+     " keeps only TRUE. A would be the result without the NULL. There is no error (C), and ",
+     {
+      "t": "code",
+      "v": "where"
+     },
+     " never returns a \"NULL row\" (D)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-18",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "One row: ",
+     {
+      "t": "code",
+      "v": "found"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "No row, because ",
+     {
+      "t": "code",
+      "v": "3 <> null"
+     },
+     " is unknown, so the whole condition is unknown"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "An error, because a subquery cannot contain NULL"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "One row with NULL"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 18,
+   "printed": 6,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Table ",
+     {
+      "t": "code",
+      "v": "t"
+     },
+     " has one column ",
+     {
+      "t": "code",
+      "v": "x"
+     },
+     " with the values 1, 2 and NULL. What does ",
+     {
+      "t": "code",
+      "v": "select 'found' where 3 not in (select x from t)"
+     },
+     " return?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "3"
+      ],
+      "t": "b"
+     },
+     " and ",
+     {
+      "c": [
+       "2"
+      ],
+      "t": "b"
+     },
+     ". ",
+     {
+      "t": "code",
+      "v": "rank()"
+     },
+     " skips after a tie (two rows share rank 1, so the next is 3); ",
+     {
+      "t": "code",
+      "v": "dense_rank()"
+     },
+     " does not skip."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch04-19",
+  "key": {
+   "blanks": [
+    [
+     "3"
+    ],
+    [
+     "2"
+    ]
+   ]
+  },
+  "keyRaw": "\\textbf{3}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 19,
+   "printed": 7,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Three rows have the values 7, 7 and 6, ordered from highest to lowest. ",
+     {
+      "t": "code",
+      "v": "rank()"
+     },
+     " returns 1, 1, ",
+     {
+      "t": "blank"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "dense_rank()"
+     },
+     " returns 1, 1, ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "qualify"
+      ],
+      "t": "b"
+     },
+     ". ",
+     {
+      "t": "code",
+      "v": "having"
+     },
+     " filters aggregates, not window functions; ",
+     {
+      "t": "code",
+      "v": "where"
+     },
+     " runs before windows are computed. Postgres has no ",
+     {
+      "t": "code",
+      "v": "qualify"
+     },
+     ": there, use a CTE and ",
+     {
+      "t": "code",
+      "v": "where rn = 1"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch04-20",
+  "key": {
+   "accepted": [
+    "qualify"
+   ]
+  },
+  "keyRaw": "\\textbf{qualify}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 20,
+   "printed": 8,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "In DuckDB, Snowflake and BigQuery, the clause ",
+     {
+      "t": "blank"
+     },
+     " filters rows on the result of a window function, without a subquery."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The default frame is ",
+     {
+      "t": "code",
+      "v": "range between unbounded preceding and current row"
+     },
+     ", and ",
+     {
+      "t": "code",
+      "v": "range"
+     },
+     " includes all peers (rows with the same ",
+     {
+      "t": "code",
+      "v": "order by"
+     },
+     " value). A would need ",
+     {
+      "t": "code",
+      "v": "rows between ..."
+     },
+     " plus a tie-breaker. C and D are not real behaviours."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-21",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Each row shows its own running total, one after the other."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Both rows show the same running total, which already includes both payments."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The second row is NULL."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "An error: a frame clause is mandatory with ",
+     {
+      "t": "code",
+      "v": "order by"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 21,
+   "printed": 9,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "You write ",
+     {
+      "t": "code",
+      "v": "sum(amount) over (order by created)"
+     },
+     " with no frame clause. Two payments have the same ",
+     {
+      "t": "code",
+      "v": "created"
+     },
+     " date. What do these two rows show?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1–d, 2–c, 3–b, 4–a."
+      ],
+      "t": "b"
+     },
+     " A view stores the query; a table stores the result of CTAS; an incremental model creates the table once then inserts or merges new rows; an ephemeral model creates no object and is injected as a CTE."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch04-22",
+  "key": {
+   "1": "d",
+   "2": "c",
+   "3": "b",
+   "4": "a"
+  },
+  "keyRaw": "\\textbf{1--d, 2--c, 3--b, 4--a.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "create view ... as select ..."
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "create table ... as select ..."
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      "after the first run, ",
+      {
+       "t": "code",
+       "v": "merge into ... using ..."
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      "the select is pasted as a CTE into downstream models"
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "ephemeral"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "incremental"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "table"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "view"
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 22,
+   "printed": 10,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each SQL strategy to the dbt materialization that uses it."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "union all"
+     },
+     " stacks all rows: always 46 + 93 = 139. ",
+     {
+      "t": "code",
+      "v": "union"
+     },
+     " removes duplicates, so it returns 139 or fewer (on our data: 72). B and C confuse the two; D inverts them."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-23",
+  "key": "A",
+  "keyRaw": "\\textbf{A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "A union all B"
+     },
+     " returns exactly 139 rows; ",
+     {
+      "t": "code",
+      "v": "A union B"
+     },
+     " returns at most 139 rows."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Both ",
+     {
+      "t": "code",
+      "v": "union all"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "union"
+     },
+     " return exactly 139 rows."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "A union B"
+     },
+     " returns exactly 139 rows; ",
+     {
+      "t": "code",
+      "v": "A union all B"
+     },
+     " may return fewer."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "union all"
+     },
+     " removes duplicates, ",
+     {
+      "t": "code",
+      "v": "union"
+     },
+     " keeps them."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 23,
+   "printed": 11,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Query A returns 46 rows and query B returns 93 rows, with the same columns. Which statement is true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 6."
+      ],
+      "t": "b"
+     },
+     " Window functions cannot be used in ",
+     {
+      "t": "code",
+      "v": "where"
+     },
+     ", because ",
+     {
+      "t": "code",
+      "v": "where"
+     },
+     " is evaluated before them. Fix: ",
+     {
+      "t": "code",
+      "v": "qualify row_number() over (...) = 1"
+     },
+     ", or compute ",
+     {
+      "t": "code",
+      "v": "rn"
+     },
+     " in a CTE and filter in the next step."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch04-c164",
+   "lines": 7,
+   "numbering": "listing"
+  },
+  "id": "q-ch04-24",
+  "key": 6,
+  "keyRaw": "\\textbf{Line 6.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 24,
+   "printed": 12,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Which line makes this query fail?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch04-c164",
+    "lang": "sql",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "select\n    id,\n    user_id,\n    order_date\nfrom jaffle_shop.orders\nwhere row_number() over (partition by user_id order by order_date desc) = 1\norder by user_id"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A: YES. B: YES. C: NO. D: YES. E: NO."
+      ],
+      "t": "b"
+     },
+     " A CTE is a named step that lives only during the statement (so C is false); it can read the CTEs defined above it, not below it (E). D is the dbt convention that makes debugging easy."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch04-25",
+  "key": {
+   "A": true,
+   "B": true,
+   "C": false,
+   "D": true,
+   "E": false
+  },
+  "keyRaw": "\\textbf{A: YES. B: YES. C: NO. D: YES. E: NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A CTE exists only while its statement runs."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A CTE can read from a CTE defined above it in the same ",
+     {
+      "t": "code",
+      "v": "with"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A CTE is saved as a table in the warehouse."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "In the dbt style, the last line of a model is usually ",
+     {
+      "t": "code",
+      "v": "select * from final"
+     },
+     "."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "A (non-recursive) CTE can read from a CTE defined below it."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 25,
+   "printed": 13,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Which statements about CTEs are true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " The view reruns its query and sees 301 orders; the table is a stored result and stays at 300 until it is rebuilt."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-26",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "301 and 301"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "300 and 300"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "301 from the view and 300 from the table"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "300 from the view and 301 from the table"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 26,
+   "printed": 14,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "You build ",
+     {
+      "t": "code",
+      "v": "order_count_view"
+     },
+     " (a view) and ",
+     {
+      "t": "code",
+      "v": "order_count_table"
+     },
+     " (a table) from the same 300 orders. Then one new order is inserted. What do they return now?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A source groups tables of one database/schema: ",
+     {
+      "t": "code",
+      "v": "raw.app"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "raw.billing"
+     },
+     " are 2 sources. The distinct tables are ",
+     {
+      "t": "code",
+      "v": "users"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "orders"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "invoices"
+     },
+     ": 3 (a table used twice is still one table). A ignores the schema difference; C counts a source per table; D counts ",
+     {
+      "t": "code",
+      "v": "orders"
+     },
+     " twice."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-27",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "1 source with 4 tables"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "2 sources with 3 tables"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "3 sources with 3 tables"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "2 sources with 4 tables"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 27,
+   "printed": 15,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "A legacy query reads ",
+     {
+      "t": "code",
+      "v": "raw.app.users"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "raw.app.orders"
+     },
+     " (twice) and ",
+     {
+      "t": "code",
+      "v": "raw.billing.invoices"
+     },
+     ". When you move it to dbt, how many sources and tables do you declare?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The join fans out orders that have several payments; ",
+     {
+      "t": "code",
+      "v": "count(distinct orders.id)"
+     },
+     " counts each order once (290). A keeps the fan-out and adds unpaid orders; C applies ",
+     {
+      "t": "code",
+      "v": "distinct"
+     },
+     " to the single count value, which changes nothing; D is not a fix (stacking rows instead of matching them). Even better: aggregate payments per order before joining."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-28",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Replace ",
+     {
+      "t": "code",
+      "v": "inner join"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "left join"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Use ",
+     {
+      "t": "code",
+      "v": "count(distinct orders.id)"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Write ",
+     {
+      "t": "code",
+      "v": "select distinct count(*)"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Replace the join with ",
+     {
+      "t": "code",
+      "v": "union all"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 28,
+   "printed": 16,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "select count(*) from orders inner join payments on orders.id = payments.orderid"
+     },
+     " returns 341, but only 290 orders have a payment. Which change gives the number of paid orders?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     "Import CTEs → logical CTEs → final CTE → ",
+     {
+      "t": "code",
+      "v": "select * from final"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch04-29",
+  "key": [
+   "B",
+   "D",
+   "A",
+   "C"
+  ],
+  "keyRaw": "Import CTEs $\\rightarrow$ logical CTEs $\\rightarrow$ final CTE $\\rightarrow$ \\code{select * from final}.",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "final CTE"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "import CTEs"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "select * from final"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "logical CTEs"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 29,
+   "printed": 17,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Order the parts of a dbt-style model:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Rows not mentioned in the source are untouched. Deleting them would require an explicit ",
+     {
+      "t": "code",
+      "v": "when not matched by source then delete"
+     },
+     " clause (supported by some databases), so A is not the default; C and D do not happen."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch04-30",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "They are deleted."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "They are left unchanged."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Their columns are set to NULL."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The merge fails."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 4,
+   "kind": "chapter",
+   "n": 30,
+   "printed": 18,
+   "quiz": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "merge"
+     },
+     " has a ",
+     {
+      "t": "code",
+      "v": "when matched then update"
+     },
+     " clause and a ",
+     {
+      "t": "code",
+      "v": "when not matched then insert"
+     },
+     " clause. What happens to rows of the target table that have no match in the source?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

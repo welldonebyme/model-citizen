@@ -1,0 +1,994 @@
+{
+ "id": "ch32",
+ "intro": [
+  {
+   "blocks": [
+    {
+     "c": [
+      {
+       "c": [
+        "How to take this mock exam."
+       ],
+       "t": "b"
+      },
+      " This is the ",
+      {
+       "c": [
+        "hardest"
+       ],
+       "t": "i"
+      },
+      " of the three mock exams. It tests edge cases, combinations of features, exact default values and precedence rules. If you pass this one, the real exam will feel comfortable."
+     ],
+     "t": "p"
+    },
+    {
+     "items": [
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Time:"
+           ],
+           "t": "b"
+          },
+          " 120 minutes for 65 questions. Use a timer. Stop when the time is over."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "No notes:"
+           ],
+           "t": "b"
+          },
+          " no book, no documentation, no terminal. Work from memory, like in the real exam."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Answer everything:"
+           ],
+           "t": "b"
+          },
+          " a wrong answer costs nothing, so never leave a question empty."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "DOMC questions:"
+           ],
+           "t": "b"
+          },
+          " cover the options with a sheet of paper. Uncover ",
+          {
+           "c": [
+            "one"
+           ],
+           "t": "i"
+          },
+          " option, write YES or NO for it, then uncover the next one. Never go back to change an option you already judged."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Multiple select:"
+           ],
+           "t": "b"
+          },
+          " choose exactly the number of options asked. ",
+          {
+           "c": [
+            "Matching"
+           ],
+           "t": "b"
+          },
+          " and ",
+          {
+           "c": [
+            "Build list"
+           ],
+           "t": "b"
+          },
+          ": all items must be right to get the point."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Write your answers on the answer sheet at the end of this chapter. Then correct yourself with ",
+          {
+           "href": "/learn/ch33/",
+           "label": "ch:mock3-answers",
+           "t": "ref",
+           "text": "Chapter 33"
+          },
+          ", which also tells you what to review for every question."
+         ],
+         "t": "p"
+        }
+       ]
+      }
+     ],
+     "kind": "ul",
+     "t": "list"
+    },
+    {
+     "c": [
+      {
+       "c": [
+        "The scenario."
+       ],
+       "t": "b"
+      },
+      " StreamBox is a video streaming company. Its dbt project ",
+      {
+       "t": "code",
+       "v": "streambox"
+      },
+      " reads raw tables in the schemas ",
+      {
+       "t": "code",
+       "v": "raw_app"
+      },
+      " (",
+      {
+       "t": "code",
+       "v": "subscriptions"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "devices"
+      },
+      "), ",
+      {
+       "t": "code",
+       "v": "raw_billing"
+      },
+      " (",
+      {
+       "t": "code",
+       "v": "invoices_v2"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "refunds"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "payouts"
+      },
+      ") and ",
+      {
+       "t": "code",
+       "v": "raw_events"
+      },
+      " (",
+      {
+       "t": "code",
+       "v": "playback_events"
+      },
+      "). Developers work on DuckDB with the target ",
+      {
+       "t": "code",
+       "v": "dev"
+      },
+      " (schema ",
+      {
+       "t": "code",
+       "v": "dbt_adnane"
+      },
+      "); production runs with the target ",
+      {
+       "t": "code",
+       "v": "prod"
+      },
+      " (schema ",
+      {
+       "t": "code",
+       "v": "analytics"
+      },
+      "). The database is called ",
+      {
+       "t": "code",
+       "v": "streambox"
+      },
+      ". Unless a question says otherwise, all defaults of dbt Core 1.11 apply."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "tip",
+   "t": "callout"
+  },
+  {
+   "ids": [
+    "m3-q01",
+    "m3-q02",
+    "m3-q03",
+    "m3-q04",
+    "m3-q05",
+    "m3-q06",
+    "m3-q07",
+    "m3-q08",
+    "m3-q09",
+    "m3-q10",
+    "m3-q11",
+    "m3-q12",
+    "m3-q13",
+    "m3-q14",
+    "m3-q15",
+    "m3-q16",
+    "m3-q17",
+    "m3-q18",
+    "m3-q19",
+    "m3-q20",
+    "m3-q21",
+    "m3-q22",
+    "m3-q23",
+    "m3-q24",
+    "m3-q25",
+    "m3-q26",
+    "m3-q27",
+    "m3-q28",
+    "m3-q29",
+    "m3-q30",
+    "m3-q31",
+    "m3-q32",
+    "m3-q33",
+    "m3-q34",
+    "m3-q35",
+    "m3-q36",
+    "m3-q37",
+    "m3-q38",
+    "m3-q39",
+    "m3-q40",
+    "m3-q41",
+    "m3-q42",
+    "m3-q43",
+    "m3-q44",
+    "m3-q45",
+    "m3-q46",
+    "m3-q47",
+    "m3-q48",
+    "m3-q49",
+    "m3-q50",
+    "m3-q51",
+    "m3-q52",
+    "m3-q53",
+    "m3-q54",
+    "m3-q55",
+    "m3-q56",
+    "m3-q57",
+    "m3-q58",
+    "m3-q59",
+    "m3-q60",
+    "m3-q61",
+    "m3-q62",
+    "m3-q63",
+    "m3-q64",
+    "m3-q65"
+   ],
+   "t": "quiz"
+  }
+ ],
+ "kind": "mock",
+ "label": "ch:mock3",
+ "lessons": [
+  {
+   "anchors": [],
+   "checkpoints": [],
+   "id": "ch32-s1",
+   "labs": [],
+   "minutes": 5,
+   "number": "",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Write one answer per question. For DOMC questions write Y or N for each option (for example ",
+        {
+         "t": "code",
+         "v": "A:N B:Y C:Y …"
+        },
+        "). For build lists write the letters in order; for matching write pairs such as ",
+        {
+         "t": "code",
+         "v": "1-c"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Q1–13"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Q14–26"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Q27–39"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Q40–52"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Q53–65"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Q1 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q14 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q27 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q40 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q53 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q2 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q15 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q28 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q41 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q54 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q3 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q16 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q29 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q42 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q55 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q4 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q17 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q30 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q43 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q56 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q5 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q18 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q31 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q44 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q57 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q6 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q19 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q32 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q45 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q58 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q7 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q20 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q33 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q46 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q59 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q8 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q21 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q34 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q47 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q60 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q9 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q22 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q35 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q48 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q61 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q10 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q23 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q36 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q49 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q62 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q11 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q24 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q37 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q50 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q63 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q12 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q25 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q38 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q51 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q64 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q13 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q26 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q39 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q52 ",
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Q65 ",
+           {
+            "t": "blank"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Time used: ",
+        {
+         "t": "blank"
+        },
+        " minutes. Now go to ",
+        {
+         "href": "/learn/ch33/",
+         "label": "ch:mock3-answers",
+         "t": "ref",
+         "text": "Chapter 33"
+        },
+        " and correct your answers."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch32-s1-0",
+     "title": [
+      "Answer sheet"
+     ],
+     "titleText": "Answer sheet"
+    }
+   ],
+   "title": [
+    "Answer sheet"
+   ],
+   "titleText": "Answer sheet"
+  }
+ ],
+ "minutes": 5,
+ "mock": 3,
+ "number": 32,
+ "objectives": [],
+ "part": 9,
+ "partLabel": "Part IX",
+ "partTitle": "Exam Mastery",
+ "printed": "32",
+ "quiz": [],
+ "quizSections": [],
+ "summary": [],
+ "title": "Mock Exam 3"
+}

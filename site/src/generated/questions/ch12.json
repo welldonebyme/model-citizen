@@ -1,0 +1,1624 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Small, static, owned by the team, not secret. A and D are raw data that changes all the time: ingestion tool + source (trap T58). C is personal and secret data: it must never be stored in Git."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch12-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The daily export of all orders from the e-commerce database (300 000 rows)."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A list of 40 internal test accounts to exclude from all reports."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A table of customer emails and passwords used by the support team."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The real-time stock levels sent by the warehouse system every hour."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "Which of these is the best use of a seed?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " builds models only and prints \"Nothing to do\" (trap T29). A and D describe ",
+     {
+      "t": "code",
+      "v": "dbt seed"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ". C: there is no error."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch12-02",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The seed is loaded, because ",
+     {
+      "t": "code",
+      "v": "run"
+     },
+     " builds every selected node."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt prints \"Nothing to do\": ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " does not load seeds."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt fails with a compilation error."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The seed is loaded and its tests are run."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "You run ",
+     {
+      "t": "code",
+      "v": "dbt run -s country_regions"
+     },
+     ", where ",
+     {
+      "t": "code",
+      "v": "country_regions"
+     },
+     " is a seed. What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "--full-refresh"
+       }
+      ],
+      "t": "b"
+     },
+     " (short form ",
+     {
+      "t": "code",
+      "v": "-f"
+     },
+     "). It drops and recreates the table (trap T59)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch12-03",
+  "key": {
+   "accepted": [
+    "--full-refresh"
+   ]
+  },
+  "keyNote": "alternative answers mentioned after the key: '(short form -f)'",
+  "keyRaw": "\\textbf{\\code{-{}-full-refresh}}",
+  "keyStatus": "todo",
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "A seed gets a new column in its CSV file. A normal ",
+     {
+      "t": "code",
+      "v": "dbt seed"
+     },
+     " fails. The command that drops and recreates the seed table is ",
+     {
+      "t": "code",
+      "v": "dbt seed "
+     },
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " Seeds are configured only in YAML: in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     ", or in a properties file under ",
+     {
+      "t": "code",
+      "v": "config:"
+     },
+     ". B and D: a CSV cannot contain configuration or Jinja. E: ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " holds connections."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch12-04",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ", under ",
+     {
+      "t": "code",
+      "v": "seeds:"
+     },
+     " → ",
+     {
+      "t": "code",
+      "v": "jaffle_dbt:"
+     },
+     " → ",
+     {
+      "t": "code",
+      "v": "country_regions:"
+     },
+     " → ",
+     {
+      "t": "code",
+      "v": "+column_types:"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "In the first line of the CSV file, after each column name."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "In a properties file, under ",
+     {
+      "t": "code",
+      "v": "seeds:"
+     },
+     " → ",
+     {
+      "t": "code",
+      "v": "- name: country_regions"
+     },
+     " → ",
+     {
+      "t": "code",
+      "v": "config:"
+     },
+     " → ",
+     {
+      "t": "code",
+      "v": "column_types:"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "In a ",
+     {
+      "t": "code",
+      "v": "{{ config(column_types=...) }}"
+     },
+     " block at the top of the CSV."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     "."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "Where can you set ",
+     {
+      "t": "code",
+      "v": "column_types"
+     },
+     " for the seed ",
+     {
+      "t": "code",
+      "v": "country_regions"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, YES, YES."
+      ],
+      "t": "b"
+     },
+     " Analyses are compiled, never materialized (trap T33); ",
+     {
+      "t": "code",
+      "v": "dbt show"
+     },
+     " runs a query without storing it."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch12-05",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": true
+  },
+  "keyRaw": "\\textbf{YES, NO, YES, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     " writes their SQL in ",
+     {
+      "t": "code",
+      "v": "target/compiled/<project>/analyses/"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " creates a view for each analysis."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "An analysis can use ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " and macros."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt show -s <analysis>"
+     },
+     " executes the compiled SQL and prints some rows, without creating any object."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about analyses:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-a, 3-b, 4-d."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch12-06",
+  "key": {
+   "1": "c",
+   "2": "a",
+   "3": "b",
+   "4": "d"
+  },
+  "keyRaw": "\\textbf{1-c, 2-a, 3-b, 4-d.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "seeds/country_regions.csv"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "analyses/revenue_by_region.sql"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "tests/assert_no_negative_amounts.sql"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "models/marts/dim_customers.sql"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "None: it is only compiled"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt test"
+      },
+      " (or ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      ")"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt seed"
+      },
+      " (or ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      ")"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt run"
+      },
+      " (or ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      ")"
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each file with the command that executes it."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The type must be text, and the existing table must be recreated for the new type to apply. A: quotes in a CSV do not choose a type. C: ",
+     {
+      "t": "code",
+      "v": "quote_columns"
+     },
+     " is about column ",
+     {
+      "c": [
+       "names"
+      ],
+      "t": "i"
+     },
+     ". D works but repeats the fix everywhere and the stored value is already wrong."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch12-07",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Write ",
+     {
+      "t": "code",
+      "v": "'01234'"
+     },
+     " with single quotes in the CSV."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Set ",
+     {
+      "t": "code",
+      "v": "column_types: {zip_code: varchar}"
+     },
+     " and run ",
+     {
+      "t": "code",
+      "v": "dbt seed --full-refresh"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Set ",
+     {
+      "t": "code",
+      "v": "quote_columns: true"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Cast the column in every model that uses it."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "A seed has a column ",
+     {
+      "t": "code",
+      "v": "zip_code"
+     },
+     " with values like ",
+     {
+      "t": "code",
+      "v": "01234"
+     },
+     ". After ",
+     {
+      "t": "code",
+      "v": "dbt seed"
+     },
+     ", the table shows ",
+     {
+      "t": "code",
+      "v": "1234"
+     },
+     ". What is the best fix?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 3."
+      ],
+      "t": "b"
+     },
+     " Seeds are described under ",
+     {
+      "t": "code",
+      "v": "seeds:"
+     },
+     ". Under ",
+     {
+      "t": "code",
+      "v": "models:"
+     },
+     ", dbt looks for a model called ",
+     {
+      "t": "code",
+      "v": "country_regions"
+     },
+     " and does not configure the seed. The rest is valid."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch12-c60",
+   "lines": 11,
+   "numbering": "listing"
+  },
+  "id": "q-ch12-08",
+  "key": 3,
+  "keyRaw": "\\textbf{Line 3.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "This properties file has one mistake: the seed is never configured. Which line is wrong?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch12-c60",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "version: 2\n\nmodels:\n  - name: country_regions\n    config:\n      column_types:\n        country: varchar\n    columns:\n      - name: country\n        data_tests:\n          - unique"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "D, B, C, A."
+      ],
+      "t": "b"
+     },
+     " Parse, load the seed, test it, then build the child. A failing seed test would make dbt skip ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch12-09",
+  "key": [
+   "D",
+   "B",
+   "C",
+   "A"
+  ],
+  "keyRaw": "\\textbf{D, B, C, A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     " is built."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The seed is loaded (",
+     {
+      "t": "code",
+      "v": "INSERT 6"
+     },
+     ")."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "unique_country_regions_country"
+     },
+     " runs."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The project is parsed (",
+     {
+      "t": "code",
+      "v": "Found ... 1 seed ..."
+     },
+     ")."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " runs on a project where the seed ",
+     {
+      "t": "code",
+      "v": "country_regions"
+     },
+     " is read by ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     ", and the seed has a ",
+     {
+      "t": "code",
+      "v": "unique"
+     },
+     " test. Put these events in the order dbt executes them:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " We saw it: ",
+     {
+      "t": "code",
+      "v": "INSERT"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "OK"
+     },
+     ", but the old ",
+     {
+      "t": "code",
+      "v": "INTEGER"
+     },
+     " column stayed. A and D: dbt says nothing. B needs ",
+     {
+      "t": "code",
+      "v": "--full-refresh"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch12-10",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt fails with a type error."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The table is recreated with the new type."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The output says OK, but the column keeps its old type, because the table was only truncated and reloaded."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt asks you to confirm the change."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "You change ",
+     {
+      "t": "code",
+      "v": "column_types"
+     },
+     " of an existing seed from ",
+     {
+      "t": "code",
+      "v": "integer"
+     },
+     " to ",
+     {
+      "t": "code",
+      "v": "varchar"
+     },
+     " and run ",
+     {
+      "t": "code",
+      "v": "dbt seed"
+     },
+     " (no flag). What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " We saw a single column ",
+     {
+      "t": "code",
+      "v": "status;label_fr"
+     },
+     ". No error (A), no split (C, which needs ",
+     {
+      "t": "code",
+      "v": "delimiter: \";\""
+     },
+     "), and the rows are there (D)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch12-11",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "An error: the file is not a CSV."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A table with one column named ",
+     {
+      "t": "code",
+      "v": "status;label_fr"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A table with two columns, ",
+     {
+      "t": "code",
+      "v": "status"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "label_fr"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "An empty table."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "Your seed file uses semicolons: ",
+     {
+      "t": "code",
+      "v": "status;label_fr"
+     },
+     ". Without any config, what does ",
+     {
+      "t": "code",
+      "v": "dbt seed"
+     },
+     " produce on DuckDB?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "delimiter"
+       }
+      ],
+      "t": "b"
+     },
+     " (available since dbt 1.7; default comma)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch12-12",
+  "key": {
+   "accepted": [
+    "delimiter"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{delimiter}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "To load a seed CSV that uses ",
+     {
+      "t": "code",
+      "v": "|"
+     },
+     " as a separator, set the seed config ",
+     {
+      "t": "blank"
+     },
+     {
+      "t": "code",
+      "v": ": \"|\""
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, NO, YES."
+      ],
+      "t": "b"
+     },
+     " B describes the normal ",
+     {
+      "t": "code",
+      "v": "dbt seed"
+     },
+     ". C: ",
+     {
+      "t": "code",
+      "v": "dbt seed"
+     },
+     " never builds models; ",
+     {
+      "t": "code",
+      "v": "dbt build --full-refresh"
+     },
+     " would rebuild them, but that is another command."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch12-13",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": false,
+   "D": true
+  },
+  "keyRaw": "\\textbf{YES, NO, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It drops the table (with ",
+     {
+      "t": "code",
+      "v": "cascade"
+     },
+     ") and creates it again."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It truncates the table and keeps its structure."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It also rebuilds the models that read the seed."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The output shows ",
+     {
+      "t": "code",
+      "v": "CREATE"
+     },
+     " instead of ",
+     {
+      "t": "code",
+      "v": "INSERT"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "What does ",
+     {
+      "t": "code",
+      "v": "dbt seed --full-refresh"
+     },
+     " do, compared with ",
+     {
+      "t": "code",
+      "v": "dbt seed"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " follows the DAG, so the seed is loaded before ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     ". A: ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " still ignores seeds. C builds nothing. D installs packages."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch12-14",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run --full-refresh"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " (it loads seeds before the models that need them)"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt compile"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt deps"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "A colleague clones the project, creates a new dev schema and runs ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     ". ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     " fails with ",
+     {
+      "t": "code",
+      "v": "Table with name country_regions does not exist"
+     },
+     ". What is the simplest correct command for next time?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " dbt stores a content hash only for seed files smaller than 1 MiB. A would be true for a small seed. C: there is no size limit, only slower loads. D: nothing makes all models modified."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch12-15",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The seed is listed, because its content hash changed."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The seed is not listed: above 1 MiB dbt compares only the file path, and it warns that it cannot compare the content."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt fails: seeds larger than 1 MiB are not allowed."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "All models are listed."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "A seed file is 3 MiB. You change one value and run ",
+     {
+      "t": "code",
+      "v": "dbt ls -s state:modified --state prod-artifacts"
+     },
+     ". What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " follows the target, and analyses are nodes of the manifest. B: analyses are never materialized. D: analyses can use Jinja, ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " and macros."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch12-16",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Compiled with ",
+     {
+      "t": "code",
+      "v": "--target prod"
+     },
+     ", its ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " calls point to the prod tables."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It appears as a table in the warehouse after ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It is listed by ",
+     {
+      "t": "code",
+      "v": "dbt ls --resource-type analysis"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It must not contain Jinja."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "Which statements about the analysis ",
+     {
+      "t": "code",
+      "v": "revenue_by_region"
+     },
+     " are true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-d, 2-a, 3-b, 4-c."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch12-17",
+  "key": {
+   "1": "d",
+   "2": "a",
+   "3": "b",
+   "4": "c"
+  },
+  "keyRaw": "\\textbf{1-d, 2-a, 3-b, 4-c.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "column_types"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "quote_columns"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "delimiter"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "full_refresh: false"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "Quote the column names when the table is created"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "The character that separates the values"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "Ignore the ",
+      {
+       "t": "code",
+       "v": "--full-refresh"
+      },
+      " flag for this seed"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "Replace the inferred types of some columns"
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 12,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each seed config with its effect."
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

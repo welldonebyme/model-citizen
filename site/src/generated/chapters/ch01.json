@@ -1,0 +1,3924 @@
+{
+ "id": "ch01",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "The vocabulary every dbt question assumes: tables, schemas, warehouses, ELT, facts, dimensions, grain, keys."
+     ],
+     "id": "CP0-DATA"
+    },
+    {
+     "c": [
+      "What a ",
+      {
+       "c": [
+        "raw object"
+       ],
+       "t": "i"
+      },
+      " is and why dbt must know where raw data lives (sources)."
+     ],
+     "id": "1.1"
+    },
+    {
+     "c": [
+      "Modularity and DRY: the engineering ideas that dbt brings to analytics."
+     ],
+     "id": "1.3"
+    },
+    {
+     "c": [
+      "What a DAG is and why a clean flow of models matters."
+     ],
+     "id": "1.5"
+    },
+    {
+     "c": [
+      "Slowly changing dimensions: the business problem that snapshots solve."
+     ],
+     "id": "1.10"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "Before you learn a tool, you need to know the job the tool does. dbt lives inside a bigger world: companies collect data in many applications, copy it into a central warehouse, clean it, and then people use it to make decisions. dbt does one part of that work, and does it very well."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "Many exam questions are not about syntax. They describe a situation (\"the data team loads raw tables every hour\", \"a dashboard depends on this model\", \"the table has one row per order line\") and ask what you should do. If you do not understand the words ",
+      {
+       "c": [
+        "raw data"
+       ],
+       "t": "i"
+      },
+      ", ",
+      {
+       "c": [
+        "warehouse"
+       ],
+       "t": "i"
+      },
+      ", ",
+      {
+       "c": [
+        "grain"
+       ],
+       "t": "i"
+      },
+      " or ",
+      {
+       "c": [
+        "dimension"
+       ],
+       "t": "i"
+      },
+      ", you will lose points even if you know dbt commands perfectly. This chapter gives you that vocabulary in simple words, using the practice data you will use in the whole book."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "Companies copy raw data from their applications into a data warehouse, and then transform it there into clean, trustworthy tables that people can use. dbt is the tool that manages that transformation step, using SQL ",
+      {
+       "t": "code",
+       "v": "select"
+      },
+      " statements organised like a software project. To do this well you must think in tables with a clear grain, split into facts and dimensions, and apply engineering habits like version control, testing and documentation."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:data-world",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-dw-tables"
+   ],
+   "checkpoints": [],
+   "id": "ch01-s1",
+   "label": "sec:dw-tables",
+   "labs": [],
+   "minutes": 5,
+   "number": "1.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Data is a record of something that happened or something that exists. A customer signed up: that is data. An order was paid with a credit card: that is data. A product costs 3.80 euros: that is data too."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Computers store this kind of business data in ",
+        {
+         "en": [
+          "tables"
+         ],
+         "fr": "tables",
+         "id": "term-table",
+         "t": "term"
+        },
+        ". A table looks like a spreadsheet:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "a ",
+            {
+             "en": [
+              "row"
+             ],
+             "fr": "ligne",
+             "id": "term-row",
+             "t": "term"
+            },
+            " (or record) is one thing: one customer, one order, one payment;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "a ",
+            {
+             "en": [
+              "column"
+             ],
+             "fr": "colonne",
+             "id": "term-column",
+             "t": "term"
+            },
+            " (or field) is one property of that thing: the order date, the status, the amount;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "every column has a ",
+            {
+             "en": [
+              "data type"
+             ],
+             "fr": "type de données",
+             "id": "term-data-type",
+             "t": "term"
+            },
+            ": whole numbers (",
+            {
+             "t": "code",
+             "v": "INTEGER"
+            },
+            "), text (",
+            {
+             "t": "code",
+             "v": "VARCHAR"
+            },
+            "), dates (",
+            {
+             "t": "code",
+             "v": "DATE"
+            },
+            "), date and time (",
+            {
+             "t": "code",
+             "v": "TIMESTAMP"
+            },
+            "), true/false (",
+            {
+             "t": "code",
+             "v": "BOOLEAN"
+            },
+            "), decimal numbers (",
+            {
+             "t": "code",
+             "v": "DECIMAL"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "DOUBLE"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "Here are the first rows of the ",
+        {
+         "t": "code",
+         "v": "orders"
+        },
+        " table from our practice data:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch01-c1",
+       "lang": "output",
+       "t": "code",
+       "text": "+----+---------+------------+-----------+---------------------+\n| id | user_id | order_date | status    | _loaded_at          |\n+----+---------+------------+-----------+---------------------+\n|  1 |      51 | 2025-01-05 | completed | 2025-01-06 02:51:00 |\n|  2 |      85 | 2025-01-06 | completed | 2025-01-06 23:55:00 |\n|  3 |      42 | 2025-01-10 | completed | 2025-01-10 21:15:00 |\n+----+---------+------------+-----------+---------------------+",
+       "title": "jaffle_shop.orders (first 3 rows)"
+      },
+      {
+       "c": [
+        "Read it like a sentence: \"Order number 1 was made by customer 51 on 5 January 2025, and it is completed.\" The column ",
+        {
+         "t": "code",
+         "v": "_loaded_at"
+        },
+        " is different: it does not describe the order, it says ",
+        {
+         "c": [
+          "when the loading tool copied this row into our database"
+         ],
+         "t": "i"
+        },
+        ". Columns that start with an underscore are often technical metadata added by tools. You will use exactly this kind of column in Chapter 21 (Source freshness)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch01-s1-1",
+     "number": "1.1.1",
+     "title": [
+      "What is data?"
+     ],
+     "titleText": "What is data?"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Sometimes a value is unknown or missing. Databases store this as ",
+        {
+         "en": [
+          "NULL"
+         ],
+         "fr": "valeur nulle / absente",
+         "id": "term-null",
+         "t": "term"
+        },
+        ". NULL does ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " mean zero and does ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " mean an empty text. It means \"we do not know\". In our practice data, five customers have no email: their ",
+        {
+         "t": "code",
+         "v": "email"
+        },
+        " column is NULL. You will see in ",
+        {
+         "href": "/learn/ch04/",
+         "label": "ch:sql",
+         "t": "ref",
+         "text": "Chapter 4"
+        },
+        " that NULL behaves in surprising ways in SQL, and in Chapter 18 (Data tests) that the most common dbt test, ",
+        {
+         "t": "code",
+         "v": "not_null"
+        },
+        ", exists exactly to catch unexpected NULLs."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch01-s1-2",
+     "number": "1.1.2",
+     "title": [
+      "NULL: the empty value"
+     ],
+     "titleText": "NULL: the empty value"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Tables are grouped. Think of a library:"
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A ",
+          {
+           "en": [
+            "database"
+           ],
+           "fr": "base de données",
+           "id": "term-database",
+           "t": "term"
+          },
+          " is the library building. A ",
+          {
+           "en": [
+            "schema"
+           ],
+           "fr": "schéma",
+           "id": "term-schema",
+           "t": "term"
+          },
+          " is one room of the library (\"History\", \"Science\"). A table is one shelf of books in that room. To find a book you say ",
+          {
+           "c": [
+            "building, room, shelf"
+           ],
+           "t": "i"
+          },
+          ". To find a table you say ",
+          {
+           "t": "code",
+           "v": "database.schema.table"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "In our practice database you have two schemas: ",
+        {
+         "t": "code",
+         "v": "jaffle_shop"
+        },
+        " (the shop's own application) and ",
+        {
+         "t": "code",
+         "v": "stripe"
+        },
+        " (the payment company). The database file is called ",
+        {
+         "t": "code",
+         "v": "practice"
+        },
+        ", so the full name of the payments table is:"
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "practice.stripe.payments"
+        }
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Most of the time we write the short form ",
+        {
+         "t": "code",
+         "v": "stripe.payments"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "dbt always builds objects with a three-part name. In Chapter 6 you will see that your ",
+          {
+           "t": "code",
+           "v": "profiles.yml"
+          },
+          " file tells dbt which database and which schema to build into, and in Chapter 10 you will learn how to change the schema of a model (custom schemas). Many exam questions ask ",
+          {
+           "c": [
+            "where"
+           ],
+           "t": "i"
+          },
+          " a model will be created: the answer is always a ",
+          {
+           "t": "code",
+           "v": "database.schema.object"
+          },
+          " combination."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch01-s1-3",
+     "number": "1.1.3",
+     "title": [
+      "Database, schema, table"
+     ],
+     "titleText": "Database, schema, table"
+    }
+   ],
+   "title": [
+    "Data, tables, rows and columns"
+   ],
+   "titleText": "Data, tables, rows and columns"
+  },
+  {
+   "anchors": [
+    "sec-dw-oltp-olap"
+   ],
+   "checkpoints": [],
+   "id": "ch01-s2",
+   "label": "sec:dw-oltp-olap",
+   "labs": [],
+   "minutes": 5,
+   "number": "1.2",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Not all databases are built for the same job."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch01-s2-0",
+     "title": [
+      "Two kinds of databases: OLTP and OLAP"
+     ],
+     "titleText": "Two kinds of databases: OLTP and OLAP"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The coffee shop's website must save each new order in a few milliseconds, update a single order when it is shipped, and never lose a payment. Databases built for this are called ",
+        {
+         "en": [
+          "OLTP"
+         ],
+         "fr": "traitement transactionnel en ligne",
+         "id": "term-oltp",
+         "t": "term"
+        },
+        " databases (On-Line Transaction Processing). Examples: PostgreSQL, MySQL, SQL Server, Oracle. They are excellent at reading and writing ",
+        {
+         "c": [
+          "one row at a time"
+         ],
+         "t": "i"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch01-s2-1",
+     "number": "1.2.1",
+     "title": [
+      "Application databases (OLTP)"
+     ],
+     "titleText": "Application databases (OLTP)"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The finance team asks a different question: \"What was our revenue per month, per country, for the whole year?\" To answer it, the database must read ",
+        {
+         "c": [
+          "millions of rows"
+         ],
+         "t": "i"
+        },
+        " but only ",
+        {
+         "c": [
+          "a few columns"
+         ],
+         "t": "i"
+        },
+        " (date, country, amount). Databases built for this are called ",
+        {
+         "en": [
+          "OLAP"
+         ],
+         "fr": "traitement analytique en ligne",
+         "id": "term-olap",
+         "t": "term"
+        },
+        " databases (On-Line Analytical Processing). When a company keeps its analytics data in one central OLAP system, we call it a ",
+        {
+         "en": [
+          "data warehouse"
+         ],
+         "fr": "entrepôt de données",
+         "id": "term-data-warehouse",
+         "t": "term"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch01-s2-2",
+     "number": "1.2.2",
+     "title": [
+      "Analytics databases: the data warehouse (OLAP)"
+     ],
+     "titleText": "Analytics databases: the data warehouse (OLAP)"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Why is a warehouse faster for analytics? Mostly because of how it stores data on disk."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "Row storage compared with column storage. Left, row storage (OLTP): each of three order rows (id, order_date, status) is stored together as one block (block 1, 2, 3). Right, column storage (OLAP): all ids are stored together, all order dates together, all statuses together; each column is stored (and compressed) together.",
+       "id": "ch01-fig1",
+       "src": "figures/ch01-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Row storage"
+             ],
+             "t": "b"
+            },
+            " keeps all the values of one row together. Perfect for \"save this one order\"."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "en": [
+              "Columnar storage"
+             ],
+             "fr": "stockage en colonnes",
+             "id": "term-columnar-storage",
+             "t": "term"
+            },
+            " keeps all the values of one column together. To sum the ",
+            {
+             "t": "code",
+             "v": "amount"
+            },
+            " column, the warehouse reads only that column and skips the others. Values in one column look alike (many ",
+            {
+             "t": "code",
+             "v": "completed"
+            },
+            "), so they compress very well."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "This is why analytics engineers avoid ",
+          {
+           "t": "code",
+           "v": "select *"
+          },
+          " in final models: in a columnar warehouse, every extra column you read costs time and money. You will meet this idea again in ",
+          {
+           "href": "/learn/ch04/",
+           "label": "ch:sql",
+           "t": "ref",
+           "text": "Chapter 4"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch01-s2-3",
+     "number": "1.2.3",
+     "title": [
+      "Row storage vs column storage"
+     ],
+     "titleText": "Row storage vs column storage"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Platform"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "In one sentence"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Snowflake"
+          ]
+         },
+         {
+          "c": [
+           "Cloud data warehouse, very common with dbt; separates storage from compute (\"warehouses\" of compute you turn on and off)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Google BigQuery"
+          ]
+         },
+         {
+          "c": [
+           "Google's serverless warehouse; you pay per data scanned; \"projects\" and \"datasets\" play the role of database and schema."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Databricks"
+          ]
+         },
+         {
+          "c": [
+           "\"Lakehouse\" platform built on Apache Spark and Delta Lake; supports SQL and Python."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Amazon Redshift"
+          ]
+         },
+         {
+          "c": [
+           "AWS's data warehouse."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "PostgreSQL"
+          ]
+         },
+         {
+          "c": [
+           "A classic OLTP database that is often used for small analytics projects too."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "DuckDB"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A small, free, columnar analytics database that runs on your laptop as a single file. ",
+           {
+            "c": [
+             "We use it in this book."
+            ],
+            "t": "b"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "dbt supports all of these through ",
+        {
+         "en": [
+          "adapters"
+         ],
+         "fr": "adaptateurs",
+         "id": "term-adapter",
+         "t": "term"
+        },
+        ": small plugins that translate dbt's work into the SQL dialect of each platform (",
+        {
+         "t": "code",
+         "v": "dbt-snowflake"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt-bigquery"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt-duckdb"
+        },
+        ", …). The ideas in this book are the same on every platform. When a feature depends on the platform (for example, which constraints are really enforced), the book will say so."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The exam is about dbt, not about one warehouse. When an answer only works on one specific platform, it is usually a distractor, unless the question names the platform. Learn the ",
+          {
+           "c": [
+            "dbt"
+           ],
+           "t": "i"
+          },
+          " behaviour first."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch01-s2-4",
+     "number": "1.2.4",
+     "title": [
+      "The warehouses you will hear about"
+     ],
+     "titleText": "The warehouses you will hear about"
+    }
+   ],
+   "title": [
+    "Two kinds of databases: OLTP and OLAP"
+   ],
+   "titleText": "Two kinds of databases: OLTP and OLAP"
+  },
+  {
+   "anchors": [
+    "sec-dw-pipeline"
+   ],
+   "checkpoints": [],
+   "id": "ch01-s3",
+   "label": "sec:dw-pipeline",
+   "labs": [],
+   "minutes": 5,
+   "number": "1.3",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Data is born in many places: the shop's application database, the payment company (Stripe), the marketing tool, spreadsheets. Nobody can analyse ten systems at once. So companies build a ",
+        {
+         "en": [
+          "data pipeline"
+         ],
+         "fr": "pipeline de données",
+         "id": "term-data-pipeline",
+         "t": "term"
+        },
+        ": a chain of steps that moves and improves data."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "A data pipeline in five steps: Sources (shop app database, Stripe, CRM, files) → Extract & Load (Fivetran, Airbyte, scripts) → Warehouse (raw tables, an untouched copy) → Transform (dbt, SQL models; highlighted) → Use (BI dashboards, ML, reverse ETL). A brace under the first steps says “E + L: copy data as it is”; a brace under Transform says “T: inside the warehouse”.",
+       "id": "ch01-fig2",
+       "src": "figures/ch01-fig2.svg",
+       "t": "figure"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Sources."
+             ],
+             "t": "b"
+            },
+            " The systems where data is created. In our practice data: the shop application (",
+            {
+             "t": "code",
+             "v": "jaffle_shop"
+            },
+            " schema) and Stripe (",
+            {
+             "t": "code",
+             "v": "stripe"
+            },
+            " schema)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Extract and Load."
+             ],
+             "t": "b"
+            },
+            " A loading tool (for example Fivetran or Airbyte, or a custom script) ",
+            {
+             "c": [
+              "extracts"
+             ],
+             "t": "i"
+            },
+            " data from each source and ",
+            {
+             "c": [
+              "loads"
+             ],
+             "t": "i"
+            },
+            " it into the warehouse, without changing it. The result is called ",
+            {
+             "en": [
+              "raw data"
+             ],
+             "fr": "données brutes",
+             "id": "term-raw-data",
+             "t": "term"
+            },
+            ". The ",
+            {
+             "t": "code",
+             "v": "_loaded_at"
+            },
+            " columns in our data are the kind of trace these tools leave."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Transform."
+             ],
+             "t": "b"
+            },
+            " Inside the warehouse, SQL turns raw data into clean, tested, documented tables: rename columns, convert cents to euros, join orders with payments, compute revenue. ",
+            {
+             "c": [
+              "This is the job of dbt."
+             ],
+             "t": "b"
+            }
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Use."
+             ],
+             "t": "b"
+            },
+            " Analysts and business people read the clean tables in ",
+            {
+             "en": [
+              "BI tools"
+             ],
+             "fr": "outils de BI (informatique décisionnelle)",
+             "id": "term-bi-tool",
+             "t": "term"
+            },
+            " (Tableau, Looker, Power BI, Metabase), data scientists train models, and ",
+            {
+             "en": [
+              "reverse ETL"
+             ],
+             "fr": "ETL inversé",
+             "id": "term-reverse-etl",
+             "t": "term"
+            },
+            " tools send clean data back into business applications (for example, the CRM)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      }
+     ],
+     "id": "ch01-s3-0",
+     "title": [
+      "The data pipeline: from apps to dashboards"
+     ],
+     "titleText": "The data pipeline: from apps to dashboards"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "There are two ways to order the three letters:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "ETL"
+            ],
+            "t": "b"
+           },
+           " (Extract, Transform, Load)"
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "ELT"
+            ],
+            "t": "b"
+           },
+           " (Extract, Load, Transform)"
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Where is the transformation done?"
+          ]
+         },
+         {
+          "c": [
+           "In a separate server or tool, ",
+           {
+            "c": [
+             "before"
+            ],
+            "t": "i"
+           },
+           " the data reaches the warehouse."
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Inside"
+            ],
+            "t": "i"
+           },
+           " the warehouse, after loading."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Raw data kept?"
+          ]
+         },
+         {
+          "c": [
+           "Often not: only the transformed result is loaded."
+          ]
+         },
+         {
+          "c": [
+           "Yes: the raw copy stays in the warehouse."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Language"
+          ]
+         },
+         {
+          "c": [
+           "Often a special tool or code (Java, Python, drag-and-drop tools)."
+          ]
+         },
+         {
+          "c": [
+           "Mostly SQL."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "If the logic was wrong"
+          ]
+         },
+         {
+          "c": [
+           "You must extract the data again."
+          ]
+         },
+         {
+          "c": [
+           "You fix the SQL and rebuild from the raw tables."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Who can do it"
+          ]
+         },
+         {
+          "c": [
+           "Mostly data engineers."
+          ]
+         },
+         {
+          "c": [
+           "Anyone who knows SQL, including analysts."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        {
+         "en": [
+          "ELT"
+         ],
+         "fr": "ELT (extraire, charger, transformer)",
+         "id": "term-elt",
+         "t": "term"
+        },
+        " became the standard because cloud warehouses became cheap and powerful enough to do the heavy work themselves. Keeping the raw data means you can always rebuild everything from the beginning, and SQL lets many more people take part."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "dbt is built for ELT: it does ",
+          {
+           "c": [
+            "only the T"
+           ],
+           "t": "i"
+          },
+          ". It never extracts data from your applications and never loads files from the internet into the warehouse (the small exception is ",
+          {
+           "c": [
+            "seeds"
+           ],
+           "t": "i"
+          },
+          ": tiny CSV files you keep in your project, Chapter 12). In dbt, the raw tables created by the loading tool are declared as ",
+          {
+           "c": [
+            "sources"
+           ],
+           "t": "b"
+          },
+          " (Chapter 7), and dbt reads them with the ",
+          {
+           "t": "code",
+           "v": "source()"
+          },
+          " function."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "\"dbt loads data from Salesforce into Snowflake\" is ",
+          {
+           "c": [
+            "false"
+           ],
+           "t": "b"
+          },
+          ". Loading is the job of a loading tool. dbt only reads tables that already exist in the warehouse and creates new tables and views from them. Exam distractors often give dbt jobs it does not do: moving data between systems, scheduling the loader, storing data itself."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch01-s3-1",
+     "number": "1.3.1",
+     "title": [
+      "ETL vs ELT"
+     ],
+     "titleText": "ETL vs ELT"
+    }
+   ],
+   "title": [
+    "The data pipeline: from apps to dashboards"
+   ],
+   "titleText": "The data pipeline: from apps to dashboards"
+  },
+  {
+   "anchors": [
+    "sec-dw-roles"
+   ],
+   "checkpoints": [],
+   "id": "ch01-s4",
+   "label": "sec:dw-roles",
+   "labs": [],
+   "minutes": 5,
+   "number": "1.4",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Role"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Main work"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "en": [
+             "Data engineer"
+            ],
+            "fr": "ingénieur de données",
+            "id": "term-data-engineer",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Builds and runs the infrastructure: loading tools, the warehouse, permissions, orchestration, very large or real-time pipelines."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "en": [
+             "Analytics engineer"
+            ],
+            "fr": "ingénieur analytique",
+            "id": "term-analytics-engineer",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Transforms raw data into clean, tested, documented data models that everybody can trust. Uses SQL, dbt, git and software-engineering habits. ",
+           {
+            "c": [
+             "This is the role of the certification."
+            ],
+            "t": "b"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "en": [
+             "Data analyst"
+            ],
+            "fr": "analyste de données",
+            "id": "term-data-analyst",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Answers business questions with the clean models: dashboards, reports, analyses."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "The analytics engineer sits in the middle. Before this role existed, analysts wrote long SQL queries directly on raw data, copied the same logic into many dashboards, and nobody knew which number was the right one. The analytics engineer fixes that by building a single, reliable layer of models."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch01-s4-0",
+     "title": [
+      "Who does what: the data roles"
+     ],
+     "titleText": "Who does what: the data roles"
+    }
+   ],
+   "title": [
+    "Who does what: the data roles"
+   ],
+   "titleText": "Who does what: the data roles"
+  },
+  {
+   "anchors": [
+    "sec-dw-dbt"
+   ],
+   "checkpoints": [],
+   "id": "ch01-s5",
+   "label": "sec:dw-dbt",
+   "labs": [],
+   "minutes": 5,
+   "number": "1.5",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "en": [
+          "dbt"
+         ],
+         "fr": "dbt (data build tool)",
+         "id": "term-dbt",
+         "t": "term"
+        },
+        " (\"data build tool\", always written in lower case) is a transformation tool. You write ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        " statements in ",
+        {
+         "t": "code",
+         "v": ".sql"
+        },
+        " files. dbt then:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "reads all your files and understands which model depends on which (the DAG, below);"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "compiles"
+             ],
+             "t": "b"
+            },
+            " each file: it replaces the small template pieces written in Jinja with real table names, producing pure SQL. For example, ",
+            {
+             "t": "code",
+             "v": "{{ ref('stg_orders') }}"
+            },
+            " becomes a full name like ",
+            {
+             "t": "code",
+             "v": "practice.main.stg_orders"
+            },
+            " (database, schema, table);"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "runs"
+             ],
+             "t": "b"
+            },
+            " that SQL ",
+            {
+             "c": [
+              "in your warehouse"
+             ],
+             "t": "i"
+            },
+            ", in the right order, wrapping each ",
+            {
+             "t": "code",
+             "v": "select"
+            },
+            " in the right ",
+            {
+             "t": "code",
+             "v": "create view"
+            },
+            " or ",
+            {
+             "t": "code",
+             "v": "create table"
+            },
+            " statement;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "can also ",
+            {
+             "c": [
+              "test"
+             ],
+             "t": "b"
+            },
+            " the results, ",
+            {
+             "c": [
+              "document"
+             ],
+             "t": "b"
+            },
+            " them and show their lineage."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Think of dbt as the head chef's recipe book plus a kitchen planner. The ingredients (raw data) are already in the fridge (the warehouse). The recipes (your SQL models) say how to prepare each dish. dbt reads all the recipes, figures out that the sauce must be ready before the pasta, and tells the kitchen staff (the warehouse engine) what to cook and in which order. dbt itself never stores any food."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      }
+     ],
+     "id": "ch01-s5-1",
+     "number": "1.5.1",
+     "title": [
+      "The simple definition"
+     ],
+     "titleText": "The simple definition"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Not a database."
+             ],
+             "t": "b"
+            },
+            " dbt stores no data. All tables live in your warehouse."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Not a loading tool."
+             ],
+             "t": "b"
+            },
+            " It does not copy data from APIs or applications."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Not a dashboard tool."
+             ],
+             "t": "b"
+            },
+            " It produces the clean tables that dashboards read."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Not a replacement for SQL."
+             ],
+             "t": "b"
+            },
+            " dbt makes SQL modular, testable and documented; the real work is still SQL running in the warehouse."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch01-s5-2",
+     "number": "1.5.2",
+     "title": [
+      "What dbt is not"
+     ],
+     "titleText": "What dbt is not"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Name"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it is"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "en": [
+             "dbt Core"
+            ],
+            "fr": "dbt Core",
+            "id": "term-dbt-core",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The free, open-source command-line tool written in Python. You install it with ",
+           {
+            "t": "code",
+            "v": "pip"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "uv"
+           },
+           " and type commands like ",
+           {
+            "t": "code",
+            "v": "dbt run"
+           },
+           ". ",
+           {
+            "c": [
+             "The exam is based on dbt Core 1.11."
+            ],
+            "t": "b"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "en": [
+             "dbt platform"
+            ],
+            "fr": "plateforme dbt",
+            "id": "term-dbt-platform",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The paid web service from dbt Labs (formerly called ",
+           {
+            "c": [
+             "dbt Cloud"
+            ],
+            "t": "i"
+           },
+           "). Adds a browser IDE, scheduled jobs, environments, CI, documentation hosting, and more. It has a free Developer plan."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "dbt Studio"
+          ]
+         },
+         {
+          "c": [
+           "The in-browser IDE of the dbt platform (older name: ",
+           {
+            "c": [
+             "dbt Cloud IDE"
+            ],
+            "t": "i"
+           },
+           "). Exam questions may still use the old name."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "VS Code extension"
+          ]
+         },
+         {
+          "c": [
+           "The official dbt extension for the VS Code editor, built on the Fusion engine."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Fusion engine"
+          ]
+         },
+         {
+          "c": [
+           "A new, faster dbt engine written in Rust. It is the future of dbt but ",
+           {
+            "c": [
+             "not"
+            ],
+            "t": "i"
+           },
+           " the version of the exam. We mention it only for context."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "In this book you will use ",
+        {
+         "c": [
+          "dbt Core 1.11 on the command line"
+         ],
+         "t": "b"
+        },
+        " with ",
+        {
+         "c": [
+          "DuckDB"
+         ],
+         "t": "b"
+        },
+        ", because it is free, works offline and shows you exactly what dbt does. In Chapter 25 you will also try the dbt platform (free plan) to understand environments, jobs and CI, which appear on the exam."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Everything you learn with dbt Core works the same in the dbt platform: the platform runs dbt for you. The platform adds features around it (scheduling, the IDE, hosted docs), but models, tests, configs and commands are the same. One difference: in the platform you set the warehouse connection in the web interface, so you do not write a ",
+          {
+           "t": "code",
+           "v": "profiles.yml"
+          },
+          " file (Chapter 6)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch01-s5-3",
+     "number": "1.5.3",
+     "title": [
+      "The dbt family of products"
+     ],
+     "titleText": "The dbt family of products"
+    }
+   ],
+   "title": [
+    "What dbt is (and what it is not)"
+   ],
+   "titleText": "What dbt is (and what it is not)"
+  },
+  {
+   "anchors": [
+    "sec-dw-modeling"
+   ],
+   "checkpoints": [],
+   "id": "ch01-s6",
+   "label": "sec:dw-modeling",
+   "labs": [
+    "ch01-lab1"
+   ],
+   "minutes": 15,
+   "number": "1.6",
+   "objectives": [
+    "CP0-DATA"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt helps you build tables. But ",
+        {
+         "c": [
+          "which"
+         ],
+         "t": "i"
+        },
+        " tables should you build? The most common answer in analytics is ",
+        {
+         "en": [
+          "dimensional modeling"
+         ],
+         "fr": "modélisation dimensionnelle",
+         "id": "term-dimensional-modeling",
+         "t": "term"
+        },
+        ", made popular by Ralph Kimball."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch01-s6-0",
+     "title": [
+      "Thinking in models: facts, dimensions and grain"
+     ],
+     "titleText": "Thinking in models: facts, dimensions and grain"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "A ",
+            {
+             "en": [
+              "fact table"
+             ],
+             "fr": "table de faits",
+             "id": "term-fact-table",
+             "t": "term"
+            },
+            " records ",
+            {
+             "c": [
+              "events or measurements"
+             ],
+             "t": "b"
+            },
+            ": things that happened, usually with numbers you can add up. Examples: orders, payments, order lines, page views. Fact tables are usually long (many rows) and grow every day."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A ",
+            {
+             "en": [
+              "dimension table"
+             ],
+             "fr": "table de dimension",
+             "id": "term-dimension-table",
+             "t": "term"
+            },
+            " describes ",
+            {
+             "c": [
+              "the things involved"
+             ],
+             "t": "b"
+            },
+            " in those events: who, what, where. Examples: customers, products, countries, dates. Dimensions give the context you use to filter and group (\"revenue ",
+            {
+             "c": [
+              "by country"
+             ],
+             "t": "i"
+            },
+            "\", \"orders ",
+            {
+             "c": [
+              "by product category"
+             ],
+             "t": "i"
+            },
+            "\")."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "A simple test: if you would ",
+        {
+         "c": [
+          "sum"
+         ],
+         "t": "i"
+        },
+        " or ",
+        {
+         "c": [
+          "count"
+         ],
+         "t": "i"
+        },
+        " it, it is probably a fact. If you would ",
+        {
+         "c": [
+          "group by"
+         ],
+         "t": "i"
+        },
+        " or ",
+        {
+         "c": [
+          "filter by"
+         ],
+         "t": "i"
+        },
+        " it, it is probably a dimension attribute."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch01-s6-1",
+     "number": "1.6.1",
+     "title": [
+      "Facts and dimensions"
+     ],
+     "titleText": "Facts and dimensions"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "When you place one fact table in the middle and connect the dimensions around it, the picture looks like a star. This shape is called a ",
+        {
+         "en": [
+          "star schema"
+         ],
+         "fr": "schéma en étoile",
+         "id": "term-star-schema",
+         "t": "term"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "A star schema: the fact table fct_order_items in the middle, linked to four dimension tables around it: dim_customers, dim_products, dim_dates and dim_order_status.",
+       "description": "fct_order_items: order_item_id (PK), order_id, customer_id (FK), product_id (FK), order_date (FK), quantity, amount_eur. dim_customers: customer_id (PK), first_name, country, signup_date. dim_products: product_id (PK), name, category, price_eur. dim_dates: date_day (PK), month, quarter, year. dim_order_status: status (PK), is_returned, description.",
+       "id": "ch01-fig3",
+       "src": "figures/ch01-fig3.svg",
+       "t": "figure"
+      }
+     ],
+     "id": "ch01-s6-2",
+     "number": "1.6.2",
+     "title": [
+      "The star schema"
+     ],
+     "titleText": "The star schema"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The ",
+        {
+         "en": [
+          "grain"
+         ],
+         "fr": "granularité",
+         "id": "term-grain",
+         "t": "term"
+        },
+        " of a table is the answer to the question: ",
+        {
+         "c": [
+          "\"What does one row represent?\""
+         ],
+         "t": "b"
+        }
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Practice table"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Grain (one row = …)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "jaffle_shop.customers"
+           }
+          ]
+         },
+         {
+          "c": [
+           "one customer"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "jaffle_shop.orders"
+           }
+          ]
+         },
+         {
+          "c": [
+           "one order"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "jaffle_shop.order_items"
+           }
+          ]
+         },
+         {
+          "c": [
+           "one product line inside an order (order 1 has 3 lines)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "jaffle_shop.products"
+           }
+          ]
+         },
+         {
+          "c": [
+           "one product of the menu"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "stripe.payments"
+           }
+          ]
+         },
+         {
+          "c": [
+           "one payment ",
+           {
+            "c": [
+             "attempt"
+            ],
+            "t": "i"
+           },
+           " (an order can have several: a failed one, or a coupon plus a card)"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Look at order number 1 in our data:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch01-c2",
+       "lang": "output",
+       "t": "code",
+       "text": "+----+---------+---------------+---------+--------+------------+\n| id | orderid | paymentmethod | status  | amount | created    |\n+----+---------+---------------+---------+--------+------------+\n|  1 |       1 | coupon        | success |    500 | 2025-01-05 |\n|  2 |       1 | credit_card   | success |   2520 | 2025-01-05 |\n+----+---------+---------------+---------+--------+------------+",
+       "title": "stripe.payments for order 1"
+      },
+      {
+       "c": [
+        "One order, two payments. If you join ",
+        {
+         "t": "code",
+         "v": "orders"
+        },
+        " to ",
+        {
+         "t": "code",
+         "v": "payments"
+        },
+        " and then count rows, order 1 is counted ",
+        {
+         "c": [
+          "twice"
+         ],
+         "t": "i"
+        },
+        ". Mixing grains by accident is the number one cause of wrong numbers in analytics (you will see it called ",
+        {
+         "c": [
+          "fan-out"
+         ],
+         "t": "i"
+        },
+        " in ",
+        {
+         "href": "/learn/ch04/",
+         "label": "ch:sql",
+         "t": "ref",
+         "text": "Chapter 4"
+        },
+        "). Always write down the grain of every model you build."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "When a question says \"the model should have one row per customer\" it is telling you the grain. The correct answer usually aggregates (",
+          {
+           "t": "code",
+           "v": "group by customer_id"
+          },
+          ") before or after a join, and a good dbt project protects the grain with a ",
+          {
+           "t": "code",
+           "v": "unique"
+          },
+          " test on the key column (Chapter 18)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch01-s6-3",
+     "number": "1.6.3",
+     "title": [
+      "Grain: the most important word in modeling"
+     ],
+     "titleText": "Grain: the most important word in modeling"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "A ",
+            {
+             "en": [
+              "primary key"
+             ],
+             "fr": "clé primaire",
+             "id": "term-primary-key",
+             "t": "term"
+            },
+            " (PK) is a column (or set of columns) that identifies each row uniquely and is never NULL. ",
+            {
+             "t": "code",
+             "v": "orders.id"
+            },
+            " is the primary key of ",
+            {
+             "t": "code",
+             "v": "orders"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A ",
+            {
+             "en": [
+              "foreign key"
+             ],
+             "fr": "clé étrangère",
+             "id": "term-foreign-key",
+             "t": "term"
+            },
+            " (FK) is a column that points to the primary key of another table. ",
+            {
+             "t": "code",
+             "v": "orders.user_id"
+            },
+            " points to ",
+            {
+             "t": "code",
+             "v": "customers.id"
+            },
+            ". In our data, order 159 points to customer 101, who does not exist: an ",
+            {
+             "c": [
+              "orphan"
+             ],
+             "t": "i"
+            },
+            " row. dbt's ",
+            {
+             "t": "code",
+             "v": "relationships"
+            },
+            " test finds exactly this kind of problem."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A ",
+            {
+             "en": [
+              "natural key"
+             ],
+             "fr": "clé naturelle",
+             "id": "term-natural-key",
+             "t": "term"
+            },
+            " comes from the business or the source system (an email, an order number printed on the receipt)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A ",
+            {
+             "en": [
+              "surrogate key"
+             ],
+             "fr": "clé de substitution",
+             "id": "term-surrogate-key",
+             "t": "term"
+            },
+            " is created by us, often by hashing several columns together, when no single natural column is unique (for example ",
+            {
+             "t": "code",
+             "v": "order_id"
+            },
+            " + ",
+            {
+             "t": "code",
+             "v": "product_id"
+            },
+            "). The package ",
+            {
+             "t": "code",
+             "v": "dbt_utils"
+            },
+            " has a macro to generate one (Chapter 11)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch01-s6-4",
+     "number": "1.6.4",
+     "title": [
+      "Keys"
+     ],
+     "titleText": "Keys"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Application databases are ",
+        {
+         "en": [
+          "normalised"
+         ],
+         "fr": "normalisé",
+         "id": "term-normalised",
+         "t": "term"
+        },
+        ": each fact is stored once, split across many small tables, to avoid duplicates when writing. Analytics models are often ",
+        {
+         "en": [
+          "denormalised"
+         ],
+         "fr": "dénormalisé",
+         "id": "term-denormalised",
+         "t": "term"
+        },
+        ": we join tables in advance and repeat some values (for example, putting ",
+        {
+         "t": "code",
+         "v": "country"
+        },
+        " on each order) so that analysts can query one wide table quickly without writing joins. dbt is the place where you do that work once, correctly, for everybody."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch01-s6-5",
+     "number": "1.6.5",
+     "title": [
+      "Normalised vs denormalised"
+     ],
+     "titleText": "Normalised vs denormalised"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Customers move to another country. Products change price. What should the dimension table show?"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "SCD Type 1"
+             ],
+             "t": "b"
+            },
+            ": overwrite the old value. Simple, but the history is lost: last year's sales now appear under the customer's ",
+            {
+             "c": [
+              "new"
+             ],
+             "t": "i"
+            },
+            " country."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "SCD Type 2"
+             ],
+             "t": "b"
+            },
+            ": keep every version of the row, each with a \"valid from\" and \"valid to\" date. You can always know what was true at any moment."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "A dimension whose values change from time to time is called a ",
+        {
+         "en": [
+          "slowly changing dimension"
+         ],
+         "fr": "dimension à évolution lente",
+         "id": "term-slowly-changing-dimension",
+         "t": "term"
+        },
+        " (SCD)."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "dbt implements SCD Type 2 with ",
+          {
+           "c": [
+            "snapshots"
+           ],
+           "t": "b"
+          },
+          " (Chapter 13): dbt compares the source table with what it saw last time and records the changes, adding columns like ",
+          {
+           "t": "code",
+           "v": "dbt_valid_from"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "dbt_valid_to"
+          },
+          ". Since dbt 1.9 you can define snapshots in YAML, which is an official exam objective."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " practise the most important modeling question before writing any SQL."
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "Open the five CSV files in ",
+              {
+               "t": "code",
+               "textBook": "~/Documents/Adnane/dbt-bible/labs/data/",
+               "v": "~/dbt-course/kit/labs/data/"
+              },
+              " with any text editor (or a spreadsheet tool)."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "For each file, write in your notebook: ",
+              {
+               "c": [
+                "fact or dimension?"
+               ],
+               "t": "i"
+              },
+              ", ",
+              {
+               "c": [
+                "grain (one row = …)"
+               ],
+               "t": "i"
+              },
+              ", ",
+              {
+               "c": [
+                "primary key"
+               ],
+               "t": "i"
+              },
+              ", ",
+              {
+               "c": [
+                "foreign keys"
+               ],
+               "t": "i"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "In ",
+              {
+               "t": "code",
+               "v": "payments.csv"
+              },
+              ", find a payment with ",
+              {
+               "t": "code",
+               "v": "status"
+              },
+              " = ",
+              {
+               "t": "code",
+               "v": "fail"
+              },
+              ". Is that still a fact? (Yes: an event happened, even if it failed.)"
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Look at ",
+              {
+               "t": "code",
+               "v": "order_items.csv"
+              },
+              ": which two columns together would make a good surrogate key if the ",
+              {
+               "t": "code",
+               "v": "id"
+              },
+              " column did not exist?"
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " customers and products are dimensions; orders, order_items and payments are facts; the grains are the ones in the table above; FKs are ",
+          {
+           "t": "code",
+           "v": "orders.user_id"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "order_items.order_id"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "order_items.product_id"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "payments.orderid"
+          },
+          "; a surrogate key could be built from ",
+          {
+           "t": "code",
+           "v": "order_id"
+          },
+          " + ",
+          {
+           "t": "code",
+           "v": "product_id"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch01-lab1",
+       "objectives": [
+        "CP0-DATA"
+       ],
+       "t": "lab",
+       "title": [
+        "Find the grain of each table"
+       ]
+      }
+     ],
+     "id": "ch01-s6-6",
+     "number": "1.6.6",
+     "title": [
+      "Slowly changing dimensions"
+     ],
+     "titleText": "Slowly changing dimensions"
+    }
+   ],
+   "title": [
+    "Thinking in models: facts, dimensions and grain"
+   ],
+   "titleText": "Thinking in models: facts, dimensions and grain"
+  },
+  {
+   "anchors": [
+    "sec-dw-viewpoint"
+   ],
+   "checkpoints": [],
+   "id": "ch01-s7",
+   "label": "sec:dw-viewpoint",
+   "labs": [],
+   "minutes": 5,
+   "number": "1.7",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Software engineers learned, over many years, how to let many people change the same code without breaking everything. dbt's central idea is simple: ",
+        {
+         "c": [
+          "analytics code deserves the same habits"
+         ],
+         "t": "b"
+        },
+        ". Here they are in our own words."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Habit"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it means for an analytics engineer"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "en": [
+             "Version control"
+            ],
+            "fr": "gestion de versions",
+            "id": "term-version-control",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Every SQL file lives in git. You can see who changed what, when and why, and go back if needed (",
+           {
+            "href": "/learn/ch03/",
+            "label": "ch:git",
+            "t": "ref",
+            "text": "Chapter 3"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "en": [
+             "Modularity"
+            ],
+            "fr": "modularité",
+            "id": "term-modularity",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Build small models that do one thing, and reuse them, instead of one giant 500-line query."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "en": [
+             "DRY"
+            ],
+            "fr": "DRY (ne pas se répéter)",
+            "id": "term-dry",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           "\"Don't Repeat Yourself\": write a piece of logic once (a model or a macro) and reference it everywhere."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "en": [
+             "Testing"
+            ],
+            "fr": "tests",
+            "id": "term-testing",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Automatically check assumptions: \"this key is unique\", \"this column is never NULL\", \"this calculation gives the expected result\"."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "en": [
+             "Documentation"
+            ],
+            "fr": "documentation",
+            "id": "term-documentation",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Describe each model and column next to the code, so the docs stay up to date."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "en": [
+             "Environments"
+            ],
+            "fr": "environnements",
+            "id": "term-environment",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Develop in your own ",
+           {
+            "c": [
+             "dev"
+            ],
+            "t": "i"
+           },
+           " schema; only reviewed code runs in ",
+           {
+            "c": [
+             "production"
+            ],
+            "t": "i"
+           },
+           ", where the business reads the data."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "en": [
+             "Code review"
+            ],
+            "fr": "revue de code",
+            "id": "term-code-review",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A teammate reads your change in a pull request before it is merged."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "en": [
+             "CI/CD"
+            ],
+            "fr": "intégration et déploiement continus",
+            "id": "term-ci-cd",
+            "t": "term"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Continuous Integration: every proposed change is built and tested automatically. Continuous Deployment: merged changes reach production automatically."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Each habit has a dbt feature: git integration (Chapter 3 and 25), ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          " and the DAG for modularity (Chapter 7), macros and packages for DRY (Chapter 11), data tests and unit tests (Chapters 18–19), docs and descriptions (Chapter 20), targets and environments (Chapters 6 and 25), and state-based CI with ",
+          {
+           "t": "code",
+           "v": "state:modified"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "--defer"
+          },
+          " (Chapter 24)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch01-s7-0",
+     "title": [
+      "Engineering habits for analytics: the dbt viewpoint"
+     ],
+     "titleText": "Engineering habits for analytics: the dbt viewpoint"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "When model B selects from model A, B ",
+        {
+         "c": [
+          "depends"
+         ],
+         "t": "i"
+        },
+        " on A. If you draw every model as a box and every dependency as an arrow, you get a ",
+        {
+         "en": [
+          "DAG"
+         ],
+         "fr": "graphe orienté acyclique",
+         "id": "term-dag",
+         "t": "term"
+        },
+        " (Directed Acyclic Graph): ",
+        {
+         "c": [
+          "directed"
+         ],
+         "t": "i"
+        },
+        " because arrows have a direction, ",
+        {
+         "c": [
+          "acyclic"
+         ],
+         "t": "i"
+        },
+        " because you can never follow the arrows and come back to where you started."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "A small DAG in four columns: raw sources, staging, marts and an exposure. The sources orders, payments and customers each feed one staging model; the staging models feed the marts fct_orders and dim_customers; both marts feed a dashboard.",
+       "description": "Arrows: orders (source) → stg_orders; payments (source) → stg_payments; customers (source) → stg_customers; stg_orders → fct_orders; stg_payments → fct_orders; stg_customers → dim_customers; fct_orders → dim_customers; fct_orders → dashboard; dim_customers → dashboard.",
+       "id": "ch01-fig4",
+       "src": "figures/ch01-fig4.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "This is the shape of almost every dbt project: ",
+        {
+         "c": [
+          "sources"
+         ],
+         "t": "b"
+        },
+        " (raw tables) feed ",
+        {
+         "c": [
+          "staging"
+         ],
+         "t": "b"
+        },
+        " models (one per source table, light cleaning), which feed ",
+        {
+         "c": [
+          "marts"
+         ],
+         "t": "b"
+        },
+        " (business-ready facts and dimensions), which feed dashboards (declared in dbt as ",
+        {
+         "c": [
+          "exposures"
+         ],
+         "t": "b"
+        },
+        "). dbt reads the DAG to know that ",
+        {
+         "t": "code",
+         "v": "stg_orders"
+        },
+        " must be built before ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A DAG cannot contain a cycle. If model A selects from B and B selects from A, dbt stops with a dependency error before running anything. \"Clean DAG\" questions on the exam often show a model that reads a raw table directly instead of using ",
+          {
+           "t": "code",
+           "v": "source()"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          ": dbt then cannot see the dependency and may build models in the wrong order."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch01-s7-1",
+     "number": "1.7.1",
+     "title": [
+      "A first look at the DAG"
+     ],
+     "titleText": "A first look at the DAG"
+    }
+   ],
+   "title": [
+    "Engineering habits for analytics: the dbt viewpoint"
+   ],
+   "titleText": "Engineering habits for analytics: the dbt viewpoint"
+  },
+  {
+   "anchors": [
+    "sec-dw-vocabulary"
+   ],
+   "checkpoints": [],
+   "id": "ch01-s8",
+   "label": "sec:dw-vocabulary",
+   "labs": [
+    "ch01-lab2"
+   ],
+   "minutes": 15,
+   "number": "1.8",
+   "objectives": [
+    "CP0-DATA",
+    "1.5"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "You do not need to understand all these words today. Use this table as a map: each word has a home chapter where it is taught properly."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Word"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "One-line meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Chapter"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "project"
+          ]
+         },
+         {
+          "c": [
+           "A folder of dbt files with a ",
+           {
+            "t": "code",
+            "v": "dbt_project.yml"
+           },
+           " at its root."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "6"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "profile"
+          ]
+         },
+         {
+          "c": [
+           "Connection settings to your warehouse, in ",
+           {
+            "t": "code",
+            "v": "profiles.yml"
+           },
+           "."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "6"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "target"
+          ]
+         },
+         {
+          "c": [
+           "One named connection inside a profile (for example ",
+           {
+            "t": "code",
+            "v": "dev"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "prod"
+           },
+           ")."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "6, 10"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "model"
+          ]
+         },
+         {
+          "c": [
+           "One ",
+           {
+            "t": "code",
+            "v": "select"
+           },
+           " statement in a ",
+           {
+            "t": "code",
+            "v": ".sql"
+           },
+           " file (or a Python function in a ",
+           {
+            "t": "code",
+            "v": ".py"
+           },
+           " file) that dbt builds, usually into a view or table."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "7"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "source"
+          ]
+         },
+         {
+          "c": [
+           "A declared raw table loaded by another tool, read with ",
+           {
+            "t": "code",
+            "v": "source()"
+           },
+           "."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "7"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ref"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The function that references another model and creates a DAG dependency."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "7"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "DAG"
+          ]
+         },
+         {
+          "c": [
+           "The graph of all dependencies between sources, models, tests and more."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "7"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "materialization"
+          ]
+         },
+         {
+          "c": [
+           "How a model is built: view, table, incremental, ephemeral, materialized view."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "8, 14"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "seed"
+          ]
+         },
+         {
+          "c": [
+           "A small CSV file in your project that dbt loads as a table."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "12"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "snapshot"
+          ]
+         },
+         {
+          "c": [
+           "A record of how rows of a table change over time (SCD Type 2)."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "13"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "data test"
+          ]
+         },
+         {
+          "c": [
+           "A query that looks for bad rows (unique, not_null, relationships, accepted_values, custom)."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "18"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "unit test"
+          ]
+         },
+         {
+          "c": [
+           "A check of a model's SQL logic on small, fixed input rows."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "19"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "docs"
+          ]
+         },
+         {
+          "c": [
+           "Descriptions and a generated website showing models, columns and lineage."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "20"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "exposure"
+          ]
+         },
+         {
+          "c": [
+           "A declaration of something downstream that uses your models (a dashboard, an app)."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "21"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "environment"
+          ]
+         },
+         {
+          "c": [
+           "A place where dbt runs with its own settings (development, staging, production)."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "25"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "job"
+          ]
+         },
+         {
+          "c": [
+           "A scheduled or triggered set of dbt commands in the dbt platform."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "25"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "artifact"
+          ]
+         },
+         {
+          "c": [
+           "JSON files dbt writes after each command (",
+           {
+            "t": "code",
+            "v": "manifest.json"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "run_results.json"
+           },
+           ", …)."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "24"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "state"
+          ]
+         },
+         {
+          "c": [
+           "A previous artifact used for comparison, e.g. \"build only what changed\"."
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "24"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " feel how dependencies drive the build order."
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "On paper, draw the five raw tables of the practice data as boxes on the left."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Add one staging box per raw table (",
+              {
+               "t": "code",
+               "v": "stg_customers"
+              },
+              ", ",
+              {
+               "t": "code",
+               "v": "stg_orders"
+              },
+              ", ",
+              {
+               "t": "code",
+               "v": "stg_order_items"
+              },
+              ", ",
+              {
+               "t": "code",
+               "v": "stg_products"
+              },
+              ", ",
+              {
+               "t": "code",
+               "v": "stg_payments"
+              },
+              ")."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Add two mart boxes: ",
+              {
+               "t": "code",
+               "v": "fct_orders"
+              },
+              " (one row per order, with the amount paid) and ",
+              {
+               "t": "code",
+               "v": "dim_customers"
+              },
+              " (one row per customer, with their number of orders and total spent)."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Draw an arrow from each box to every box that reads it."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Number the boxes in an order in which they could be built. Is there only one correct order?"
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " every staging model can be built in any order (they only depend on raw data); ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " needs ",
+          {
+           "t": "code",
+           "v": "stg_orders"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "stg_payments"
+          },
+          " (and ",
+          {
+           "t": "code",
+           "v": "stg_order_items"
+          },
+          " if you compute the order total); ",
+          {
+           "t": "code",
+           "v": "dim_customers"
+          },
+          " needs ",
+          {
+           "t": "code",
+           "v": "stg_customers"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          ". Several build orders are correct, as long as every arrow goes from an earlier number to a later one. This is exactly what dbt computes, and why it can build independent models in parallel (threads, Chapter 23)."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch01-lab2",
+       "objectives": [
+        "CP0-DATA",
+        "1.5"
+       ],
+       "t": "lab",
+       "title": [
+        "Draw your first DAG on paper"
+       ]
+      }
+     ],
+     "id": "ch01-s8-0",
+     "title": [
+      "Your dbt vocabulary map"
+     ],
+     "titleText": "Your dbt vocabulary map"
+    }
+   ],
+   "title": [
+    "Your dbt vocabulary map"
+   ],
+   "titleText": "Your dbt vocabulary map"
+  }
+ ],
+ "minutes": 80,
+ "number": 1,
+ "objectives": [
+  "CP0-DATA",
+  "1.1",
+  "1.3",
+  "1.5",
+  "1.10"
+ ],
+ "part": 1,
+ "partLabel": "Part I",
+ "partTitle": "Foundations Refresh",
+ "printed": "1",
+ "quiz": [
+  "q-ch01-01",
+  "q-ch01-02",
+  "q-ch01-03",
+  "q-ch01-04",
+  "q-ch01-05",
+  "q-ch01-06",
+  "q-ch01-07",
+  "q-ch01-08",
+  "q-ch01-09",
+  "q-ch01-10",
+  "q-ch01-11",
+  "q-ch01-12",
+  "q-ch01-13",
+  "q-ch01-14"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-dw-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch01-01",
+      "q-ch01-02",
+      "q-ch01-03",
+      "q-ch01-04",
+      "q-ch01-05",
+      "q-ch01-06",
+      "q-ch01-07",
+      "q-ch01-08",
+      "q-ch01-09",
+      "q-ch01-10",
+      "q-ch01-11",
+      "q-ch01-12",
+      "q-ch01-13",
+      "q-ch01-14"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch01-01",
+    "q-ch01-02",
+    "q-ch01-03",
+    "q-ch01-04",
+    "q-ch01-05",
+    "q-ch01-06",
+    "q-ch01-07",
+    "q-ch01-08",
+    "q-ch01-09",
+    "q-ch01-10",
+    "q-ch01-11",
+    "q-ch01-12",
+    "q-ch01-13",
+    "q-ch01-14"
+   ],
+   "label": "sec:dw-quiz",
+   "number": "1.9",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Tables have rows (things) and columns (properties) with data types; NULL means \"unknown\"."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Objects are named ",
+        {
+         "t": "code",
+         "v": "database.schema.table"
+        },
+        "; dbt always builds into a database and a schema."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "OLTP databases run applications; OLAP data warehouses (columnar) run analytics."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The pipeline is sources → extract & load → raw data → transform → use. dbt is ",
+        {
+         "c": [
+          "only"
+         ],
+         "t": "i"
+        },
+        " the T, inside the warehouse."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "ELT keeps the raw data and transforms with SQL in the warehouse; you can always rebuild."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt Core (free CLI, exam version 1.11) vs the dbt platform (formerly dbt Cloud) with dbt Studio; Fusion is out of scope."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Facts record events, dimensions describe things; a star schema puts facts in the middle."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Grain = what one row represents. Joining tables of different grain causes fan-out."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "PK, FK, natural and surrogate keys; SCD Type 2 keeps history (dbt snapshots)."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt brings engineering habits to analytics: git, modularity, DRY, tests, docs, environments, review, CI/CD; the DAG is built from ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "The Data World in Simple Words"
+}

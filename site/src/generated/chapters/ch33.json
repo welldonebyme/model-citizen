@@ -1,0 +1,1415 @@
+{
+ "id": "ch33",
+ "intro": [
+  {
+   "c": [
+    "This chapter corrects Mock Exam 3 (",
+    {
+     "href": "/learn/ch32/",
+     "label": "ch:mock3",
+     "t": "ref",
+     "text": "Chapter 32"
+    },
+    "). Every answer was checked with dbt Core 1.11 on a small StreamBox project (DuckDB), or in the official documentation when the behaviour depends on another data platform (Snowflake, BigQuery, Postgres). For each question you get the correct answer, ",
+    {
+     "c": [
+      "why"
+     ],
+     "t": "i"
+    },
+    " it is correct, and one line on why each wrong option is wrong. The last line tells you what to review."
+   ],
+   "t": "p"
+  }
+ ],
+ "kind": "mock-answers",
+ "label": "ch:mock3-answers",
+ "lessons": [
+  {
+   "anchors": [],
+   "checkpoints": [],
+   "id": "ch33-s1",
+   "labs": [],
+   "minutes": 5,
+   "number": "",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Count one point per question. A DOMC, matching or build-list question gives the point only if ",
+        {
+         "c": [
+          "every"
+         ],
+         "t": "i"
+        },
+        " part is right. A multiple-select question gives the point only if you chose exactly the right options."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Topic"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Questions"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "c": [
+             "Score"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "1. Developing models"
+          ]
+         },
+         {
+          "c": [
+           "1, 3, 5, 8, 10, 12, 15, 17, 19, 21, 24, 27, 29, 31, 32, 34, 37, 39, 40, 43, 45, 48, 50, 53, 57, 60"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 26"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "2. Model governance"
+          ]
+         },
+         {
+          "c": [
+           "9, 13, 25, 38, 47, 55, 62"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 7"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "3. Debugging"
+          ]
+         },
+         {
+          "c": [
+           "4, 18, 28, 33, 44, 51, 56, 64"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 8"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "4. Pipelines"
+          ]
+         },
+         {
+          "c": [
+           "11, 22, 42, 49, 61"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 5"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "5. Tests"
+          ]
+         },
+         {
+          "c": [
+           "7, 14, 23, 30, 35, 46, 58, 63, 65"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 9"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "6. External dependencies"
+          ]
+         },
+         {
+          "c": [
+           "2, 20, 41, 52"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 4"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "7. dbt state"
+          ]
+         },
+         {
+          "c": [
+           "6, 16, 26, 36, 54, 59"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 6"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Total"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 65"
+          ]
+         }
+        ]
+       ],
+       "rules": [
+        7
+       ],
+       "t": "table"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Your total"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What to do next"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "52 or more (80% or more)"
+          ]
+         },
+         {
+          "c": [
+           "You are ready. This mock is harder than the real exam. Book the exam, and keep your level with short daily reviews."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "43 to 51 (65% to 79%)"
+          ]
+         },
+         {
+          "c": [
+           "You would probably pass, but not with a safe margin. Review the topics where you lost the most points, then take this mock again in a few days."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "42 or less (less than 65%)"
+          ]
+         },
+         {
+          "c": [
+           "Redo the parts of the book linked to your weakest topics (see the \"Review\" line under each answer), do their labs again, then retake Mock Exams 1 and 2 before this one."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Use your mistakes."
+           ],
+           "t": "b"
+          },
+          " For every wrong answer, write in your error notebook: the question number, the rule you did not know, and the review line. Wrong answers on this mock are usually about one small detail: a default value, an order of precedence, or a flag that only works with some commands. These details are exactly what the real exam checks."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch33-s1-0",
+     "title": [
+      "Score table"
+     ],
+     "titleText": "Score table"
+    }
+   ],
+   "title": [
+    "Score table"
+   ],
+   "titleText": "Score table"
+  },
+  {
+   "anchors": [],
+   "checkpoints": [],
+   "id": "ch33-s2",
+   "labs": [],
+   "minutes": 5,
+   "number": "",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "align": "r",
+          "c": [
+           {
+            "c": [
+             "Q"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Answer"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "c": [
+             "Q"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Answer"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "align": "r",
+          "c": [
+           "1"
+          ]
+         },
+         {
+          "c": [
+           "D"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "34"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "full_refresh"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "2"
+          ]
+         },
+         {
+          "c": [
+           "B"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "35"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "macros"
+           },
+           " ; ",
+           {
+            "t": "code",
+            "v": "this"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "3"
+          ]
+         },
+         {
+          "c": [
+           "A:N B:Y C:Y D:Y E:N"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "36"
+          ]
+         },
+         {
+          "c": [
+           "A:Y B:Y C:Y D:N E:Y"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "4"
+          ]
+         },
+         {
+          "c": [
+           "Line 3"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "37"
+          ]
+         },
+         {
+          "c": [
+           "B"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "5"
+          ]
+         },
+         {
+          "c": [
+           "3 ; 2026-10-19"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "38"
+          ]
+         },
+         {
+          "c": [
+           "A, C"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "6"
+          ]
+         },
+         {
+          "c": [
+           "C"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "39"
+          ]
+         },
+         {
+          "c": [
+           "C, E, A, D, B"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "7"
+          ]
+         },
+         {
+          "c": [
+           "D"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "40"
+          ]
+         },
+         {
+          "c": [
+           "Line 4"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "8"
+          ]
+         },
+         {
+          "c": [
+           "1-c 2-a 3-b 4-e 5-d"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "41"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "fresher"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "9"
+          ]
+         },
+         {
+          "c": [
+           "A:N B:Y C:N D:N E:Y"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "42"
+          ]
+         },
+         {
+          "c": [
+           "B, D"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "10"
+          ]
+         },
+         {
+          "c": [
+           "B"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "43"
+          ]
+         },
+         {
+          "c": [
+           "B"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "11"
+          ]
+         },
+         {
+          "c": [
+           "D"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "44"
+          ]
+         },
+         {
+          "c": [
+           "A"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "12"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "stripe_billing"
+           }
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "45"
+          ]
+         },
+         {
+          "c": [
+           "A:N B:Y C:Y D:Y E:Y"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "13"
+          ]
+         },
+         {
+          "c": [
+           "C, D, B, E, A"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "46"
+          ]
+         },
+         {
+          "c": [
+           "A"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "14"
+          ]
+         },
+         {
+          "c": [
+           "C"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "47"
+          ]
+         },
+         {
+          "c": [
+           "C"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "15"
+          ]
+         },
+         {
+          "c": [
+           "Line 3"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "48"
+          ]
+         },
+         {
+          "c": [
+           "1-b 2-c 3-d 4-e 5-a"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "16"
+          ]
+         },
+         {
+          "c": [
+           "C"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "49"
+          ]
+         },
+         {
+          "c": [
+           "A:Y B:Y C:Y D:N E:N"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "17"
+          ]
+         },
+         {
+          "c": [
+           "B, D"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "50"
+          ]
+         },
+         {
+          "c": [
+           "B"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "18"
+          ]
+         },
+         {
+          "c": [
+           "C"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "51"
+          ]
+         },
+         {
+          "c": [
+           "B, D, E, A, C"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "19"
+          ]
+         },
+         {
+          "c": [
+           "A:N B:N C:N D:Y E:Y"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "52"
+          ]
+         },
+         {
+          "c": [
+           "A, B"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "20"
+          ]
+         },
+         {
+          "c": [
+           "B"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "53"
+          ]
+         },
+         {
+          "c": [
+           "C"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "21"
+          ]
+         },
+         {
+          "c": [
+           "A"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "54"
+          ]
+         },
+         {
+          "c": [
+           "D, B, A, E, C"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "22"
+          ]
+         },
+         {
+          "c": [
+           "A"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "55"
+          ]
+         },
+         {
+          "c": [
+           "B"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "23"
+          ]
+         },
+         {
+          "c": [
+           "1-e 2-a 3-b 4-c 5-d"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "56"
+          ]
+         },
+         {
+          "c": [
+           "Line 10"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "24"
+          ]
+         },
+         {
+          "c": [
+           "B"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "57"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--static"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "25"
+          ]
+         },
+         {
+          "c": [
+           "D"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "58"
+          ]
+         },
+         {
+          "c": [
+           "A"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "26"
+          ]
+         },
+         {
+          "c": [
+           "B, D"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "59"
+          ]
+         },
+         {
+          "c": [
+           "1-b 2-d 3-a 4-e 5-c"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "27"
+          ]
+         },
+         {
+          "c": [
+           "Line 6"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "60"
+          ]
+         },
+         {
+          "c": [
+           "D"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "28"
+          ]
+         },
+         {
+          "c": [
+           "1-d 2-b 3-e 4-a 5-c"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "61"
+          ]
+         },
+         {
+          "c": [
+           "A:Y B:N C:N D:Y E:N"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "29"
+          ]
+         },
+         {
+          "c": [
+           "D"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "62"
+          ]
+         },
+         {
+          "c": [
+           "A"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "30"
+          ]
+         },
+         {
+          "c": [
+           "C, E, A, B, D"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "63"
+          ]
+         },
+         {
+          "c": [
+           "A, C"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "31"
+          ]
+         },
+         {
+          "c": [
+           "C"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "64"
+          ]
+         },
+         {
+          "c": [
+           "A"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "32"
+          ]
+         },
+         {
+          "c": [
+           "A:N B:Y C:Y D:Y E:N"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "65"
+          ]
+         },
+         {
+          "c": [
+           "D"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "r",
+          "c": [
+           "33"
+          ]
+         },
+         {
+          "c": [
+           "C"
+          ]
+         },
+         {
+          "align": "r",
+          "c": []
+         },
+         {
+          "c": []
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch33-s2-0",
+     "title": [
+      "Quick answer key"
+     ],
+     "titleText": "Quick answer key"
+    }
+   ],
+   "title": [
+    "Quick answer key"
+   ],
+   "titleText": "Quick answer key"
+  }
+ ],
+ "minutes": 10,
+ "mock": 3,
+ "number": 33,
+ "objectives": [],
+ "part": 9,
+ "partLabel": "Part IX",
+ "partTitle": "Exam Mastery",
+ "printed": "33",
+ "quiz": [],
+ "quizSections": [
+  {
+   "blocks": [
+    {
+     "ids": [
+      "m3-q01",
+      "m3-q02",
+      "m3-q03",
+      "m3-q04",
+      "m3-q05",
+      "m3-q06",
+      "m3-q07",
+      "m3-q08",
+      "m3-q09",
+      "m3-q10",
+      "m3-q11",
+      "m3-q12",
+      "m3-q13",
+      "m3-q14",
+      "m3-q15",
+      "m3-q16",
+      "m3-q17",
+      "m3-q18",
+      "m3-q19",
+      "m3-q20",
+      "m3-q21",
+      "m3-q22",
+      "m3-q23",
+      "m3-q24",
+      "m3-q25",
+      "m3-q26",
+      "m3-q27",
+      "m3-q28",
+      "m3-q29",
+      "m3-q30",
+      "m3-q31",
+      "m3-q32",
+      "m3-q33",
+      "m3-q34",
+      "m3-q35",
+      "m3-q36",
+      "m3-q37",
+      "m3-q38",
+      "m3-q39",
+      "m3-q40",
+      "m3-q41",
+      "m3-q42",
+      "m3-q43",
+      "m3-q44",
+      "m3-q45",
+      "m3-q46",
+      "m3-q47",
+      "m3-q48",
+      "m3-q49",
+      "m3-q50",
+      "m3-q51",
+      "m3-q52",
+      "m3-q53",
+      "m3-q54",
+      "m3-q55",
+      "m3-q56",
+      "m3-q57",
+      "m3-q58",
+      "m3-q59",
+      "m3-q60",
+      "m3-q61",
+      "m3-q62",
+      "m3-q63",
+      "m3-q64",
+      "m3-q65"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "m3-q01",
+    "m3-q02",
+    "m3-q03",
+    "m3-q04",
+    "m3-q05",
+    "m3-q06",
+    "m3-q07",
+    "m3-q08",
+    "m3-q09",
+    "m3-q10",
+    "m3-q11",
+    "m3-q12",
+    "m3-q13",
+    "m3-q14",
+    "m3-q15",
+    "m3-q16",
+    "m3-q17",
+    "m3-q18",
+    "m3-q19",
+    "m3-q20",
+    "m3-q21",
+    "m3-q22",
+    "m3-q23",
+    "m3-q24",
+    "m3-q25",
+    "m3-q26",
+    "m3-q27",
+    "m3-q28",
+    "m3-q29",
+    "m3-q30",
+    "m3-q31",
+    "m3-q32",
+    "m3-q33",
+    "m3-q34",
+    "m3-q35",
+    "m3-q36",
+    "m3-q37",
+    "m3-q38",
+    "m3-q39",
+    "m3-q40",
+    "m3-q41",
+    "m3-q42",
+    "m3-q43",
+    "m3-q44",
+    "m3-q45",
+    "m3-q46",
+    "m3-q47",
+    "m3-q48",
+    "m3-q49",
+    "m3-q50",
+    "m3-q51",
+    "m3-q52",
+    "m3-q53",
+    "m3-q54",
+    "m3-q55",
+    "m3-q56",
+    "m3-q57",
+    "m3-q58",
+    "m3-q59",
+    "m3-q60",
+    "m3-q61",
+    "m3-q62",
+    "m3-q63",
+    "m3-q64",
+    "m3-q65"
+   ],
+   "kind": "mock-answers",
+   "number": "",
+   "title": [
+    "Detailed explanations"
+   ],
+   "titleText": "Detailed explanations"
+  }
+ ],
+ "summary": [],
+ "title": "Mock Exam 3: Answers and Explanations"
+}

@@ -1,0 +1,6676 @@
+{
+ "id": "ch07",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "Identifying and verifying raw object dependencies: declaring sources (",
+      {
+       "t": "code",
+       "v": "name"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "database"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "schema"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "tables"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "identifier"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "description"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "loader"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "quoting"
+      },
+      "), ",
+      {
+       "t": "code",
+       "v": "source()"
+      },
+      ", and checking that the raw tables really exist."
+     ],
+     "id": "1.1"
+    },
+    {
+     "c": [
+      "A logical flow of models and a clean DAG: ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      ", sources → staging → marts, naming conventions, parents and children, upstream and downstream, why hard-coded table names break the order."
+     ],
+     "id": "1.5"
+    },
+    {
+     "c": [
+      "The commands of daily work: ",
+      {
+       "t": "code",
+       "v": "dbt run"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt compile"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt ls"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt show"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt docs generate"
+      },
+      " / ",
+      {
+       "t": "code",
+       "v": "serve"
+      },
+      " (details in Chapter 16 and Chapter 20)."
+     ],
+     "id": "1.4"
+    },
+    {
+     "c": [
+      "Preview: ",
+      {
+       "t": "code",
+       "v": "unique"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "not_null"
+      },
+      " tests on primary keys (full treatment in Chapter 18)."
+     ],
+     "id": "5.1"
+    },
+    {
+     "c": [
+      "Preview: the error messages of a missing ",
+      {
+       "t": "code",
+       "v": "ref"
+      },
+      ", an unknown source, a cycle and a trailing semicolon."
+     ],
+     "id": "3.1"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "In ",
+      {
+       "href": "/learn/ch04/",
+       "label": "ch:sql",
+       "t": "ref",
+       "text": "Chapter 4"
+      },
+      " you wrote one long query that read three raw tables and produced the customer report. It worked, but the table names were written by hand, the cleaning steps were hidden inside CTEs, and nobody could reuse them. In this chapter the same logic becomes a small dbt project: the raw tables are declared once as ",
+      {
+       "c": [
+        "sources"
+       ],
+       "t": "i"
+      },
+      ", each one gets a ",
+      {
+       "c": [
+        "staging model"
+       ],
+       "t": "i"
+      },
+      " that cleans it, and two business models, ",
+      {
+       "t": "code",
+       "v": "fct_orders"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "dim_customers"
+      },
+      ", are built on top with ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      ". dbt then knows how everything is connected and builds it in the right order, every time."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "This is the heart of dbt and of exam topic 1. Questions about sources (\"what does this ",
+      {
+       "t": "code",
+       "v": "source()"
+      },
+      " compile to?\"), about hard-coded table names (\"why did this model run before its parent?\"), about the DAG (\"which models are downstream?\") and about naming and layers appear in every version of the exam. They are easy points once you have built the DAG with your own hands."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "A model is one ",
+      {
+       "t": "code",
+       "v": "select"
+      },
+      " in a ",
+      {
+       "t": "code",
+       "v": ".sql"
+      },
+      " file; dbt turns it into a view or a table with the same name. Models read raw tables only through ",
+      {
+       "t": "code",
+       "v": "source()"
+      },
+      ", which points to tables declared in YAML, and read other models only through ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      ", so that dbt can draw the DAG, the graph of who depends on whom. dbt builds the DAG from these two functions alone, runs the models in its order, and resolves every name for the current environment; a table name typed by hand is invisible to dbt and breaks all of this."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:models-sources-dag",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-msd-model"
+   ],
+   "checkpoints": [],
+   "id": "ch07-s1",
+   "label": "sec:msd-model",
+   "labs": [],
+   "minutes": 5,
+   "number": "7.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "model"
+         ],
+         "fr": "modèle",
+         "id": "term-model",
+         "t": "term"
+        },
+        " is a file in ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        " that contains ",
+        {
+         "c": [
+          "one"
+         ],
+         "t": "b"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        " statement. That is all. When you run dbt, the model becomes an object in the warehouse (a view, a table… Chapter 8 explains the choices), and the object has the same name as the file:"
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "A model file becomes a warehouse object. The file models/marts/fct_orders.sql (with orders as (…), payments as (…) select … from orders …) becomes, with dbt run, the object \"practice\".\"dbt_adnane\".\"fct_orders\": a view (by default) or a table, in the target database and schema.",
+       "id": "ch07-fig1",
+       "src": "figures/ch07-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "The rules of a SQL model:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Only a ",
+              {
+               "t": "code",
+               "v": "select"
+              },
+              "."
+             ],
+             "t": "b"
+            },
+            " No ",
+            {
+             "t": "code",
+             "v": "create"
+            },
+            ", no ",
+            {
+             "t": "code",
+             "v": "insert"
+            },
+            ", no ",
+            {
+             "t": "code",
+             "v": "drop"
+            },
+            ": dbt writes the DDL around your query."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "No semicolon at the end."
+             ],
+             "t": "b"
+            },
+            " dbt puts your ",
+            {
+             "t": "code",
+             "v": "select"
+            },
+            " ",
+            {
+             "c": [
+              "inside"
+             ],
+             "t": "i"
+            },
+            " its own statement (",
+            {
+             "t": "code",
+             "v": "create view … as ( … );"
+            },
+            "). A semicolon in the middle breaks it. You will see the real error in ",
+            {
+             "href": "/learn/ch07/ch07-s6/",
+             "label": "sec:msd-marts",
+             "t": "ref",
+             "text": "Section 7.6"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "The file name is the model name."
+             ],
+             "t": "b"
+            },
+            " It must be unique in the whole project, whatever the folder. We copied ",
+            {
+             "t": "code",
+             "v": "fct_orders.sql"
+            },
+            " into ",
+            {
+             "t": "code",
+             "v": "models/staging/"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "dbt parse"
+            },
+            " refused: ",
+            {
+             "t": "code",
+             "v": "dbt found two models with the name \"fct_orders\""
+            },
+            ", because ",
+            {
+             "t": "code",
+             "v": "ref(\"fct_orders\")"
+            },
+            " would not know which one to use. The model name is also the name of the object in the warehouse."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "CTEs are welcome."
+             ],
+             "t": "b"
+            },
+            " The dbt CTE pattern of ",
+            {
+             "href": "/learn/ch04/",
+             "label": "ch:sql",
+             "t": "ref",
+             "text": "Chapter 4"
+            },
+            " (import CTEs, logical CTEs, ",
+            {
+             "t": "code",
+             "v": "final"
+            },
+            ") is the house style of almost every dbt project, and the one we use."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A model is a recipe card. The card says what to do with the ingredients (",
+          {
+           "t": "code",
+           "v": "select … from …"
+          },
+          "). It does not say \"buy a pan\" or \"turn on the oven\": the kitchen (dbt and the warehouse) knows how to do that. And when a recipe uses the result of another recipe (\"take the tomato sauce from card 12\"), it names the other card, it does not describe a pot on a shelf. That is exactly what ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          " does."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      }
+     ],
+     "id": "ch07-s1-0",
+     "title": [
+      "What a model is"
+     ],
+     "titleText": "What a model is"
+    }
+   ],
+   "title": [
+    "What a model is"
+   ],
+   "titleText": "What a model is"
+  },
+  {
+   "anchors": [
+    "sec-msd-sources"
+   ],
+   "checkpoints": [],
+   "id": "ch07-s2",
+   "label": "sec:msd-sources",
+   "labs": [
+    "ch07-lab1"
+   ],
+   "minutes": 20,
+   "number": "7.2",
+   "objectives": [
+    "CP0-YAML",
+    "1.1"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt does not load data. Other tools (Fivetran, Airbyte, a Python script, or our ",
+        {
+         "t": "code",
+         "v": "setup.sql"
+        },
+        ") copy the data of applications into the warehouse, in ",
+        {
+         "c": [
+          "raw"
+         ],
+         "t": "i"
+        },
+        " schemas: ",
+        {
+         "t": "code",
+         "v": "jaffle_shop"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "stripe"
+        },
+        " in our database. dbt starts from there."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "You could write ",
+        {
+         "t": "code",
+         "v": "from jaffle_shop.orders"
+        },
+        " in a model, and it would work. But dbt would not know that the model depends on raw data. Instead you ",
+        {
+         "c": [
+          "declare"
+         ],
+         "t": "i"
+        },
+        " each raw table once, in a YAML file, and read it with the Jinja function ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        ". The benefits:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "the raw table becomes a node of the DAG: you can see which models use it, and select them (",
+            {
+             "t": "code",
+             "v": "source:stripe+"
+            },
+            ");"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "its location is written in ",
+            {
+             "c": [
+              "one"
+             ],
+             "t": "b"
+            },
+            " place: if the loader moves the table to another schema, you change one line of YAML;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "you can describe it, test it (Chapter 18) and check its freshness (Chapter 21)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch07-s2-1",
+     "number": "7.2.1",
+     "title": [
+      "Why declare sources?"
+     ],
+     "titleText": "Why declare sources?"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt finds sources in any YAML file under ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        ", under the key ",
+        {
+         "t": "code",
+         "v": "sources:"
+        },
+        ". We follow the common convention: one file per source, in the staging folder of that source, called ",
+        {
+         "t": "code",
+         "v": "_<source>__sources.yml"
+        },
+        " (the leading underscore keeps the YAML files at the top of the folder listing)."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c1",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nsources:\n  - name: jaffle_shop\n    description: Raw data copied every night from the Jaffle Shop web application.\n    schema: jaffle_shop   # same as the source name, so this line is optional\n    tables:\n      - name: customers\n        description: One row per customer account.\n      - name: orders\n        description: One row per order. user_id points to customers.id.\n      - name: order_items\n        description: One row per product line inside an order.\n      - name: products\n        description: The product catalogue. Prices are in cents.",
+       "title": "models/staging/jaffle_shop/_jaffle_shop__sources.yml"
+      },
+      {
+       "id": "ch07-c2",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nsources:\n  - name: stripe\n    description: Raw data from Stripe, our payment provider.\n    tables:\n      - name: payments\n        description: One row per payment attempt. Amounts are in cents.",
+       "title": "models/staging/stripe/_stripe__sources.yml"
+      },
+      {
+       "c": [
+        "A ",
+        {
+         "c": [
+          "source"
+         ],
+         "t": "b"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "jaffle_shop"
+        },
+        ") is a group of raw tables, usually everything that one loader brings from one system. Each item under ",
+        {
+         "t": "code",
+         "v": "tables:"
+        },
+        " is a ",
+        {
+         "c": [
+          "source table"
+         ],
+         "t": "b"
+        },
+        ". The first line ",
+        {
+         "t": "code",
+         "v": "version: 2"
+        },
+        " is a leftover of old dbt versions; it is optional in dbt 1.11, but you will see it in most projects."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch07-s2-2",
+     "number": "7.2.2",
+     "title": [
+      "Our two source files"
+     ],
+     "titleText": "Our two source files"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "In a model you write ",
+        {
+         "t": "code",
+         "v": "{{ source('jaffle_shop', 'orders') }}"
+        },
+        ": two arguments, the ",
+        {
+         "c": [
+          "source name"
+         ],
+         "t": "i"
+        },
+        " and the ",
+        {
+         "c": [
+          "table name"
+         ],
+         "t": "i"
+        },
+        ", both as declared in YAML. dbt replaces the call with the full name of the table:"
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "dbt compiles {{ source('jaffle_shop', 'orders') }} into the full table name \"practice\".\"jaffle_shop\".\"orders\": database (the target database), schema (default: the source name) and identifier (default: the table name).",
+       "id": "ch07-fig2",
+       "src": "figures/ch07-fig2.svg",
+       "t": "figure"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "database"
+             ],
+             "t": "b"
+            },
+            ": without a ",
+            {
+             "t": "code",
+             "v": "database:"
+            },
+            " key, the database of the current target (",
+            {
+             "t": "code",
+             "v": "practice"
+            },
+            " for us)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "schema"
+             ],
+             "t": "b"
+            },
+            ": without a ",
+            {
+             "t": "code",
+             "v": "schema:"
+            },
+            " key, ",
+            {
+             "c": [
+              "the source name"
+             ],
+             "t": "b"
+            },
+            ". Our ",
+            {
+             "t": "code",
+             "v": "stripe"
+            },
+            " source has no ",
+            {
+             "t": "code",
+             "v": "schema:"
+            },
+            " line, so dbt uses the schema ",
+            {
+             "t": "code",
+             "v": "stripe"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "identifier"
+             ],
+             "t": "b"
+            },
+            ": without an ",
+            {
+             "t": "code",
+             "v": "identifier:"
+            },
+            " key, the table ",
+            {
+             "t": "code",
+             "v": "name"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "You can check it any time with ",
+        {
+         "t": "code",
+         "v": "dbt compile"
+        },
+        " (",
+        {
+         "href": "/learn/ch07/ch07-s7/",
+         "label": "sec:msd-commands",
+         "t": "ref",
+         "text": "Section 7.7"
+        },
+        "). The compiled staging model shows ",
+        {
+         "t": "code",
+         "v": "select * from \"practice\".\"jaffle_shop\".\"orders\""
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Two arguments, always."
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "source('orders')"
+          },
+          " is wrong; you need ",
+          {
+           "t": "code",
+           "v": "source('jaffle_shop', 'orders')"
+          },
+          " (trap T38). ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          " is different: it usually takes one argument, the model name (trap T37: the two functions are not interchangeable). ",
+          {
+           "c": [
+            "The schema defaults to the source name, not to your target schema"
+           ],
+           "t": "b"
+          },
+          " (trap T39). Without ",
+          {
+           "t": "code",
+           "v": "schema:"
+          },
+          ", the source ",
+          {
+           "t": "code",
+           "v": "stripe"
+          },
+          " is read from the schema ",
+          {
+           "t": "code",
+           "v": "stripe"
+          },
+          ", never from ",
+          {
+           "t": "code",
+           "v": "dbt_adnane"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch07-s2-3",
+     "number": "7.2.3",
+     "title": [
+      "source() and what it compiles to"
+     ],
+     "titleText": "source() and what it compiles to"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "In real warehouses the raw names are often ugly (",
+        {
+         "t": "code",
+         "v": "raw_shopify_v2"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "ORDERS_EXPORT_2024"
+        },
+        "). You choose a clean name for ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " and map it to the real location. We tested it with a temporary file:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c3",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nsources:\n  - name: shop_raw            # the name you type in source()\n    schema: jaffle_shop       # the real schema in the database\n    tables:\n      - name: raw_orders      # the name you type in source()\n        identifier: orders    # the real table name",
+       "title": "models/staging/_demo_sources.yml (temporary, not committed)"
+      },
+      {
+       "id": "ch07-c4",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "20:39:35  Found 7 models, 10 data tests, 1 sql operation, 6 sources, 500 macros\n...\nCompiled inline node is:\nselect count(*) as n from \"practice\".\"jaffle_shop\".\"orders\"",
+       "title": "Result: dbt compile --inline \"select count(*) as n from {{ source('shop_raw', 'raw_orders') }}\""
+      },
+      {
+       "c": [
+        "The names in ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "shop_raw"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "raw_orders"
+        },
+        ") never appear in the SQL; the real schema and identifier do. And ",
+        {
+         "t": "code",
+         "v": "dbt show"
+        },
+        " with the same query prints ",
+        {
+         "t": "code",
+         "v": "n = 300"
+        },
+        ": the 300 orders are really read. Now remove the ",
+        {
+         "t": "code",
+         "v": "schema:"
+        },
+        " line and use a table named ",
+        {
+         "t": "code",
+         "v": "orders"
+        },
+        ": the schema falls back to the source name, ",
+        {
+         "t": "code",
+         "v": "shop_raw"
+        },
+        ", which does not exist:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c5",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "20:39:43  Encountered an error:\nRuntime Error\n  Runtime Error in sql_operation inline_query (from remote system.sql)\n    Catalog Error: Table with name \"shop_raw.orders\" does not exist because schema \"shop_raw\" does not exist.\n\n    LINE 4:   select count(*) as n from \"practice\".\"shop_raw\".\"orders\"\n                                        ^",
+       "title": "Result: without schema:, dbt show --inline \"select count(*) as n from {{ source('shop_raw', 'orders') }}\""
+      }
+     ],
+     "id": "ch07-s2-4",
+     "number": "7.2.4",
+     "title": [
+      "When the names differ: schema and identifier"
+     ],
+     "titleText": "When the names differ: schema and identifier"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Key"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Level"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "name"
+           }
+          ]
+         },
+         {
+          "c": [
+           "source, table"
+          ]
+         },
+         {
+          "c": [
+           "Required. The names you use in ",
+           {
+            "t": "code",
+            "v": "source('<source>', '<table>')"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "description"
+           }
+          ]
+         },
+         {
+          "c": [
+           "source, table, column"
+          ]
+         },
+         {
+          "c": [
+           "Free text (Markdown) shown in the documentation."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "database"
+           }
+          ]
+         },
+         {
+          "c": [
+           "source"
+          ]
+         },
+         {
+          "c": [
+           "Database (or project, catalog) of the raw tables. Default: the target database."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "schema"
+           }
+          ]
+         },
+         {
+          "c": [
+           "source"
+          ]
+         },
+         {
+          "c": [
+           "Schema (or dataset) of the raw tables. Default: the source ",
+           {
+            "t": "code",
+            "v": "name"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "identifier"
+           }
+          ]
+         },
+         {
+          "c": [
+           "table"
+          ]
+         },
+         {
+          "c": [
+           "Real table name in the warehouse. Default: the table ",
+           {
+            "t": "code",
+            "v": "name"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "loader"
+           }
+          ]
+         },
+         {
+          "c": [
+           "source"
+          ]
+         },
+         {
+          "c": [
+           "Free text saying which tool loads the data (",
+           {
+            "t": "code",
+            "v": "fivetran"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "airbyte"
+           },
+           "…). Documentation only."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "quoting"
+           }
+          ]
+         },
+         {
+          "c": [
+           "source, table"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "database"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "schema"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "identifier"
+           },
+           ": ",
+           {
+            "t": "code",
+            "v": "true"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "false"
+           },
+           ", whether dbt puts the names in double quotes."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "tables"
+           }
+          ]
+         },
+         {
+          "c": [
+           "source"
+          ]
+         },
+         {
+          "c": [
+           "The list of source tables."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "columns"
+           }
+          ]
+         },
+         {
+          "c": [
+           "table"
+          ]
+         },
+         {
+          "c": [
+           "Column names with descriptions and data tests."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "data_tests"
+           }
+          ]
+         },
+         {
+          "c": [
+           "table, column"
+          ]
+         },
+         {
+          "c": [
+           "Tests on the raw data (Chapter 18)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "config"
+           }
+          ]
+         },
+         {
+          "c": [
+           "source, table"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "enabled"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "tags"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "meta"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "freshness"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "loaded_at_field"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "event_time"
+           },
+           "… (Chapters 10, 16, 21)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "A last test shows ",
+        {
+         "t": "code",
+         "v": "database"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "loader"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "quoting"
+        },
+        " together. With ",
+        {
+         "t": "code",
+         "v": "database: archive"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "loader: nightly_copy_script"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "quoting: {identifier: false}"
+        },
+        " on the ",
+        {
+         "t": "code",
+         "v": "shop_raw"
+        },
+        " source, the same ",
+        {
+         "t": "code",
+         "v": "source('shop_raw', 'raw_orders')"
+        },
+        " compiled to:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c6",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "Compiled inline node is:\nselect count(*) as n from \"archive\".\"jaffle_shop\".orders"
+      },
+      {
+       "c": [
+        "The database changed, the identifier lost its quotes, and ",
+        {
+         "t": "code",
+         "v": "loader"
+        },
+        " changed nothing in the SQL (it only appears in the documentation). Quoting matters on Snowflake, where quoted names become case sensitive: ",
+        {
+         "c": [
+          "the default is ",
+          {
+           "t": "code",
+           "v": "false"
+          },
+          " on Snowflake and ",
+          {
+           "t": "code",
+           "v": "true"
+          },
+          " on most other adapters"
+         ],
+         "t": "b"
+        },
+        ", DuckDB included. You rarely need to change it."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Since dbt 1.10, ",
+          {
+           "t": "code",
+           "v": "freshness"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "loaded_at_field"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "meta"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "tags"
+          },
+          " of a source belong under ",
+          {
+           "t": "code",
+           "v": "config:"
+          },
+          ". The old place (directly under the source or table) still works but is deprecated. On Snowflake, BigQuery, Databricks and Redshift, dbt 1.11 prints a deprecation warning for the old place; with DuckDB, dbt skips this check, so you would see nothing. Write the new form from the start."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "deep",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " dbt knows the five raw tables. No model yet."
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "Go to your project and create the folders:"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch07-c7",
+             "lang": "bash",
+             "t": "code",
+             "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n(.venv) $ mkdir -p models/staging/jaffle_shop models/staging/stripe models/marts"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Create ",
+              {
+               "t": "code",
+               "v": "models/staging/jaffle_shop/_jaffle_shop__sources.yml"
+              },
+              " and ",
+              {
+               "t": "code",
+               "v": "models/staging/stripe/_stripe__sources.yml"
+              },
+              " with the content above."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "List the sources that dbt found. In zsh, put the selector in quotes, because ",
+              {
+               "t": "code",
+               "v": "*"
+              },
+              " would be expanded by the shell:"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch07-c8",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ dbt ls --select \"source:*\""
+            },
+            {
+             "id": "ch07-c9",
+             "lang": "output",
+             "small": true,
+             "t": "code",
+             "text": "22:13:20  Running with dbt=1.11.16\n22:13:20  Registered adapter: duckdb=1.11.0\n22:13:20  Found 5 sources, 500 macros\nsource:jaffle_dbt.jaffle_shop.customers\nsource:jaffle_dbt.jaffle_shop.order_items\nsource:jaffle_dbt.jaffle_shop.orders\nsource:jaffle_dbt.jaffle_shop.products\nsource:jaffle_dbt.stripe.payments"
+            },
+            {
+             "c": [
+              "A source's full name is ",
+              {
+               "t": "code",
+               "v": "source:<project>.<source>.<table>"
+              },
+              ". ",
+              {
+               "t": "code",
+               "v": "dbt ls --resource-type source"
+              },
+              " gives the same list."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " 5 sources, 0 models. Nothing was built: declaring a source creates nothing in the warehouse."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch07-lab1",
+       "objectives": [
+        "1.1",
+        "CP0-YAML"
+       ],
+       "t": "lab",
+       "title": [
+        "Declare the two sources"
+       ]
+      }
+     ],
+     "id": "ch07-s2-5",
+     "number": "7.2.5",
+     "title": [
+      "All source properties"
+     ],
+     "titleText": "All source properties"
+    }
+   ],
+   "title": [
+    "Sources: declaring the raw data"
+   ],
+   "titleText": "Sources: declaring the raw data"
+  },
+  {
+   "anchors": [
+    "sec-msd-verify"
+   ],
+   "checkpoints": [],
+   "id": "ch07-s3",
+   "label": "sec:msd-verify",
+   "labs": [],
+   "minutes": 5,
+   "number": "7.3",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Exam objective 1.1 says ",
+        {
+         "c": [
+          "identifying and verifying"
+         ],
+         "t": "i"
+        },
+        " raw object dependencies. Identifying is what you just did: declaring sources and using ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        ". Verifying means checking that what you declared really exists in the warehouse, with the names you think, and finding the models that read raw data without telling dbt."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch07-s3-0",
+     "title": [
+      "Verifying raw object dependencies"
+     ],
+     "titleText": "Verifying raw object dependencies"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "This surprises many people. We changed ",
+        {
+         "t": "code",
+         "v": "- name: payments"
+        },
+        " into ",
+        {
+         "t": "code",
+         "v": "- name: payment"
+        },
+        " (a typo) in ",
+        {
+         "t": "code",
+         "v": "_stripe__sources.yml"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt parse"
+            },
+            " succeeds, and ",
+            {
+             "t": "code",
+             "v": "dbt ls -s source:stripe"
+            },
+            " happily prints ",
+            {
+             "t": "code",
+             "v": "source:jaffle_dbt.stripe.payment"
+            },
+            ";"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt compile --inline \"select * from {{ source('stripe', 'payment') }}\""
+            },
+            " succeeds and prints ",
+            {
+             "t": "code",
+             "v": "select * from \"practice\".\"stripe\".\"payment\""
+            },
+            ";"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "only when the warehouse runs the query does it fail:"
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "id": "ch07-c10",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "Runtime Error\n  Runtime Error in sql_operation inline_query (from remote system.sql)\n    Catalog Error: Table with name payment does not exist!\n    Did you mean \"payments\"?\n\n    LINE 4:   select * from \"practice\".\"stripe\".\"payment\"\n                            ^",
+       "title": "Result: dbt show --inline \"select * from {{ source('stripe', 'payment') }}\""
+      },
+      {
+       "c": [
+        "dbt reads your YAML; it does not compare it with the warehouse. A source declaration is a ",
+        {
+         "c": [
+          "promise"
+         ],
+         "t": "i"
+        },
+        ", and you have to verify it. (DuckDB calls this a ",
+        {
+         "c": [
+          "Catalog Error"
+         ],
+         "t": "i"
+        },
+        " inside a ",
+        {
+         "c": [
+          "Runtime Error"
+         ],
+         "t": "i"
+        },
+        "; on Snowflake or BigQuery the same problem appears as a ",
+        {
+         "c": [
+          "Database Error"
+         ],
+         "t": "i"
+        },
+        " saying the object does not exist or is not authorized.)"
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch07-s3-1",
+     "number": "7.3.1",
+     "title": [
+      "dbt does not check that a source table exists"
+     ],
+     "titleText": "dbt does not check that a source table exists"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "What dbt knows:"
+             ],
+             "t": "b"
+            },
+            " ",
+            {
+             "t": "code",
+             "v": "dbt ls --select \"source:*\""
+            },
+            " (the declared tables)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "What the warehouse has:"
+             ],
+             "t": "b"
+            },
+            " ask the information schema, through dbt:"
+           ],
+           "t": "p"
+          },
+          {
+           "id": "ch07-c11",
+           "lang": "bash",
+           "t": "code",
+           "text": "(.venv) $ dbt show --inline \"select table_schema, table_name from information_schema.tables where table_schema in ('jaffle_shop', 'stripe') order by 1, 2\""
+          },
+          {
+           "id": "ch07-c12",
+           "lang": "output",
+           "small": true,
+           "t": "code",
+           "text": "Previewing inline node:\n| table_schema | table_name  |\n| ------------ | ----------- |\n| jaffle_shop  | customers   |\n| jaffle_shop  | order_items |\n| jaffle_shop  | orders      |\n| jaffle_shop  | products    |\n| stripe       | payments    |"
+          },
+          {
+           "c": [
+            "Compare the two lists: same schemas, same names (or the right ",
+            {
+             "t": "code",
+             "v": "identifier"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Can dbt read it?"
+             ],
+             "t": "b"
+            },
+            " Query each source through ",
+            {
+             "t": "code",
+             "v": "source()"
+            },
+            ", so that the declaration itself is tested:"
+           ],
+           "t": "p"
+          },
+          {
+           "id": "ch07-c13",
+           "lang": "bash",
+           "t": "code",
+           "text": "(.venv) $ dbt show --inline \"select count(*) as n from {{ source('stripe', 'payments') }}\"\n...\n|   n |\n| --- |\n| 341 |"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "What exactly will run:"
+             ],
+             "t": "b"
+            },
+            " ",
+            {
+             "t": "code",
+             "v": "dbt compile"
+            },
+            " on a model shows the real relation names (database, schema, identifier)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Who depends on it:"
+             ],
+             "t": "b"
+            },
+            " ",
+            {
+             "t": "code",
+             "v": "dbt ls --select \"source:stripe+\""
+            },
+            " lists every node downstream of the raw table (",
+            {
+             "href": "/learn/ch07/ch07-s5/",
+             "label": "sec:msd-dag",
+             "t": "ref",
+             "text": "Section 7.5"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Later, automatically:"
+             ],
+             "t": "b"
+            },
+            " tests on sources (Chapter 18) and ",
+            {
+             "t": "code",
+             "v": "dbt source freshness"
+            },
+            " (Chapter 21) check the raw data at every run."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "dbt show"
+          },
+          " works on models, not on sources: ",
+          {
+           "t": "code",
+           "v": "dbt show --select source:jaffle_shop.orders"
+          },
+          " answers ",
+          {
+           "t": "code",
+           "v": "Nothing to do. Try checking your model configs and model specification args"
+          },
+          ". Use ",
+          {
+           "t": "code",
+           "v": "--inline"
+          },
+          " with ",
+          {
+           "t": "code",
+           "v": "source()"
+          },
+          " instead. ",
+          {
+           "t": "code",
+           "v": "dbt show"
+          },
+          " prints 5 rows by default (",
+          {
+           "t": "code",
+           "v": "--limit"
+          },
+          " to change it), cuts long values at 20 characters, and saves nothing (trap T32)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch07-s3-2",
+     "number": "7.3.2",
+     "title": [
+      "A verification routine"
+     ],
+     "titleText": "A verification routine"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The opposite problem: a model that reads a raw table ",
+        {
+         "c": [
+          "without"
+         ],
+         "t": "i"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        ", for example ",
+        {
+         "t": "code",
+         "v": "from stripe.payments"
+        },
+        ". dbt cannot see this dependency. To find such models:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "search the code: ",
+            {
+             "t": "code",
+             "v": "grep -rn \"from stripe\\.|from jaffle_shop\\.\" models/"
+            },
+            ";"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "look at the parents dbt knows. For a model with only hard-coded names, the manifest says ",
+            {
+             "t": "code",
+             "v": "\"depends_on\": {\"nodes\": []}"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "dbt ls --select +my_model"
+            },
+            " lists only the model itself (",
+            {
+             "href": "/learn/ch07/ch07-s9/",
+             "label": "sec:msd-hardcoded",
+             "t": "ref",
+             "text": "Section 7.9"
+            },
+            ");"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "in the lineage graph (",
+            {
+             "href": "/learn/ch07/ch07-s8/",
+             "label": "sec:msd-lineage",
+             "t": "ref",
+             "text": "Section 7.8"
+            },
+            "), such a model floats alone, with no arrow coming in."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch07-s3-3",
+     "number": "7.3.3",
+     "title": [
+      "Finding hidden raw dependencies"
+     ],
+     "titleText": "Finding hidden raw dependencies"
+    }
+   ],
+   "title": [
+    "Verifying raw object dependencies"
+   ],
+   "titleText": "Verifying raw object dependencies"
+  },
+  {
+   "anchors": [
+    "sec-msd-staging"
+   ],
+   "checkpoints": [],
+   "id": "ch07-s4",
+   "label": "sec:msd-staging",
+   "labs": [
+    "ch07-lab2"
+   ],
+   "minutes": 35,
+   "number": "7.4",
+   "objectives": [
+    "1.1",
+    "1.5",
+    "5.1"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A staging model is the ",
+        {
+         "c": [
+          "only"
+         ],
+         "t": "i"
+        },
+        " model that reads a source table. It makes the raw table pleasant to use, and nothing more:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Do in staging"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Do not do in staging"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "rename columns (",
+           {
+            "t": "code",
+            "v": "id"
+           },
+           " → ",
+           {
+            "t": "code",
+            "v": "order_id"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "user_id"
+           },
+           " → ",
+           {
+            "t": "code",
+            "v": "customer_id"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "join with other tables"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "cast types (cents → dollars as a decimal)"
+          ]
+         },
+         {
+          "c": [
+           "aggregate (",
+           {
+            "t": "code",
+            "v": "group by"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "light cleaning (",
+           {
+            "t": "code",
+            "v": "lower(email)"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "business logic (\"revenue\", \"active customer\")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "simple categorisation (",
+           {
+            "t": "code",
+            "v": "case when"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "filter out rows that the business may need later"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "The rule is ",
+        {
+         "c": [
+          "one staging model per source table"
+         ],
+         "t": "b"
+        },
+        ", in a one-to-one relationship. Every other model reads the staging model, never the raw table. So if the raw table changes (a renamed column, a new format), you fix one file. Staging models are usually views: they are cheap, always up to date, and nobody queries them directly."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch07-s4-1",
+     "number": "7.4.1",
+     "title": [
+      "What a staging model does"
+     ],
+     "titleText": "What a staging model does"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The convention you will meet in most projects (and in exam questions) is:"
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "The naming convention of a staging model, shown on stg_stripe__payments: stg is the layer, stripe is the source and payments is the entity (plural). A single underscore follows the layer; a double underscore separates the source and the entity.",
+       "id": "ch07-fig3",
+       "src": "figures/ch07-fig3.svg",
+       "t": "figure"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "stg_"
+            },
+            " says the layer. Other prefixes: ",
+            {
+             "t": "code",
+             "v": "int_"
+            },
+            " for intermediate models (Chapter 9), ",
+            {
+             "t": "code",
+             "v": "fct_"
+            },
+            " for facts and ",
+            {
+             "t": "code",
+             "v": "dim_"
+            },
+            " for dimensions (the marts, ",
+            {
+             "href": "/learn/ch01/",
+             "label": "ch:data-world",
+             "t": "ref",
+             "text": "Chapter 1"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A ",
+            {
+             "c": [
+              "double underscore"
+             ],
+             "t": "b"
+            },
+            " separates the source from the entity. Source names often contain single underscores (",
+            {
+             "t": "code",
+             "v": "jaffle_shop"
+            },
+            "), so ",
+            {
+             "t": "code",
+             "v": "stg_jaffle_shop__orders"
+            },
+            " stays readable: source ",
+            {
+             "t": "code",
+             "v": "jaffle_shop"
+            },
+            ", entity ",
+            {
+             "t": "code",
+             "v": "orders"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "One folder per source under ",
+            {
+             "t": "code",
+             "v": "models/staging/"
+            },
+            ", with its two YAML files: ",
+            {
+             "t": "code",
+             "v": "_<source>__sources.yml"
+            },
+            " (the raw tables) and ",
+            {
+             "t": "code",
+             "v": "_<source>__models.yml"
+            },
+            " (descriptions and tests of the staging models)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "id": "ch07-c14",
+       "lang": "plain",
+       "t": "code",
+       "text": "models/\n|-- staging/\n|   |-- jaffle_shop/\n|   |   |-- _jaffle_shop__sources.yml\n|   |   |-- _jaffle_shop__models.yml\n|   |   |-- stg_jaffle_shop__customers.sql\n|   |   |-- stg_jaffle_shop__order_items.sql\n|   |   |-- stg_jaffle_shop__orders.sql\n|   |   `-- stg_jaffle_shop__products.sql\n|   `-- stripe/\n|       |-- _stripe__sources.yml\n|       |-- _stripe__models.yml\n|       `-- stg_stripe__payments.sql\n`-- marts/\n    |-- dim_customers.sql\n    `-- fct_orders.sql",
+       "title": "models/ at the end of this chapter"
+      },
+      {
+       "c": [
+        "These names are conventions, not dbt rules: dbt would accept ",
+        {
+         "t": "code",
+         "v": "orders_clean.sql"
+        },
+        " in any folder. But the exam uses them, and a reviewer will ask you to follow them. The folder names matter for dbt in one way: configs in ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        " are given per folder (Chapter 8)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch07-s4-2",
+     "number": "7.4.2",
+     "title": [
+      "Naming and folders"
+     ],
+     "titleText": "Naming and folders"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Every staging model has the same shape: an import CTE that reads the source, a CTE that renames and casts, and a final ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c15",
+       "lang": "dbt",
+       "t": "code",
+       "text": "with\n\nsource as (\n\n    select * from {{ source('jaffle_shop', 'orders') }}\n\n),\n\nrenamed as (\n\n    select\n        id as order_id,\n        user_id as customer_id,\n        order_date,\n        status,\n        _loaded_at as loaded_at\n\n    from source\n\n)\n\nselect * from renamed",
+       "title": "models/staging/jaffle_shop/stg_jaffle_shop__orders.sql"
+      },
+      {
+       "id": "ch07-c16",
+       "lang": "dbt",
+       "t": "code",
+       "text": "with\n\nsource as (\n\n    select * from {{ source('stripe', 'payments') }}\n\n),\n\nrenamed as (\n\n    select\n        id as payment_id,\n        orderid as order_id,\n        paymentmethod as payment_method,\n        status,\n        -- cents -> dollars, stored as an exact decimal (not a float)\n        cast(amount / 100 as decimal(16, 2)) as amount,\n        created as created_at,\n        _loaded_at as loaded_at\n\n    from source\n\n)\n\nselect * from renamed",
+       "title": "models/staging/stripe/stg_stripe__payments.sql"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Every column gets a clear name. Primary keys are called ",
+            {
+             "t": "code",
+             "v": "<entity>_id"
+            },
+            " (",
+            {
+             "t": "code",
+             "v": "order_id"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "payment_id"
+            },
+            "), so that a join reads naturally: ",
+            {
+             "t": "code",
+             "v": "orders.order_id = payments.order_id"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Money: Stripe stores cents as integers. We divide by 100 and cast to ",
+            {
+             "t": "code",
+             "v": "decimal(16, 2)"
+            },
+            ", an exact type. In DuckDB, ",
+            {
+             "t": "code",
+             "v": "amount / 100"
+            },
+            " already keeps the cents, because it returns a floating-point number (type ",
+            {
+             "t": "code",
+             "v": "DOUBLE"
+            },
+            "), and ",
+            {
+             "t": "code",
+             "v": "//"
+            },
+            " is the integer division; on other warehouses integer division can drop the cents (",
+            {
+             "t": "code",
+             "v": "1250 / 100 = 12"
+            },
+            " on Postgres or SQL Server). The ",
+            {
+             "t": "code",
+             "v": "cast"
+            },
+            " makes the result the same everywhere."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "In Chapter 11 the expression ",
+            {
+             "t": "code",
+             "v": "cast(amount / 100 as decimal(16, 2))"
+            },
+            " becomes a macro, ",
+            {
+             "t": "code",
+             "v": "cents_to_dollars"
+            },
+            ", because it is repeated in ",
+            {
+             "t": "code",
+             "v": "stg_jaffle_shop__products"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch07-s4-3",
+     "number": "7.4.3",
+     "title": [
+      "Two staging models in detail"
+     ],
+     "titleText": "Two staging models in detail"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Each staging folder has a ",
+        {
+         "t": "code",
+         "v": "_<source>__models.yml"
+        },
+        " file. It describes the models and their columns, and puts two tests on each primary key: ",
+        {
+         "t": "code",
+         "v": "unique"
+        },
+        " (no duplicates) and ",
+        {
+         "t": "code",
+         "v": "not_null"
+        },
+        " (no missing values)."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c17",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nmodels:\n  - name: stg_stripe__payments\n    description: One row per payment attempt, amount in dollars.\n    columns:\n      - name: payment_id\n        description: Primary key of the payment.\n        data_tests:\n          - unique\n          - not_null\n      - name: status\n        description: success or fail. Only successful payments count as revenue.\n      - name: amount\n        description: Amount in dollars.",
+       "title": "models/staging/stripe/_stripe__models.yml"
+      },
+      {
+       "c": [
+        "dbt turns each test into a query that returns the ",
+        {
+         "c": [
+          "failing"
+         ],
+         "t": "i"
+        },
+        " rows. A test passes when its query returns zero rows. This is the compiled ",
+        {
+         "t": "code",
+         "v": "unique"
+        },
+        " test of ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__orders"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c18",
+       "lang": "sql",
+       "t": "code",
+       "text": "select\n    order_id as unique_field,\n    count(*) as n_records\n\nfrom \"practice\".\"dbt_adnane\".\"stg_jaffle_shop__orders\"\nwhere order_id is not null\ngroup by order_id\nhaving count(*) > 1",
+       "title": "target/compiled/.../_jaffle_shop__models.yml/unique_stg_jaffle_shop__orders_order_id.sql"
+      },
+      {
+       "c": [
+        "That is all you need for now. Chapter 18 explains the four built-in generic tests, their arguments and their configs."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Why test the primary key of every staging model? Because every later join relies on it. If ",
+          {
+           "t": "code",
+           "v": "order_id"
+          },
+          " had a duplicate, ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " would silently double some revenue (the fan-out of ",
+          {
+           "href": "/learn/ch04/",
+           "label": "ch:sql",
+           "t": "ref",
+           "text": "Chapter 4"
+          },
+          "). Two lines of YAML protect the whole DAG."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "Create ",
+              {
+               "t": "code",
+               "v": "stg_jaffle_shop__orders.sql"
+              },
+              " and ",
+              {
+               "t": "code",
+               "v": "stg_stripe__payments.sql"
+              },
+              " as above, and ",
+              {
+               "t": "code",
+               "v": "_stripe__models.yml"
+              },
+              " as above."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Create the three other staging models in ",
+              {
+               "t": "code",
+               "v": "models/staging/jaffle_shop/"
+              },
+              ":"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch07-c19",
+             "lang": "dbt",
+             "t": "code",
+             "text": "with\n\nsource as (\n\n    select * from {{ source('jaffle_shop', 'customers') }}\n\n),\n\nrenamed as (\n\n    select\n        id as customer_id,\n        first_name,\n        last_name,\n        lower(email) as email,\n        country,\n        signup_date\n\n    from source\n\n)\n\nselect * from renamed",
+             "title": "models/staging/jaffle_shop/stg_jaffle_shop__customers.sql"
+            },
+            {
+             "id": "ch07-c20",
+             "lang": "dbt",
+             "t": "code",
+             "text": "with\n\nsource as (\n\n    select * from {{ source('jaffle_shop', 'order_items') }}\n\n),\n\nrenamed as (\n\n    select\n        id as order_item_id,\n        order_id,\n        product_id,\n        quantity\n\n    from source\n\n)\n\nselect * from renamed",
+             "title": "models/staging/jaffle_shop/stg_jaffle_shop__order_items.sql"
+            },
+            {
+             "id": "ch07-c21",
+             "lang": "dbt",
+             "t": "code",
+             "text": "with\n\nsource as (\n\n    select * from {{ source('jaffle_shop', 'products') }}\n\n),\n\nrenamed as (\n\n    select\n        id as product_id,\n        name as product_name,\n        category,\n        -- cents -> dollars, stored as an exact decimal (not a float)\n        cast(price_cents / 100 as decimal(16, 2)) as price\n\n    from source\n\n)\n\nselect * from renamed",
+             "title": "models/staging/jaffle_shop/stg_jaffle_shop__products.sql"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Create the properties file of the ",
+              {
+               "t": "code",
+               "v": "jaffle_shop"
+              },
+              " models:"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch07-c22",
+             "lang": "yaml",
+             "t": "code",
+             "text": "version: 2\n\nmodels:\n  - name: stg_jaffle_shop__customers\n    description: One row per customer, cleaned (email in lower case).\n    columns:\n      - name: customer_id\n        description: Primary key of the customer.\n        data_tests:\n          - unique\n          - not_null\n      - name: email\n        description: Email address in lower case. NULL when the customer gave none.\n\n  - name: stg_jaffle_shop__orders\n    description: One row per order.\n    columns:\n      - name: order_id\n        description: Primary key of the order.\n        data_tests:\n          - unique\n          - not_null\n      - name: customer_id\n        description: The customer who placed the order.\n      - name: status\n        description: Order status (placed, shipped, completed, return_pending, returned).\n      - name: loaded_at\n        description: When the row was loaded into the warehouse.\n\n  - name: stg_jaffle_shop__order_items\n    description: One row per product line inside an order.\n    columns:\n      - name: order_item_id\n        description: Primary key of the order item.\n        data_tests:\n          - unique\n          - not_null\n\n  - name: stg_jaffle_shop__products\n    description: One row per product, price in dollars.\n    columns:\n      - name: product_id\n        description: Primary key of the product.\n        data_tests:\n          - unique\n          - not_null\n      - name: price\n        description: Unit price in dollars.",
+             "title": "models/staging/jaffle_shop/_jaffle_shop__models.yml"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Close any DuckDB CLI session (",
+              {
+               "href": "/learn/ch06/",
+               "label": "ch:first-project",
+               "t": "ref",
+               "text": "Chapter 6"
+              },
+              ", the file lock), then build the models:"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch07-c23",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ dbt run"
+            },
+            {
+             "id": "ch07-c24",
+             "lang": "output",
+             "small": true,
+             "t": "code",
+             "text": "22:14:40  Running with dbt=1.11.16\n22:14:40  Registered adapter: duckdb=1.11.0\n22:14:40  Found 5 models, 10 data tests, 5 sources, 500 macros\n22:14:40\n22:14:40  Concurrency: 4 threads (target='dev')\n22:14:40\n22:14:40  1 of 5 START sql view model dbt_adnane.stg_jaffle_shop__customers .............. [RUN]\n22:14:40  2 of 5 START sql view model dbt_adnane.stg_jaffle_shop__order_items ............ [RUN]\n22:14:40  3 of 5 START sql view model dbt_adnane.stg_jaffle_shop__orders ................. [RUN]\n22:14:40  4 of 5 START sql view model dbt_adnane.stg_jaffle_shop__products ............... [RUN]\n22:14:40  3 of 5 OK created sql view model dbt_adnane.stg_jaffle_shop__orders ............ [OK in 0.10s]\n22:14:40  5 of 5 START sql view model dbt_adnane.stg_stripe__payments .................... [RUN]\n22:14:40  1 of 5 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ......... [OK in 0.16s]\n22:14:40  2 of 5 OK created sql view model dbt_adnane.stg_jaffle_shop__order_items ....... [OK in 0.16s]\n22:14:40  4 of 5 OK created sql view model dbt_adnane.stg_jaffle_shop__products .......... [OK in 0.21s]\n22:14:40  5 of 5 OK created sql view model dbt_adnane.stg_stripe__payments ............... [OK in 0.12s]\n22:14:40\n22:14:40  Finished running 5 view models in 0 hours 0 minutes and 0.42 seconds (0.42s).\n22:14:40\n22:14:40  Completed successfully\n22:14:40\n22:14:40  Done. PASS=5 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=5"
+            },
+            {
+             "c": [
+              "The five models are independent of each other, so with 4 threads dbt starts four at once, and the fifth as soon as a thread is free. Your order of the OK lines may differ: that is normal for independent models."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Run the tests: ",
+              {
+               "t": "code",
+               "v": "dbt test"
+              },
+              ". ",
+              {
+               "c": [
+                "Expected:"
+               ],
+               "t": "b"
+              },
+              " ",
+              {
+               "t": "code",
+               "v": "Found 5 models, 10 data tests, 5 sources"
+              },
+              " and ",
+              {
+               "t": "code",
+               "v": "Done. PASS=10 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=10"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Look at the result of one model:"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch07-c25",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ dbt show --select stg_stripe__payments"
+            },
+            {
+             "id": "ch07-c26",
+             "lang": "output",
+             "small": true,
+             "t": "code",
+             "text": "Previewing node 'stg_stripe__payments':\n| payment_id | order_id | payment_method | status  | amount | created_at | ... |\n| ---------- | -------- | -------------- | ------- | ------ | ---------- | --- |\n|          1 |        1 | coupon         | success |    5.0 | 2025-01-05 | ... |\n|          2 |        1 | credit_card    | success |   25.2 | 2025-01-05 | ... |\n|          3 |        2 | credit_card    | success |   19.5 | 2025-01-06 | ... |\n|          4 |        3 | credit_card    | success |   43.5 | 2025-01-11 | ... |\n|          5 |        4 | credit_card    | success |    7.5 | 2025-01-12 | ... |"
+            },
+            {
+             "c": [
+              "Amounts are in dollars now (",
+              {
+               "t": "code",
+               "v": "dbt show"
+              },
+              " prints decimals without trailing zeros: ",
+              {
+               "t": "code",
+               "v": "5.0"
+              },
+              " is ",
+              {
+               "t": "code",
+               "v": "5.00"
+              },
+              "). Order 1 was paid with a coupon and a card: one order, two payments. Remember it for ",
+              {
+               "t": "code",
+               "v": "fct_orders"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected final state:"
+           ],
+           "t": "b"
+          },
+          " 5 views in ",
+          {
+           "t": "code",
+           "v": "dbt_adnane"
+          },
+          ", 10 tests passing."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch07-lab2",
+       "objectives": [
+        "1.1",
+        "1.5",
+        "5.1"
+       ],
+       "t": "lab",
+       "title": [
+        "Write the five staging models"
+       ]
+      }
+     ],
+     "id": "ch07-s4-4",
+     "number": "7.4.4",
+     "title": [
+      "The properties files: descriptions and the first tests"
+     ],
+     "titleText": "The properties files: descriptions and the first tests"
+    }
+   ],
+   "title": [
+    "Staging models: one clean copy per raw table"
+   ],
+   "titleText": "Staging models: one clean copy per raw table"
+  },
+  {
+   "anchors": [
+    "sec-msd-dag"
+   ],
+   "checkpoints": [],
+   "id": "ch07-s5",
+   "label": "sec:msd-dag",
+   "labs": [],
+   "minutes": 10,
+   "number": "7.5",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "{{ ref('stg_jaffle_shop__orders') }}"
+        },
+        " means \"the relation built by the model ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__orders"
+        },
+        ", wherever it is in the current environment\". At compile time dbt replaces it with the full name. In ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " (written below) the two ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " calls compile to:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c27",
+       "lang": "sql",
+       "t": "code",
+       "text": "with\n\ncustomers as (\n\n    select * from \"practice\".\"dbt_adnane\".\"stg_jaffle_shop__customers\"\n\n),\n\norders as (\n\n    select * from \"practice\".\"dbt_adnane\".\"fct_orders\"\n\n),\n...",
+       "title": "target/compiled/jaffle_dbt/models/marts/dim_customers.sql (start)"
+      },
+      {
+       "c": [
+        "Run the same project with ",
+        {
+         "t": "code",
+         "v": "--target prod"
+        },
+        " and the same ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " compiles to ",
+        {
+         "t": "code",
+         "v": "\"practice\".\"prod\".\"fct_orders\""
+        },
+        ". You never write a schema name in a model: ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " adapts to development, CI and production by itself."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " works for models, seeds (Chapter 12) and snapshots (Chapter 13). Two other forms exist: ",
+        {
+         "t": "code",
+         "v": "ref('package_name', 'model_name')"
+        },
+        " for a model of an installed package or another project (Chapters 11 and 17), and ",
+        {
+         "t": "code",
+         "v": "ref('dim_customers', v=2)"
+        },
+        " for a model version (Chapter 17)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch07-s5-1",
+     "number": "7.5.1",
+     "title": [
+      "ref(): pointing to another model"
+     ],
+     "titleText": "ref(): pointing to another model"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Every ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " and every ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " is an arrow from a parent to a child. Together they form the ",
+        {
+         "c": [
+          "DAG"
+         ],
+         "t": "b"
+        },
+        " of the project (",
+        {
+         "c": [
+          "Directed Acyclic Graph"
+         ],
+         "t": "i"
+        },
+        "): ",
+        {
+         "c": [
+          "directed"
+         ],
+         "t": "i"
+        },
+        " because each arrow has a direction (from the data you read to the model that reads it), ",
+        {
+         "c": [
+          "acyclic"
+         ],
+         "t": "i"
+        },
+        " because you can never follow the arrows and come back to where you started. Here is our project at the end of the chapter:"
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "The DAG of the practice project at the end of Chapter 7: five sources, five staging models and two marts. Upstream is on the left, downstream on the right.",
+       "description": "Sources: jaffle_shop.customers, jaffle_shop.orders, stripe.payments, jaffle_shop.order_items, jaffle_shop.products. Each feeds its staging model: stg_jaffle_shop__customers, stg_jaffle_shop__orders, stg_stripe__payments, stg_jaffle_shop__order_items, stg_jaffle_shop__products. Marts: stg_jaffle_shop__orders and stg_stripe__payments feed fct_orders; stg_jaffle_shop__customers and fct_orders feed dim_customers. The order_items and products staging models have no children yet.",
+       "id": "ch07-fig4",
+       "src": "figures/ch07-fig4.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "The vocabulary, used in exam questions and in the documentation:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "A ",
+            {
+             "en": [
+              "node"
+             ],
+             "fr": "nœud",
+             "id": "term-node",
+             "t": "term"
+            },
+            " is anything in the graph: a model, a source, a seed, a snapshot, a test, an exposure."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A ",
+            {
+             "en": [
+              "parent"
+             ],
+             "fr": "parent",
+             "id": "term-parent",
+             "t": "term"
+            },
+            " is a node that a model reads directly (",
+            {
+             "t": "code",
+             "v": "stg_jaffle_shop__orders"
+            },
+            " is a parent of ",
+            {
+             "t": "code",
+             "v": "fct_orders"
+            },
+            "); a ",
+            {
+             "en": [
+              "child"
+             ],
+             "fr": "enfant",
+             "id": "term-child",
+             "t": "term"
+            },
+            " is a node that reads it directly (",
+            {
+             "t": "code",
+             "v": "dim_customers"
+            },
+            " is a child of ",
+            {
+             "t": "code",
+             "v": "fct_orders"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "en": [
+              "Upstream"
+             ],
+             "fr": "en amont",
+             "id": "term-upstream",
+             "t": "term"
+            },
+            " means \"on the side of the sources\": all the parents, the parents of the parents, and so on. ",
+            {
+             "en": [
+              "Downstream"
+             ],
+             "fr": "en aval",
+             "id": "term-downstream",
+             "t": "term"
+            },
+            " means \"on the side of the final models\": all the children, their children, and so on. ",
+            {
+             "t": "code",
+             "v": "stripe.payments"
+            },
+            " is upstream of ",
+            {
+             "t": "code",
+             "v": "dim_customers"
+            },
+            "; ",
+            {
+             "t": "code",
+             "v": "dim_customers"
+            },
+            " is downstream of ",
+            {
+             "t": "code",
+             "v": "stripe.payments"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A model that no other model reads is a ",
+            {
+             "c": [
+              "leaf"
+             ],
+             "t": "i"
+            },
+            ". Our leaves are ",
+            {
+             "t": "code",
+             "v": "dim_customers"
+            },
+            " and, for now, the staging models of order items and products (their tests do not count). Sources are the ",
+            {
+             "c": [
+              "roots"
+             ],
+             "t": "i"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch07-s5-2",
+     "number": "7.5.2",
+     "title": [
+      "The DAG"
+     ],
+     "titleText": "The DAG"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt does not read your SQL to find the tables in the ",
+        {
+         "t": "code",
+         "v": "from"
+        },
+        " clauses. During parsing, it ",
+        {
+         "c": [
+          "renders"
+         ],
+         "t": "i"
+        },
+        " each model's Jinja, and every ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " call is recorded. The result is stored in the manifest; ",
+        {
+         "t": "code",
+         "v": "dbt ls"
+        },
+        " can print it:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c28",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "{\"name\": \"dim_customers\", \"depends_on\": {\"macros\": [], \"nodes\": [\"model.jaffle_dbt.stg_jaffle_shop__customers\", \"model.jaffle_dbt.fct_orders\"]}}",
+       "title": "Result: dbt ls -s dim_customers --output json --output-keys \"name depends_on\""
+      },
+      {
+       "c": [
+        "From these lists dbt computes a ",
+        {
+         "en": [
+          "topological order"
+         ],
+         "fr": "ordre topologique",
+         "id": "term-topological-order",
+         "t": "term"
+        },
+        ": an order in which every node comes after all its parents. ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " follows it: the five staging models first (in parallel, up to the number of threads), then ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " as soon as its two parents are done, then ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        ". More threads make independent branches run at the same time; they never change the order between a parent and its child (trap T114)."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Because dependencies are found when dbt ",
+          {
+           "c": [
+            "parses"
+           ],
+           "t": "i"
+          },
+          " the file, a ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          " hidden inside a Jinja condition that is false at parse time is not seen. We tested a model whose only ",
+          {
+           "t": "code",
+           "v": "ref('fct_orders')"
+          },
+          " was inside ",
+          {
+           "t": "code",
+           "v": "{% if execute %}"
+          },
+          ": that model failed with a compilation error, ",
+          {
+           "t": "code",
+           "v": "dbt was unable to infer all dependencies for the model \"zz_hidden_ref\". This typically happens when ref() is placed within a conditional block."
+          },
+          " and dbt proposed the fix: a SQL comment at the top of the file, ",
+          {
+           "t": "code",
+           "v": "-- depends_on: {{ ref('fct_orders') }}"
+          },
+          ". dbt reads the ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          " in the comment during parsing, adds the arrow, and the run passed. You will meet this case again with incremental models (Chapter 14)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "deep",
+       "t": "callout"
+      }
+     ],
+     "id": "ch07-s5-3",
+     "number": "7.5.3",
+     "title": [
+      "How dbt finds the arrows, and the build order"
+     ],
+     "titleText": "How dbt finds the arrows, and the build order"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt ls --select"
+        },
+        " accepts ",
+        {
+         "c": [
+          "graph operators"
+         ],
+         "t": "i"
+        },
+        ". Chapter 16 covers all of them; these are enough today:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Selector"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Selects"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "+dim_customers"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dim_customers"
+           },
+           " and everything ",
+           {
+            "c": [
+             "upstream"
+            ],
+            "t": "b"
+           },
+           " (all its ancestors)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "stg_jaffle_shop__orders+"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the model and everything ",
+           {
+            "c": [
+             "downstream"
+            ],
+            "t": "b"
+           },
+           " (all its descendants)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "1+dim_customers"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the model and its ",
+           {
+            "c": [
+             "direct"
+            ],
+            "t": "b"
+           },
+           " parents only (one level)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "source:stripe+"
+           }
+          ]
+         },
+         {
+          "c": [
+           "everything downstream of the source ",
+           {
+            "t": "code",
+            "v": "stripe"
+           },
+           " (all its tables)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "source:jaffle_shop.orders+"
+           }
+          ]
+         },
+         {
+          "c": [
+           "everything downstream of ",
+           {
+            "c": [
+             "one"
+            ],
+            "t": "b"
+           },
+           " source table, written ",
+           {
+            "t": "code",
+            "v": "<source name>.<table name>"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "In a selector, a source is always written with the names of the YAML file: the source ",
+        {
+         "t": "code",
+         "v": "name"
+        },
+        " and the table ",
+        {
+         "t": "code",
+         "v": "name"
+        },
+        ", never the ",
+        {
+         "t": "code",
+         "v": "schema"
+        },
+        " or the ",
+        {
+         "t": "code",
+         "v": "identifier"
+        },
+        ". With the ",
+        {
+         "t": "code",
+         "v": "shop_raw"
+        },
+        " demo file of ",
+        {
+         "href": "/learn/ch07/ch07-s2/",
+         "label": "sec:msd-sources",
+         "t": "ref",
+         "text": "Section 7.2"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt ls --select \"source:shop_raw.raw_orders\""
+        },
+        " printed ",
+        {
+         "t": "code",
+         "v": "source:jaffle_dbt.shop_raw.raw_orders"
+        },
+        ", while ",
+        {
+         "t": "code",
+         "v": "\"source:shop_raw.orders\""
+        },
+        " (the identifier) gave ",
+        {
+         "t": "code",
+         "v": "The selection criterion 'source:shop_raw.orders' does not match any enabled nodes"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c29",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "20:39:00  Found 7 models, 10 data tests, 5 sources, 500 macros\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments\nsource:jaffle_dbt.jaffle_shop.customers\nsource:jaffle_dbt.jaffle_shop.orders\nsource:jaffle_dbt.stripe.payments\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__orders_order_id\njaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__orders_order_id\njaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id",
+       "title": "Result: dbt ls --select +dim_customers"
+      },
+      {
+       "c": [
+        "The ",
+        {
+         "t": "code",
+         "v": "+"
+        },
+        " on the left means \"and my ancestors\" (trap T87: it does not select the children). The list contains the models, the three sources they read, and the tests attached to those models: tests are nodes too. Add ",
+        {
+         "t": "code",
+         "v": "--resource-type"
+        },
+        " to keep one kind of node. \"Which raw tables does ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " need, at any distance?\" is a one-liner:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c30",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "source:jaffle_dbt.jaffle_shop.customers\nsource:jaffle_dbt.jaffle_shop.orders\nsource:jaffle_dbt.stripe.payments",
+       "title": "Result: dbt ls --select +dim_customers --resource-type source (log lines removed)"
+      },
+      {
+       "c": [
+        "The compiled SQL of ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " would not tell you this: it shows only its direct parents (",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__customers"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        "), not the raw tables behind them."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c31",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "jaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__orders_order_id\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__orders_order_id",
+       "title": "Result: dbt ls --select stg_jaffle_shop__orders+ (log lines removed)"
+      },
+      {
+       "id": "ch07-c32",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "jaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers",
+       "title": "Result: dbt ls --select 1+dim_customers --resource-type model (log lines removed)"
+      },
+      {
+       "c": [
+        "With ",
+        {
+         "t": "code",
+         "v": "1+"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__orders"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "stg_stripe__payments"
+        },
+        " disappear: they are grandparents, not parents. And ",
+        {
+         "t": "code",
+         "v": "dbt ls --select \"source:stripe+\" --resource-type model"
+        },
+        " answers ",
+        {
+         "t": "code",
+         "v": "stg_stripe__payments"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        ": the three models affected if the Stripe data is late or wrong."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch07-s5-4",
+     "number": "7.5.4",
+     "title": [
+      "Reading the DAG with dbt ls"
+     ],
+     "titleText": "Reading the DAG with dbt ls"
+    }
+   ],
+   "title": [
+    "ref() and the DAG"
+   ],
+   "titleText": "ref() and the DAG"
+  },
+  {
+   "anchors": [
+    "sec-msd-marts"
+   ],
+   "checkpoints": [],
+   "id": "ch07-s6",
+   "label": "sec:msd-marts",
+   "labs": [
+    "ch07-lab3"
+   ],
+   "minutes": 25,
+   "number": "7.6",
+   "objectives": [
+    "CP0-SQL",
+    "1.4",
+    "1.5"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The staging layer is ready. Now the business models, from the final lab of ",
+        {
+         "href": "/learn/ch04/",
+         "label": "ch:sql",
+         "t": "ref",
+         "text": "Chapter 4"
+        },
+        ". That query did three things at once: it cleaned the raw tables (now the staging models' job), it summed the successful payments per order, and it summarised the orders per customer. We split the last two into two marts:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "fct_orders"
+            },
+            ": a fact table, ",
+            {
+             "c": [
+              "one row per order"
+             ],
+             "t": "b"
+            },
+            ", with ",
+            {
+             "t": "code",
+             "v": "amount"
+            },
+            " = the total of the successful payments of the order."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dim_customers"
+            },
+            ": a dimension, ",
+            {
+             "c": [
+              "one row per customer"
+             ],
+             "t": "b"
+            },
+            ", with the order summary and the lifetime value."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "id": "ch07-c33",
+       "lang": "dbt",
+       "t": "code",
+       "text": "with\n\norders as (\n\n    select * from {{ ref('stg_jaffle_shop__orders') }}\n\n),\n\npayments as (\n\n    select * from {{ ref('stg_stripe__payments') }}\n\n),\n\norder_payments as (\n\n    select\n        order_id,\n        sum(amount) as amount\n\n    from payments\n    where status = 'success'\n    group by order_id\n\n),\n\nfinal as (\n\n    select\n        orders.order_id,\n        orders.customer_id,\n        orders.order_date,\n        orders.status,\n        coalesce(order_payments.amount, 0) as amount\n\n    from orders\n    left join order_payments\n        on orders.order_id = order_payments.order_id\n\n)\n\nselect * from final",
+       "title": "models/marts/fct_orders.sql"
+      },
+      {
+       "id": "ch07-c34",
+       "lang": "dbt",
+       "t": "code",
+       "text": "with\n\ncustomers as (\n\n    select * from {{ ref('stg_jaffle_shop__customers') }}\n\n),\n\norders as (\n\n    select * from {{ ref('fct_orders') }}\n\n),\n\ncustomer_orders as (\n\n    select\n        customer_id,\n        min(order_date) as first_order_date,\n        max(order_date) as most_recent_order_date,\n        count(order_id) as number_of_orders,\n        sum(amount) as lifetime_value\n\n    from orders\n    group by customer_id\n\n),\n\nfinal as (\n\n    select\n        customers.customer_id,\n        customers.first_name,\n        customers.last_name,\n        customers.email,\n        customers.country,\n        customer_orders.first_order_date,\n        customer_orders.most_recent_order_date,\n        coalesce(customer_orders.number_of_orders, 0) as number_of_orders,\n        coalesce(customer_orders.lifetime_value, 0) as lifetime_value\n\n    from customers\n    left join customer_orders\n        on customers.customer_id = customer_orders.customer_id\n\n)\n\nselect * from final",
+       "title": "models/marts/dim_customers.sql"
+      },
+      {
+       "c": [
+        "Compare with ",
+        {
+         "href": "/learn/ch04/",
+         "label": "ch:sql",
+         "t": "ref",
+         "text": "Chapter 4"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "The import CTEs no longer read raw tables: they ",
+            {
+             "t": "code",
+             "v": "ref()"
+            },
+            " staging models, which already renamed the columns and converted cents to dollars. No ",
+            {
+             "t": "code",
+             "v": "/ 100"
+            },
+            " here."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The payments are aggregated ",
+            {
+             "c": [
+              "per order"
+             ],
+             "t": "i"
+            },
+            " before the join (the fan-out trap of ",
+            {
+             "href": "/learn/ch04/",
+             "label": "ch:sql",
+             "t": "ref",
+             "text": "Chapter 4"
+            },
+            "), once, in ",
+            {
+             "t": "code",
+             "v": "fct_orders"
+            },
+            ". ",
+            {
+             "t": "code",
+             "v": "dim_customers"
+            },
+            " reuses ",
+            {
+             "t": "code",
+             "v": "fct_orders"
+            },
+            " instead of repeating that logic: a first taste of modularity (Chapter 9)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dim_customers"
+            },
+            " keeps every customer (",
+            {
+             "t": "code",
+             "v": "left join"
+            },
+            " + ",
+            {
+             "t": "code",
+             "v": "coalesce"
+            },
+            "), including the 11 who never ordered."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "No ",
+            {
+             "t": "code",
+             "v": "order by"
+            },
+            " (sorting a view or table has no meaning; sort when you query it) and ",
+            {
+             "c": [
+              "no semicolon"
+             ],
+             "t": "b"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Remove the semicolon."
+           ],
+           "t": "b"
+          },
+          " Your Chapter 4 file ended with ",
+          {
+           "t": "code",
+           "v": "select * from final;"
+          },
+          " for the DuckDB CLI. In a dbt model it fails, because dbt places your query inside ",
+          {
+           "t": "code",
+           "v": "create view … as ( … );"
+          },
+          ". We tried it on ",
+          {
+           "t": "code",
+           "v": "dim_customers"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch07-c35",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "22:17:57  Failure in model dim_customers (models/marts/dim_customers.sql)\n22:17:57    Runtime Error in model dim_customers (models/marts/dim_customers.sql)\n  Parser Error: syntax error at or near \";\"\n\n  LINE 52: select * from final;\n                              ^"
+        },
+        {
+         "c": [
+          "Line 52 is a line of the ",
+          {
+           "c": [
+            "compiled"
+           ],
+           "t": "i"
+          },
+          " statement, not of your file: dbt added lines around your query. Other warehouses give a similar syntax error."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "Create ",
+              {
+               "t": "code",
+               "v": "models/marts/fct_orders.sql"
+              },
+              " and ",
+              {
+               "t": "code",
+               "v": "models/marts/dim_customers.sql"
+              },
+              " as above."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Build everything, models and tests, with one command:"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch07-c36",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ dbt build"
+            },
+            {
+             "id": "ch07-c37",
+             "lang": "output",
+             "small": true,
+             "t": "code",
+             "text": "20:38:47  Found 7 models, 10 data tests, 5 sources, 500 macros\n20:38:47\n20:38:47  Concurrency: 4 threads (target='dev')\n20:38:47\n20:38:47  1 of 17 START sql view model dbt_adnane.stg_jaffle_shop__customers ............. [RUN]\n20:38:47  2 of 17 START sql view model dbt_adnane.stg_jaffle_shop__order_items ........... [RUN]\n20:38:47  3 of 17 START sql view model dbt_adnane.stg_jaffle_shop__orders ................ [RUN]\n20:38:47  4 of 17 START sql view model dbt_adnane.stg_jaffle_shop__products .............. [RUN]\n...\n20:38:48  5 of 17 OK created sql view model dbt_adnane.stg_stripe__payments .............. [OK in 0.12s]\n...\n20:38:48  14 of 17 PASS not_null_stg_stripe__payments_payment_id ......................... [PASS in 0.03s]\n20:38:48  16 of 17 START sql view model dbt_adnane.fct_orders ............................ [RUN]\n20:38:48  16 of 17 OK created sql view model dbt_adnane.fct_orders ....................... [OK in 0.02s]\n20:38:48  17 of 17 START sql view model dbt_adnane.dim_customers ......................... [RUN]\n20:38:48  17 of 17 OK created sql view model dbt_adnane.dim_customers .................... [OK in 0.02s]\n20:38:48\n20:38:48  Finished running 10 data tests, 7 view models in 0 hours 0 minutes and 0.38 seconds (0.38s).\n20:38:48\n20:38:48  Completed successfully\n20:38:48\n20:38:48  Done. PASS=17 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=17"
+            },
+            {
+             "c": [
+              "17 nodes: 7 models and 10 tests. ",
+              {
+               "t": "code",
+               "v": "fct_orders"
+              },
+              " started only after ",
+              {
+               "c": [
+                "both"
+               ],
+               "t": "i"
+              },
+              " its parents ",
+              {
+               "c": [
+                "and their tests"
+               ],
+               "t": "i"
+              },
+              " had passed."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Look at the first customers:"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch07-c38",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ dbt show --inline \"select customer_id, number_of_orders, lifetime_value from {{ ref('dim_customers') }} order by customer_id\" --limit 10"
+            },
+            {
+             "id": "ch07-c39",
+             "lang": "output",
+             "small": true,
+             "t": "code",
+             "text": "Previewing inline node:\n| customer_id | number_of_orders | lifetime_value |\n| ----------- | ---------------- | -------------- |\n|           1 |                3 |           46.7 |\n|           2 |                3 |           65.5 |\n|           3 |                3 |           24.8 |\n|           4 |                5 |           67.5 |\n|           5 |                3 |           57.8 |\n|           6 |                3 |           81.4 |\n|           7 |                1 |            6.0 |\n|           8 |                2 |           21.5 |\n|           9 |                1 |           40.0 |\n|          10 |                1 |           28.0 |"
+            },
+            {
+             "c": [
+              "The same values as the Chapter 4 report."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Run the professional checks of ",
+              {
+               "href": "/learn/ch04/",
+               "label": "ch:sql",
+               "t": "ref",
+               "text": "Chapter 4"
+              },
+              " on the two marts:"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch07-c40",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ dbt show --inline \"select count(*) as n_customers, sum(number_of_orders) as total_orders, sum(lifetime_value) as total_lifetime_value, count(*) filter (where number_of_orders = 0) as customers_without_orders from {{ ref('dim_customers') }}\"\n(.venv) $ dbt show --inline \"select count(*) as n_orders, sum(amount) as total_amount from {{ ref('fct_orders') }}\""
+            },
+            {
+             "id": "ch07-c41",
+             "lang": "output",
+             "small": true,
+             "t": "code",
+             "text": "Previewing inline node:\n| n_customers | total_orders | total_lifetime_value | customers_without... |\n| ----------- | ------------ | -------------------- | -------------------- |\n|         100 |          299 |              4,988.4 |                   11 |\n\nPreviewing inline node:\n| n_orders | total_amount |\n| -------- | ------------ |\n|      300 |      5,004.4 |"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " 100 customers, 299 orders, 4988.4 dollars, 11 customers without orders, exactly as in Chapter 4; and ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " has all 300 orders and 5004.4 dollars. The difference (1 order, 16.0 dollars) is still order 159 of the unknown customer 101: ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " keeps it, ",
+          {
+           "t": "code",
+           "v": "dim_customers"
+          },
+          " cannot attach it to a customer. A ",
+          {
+           "t": "code",
+           "v": "relationships"
+          },
+          " test will report it in Chapter 18."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch07-lab3",
+       "objectives": [
+        "1.4",
+        "1.5",
+        "CP0-SQL"
+       ],
+       "t": "lab",
+       "title": [
+        "Build the marts and check the numbers"
+       ]
+      }
+     ],
+     "id": "ch07-s6-0",
+     "title": [
+      "The marts: fct_orders and dim_customers"
+     ],
+     "titleText": "The marts: fct_orders and dim_customers"
+    }
+   ],
+   "title": [
+    "The marts: fct_orders and dim_customers"
+   ],
+   "titleText": "The marts: fct_orders and dim_customers"
+  },
+  {
+   "anchors": [
+    "sec-msd-commands"
+   ],
+   "checkpoints": [],
+   "id": "ch07-s7",
+   "label": "sec:msd-commands",
+   "labs": [],
+   "minutes": 5,
+   "number": "7.7",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Command"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it does here"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt run"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Builds the selected models (views and tables) in DAG order. Runs no test (trap T28)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt test"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Runs the data tests (and unit tests, Chapter 19) of the selected nodes. Builds nothing."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt build"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Runs models, data tests, seeds and snapshots (and unit tests, Chapter 19) together, in DAG order: the data tests of a model run right after it (its unit tests just before it), and its children wait for them."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt compile"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Renders the selected nodes into ",
+           {
+            "t": "code",
+            "v": "target/compiled/"
+           },
+           ". With one model or ",
+           {
+            "t": "code",
+            "v": "--inline"
+           },
+           ", also prints the SQL. Builds nothing."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt ls"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Lists the resources that a selection matches. Builds nothing and does not connect to run queries."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt show"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Compiles a model (or ",
+           {
+            "t": "code",
+            "v": "--inline"
+           },
+           " SQL), runs it, and prints the first rows (5 by default). Saves nothing."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt docs generate"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Writes the documentation site files into ",
+           {
+            "t": "code",
+            "v": "target/"
+           },
+           " (",
+           {
+            "href": "/learn/ch07/ch07-s8/",
+            "label": "sec:msd-lineage",
+            "t": "ref",
+            "text": "Section 7.8"
+           },
+           ")."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch07-s7-0",
+     "title": [
+      "The commands of this chapter"
+     ],
+     "titleText": "The commands of this chapter"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "When you select one model, ",
+        {
+         "t": "code",
+         "v": "dbt compile"
+        },
+        " prints its compiled SQL: the fastest way to see what ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " became."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c42",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "20:38:53  Concurrency: 4 threads (target='dev')\n20:38:53\nCompiled node 'stg_stripe__payments' is:\nwith\n\nsource as (\n\n    select * from \"practice\".\"stripe\".\"payments\"\n\n),\n...",
+       "title": "Result: dbt compile --select stg_stripe__payments"
+      }
+     ],
+     "id": "ch07-s7-1",
+     "number": "7.7.1",
+     "title": [
+      "dbt compile for one model"
+     ],
+     "titleText": "dbt compile for one model"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "In the ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " output of the last lab, the ten tests of the staging models ran ",
+        {
+         "c": [
+          "before"
+         ],
+         "t": "i"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " started. That is the point of ",
+        {
+         "t": "code",
+         "v": "build"
+        },
+        ": if ",
+        {
+         "t": "code",
+         "v": "unique_stg_jaffle_shop__orders_order_id"
+        },
+        " had failed, dbt would have ",
+        {
+         "c": [
+          "skipped"
+         ],
+         "t": "i"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "SKIP"
+        },
+        " in the summary) instead of building marts on duplicated data. ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " followed by ",
+        {
+         "t": "code",
+         "v": "dbt test"
+        },
+        " cannot do that: it builds everything first and tests afterwards. Chapters 16 and 18 come back to this; remember for now that ",
+        {
+         "t": "code",
+         "v": "build"
+        },
+        " = models ",
+        {
+         "c": [
+          "and"
+         ],
+         "t": "i"
+        },
+        " their tests, interleaved in DAG order."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch07-s7-2",
+     "number": "7.7.2",
+     "title": [
+      "dbt build: why the order matters"
+     ],
+     "titleText": "dbt build: why the order matters"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt run --select staging"
+        },
+        " builds the five staging models. It works because the folder name is part of each model's full name (",
+        {
+         "t": "code",
+         "v": "jaffle_dbt.staging.stripe.stg_stripe__payments"
+        },
+        ", as ",
+        {
+         "t": "code",
+         "v": "dbt ls"
+        },
+        " prints it). The explicit form is ",
+        {
+         "t": "code",
+         "v": "--select path:models/staging"
+        },
+        ". Chapter 16 lists all the selection methods."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch07-s7-3",
+     "number": "7.7.3",
+     "title": [
+      "Selecting a folder"
+     ],
+     "titleText": "Selecting a folder"
+    }
+   ],
+   "title": [
+    "The commands of this chapter"
+   ],
+   "titleText": "The commands of this chapter"
+  },
+  {
+   "anchors": [
+    "sec-msd-lineage"
+   ],
+   "checkpoints": [],
+   "id": "ch07-s8",
+   "label": "sec:msd-lineage",
+   "labs": [],
+   "minutes": 5,
+   "number": "7.8",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "en": [
+          "Lineage"
+         ],
+         "fr": "lignage",
+         "id": "term-lineage",
+         "t": "term"
+        },
+        " is the path of the data from the sources to the final models: the DAG drawn as a picture. dbt Core draws it in its documentation site. Two commands (Chapter 20 covers documentation in depth):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c43",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "20:39:20  Running with dbt=1.11.16\n20:39:20  Registered adapter: duckdb=1.11.0\n20:39:20  Found 7 models, 10 data tests, 5 sources, 500 macros\n20:39:20\n20:39:20  Concurrency: 4 threads (target='dev')\n20:39:20\n20:39:21  Building catalog\n20:39:21  Catalog written to /Users/you/dbt-course/jaffle_dbt/target/catalog.json",
+       "textBook": "20:39:20  Running with dbt=1.11.16\n20:39:20  Registered adapter: duckdb=1.11.0\n20:39:20  Found 7 models, 10 data tests, 5 sources, 500 macros\n20:39:20\n20:39:20  Concurrency: 4 threads (target='dev')\n20:39:20\n20:39:21  Building catalog\n20:39:21  Catalog written to /Users/mac/dbt-course/jaffle_dbt/target/catalog.json",
+       "title": "Result: dbt docs generate"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt docs generate"
+        },
+        " compiles the project and asks the warehouse for the columns and types of every relation; it writes ",
+        {
+         "t": "code",
+         "v": "catalog.json"
+        },
+        " and the website file ",
+        {
+         "t": "code",
+         "v": "index.html"
+        },
+        " next to ",
+        {
+         "t": "code",
+         "v": "manifest.json"
+        },
+        " in ",
+        {
+         "t": "code",
+         "v": "target/"
+        },
+        ". It does ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "b"
+        },
+        " open anything (trap T36). To look at the site, start the small local web server:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c44",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:15:43  Running with dbt=1.11.16\nServing docs at 8080\nTo access from your browser, navigate to: http://localhost:8080\n\n\n\nPress Ctrl+C to exit.",
+       "title": "Result: dbt docs serve"
+      },
+      {
+       "c": [
+        "Your browser opens ",
+        {
+         "t": "code",
+         "v": "http://localhost:8080"
+        },
+        " (use ",
+        {
+         "t": "code",
+         "v": "--port"
+        },
+        " to choose another port, ",
+        {
+         "t": "code",
+         "v": "--no-browser"
+        },
+        " to not open it). Click any model, then the round ",
+        {
+         "c": [
+          "lineage"
+         ],
+         "t": "i"
+        },
+        " button at the bottom right: the graph of this chapter appears, sources in green. The terminal stays busy while the server runs; stop it with ",
+        {
+         "t": "key",
+         "v": "Ctrl+C"
+        },
+        " before you continue."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "In the ",
+          {
+           "c": [
+            "dbt platform"
+           ],
+           "t": "b"
+          },
+          " you do not run a server. The ",
+          {
+           "c": [
+            "Studio IDE"
+           ],
+           "t": "b"
+          },
+          " has a ",
+          {
+           "c": [
+            "Lineage"
+           ],
+           "t": "b"
+          },
+          " tab under the editor that shows the graph around the open model (by default two levels up and two levels down, the selector ",
+          {
+           "t": "code",
+           "v": "2+model+2"
+          },
+          "). For the whole project, the platform offers ",
+          {
+           "c": [
+            "Catalog"
+           ],
+           "t": "b"
+          },
+          " (formerly called dbt Explorer): lineage, descriptions, columns, test results and recent runs for every resource. Catalog is filled by jobs: you need a production or staging deployment environment and at least one successful job run there (Chapter 25); CI jobs do not update it, and it is part of the paid plans (Starter and Enterprise), not of the free Developer plan."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch07-s8-0",
+     "title": [
+      "Seeing the lineage: dbt docs and Catalog"
+     ],
+     "titleText": "Seeing the lineage: dbt docs and Catalog"
+    }
+   ],
+   "title": [
+    "Seeing the lineage: dbt docs and Catalog"
+   ],
+   "titleText": "Seeing the lineage: dbt docs and Catalog"
+  },
+  {
+   "anchors": [
+    "sec-msd-hardcoded"
+   ],
+   "checkpoints": [],
+   "id": "ch07-s9",
+   "label": "sec:msd-hardcoded",
+   "labs": [],
+   "minutes": 5,
+   "number": "7.9",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "This story appears, in many costumes, in exam questions. Let us live it once."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Lina, a new analyst, adds a report model. She knows that ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " exists in the development schema, so she writes its name directly:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c45",
+       "lang": "sql",
+       "t": "code",
+       "text": "-- DEMO ONLY (do not commit): a hard-coded table name instead of ref()\nselect\n    status,\n    count(*) as number_of_orders,\n    sum(amount) as amount\nfrom dbt_adnane.fct_orders\ngroup by status",
+       "title": "models/marts/rpt_orders_by_status.sql (demo, do not commit)"
+      },
+      {
+       "c": [
+        "On her laptop it works: ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " was built yesterday. Then a teammate runs the project on a ",
+        {
+         "c": [
+          "new, empty"
+         ],
+         "t": "i"
+        },
+        " schema (as CI does, Chapter 25). We reproduced it on a fresh copy of the practice database:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c46",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:16:34  Found 8 models, 10 data tests, 5 sources, 500 macros\n22:16:34\n22:16:34  Concurrency: 4 threads (target='dev')\n22:16:34\n22:16:34  1 of 8 START sql view model dbt_adnane.rpt_orders_by_status .................... [RUN]\n22:16:34  2 of 8 START sql view model dbt_adnane.stg_jaffle_shop__customers .............. [RUN]\n22:16:34  3 of 8 START sql view model dbt_adnane.stg_jaffle_shop__order_items ............ [RUN]\n22:16:34  4 of 8 START sql view model dbt_adnane.stg_jaffle_shop__orders ................. [RUN]\n22:16:34  2 of 8 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ......... [OK in 0.12s]\n22:16:34  1 of 8 ERROR creating sql view model dbt_adnane.rpt_orders_by_status ........... [ERROR in 0.13s]\n...\n22:16:34  7 of 8 START sql view model dbt_adnane.fct_orders .............................. [RUN]\n22:16:34  7 of 8 OK created sql view model dbt_adnane.fct_orders ......................... [OK in 0.02s]\n22:16:34  8 of 8 START sql view model dbt_adnane.dim_customers ........................... [RUN]\n22:16:34  8 of 8 OK created sql view model dbt_adnane.dim_customers ...................... [OK in 0.01s]\n...\n22:16:35  Failure in model rpt_orders_by_status (models/marts/rpt_orders_by_status.sql)\n22:16:35    Runtime Error in model rpt_orders_by_status (models/marts/rpt_orders_by_status.sql)\n  Catalog Error: Table with name fct_orders does not exist!\n  Did you mean \"jaffle_shop.orders\"?\n\n  LINE 10: from dbt_adnane.fct_orders\n...\n22:16:35  Done. PASS=7 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=8",
+       "title": "Result: dbt run on an empty database"
+      },
+      {
+       "c": [
+        "Read the order: the report started ",
+        {
+         "c": [
+          "first"
+         ],
+         "t": "b"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "1 of 8"
+        },
+        "), at the same time as the staging models, long before ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "7 of 8"
+        },
+        "). For dbt, the report had ",
+        {
+         "c": [
+          "no parent at all"
+         ],
+         "t": "i"
+        },
+        ", so it could start immediately. ",
+        {
+         "t": "code",
+         "v": "dbt ls"
+        },
+        " and the manifest confirm it:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c47",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:36:12  Found 8 models, 10 data tests, 5 sources, 500 macros\njaffle_dbt.marts.rpt_orders_by_status",
+       "title": "Result: dbt ls --select +rpt_orders_by_status"
+      },
+      {
+       "id": "ch07-c48",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "{\"name\": \"rpt_orders_by_status\", \"depends_on\": {\"macros\": [], \"nodes\": []}}",
+       "title": "Result: dbt ls --select rpt_orders_by_status --output json --output-keys \"name depends_on\""
+      },
+      {
+       "c": [
+        "The worst part: a second ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " on the same database ",
+        {
+         "c": [
+          "succeeds"
+         ],
+         "t": "i"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " now exists), so the bug looks random. And there is a second, silent bug: with ",
+        {
+         "t": "code",
+         "v": "--target prod"
+        },
+        ", the report would still read ",
+        {
+         "t": "code",
+         "v": "dbt_adnane.fct_orders"
+        },
+        ", the ",
+        {
+         "c": [
+          "development"
+         ],
+         "t": "i"
+        },
+        " table, and publish development numbers in production."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The fix is one line: ",
+        {
+         "t": "code",
+         "v": "from {{ ref('fct_orders') }}"
+        },
+        ". On a new empty database again:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c49",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:16:52  1 of 8 START sql view model dbt_adnane.stg_jaffle_shop__customers .............. [RUN]\n22:16:52  2 of 8 START sql view model dbt_adnane.stg_jaffle_shop__order_items ............ [RUN]\n22:16:52  3 of 8 START sql view model dbt_adnane.stg_jaffle_shop__orders ................. [RUN]\n22:16:52  4 of 8 START sql view model dbt_adnane.stg_jaffle_shop__products ............... [RUN]\n22:16:52  5 of 8 START sql view model dbt_adnane.stg_stripe__payments .................... [RUN]\n22:16:52  6 of 8 START sql view model dbt_adnane.fct_orders .............................. [RUN]\n22:16:52  7 of 8 START sql view model dbt_adnane.dim_customers ........................... [RUN]\n22:16:52  8 of 8 START sql view model dbt_adnane.rpt_orders_by_status .................... [RUN]\n22:16:52  Done. PASS=8 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=8",
+       "title": "Result: dbt run after the fix (START lines only)"
+      },
+      {
+       "c": [
+        "Now the report waits for ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt ls --select +rpt_orders_by_status"
+        },
+        " lists its four upstream models, and ",
+        {
+         "t": "code",
+         "v": "dbt compile --select rpt_orders_by_status --target prod"
+        },
+        " shows ",
+        {
+         "t": "code",
+         "v": "from \"practice\".\"prod\".\"fct_orders\""
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A hard-coded table name compiles and runs, so dbt gives ",
+          {
+           "c": [
+            "no error"
+           ],
+           "t": "i"
+          },
+          " about it. What you lose (trap T37):"
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "order"
+               ],
+               "t": "b"
+              },
+              ": the model can run before (or in parallel with) the model it reads, and fail or read old data;"
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "environments"
+               ],
+               "t": "b"
+              },
+              ": the name does not change with the target, so dev, CI and prod read the same table;"
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "lineage and selection"
+               ],
+               "t": "b"
+              },
+              ": the model is missing from ",
+              {
+               "t": "code",
+               "v": "+model"
+              },
+              ", ",
+              {
+               "t": "code",
+               "v": "source:x+"
+              },
+              ", the docs graph and Catalog;"
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "other features"
+               ],
+               "t": "b"
+              },
+              ": ",
+              {
+               "t": "code",
+               "v": "--empty"
+              },
+              ", ",
+              {
+               "t": "code",
+               "v": "--defer"
+              },
+              " and state selection (Chapters 16 and 24) only work through ",
+              {
+               "t": "code",
+               "v": "ref()"
+              },
+              " and ",
+              {
+               "t": "code",
+               "v": "source()"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ul",
+         "t": "list"
+        },
+        {
+         "c": [
+          "The exam answer is always the same: replace the name with ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          " (a model, seed or snapshot) or ",
+          {
+           "t": "code",
+           "v": "source()"
+          },
+          " (a raw table)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Reading a source directly in a mart (",
+          {
+           "t": "code",
+           "v": "{{ source('stripe', 'payments') }}"
+          },
+          " inside ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          ") is ",
+          {
+           "c": [
+            "allowed"
+           ],
+           "t": "i"
+          },
+          " by dbt: it is not an error (trap T40 in ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          "). It is a design smell: the cleaning of the staging model is skipped or repeated, and the DAG gets arrows that jump over a layer. The clean flow is ",
+          {
+           "c": [
+            "sources → staging → (intermediate) → marts"
+           ],
+           "t": "b"
+          },
+          ", never backwards (a staging model must not ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          " a mart). Chapter 9 turns these rules into a checklist."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch07-s9-0",
+     "title": [
+      "The classic scenario: a hard-coded table name"
+     ],
+     "titleText": "The classic scenario: a hard-coded table name"
+    }
+   ],
+   "title": [
+    "The classic scenario: a hard-coded table name"
+   ],
+   "titleText": "The classic scenario: a hard-coded table name"
+  },
+  {
+   "anchors": [
+    "sec-msd-errors"
+   ],
+   "checkpoints": [],
+   "id": "ch07-s10",
+   "label": "sec:msd-errors",
+   "labs": [
+    "ch07-lab4"
+   ],
+   "minutes": 15,
+   "number": "7.10",
+   "objectives": [
+    "1.1",
+    "1.5",
+    "3.1"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Errors in dbt come in two families, and the family tells you where to look (Chapter 22 goes much further):"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Errors found by dbt"
+             ],
+             "t": "b"
+            },
+            " while parsing or compiling (",
+            {
+             "c": [
+              "Compilation Error"
+             ],
+             "t": "i"
+            },
+            ", ",
+            {
+             "c": [
+              "Found a cycle"
+             ],
+             "t": "i"
+            },
+            "). dbt stops ",
+            {
+             "c": [
+              "before running anything"
+             ],
+             "t": "i"
+            },
+            ": no model is built, not even the ones without a problem. The message names the file."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Errors returned by the warehouse"
+             ],
+             "t": "b"
+            },
+            " while running (",
+            {
+             "c": [
+              "Runtime Error"
+             ],
+             "t": "i"
+            },
+            " with ",
+            {
+             "c": [
+              "Catalog Error"
+             ],
+             "t": "i"
+            },
+            ", ",
+            {
+             "c": [
+              "Parser Error"
+             ],
+             "t": "i"
+            },
+            "… on DuckDB, ",
+            {
+             "c": [
+              "Database Error"
+             ],
+             "t": "i"
+            },
+            " on most other warehouses). Only the failing model and its children are affected; the rest of the run continues."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "We produced each error below on purpose in the project, after a commit, then undid the change with ",
+        {
+         "t": "code",
+         "v": "git restore models"
+        },
+        " (you will do the same in the lab at the end of this section)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch07-s10-0",
+     "title": [
+      "Common errors and how to read them"
+     ],
+     "titleText": "Common errors and how to read them"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A typo: ",
+        {
+         "t": "code",
+         "v": "ref('stg_stripe_payments')"
+        },
+        " (one underscore) in ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c50",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:15:57  Running with dbt=1.11.16\n22:15:57  Registered adapter: duckdb=1.11.0\n22:15:57  Encountered an error:\nCompilation Error\n  Model 'model.jaffle_dbt.fct_orders' (models/marts/fct_orders.sql) depends on a node named 'stg_stripe_payments' which was not found"
+      },
+      {
+       "c": [
+        "The whole command stops (exit code 2), even ",
+        {
+         "t": "code",
+         "v": "dbt run --select stg_jaffle_shop__orders"
+        },
+        ", because the project cannot be parsed. Fix the name (",
+        {
+         "t": "code",
+         "v": "dbt ls --resource-type model"
+        },
+        " lists the real names), or create the missing model."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch07-s10-1",
+     "number": "7.10.1",
+     "title": [
+      "A ref() to a model that does not exist"
+     ],
+     "titleText": "A ref() to a model that does not exist"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "source('jaffle_shop', 'order')"
+        },
+        " instead of ",
+        {
+         "t": "code",
+         "v": "'orders'"
+        },
+        " in ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__orders"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c51",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:16:02  Encountered an error:\nCompilation Error\n  Model 'model.jaffle_dbt.stg_jaffle_shop__orders' (models/staging/jaffle_shop/stg_jaffle_shop__orders.sql) depends on a source named 'jaffle_shop.order' which was not found"
+      },
+      {
+       "c": [
+        "The message gives ",
+        {
+         "t": "code",
+         "v": "source_name.table_name"
+        },
+        ": compare it with the ",
+        {
+         "t": "code",
+         "v": "name"
+        },
+        " keys of your sources YAML. Do not confuse it with the ",
+        {
+         "c": [
+          "runtime"
+         ],
+         "t": "i"
+        },
+        " error of ",
+        {
+         "href": "/learn/ch07/ch07-s3/",
+         "label": "sec:msd-verify",
+         "t": "ref",
+         "text": "Section 7.3"
+        },
+        ", where the source ",
+        {
+         "c": [
+          "is"
+         ],
+         "t": "i"
+        },
+        " declared but the table does not exist in the warehouse."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch07-s10-2",
+     "number": "7.10.2",
+     "title": [
+      "A source() that is not declared"
+     ],
+     "titleText": "A source() that is not declared"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "We added ",
+        {
+         "t": "code",
+         "v": "customers as (select * from {{ ref('dim_customers') }})"
+        },
+        " to ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        ", while ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " already refs ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch07-c52",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:16:11  Encountered an error:\nFound a cycle: model.jaffle_dbt.dim_customers --> model.jaffle_dbt.fct_orders\n22:16:11  Traceback (most recent call last):\n  ...\nRuntimeError: Found a cycle: model.jaffle_dbt.dim_customers --> model.jaffle_dbt.fct_orders"
+      },
+      {
+       "c": [
+        "A DAG must be ",
+        {
+         "c": [
+          "acyclic"
+         ],
+         "t": "i"
+        },
+        ": if A needs B and B needs A, there is no order in which to build them (trap T41: dbt does not \"run them twice\"). ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt ls"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "dbt compile"
+        },
+        " all stop with this message. Interesting detail: ",
+        {
+         "t": "code",
+         "v": "dbt parse"
+        },
+        " alone succeeded, because the cycle is detected when dbt links the graph, after parsing. The fix is a design fix: decide which model is upstream, and move the shared logic into a model that both can ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " (Chapter 9)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch07-s10-3",
+     "number": "7.10.3",
+     "title": [
+      "A circular dependency"
+     ],
+     "titleText": "A circular dependency"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Mistake"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Message starts with"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "When / what is built"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ref()"
+           },
+           " to an unknown model"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "Compilation Error … depends on a node named … which was not found"
+           }
+          ]
+         },
+         {
+          "c": [
+           "parsing; nothing is built"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "source()"
+           },
+           " not declared"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "Compilation Error … depends on a source named … which was not found"
+           }
+          ]
+         },
+         {
+          "c": [
+           "parsing; nothing is built"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "two models ref each other"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "Found a cycle: … --> …"
+           }
+          ]
+         },
+         {
+          "c": [
+           "graph linking; nothing is built"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "declared source, missing table"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "Runtime Error … Catalog Error: Table with name … does not exist"
+           }
+          ]
+         },
+         {
+          "c": [
+           "running; that model fails, children skipped"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "semicolon at the end"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "Runtime Error … Parser Error: syntax error at or near \";\""
+           }
+          ]
+         },
+         {
+          "c": [
+           "running; that model fails, children skipped"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "hard-coded table name"
+          ]
+         },
+         {
+          "c": [
+           "no message, or a runtime error on an empty schema"
+          ]
+         },
+         {
+          "c": [
+           "running; wrong order, wrong environment"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "Make sure your work is saved and the run is green: ",
+              {
+               "t": "code",
+               "v": "dbt build"
+              },
+              " ends with ",
+              {
+               "t": "code",
+               "v": "PASS=17"
+              },
+              ". Then ",
+              {
+               "c": [
+                "commit now"
+               ],
+               "t": "b"
+              },
+              ", before breaking anything: Git can only undo your experiments if the good version is committed (",
+              {
+               "href": "/learn/ch03/",
+               "label": "ch:git",
+               "t": "ref",
+               "text": "Chapter 3"
+              },
+              ")."
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch07-c53",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ git status --short\n?? models/\n(.venv) $ git add .\n(.venv) $ git commit -m \"Add sources, staging models, fct_orders and dim_customers\"\n[main 170c057] Add sources, staging models, fct_orders and dim_customers\n 11 files changed, 289 insertions(+)\n ..."
+            },
+            {
+             "c": [
+              "(Your commit hash will be different.)"
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Missing ref."
+               ],
+               "t": "b"
+              },
+              " In ",
+              {
+               "t": "code",
+               "v": "fct_orders.sql"
+              },
+              ", change ",
+              {
+               "t": "code",
+               "v": "ref('stg_stripe__payments')"
+              },
+              " into ",
+              {
+               "t": "code",
+               "v": "ref('stg_stripe_payments')"
+              },
+              ". Run ",
+              {
+               "t": "code",
+               "v": "dbt run"
+              },
+              ". ",
+              {
+               "c": [
+                "Expected:"
+               ],
+               "t": "b"
+              },
+              " ",
+              {
+               "t": "code",
+               "v": "Compilation Error … depends on a node named 'stg_stripe_payments' which was not found"
+              },
+              ", and no model built. Undo the change with ",
+              {
+               "t": "code",
+               "v": "git restore models"
+              },
+              " (it puts back the committed version of every file in ",
+              {
+               "t": "code",
+               "v": "models/"
+              },
+              "); ",
+              {
+               "t": "code",
+               "v": "git status"
+              },
+              " must say ",
+              {
+               "t": "code",
+               "v": "nothing to commit, working tree clean"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Cycle."
+               ],
+               "t": "b"
+              },
+              " In ",
+              {
+               "t": "code",
+               "v": "fct_orders.sql"
+              },
+              ", add an import CTE ",
+              {
+               "t": "code",
+               "v": "customers as (select * from {{ ref('dim_customers') }}),"
+              },
+              " after the ",
+              {
+               "t": "code",
+               "v": "payments"
+              },
+              " CTE. Run ",
+              {
+               "t": "code",
+               "v": "dbt ls"
+              },
+              ". ",
+              {
+               "c": [
+                "Expected:"
+               ],
+               "t": "b"
+              },
+              " ",
+              {
+               "t": "code",
+               "v": "Found a cycle: model.jaffle_dbt.dim_customers --> model.jaffle_dbt.fct_orders"
+              },
+              ". Then run ",
+              {
+               "t": "code",
+               "v": "dbt parse"
+              },
+              ". ",
+              {
+               "c": [
+                "Expected:"
+               ],
+               "t": "b"
+              },
+              " it succeeds (cycles are found after parsing). Undo the change: ",
+              {
+               "t": "code",
+               "v": "git restore models"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Hard-coded name."
+               ],
+               "t": "b"
+              },
+              " Create ",
+              {
+               "t": "code",
+               "v": "models/marts/rpt_orders_by_status.sql"
+              },
+              " with the hard-coded version above. Run ",
+              {
+               "t": "code",
+               "v": "dbt ls --select +rpt_orders_by_status"
+              },
+              ". ",
+              {
+               "c": [
+                "Expected:"
+               ],
+               "t": "b"
+              },
+              " one line, the model alone. To see the ordering bug, empty your development schema first (dbt rebuilds everything in it), with the DuckDB CLI closed afterwards:"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch07-c54",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ duckdb ../practice/practice.duckdb\nD drop schema dbt_adnane cascade;\nD .quit\n(.venv) $ dbt run"
+            },
+            {
+             "c": [
+              {
+               "c": [
+                "Expected:"
+               ],
+               "t": "b"
+              },
+              " ",
+              {
+               "t": "code",
+               "v": "rpt_orders_by_status"
+              },
+              " starts among the first nodes and fails with ",
+              {
+               "t": "code",
+               "v": "Table with name fct_orders does not exist"
+              },
+              "; ",
+              {
+               "t": "code",
+               "v": "PASS=7 … ERROR=1"
+              },
+              ". (If your laptop is very fast or slow, the timing can differ, but the report never waits for ",
+              {
+               "t": "code",
+               "v": "fct_orders"
+              },
+              ".)"
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Replace ",
+              {
+               "t": "code",
+               "v": "dbt_adnane.fct_orders"
+              },
+              " with ",
+              {
+               "t": "code",
+               "v": "{{ ref('fct_orders') }}"
+              },
+              ". Run ",
+              {
+               "t": "code",
+               "v": "dbt ls --select +rpt_orders_by_status --resource-type model"
+              },
+              ". ",
+              {
+               "c": [
+                "Expected:"
+               ],
+               "t": "b"
+              },
+              " four lines: the report, ",
+              {
+               "t": "code",
+               "v": "fct_orders"
+              },
+              ", ",
+              {
+               "t": "code",
+               "v": "stg_jaffle_shop__orders"
+              },
+              " and ",
+              {
+               "t": "code",
+               "v": "stg_stripe__payments"
+              },
+              ". Then delete the demo: ",
+              {
+               "t": "code",
+               "v": "rm models/marts/rpt_orders_by_status.sql"
+              },
+              ". If a later run built its view, drop it: open the CLI, ",
+              {
+               "t": "code",
+               "v": "drop view if exists dbt_adnane.rpt_orders_by_status;"
+              },
+              ", ",
+              {
+               "t": "code",
+               "v": ".quit"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Final check: ",
+              {
+               "t": "code",
+               "v": "dbt build"
+              },
+              ". ",
+              {
+               "c": [
+                "Expected:"
+               ],
+               "t": "b"
+              },
+              " ",
+              {
+               "t": "code",
+               "v": "Done. PASS=17 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=17"
+              },
+              ". Then ",
+              {
+               "t": "code",
+               "v": "git status"
+              },
+              ". ",
+              {
+               "c": [
+                "Expected:"
+               ],
+               "t": "b"
+              },
+              " ",
+              {
+               "t": "code",
+               "v": "nothing to commit, working tree clean"
+              },
+              ": the experiments are undone and the demo file is gone, so the commit of step 1 is the final state of this chapter."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Push to GitHub:"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch07-c55",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ git push"
+            },
+            {
+             "c": [
+              "Skip this step if you did not create the GitHub repository in ",
+              {
+               "href": "/learn/ch06/",
+               "label": "ch:first-project",
+               "t": "ref",
+               "text": "Chapter 6"
+              },
+              ". Without an ",
+              {
+               "t": "code",
+               "v": "origin"
+              },
+              " remote, Git answers ",
+              {
+               "t": "code",
+               "v": "fatal: The current branch main has no upstream branch."
+              },
+              " and suggests ",
+              {
+               "t": "code",
+               "v": "git push --set-upstream reference main"
+              },
+              ": do ",
+              {
+               "c": [
+                "not"
+               ],
+               "t": "b"
+              },
+              " follow that advice, the ",
+              {
+               "t": "code",
+               "v": "reference"
+              },
+              " remote is the bible's read-only copy."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Compare with the reference"
+               ],
+               "t": "b"
+              },
+              " (the ",
+              {
+               "t": "code",
+               "v": "reference"
+              },
+              " remote of ",
+              {
+               "href": "/learn/ch06/",
+               "label": "ch:first-project",
+               "t": "ref",
+               "text": "Chapter 6"
+              },
+              "):"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch07-c56",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ git diff ref-ch07 --stat"
+            },
+            {
+             "c": [
+              {
+               "c": [
+                "Expected:"
+               ],
+               "t": "b"
+              },
+              " no output. If a file is listed, ",
+              {
+               "t": "code",
+               "v": "git diff ref-ch07 -- models/"
+              },
+              " shows the lines that differ. Differences in descriptions or blank lines are fine; differences in column names, model names or ",
+              {
+               "t": "code",
+               "v": "ref()"
+              },
+              " calls are not, because later chapters build on them."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected final state:"
+           ],
+           "t": "b"
+          },
+          " 7 views in ",
+          {
+           "t": "code",
+           "v": "dbt_adnane"
+          },
+          " (",
+          {
+           "t": "code",
+           "v": "dbt show --inline \"select table_schema, table_type, count(*) as n from information_schema.tables where table_schema = 'dbt_adnane' group by all\""
+          },
+          " prints ",
+          {
+           "t": "code",
+           "v": "| dbt_adnane | VIEW | 7 |"
+          },
+          "), two commits in ",
+          {
+           "t": "code",
+           "v": "git log --oneline"
+          },
+          ", and a project identical to the tag ",
+          {
+           "t": "code",
+           "v": "ch07"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch07-lab4",
+       "objectives": [
+        "1.1",
+        "1.5",
+        "3.1"
+       ],
+       "t": "lab",
+       "title": [
+        "Commit, break it, read it, fix it"
+       ]
+      }
+     ],
+     "id": "ch07-s10-4",
+     "number": "7.10.4",
+     "title": [
+      "Summary of the errors"
+     ],
+     "titleText": "Summary of the errors"
+    }
+   ],
+   "title": [
+    "Common errors and how to read them"
+   ],
+   "titleText": "Common errors and how to read them"
+  },
+  {
+   "anchors": [
+    "sec-msd-platform"
+   ],
+   "checkpoints": [],
+   "id": "ch07-s11",
+   "label": "sec:msd-platform",
+   "labs": [],
+   "minutes": 5,
+   "number": "7.11",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Everything in this chapter works the same in the Studio IDE; only the buttons change:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Create files and folders from the file explorer (the ",
+            {
+             "c": [
+              "…"
+             ],
+             "t": "b"
+            },
+            " menu next to a folder: ",
+            {
+             "c": [
+              "Create file"
+             ],
+             "t": "i"
+            },
+            ", ",
+            {
+             "c": [
+              "Create folder"
+             ],
+             "t": "i"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Preview"
+             ],
+             "t": "b"
+            },
+            " runs the open model or a selected piece of SQL and shows the rows in the ",
+            {
+             "c": [
+              "Results"
+             ],
+             "t": "b"
+            },
+            " tab (like ",
+            {
+             "t": "code",
+             "v": "dbt show"
+            },
+            ", up to 500 rows by default). ",
+            {
+             "c": [
+              "Compile"
+             ],
+             "t": "b"
+            },
+            " shows the compiled SQL in the ",
+            {
+             "c": [
+              "Compiled code"
+             ],
+             "t": "b"
+            },
+            " tab (like ",
+            {
+             "t": "code",
+             "v": "dbt compile --select"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Build"
+             ],
+             "t": "b"
+            },
+            " has a menu: build, run or test the open model; for other selections, type the command in the command bar (",
+            {
+             "t": "code",
+             "v": "dbt build --select +dim_customers"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "c": [
+              "Lineage"
+             ],
+             "t": "b"
+            },
+            " tab draws the DAG around the open model; Catalog shows the whole project once a production job has run."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Version control: create a branch (for example ",
+            {
+             "t": "code",
+             "v": "feature/staging-models"
+            },
+            "), ",
+            {
+             "c": [
+              "Commit and sync"
+             ],
+             "t": "b"
+            },
+            ", then open a pull request."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "The YAML files, the SQL, the ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " calls, the folder conventions and the error messages are exactly the same."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch07-s11-0",
+     "title": [
+      "The same work in the dbt platform"
+     ],
+     "titleText": "The same work in the dbt platform"
+    }
+   ],
+   "title": [
+    "The same work in the dbt platform"
+   ],
+   "titleText": "The same work in the dbt platform"
+  }
+ ],
+ "minutes": 160,
+ "number": 7,
+ "objectives": [
+  "1.1",
+  "1.4",
+  "1.5",
+  "3.1",
+  "5.1"
+ ],
+ "part": 2,
+ "partLabel": "Part II",
+ "partTitle": "Building with dbt",
+ "printed": "7",
+ "quiz": [
+  "q-ch07-01",
+  "q-ch07-02",
+  "q-ch07-03",
+  "q-ch07-04",
+  "q-ch07-05",
+  "q-ch07-06",
+  "q-ch07-07",
+  "q-ch07-08",
+  "q-ch07-09",
+  "q-ch07-10",
+  "q-ch07-11",
+  "q-ch07-12",
+  "q-ch07-13",
+  "q-ch07-14",
+  "q-ch07-15",
+  "q-ch07-16",
+  "q-ch07-17",
+  "q-ch07-18"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-msd-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch07-01",
+      "q-ch07-02",
+      "q-ch07-03",
+      "q-ch07-04",
+      "q-ch07-05",
+      "q-ch07-06",
+      "q-ch07-07",
+      "q-ch07-08",
+      "q-ch07-09",
+      "q-ch07-10",
+      "q-ch07-11",
+      "q-ch07-12",
+      "q-ch07-13",
+      "q-ch07-14",
+      "q-ch07-15",
+      "q-ch07-16",
+      "q-ch07-17",
+      "q-ch07-18"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch07-01",
+    "q-ch07-02",
+    "q-ch07-03",
+    "q-ch07-04",
+    "q-ch07-05",
+    "q-ch07-06",
+    "q-ch07-07",
+    "q-ch07-08",
+    "q-ch07-09",
+    "q-ch07-10",
+    "q-ch07-11",
+    "q-ch07-12",
+    "q-ch07-13",
+    "q-ch07-14",
+    "q-ch07-15",
+    "q-ch07-16",
+    "q-ch07-17",
+    "q-ch07-18"
+   ],
+   "label": "sec:msd-quiz",
+   "number": "7.12",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A model is one ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        " in a ",
+        {
+         "t": "code",
+         "v": ".sql"
+        },
+        " file under ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        ", without DDL and without a final semicolon; its file name is its unique name and the name of the relation dbt builds."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Raw tables are declared under ",
+        {
+         "t": "code",
+         "v": "sources:"
+        },
+        " in YAML and read with ",
+        {
+         "t": "code",
+         "v": "source('<source>', '<table>')"
+        },
+        ": database = target database, schema = source ",
+        {
+         "t": "code",
+         "v": "name"
+        },
+        ", identifier = table ",
+        {
+         "t": "code",
+         "v": "name"
+        },
+        ", unless ",
+        {
+         "t": "code",
+         "v": "database"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "schema"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "identifier"
+        },
+        " say otherwise. ",
+        {
+         "t": "code",
+         "v": "loader"
+        },
+        " is documentation; ",
+        {
+         "t": "code",
+         "v": "quoting"
+        },
+        " controls double quotes."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt never checks that a declared source table exists: verify with ",
+        {
+         "t": "code",
+         "v": "dbt show --inline"
+        },
+        " through ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        ", the information schema, and later source tests and freshness."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Staging: one model per source table, rename and cast only, named ",
+        {
+         "t": "code",
+         "v": "stg_<source>__<entity>s"
+        },
+        ", one folder per source with ",
+        {
+         "t": "code",
+         "v": "_<source>__sources.yml"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "_<source>__models.yml"
+        },
+        ". Marts (",
+        {
+         "t": "code",
+         "v": "fct_"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dim_"
+        },
+        ") ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " staging and other marts."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " points to a model, seed or snapshot in the current environment and creates an edge of the DAG; dbt finds edges while parsing, from ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " only."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The DAG gives the build order: parents before children; threads only parallelise independent branches. Parent/child = direct; upstream/downstream = all levels. ",
+        {
+         "t": "code",
+         "v": "+model"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "model+"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "1+model"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "source:x+"
+        },
+        " read it."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A hard-coded table name compiles and runs, but breaks order, environments, lineage and selection: replace it with ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Missing ref, undeclared source and cycles stop dbt before anything runs; a missing raw table or a semicolon fails at run time on one model."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " interleaves models and tests in DAG order; ",
+        {
+         "t": "code",
+         "v": "dbt docs generate"
+        },
+        " writes files, ",
+        {
+         "t": "code",
+         "v": "dbt docs serve"
+        },
+        " shows them; the platform shows lineage in the Studio IDE and in Catalog."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "Models, ref, Sources and the DAG"
+}

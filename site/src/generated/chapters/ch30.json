@@ -1,0 +1,931 @@
+{
+ "id": "ch30",
+ "intro": [
+  {
+   "blocks": [
+    {
+     "items": [
+      {
+       "blocks": [
+        {
+         "c": [
+          "Time: ",
+          {
+           "c": [
+            "120 minutes"
+           ],
+           "t": "b"
+          },
+          " for ",
+          {
+           "c": [
+            "65 questions"
+           ],
+           "t": "b"
+          },
+          ". Use a timer. No notes, no book, no terminal."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Answer ",
+          {
+           "c": [
+            "every"
+           ],
+           "t": "b"
+          },
+          " question. There is no penalty for a wrong answer on the real exam, so never leave a blank."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "DOMC questions"
+           ],
+           "t": "b"
+          },
+          ": cover the options with a sheet of paper. Reveal ",
+          {
+           "c": [
+            "one"
+           ],
+           "t": "i"
+          },
+          " option at a time, write YES or NO for it, and only then reveal the next one. You may not go back. This is how the real exam shows them: one option at a time."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Write your answers on the answer sheet at the end of this chapter, not in the question text."
+         ],
+         "t": "p"
+        }
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "When you finish, score yourself with ",
+          {
+           "href": "/learn/ch31/",
+           "label": "ch:mock2-answers",
+           "t": "ref",
+           "text": "Chapter 31"
+          },
+          ". Read the explanation of ",
+          {
+           "c": [
+            "every"
+           ],
+           "t": "i"
+          },
+          " question, also the ones you got right."
+         ],
+         "t": "p"
+        }
+       ]
+      }
+     ],
+     "kind": "ul",
+     "t": "list"
+    }
+   ],
+   "kind": "tip",
+   "t": "callout",
+   "title": [
+    {
+     "name": "info-circle",
+     "t": "icon"
+    },
+    " How to take this mock exam"
+   ]
+  }
+ ],
+ "kind": "mock",
+ "label": "ch:mock2",
+ "lessons": [
+  {
+   "anchors": [],
+   "checkpoints": [],
+   "id": "ch30-s1",
+   "labs": [],
+   "minutes": 5,
+   "number": "",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "All questions in this mock exam happen at ",
+        {
+         "c": [
+          "RideNow"
+         ],
+         "t": "b"
+        },
+        ", a ride-hailing company (like a taxi app). Sara is the analytics engineer. Her dbt project is called ",
+        {
+         "t": "code",
+         "v": "ridenow"
+        },
+        ". Keep this map in front of you:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Thing"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Details"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Raw data (source ",
+           {
+            "t": "code",
+            "v": "ridenow"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "schema ",
+           {
+            "t": "code",
+            "v": "raw_ridenow"
+           },
+           ": tables ",
+           {
+            "t": "code",
+            "v": "trips"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "drivers"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "riders"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "fares"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "ratings"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Seed"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "city_zones"
+           },
+           " (city_id, city_name, country_code, timezone)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Staging (views)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "stg_ridenow__trips"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "stg_ridenow__drivers"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "stg_ridenow__riders"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "stg_ridenow__fares"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "stg_ridenow__ratings"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Intermediate (ephemeral)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "int_trips__with_fares"
+           },
+           " (trips joined to fares)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Marts"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "fct_trips"
+           },
+           " (incremental), ",
+           {
+            "t": "code",
+            "v": "dim_drivers"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "dim_riders"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "fct_driver_payouts"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "fct_driver_daily_earnings"
+           },
+           " (microbatch), ",
+           {
+            "t": "code",
+            "v": "rpt_city_trip_counts"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "rpt_ops_payout_check"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "driver_rating_stats"
+           },
+           " (Python)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Snapshot"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "drivers_snapshot"
+           },
+           " (defined in YAML)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Schemas"
+          ]
+         },
+         {
+          "c": [
+           "dev: ",
+           {
+            "t": "code",
+            "v": "dbt_sara"
+           },
+           " CI: ",
+           {
+            "t": "code",
+            "v": "dbt_ci_pr42"
+           },
+           " production: ",
+           {
+            "t": "code",
+            "v": "prod"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "The logs, compiled SQL and errors in this exam come from real runs of dbt Core 1.11 (the warehouse was DuckDB, whose database is called ",
+        {
+         "t": "code",
+         "v": "ridenow"
+        },
+        "). Database error texts look different on Snowflake or BigQuery, but the dbt part of every message is the same. Long logs are shortened with ",
+        {
+         "t": "code",
+         "v": "..."
+        },
+        " lines. One terminal symbol, an arrow, is printed as ",
+        {
+         "t": "code",
+         "v": "->"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "ids": [
+        "m2-q01",
+        "m2-q02",
+        "m2-q03",
+        "m2-q04",
+        "m2-q05",
+        "m2-q06",
+        "m2-q07",
+        "m2-q08",
+        "m2-q09",
+        "m2-q10",
+        "m2-q11",
+        "m2-q12",
+        "m2-q13",
+        "m2-q14",
+        "m2-q15",
+        "m2-q16",
+        "m2-q17",
+        "m2-q18",
+        "m2-q19",
+        "m2-q20",
+        "m2-q21",
+        "m2-q22",
+        "m2-q23",
+        "m2-q24",
+        "m2-q25",
+        "m2-q26",
+        "m2-q27",
+        "m2-q28",
+        "m2-q29",
+        "m2-q30",
+        "m2-q31",
+        "m2-q32",
+        "m2-q33",
+        "m2-q34",
+        "m2-q35",
+        "m2-q36",
+        "m2-q37",
+        "m2-q38",
+        "m2-q39",
+        "m2-q40",
+        "m2-q41",
+        "m2-q42",
+        "m2-q43",
+        "m2-q44",
+        "m2-q45",
+        "m2-q46",
+        "m2-q47",
+        "m2-q48",
+        "m2-q49",
+        "m2-q50",
+        "m2-q51",
+        "m2-q52",
+        "m2-q53",
+        "m2-q54",
+        "m2-q55",
+        "m2-q56",
+        "m2-q57",
+        "m2-q58",
+        "m2-q59",
+        "m2-q60",
+        "m2-q61",
+        "m2-q62",
+        "m2-q63",
+        "m2-q64",
+        "m2-q65"
+       ],
+       "t": "quiz"
+      }
+     ],
+     "id": "ch30-s1-0",
+     "title": [
+      "The scenario: RideNow"
+     ],
+     "titleText": "The scenario: RideNow"
+    }
+   ],
+   "title": [
+    "The scenario: RideNow"
+   ],
+   "titleText": "The scenario: RideNow"
+  },
+  {
+   "anchors": [],
+   "checkpoints": [],
+   "id": "ch30-s2",
+   "labs": [],
+   "minutes": 5,
+   "number": "",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Write one answer per box. For DOMC questions write YES/NO for each letter (for example ",
+        {
+         "t": "code",
+         "v": "A Y, B N, ..."
+        },
+        "); for matching write pairs (",
+        {
+         "t": "code",
+         "v": "1-C, 2-A, ..."
+        },
+        "); for build lists write the letters in order."
+       ],
+       "t": "p"
+      },
+      {
+       "rows": [
+        [
+         {
+          "c": [
+           "Q1"
+          ]
+         },
+         {
+          "c": [
+           "Q2"
+          ]
+         },
+         {
+          "c": [
+           "Q3"
+          ]
+         },
+         {
+          "c": [
+           "Q4"
+          ]
+         },
+         {
+          "c": [
+           "Q5"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q6"
+          ]
+         },
+         {
+          "c": [
+           "Q7"
+          ]
+         },
+         {
+          "c": [
+           "Q8"
+          ]
+         },
+         {
+          "c": [
+           "Q9"
+          ]
+         },
+         {
+          "c": [
+           "Q10"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q11"
+          ]
+         },
+         {
+          "c": [
+           "Q12"
+          ]
+         },
+         {
+          "c": [
+           "Q13"
+          ]
+         },
+         {
+          "c": [
+           "Q14"
+          ]
+         },
+         {
+          "c": [
+           "Q15"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q16"
+          ]
+         },
+         {
+          "c": [
+           "Q17"
+          ]
+         },
+         {
+          "c": [
+           "Q18"
+          ]
+         },
+         {
+          "c": [
+           "Q19"
+          ]
+         },
+         {
+          "c": [
+           "Q20"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q21"
+          ]
+         },
+         {
+          "c": [
+           "Q22"
+          ]
+         },
+         {
+          "c": [
+           "Q23"
+          ]
+         },
+         {
+          "c": [
+           "Q24"
+          ]
+         },
+         {
+          "c": [
+           "Q25"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q26"
+          ]
+         },
+         {
+          "c": [
+           "Q27"
+          ]
+         },
+         {
+          "c": [
+           "Q28"
+          ]
+         },
+         {
+          "c": [
+           "Q29"
+          ]
+         },
+         {
+          "c": [
+           "Q30"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q31"
+          ]
+         },
+         {
+          "c": [
+           "Q32"
+          ]
+         },
+         {
+          "c": [
+           "Q33"
+          ]
+         },
+         {
+          "c": [
+           "Q34"
+          ]
+         },
+         {
+          "c": [
+           "Q35"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q36"
+          ]
+         },
+         {
+          "c": [
+           "Q37"
+          ]
+         },
+         {
+          "c": [
+           "Q38"
+          ]
+         },
+         {
+          "c": [
+           "Q39"
+          ]
+         },
+         {
+          "c": [
+           "Q40"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q41"
+          ]
+         },
+         {
+          "c": [
+           "Q42"
+          ]
+         },
+         {
+          "c": [
+           "Q43"
+          ]
+         },
+         {
+          "c": [
+           "Q44"
+          ]
+         },
+         {
+          "c": [
+           "Q45"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q46"
+          ]
+         },
+         {
+          "c": [
+           "Q47"
+          ]
+         },
+         {
+          "c": [
+           "Q48"
+          ]
+         },
+         {
+          "c": [
+           "Q49"
+          ]
+         },
+         {
+          "c": [
+           "Q50"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q51"
+          ]
+         },
+         {
+          "c": [
+           "Q52"
+          ]
+         },
+         {
+          "c": [
+           "Q53"
+          ]
+         },
+         {
+          "c": [
+           "Q54"
+          ]
+         },
+         {
+          "c": [
+           "Q55"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q56"
+          ]
+         },
+         {
+          "c": [
+           "Q57"
+          ]
+         },
+         {
+          "c": [
+           "Q58"
+          ]
+         },
+         {
+          "c": [
+           "Q59"
+          ]
+         },
+         {
+          "c": [
+           "Q60"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q61"
+          ]
+         },
+         {
+          "c": [
+           "Q62"
+          ]
+         },
+         {
+          "c": [
+           "Q63"
+          ]
+         },
+         {
+          "c": [
+           "Q64"
+          ]
+         },
+         {
+          "c": [
+           "Q65"
+          ]
+         }
+        ]
+       ],
+       "rules": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "When you have answered all 65 questions, go to ",
+        {
+         "href": "/learn/ch31/",
+         "label": "ch:mock2-answers",
+         "t": "ref",
+         "text": "Chapter 31"
+        },
+        " and score yourself."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch30-s2-0",
+     "title": [
+      "Answer sheet"
+     ],
+     "titleText": "Answer sheet"
+    }
+   ],
+   "title": [
+    "Answer sheet"
+   ],
+   "titleText": "Answer sheet"
+  }
+ ],
+ "minutes": 10,
+ "mock": 2,
+ "number": 30,
+ "objectives": [],
+ "part": 9,
+ "partLabel": "Part IX",
+ "partTitle": "Exam Mastery",
+ "printed": "30",
+ "quiz": [],
+ "quizSections": [],
+ "summary": [],
+ "title": "Mock Exam 2"
+}

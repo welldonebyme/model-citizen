@@ -1,0 +1,3999 @@
+{
+ "id": "ch02",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "Use a terminal with confidence: move between folders, manage files, read outputs."
+     ],
+     "id": "CP0-CLI"
+    },
+    {
+     "c": [
+      "dbt is driven by commands (",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt run"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt test"
+      },
+      ", …) and flags typed in a terminal."
+     ],
+     "id": "1.4"
+    },
+    {
+     "c": [
+      "Read messages and errors printed in the terminal, and understand exit codes."
+     ],
+     "id": "3.1"
+    },
+    {
+     "c": [
+      "Environment variables, the base of ",
+      {
+       "t": "code",
+       "v": "env_var()"
+      },
+      " in dbt configurations."
+     ],
+     "id": "1.6"
+    },
+    {
+     "c": [
+      {
+       "c": [
+        "Setup:"
+       ],
+       "t": "b"
+      },
+      " build the workspace (",
+      {
+       "t": "code",
+       "v": "~/dbt-course"
+      },
+      ") with dbt Core 1.11, DuckDB and the practice database used in the whole book."
+     ],
+     "id": null
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "dbt Core has no buttons. You talk to it by typing commands like ",
+      {
+       "t": "code",
+       "v": "dbt build --select stg_orders+"
+      },
+      " in a terminal. Even in the dbt platform, where there is a web IDE, you still type the same dbt commands in a command bar, and jobs are defined as lists of commands."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "Many exam questions show a command and ask what it does, or show terminal output and ask what went wrong. If the terminal feels strange or scary, every one of those questions is harder than it needs to be. In this chapter you learn the twenty or so commands you really need, and you build the workspace you will use for every lab in this book."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "The terminal is a text window where you type a command, press ",
+      {
+       "t": "key",
+       "v": "Enter"
+      },
+      ", and read the answer. Every command runs ",
+      {
+       "c": [
+        "in a folder"
+       ],
+       "t": "i"
+      },
+      " (the current directory), so knowing where you are is the first skill. With a handful of commands for folders, files, environment variables and Python environments, you can install dbt and run it like a professional."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:cli",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-cli-basics"
+   ],
+   "checkpoints": [],
+   "id": "ch02-s1",
+   "label": "sec:cli-basics",
+   "labs": [],
+   "minutes": 5,
+   "number": "2.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Three words are often mixed up:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "en": [
+              "terminal"
+             ],
+             "fr": "terminal",
+             "id": "term-terminal",
+             "t": "term"
+            },
+            " is the window application. On a Mac: press ",
+            {
+             "t": "key",
+             "v": "Cmd+Space"
+            },
+            ", type ",
+            {
+             "t": "code",
+             "v": "Terminal"
+            },
+            ", press ",
+            {
+             "t": "key",
+             "v": "Enter"
+            },
+            ". (Other terminal apps exist, like iTerm2 or the terminal inside VS Code; they all work the same way.)"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "en": [
+              "shell"
+             ],
+             "fr": "interpréteur de commandes (shell)",
+             "id": "term-shell",
+             "t": "term"
+            },
+            " is the program inside the window that reads what you type and runs it. On a modern Mac the shell is ",
+            {
+             "c": [
+              "zsh"
+             ],
+             "t": "b"
+            },
+            ". On Linux it is often ",
+            {
+             "c": [
+              "bash"
+             ],
+             "t": "b"
+            },
+            ". For everything in this book they behave the same."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "en": [
+              "prompt"
+             ],
+             "fr": "invite de commande",
+             "id": "term-prompt",
+             "t": "term"
+            },
+            " is the short text the shell prints when it waits for you, for example ",
+            {
+             "t": "code",
+             "v": "mac@MacBook-Air ~ %"
+            },
+            ". It usually shows your user name, the computer name and the current folder (~ means your home folder)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "In this book, commands are shown in dark boxes and start with ",
+          {
+           "t": "code",
+           "v": "$ "
+          },
+          ". ",
+          {
+           "c": [
+            "Do not type the ",
+            {
+             "t": "code",
+             "v": "$"
+            }
+           ],
+           "t": "b"
+          },
+          ": it only means \"type what follows\". Lines without ",
+          {
+           "t": "code",
+           "v": "$"
+          },
+          " are what the computer prints back. Text after a ",
+          {
+           "t": "code",
+           "v": "#"
+          },
+          " sign is an explanation for you: do not type it either (see the trap in ",
+          {
+           "href": "/learn/ch02/ch02-s2/",
+           "label": "sec:cli-paths",
+           "t": "ref",
+           "text": "Section 2.2"
+          },
+          ")."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      },
+      {
+       "id": "ch02-c1",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ echo \"Hello dbt\"\nHello dbt"
+      },
+      {
+       "c": [
+        "You just ran your first command: ",
+        {
+         "t": "code",
+         "v": "echo"
+        },
+        " prints back the text you give it. Most commands have the same shape:"
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "command -options arguments"
+        },
+        " e.g. ",
+        {
+         "t": "code",
+         "v": "ls -la data"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "dbt run --select stg_orders"
+        }
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The ",
+        {
+         "c": [
+          "command"
+         ],
+         "t": "i"
+        },
+        " is the program, ",
+        {
+         "c": [
+          "options"
+         ],
+         "t": "i"
+        },
+        " (also called ",
+        {
+         "c": [
+          "flags"
+         ],
+         "t": "i"
+        },
+        ") change how it behaves and start with ",
+        {
+         "t": "code",
+         "v": "-"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "--"
+        },
+        ", and ",
+        {
+         "c": [
+          "arguments"
+         ],
+         "t": "i"
+        },
+        " say what to act on."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Every dbt command has exactly this shape: ",
+          {
+           "t": "code",
+           "v": "dbt"
+          },
+          " is the program, ",
+          {
+           "t": "code",
+           "v": "run"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "build"
+          },
+          " is a sub-command, and flags like ",
+          {
+           "t": "code",
+           "v": "--select"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "--exclude"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "--full-refresh"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "--target"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "--empty"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "--threads"
+          },
+          " change its behaviour. Chapter 16 is fully dedicated to these flags, because the exam loves them."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch02-s1-0",
+     "title": [
+      "Terminal, shell and prompt"
+     ],
+     "titleText": "Terminal, shell and prompt"
+    }
+   ],
+   "title": [
+    "Terminal, shell and prompt"
+   ],
+   "titleText": "Terminal, shell and prompt"
+  },
+  {
+   "anchors": [
+    "sec-cli-paths"
+   ],
+   "checkpoints": [],
+   "id": "ch02-s2",
+   "label": "sec:cli-paths",
+   "labs": [],
+   "minutes": 5,
+   "number": "2.2",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Your files are organised as a tree of ",
+        {
+         "en": [
+          "folders"
+         ],
+         "fr": "dossiers",
+         "id": "term-folder",
+         "t": "term"
+        },
+        " (also called ",
+        {
+         "en": [
+          "directories"
+         ],
+         "fr": "répertoires",
+         "id": "term-directorie",
+         "t": "term"
+        },
+        "). At any moment, the shell is \"standing\" in one folder: the ",
+        {
+         "en": [
+          "current working directory"
+         ],
+         "fr": "répertoire de travail courant",
+         "id": "term-current-working-directory",
+         "t": "term"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "A folder tree from the root folder / to the course folders. /Users/you/ is the home folder (~). It contains Documents/Adnane/dbt-bible/ (this book, with labs/), dbt-course/ (your workspace, Chapter 2 lab) and .dbt/ (hidden: dbt connection settings).",
+       "description": "/ (root) → Users/ → mac/ (home = ~). Inside mac/: Documents/ → Adnane/ → dbt-bible/ (this book, with labs/); dbt-course/ (your workspace for the Chapter 2 lab) with .venv/ and practice/; practice/ contains practice.duckdb, setup.sql and data/; and .dbt/ (hidden: dbt connection settings).",
+       "id": "ch02-fig1",
+       "src": "figures/ch02-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "path"
+         ],
+         "fr": "chemin",
+         "id": "term-path",
+         "t": "term"
+        },
+        " is the address of a file or folder."
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "An ",
+            {
+             "c": [
+              "absolute path"
+             ],
+             "t": "b"
+            },
+            " starts from the root ",
+            {
+             "t": "code",
+             "v": "/"
+            },
+            ": ",
+            {
+             "t": "code",
+             "textBook": "/Users/mac/dbt-course/practice",
+             "v": "/Users/you/dbt-course/practice"
+            },
+            ". It works from anywhere."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A ",
+            {
+             "c": [
+              "relative path"
+             ],
+             "t": "b"
+            },
+            " starts from where you are now: if you are in ",
+            {
+             "t": "code",
+             "textBook": "/Users/mac/dbt-course",
+             "v": "/Users/you/dbt-course"
+            },
+            ", then ",
+            {
+             "t": "code",
+             "v": "practice/setup.sql"
+            },
+            " means ",
+            {
+             "t": "code",
+             "textBook": "/Users/mac/dbt-course/practice/setup.sql",
+             "v": "/Users/you/dbt-course/practice/setup.sql"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Special names: ",
+            {
+             "t": "code",
+             "v": "~"
+            },
+            " = your home folder (",
+            {
+             "t": "code",
+             "textBook": "/Users/mac",
+             "v": "/Users/you"
+            },
+            "), ",
+            {
+             "t": "code",
+             "v": "."
+            },
+            " = the current folder, ",
+            {
+             "t": "code",
+             "v": ".."
+            },
+            " = the parent folder (one level up)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch02-s2-0",
+     "title": [
+      "Where am I? Folders and paths"
+     ],
+     "titleText": "Where am I? Folders and paths"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch02-c2",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ pwd                      # print working directory: where am I?\n/Users/you\n$ cd dbt-course            # change directory (relative path)\n$ pwd\n/Users/you/dbt-course\n$ cd ..                    # go up one level\n$ cd ~/dbt-course/practice # absolute path using ~\n$ cd -                     # go back to the previous folder\n~\n$ cd                       # cd alone = go home",
+       "textBook": "$ pwd                      # print working directory: where am I?\n/Users/mac\n$ cd dbt-course            # change directory (relative path)\n$ pwd\n/Users/mac/dbt-course\n$ cd ..                    # go up one level\n$ cd ~/dbt-course/practice # absolute path using ~\n$ cd -                     # go back to the previous folder\n~\n$ cd                       # cd alone = go home"
+      },
+      {
+       "c": [
+        "And ",
+        {
+         "t": "code",
+         "v": "ls"
+        },
+        " lists what is inside a folder:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch02-c3",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ cd ~/dbt-course\n$ ls\nnotes.txt  practice\n$ ls -la\ntotal 0\ndrwxr-xr-x@  5 mac  staff  160 Oct 21 19:40 .\ndrwxr-x---+ 42 mac  staff 1344 Oct 21 19:40 ..\ndrwxr-xr-x@  7 mac  staff  224 Oct 21 19:40 .venv\n-rw-r--r--@  1 mac  staff    0 Oct 21 19:40 notes.txt\ndrwxr-xr-x@  5 mac  staff  160 Oct 21 19:40 practice"
+      },
+      {
+       "c": [
+        "Read the long format (",
+        {
+         "t": "code",
+         "v": "-l"
+        },
+        ") from left to right: a ",
+        {
+         "t": "code",
+         "v": "d"
+        },
+        " at the start means ",
+        {
+         "c": [
+          "directory"
+         ],
+         "t": "i"
+        },
+        "; then the permissions, a link count, the owner (",
+        {
+         "t": "code",
+         "v": "mac"
+        },
+        ") and group (",
+        {
+         "t": "code",
+         "v": "staff"
+        },
+        "), the size in bytes, the date, and the name. The ",
+        {
+         "t": "code",
+         "v": "-a"
+        },
+        " option (\"all\") also shows ",
+        {
+         "en": [
+          "hidden files"
+         ],
+         "fr": "fichiers cachés",
+         "id": "term-hidden-file",
+         "t": "term"
+        },
+        ": names that start with a dot, like ",
+        {
+         "t": "code",
+         "v": ".venv"
+        },
+        " (you will create it in this chapter)."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The ",
+          {
+           "t": "code",
+           "v": "#"
+          },
+          " sign starts a ",
+          {
+           "c": [
+            "comment"
+           ],
+           "t": "i"
+          },
+          ": everything after it is ignored. We use comments in this book to explain commands, so ",
+          {
+           "c": [
+            "type only the part before ",
+            {
+             "t": "code",
+             "v": "#"
+            }
+           ],
+           "t": "b"
+          },
+          ". Careful: on a Mac, by default, zsh does ",
+          {
+           "c": [
+            "not"
+           ],
+           "t": "i"
+          },
+          " treat ",
+          {
+           "t": "code",
+           "v": "#"
+          },
+          " as a comment when you type commands by hand. If you copy a whole line like ",
+          {
+           "t": "code",
+           "v": "pwd # where am I?"
+          },
+          ", zsh gives an error. To make zsh accept these comments, run this once, then open a new terminal:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch02-c4",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ echo 'setopt interactivecomments' >> ~/.zshrc"
+        },
+        {
+         "c": [
+          "You will see the same ",
+          {
+           "t": "code",
+           "v": "#"
+          },
+          " comment sign in YAML files (",
+          {
+           "href": "/learn/ch05/",
+           "label": "ch:yaml-jinja-python",
+           "t": "ref",
+           "text": "Chapter 5"
+          },
+          "), which are everywhere in dbt."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch02-s2-1",
+     "number": "2.2.1",
+     "title": [
+      "The three navigation commands"
+     ],
+     "titleText": "The three navigation commands"
+    }
+   ],
+   "title": [
+    "Where am I? Folders and paths"
+   ],
+   "titleText": "Where am I? Folders and paths"
+  },
+  {
+   "anchors": [
+    "sec-cli-files"
+   ],
+   "checkpoints": [],
+   "id": "ch02-s3",
+   "label": "sec:cli-files",
+   "labs": [],
+   "minutes": 5,
+   "number": "2.3",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Command"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it does"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "mkdir notes"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Make a directory. ",
+           {
+            "t": "code",
+            "v": "mkdir -p a/b/c"
+           },
+           " creates all missing parent folders at once and does not complain if they exist."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "touch file.txt"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Create an empty file (or update its date if it exists)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "cp a.txt b.txt"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Copy a file. ",
+           {
+            "t": "code",
+            "v": "cp -R folder new_folder"
+           },
+           " copies a whole folder (recursive)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "mv old.txt new.txt"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Move ",
+           {
+            "c": [
+             "or rename"
+            ],
+            "t": "i"
+           },
+           " a file or folder."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "rm file.txt"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Remove a file. ",
+           {
+            "t": "code",
+            "v": "rm -r folder"
+           },
+           " removes a folder and everything inside."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "cat file.txt"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Print the whole file."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "less file.txt"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Read a long file page by page (",
+           {
+            "t": "key",
+            "v": "Space"
+           },
+           " next page, ",
+           {
+            "t": "key",
+            "v": "q"
+           },
+           " quit)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "head -3 f"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "tail -2 f"
+           }
+          ]
+         },
+         {
+          "c": [
+           "First 3 lines / last 2 lines of a file."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "wc -l file.csv"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Count lines (",
+           {
+            "c": [
+             "word count"
+            ],
+            "t": "i"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "-l"
+           },
+           " = lines)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "rm"
+          },
+          " does ",
+          {
+           "c": [
+            "not"
+           ],
+           "t": "b"
+          },
+          " use the Trash. A deleted file is gone. Never run ",
+          {
+           "t": "code",
+           "v": "rm -rf"
+          },
+          " with a path you have not checked twice, and never with ",
+          {
+           "t": "code",
+           "v": "~"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "/"
+          },
+          ". When in doubt, run ",
+          {
+           "t": "code",
+           "v": "ls"
+          },
+          " on the same path first to see what would be deleted."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "Let us look at the practice data with these commands (you will copy it into your workspace in the main lab of this chapter):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch02-c5",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ cd ~/dbt-course/practice\n$ ls data\ncustomers.csv  order_items.csv  orders.csv  payments.csv  products.csv\n$ head -3 data/orders.csv\nid,user_id,order_date,status,_loaded_at\n1,51,2025-01-05,completed,2025-01-06 02:51:00\n2,85,2025-01-06,completed,2025-01-06 23:55:00\n$ tail -2 data/customers.csv\n99,Olivia,Brown,OLIVIA.BROWN99@EXAMPLE.COM,Morocco,2024-02-27\n100,Mehdi,Bernard,mehdi.bernard100@example.com,Morocco,2024-05-05\n$ wc -l data/*.csv\n     101 data/customers.csv\n     607 data/order_items.csv\n     301 data/orders.csv\n     342 data/payments.csv\n      13 data/products.csv\n    1364 total"
+      },
+      {
+       "c": [
+        "A CSV (\"comma-separated values\") file is a table written as text: the first line is the header with the column names, and each next line is one row. That is why ",
+        {
+         "t": "code",
+         "v": "wc -l"
+        },
+        " says 301 for ",
+        {
+         "t": "code",
+         "v": "orders.csv"
+        },
+        ": 300 orders plus 1 header line."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Notice customer 99: the email is in upper case. Raw data is often messy like this. Cleaning it (for example with ",
+          {
+           "t": "code",
+           "v": "lower(email)"
+          },
+          ") is the job of the ",
+          {
+           "c": [
+            "staging"
+           ],
+           "t": "i"
+          },
+          " models you will build in Part II."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch02-s3-0",
+     "title": [
+      "Creating, copying, moving and deleting"
+     ],
+     "titleText": "Creating, copying, moving and deleting"
+    }
+   ],
+   "title": [
+    "Creating, copying, moving and deleting"
+   ],
+   "titleText": "Creating, copying, moving and deleting"
+  },
+  {
+   "anchors": [
+    "sec-cli-pipes"
+   ],
+   "checkpoints": [],
+   "id": "ch02-s4",
+   "label": "sec:cli-pipes",
+   "labs": [
+    "ch02-lab1"
+   ],
+   "minutes": 15,
+   "number": "2.4",
+   "objectives": [
+    "CP0-CLI"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "id": "ch02-c6",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ grep -c \"placed\" data/orders.csv      # -c = count the matching lines\n10\n$ grep \"coffee\" data/products.csv\n1,Espresso,coffee,250\n2,Cappuccino,coffee,380\n3,Flat White,coffee,400\n4,Cold Brew,coffee,450"
+      }
+     ],
+     "id": "ch02-s4-1",
+     "number": "2.4.1",
+     "title": [
+      "grep: find lines that contain a word"
+     ],
+     "titleText": "grep: find lines that contain a word"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The star ",
+        {
+         "t": "code",
+         "v": "*"
+        },
+        " means \"any characters\". The shell replaces the pattern with every matching name before running the command."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch02-c7",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ ls data/p*          # every name in data/ that starts with p\ndata/payments.csv  data/products.csv"
+      }
+     ],
+     "id": "ch02-s4-2",
+     "number": "2.4.2",
+     "title": [
+      "Wildcards"
+     ],
+     "titleText": "Wildcards"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "en": [
+              "pipe"
+             ],
+             "fr": "tube (pipe)",
+             "id": "term-pipe",
+             "t": "term"
+            },
+            " ",
+            {
+             "t": "code",
+             "v": "|"
+            },
+            " sends the output of one command into the next command."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": ">"
+            },
+            " writes the output into a file (",
+            {
+             "c": [
+              "replacing"
+             ],
+             "t": "b"
+            },
+            " the file)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": ">>"
+            },
+            " adds the output at the end of a file (",
+            {
+             "c": [
+              "appending"
+             ],
+             "t": "b"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "id": "ch02-c8",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ grep \"placed\" data/orders.csv | head -3\n288,24,2025-12-21,placed,2025-12-21 22:15:00\n289,70,2025-12-21,placed,2025-12-22 02:25:00\n290,72,2025-12-21,placed,2025-12-21 15:10:00\n$ echo \"first line\" > notes.txt\n$ echo \"second line\" >> notes.txt\n$ cat notes.txt\nfirst line\nsecond line"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": ">"
+          },
+          " silently replaces the whole file. If you meant to add a line and typed ",
+          {
+           "t": "code",
+           "v": ">"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": ">>"
+          },
+          ", the old content is lost. The same logic appears in dbt: a ",
+          {
+           "t": "code",
+           "v": "table"
+          },
+          " materialization replaces the table at each run, while an ",
+          {
+           "t": "code",
+           "v": "incremental"
+          },
+          " model ",
+          {
+           "c": [
+            "adds"
+           ],
+           "t": "i"
+          },
+          " new rows (Chapter 14)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch02-s4-3",
+     "number": "2.4.3",
+     "title": [
+      "Pipes and redirection"
+     ],
+     "titleText": "Pipes and redirection"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Key / command"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Effect"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "key",
+            "v": "Tab"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Auto-complete a file, folder or command name. Press it all the time: it avoids typing errors."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "key",
+            "v": "Up"
+           },
+           " / ",
+           {
+            "t": "key",
+            "v": "Down"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Walk through the commands you typed before."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "history"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Show the list of previous commands."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "key",
+            "v": "Ctrl+C"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Stop the running command (for example a ",
+           {
+            "t": "code",
+            "v": "dbt build"
+           },
+           " you started by mistake)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "key",
+            "v": "Ctrl+A"
+           },
+           " / ",
+           {
+            "t": "key",
+            "v": "Ctrl+E"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Jump to the beginning / end of the line."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "clear"
+           },
+           " or ",
+           {
+            "t": "key",
+            "v": "Cmd+K"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Clean the screen."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " practise navigation and reading files. Do this lab ",
+          {
+           "c": [
+            "after"
+           ],
+           "t": "i"
+          },
+          " the main lab (",
+          {
+           "href": "/learn/ch02/ch02-s9/",
+           "label": "sec:cli-mainlab",
+           "t": "ref",
+           "text": "Section 2.9"
+          },
+          "), or directly in ",
+          {
+           "t": "code",
+           "textBook": "~/Documents/Adnane/dbt-bible/labs",
+           "v": "~/dbt-course/kit/labs"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "cd"
+              },
+              " into the folder that contains ",
+              {
+               "t": "code",
+               "v": "data/"
+              },
+              " and check with ",
+              {
+               "t": "code",
+               "v": "pwd"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Show the first 5 lines of ",
+              {
+               "t": "code",
+               "v": "payments.csv"
+              },
+              ". Which column holds the amount, and in which unit?"
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Count how many lines of ",
+              {
+               "t": "code",
+               "v": "payments.csv"
+              },
+              " contain ",
+              {
+               "t": "code",
+               "v": "fail"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Write the header line of every CSV file into one file with ",
+              {
+               "t": "code",
+               "v": "head -1 data/*.csv > headers.txt"
+              },
+              ", then read it with ",
+              {
+               "t": "code",
+               "v": "cat"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Delete ",
+              {
+               "t": "code",
+               "v": "headers.txt"
+              },
+              " with ",
+              {
+               "t": "code",
+               "v": "rm"
+              },
+              " (check the name first!)."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the amount is in the ",
+          {
+           "t": "code",
+           "v": "amount"
+          },
+          " column, in cents (2520 = 25.20); ",
+          {
+           "t": "code",
+           "v": "grep -c fail data/payments.csv"
+          },
+          " prints ",
+          {
+           "t": "code",
+           "v": "24"
+          },
+          "; ",
+          {
+           "t": "code",
+           "v": "headers.txt"
+          },
+          " contains a small title line (",
+          {
+           "t": "code",
+           "v": "==> data/customers.csv <=="
+          },
+          ") followed by the header of each file."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch02-lab1",
+       "objectives": [
+        "CP0-CLI"
+       ],
+       "t": "lab",
+       "title": [
+        "Explore the practice files"
+       ]
+      }
+     ],
+     "id": "ch02-s4-4",
+     "number": "2.4.4",
+     "title": [
+      "Speed tricks you will use every day"
+     ],
+     "titleText": "Speed tricks you will use every day"
+    }
+   ],
+   "title": [
+    "Searching and combining commands"
+   ],
+   "titleText": "Searching and combining commands"
+  },
+  {
+   "anchors": [
+    "sec-cli-hidden"
+   ],
+   "checkpoints": [],
+   "id": "ch02-s5",
+   "label": "sec:cli-hidden",
+   "labs": [],
+   "minutes": 5,
+   "number": "2.5",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Files whose name starts with a dot are hidden from a normal ",
+        {
+         "t": "code",
+         "v": "ls"
+        },
+        " and from the Finder (in Finder, ",
+        {
+         "t": "key",
+         "v": "Cmd+Shift+."
+        },
+        " shows them). Tools use them for settings. You will meet these:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Hidden item"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Role"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".venv/"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Your Python virtual environment (this chapter)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".git/"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The full history of a git repository (",
+           {
+            "href": "/learn/ch03/",
+            "label": "ch:git",
+            "t": "ref",
+            "text": "Chapter 3"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".gitignore"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A list of files git must ignore, like ",
+           {
+            "t": "code",
+            "v": "target/"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": ".venv/"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "~/.dbt/"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The default folder for ",
+           {
+            "t": "code",
+            "v": "profiles.yml"
+           },
+           ", your dbt connection settings (Chapter 6)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "~/.zshrc"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The settings file zsh reads when a terminal opens."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".env"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A common place to keep environment variables for a project (never commit it)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "dbt creates several folders inside a project: ",
+          {
+           "t": "code",
+           "v": "target/"
+          },
+          " (compiled SQL and JSON artifacts), ",
+          {
+           "t": "code",
+           "v": "logs/"
+          },
+          " (the detailed ",
+          {
+           "t": "code",
+           "v": "dbt.log"
+          },
+          ") and ",
+          {
+           "t": "code",
+           "v": "dbt_packages/"
+          },
+          " (installed packages). They are ",
+          {
+           "c": [
+            "generated"
+           ],
+           "t": "i"
+          },
+          ", so a dbt project's ",
+          {
+           "t": "code",
+           "v": ".gitignore"
+          },
+          " normally lists them. When you debug (Chapter 22), you will open ",
+          {
+           "t": "code",
+           "v": "target/compiled/"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "logs/dbt.log"
+          },
+          " with the commands of this chapter."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch02-s5-0",
+     "title": [
+      "Hidden files and folders"
+     ],
+     "titleText": "Hidden files and folders"
+    }
+   ],
+   "title": [
+    "Hidden files and folders"
+   ],
+   "titleText": "Hidden files and folders"
+  },
+  {
+   "anchors": [
+    "sec-cli-env"
+   ],
+   "checkpoints": [],
+   "id": "ch02-s6",
+   "label": "sec:cli-env",
+   "labs": [],
+   "minutes": 5,
+   "number": "2.6",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "An ",
+        {
+         "en": [
+          "environment variable"
+         ],
+         "fr": "variable d'environnement",
+         "id": "term-environment-variable",
+         "t": "term"
+        },
+        " is a named value that the shell gives to every program it starts. Some exist already:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch02-c9",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ echo $HOME\n/Users/you\n$ echo $SHELL\n/bin/zsh",
+       "textBook": "$ echo $HOME\n/Users/mac\n$ echo $SHELL\n/bin/zsh"
+      },
+      {
+       "c": [
+        "You can create your own with ",
+        {
+         "t": "code",
+         "v": "export"
+        },
+        ". It lives until you close this terminal window:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch02-c10",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ export DBT_DEMO_SECRET=\"abc123\"\n$ echo \"My secret is $DBT_DEMO_SECRET\"\nMy secret is abc123"
+      }
+     ],
+     "id": "ch02-s6-0",
+     "title": [
+      "Environment variables"
+     ],
+     "titleText": "Environment variables"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "When you type ",
+        {
+         "t": "code",
+         "v": "dbt"
+        },
+        ", how does the shell know which program to run? It looks in the folders listed in the ",
+        {
+         "t": "code",
+         "v": "PATH"
+        },
+        " variable, in order, and runs the first match. ",
+        {
+         "t": "code",
+         "v": "which"
+        },
+        " tells you which file was found:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch02-c11",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ which git\n/usr/bin/git\n$ which python3\n/opt/homebrew/bin/python3"
+      },
+      {
+       "c": [
+        "If a command prints ",
+        {
+         "t": "code",
+         "v": "command not found"
+        },
+        ", the program is either not installed or not in a folder of your ",
+        {
+         "t": "code",
+         "v": "PATH"
+        },
+        ". With dbt, the usual reason is simply that the virtual environment is not activated (",
+        {
+         "href": "/learn/ch02/ch02-s8/",
+         "label": "sec:cli-python",
+         "t": "ref",
+         "text": "Section 2.8"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch02-s6-1",
+     "number": "2.6.1",
+     "title": [
+      "PATH: how the shell finds programs"
+     ],
+     "titleText": "PATH: how the shell finds programs"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Passwords and tokens must never be written in files that go into git: anybody who can read the repository would see them. The professional habit is to keep the secret in an environment variable and let the tool read it at run time."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "dbt reads environment variables with the Jinja function ",
+          {
+           "t": "code",
+           "v": "env_var('NAME')"
+          },
+          ", for example in ",
+          {
+           "t": "code",
+           "v": "profiles.yml"
+          },
+          ": ",
+          {
+           "t": "code",
+           "v": "password: \"{{ env_var('DBT_ENV_SECRET_PASSWORD') }}\""
+          },
+          ". Variables whose name starts with ",
+          {
+           "t": "code",
+           "v": "DBT_ENV_SECRET_"
+          },
+          " get special protection: dbt hides their value in logs. You will use ",
+          {
+           "t": "code",
+           "v": "env_var()"
+          },
+          " in Chapter 6 and Chapter 10, and the dbt platform lets you define environment variables per environment (Chapter 25)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "To keep a variable for every new terminal, add the ",
+          {
+           "t": "code",
+           "v": "export"
+          },
+          " line at the end of ",
+          {
+           "t": "code",
+           "v": "~/.zshrc"
+          },
+          " and open a new terminal. Do this for harmless settings only; for real passwords prefer a password manager or your company's secret tool."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch02-s6-2",
+     "number": "2.6.2",
+     "title": [
+      "Why secrets go in environment variables"
+     ],
+     "titleText": "Why secrets go in environment variables"
+    }
+   ],
+   "title": [
+    "Environment variables"
+   ],
+   "titleText": "Environment variables"
+  },
+  {
+   "anchors": [
+    "sec-cli-help"
+   ],
+   "checkpoints": [],
+   "id": "ch02-s7",
+   "label": "sec:cli-help",
+   "labs": [],
+   "minutes": 5,
+   "number": "2.7",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Almost every command explains itself:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch02-c12",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt --help             # list of dbt sub-commands and global options\n$ dbt run --help         # options of one sub-command\n$ man ls                 # the manual page of ls (q to quit)"
+      }
+     ],
+     "id": "ch02-s7-1",
+     "number": "2.7.1",
+     "title": [
+      "Help"
+     ],
+     "titleText": "Help"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "When a command finishes, it returns a small number to the shell: the ",
+        {
+         "en": [
+          "exit code"
+         ],
+         "fr": "code de sortie",
+         "id": "term-exit-code",
+         "t": "term"
+        },
+        ". ",
+        {
+         "c": [
+          "0 means success; any other number means failure."
+         ],
+         "t": "b"
+        },
+        " The special variable ",
+        {
+         "t": "code",
+         "v": "$?"
+        },
+        " holds the exit code of the last command:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch02-c13",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ ls data\ncustomers.csv  order_items.csv  orders.csv  payments.csv  products.csv\n$ echo $?\n0\n$ ls nofolder\nls: nofolder: No such file or directory\n$ echo $?\n1"
+      },
+      {
+       "c": [
+        "The operator ",
+        {
+         "t": "code",
+         "v": "&&"
+        },
+        " runs the second command only if the first one succeeded (exit code 0):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch02-c14",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt build && echo \"All good, ready to deploy\""
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "dbt returns exit code 0 when everything succeeded and a non-zero code when a model, test or other node failed (or when it could not even start, for example ",
+          {
+           "t": "code",
+           "v": "dbt debug"
+          },
+          " outside a project returns 1). Orchestrators and CI systems (GitHub Actions, the dbt platform) use this number to decide whether a job passed or failed, and whether to stop a pipeline. Note that ",
+          {
+           "t": "code",
+           "v": "dbt retry"
+          },
+          " (Chapter 24) does not use the exit code: it reads the file ",
+          {
+           "t": "code",
+           "v": "target/run_results.json"
+          },
+          ", written by the previous command, to find what failed."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A dbt ",
+          {
+           "c": [
+            "warning"
+           ],
+           "t": "i"
+          },
+          " (for example a test configured with ",
+          {
+           "t": "code",
+           "v": "severity: warn"
+          },
+          ") does not make dbt return a failure code. Only errors and failures do. The exception is the ",
+          {
+           "t": "code",
+           "v": "--warn-error"
+          },
+          " flag, which turns warnings into errors (Chapter 22). Remember this when a question asks whether a job \"fails\"."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch02-s7-2",
+     "number": "2.7.2",
+     "title": [
+      "Exit codes"
+     ],
+     "titleText": "Exit codes"
+    }
+   ],
+   "title": [
+    "Getting help and reading exit codes"
+   ],
+   "titleText": "Getting help and reading exit codes"
+  },
+  {
+   "anchors": [
+    "sec-cli-python",
+    "sec-cli-duckdb-version"
+   ],
+   "checkpoints": [],
+   "id": "ch02-s8",
+   "label": "sec:cli-python",
+   "labs": [],
+   "minutes": 5,
+   "number": "2.8",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "en": [
+          "Homebrew"
+         ],
+         "fr": "Homebrew (gestionnaire de paquets)",
+         "id": "term-homebrew",
+         "t": "term"
+        },
+        " is the package manager of macOS: one command installs a tool and puts it in your ",
+        {
+         "t": "code",
+         "v": "PATH"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch02-c15",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ brew --version            # is Homebrew installed?\n$ brew install duckdb       # the DuckDB command-line tool\n$ brew install uv           # only if \"uv --version\" does not work\n$ duckdb --version"
+      },
+      {
+       "c": [
+        "If ",
+        {
+         "t": "code",
+         "v": "brew"
+        },
+        " itself is missing, install it by following the one-line instruction on ",
+        {
+         "t": "code",
+         "v": "brew.sh"
+        },
+        ". At the end, the installer prints ",
+        {
+         "c": [
+          "Next steps"
+         ],
+         "t": "i"
+        },
+        ": run the commands it shows (they add ",
+        {
+         "t": "code",
+         "v": "brew"
+        },
+        " to your ",
+        {
+         "t": "code",
+         "v": "PATH"
+        },
+        "), then open a new terminal."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch02-s8-1",
+     "number": "2.8.1",
+     "title": [
+      "Homebrew"
+     ],
+     "titleText": "Homebrew"
+    },
+    {
+     "blocks": [
+      {
+       "blocks": [
+        {
+         "c": [
+          "Imagine one shared toolbox for every job in a house. The plumber replaces your hammer with a heavier one, and the next day the carpenter's work goes wrong. A ",
+          {
+           "c": [
+            "virtual environment"
+           ],
+           "t": "b"
+          },
+          " is a private toolbox for one project: the exact Python version and the exact dbt version it needs, without touching any other project or the system."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "virtual environment"
+         ],
+         "fr": "environnement virtuel",
+         "id": "term-virtual-environment",
+         "t": "term"
+        },
+        " (\"venv\") is a folder (we call it ",
+        {
+         "t": "code",
+         "v": ".venv"
+        },
+        ") that contains its own Python and its own installed packages. We create it with ",
+        {
+         "t": "code",
+         "v": "uv"
+        },
+        ", a fast modern tool for Python packages:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch02-c16",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ cd ~/dbt-course\n$ uv venv --python 3.12 .venv\nUsing CPython 3.12.13\nCreating virtual environment at: .venv\nActivate with: source .venv/bin/activate\n$ source .venv/bin/activate\n(.venv) $ which python\n/Users/you/dbt-course/.venv/bin/python",
+       "textBook": "$ cd ~/dbt-course\n$ uv venv --python 3.12 .venv\nUsing CPython 3.12.13\nCreating virtual environment at: .venv\nActivate with: source .venv/bin/activate\n$ source .venv/bin/activate\n(.venv) $ which python\n/Users/mac/dbt-course/.venv/bin/python"
+      },
+      {
+       "c": [
+        "After ",
+        {
+         "t": "code",
+         "v": "source .venv/bin/activate"
+        },
+        ", the prompt starts with ",
+        {
+         "t": "code",
+         "v": "(.venv)"
+        },
+        ": the environment is ",
+        {
+         "c": [
+          "active"
+         ],
+         "t": "i"
+        },
+        " in this terminal, and its ",
+        {
+         "t": "code",
+         "v": "bin/"
+        },
+        " folder is first in your ",
+        {
+         "t": "code",
+         "v": "PATH"
+        },
+        ". Type ",
+        {
+         "t": "code",
+         "v": "deactivate"
+        },
+        " to leave it. You must activate it again in every new terminal window."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "On a Mac, outside a virtual environment the command is ",
+          {
+           "t": "code",
+           "v": "python3"
+          },
+          "; ",
+          {
+           "t": "code",
+           "v": "python"
+          },
+          " alone may print ",
+          {
+           "t": "code",
+           "v": "command not found"
+          },
+          ". Inside an active venv both work. If ",
+          {
+           "t": "code",
+           "v": "dbt"
+          },
+          " says ",
+          {
+           "t": "code",
+           "v": "command not found"
+          },
+          ", check the prompt: no ",
+          {
+           "t": "code",
+           "v": "(.venv)"
+          },
+          " means you forgot ",
+          {
+           "t": "code",
+           "v": "source .venv/bin/activate"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch02-s8-2",
+     "number": "2.8.2",
+     "title": [
+      "Why a virtual environment?"
+     ],
+     "titleText": "Why a virtual environment?"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch02-c17",
+       "lang": "bash",
+       "t": "code",
+       "text": "(.venv) $ uv pip install \"dbt-core~=1.11.0\" \"dbt-duckdb~=1.11.0\"\nResolved 54 packages in 17ms\nInstalled 54 packages in 229ms\n + agate==1.9.1\n ...\n(.venv) $ dbt --version\nCore:\n  - installed: 1.11.16\n  - latest:    1.12.6  - Update available!\n\n  Your version of dbt-core is out of date!\n  You can find instructions for upgrading here:\n  https://docs.getdbt.com/docs/installation\n\nPlugins:\n  - duckdb: 1.11.0 - Up to date!"
+      },
+      {
+       "c": [
+        "Three details to understand:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "~=1.11.0"
+            },
+            " means \"version 1.11.",
+            {
+             "c": [
+              "anything"
+             ],
+             "t": "i"
+            },
+            ", but not 1.12\". We ",
+            {
+             "c": [
+              "pin"
+             ],
+             "t": "b"
+            },
+            " 1.11 on purpose because ",
+            {
+             "c": [
+              "the exam is based on dbt Core 1.11"
+             ],
+             "t": "b"
+            },
+            ". The \"Update available\" message is normal: ignore it. (Your exact patch numbers, like ",
+            {
+             "t": "code",
+             "v": "1.11.16"
+            },
+            ", may be different.)"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "dbt is two pieces: ",
+            {
+             "t": "code",
+             "v": "dbt-core"
+            },
+            " (the engine) and an ",
+            {
+             "c": [
+              "adapter"
+             ],
+             "t": "b"
+            },
+            " for your platform (",
+            {
+             "t": "code",
+             "v": "dbt-duckdb"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "dbt-snowflake"
+            },
+            ", …). The adapter is listed under \"Plugins\"."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "We use ",
+            {
+             "c": [
+              "Python 3.12"
+             ],
+             "t": "b"
+            },
+            ", not the newest Python. dbt 1.11 officially supports Python 3.10 to 3.13; a brand-new Python version can break some of dbt's dependencies."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch02-s8-3",
+     "number": "2.8.3",
+     "title": [
+      "Install dbt Core 1.11 with the DuckDB adapter"
+     ],
+     "titleText": "Install dbt Core 1.11 with the DuckDB adapter"
+    },
+    {
+     "anchor": "sec-cli-duckdb-version",
+     "blocks": [
+      {
+       "c": [
+        "You now have DuckDB twice: the ",
+        {
+         "c": [
+          "command-line tool"
+         ],
+         "t": "b"
+        },
+        " from Homebrew (",
+        {
+         "t": "code",
+         "v": "duckdb"
+        },
+        ") and the ",
+        {
+         "c": [
+          "Python library"
+         ],
+         "t": "b"
+        },
+        " that ",
+        {
+         "t": "code",
+         "v": "dbt-duckdb"
+        },
+        " installed inside your venv. They are installed by two different tools, so they can have different versions. That matters: a database file written by a ",
+        {
+         "c": [
+          "newer"
+         ],
+         "t": "i"
+        },
+        " DuckDB cannot be opened by an ",
+        {
+         "c": [
+          "older"
+         ],
+         "t": "i"
+        },
+        " one. In Chapter 6, dbt (the library) will create database files that you will want to open with the command-line tool. So we make both versions equal:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch02-c18",
+       "lang": "bash",
+       "t": "code",
+       "text": "(.venv) $ duckdb --version\n# read the version number at the start, for example v1.5.6\n(.venv) $ uv pip install \"duckdb==1.5.6\"    # use YOUR number, without the \"v\"\n(.venv) $ python -c \"import duckdb; print(duckdb.__version__)\"\n1.5.6"
+      },
+      {
+       "c": [
+        "The last command prints the version of the Python library: it must be the same number as ",
+        {
+         "t": "code",
+         "v": "duckdb --version"
+        },
+        ". dbt 1.11 works with any recent DuckDB, so choosing the Homebrew version is safe."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "If you ever see ",
+          {
+           "t": "code",
+           "v": "The database file was created with a newer version of DuckDB"
+          },
+          ", the two versions are different again (for example after ",
+          {
+           "t": "code",
+           "v": "brew upgrade"
+          },
+          "). Compare ",
+          {
+           "t": "code",
+           "v": "duckdb --version"
+          },
+          " with ",
+          {
+           "t": "code",
+           "v": "uv pip show duckdb"
+          },
+          " and repeat the ",
+          {
+           "t": "code",
+           "v": "uv pip install \"duckdb==...\""
+          },
+          " step with the CLI's number."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Without ",
+          {
+           "t": "code",
+           "v": "uv"
+          },
+          ", the classic way uses Python's own ",
+          {
+           "t": "code",
+           "v": "venv"
+          },
+          " module and ",
+          {
+           "t": "code",
+           "v": "pip"
+          },
+          " (it needs Python 3.12 already installed, for example with ",
+          {
+           "t": "code",
+           "v": "brew install python@3.12"
+          },
+          "):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch02-c19",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ python3.12 -m venv .venv\n$ source .venv/bin/activate\n(.venv) $ python -m pip install \"dbt-core~=1.11.0\" \"dbt-duckdb~=1.11.0\""
+        },
+        {
+         "c": [
+          "The result is the same; ",
+          {
+           "t": "code",
+           "v": "uv"
+          },
+          " is simply faster and can download the right Python version for you."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "deep",
+       "t": "callout"
+      }
+     ],
+     "id": "ch02-s8-4",
+     "number": "2.8.4",
+     "title": [
+      "One DuckDB version everywhere"
+     ],
+     "titleText": "One DuckDB version everywhere"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "You can write SQL and YAML in any text editor, but ",
+        {
+         "c": [
+          "VS Code"
+         ],
+         "t": "b"
+        },
+        " makes life easier (colours, file tree, built-in terminal). Install it with ",
+        {
+         "t": "code",
+         "v": "brew install --cask visual-studio-code"
+        },
+        ". In VS Code, open the command palette (",
+        {
+         "t": "key",
+         "v": "Cmd+Shift+P"
+        },
+        ") and run ",
+        {
+         "c": [
+          "Shell Command: Install 'code' command in PATH"
+         ],
+         "t": "i"
+        },
+        "; after that, ",
+        {
+         "t": "code",
+         "v": "code ."
+        },
+        " opens the current folder. Useful extensions: ",
+        {
+         "c": [
+          "YAML"
+         ],
+         "t": "i"
+        },
+        " (Red Hat) and ",
+        {
+         "c": [
+          "Rainbow CSV"
+         ],
+         "t": "i"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Windows users:"
+           ],
+           "t": "b"
+          },
+          " install WSL (Windows Subsystem for Linux) and Ubuntu, and follow this book in the Ubuntu terminal: every command is the same except ",
+          {
+           "t": "code",
+           "v": "brew"
+          },
+          " (use ",
+          {
+           "t": "code",
+           "v": "sudo apt install"
+          },
+          " or the official installers). Native PowerShell also works with dbt, but paths and activation differ (",
+          {
+           "t": "code",
+           "v": ".venv\\Scripts\\activate"
+          },
+          ")."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch02-s8-5",
+     "number": "2.8.5",
+     "title": [
+      "A code editor (recommended)"
+     ],
+     "titleText": "A code editor (recommended)"
+    }
+   ],
+   "title": [
+    "Installing tools: Homebrew, Python environments and dbt"
+   ],
+   "titleText": "Installing tools: Homebrew, Python environments and dbt"
+  },
+  {
+   "anchors": [
+    "sec-cli-mainlab"
+   ],
+   "checkpoints": [],
+   "id": "ch02-s9",
+   "label": "sec:cli-mainlab",
+   "labs": [
+    "ch02-lab2"
+   ],
+   "minutes": 15,
+   "number": "2.9",
+   "objectives": [
+    "CP0-CLI"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "This lab is ",
+        {
+         "c": [
+          "mandatory"
+         ],
+         "t": "b"
+        },
+        ": every later chapter assumes it is done. Take your time and check the expected result after each step."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Open a terminal"
+               ],
+               "t": "b"
+              },
+              " and go home: ",
+              {
+               "t": "code",
+               "v": "cd"
+              },
+              ", then ",
+              {
+               "t": "code",
+               "v": "pwd"
+              },
+              ". Expected: ",
+              {
+               "t": "code",
+               "v": "/Users/<your-name>"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Check the tools."
+               ],
+               "t": "b"
+              },
+              " Run ",
+              {
+               "t": "code",
+               "v": "brew --version"
+              },
+              ", ",
+              {
+               "t": "code",
+               "v": "uv --version"
+              },
+              " and ",
+              {
+               "t": "code",
+               "v": "git --version"
+              },
+              ". Each should print a version. If ",
+              {
+               "t": "code",
+               "v": "uv"
+              },
+              " is missing: ",
+              {
+               "t": "code",
+               "v": "brew install uv"
+              },
+              ". If ",
+              {
+               "t": "code",
+               "v": "git --version"
+              },
+              " opens a window that offers to install the ",
+              {
+               "c": [
+                "command line developer tools"
+               ],
+               "t": "i"
+              },
+              ", accept and wait for the end of the installation, then run it again."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Install DuckDB:"
+               ],
+               "t": "b"
+              },
+              " ",
+              {
+               "t": "code",
+               "v": "brew install duckdb"
+              },
+              ", then ",
+              {
+               "t": "code",
+               "v": "duckdb --version"
+              },
+              ". Expected: a version number such as ",
+              {
+               "t": "code",
+               "v": "v1.5.6"
+              },
+              " (1.5 or newer is fine)."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Create the workspace:"
+               ],
+               "t": "b"
+              }
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch02-c20",
+             "lang": "bash",
+             "t": "code",
+             "text": "$ mkdir -p ~/dbt-course/practice\n$ cd ~/dbt-course"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Create and activate the virtual environment:"
+               ],
+               "t": "b"
+              }
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch02-c21",
+             "lang": "bash",
+             "t": "code",
+             "text": "$ uv venv --python 3.12 .venv\n$ source .venv/bin/activate"
+            },
+            {
+             "c": [
+              "Expected: the prompt now starts with ",
+              {
+               "t": "code",
+               "v": "(.venv)"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Install dbt:"
+               ],
+               "t": "b"
+              }
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch02-c22",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ uv pip install \"dbt-core~=1.11.0\" \"dbt-duckdb~=1.11.0\"\n(.venv) $ dbt --version"
+            },
+            {
+             "c": [
+              "Expected: ",
+              {
+               "t": "code",
+               "v": "installed: 1.11.x"
+              },
+              " under Core and ",
+              {
+               "t": "code",
+               "v": "duckdb: 1.11.x"
+              },
+              " under Plugins."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Align the DuckDB versions"
+               ],
+               "t": "b"
+              },
+              " (",
+              {
+               "href": "/learn/ch02/ch02-s8/#sec-cli-duckdb-version",
+               "label": "sec:cli-duckdb-version",
+               "t": "ref",
+               "text": "Section 2.8.4"
+              },
+              "): run ",
+              {
+               "t": "code",
+               "v": "duckdb --version"
+              },
+              ", then ",
+              {
+               "t": "code",
+               "v": "uv pip install \"duckdb==X.Y.Z\""
+              },
+              " with that number. Expected: ",
+              {
+               "t": "code",
+               "v": "python -c \"import duckdb; print(duckdb.__version__)\""
+              },
+              " prints the same number."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Copy the practice data"
+               ],
+               "t": "b"
+              },
+              " from the bible folder into your workspace:"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch02-c23",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ cp -R ~/dbt-course/kit/labs/data ~/dbt-course/practice/\n(.venv) $ cp ~/dbt-course/kit/labs/setup.sql ~/dbt-course/practice/\n(.venv) $ cd ~/dbt-course/practice\n(.venv) $ ls\ndata      setup.sql",
+             "textBook": "(.venv) $ cp -R ~/Documents/Adnane/dbt-bible/labs/data ~/dbt-course/practice/\n(.venv) $ cp ~/Documents/Adnane/dbt-bible/labs/setup.sql ~/dbt-course/practice/\n(.venv) $ cd ~/dbt-course/practice\n(.venv) $ ls\ndata      setup.sql"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Build the practice database."
+               ],
+               "t": "b"
+              },
+              " The ",
+              {
+               "t": "code",
+               "v": "<"
+              },
+              " sign sends the content of ",
+              {
+               "t": "code",
+               "v": "setup.sql"
+              },
+              " into DuckDB, which creates the file ",
+              {
+               "t": "code",
+               "v": "practice.duckdb"
+              },
+              ":"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch02-c24",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ duckdb practice.duckdb < setup.sql"
+            },
+            {
+             "c": [
+              "Expected: DuckDB prints one table with the row count of each table (your screen draws the box with nicer lines and also shows the column types under the column names):"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch02-c25",
+             "lang": "output",
+             "t": "code",
+             "text": "+-------------------------+--------+\n| table_name              | n_rows |\n+-------------------------+--------+\n| jaffle_shop.customers   |    100 |\n| jaffle_shop.orders      |    300 |\n| jaffle_shop.order_items |    606 |\n| jaffle_shop.products    |     12 |\n| stripe.payments         |    341 |\n+-------------------------+--------+"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Open the database interactively"
+               ],
+               "t": "b"
+              },
+              " and look around:"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch02-c26",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ duckdb practice.duckdb\nD .tables\nD select count(*) from jaffle_shop.orders;\nD .quit"
+            },
+            {
+             "c": [
+              "The prompt ",
+              {
+               "t": "code",
+               "v": "D"
+              },
+              " is DuckDB waiting for SQL. ",
+              {
+               "t": "code",
+               "v": ".tables"
+              },
+              " lists the five tables (customers, order_items, orders, payments, products); the ",
+              {
+               "t": "code",
+               "v": "count(*)"
+              },
+              " returns 300; ",
+              {
+               "t": "code",
+               "v": ".quit"
+              },
+              " (or ",
+              {
+               "t": "key",
+               "v": "Ctrl+D"
+              },
+              ") goes back to the shell. Commands starting with a dot are DuckDB's own helper commands; everything else is SQL and must end with ",
+              {
+               "t": "code",
+               "v": ";"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Write down your setup"
+               ],
+               "t": "b"
+              },
+              " in ",
+              {
+               "t": "code",
+               "v": "~/dbt-course/notes.txt"
+              },
+              ":"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch02-c27",
+             "lang": "bash",
+             "t": "code",
+             "text": "(.venv) $ cd ~/dbt-course\n(.venv) $ dbt --version > notes.txt\n(.venv) $ duckdb --version >> notes.txt\n(.venv) $ cat notes.txt"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected final state:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "~/dbt-course/"
+          },
+          " contains ",
+          {
+           "t": "code",
+           "v": ".venv/"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "notes.txt"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "practice/"
+          },
+          " (with ",
+          {
+           "t": "code",
+           "v": "data/"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "setup.sql"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "practice.duckdb"
+          },
+          "). If something went wrong, use the troubleshooting table below. You can rebuild the database at any time by running step 9 again."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch02-lab2",
+       "objectives": [
+        "CP0-CLI"
+       ],
+       "t": "lab",
+       "title": [
+        "Create ~/dbt-course with dbt 1.11, DuckDB and the practice database"
+       ]
+      }
+     ],
+     "id": "ch02-s9-0",
+     "title": [
+      "Main lab: build your study workspace"
+     ],
+     "titleText": "Main lab: build your study workspace"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Message or symptom"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Likely cause and fix"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "zsh: command not found: dbt"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The venv is not active. ",
+           {
+            "t": "code",
+            "v": "cd ~/dbt-course && source .venv/bin/activate"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "command not found: duckdb"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "brew"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "uv"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Tool not installed, or the terminal was opened before installation: install it, then open a new terminal."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "No such file or directory"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Wrong path or wrong current folder. Run ",
+           {
+            "t": "code",
+            "v": "pwd"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "ls"
+           },
+           ", and use ",
+           {
+            "t": "key",
+            "v": "Tab"
+           },
+           " completion."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "Permission denied"
+           }
+          ]
+         },
+         {
+          "c": [
+           "You are writing somewhere you do not own (for example ",
+           {
+            "t": "code",
+            "v": "/"
+           },
+           "). Work inside ",
+           {
+            "t": "code",
+            "v": "~/dbt-course"
+           },
+           ". Do not use ",
+           {
+            "t": "code",
+            "v": "sudo"
+           },
+           " for these labs."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt --version"
+           },
+           " shows 1.12 or another version"
+          ]
+         },
+         {
+          "c": [
+           "You installed without the pin. Run the install command again with ",
+           {
+            "t": "code",
+            "v": "\"dbt-core~=1.11.0\""
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "which python"
+           },
+           " does not show ",
+           {
+            "t": "code",
+            "v": ".venv"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The venv is not active in ",
+           {
+            "c": [
+             "this"
+            ],
+            "t": "i"
+           },
+           " terminal; activate it again."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Error about the Python version during install"
+          ]
+         },
+         {
+          "c": [
+           "You are not using Python 3.12. Recreate the venv: ",
+           {
+            "t": "code",
+            "v": "rm -r .venv"
+           },
+           " then ",
+           {
+            "t": "code",
+            "v": "uv venv --python 3.12 .venv"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "setup.sql"
+           },
+           ": ",
+           {
+            "t": "code",
+            "v": "No files found that match the pattern \"data/customers.csv\""
+           }
+          ]
+         },
+         {
+          "c": [
+           "You ran DuckDB from the wrong folder. ",
+           {
+            "t": "code",
+            "v": "cd ~/dbt-course/practice"
+           },
+           " first."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "duckdb"
+           },
+           ": ",
+           {
+            "t": "code",
+            "v": "The database file was created with a newer version of DuckDB"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The DuckDB tool from Homebrew is older than the DuckDB library that dbt installed in your venv. Compare ",
+           {
+            "t": "code",
+            "v": "duckdb --version"
+           },
+           " with ",
+           {
+            "t": "code",
+            "v": "uv pip show duckdb"
+           },
+           " (venv active), then run ",
+           {
+            "t": "code",
+            "v": "brew upgrade duckdb"
+           },
+           ", or install the same version in the venv: ",
+           {
+            "t": "code",
+            "v": "uv pip install \"duckdb==1.5.6\""
+           },
+           " (use your own version number)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch02-s9-1",
+     "number": "2.9.1",
+     "title": [
+      "Troubleshooting"
+     ],
+     "titleText": "Troubleshooting"
+    }
+   ],
+   "title": [
+    "Main lab: build your study workspace"
+   ],
+   "titleText": "Main lab: build your study workspace"
+  }
+ ],
+ "minutes": 85,
+ "number": 2,
+ "objectives": [
+  "CP0-CLI",
+  "1.4",
+  "1.6",
+  "3.1"
+ ],
+ "part": 1,
+ "partLabel": "Part I",
+ "partTitle": "Foundations Refresh",
+ "printed": "2",
+ "quiz": [
+  "q-ch02-01",
+  "q-ch02-02",
+  "q-ch02-03",
+  "q-ch02-04",
+  "q-ch02-05",
+  "q-ch02-06",
+  "q-ch02-07",
+  "q-ch02-08",
+  "q-ch02-09",
+  "q-ch02-10",
+  "q-ch02-11",
+  "q-ch02-12",
+  "q-ch02-13",
+  "q-ch02-14"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-cli-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch02-01",
+      "q-ch02-02",
+      "q-ch02-03",
+      "q-ch02-04",
+      "q-ch02-05",
+      "q-ch02-06",
+      "q-ch02-07",
+      "q-ch02-08",
+      "q-ch02-09",
+      "q-ch02-10",
+      "q-ch02-11",
+      "q-ch02-12",
+      "q-ch02-13",
+      "q-ch02-14"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch02-01",
+    "q-ch02-02",
+    "q-ch02-03",
+    "q-ch02-04",
+    "q-ch02-05",
+    "q-ch02-06",
+    "q-ch02-07",
+    "q-ch02-08",
+    "q-ch02-09",
+    "q-ch02-10",
+    "q-ch02-11",
+    "q-ch02-12",
+    "q-ch02-13",
+    "q-ch02-14"
+   ],
+   "label": "sec:cli-quiz",
+   "number": "2.10",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The terminal is the window, the shell (zsh) reads commands, the prompt waits for you. Do not type the ",
+        {
+         "t": "code",
+         "v": "$"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Commands have the shape ",
+        {
+         "t": "code",
+         "v": "command -options arguments"
+        },
+        "; dbt commands are the same (",
+        {
+         "t": "code",
+         "v": "dbt run --select x"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Navigate with ",
+        {
+         "t": "code",
+         "v": "pwd"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "ls -la"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "cd"
+        },
+        "; paths are absolute (",
+        {
+         "t": "code",
+         "v": "/Users/…"
+        },
+        ") or relative; ",
+        {
+         "t": "code",
+         "v": "~"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "."
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": ".."
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Manage files with ",
+        {
+         "t": "code",
+         "v": "mkdir -p"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "touch"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "cp -R"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "mv"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "rm"
+        },
+        " (no Trash!), ",
+        {
+         "t": "code",
+         "v": "cat"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "less"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "head"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "tail"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "wc -l"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Combine with ",
+        {
+         "t": "code",
+         "v": "|"
+        },
+        "; write with ",
+        {
+         "t": "code",
+         "v": ">"
+        },
+        " (replace) and ",
+        {
+         "t": "code",
+         "v": ">>"
+        },
+        " (append); search with ",
+        {
+         "t": "code",
+         "v": "grep"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Environment variables (",
+        {
+         "t": "code",
+         "v": "export"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "$HOME"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "$PATH"
+        },
+        ") carry settings and secrets; dbt reads them with ",
+        {
+         "t": "code",
+         "v": "env_var()"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Exit code 0 = success, non-zero = failure; CI and ",
+        {
+         "t": "code",
+         "v": "&&"
+        },
+        " rely on it; warnings do not fail dbt."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A virtual environment is a private toolbox: ",
+        {
+         "t": "code",
+         "v": "uv venv --python 3.12 .venv"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "source .venv/bin/activate"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "deactivate"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "We pin ",
+        {
+         "t": "code",
+         "v": "dbt-core~=1.11.0"
+        },
+        " + ",
+        {
+         "t": "code",
+         "v": "dbt-duckdb"
+        },
+        ", the exam's version."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Your workspace ",
+        {
+         "t": "code",
+         "v": "~/dbt-course"
+        },
+        " with ",
+        {
+         "t": "code",
+         "v": "practice/practice.duckdb"
+        },
+        " is ready for the next chapters."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "The Command Line from Zero"
+}

@@ -1,0 +1,1665 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The default materialization is ",
+     {
+      "t": "code",
+      "v": "view"
+     },
+     ". A is the most common wrong belief (trap T42). C: ephemeral must be configured. D: ",
+     {
+      "t": "code",
+      "v": "materialized"
+     },
+     " is optional."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch08-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A table."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A view."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Nothing: the model is ephemeral by default."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "An error: ",
+     {
+      "t": "code",
+      "v": "materialized"
+     },
+     " is required."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "A new model ",
+     {
+      "t": "code",
+      "v": "stg_shop__refunds.sql"
+     },
+     " has no ",
+     {
+      "t": "code",
+      "v": "config()"
+     },
+     " block, no properties YAML entry, and no ",
+     {
+      "t": "code",
+      "v": "models:"
+     },
+     " block covers its folder in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ". What does ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " create?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " An ephemeral model has no relation in the warehouse: \"does not exist\". A and B describe a view and a table. D: a SQL query in a BI tool never triggers dbt."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch08-02",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The query works and returns the latest data."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The query works but returns the data of the last ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The query fails: no such table or view exists in the warehouse."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The query triggers ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " for the model."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "int_customers__deduped"
+     },
+     " is ephemeral. A colleague runs ",
+     {
+      "t": "code",
+      "v": "select * from analytics.int_customers__deduped"
+     },
+     " in the BI tool. What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "__dbt__cte__int_payments__successful"
+       }
+      ],
+      "t": "b"
+     },
+     " (two underscores, ",
+     {
+      "t": "code",
+      "v": "dbt"
+     },
+     ", two underscores, ",
+     {
+      "t": "code",
+      "v": "cte"
+     },
+     ", two underscores, then the model name)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch08-03",
+  "key": {
+   "accepted": [
+    "__dbt__cte__int_payments__successful"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{\\_\\_dbt\\_\\_cte\\_\\_int\\_payments\\_\\_successful}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " refs the ephemeral model ",
+     {
+      "t": "code",
+      "v": "int_payments__successful"
+     },
+     ". In ",
+     {
+      "t": "code",
+      "v": "target/compiled"
+     },
+     ", the injected CTE is named ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-b, 2-d, 3-a, 4-c."
+      ],
+      "t": "b"
+     },
+     " On DuckDB the materialized view macro is not implemented (Compilation Error). On a platform that supports it, dbt would send ",
+     {
+      "t": "code",
+      "v": "create materialized view"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch08-04",
+  "key": {
+   "1": "b",
+   "2": "d",
+   "3": "a",
+   "4": "c"
+  },
+  "keyRaw": "\\textbf{1-b, 2-d, 3-a, 4-c.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "view"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "table"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "ephemeral"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "materialized_view"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "No statement of its own; its SQL appears inside other models."
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "create view …__dbt_tmp"
+      },
+      ", two renames, ",
+      {
+       "t": "code",
+       "v": "drop view …__dbt_backup"
+      },
+      "."
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "A Compilation Error: the adapter does not implement it."
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "create table …__dbt_tmp as"
+      },
+      ", two renames, ",
+      {
+       "t": "code",
+       "v": "drop table …__dbt_backup"
+      },
+      "."
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each materialization with what dbt-duckdb sends to the warehouse for an existing model."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 8."
+      ],
+      "t": "b"
+     },
+     " The folder is ",
+     {
+      "t": "code",
+      "v": "models/marts"
+     },
+     ", so the key must be ",
+     {
+      "t": "code",
+      "v": "marts:"
+     },
+     ". ",
+     {
+      "t": "code",
+      "v": "mart:"
+     },
+     " matches no folder: dbt only warns (\"unused configuration paths\") and the marts keep the default ",
+     {
+      "t": "code",
+      "v": "view"
+     },
+     ". Lines 4–7 are correct."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch08-c53",
+   "lines": 9,
+   "numbering": "listing"
+  },
+  "id": "q-ch08-05",
+  "key": 8,
+  "keyRaw": "\\textbf{Line 8.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "After this change, ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " prints \"There are 1 unused configuration paths\" and the marts stay views. Which line is wrong?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch08-c53",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "name: 'jaffle_dbt'\nprofile: 'jaffle_dbt'\n\nmodels:\n  jaffle_dbt:\n    staging:\n      +materialized: view\n    mart:\n      +materialized: table"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " B: there is no object to select from. D: contracts are not supported on ephemeral models. E: ",
+     {
+      "t": "code",
+      "v": "dbt run -s"
+     },
+     " on an ephemeral model builds nothing at all."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch08-06",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "They create no object in the warehouse."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A BI tool can select from them like from a view."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Their SQL is injected as a CTE into every model that refs them."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "They support enforced model contracts."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run --select"
+     },
+     " on an ephemeral model builds it as a view."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two statements about ephemeral models are true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, NO, YES."
+      ],
+      "t": "b"
+     },
+     " A table is rebuilt completely at every run, with or without the flag (we saw identical statements). An incremental model is rebuilt from scratch. An ephemeral model never has an object. ",
+     {
+      "t": "code",
+      "v": "--full-refresh"
+     },
+     " overrides ",
+     {
+      "t": "code",
+      "v": "on_configuration_change"
+     },
+     " and replaces the materialized view."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch08-07",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": false,
+   "D": true
+  },
+  "keyRaw": "\\textbf{NO, YES, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "… a ",
+     {
+      "t": "code",
+      "v": "table"
+     },
+     " model? (it is rebuilt differently from a normal run)"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "… an ",
+     {
+      "t": "code",
+      "v": "incremental"
+     },
+     " model? (it is rebuilt from all the data)"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "… an ",
+     {
+      "t": "code",
+      "v": "ephemeral"
+     },
+     " model? (it is built this time)"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "… a ",
+     {
+      "t": "code",
+      "v": "materialized_view"
+     },
+     " whose ",
+     {
+      "t": "code",
+      "v": "on_configuration_change"
+     },
+     " is ",
+     {
+      "t": "code",
+      "v": "continue"
+     },
+     "? (it is replaced anyway)"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "You run ",
+     {
+      "t": "code",
+      "v": "dbt run --full-refresh"
+     },
+     ". Does the flag change what happens for…"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C, E, B, D, A."
+      ],
+      "t": "b"
+     },
+     " Build under a temporary name, move the old table to the backup name, give the new table the real name, commit, then drop the backup."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch08-08",
+  "key": [
+   "C",
+   "E",
+   "B",
+   "D",
+   "A"
+  ],
+  "keyRaw": "\\textbf{C, E, B, D, A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "drop table if exists …fct_orders__dbt_backup"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "alter table …fct_orders__dbt_tmp rename to fct_orders"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "create table …fct_orders__dbt_tmp as (select …)"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "COMMIT"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "alter table …fct_orders rename to fct_orders__dbt_backup"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "Put in order the statements that dbt-duckdb runs to rebuild the existing table ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     ":"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " The most specific place wins: ",
+     {
+      "t": "code",
+      "v": "config()"
+     },
+     " in the file, then the properties YAML, then ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ". B would be right without the ",
+     {
+      "t": "code",
+      "v": "config()"
+     },
+     " block; A only if the folder config were the only one. D: dbt has no such error."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch08-09",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A table."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A view."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Ephemeral."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt stops with a \"conflicting configs\" error."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "models/marts/"
+     },
+     " has ",
+     {
+      "t": "code",
+      "v": "+materialized: table"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     "; ",
+     {
+      "t": "code",
+      "v": "_marts__models.yml"
+     },
+     " sets ",
+     {
+      "t": "code",
+      "v": "materialized: view"
+     },
+     " for ",
+     {
+      "t": "code",
+      "v": "fct_daily"
+     },
+     "; ",
+     {
+      "t": "code",
+      "v": "fct_daily.sql"
+     },
+     " starts with ",
+     {
+      "t": "code",
+      "v": "{{ config(materialized='ephemeral') }}"
+     },
+     ". What is ",
+     {
+      "t": "code",
+      "v": "fct_daily"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " dbt never drops a relation it no longer manages: the old view is an orphan. A is the common wrong belief. C: an ephemeral model creates nothing, so there is no conflict. D: views do not change by themselves."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch08-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt dropped the view ",
+     {
+      "t": "code",
+      "v": "int_orders"
+     },
+     " during the run."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The view ",
+     {
+      "t": "code",
+      "v": "int_orders"
+     },
+     " still exists with its old definition; its children now use a CTE."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The job failed, because a view with the same name exists."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The view now reads from the CTE of its children."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "int_orders"
+     },
+     " was a view in production. You change it to ephemeral and the nightly job runs. What is true the next morning?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " \"Materialization … only supports languages ['sql']; got \"python\"\". Python models are ",
+     {
+      "t": "code",
+      "v": "table"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "incremental"
+     },
+     ". A, C, D are invented behaviours."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch08-11",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It works: dbt creates a view on top of the DataFrame."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It fails: the view materialization only supports SQL."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt silently builds a table instead."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It works only on Snowflake."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "A Python model contains ",
+     {
+      "t": "code",
+      "v": "dbt.config(materialized=\"view\")"
+     },
+     ". What happens on ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " Heavy logic read many times, data that changes once a night: compute once, read fast. A makes each dashboard repeat the five joins. B is not even queryable by dashboards. D is not available everywhere, and it is not needed when the data changes once a day."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch08-12",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "view"
+     },
+     ", so the dashboards always see the latest data."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ephemeral"
+     },
+     ", to save storage."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "table"
+     },
+     ", rebuilt by the nightly job after the load."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "materialized_view"
+     },
+     " on every platform."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "Your mart ",
+     {
+      "t": "code",
+      "v": "fct_sales"
+     },
+     " joins five large tables. Forty dashboards read it every morning; the raw data is loaded once a night. Which materialization is the best first choice?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "on_configuration_change"
+       }
+      ],
+      "t": "b"
+     },
+     ", default ",
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "apply"
+       }
+      ],
+      "t": "b"
+     },
+     " (other values: ",
+     {
+      "t": "code",
+      "v": "continue"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "fail"
+     },
+     ")."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch08-13",
+  "key": {
+   "blanks": [
+    [
+     "on_configuration_change"
+    ],
+    [
+     "apply"
+    ]
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{on\\_configuration\\_change}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "The config that decides what dbt does when the configuration of an existing materialized view changes is ",
+     {
+      "t": "blank"
+     },
+     "; its default value is ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "logs/dbt.log"
+     },
+     " has every statement in order. A has only the compiled ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     "; B has only the main ",
+     {
+      "t": "code",
+      "v": "create … as"
+     },
+     " statement; D is the project's metadata, not the executed SQL."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch08-14",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/compiled/"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/run/"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "logs/dbt.log"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/manifest.json"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "You want to see ",
+     {
+      "c": [
+       "all"
+      ],
+      "t": "i"
+     },
+     " the statements dbt sent for a table model, including the renames and the ",
+     {
+      "t": "code",
+      "v": "drop"
+     },
+     " of the backup. Where do you look?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B (7)."
+      ],
+      "t": "b"
+     },
+     " The ephemeral model is not executed, so the run counts only the 7 other models (\"Found 8 models\" but \"1 of 7\"). C is invented. D: threads change how many models run at the same time, not how many run."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch08-15",
+  "key": "B",
+  "keyRaw": "\\textbf{B (7).}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "8"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "7"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "9 (the ephemeral model counts twice)"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It depends on the number of threads."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "A project has 8 models; one of them is ephemeral, the others are views and tables. ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " prints \"",
+     {
+      "t": "code",
+      "v": "1 of N START …"
+     },
+     "\". What is N?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, YES, YES."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " holds connection settings (targets, credentials, threads), never model configs."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch08-16",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": true
+  },
+  "keyRaw": "\\textbf{YES, NO, YES, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "… a ",
+     {
+      "t": "code",
+      "v": "config()"
+     },
+     " block in the model file?"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "… ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     "?"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "… a properties YAML file, under ",
+     {
+      "t": "code",
+      "v": "config:"
+     },
+     "?"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "… ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ", for the model's folder?"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "Can you set ",
+     {
+      "t": "code",
+      "v": "materialized"
+     },
+     " for a model in…"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Snowflake uses dynamic tables instead of materialized views; ",
+     {
+      "t": "code",
+      "v": "target_lag"
+     },
+     " sets the maximum delay. A: dbt-snowflake does not support ",
+     {
+      "t": "code",
+      "v": "materialized_view"
+     },
+     ". C: ",
+     {
+      "t": "code",
+      "v": "lookback"
+     },
+     " is a microbatch config and the platform does not refresh incremental models. D: there is no ",
+     {
+      "t": "code",
+      "v": "refresh"
+     },
+     " config for views."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch08-17",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "materialized='materialized_view'"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "materialized='dynamic_table'"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "target_lag='30 minutes'"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "materialized='incremental'"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "lookback=30"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "materialized='view'"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "refresh='30 minutes'"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "On Snowflake, you want an object that the platform refreshes by itself with a maximum delay of 30 minutes. Which config do you write?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     " marks a config. A confuses it with the ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     " of ",
+     {
+      "t": "code",
+      "v": "grants"
+     },
+     " (Chapter 10). C and D are wrong: tests have their own configs, and ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " has the ",
+     {
+      "c": [
+       "lowest"
+      ],
+      "t": "i"
+     },
+     " precedence among the three places."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch08-18",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "table"
+     },
+     " to the list of materializations of the folder."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "materialized"
+     },
+     " is a config, not the name of a subfolder."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The config also applies to tests."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The value overrides ",
+     {
+      "t": "code",
+      "v": "config()"
+     },
+     " blocks in the files."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 8,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "What does the ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "+materialized: table"
+     },
+     " mean in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

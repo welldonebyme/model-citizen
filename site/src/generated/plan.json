@@ -1,0 +1,471 @@
+{
+ "columns": [
+  "Week",
+  "Bible",
+  "Official path (dbt Learn)",
+  "Checkpoint"
+ ],
+ "intro": [
+  {
+   "c": [
+    "The plan assumes about ",
+    {
+     "c": [
+      "2 hours per day, 6 days per week"
+     ],
+     "t": "b"
+    },
+    ". The book is long (Part II alone is more than 400 pages) because every lab output is printed for you: you read faster than the page count suggests, but do every lab. The middle column lists the items of the official ",
+    {
+     "c": [
+      "dbt Certified Developer Path"
+     ],
+     "t": "i"
+    },
+    " on ",
+    {
+     "t": "code",
+     "v": "learn.getdbt.com"
+    },
+    " to take in the same week. When a course exists in two versions (dbt Studio or VS Code), choose the ",
+    {
+     "c": [
+      "dbt Studio"
+     ],
+     "t": "b"
+    },
+    " version: the exam still asks questions about the browser IDE of the dbt platform, while this bible's labs already give you the command-line experience."
+   ],
+   "t": "p"
+  }
+ ],
+ "readiness": {
+  "conditions": [
+   [
+    {
+     "c": [
+      "Every chapter quiz is at 80% or more (after review)."
+     ],
+     "t": "p"
+    }
+   ],
+   [
+    {
+     "c": [
+      "The capstone project is finished and builds without errors."
+     ],
+     "t": "p"
+    }
+   ],
+   [
+    {
+     "c": [
+      "You scored ",
+      {
+       "c": [
+        "80% or more on two full mock exams"
+       ],
+       "t": "b"
+      },
+      " under real time conditions (65 questions, 2 hours, no notes)."
+     ],
+     "t": "p"
+    }
+   ],
+   [
+    {
+     "c": [
+      "You have re-read your whole error notebook."
+     ],
+     "t": "p"
+    }
+   ]
+  ],
+  "intro": [
+   {
+    "c": [
+     "Book the exam when ",
+     {
+      "c": [
+       "all four"
+      ],
+      "t": "b"
+     },
+     " conditions are true:"
+    ],
+    "t": "p"
+   },
+   {
+    "c": [
+     "Book a date about one week later, and use that week for light review only. The last-week plan and the exam-day checklist are in ",
+     {
+      "href": "/learn/ch27/",
+      "label": "ch:exam-strategy",
+      "t": "ref",
+      "text": "Chapter 27"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ "rhythms": [
+  {
+   "how": [
+    "About 8 weeks: do two plan weeks per week for weeks 1–12, then keep a full week each for the capstone and the mocks."
+   ],
+   "rhythm": [
+    "Intensive (3–4 h/day)"
+   ]
+  },
+  {
+   "how": [
+    "The 14-week table above."
+   ],
+   "rhythm": [
+    "Standard (about 2 h/day)"
+   ]
+  },
+  {
+   "how": [
+    "About 24–26 weeks: give each plan week of Parts II to VII two weeks."
+   ],
+   "rhythm": [
+    "Relaxed (about 1 h/day)"
+   ]
+  }
+ ],
+ "session": [
+  {
+   "activity": [
+    "Spaced review: error notebook entries and one old summary box."
+   ],
+   "minutes": "0–10"
+  },
+  {
+   "activity": [
+    "Read the next sections of the chapter."
+   ],
+   "minutes": "10–50"
+  },
+  {
+   "activity": [
+    "Do the labs. When something fails, read the error before searching."
+   ],
+   "minutes": "50–100"
+  },
+  {
+   "activity": [
+    "Quiz with the book closed, correct it, write error notebook entries."
+   ],
+   "minutes": "100–120"
+  }
+ ],
+ "source": "ch00-s7",
+ "weeks": [
+  {
+   "bible": [
+    "Part 0; Ch. 1 Data world; Ch. 2 Command line"
+   ],
+   "checkpoint": [
+    "Workspace ready, ",
+    {
+     "t": "code",
+     "v": "dbt --version"
+    },
+    " works"
+   ],
+   "official": [
+    "Learning Path Overview video; ",
+    {
+     "c": [
+      "Introduction to SQL"
+     ],
+     "t": "i"
+    },
+    " (optional)"
+   ],
+   "week": 1
+  },
+  {
+   "bible": [
+    "Ch. 3 Git; Ch. 4 SQL (first half)"
+   ],
+   "checkpoint": [
+    "Practice repo on GitHub, first PR merged"
+   ],
+   "official": [
+    {
+     "c": [
+      "Git Fundamentals"
+     ],
+     "t": "i"
+    }
+   ],
+   "week": 2
+  },
+  {
+   "bible": [
+    "Ch. 4 SQL (second half); Ch. 5 YAML, Jinja, Python"
+   ],
+   "checkpoint": [
+    "Customer orders report query works"
+   ],
+   "official": [
+    "–"
+   ],
+   "week": 3
+  },
+  {
+   "bible": [
+    "Ch. 6 First project; Ch. 7 Models, sources, DAG"
+   ],
+   "checkpoint": [
+    "First dbt project builds"
+   ],
+   "official": [
+    {
+     "c": [
+      "dbt Fundamentals"
+     ],
+     "t": "i"
+    }
+   ],
+   "week": 4
+  },
+  {
+   "bible": [
+    "Ch. 8 Materializations; Ch. 9 Modularity"
+   ],
+   "checkpoint": [
+    "Legacy SQL refactored"
+   ],
+   "official": [
+    {
+     "c": [
+      "Materialization Fundamentals"
+     ],
+     "t": "i"
+    },
+    "; ",
+    {
+     "c": [
+      "Refactoring SQL for Modularity"
+     ],
+     "t": "i"
+    }
+   ],
+   "week": 5
+  },
+  {
+   "bible": [
+    "Ch. 10 Configuration; Ch. 11 Jinja, macros, packages"
+   ],
+   "checkpoint": [
+    "Packages + macros in the project"
+   ],
+   "official": [
+    {
+     "c": [
+      "Jinja, Macros, and Packages"
+     ],
+     "t": "i"
+    },
+    "; ",
+    {
+     "c": [
+      "Grants"
+     ],
+     "t": "i"
+    },
+    " video"
+   ],
+   "week": 6
+  },
+  {
+   "bible": [
+    "Ch. 12 Seeds and analyses; Ch. 13 Snapshots"
+   ],
+   "checkpoint": [
+    "Snapshot history after day 2"
+   ],
+   "official": [
+    {
+     "c": [
+      "Analyses and Seeds"
+     ],
+     "t": "i"
+    },
+    "; ",
+    {
+     "c": [
+      "Snapshots"
+     ],
+     "t": "i"
+    }
+   ],
+   "week": 7
+  },
+  {
+   "bible": [
+    "Ch. 14 Incremental and microbatch; Ch. 15 Python; Ch. 16 Commands and selection"
+   ],
+   "checkpoint": [
+    "Part II quiz average ≥ 80%"
+   ],
+   "official": [
+    {
+     "c": [
+      "Incremental Models"
+     ],
+     "t": "i"
+    },
+    "; ",
+    {
+     "c": [
+      "Python Models"
+     ],
+     "t": "i"
+    },
+    " video"
+   ],
+   "week": 8
+  },
+  {
+   "bible": [
+    "Ch. 17 Governance; Ch. 18 Data tests"
+   ],
+   "checkpoint": [
+    "Contracts + tests in the project"
+   ],
+   "official": [
+    {
+     "c": [
+      "dbt Mesh Introduction"
+     ],
+     "t": "i"
+    },
+    " video; ",
+    {
+     "c": [
+      "dbt Mesh"
+     ],
+     "t": "i"
+    },
+    "; ",
+    {
+     "c": [
+      "Advanced Testing"
+     ],
+     "t": "i"
+    }
+   ],
+   "week": 9
+  },
+  {
+   "bible": [
+    "Ch. 19 Unit tests; Ch. 20 Documentation; Ch. 21 Freshness and exposures"
+   ],
+   "checkpoint": [
+    "Unit tests pass; freshness green"
+   ],
+   "official": [
+    {
+     "c": [
+      "Unit Testing"
+     ],
+     "t": "i"
+    },
+    "; ",
+    {
+     "c": [
+      "Exposures"
+     ],
+     "t": "i"
+    }
+   ],
+   "week": 10
+  },
+  {
+   "bible": [
+    "Ch. 22 Debugging; Ch. 23 Pipelines and clone"
+   ],
+   "checkpoint": [
+    "Nine bugs fixed; prod build + clone"
+   ],
+   "official": [
+    {
+     "c": [
+      "Debug Errors"
+     ],
+     "t": "i"
+    },
+    ", ",
+    {
+     "c": [
+      "dbt Clone"
+     ],
+     "t": "i"
+    },
+    " videos"
+   ],
+   "week": 11
+  },
+  {
+   "bible": [
+    "Ch. 24 State, defer, retry; Ch. 25 Environments and CI"
+   ],
+   "checkpoint": [
+    "Slim CI command runs"
+   ],
+   "official": [
+    {
+     "c": [
+      "Understanding state"
+     ],
+     "t": "i"
+    },
+    ", ",
+    {
+     "c": [
+      "dbt retry"
+     ],
+     "t": "i"
+    },
+    " videos"
+   ],
+   "week": 12
+  },
+  {
+   "bible": [
+    "Part VIII Capstone project"
+   ],
+   "checkpoint": [
+    "Capstone complete"
+   ],
+   "official": [
+    "–"
+   ],
+   "week": 13
+  },
+  {
+   "bible": [
+    "Ch. 27 Strategy and traps; Mock exams 1–3; error notebook; cheat sheets"
+   ],
+   "checkpoint": [
+    "Two mocks ≥ 80% ⇒ book the exam"
+   ],
+   "official": [
+    {
+     "c": [
+      "Pro Tips for dbt Certifications"
+     ],
+     "t": "i"
+    },
+    " video; study guide v1.11; registration"
+   ],
+   "week": 14
+  }
+ ]
+}

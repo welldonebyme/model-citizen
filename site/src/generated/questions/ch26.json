@@ -1,0 +1,1589 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " In ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", a failing test skips every node downstream of the tested node, and a source test is upstream of the staging model. A is wrong: ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " respects test results. C is wrong: the default severity is ",
+     {
+      "t": "code",
+      "v": "error"
+     },
+     ". D is wrong: dbt continues with the independent branches (use ",
+     {
+      "t": "code",
+      "v": "--fail-fast"
+     },
+     " to stop)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch26-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It is built, because the test is on the source, not on the model."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It is skipped, and so are its children."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It is built, and the test is reported as WARN."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt stops the whole run immediately."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "In m06 you add a ",
+     {
+      "t": "code",
+      "v": "unique"
+     },
+     " test on the ",
+     {
+      "c": [
+       "source"
+      ],
+      "t": "i"
+     },
+     " column ",
+     {
+      "t": "code",
+      "v": "shopflow_app.customers.customer_id"
+     },
+     " with the default severity, and run ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ". The test returns 4 rows. What happens to ",
+     {
+      "t": "code",
+      "v": "stg_shopflow_app__customers"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B and C."
+      ],
+      "t": "b"
+     },
+     " Both replace rows by ",
+     {
+      "t": "code",
+      "v": "unique_key"
+     },
+     ". A duplicates changed orders. D is not available on dbt-duckdb (\"not valid for this adapter\"). E: microbatch needs ",
+     {
+      "t": "code",
+      "v": "event_time"
+     },
+     ", and works on time batches, not on order keys."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch26-02",
+  "key": [
+   "B",
+   "C"
+  ],
+  "keyRaw": "\\textbf{B and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "append"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "merge"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "delete+insert"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "insert_overwrite"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "microbatch"
+     },
+     " without ",
+     {
+      "t": "code",
+      "v": "event_time"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " must reflect orders whose status changes after they were first loaded. On dbt-duckdb, which incremental strategies are correct, with ",
+     {
+      "t": "code",
+      "v": "unique_key='order_id'"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 3,
+  "explanation": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "--event-time-start"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "--event-time-end"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "2026-01-01"
+     },
+     ". The end is exclusive, so 2026-01-01 stops after 31 December. Using ",
+     {
+      "t": "code",
+      "v": "2025-12-31"
+     },
+     " as the end would rebuild 30 December only."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch26-03",
+  "key": null,
+  "keyNote": "fill-in answer does not start with a bold value",
+  "keyRaw": "\\code{-{}-event-time-start}, \\code{-{}-event-time-end}, \\code{2026-01-01}. The end is exclusive, so 2026-01-01 stops after 31 December.\nUsing \\code{2025-12-31} as the end would rebuild 30 December only.",
+  "keyStatus": "todo",
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "Late events for 30 and 31 December arrive. To rebuild exactly these two daily batches of ",
+     {
+      "t": "code",
+      "v": "fct_events"
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "dbt run -s fct_events ______ \"2025-12-30\" ______ \"______\""
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 8."
+      ],
+      "t": "b"
+     },
+     " With ",
+     {
+      "t": "code",
+      "v": "severity: error"
+     },
+     ", dbt checks ",
+     {
+      "t": "code",
+      "v": "error_if"
+     },
+     " first: 12 > 10 gives ERROR. Raise it (for example ",
+     {
+      "t": "code",
+      "v": "\">50\""
+     },
+     "). Line 7 already gives WARN for 1 row or more; line 9 only stores the failing rows; lines 1–5 define what is tested."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch26-c91",
+   "lines": 9,
+   "numbering": "text"
+  },
+  "id": "q-ch26-04",
+  "key": 8,
+  "keyRaw": "\\textbf{Line 8.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "The orphan test is configured like this. Twelve orphan orders appear one day, and you want a WARN, not an ERROR, until the app team fixes the bug. Which line do you change?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch26-c91",
+    "lang": "yaml",
+    "t": "code",
+    "text": "1  - relationships:\n2      name: orders_customer_exists\n3      arguments:\n4        to: ref('stg_shopflow_app__customers')\n5        field: customer_id\n6      config:\n7        warn_if: \">0\"\n8        error_if: \">10\"\n9        store_failures: true"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, NO, YES, YES."
+      ],
+      "t": "b"
+     },
+     " An ephemeral model creates no object, so nothing can query it; dbt pastes it as a CTE; and a unit test cannot read the columns of a relation that does not exist, hence ",
+     {
+      "t": "code",
+      "v": "format: sql"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO",
+  "id": "q-ch26-05",
+  "key": {
+   "A": false,
+   "B": false,
+   "C": true,
+   "D": true
+  },
+  "keyRaw": "\\textbf{NO, NO, YES, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt creates a view for it in the dev schema."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A BI tool can query it directly."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Its SQL appears in the models that ref it, as a CTE named ",
+     {
+      "t": "code",
+      "v": "__dbt__cte__int_payments__per_order"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "As an input of a unit test, it must be given with ",
+     {
+      "t": "code",
+      "v": "format: sql"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "About the ephemeral model ",
+     {
+      "t": "code",
+      "v": "int_payments__per_order"
+     },
+     ":"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "b, f, d, c, e, a."
+      ],
+      "t": "b"
+     },
+     " The project must be checked out and dbt installed before ",
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     "; the state must be downloaded before any ",
+     {
+      "t": "code",
+      "v": "state:"
+     },
+     " selection; the cheap ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     " run comes before the real build."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch26-06",
+  "key": [
+   "B",
+   "F",
+   "D",
+   "C",
+   "E",
+   "A"
+  ],
+  "keyRaw": "\\textbf{b, f, d, c, e, a.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build --selector ci_slim --defer --state prod-artifacts"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "check out the pull request"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "download the production manifest"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "dbt parse"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "the same build with ",
+     {
+      "t": "code",
+      "v": "--empty"
+     }
+    ],
+    "id": "E"
+   },
+   {
+    "c": [
+     "install dbt Core and the adapter"
+    ],
+    "id": "F"
+   }
+  ],
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Put the steps of the ShopFlow slim CI job in order:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-d, 2-b, 3-a, 4-c."
+      ],
+      "t": "b"
+     },
+     " Timestamp trusts ",
+     {
+      "t": "code",
+      "v": "updated_at"
+     },
+     "; check compares column values; ",
+     {
+      "t": "code",
+      "v": "invalidate"
+     },
+     " handles deleted keys; ",
+     {
+      "t": "code",
+      "v": "dbt_valid_to_current"
+     },
+     " replaces NULL for current rows (for example with a far future date)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch26-07",
+  "key": {
+   "1": "d",
+   "2": "b",
+   "3": "a",
+   "4": "c"
+  },
+  "keyRaw": "\\textbf{1-d, 2-b, 3-a, 4-c.}",
+  "keyStatus": "ok",
+  "match": {
+   "inline": true,
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "strategy: timestamp"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "strategy: check"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "hard_deletes: invalidate"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt_valid_to_current"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "closes the current version when the key disappears from the source"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "a new version when one of the listed columns changes"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "the value written in ",
+      {
+       "t": "code",
+       "v": "dbt_valid_to"
+      },
+      " for current rows instead of NULL"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "a new version when ",
+      {
+       "t": "code",
+       "v": "updated_at"
+      },
+      " is newer than the snapshotted one"
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each snapshot config to its effect."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " The default macro concatenates target schema, underscore, custom schema. A needs an overridden macro (the ShopFlow one, in prod); B happens with the ShopFlow macro in dev; D does not exist."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch26-08",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "finance"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_adnane"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_adnane_finance"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "finance_dbt_adnane"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "Without your own ",
+     {
+      "t": "code",
+      "v": "generate_schema_name"
+     },
+     ", the target schema is ",
+     {
+      "t": "code",
+      "v": "dbt_adnane"
+     },
+     " and the marts/finance folder has ",
+     {
+      "t": "code",
+      "v": "+schema: finance"
+     },
+     ". Where is ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " built?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " The contract is a promise to consumers: keep its type portable and make the SQL respect it. A and D remove the promise; B works on DuckDB only and leaks a warehouse-specific type into a public interface."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch26-09",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Set ",
+     {
+      "t": "code",
+      "v": "contract: enforced: false"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Change the contract type to ",
+     {
+      "t": "code",
+      "v": "hugeint"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Cast the column to ",
+     {
+      "t": "code",
+      "v": "bigint"
+     },
+     " in the SQL that produces it."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Remove the column from the YAML."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "The contract of the public model ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " fails: ",
+     {
+      "t": "code",
+      "v": "number_of_units"
+     },
+     " is ",
+     {
+      "t": "code",
+      "v": "HUGEINT"
+     },
+     " in the model and ",
+     {
+      "t": "code",
+      "v": "bigint"
+     },
+     " in the contract. What is the best fix?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     " reads ",
+     {
+      "t": "code",
+      "v": "target/run_results.json"
+     },
+     " and re-runs the error and the skipped nodes with the same command and flags (only ",
+     {
+      "t": "code",
+      "v": "--threads"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "--vars"
+     },
+     " can be overridden). A can work, but you must keep the old ",
+     {
+      "t": "code",
+      "v": "run_results.json"
+     },
+     " in a state folder and build the selection yourself: ",
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     " is the built-in answer the exam expects. C rebuilds incremental models from zero and runs everything; D is unrelated."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch26-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build -s result:error+ --state target"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt retry"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build --full-refresh"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run --fail-fast"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " ended with ",
+     {
+      "t": "code",
+      "v": "ERROR=1 SKIP=33"
+     },
+     ". You fixed the typo. Which command runs only the failed and skipped nodes again?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, YES, NO."
+      ],
+      "t": "b"
+     },
+     " DuckDB has no zero-copy clone, so dbt-duckdb creates views; ",
+     {
+      "t": "code",
+      "v": "--state"
+     },
+     " is required; existing relations are skipped unless you add ",
+     {
+      "t": "code",
+      "v": "--full-refresh"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO",
+  "id": "q-ch26-11",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": true,
+   "D": false
+  },
+  "keyRaw": "\\textbf{NO, YES, YES, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "creates zero-copy clones of the production tables;"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "creates views that select from the production relations;"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "cannot run without ",
+     {
+      "t": "code",
+      "v": "--state"
+     },
+     ";"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "replaces relations that already exist in ",
+     {
+      "t": "code",
+      "v": "ci"
+     },
+     ", by default."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt clone --state prod-artifacts --target ci"
+     },
+     " on DuckDB:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " An unpinned ref uses ",
+     {
+      "t": "code",
+      "v": "latest_version"
+     },
+     ", and versioned relations get the suffix ",
+     {
+      "t": "code",
+      "v": "_v<version>"
+     },
+     ". B is wrong: the deprecation date only triggers warnings, it never changes the resolution. D is wrong: ",
+     {
+      "t": "code",
+      "v": "v"
+     },
+     " is optional."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch26-12",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It resolves to version 2."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It resolves to version 1 until the deprecation date."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The relation it reads is named ",
+     {
+      "t": "code",
+      "v": "dim_customers_v2"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt raises an error because the version is missing."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     " has ",
+     {
+      "t": "code",
+      "v": "latest_version: 2"
+     },
+     "; v1 has a deprecation date in 2027. A new model contains ",
+     {
+      "t": "code",
+      "v": "ref('dim_customers')"
+     },
+     ". Which statements are true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " The ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     " before ",
+     {
+      "t": "code",
+      "v": "exposure:"
+     },
+     " selects all its parents; ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " also runs their tests. A is wrong: the selector selects the parents, and they are built (dbt 1.11 also lists the exposure itself as a NO-OP node). B forgets the upstream models. D is too wide."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch26-13",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Nothing: exposures cannot be built."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Only ",
+     {
+      "t": "code",
+      "v": "fct_daily_revenue"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Every upstream node of the dashboard (models, seeds, tests), and the exposure as a NO-OP node."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Every node of the project."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "What does ",
+     {
+      "t": "code",
+      "v": "dbt build -s +exposure:weekly_revenue_dashboard"
+     },
+     " build?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "now"
+      ],
+      "t": "b"
+     },
+     " (the current time), ",
+     {
+      "c": [
+       "dictionary"
+      ],
+      "t": "b"
+     },
+     " (",
+     {
+      "t": "code",
+      "v": "--sample=\"{'start': '2025-12-24', 'end': '2025-12-25'}\""
+     },
+     "). The data stops in January 2026, so any relative window in the future of the data is empty."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch26-14",
+  "key": {
+   "blanks": [
+    [
+     "now"
+    ],
+    [
+     "dictionary"
+    ]
+   ]
+  },
+  "keyRaw": "\\textbf{now}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run -s fct_sessions --sample=\"3 days\""
+     },
+     " built 0 sessions, because the window is counted back from ______. For historical data, pass a ______ with ",
+     {
+      "t": "code",
+      "v": "start"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "end"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Only the freshness command writes ",
+     {
+      "t": "code",
+      "v": "sources.json"
+     },
+     ". A never checks freshness; C writes ",
+     {
+      "t": "code",
+      "v": "catalog.json"
+     },
+     "; D runs data tests on sources, which is a different thing."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch26-15",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt docs generate"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt test -s source:*"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "Which command writes ",
+     {
+      "t": "code",
+      "v": "target/sources.json"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     "The compiled text is ",
+     {
+      "t": "code",
+      "v": "round(amount_paid - amount_refunded * rate_to_eur, 2)"
+     },
+     ": only ",
+     {
+      "t": "code",
+      "v": "amount_refunded"
+     },
+     " is multiplied, because ",
+     {
+      "t": "code",
+      "v": "*"
+     },
+     " comes before ",
+     {
+      "t": "code",
+      "v": "-"
+     },
+     ". Fix: ",
+     {
+      "t": "code",
+      "v": "round(({{ amount }}) * {{ rate_column }}, 2)"
+     },
+     ". A macro pastes text, so protect every argument with parentheses."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which part",
+  "id": "q-ch26-16",
+  "key": null,
+  "keyNote": "hotspot without line numbers (listing or embedded)",
+  "keyRaw": "The compiled text is \\code{round(amount\\_paid - amount\\_refunded * rate\\_to\\_eur, 2)}: only \\code{amount\\_refunded} is multiplied, because \\code{*}\ncomes before \\code{-}. Fix: \\code{round((\\{\\{ amount \\}\\}) * \\{\\{ rate\\_column \\}\\}, 2)}. A macro pastes text, so protect every argument with parentheses.",
+  "keyStatus": "todo",
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "A macro is ",
+     {
+      "t": "code",
+      "v": "round({{ amount }} * {{ rate_column }}, 2)"
+     },
+     ". It is called with ",
+     {
+      "t": "code",
+      "v": "convert_to_eur('amount_paid - amount_refunded')"
+     },
+     ". Which part of the compiled expression is wrong, and how do you fix the macro?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Snowflake enforces ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     "; ",
+     {
+      "t": "code",
+      "v": "primary_key"
+     },
+     " is metadata only, and ",
+     {
+      "t": "code",
+      "v": "check"
+     },
+     " is not supported (skipped with a warning). A describes Postgres; C mixes up \"definable\" and \"enforced\"; D is wrong because ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " is enforced."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch26-17",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "All three."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " only."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "primary_key"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "None: constraints are only documentation."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 26,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "You move ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     " to Snowflake with the same YAML constraints (",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "primary_key"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "check"
+     },
+     "). Which constraint does Snowflake enforce?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

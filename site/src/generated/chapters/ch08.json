@@ -1,0 +1,5862 @@
+{
+ "id": "ch08",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "Understanding the core materializations: ",
+      {
+       "t": "code",
+       "v": "view"
+      },
+      " (the default), ",
+      {
+       "t": "code",
+       "v": "table"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "ephemeral"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "incremental"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "materialized_view"
+      },
+      ": what each one creates in the warehouse, the SQL dbt runs for it, its trade-offs, and when to choose it."
+     ],
+     "id": "1.2"
+    },
+    {
+     "c": [
+      "Setting ",
+      {
+       "t": "code",
+       "v": "materialized"
+      },
+      " in three places: a ",
+      {
+       "t": "code",
+       "v": "config()"
+      },
+      " block, a properties YAML file, and a folder of ",
+      {
+       "t": "code",
+       "v": "dbt_project.yml"
+      },
+      " with ",
+      {
+       "t": "code",
+       "v": "+materialized"
+      },
+      ". A first look at which one wins (the full story is in Chapter 10)."
+     ],
+     "id": "1.6"
+    },
+    {
+     "c": [
+      "Reading the code dbt really runs: ",
+      {
+       "t": "code",
+       "v": "target/compiled"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "target/run"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "logs/dbt.log"
+      },
+      ", including the ",
+      {
+       "t": "code",
+       "v": "__dbt__cte__"
+      },
+      " that replaces an ephemeral model."
+     ],
+     "id": "3.2"
+    },
+    {
+     "c": [
+      "The two materializations a Python model can use (a preview of Chapter 15)."
+     ],
+     "id": "1.8"
+    },
+    {
+     "c": [
+      "A first look at incremental models and microbatch (the full story is in Chapter 14)."
+     ],
+     "id": "1.11",
+     "ids": [
+      "1.11",
+      "1.14"
+     ]
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "In ",
+      {
+       "href": "/learn/ch07/",
+       "label": "ch:models-sources-dag",
+       "t": "ref",
+       "text": "Chapter 7"
+      },
+      " every model became a view, because you did not configure anything. That is fine for seven small models on a laptop. Now imagine a real company. A mart model joins millions of rows, and 50 dashboards read it every morning. If the mart is a view, the warehouse runs the big join again for every dashboard, every time: slow and expensive. If it is a table, the join runs once per night, and every dashboard reads rows that are already computed."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "Choosing the right ",
+      {
+       "c": [
+        "materialization"
+       ],
+       "t": "i"
+      },
+      " is one of the most frequent decisions of an analytics engineer. It is also a favourite exam topic: what is the default, what happens to an ephemeral model, what ",
+      {
+       "t": "code",
+       "v": "--full-refresh"
+      },
+      " changes, which objects a BI tool can query. In this chapter you will look at the ",
+      {
+       "c": [
+        "exact"
+       ],
+       "t": "i"
+      },
+      " SQL that dbt sends to the warehouse for each choice. After that, you will never need to guess."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "A materialization is the way dbt turns your ",
+      {
+       "t": "code",
+       "v": "select"
+      },
+      " into something in the warehouse: a view, a table, nothing at all (ephemeral), a table that grows in small pieces (incremental), or a materialized view. You choose it with the ",
+      {
+       "t": "code",
+       "v": "materialized"
+      },
+      " config, in the model file, in a YAML file or for a whole folder in ",
+      {
+       "t": "code",
+       "v": "dbt_project.yml"
+      },
+      ", and when you choose nothing you get a ",
+      {
+       "t": "code",
+       "v": "view"
+      },
+      ". A good default is to choose by layer: views for staging, ephemeral models or views for intermediate steps, and tables (later incremental models) for the marts that people query."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:materializations",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-mat-what"
+   ],
+   "checkpoints": [],
+   "id": "ch08-s1",
+   "label": "sec:mat-what",
+   "labs": [],
+   "minutes": 5,
+   "number": "8.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "You met the word in ",
+        {
+         "href": "/learn/ch04/",
+         "label": "ch:sql",
+         "t": "ref",
+         "text": "Chapter 4"
+        },
+        " (",
+        {
+         "href": "/learn/ch04/ch04-s15/",
+         "label": "sec:sql-views-tables",
+         "t": "ref",
+         "text": "Section 4.15"
+        },
+        "): a materialization is the way a model becomes a database object. Remember the most important idea of dbt: ",
+        {
+         "c": [
+          "you only write a ",
+          {
+           "t": "code",
+           "v": "select"
+          }
+         ],
+         "t": "b"
+        },
+        ". You never write ",
+        {
+         "t": "code",
+         "v": "create table"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "create view"
+        },
+        " yourself. dbt reads the ",
+        {
+         "t": "code",
+         "v": "materialized"
+        },
+        " config of the model and ",
+        {
+         "c": [
+          "wraps"
+         ],
+         "t": "i"
+        },
+        " your ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        " in the right statements. Technically, each materialization is a macro (a Jinja function, ",
+        {
+         "href": "/learn/ch05/",
+         "label": "ch:yaml-jinja-python",
+         "t": "ref",
+         "text": "Chapter 5"
+        },
+        ") that lives inside dbt or inside the adapter (dbt-duckdb, dbt-snowflake…)."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "dbt calls every table or view it can read or create a ",
+        {
+         "en": [
+          "relation"
+         ],
+         "fr": "relation (table ou vue dans l'entrepôt)",
+         "id": "term-relation",
+         "t": "term"
+        },
+        ". The word appears in many messages, so learn it now: \"the relation does not exist\" means \"there is no table or view with that name\"."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Think of a restaurant. Your ",
+          {
+           "t": "code",
+           "v": "select"
+          },
+          " is a recipe."
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "view"
+               ],
+               "t": "b"
+              },
+              ": the recipe card is pinned in the kitchen. Each time a guest orders, the cook prepares the dish from scratch. Always fresh, but every order costs work."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "table"
+               ],
+               "t": "b"
+              },
+              ": the dish is cooked once in the morning and kept in the fridge. Serving is fast, but the dish is as old as the morning."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "ephemeral"
+               ],
+               "t": "b"
+              },
+              ": a sauce that is never served alone. Its recipe is copied into every dish that uses it."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "incremental"
+               ],
+               "t": "b"
+              },
+              ": a big pot of soup. Each morning you only add today's vegetables instead of cooking the whole pot again."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "materialized view"
+               ],
+               "t": "b"
+              },
+              ": a dish the restaurant keeps warm and refreshes by itself, without the cook."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ul",
+         "t": "list"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "dbt has five built-in materializations. The default is ",
+        {
+         "t": "code",
+         "v": "view"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Materialization"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What exists in the warehouse after ",
+             {
+              "t": "code",
+              "v": "dbt run"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What dbt sends (main statement)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "view"
+           },
+           " (default)"
+          ]
+         },
+         {
+          "c": [
+           "A view: only the query is stored; it is computed again at each read."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "create view … as (select …)"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "table"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A table: the rows are computed and stored; rebuilt completely at each run."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "create table … as (select …)"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ephemeral"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Nothing."
+            ],
+            "t": "b"
+           },
+           " The ",
+           {
+            "t": "code",
+            "v": "select"
+           },
+           " is pasted as a CTE into every model that uses it."
+          ]
+         },
+         {
+          "c": [
+           "No statement of its own."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "incremental"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A table; later runs only add or update the new rows."
+          ]
+         },
+         {
+          "c": [
+           "First run: ",
+           {
+            "t": "code",
+            "v": "create table as"
+           },
+           "; later: ",
+           {
+            "t": "code",
+            "v": "insert"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "merge"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "delete"
+           },
+           "+",
+           {
+            "t": "code",
+            "v": "insert"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "materialized_view"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A materialized view, refreshed by the platform."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "create materialized view …"
+           },
+           " (only on platforms that support it)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "You can also write your own materializations (",
+        {
+         "href": "/learn/ch08/ch08-s11/",
+         "label": "sec:mat-python-custom",
+         "t": "ref",
+         "text": "Section 8.11"
+        },
+        "), but the exam focuses on these five, and mostly on the first four."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "The default is ",
+            {
+             "t": "code",
+             "v": "view"
+            },
+            ", not ",
+            {
+             "t": "code",
+             "v": "table"
+            }
+           ],
+           "t": "b"
+          },
+          " (trap T42 in Chapter 27). A model with no ",
+          {
+           "t": "code",
+           "v": "materialized"
+          },
+          " config anywhere (not in the file, not in YAML, not in ",
+          {
+           "t": "code",
+           "v": "dbt_project.yml"
+          },
+          ") becomes a view. You saw it in ",
+          {
+           "href": "/learn/ch07/",
+           "label": "ch:models-sources-dag",
+           "t": "ref",
+           "text": "Chapter 7"
+          },
+          ": ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          " printed \"",
+          {
+           "t": "code",
+           "v": "7 view models"
+          },
+          "\"."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch08-s1-0",
+     "title": [
+      "What a materialization is"
+     ],
+     "titleText": "What a materialization is"
+    }
+   ],
+   "title": [
+    "What a materialization is"
+   ],
+   "titleText": "What a materialization is"
+  },
+  {
+   "anchors": [
+    "sec-mat-where"
+   ],
+   "checkpoints": [],
+   "id": "ch08-s2",
+   "label": "sec:mat-where",
+   "labs": [
+    "ch08-lab1"
+   ],
+   "minutes": 20,
+   "number": "8.2",
+   "objectives": [
+    "1.2",
+    "1.6",
+    "3.2"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "materialized"
+        },
+        " is a ",
+        {
+         "c": [
+          "config"
+         ],
+         "t": "i"
+        },
+        ": a setting that tells dbt ",
+        {
+         "c": [
+          "how"
+         ],
+         "t": "i"
+        },
+        " to build a model (not ",
+        {
+         "c": [
+          "what"
+         ],
+         "t": "i"
+        },
+        " to compute: that is the SQL). You can set it in three places."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "1. In the model file, with a ",
+          {
+           "t": "code",
+           "v": "config()"
+          },
+          " block."
+         ],
+         "t": "b"
+        },
+        " The block is Jinja, usually on the first line:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c1",
+       "lang": "dbt",
+       "t": "code",
+       "text": "{{ config(materialized='ephemeral') }}",
+       "title": "models/intermediate/int_payments__successful.sql (first line)"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "2. In a properties YAML file"
+         ],
+         "t": "b"
+        },
+        ", under the model's ",
+        {
+         "t": "code",
+         "v": "config:"
+        },
+        " key:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c2",
+       "lang": "yaml",
+       "t": "code",
+       "text": "models:\n  - name: dim_customers\n    config:\n      materialized: table",
+       "title": "models/marts/_marts__models.yml (example)"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "3. In ",
+          {
+           "t": "code",
+           "v": "dbt_project.yml"
+          },
+          ", for a whole folder."
+         ],
+         "t": "b"
+        },
+        " Under ",
+        {
+         "t": "code",
+         "v": "models:"
+        },
+        ", you write the ",
+        {
+         "c": [
+          "project name"
+         ],
+         "t": "i"
+        },
+        ", then the folder names inside ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        ", then the config with a ",
+        {
+         "t": "code",
+         "v": "+"
+        },
+        " in front:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c3",
+       "lang": "yaml",
+       "t": "code",
+       "text": "models:\n  jaffle_dbt:            # the project name (the \"name:\" at the top of the file)\n    staging:             # the folder models/staging (and all its subfolders)\n      +materialized: view\n    intermediate:        # the folder models/intermediate\n      +materialized: view\n    marts:               # the folder models/marts\n      +materialized: table",
+       "title": "dbt_project.yml (end of the file)"
+      },
+      {
+       "c": [
+        "A folder config applies to every model in that folder ",
+        {
+         "c": [
+          "and in its subfolders"
+         ],
+         "t": "i"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "staging:"
+        },
+        " covers ",
+        {
+         "t": "code",
+         "v": "models/staging/jaffle_shop/"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "models/staging/stripe/"
+        },
+        ". This is the usual way to choose materializations: one decision per layer, written once (DRY, Chapter 9)."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "The ",
+            {
+             "t": "code",
+             "v": "+"
+            },
+            " means \"this is a config, not a folder\""
+           ],
+           "t": "b"
+          },
+          " (trap T49). Under ",
+          {
+           "t": "code",
+           "v": "marts:"
+          },
+          ", dbt must know if ",
+          {
+           "t": "code",
+           "v": "materialized"
+          },
+          " is a config or a subfolder called ",
+          {
+           "t": "code",
+           "v": "materialized"
+          },
+          ". The ",
+          {
+           "t": "code",
+           "v": "+"
+          },
+          " removes the doubt. dbt expects the ",
+          {
+           "t": "code",
+           "v": "+"
+          },
+          " on every config key in ",
+          {
+           "t": "code",
+           "v": "dbt_project.yml"
+          },
+          "; writing a config without it is deprecated (dbt 1.11 prints a deprecation warning on Snowflake, Databricks, BigQuery and Redshift; on DuckDB it still works silently). It really matters for configs whose value is a dictionary (such as ",
+          {
+           "t": "code",
+           "v": "persist_docs"
+          },
+          ") and when a folder has the same name as a config (a folder ",
+          {
+           "t": "code",
+           "v": "models/tags/"
+          },
+          "). Folder names never take a ",
+          {
+           "t": "code",
+           "v": "+"
+          },
+          ". And the ",
+          {
+           "t": "code",
+           "v": "+"
+          },
+          " does ",
+          {
+           "c": [
+            "not"
+           ],
+           "t": "b"
+          },
+          " mean \"add\"."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "A folder path that matches nothing is silently useless, except for one warning."
+           ],
+           "t": "b"
+          },
+          " If you write a folder that does not exist (a typo such as ",
+          {
+           "t": "code",
+           "v": "mart:"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": "marts:"
+          },
+          ", or a folder you have not created yet), dbt does not fail. It prints this warning at the start of every command, and the models keep their old materialization:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c4",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "[WARNING]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.\nThere are 1 unused configuration paths:\n- models.jaffle_dbt.intermediate"
+        },
+        {
+         "c": [
+          "You will see exactly this warning in the first lab of this chapter, because ",
+          {
+           "t": "code",
+           "v": "models/intermediate"
+          },
+          " does not exist yet. Read it as \"check the spelling of your folders\"."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "One project, two behaviours."
+           ],
+           "t": "b"
+          },
+          " A config value can be Jinja. This line keeps the marts as cheap views in development and makes them tables in production (we tested it: ",
+          {
+           "t": "code",
+           "v": "dbt ls -s config.materialized:table"
+          },
+          " lists nothing with the ",
+          {
+           "t": "code",
+           "v": "dev"
+          },
+          " target and the two marts with ",
+          {
+           "t": "code",
+           "v": "--target prod"
+          },
+          "):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c5",
+         "lang": "yaml",
+         "t": "code",
+         "text": "    marts:\n      +materialized: \"{{ 'table' if target.name == 'prod' else 'view' }}\""
+        },
+        {
+         "c": [
+          "The quotes are required, because the value contains Jinja (",
+          {
+           "href": "/learn/ch05/",
+           "label": "ch:yaml-jinja-python",
+           "t": "ref",
+           "text": "Chapter 5"
+          },
+          "). We do not keep this in the project: our marts are tables everywhere."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " staging models stay views, marts become tables, and you see the SQL dbt runs for the switch."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Open a terminal in your project and activate the environment. Your project is in the state of the end of ",
+          {
+           "href": "/learn/ch07/",
+           "label": "ch:models-sources-dag",
+           "t": "ref",
+           "text": "Chapter 7"
+          },
+          " (seven models, all views)."
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c6",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # nothing printed: everything is committed"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Open ",
+          {
+           "t": "code",
+           "v": "dbt_project.yml"
+          },
+          ". At the very end of the file, after the comment lines ",
+          {
+           "t": "code",
+           "v": "# Configuring models"
+          },
+          ", add the ",
+          {
+           "t": "code",
+           "v": "models:"
+          },
+          " block shown in ",
+          {
+           "href": "/learn/ch08/ch08-s2/",
+           "label": "sec:mat-where",
+           "t": "ref",
+           "text": "Section 8.2"
+          },
+          " (project ",
+          {
+           "t": "code",
+           "v": "jaffle_dbt"
+          },
+          ", folders ",
+          {
+           "t": "code",
+           "v": "staging"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "intermediate"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "marts"
+          },
+          "). The word ",
+          {
+           "t": "code",
+           "v": "models:"
+          },
+          " must start at column 1, with no space before it."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Run all models:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c7",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt run"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (times will differ):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c8",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "22:07:15  Running with dbt=1.11.16\n22:07:15  Registered adapter: duckdb=1.11.0\n22:07:15  Unable to do partial parsing because a project config has changed\n22:07:16  [WARNING]: Configuration paths exist in your dbt_project.yml file which do not apply to any resources.\nThere are 1 unused configuration paths:\n- models.jaffle_dbt.intermediate\n22:07:16  Found 7 models, 10 data tests, 5 sources, 500 macros\n...\n22:07:16  1 of 7 START sql view model dbt_adnane.stg_jaffle_shop__customers .............. [RUN]\n...\n22:07:16  5 of 7 OK created sql view model dbt_adnane.stg_stripe__payments ............... [OK in 0.02s]\n22:07:16  6 of 7 START sql table model dbt_adnane.fct_orders ............................. [RUN]\n22:07:16  6 of 7 OK created sql table model dbt_adnane.fct_orders ........................ [OK in 0.04s]\n22:07:16  7 of 7 START sql table model dbt_adnane.dim_customers .......................... [RUN]\n22:07:16  7 of 7 OK created sql table model dbt_adnane.dim_customers ..................... [OK in 0.02s]\n22:07:16\n22:07:16  Finished running 2 table models, 5 view models in 0 hours 0 minutes and 0.30 seconds (0.30s).\n...\n22:07:16  Done. PASS=7 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=7"
+        },
+        {
+         "c": [
+          "Three things to notice. (1) dbt re-parsed everything because ",
+          {
+           "t": "code",
+           "v": "dbt_project.yml"
+          },
+          " changed. (2) The warning about ",
+          {
+           "t": "code",
+           "v": "intermediate"
+          },
+          ": the folder does not exist yet (the second lab creates it). (3) ",
+          {
+           "t": "code",
+           "v": "sql table model"
+          },
+          " for the two marts."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Check what exists in the warehouse. Use the DuckDB CLI in read-only mode with ",
+          {
+           "t": "code",
+           "v": "-c"
+          },
+          " (run one command and quit), so the file is not locked for long (",
+          {
+           "href": "/learn/ch02/",
+           "label": "ch:cli",
+           "t": "ref",
+           "text": "Chapter 2"
+          },
+          "):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c9",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' order by 1\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (DuckDB draws nicer lines than this book):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c10",
+         "lang": "output",
+         "t": "code",
+         "text": "+------------------------------+------------+\n| table_name                   | table_type |\n+------------------------------+------------+\n| dim_customers                | BASE TABLE |\n| fct_orders                   | BASE TABLE |\n| stg_jaffle_shop__customers   | VIEW       |\n| stg_jaffle_shop__order_items | VIEW       |\n| stg_jaffle_shop__orders      | VIEW       |\n| stg_jaffle_shop__products    | VIEW       |\n| stg_stripe__payments         | VIEW       |\n+------------------------------+------------+"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Find the statements dbt used to turn the old ",
+          {
+           "c": [
+            "view"
+           ],
+           "t": "i"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " into a ",
+          {
+           "c": [
+            "table"
+           ],
+           "t": "i"
+          },
+          ". They are in ",
+          {
+           "t": "code",
+           "v": "logs/dbt.log"
+          },
+          " (the console only shows a summary):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c11",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ grep -E \"fct_orders__dbt_(tmp|backup)\" logs/dbt.log | tail -4"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c12",
+         "lang": "output",
+         "t": "code",
+         "text": "      \"practice\".\"dbt_adnane\".\"fct_orders__dbt_tmp\"\nalter view \"practice\".\"dbt_adnane\".\"fct_orders\" rename to \"fct_orders__dbt_backup\"\nalter table \"practice\".\"dbt_adnane\".\"fct_orders__dbt_tmp\" rename to \"fct_orders\"\n      drop view if exists \"practice\".\"dbt_adnane\".\"fct_orders__dbt_backup\" cascade"
+        },
+        {
+         "c": [
+          "The first line is the end of ",
+          {
+           "t": "code",
+           "v": "create table \"practice\".\"dbt_adnane\".\"fct_orders__dbt_tmp\" as (…)"
+          },
+          ". Then the old ",
+          {
+           "c": [
+            "view"
+           ],
+           "t": "i"
+          },
+          " is renamed to a backup, the new ",
+          {
+           "c": [
+            "table"
+           ],
+           "t": "i"
+          },
+          " takes the real name, and the backup view is dropped. ",
+          {
+           "href": "/learn/ch08/ch08-s3/",
+           "label": "sec:mat-view-table",
+           "t": "ref",
+           "text": "Section 8.3"
+          },
+          " explains this pattern."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          "Do not commit yet: the lab ",
+          {
+           "c": [
+            "Add an ephemeral intermediate model"
+           ],
+           "t": "i"
+          },
+          " (",
+          {
+           "href": "/learn/ch08/ch08-s4/",
+           "label": "sec:mat-ephemeral",
+           "t": "ref",
+           "text": "Section 8.4"
+          },
+          ") finishes the chapter's changes."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch08-lab1",
+       "objectives": [
+        "1.2",
+        "1.6",
+        "3.2"
+       ],
+       "t": "lab",
+       "title": [
+        "Configure the materialization of each folder"
+       ]
+      }
+     ],
+     "id": "ch08-s2-0",
+     "title": [
+      "Where you configure a materialization"
+     ],
+     "titleText": "Where you configure a materialization"
+    }
+   ],
+   "title": [
+    "Where you configure a materialization"
+   ],
+   "titleText": "Where you configure a materialization"
+  },
+  {
+   "anchors": [
+    "sec-mat-view-table"
+   ],
+   "checkpoints": [],
+   "id": "ch08-s3",
+   "label": "sec:mat-view-table",
+   "labs": [],
+   "minutes": 5,
+   "number": "8.3",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Here is what dbt-duckdb ran for the view ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__orders"
+        },
+        ", taken from ",
+        {
+         "t": "code",
+         "v": "logs/dbt.log"
+        },
+        " (comments and empty lines removed):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c13",
+       "lang": "sql",
+       "small": true,
+       "t": "code",
+       "text": "create view \"practice\".\"dbt_adnane\".\"stg_jaffle_shop__orders__dbt_tmp\" as (\n    with\n    source as (\n        select * from \"practice\".\"jaffle_shop\".\"orders\"\n    ),\n    renamed as ( ... )\n    select * from renamed\n);\nalter view \"practice\".\"dbt_adnane\".\"stg_jaffle_shop__orders\" rename to \"stg_jaffle_shop__orders__dbt_backup\";\nalter view \"practice\".\"dbt_adnane\".\"stg_jaffle_shop__orders__dbt_tmp\" rename to \"stg_jaffle_shop__orders\";\n-- COMMIT\ndrop view if exists \"practice\".\"dbt_adnane\".\"stg_jaffle_shop__orders__dbt_backup\" cascade;",
+       "title": "logs/dbt.log (view model stg_jaffle_shop__orders)"
+      },
+      {
+       "c": [
+        "And for the table ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " on its second run (it was already a table):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c14",
+       "lang": "sql",
+       "small": true,
+       "t": "code",
+       "text": "create table \"practice\".\"dbt_adnane\".\"fct_orders__dbt_tmp\" as ( with ... select * from final );\nalter table \"practice\".\"dbt_adnane\".\"fct_orders\" rename to \"fct_orders__dbt_backup\";\nalter table \"practice\".\"dbt_adnane\".\"fct_orders__dbt_tmp\" rename to \"fct_orders\";\n-- COMMIT\ndrop table if exists \"practice\".\"dbt_adnane\".\"fct_orders__dbt_backup\" cascade;",
+       "title": "logs/dbt.log (table model fct_orders, already a table)"
+      },
+      {
+       "c": [
+        "Views and tables use the same four steps. We call it a ",
+        {
+         "en": [
+          "swap"
+         ],
+         "fr": "échange (remplacement en une seule étape)",
+         "id": "term-swap",
+         "t": "term"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "How dbt replaces a view or a table (the swap), in four steps: 1. Build the new object (create … fct_orders__dbt_tmp); 2. Move the old one away (rename fct_orders to …__dbt_backup); 3. Give the real name (rename …__dbt_tmp to fct_orders); 4. Clean up (drop …__dbt_backup). Steps 1–3 are one transaction (BEGIN … COMMIT): if step 1 fails, nothing changes. Step 4 runs after the COMMIT.",
+       "id": "ch08-fig1",
+       "src": "figures/ch08-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "Why so complicated? Because the expensive and risky part (the ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        ") runs ",
+        {
+         "c": [
+          "first"
+         ],
+         "t": "i"
+        },
+        ", under a temporary name. The renames take almost no time. So the people who read ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " never see a missing or half-built object, and if your SQL is wrong, the old version stays in place. We tested it: we broke ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " on purpose (a column name with a typo)."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c15",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:09:38  1 of 1 ERROR creating sql table model dbt_adnane.fct_orders .................... [ERROR in 0.04s]\n...\n22:09:38    Runtime Error in model fct_orders (models/marts/fct_orders.sql)\n  Binder Error: Values list \"orders\" does not have a column named \"statuss\""
+      },
+      {
+       "c": [
+        "After the error, ",
+        {
+         "t": "code",
+         "v": "select count(*) from dbt_adnane.fct_orders"
+        },
+        " still returned ",
+        {
+         "c": [
+          "300"
+         ],
+         "t": "b"
+        },
+        " (the old table), and no object with ",
+        {
+         "t": "code",
+         "v": "__dbt_tmp"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "__dbt_backup"
+        },
+        " was left in the schema. (A DuckDB SQL error is a \"Runtime Error … Binder Error\"; on other warehouses you would read \"Database Error\".)"
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Other adapters, other statements."
+           ],
+           "t": "b"
+          },
+          " The four steps above are what dbt-duckdb (and dbt-postgres) do. Other adapters reach the same goal differently. On Snowflake and BigQuery, for example, dbt sends one ",
+          {
+           "t": "code",
+           "v": "create or replace table … as (…)"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "create or replace view …"
+          },
+          ", because the platform itself replaces the object in one step. The exam does not ask you to memorize these statements; it asks you to understand that a table is ",
+          {
+           "c": [
+            "rebuilt completely"
+           ],
+           "t": "i"
+          },
+          " and a view is ",
+          {
+           "c": [
+            "recreated"
+           ],
+           "t": "i"
+          },
+          ", at every run, and that you only wrote the ",
+          {
+           "t": "code",
+           "v": "select"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "deep",
+       "t": "callout"
+      }
+     ],
+     "id": "ch08-s3-1",
+     "number": "8.3.1",
+     "title": [
+      "The swap pattern"
+     ],
+     "titleText": "The swap pattern"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Three places, three levels of detail. This is objective 3.2, and the exam likes it (trap T106)."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Place"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What you find"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "target/compiled/…/fct_orders.sql"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The ",
+           {
+            "t": "code",
+            "v": "select"
+           },
+           " after Jinja is rendered (",
+           {
+            "t": "code",
+            "v": "ref"
+           },
+           " replaced by real names, ephemeral CTEs injected). No ",
+           {
+            "t": "code",
+            "v": "create"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "target/run/…/fct_orders.sql"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The main statement: the ",
+           {
+            "t": "code",
+            "v": "create table …__dbt_tmp as (…)"
+           },
+           " wrapper around the compiled ",
+           {
+            "t": "code",
+            "v": "select"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "logs/dbt.log"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Every"
+            ],
+            "t": "i"
+           },
+           " statement, in order, with times: ",
+           {
+            "t": "code",
+            "v": "BEGIN"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "create"
+           },
+           ", the renames, ",
+           {
+            "t": "code",
+            "v": "COMMIT"
+           },
+           ", the ",
+           {
+            "t": "code",
+            "v": "drop"
+           },
+           "."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch08-s3-2",
+     "number": "8.3.2",
+     "title": [
+      "Where to read the SQL dbt really ran"
+     ],
+     "titleText": "Where to read the SQL dbt really ran"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "view"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "table"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Build time (",
+           {
+            "t": "code",
+            "v": "dbt run"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "Almost zero: only the definition is saved."
+          ]
+         },
+         {
+          "c": [
+           "The full query runs and the rows are written."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Query time (people reading it)"
+          ]
+         },
+         {
+          "c": [
+           "The query runs at every read; slow if the logic is heavy or views are stacked on views."
+          ]
+         },
+         {
+          "c": [
+           "Fast: the rows are ready."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Freshness"
+          ]
+         },
+         {
+          "c": [
+           "Always shows the current data of its inputs."
+          ]
+         },
+         {
+          "c": [
+           "Shows the data as of the last ",
+           {
+            "t": "code",
+            "v": "dbt run"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Storage"
+          ]
+         },
+         {
+          "c": [
+           "None."
+          ]
+         },
+         {
+          "c": [
+           "The whole result is stored."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Typical use"
+          ]
+         },
+         {
+          "c": [
+           "Staging (renames, casts); light logic."
+          ]
+         },
+         {
+          "c": [
+           "Marts read by BI tools; heavy joins used by many models."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"A view stores the data\""
+           ],
+           "t": "b"
+          },
+          " is false (trap T44). A view stores only its query. Two consequences that the exam likes: (1) a view is always up to date ",
+          {
+           "c": [
+            "with its inputs"
+           ],
+           "t": "i"
+          },
+          ", so a view on top of a table is only as fresh as that table; (2) when the logic is heavy, every reader pays for it. A table is a photograph: new raw rows appear only after the next run. And you never need a special flag to rebuild a table: ",
+          {
+           "c": [
+            "every"
+           ],
+           "t": "i"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          " rebuilds it completely."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch08-s3-3",
+     "number": "8.3.3",
+     "title": [
+      "View or table: the trade-offs"
+     ],
+     "titleText": "View or table: the trade-offs"
+    }
+   ],
+   "title": [
+    "View and table: the SQL behind them"
+   ],
+   "titleText": "View and table: the SQL behind them"
+  },
+  {
+   "anchors": [
+    "sec-mat-ephemeral"
+   ],
+   "checkpoints": [],
+   "id": "ch08-s4",
+   "label": "sec:mat-ephemeral",
+   "labs": [
+    "ch08-lab2"
+   ],
+   "minutes": 30,
+   "number": "8.4",
+   "objectives": [
+    "1.2",
+    "1.3",
+    "3.2"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "An ",
+        {
+         "en": [
+          "ephemeral model"
+         ],
+         "fr": "modèle éphémère",
+         "id": "term-ephemeral-model",
+         "t": "term"
+        },
+        " is a model that dbt never builds in the warehouse. When another model ",
+        {
+         "t": "code",
+         "v": "ref"
+        },
+        "s it, dbt copies its SQL into that model as a CTE (a named subquery, ",
+        {
+         "href": "/learn/ch04/",
+         "label": "ch:sql",
+         "t": "ref",
+         "text": "Chapter 4"
+        },
+        "). A CTE is not stored anywhere: it exists only while the query that contains it runs (trap T8). The CTE has a special name: ",
+        {
+         "t": "code",
+         "v": "__dbt__cte__"
+        },
+        " followed by the model name."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Our project needs one now. ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " keeps only the successful payments with ",
+        {
+         "t": "code",
+         "v": "where status = 'success'"
+        },
+        ". Later models (Chapter 9 and Chapter 11) will need the same filter. Instead of copying the ",
+        {
+         "t": "code",
+         "v": "where"
+        },
+        " into each of them, we write it once in a small intermediate model, ",
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        ", and make it ephemeral: it is light, and nobody needs to query it alone."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c16",
+       "lang": "dbt",
+       "t": "code",
+       "text": "{{ config(materialized='ephemeral') }}\n\nwith\n\npayments as (\n\n    select * from {{ ref('stg_stripe__payments') }}\n\n),\n\nsuccessful as (\n\n    select\n        payment_id,\n        order_id,\n        payment_method,\n        amount,\n        created_at\n\n    from payments\n    where status = 'success'\n\n)\n\nselect * from successful",
+       "title": "models/intermediate/int_payments__successful.sql"
+      },
+      {
+       "c": [
+        "The folder ",
+        {
+         "t": "code",
+         "v": "intermediate"
+        },
+        " says ",
+        {
+         "t": "code",
+         "v": "+materialized: view"
+        },
+        ", but the ",
+        {
+         "t": "code",
+         "v": "config()"
+        },
+        " block in the file says ",
+        {
+         "t": "code",
+         "v": "ephemeral"
+        },
+        ". The file wins (",
+        {
+         "href": "/learn/ch08/ch08-s5/",
+         "label": "sec:mat-precedence",
+         "t": "ref",
+         "text": "Section 8.5"
+        },
+        "). In ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        ", the import CTE now reads the new model, and the ",
+        {
+         "t": "code",
+         "v": "where"
+        },
+        " disappears:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c17",
+       "lang": "plain",
+       "t": "code",
+       "text": " payments as (\n\n-    select * from {{ ref('stg_stripe__payments') }}\n+    select * from {{ ref('int_payments__successful') }}\n\n ),\n@@ -19,7 +19,6 @@ order_payments as (\n         sum(amount) as amount\n\n     from payments\n-    where status = 'success'\n     group by order_id",
+       "title": "git diff models/marts/fct_orders.sql"
+      }
+     ],
+     "id": "ch08-s4-0",
+     "title": [
+      "Ephemeral models"
+     ],
+     "titleText": "Ephemeral models"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " prints ",
+        {
+         "t": "code",
+         "v": "Found 8 models"
+        },
+        " but runs only ",
+        {
+         "t": "code",
+         "v": "7"
+        },
+        ": the ephemeral model is not a step of its own. The summary line still says ",
+        {
+         "t": "code",
+         "v": "2 table models, 5 view models"
+        },
+        ". Now look at the compiled ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " (the beginning of the file):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c18",
+       "lang": "sql",
+       "t": "code",
+       "text": "with\n\n __dbt__cte__int_payments__successful as (\n\n\nwith\n\npayments as (\n\n    select * from \"practice\".\"dbt_adnane\".\"stg_stripe__payments\"\n\n),\n\nsuccessful as (\n    ...\n    from payments\n    where status = 'success'\n\n)\n\nselect * from successful\n), orders as (\n\n    select * from \"practice\".\"dbt_adnane\".\"stg_jaffle_shop__orders\"\n\n),\n\npayments as (\n\n    select * from __dbt__cte__int_payments__successful\n\n),\n...",
+       "title": "target/compiled/jaffle_dbt/models/marts/fct_orders.sql"
+      },
+      {
+       "c": [
+        "dbt did three things: it added the CTE ",
+        {
+         "t": "code",
+         "v": "__dbt__cte__int_payments__successful"
+        },
+        " at the top, it merged the model's own ",
+        {
+         "t": "code",
+         "v": "with"
+        },
+        " into that list (",
+        {
+         "t": "code",
+         "v": "), orders as ("
+        },
+        "), and it replaced ",
+        {
+         "t": "code",
+         "v": "{{ ref('int_payments__successful') }}"
+        },
+        " by the CTE name. The ephemeral model keeps its own ",
+        {
+         "t": "code",
+         "v": "with"
+        },
+        ", nested inside the CTE, and DuckDB runs it without complaint."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "An ephemeral model creates no object in the warehouse. stg_stripe__payments (a view) feeds int_payments__successful (ephemeral, drawn dashed). Its SQL is pasted into fct_orders (a table) as a CTE: with __dbt__cte__int_payments__successful as ( … where status = 'success' ), orders as ( … ), …",
+       "id": "ch08-fig2",
+       "src": "figures/ch08-fig2.svg",
+       "t": "figure"
+      }
+     ],
+     "id": "ch08-s4-1",
+     "number": "8.4.1",
+     "title": [
+      "What dbt does with it"
+     ],
+     "titleText": "What dbt does with it"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The exam asks many \"can I … with an ephemeral model?\" questions. We tested each case with dbt 1.11.16."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Running it alone builds nothing."
+         ],
+         "t": "b"
+        },
+        " No line ",
+        {
+         "t": "code",
+         "v": "START"
+        },
+        ", no error:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c19",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt run --select int_payments__successful"
+      },
+      {
+       "id": "ch08-c20",
+       "lang": "output",
+       "t": "code",
+       "text": "22:07:51  Found 8 models, 10 data tests, 5 sources, 500 macros\n22:07:51\n22:07:51  Concurrency: 4 threads (target='dev')\n22:07:51\n22:07:51\n22:07:51  Finished running  in 0 hours 0 minutes and 0.07 seconds (0.07s)."
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt build --select int_payments__successful"
+        },
+        " prints the same empty run."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "The warehouse does not know it."
+         ],
+         "t": "b"
+        },
+        " A BI tool or an analyst who queries it gets an error:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c21",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select count(*) from dbt_adnane.int_payments__successful\""
+      },
+      {
+       "id": "ch08-c22",
+       "lang": "output",
+       "t": "code",
+       "text": "Catalog Error: Table with name int_payments__successful does not exist!\nDid you mean \"stg_stripe__payments\"?"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "But dbt can compile and preview it."
+         ],
+         "t": "b"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "dbt compile --select int_payments__successful"
+        },
+        " prints its compiled ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        " (and writes it to ",
+        {
+         "t": "code",
+         "v": "target/compiled"
+        },
+        "; nothing is written to ",
+        {
+         "t": "code",
+         "v": "target/run"
+        },
+        "). ",
+        {
+         "t": "code",
+         "v": "dbt show"
+        },
+        " compiles the model and runs its ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        " for you, then prints the first rows. It never reads a stored table (for any model, not only ephemeral ones: it always runs the compiled ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        " again), so it works even though no object exists:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c23",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt show --select int_payments__successful --limit 3"
+      },
+      {
+       "id": "ch08-c24",
+       "lang": "output",
+       "t": "code",
+       "text": "Previewing node 'int_payments__successful':\n| payment_id | order_id | payment_method | amount | created_at |\n| ---------- | -------- | -------------- | ------ | ---------- |\n|          1 |        1 | coupon         |    5.0 | 2025-01-05 |\n|          2 |        1 | credit_card    |   25.2 | 2025-01-05 |\n|          3 |        2 | credit_card    |   19.5 | 2025-01-06 |"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Data tests work."
+         ],
+         "t": "b"
+        },
+        " We added ",
+        {
+         "t": "code",
+         "v": "unique"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "not_null"
+        },
+        " on ",
+        {
+         "t": "code",
+         "v": "payment_id"
+        },
+        " in a properties file: ",
+        {
+         "t": "code",
+         "v": "dbt test --select int_payments__successful"
+        },
+        " gave ",
+        {
+         "t": "code",
+         "v": "PASS=2"
+        },
+        ". The compiled test query starts with ",
+        {
+         "t": "code",
+         "v": "with __dbt__cte__int_payments__successful as (…)"
+        },
+        ": dbt injects the CTE into the test, exactly like into a model."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Ephemeral on top of ephemeral works."
+         ],
+         "t": "b"
+        },
+        " A view that reads an ephemeral model ",
+        {
+         "t": "code",
+         "v": "int_payments__by_method"
+        },
+        ", which itself reads ",
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        ", compiled to two CTEs, in dependency order:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c25",
+       "lang": "output",
+       "t": "code",
+       "text": "with __dbt__cte__int_payments__successful as (\n...\n),  __dbt__cte__int_payments__by_method as (\nselect payment_method, sum(amount) as amount\nfrom __dbt__cte__int_payments__successful\ngroup by payment_method\n) select * from __dbt__cte__int_payments__by_method"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "A macro run with ",
+          {
+           "t": "code",
+           "v": "dbt run-operation"
+          },
+          " cannot ",
+          {
+           "t": "code",
+           "v": "ref"
+          },
+          " it."
+         ],
+         "t": "b"
+        },
+        " A small macro that counts rows with ",
+        {
+         "t": "code",
+         "v": "run_query(\"select count(*) from \" ~ ref(model_name))"
+        },
+        " worked for ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " and failed for the ephemeral model:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c26",
+       "lang": "output",
+       "t": "code",
+       "text": "Encountered an error while running operation: Compilation Error\n  Operations can not ref() ephemeral nodes, but int_payments__successful is ephemeral"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "A Python model cannot read it."
+         ],
+         "t": "b"
+        },
+        " dbt tried to paste the SQL CTE in front of the Python code, and Python refused it:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c27",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:08:31  1 of 1 ERROR creating python table model dbt_adnane.py_payments ................ [ERROR in 0.15s]\n...\n  SyntaxError: invalid syntax"
+      },
+      {
+       "c": [
+        "The compiled file ",
+        {
+         "t": "code",
+         "v": "target/compiled/.../py_payments.py"
+        },
+        " began with ",
+        {
+         "t": "code",
+         "v": "with __dbt__cte__int_payments__successful as ("
+        },
+        " followed by ",
+        {
+         "t": "code",
+         "v": "def model(dbt, session):"
+        },
+        ". A Python model's parents must be real relations."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Contracts are not supported."
+         ],
+         "t": "b"
+        },
+        " dbt's documentation says that ephemeral models do not support model contracts (Chapter 17). In our test (dbt 1.11.16 with DuckDB) a contract on an ephemeral model was simply not checked: a wrong ",
+        {
+         "t": "code",
+         "v": "data_type"
+        },
+        " gave no error and no warning. For the exam, remember \"not supported\"."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Its hooks never run."
+         ],
+         "t": "b"
+        },
+        " Hooks are SQL statements that dbt runs before or after building a model (Chapter 10). We gave ",
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        " a ",
+        {
+         "t": "code",
+         "v": "post_hook"
+        },
+        " that creates a small table: ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " was green, and the table was never created. An ephemeral model has no build step, so there is no \"before\" or \"after\" for a hook."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Unit tests"
+         ],
+         "t": "b"
+        },
+        " can use an ephemeral model as an input, but the fixture rows must then be written with ",
+        {
+         "t": "code",
+         "v": "format: sql"
+        },
+        " (Chapter 19)."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "With an ephemeral model, can I…"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Answer"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Evidence"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ref"
+           },
+           " it from a SQL model?"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "YES"
+          ]
+         },
+         {
+          "c": [
+           "injected as ",
+           {
+            "t": "code",
+            "v": "__dbt__cte__<name>"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "build it with ",
+           {
+            "t": "code",
+            "v": "dbt run -s"
+           },
+           "?"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "NO object"
+          ]
+         },
+         {
+          "c": [
+           "\"Finished running in…\", nothing built"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "query it from a BI tool or the DuckDB CLI?"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "NO"
+          ]
+         },
+         {
+          "c": [
+           "Catalog Error: does not exist"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "preview it with ",
+           {
+            "t": "code",
+            "v": "dbt show"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "dbt compile"
+           },
+           "?"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "YES"
+          ]
+         },
+         {
+          "c": [
+           "preview printed"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "attach data tests to it?"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "YES"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "PASS=2"
+           },
+           ", CTE injected in the test"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ref"
+           },
+           " it from another ephemeral model?"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "YES"
+          ]
+         },
+         {
+          "c": [
+           "two CTEs, in order"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ref"
+           },
+           " it in a ",
+           {
+            "t": "code",
+            "v": "run-operation"
+           },
+           " macro?"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "NO"
+          ]
+         },
+         {
+          "c": [
+           "\"Operations can not ref() ephemeral nodes\""
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ref"
+           },
+           " it from a Python model?"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "NO"
+          ]
+         },
+         {
+          "c": [
+           "SQL pasted in Python: SyntaxError"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "enforce a contract on it?"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "NO"
+          ]
+         },
+         {
+          "c": [
+           "not supported (silently ignored in 1.11)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "run a ",
+           {
+            "t": "code",
+            "v": "pre_hook"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "post_hook"
+           },
+           " on it?"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "NO"
+          ]
+         },
+         {
+          "c": [
+           "the hook's table was never created"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch08-s4-2",
+     "number": "8.4.2",
+     "title": [
+      "Edge cases, tested one by one"
+     ],
+     "titleText": "Edge cases, tested one by one"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Use it for a ",
+        {
+         "c": [
+          "light"
+         ],
+         "t": "b"
+        },
+        " transformation, ",
+        {
+         "c": [
+          "early"
+         ],
+         "t": "b"
+        },
+        " in the DAG, used by ",
+        {
+         "c": [
+          "one or two"
+         ],
+         "t": "b"
+        },
+        " models, that nobody needs to query on its own. Our ",
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        " is a good example: one ",
+        {
+         "t": "code",
+         "v": "where"
+        },
+        ", a few columns."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Avoid it when:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "the logic is heavy and used by many models: each child gets its own copy of the CTE, so the warehouse computes it again for each child (nothing is stored to share);"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "you need to debug it: you cannot ",
+            {
+             "t": "code",
+             "v": "select"
+            },
+            " from it in the warehouse, and the compiled SQL of the children becomes long;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "a BI tool, a Python model, a ",
+            {
+             "t": "code",
+             "v": "run-operation"
+            },
+            " macro, a contract or a hook needs it."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "In those cases make it a ",
+        {
+         "t": "code",
+         "v": "view"
+        },
+        " (cheap, queryable) or a ",
+        {
+         "t": "code",
+         "v": "table"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"A BI tool can query an ephemeral model\""
+           ],
+           "t": "b"
+          },
+          " is false (trap T43). Ephemeral = no relation in the warehouse. Also remember: ",
+          {
+           "t": "code",
+           "v": "dbt run -s my_ephemeral_model"
+          },
+          " is ",
+          {
+           "c": [
+            "not"
+           ],
+           "t": "i"
+          },
+          " an error, it just builds nothing; and ",
+          {
+           "t": "code",
+           "v": "dbt show"
+          },
+          " ",
+          {
+           "c": [
+            "can"
+           ],
+           "t": "i"
+          },
+          " preview it, because dbt runs the ",
+          {
+           "t": "code",
+           "v": "select"
+          },
+          " itself."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " create ",
+          {
+           "t": "code",
+           "v": "int_payments__successful"
+          },
+          ", use it in ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          ", and prove that it exists only as a CTE."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Create the folder and the file:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c28",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ mkdir models/intermediate\n$ code models/intermediate/int_payments__successful.sql"
+        },
+        {
+         "c": [
+          "Type the content shown at the start of ",
+          {
+           "href": "/learn/ch08/ch08-s4/",
+           "label": "sec:mat-ephemeral",
+           "t": "ref",
+           "text": "Section 8.4"
+          },
+          " and save."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "models/marts/fct_orders.sql"
+          },
+          ", change the import CTE ",
+          {
+           "t": "code",
+           "v": "payments"
+          },
+          " to ",
+          {
+           "t": "code",
+           "v": "select * from {{ ref('int_payments__successful') }}"
+          },
+          " and delete the line ",
+          {
+           "t": "code",
+           "v": "where status = 'success'"
+          },
+          " in ",
+          {
+           "t": "code",
+           "v": "order_payments"
+          },
+          " (the git diff above). Check:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c29",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git status --short"
+        },
+        {
+         "id": "ch08-c30",
+         "lang": "output",
+         "t": "code",
+         "text": " M dbt_project.yml\n M models/marts/fct_orders.sql\n?? models/intermediate/"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Run everything:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c31",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt run"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the warning about ",
+          {
+           "t": "code",
+           "v": "intermediate"
+          },
+          " is gone, dbt finds 8 models and runs 7:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c32",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "20:40:22  Found 8 models, 10 data tests, 5 sources, 500 macros\n...\n20:40:22  6 of 7 START sql table model dbt_adnane.fct_orders ............................. [RUN]\n20:40:22  6 of 7 OK created sql table model dbt_adnane.fct_orders ........................ [OK in 0.05s]\n20:40:22  7 of 7 START sql table model dbt_adnane.dim_customers .......................... [RUN]\n20:40:22  7 of 7 OK created sql table model dbt_adnane.dim_customers ..................... [OK in 0.02s]\n20:40:22\n20:40:22  Finished running 2 table models, 5 view models in 0 hours 0 minutes and 0.30 seconds (0.30s).\n...\n20:40:22  Done. PASS=7 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=7"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Open ",
+          {
+           "t": "code",
+           "v": "target/compiled/jaffle_dbt/models/marts/fct_orders.sql"
+          },
+          " and find ",
+          {
+           "t": "code",
+           "v": "__dbt__cte__int_payments__successful"
+          },
+          ". Then check that ",
+          {
+           "t": "code",
+           "v": "target/run"
+          },
+          " has no file for the ephemeral model:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c33",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ ls target/compiled/jaffle_dbt/models/intermediate/\nint_payments__successful.sql\n$ ls target/run/jaffle_dbt/models/\nexample   marts     staging"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected:"
+           ],
+           "t": "b"
+          },
+          " no ",
+          {
+           "t": "code",
+           "v": "intermediate"
+          },
+          " folder in ",
+          {
+           "t": "code",
+           "v": "target/run"
+          },
+          ": the ephemeral model was compiled but never run. The ",
+          {
+           "t": "code",
+           "v": "example"
+          },
+          " folder is a leftover of the starter models of ",
+          {
+           "href": "/learn/ch06/",
+           "label": "ch:first-project",
+           "t": "ref",
+           "text": "Chapter 6"
+          },
+          ": dbt never deletes old files in ",
+          {
+           "t": "code",
+           "v": "target/"
+          },
+          " by itself (",
+          {
+           "t": "code",
+           "v": "dbt clean"
+          },
+          " does). If you ran ",
+          {
+           "t": "code",
+           "v": "dbt clean"
+          },
+          " after deleting the examples, you see only ",
+          {
+           "t": "code",
+           "v": "marts"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "staging"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Run the information-schema query of the first lab (step 4) again. ",
+          {
+           "c": [
+            "Expected:"
+           ],
+           "t": "b"
+          },
+          " the same 7 relations, and no ",
+          {
+           "t": "code",
+           "v": "int_payments__successful"
+          },
+          ". Then try the ",
+          {
+           "t": "code",
+           "v": "select count(*)"
+          },
+          " query of the edge cases above: Catalog Error."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6."
+           ],
+           "t": "b"
+          },
+          " List the models by materialization, then preview the ephemeral model:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c34",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt ls --select config.materialized:ephemeral config.materialized:table"
+        },
+        {
+         "id": "ch08-c35",
+         "lang": "output",
+         "t": "code",
+         "text": "jaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_payments__successful"
+        },
+        {
+         "c": [
+          "(The space between the two selectors means \"or\". Chapter 16 covers selection.) Then run ",
+          {
+           "t": "code",
+           "v": "dbt show --select int_payments__successful --limit 3"
+          },
+          ": you get the three rows shown above."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 7."
+           ],
+           "t": "b"
+          },
+          " Build and test everything, then check that the totals did not change:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c36",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build"
+        },
+        {
+         "id": "ch08-c37",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "20:41:13  Finished running 2 table models, 10 data tests, 5 view models in 0 hours 0 minutes and 0.39 seconds (0.39s).\n20:41:13\n20:41:13  Completed successfully\n20:41:13\n20:41:13  Done. PASS=17 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=17"
+        },
+        {
+         "id": "ch08-c38",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt show --inline \"select count(*) as n_orders, sum(amount) as total_amount from {{ ref('fct_orders') }}\""
+        },
+        {
+         "id": "ch08-c39",
+         "lang": "output",
+         "t": "code",
+         "text": "| n_orders | total_amount |\n| -------- | ------------ |\n|      300 |      5,004.4 |"
+        },
+        {
+         "c": [
+          "The same 300 orders and 5004.4 dollars as in ",
+          {
+           "href": "/learn/ch07/",
+           "label": "ch:models-sources-dag",
+           "t": "ref",
+           "text": "Chapter 7"
+          },
+          ": we moved the filter, we did not change the result."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 8."
+           ],
+           "t": "b"
+          },
+          " Commit:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c40",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git add .\n$ git commit -m \"Configure materializations; add ephemeral int_payments__successful\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Compare with the reference."
+           ],
+           "t": "b"
+          },
+          " You connected the remote ",
+          {
+           "t": "code",
+           "v": "reference"
+          },
+          " and fetched its tags (",
+          {
+           "t": "code",
+           "v": "ref-ch06"
+          },
+          " to ",
+          {
+           "t": "code",
+           "v": "ref-ch25"
+          },
+          ") in ",
+          {
+           "href": "/learn/ch06/",
+           "label": "ch:first-project",
+           "t": "ref",
+           "text": "Chapter 6"
+          },
+          ". If ",
+          {
+           "t": "code",
+           "v": "git remote -v"
+          },
+          " does not list ",
+          {
+           "t": "code",
+           "v": "reference"
+          },
+          ", run first the two commands ",
+          {
+           "t": "code",
+           "v": "git remote add reference …"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "git fetch --no-tags reference …"
+          },
+          " of that chapter. Then:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch08-c41",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git diff ref-ch08 --stat\n dbt_project.yml | 8 ++++----\n 1 file changed, 4 insertions(+), 4 deletions(-)\n$ git diff ref-ch08 -- dbt_project.yml"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected:"
+           ],
+           "t": "b"
+          },
+          " only ",
+          {
+           "t": "code",
+           "v": "dbt_project.yml"
+          },
+          " is listed, and the second command shows that the only differences are the comments (",
+          {
+           "t": "code",
+           "v": "# the project name …"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "# the folder models/staging …"
+          },
+          ") that you typed from this book: the reference file has none (if you did not type them, nothing is listed). Comments are harmless. Any other file in the list, or a difference in a name, a config or the logic, is a mistake to fix."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch08-lab2",
+       "objectives": [
+        "1.2",
+        "1.3",
+        "3.2"
+       ],
+       "t": "lab",
+       "title": [
+        "Add an ephemeral intermediate model"
+       ]
+      }
+     ],
+     "id": "ch08-s4-3",
+     "number": "8.4.3",
+     "title": [
+      "When to use ephemeral, and when not"
+     ],
+     "titleText": "When to use ephemeral, and when not"
+    }
+   ],
+   "title": [
+    "Ephemeral models"
+   ],
+   "titleText": "Ephemeral models"
+  },
+  {
+   "anchors": [
+    "sec-mat-precedence"
+   ],
+   "checkpoints": [],
+   "id": "ch08-s5",
+   "label": "sec:mat-precedence",
+   "labs": [],
+   "minutes": 5,
+   "number": "8.5",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "You have now set ",
+        {
+         "t": "code",
+         "v": "materialized"
+        },
+        " twice for ",
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "view"
+        },
+        " for its folder, ",
+        {
+         "t": "code",
+         "v": "ephemeral"
+        },
+        " in its file. dbt applies a simple ",
+        {
+         "en": [
+          "precedence"
+         ],
+         "fr": "ordre de priorité",
+         "id": "term-precedence",
+         "t": "term"
+        },
+        " rule: ",
+        {
+         "c": [
+          "the most specific place wins"
+         ],
+         "t": "b"
+        },
+        " (trap T46)."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Rank"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Place"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Example"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "align": "c",
+          "c": [
+           "1 (wins)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "config()"
+           },
+           " in the model's ",
+           {
+            "t": "code",
+            "v": ".sql"
+           },
+           " file"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{{ config(materialized='ephemeral') }}"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "align": "c",
+          "c": [
+           "2"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "config:"
+           },
+           " in a properties YAML file"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "- name: dim_customers / config: materialized: view"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "align": "c",
+          "c": [
+           "3"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_project.yml"
+           },
+           ", deepest folder first"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "marts: +materialized: table"
+           },
+           " beats a value set on ",
+           {
+            "t": "code",
+            "v": "jaffle_dbt:"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "align": "c",
+          "c": [
+           "4"
+          ]
+         },
+         {
+          "c": [
+           "dbt's default"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "view"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "We checked ranks 1 to 3 with a temporary properties file (deleted afterwards):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c42",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nmodels:\n  - name: dim_customers\n    config:\n      materialized: view      # beats the folder config (+materialized: table)\n  - name: int_payments__successful\n    config:\n      materialized: table     # loses: config() in the .sql file says ephemeral",
+       "title": "models/marts/_precedence_demo.yml (temporary)"
+      },
+      {
+       "id": "ch08-c43",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt ls --select config.materialized:view --resource-type model"
+      },
+      {
+       "id": "ch08-c44",
+       "lang": "output",
+       "t": "code",
+       "text": "jaffle_dbt.marts.dim_customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__order_items\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products\njaffle_dbt.staging.stripe.stg_stripe__payments"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " became a view (YAML beat the folder), and ",
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        " stayed ephemeral (the file beat the YAML): ",
+        {
+         "t": "code",
+         "v": "dbt ls --select config.materialized:ephemeral config.materialized:table"
+        },
+        " listed ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        ". Chapter 10 shows the whole precedence story, including configs that ",
+        {
+         "c": [
+          "add up"
+         ],
+         "t": "i"
+        },
+        " instead of replacing (tags, meta)."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Without ",
+          {
+           "t": "code",
+           "v": "--resource-type model"
+          },
+          ", the same ",
+          {
+           "t": "code",
+           "v": "dbt ls"
+          },
+          " also listed the ten data tests of the staging models: a test is selected together with the model it tests (indirect selection, Chapter 16). Add ",
+          {
+           "t": "code",
+           "v": "--resource-type model"
+          },
+          " when you only want models."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch08-s5-0",
+     "title": [
+      "Which config wins? A first look at precedence"
+     ],
+     "titleText": "Which config wins? A first look at precedence"
+    }
+   ],
+   "title": [
+    "Which config wins? A first look at precedence"
+   ],
+   "titleText": "Which config wins? A first look at precedence"
+  },
+  {
+   "anchors": [
+    "sec-mat-change"
+   ],
+   "checkpoints": [],
+   "id": "ch08-s6",
+   "label": "sec:mat-change",
+   "labs": [],
+   "minutes": 5,
+   "number": "8.6",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "What happens in the warehouse when a model that already exists gets a new materialization? dbt's rule is: if the object exists with a different type, dbt replaces it with an object of the new type. On dbt-duckdb, it uses the same swap. We tested every direction."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "View → table"
+         ],
+         "t": "b"
+        },
+        " (the first lab of this chapter): ",
+        {
+         "t": "code",
+         "v": "create table …__dbt_tmp"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "alter view … rename to …__dbt_backup"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "alter table …__dbt_tmp rename to …"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "drop view if exists …__dbt_backup"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Table → view"
+         ],
+         "t": "b"
+        },
+        ": we added ",
+        {
+         "t": "code",
+         "v": "{{ config(materialized='view') }}"
+        },
+        " to ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " for one run."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c45",
+       "lang": "output",
+       "t": "code",
+       "text": "  create view \"practice\".\"dbt_adnane\".\"dim_customers__dbt_tmp\" as (\nalter table \"practice\".\"dbt_adnane\".\"dim_customers\" rename to \"dim_customers__dbt_backup\"\nalter view \"practice\".\"dbt_adnane\".\"dim_customers__dbt_tmp\" rename to \"dim_customers\"\n      drop table if exists \"practice\".\"dbt_adnane\".\"dim_customers__dbt_backup\" cascade"
+      },
+      {
+       "c": [
+        "dbt knew the old object was a table (it reads the warehouse catalog before building), so it renamed it with ",
+        {
+         "t": "code",
+         "v": "alter table"
+        },
+        " and dropped it with ",
+        {
+         "t": "code",
+         "v": "drop table"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "View or table → ephemeral"
+         ],
+         "t": "b"
+        },
+        ": here is the surprise. We made ",
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        " a view for one run, then ephemeral again, and ran ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        ". The run was green, ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " used the CTE… and the old view was ",
+        {
+         "c": [
+          "still there"
+         ],
+         "t": "i"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c46",
+       "lang": "output",
+       "t": "code",
+       "text": "+--------------------------+------------+\n| table_name               | table_type |\n+--------------------------+------------+\n| int_payments__successful | VIEW       |\n+--------------------------+------------+"
+      },
+      {
+       "c": [
+        "An ephemeral model creates nothing, so dbt never looks at the old object. It stays, frozen at its last definition, and someone may still query it by mistake. We call it an ",
+        {
+         "en": [
+          "orphan relation"
+         ],
+         "fr": "relation orpheline",
+         "id": "term-orphan-relation",
+         "t": "term"
+        },
+        ": an object in the warehouse that no model manages any more. Drop it yourself (",
+        {
+         "t": "code",
+         "v": "drop view dbt_adnane.int_payments__successful;"
+        },
+        " in the DuckDB CLI, with dbt not running)."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Ephemeral → view or table"
+         ],
+         "t": "b"
+        },
+        ": the opposite direction is simple. We made ",
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        " a ",
+        {
+         "t": "code",
+         "v": "table"
+        },
+        " for one run: dbt created the table, and the compiled ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " no longer had a ",
+        {
+         "t": "code",
+         "v": "__dbt__cte__"
+        },
+        "; its import CTE became ",
+        {
+         "t": "code",
+         "v": "select * from \"practice\".\"dbt_adnane\".\"int_payments__successful\""
+        },
+        ". As soon as a model has a relation, ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " points to that relation."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Model deleted"
+         ],
+         "t": "b"
+        },
+        ": the same thing happens when you delete a model file. dbt does not drop anything; the old relation stays. You will do this clean-up in Chapter 9 after deleting the legacy model."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "One platform difference."
+         ],
+         "t": "b"
+        },
+        " On DuckDB, Postgres, Snowflake and most platforms, a normal run is enough to turn a table into a view. dbt-bigquery is stricter: when a table already exists where a view must be created, it stops with a \"wrong type\" error that asks you to drop the table yourself or to run with ",
+        {
+         "t": "code",
+         "v": "--full-refresh"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "dbt never drops a relation it no longer manages."
+           ],
+           "t": "b"
+          },
+          " Switching a model to ",
+          {
+           "t": "code",
+           "v": "ephemeral"
+          },
+          ", renaming a model, or deleting a model leaves the old view or table in the warehouse. In development, drop it by hand. In production, teams usually run a clean-up macro (Chapter 11 shows how macros can run SQL)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch08-s6-0",
+     "title": [
+      "Changing the materialization of an existing model"
+     ],
+     "titleText": "Changing the materialization of an existing model"
+    }
+   ],
+   "title": [
+    "Changing the materialization of an existing model"
+   ],
+   "titleText": "Changing the materialization of an existing model"
+  },
+  {
+   "anchors": [
+    "sec-mat-incremental"
+   ],
+   "checkpoints": [],
+   "id": "ch08-s7",
+   "label": "sec:mat-incremental",
+   "labs": [],
+   "minutes": 5,
+   "number": "8.7",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A table is rebuilt completely at every run. With 300 orders that takes 0.05 seconds. With 3 billion events it takes hours and costs money, every night, mostly to recompute rows that did not change. An ",
+        {
+         "en": [
+          "incremental model"
+         ],
+         "fr": "modèle incrémental",
+         "id": "term-incremental-model",
+         "t": "term"
+        },
+        " solves this: the first run builds the full table; each later run selects ",
+        {
+         "c": [
+          "only the new or changed rows"
+         ],
+         "t": "i"
+        },
+        " and adds them (or updates them) in the existing table."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "You will make ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " incremental in Chapter 14. Here is the shape it will have, so you recognise it:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c47",
+       "lang": "dbt",
+       "t": "code",
+       "text": "{{ config(\n    materialized='incremental',\n    unique_key='order_id',\n    incremental_strategy='merge'\n) }}\n\nselect * from {{ ref('int_orders__enriched') }}\n\n{% if is_incremental() %}\n-- only on later runs: the rows loaded after the newest row already in this table\nwhere loaded_at > (select max(loaded_at) from {{ this }})\n{% endif %}"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "unique_key"
+        },
+        " says which rows to ",
+        {
+         "c": [
+          "update"
+         ],
+         "t": "i"
+        },
+        " instead of inserting them again; ",
+        {
+         "t": "code",
+         "v": "incremental_strategy"
+        },
+        " says how the new rows are applied; ",
+        {
+         "t": "code",
+         "v": "{{ this }}"
+        },
+        " is the model's own table. (Chapter 14 makes this filter safer with ",
+        {
+         "t": "code",
+         "v": "coalesce"
+        },
+        ".) Note that the comment with ",
+        {
+         "t": "code",
+         "v": "--"
+        },
+        " is ",
+        {
+         "c": [
+          "outside"
+         ],
+         "t": "i"
+        },
+        " the ",
+        {
+         "t": "code",
+         "v": "config()"
+        },
+        " call: inside ",
+        {
+         "t": "code",
+         "v": "{{ }}"
+        },
+        " you are in Jinja, where ",
+        {
+         "t": "code",
+         "v": "--"
+        },
+        " is not a comment. We tried ",
+        {
+         "t": "code",
+         "v": "materialized='table',  -- a comment"
+        },
+        " inside the call and got \"",
+        {
+         "t": "code",
+         "v": "Compilation Error … invalid syntax for function call expression"
+        },
+        "\". Use a Jinja comment ",
+        {
+         "t": "code",
+         "v": "{# … #}"
+        },
+        " instead."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Three ideas to keep from this preview:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "is_incremental()"
+            },
+            " is true only when the table already exists, the model is incremental, and ",
+            {
+             "t": "code",
+             "v": "--full-refresh"
+            },
+            " is not used. So the first run (and every full refresh) builds everything."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "t": "code",
+             "v": "incremental_strategy"
+            },
+            " (",
+            {
+             "t": "code",
+             "v": "append"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "merge"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "delete+insert"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "insert_overwrite"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "microbatch"
+            },
+            ") decides how the new rows are written. Not every adapter supports every strategy."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt run --full-refresh"
+            },
+            " drops the incremental table and builds it again from all the data."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Microbatch"
+         ],
+         "t": "b"
+        },
+        " (objective 1.14) is a special incremental strategy for large time series: you write the SQL for one period, and dbt runs it once per batch (one day, one month…), using an ",
+        {
+         "t": "code",
+         "v": "event_time"
+        },
+        " column. No ",
+        {
+         "t": "code",
+         "v": "is_incremental()"
+        },
+        " needed. Chapter 14 covers both in depth."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch08-s7-0",
+     "title": [
+      "Incremental models: a preview"
+     ],
+     "titleText": "Incremental models: a preview"
+    }
+   ],
+   "title": [
+    "Incremental models: a preview"
+   ],
+   "titleText": "Incremental models: a preview"
+  },
+  {
+   "anchors": [
+    "sec-mat-mv"
+   ],
+   "checkpoints": [],
+   "id": "ch08-s8",
+   "label": "sec:mat-mv",
+   "labs": [],
+   "minutes": 5,
+   "number": "8.8",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "materialized view"
+         ],
+         "fr": "vue matérialisée",
+         "id": "term-materialized-view",
+         "t": "term"
+        },
+        " is a database object that stores its rows like a table, but that the ",
+        {
+         "c": [
+          "platform"
+         ],
+         "t": "i"
+        },
+        " refreshes when its inputs change (automatically or on a schedule). You get table-like read speed with view-like freshness, and dbt does not need to rebuild it at every run. After the first creation, a ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " is like a deployment: dbt compares the configuration of the existing object with your configs. If nothing changed, it only asks the platform to refresh the data; if something changed, the config ",
+        {
+         "t": "code",
+         "v": "on_configuration_change"
+        },
+        " (below) decides. Whether a change in the SQL alone is detected depends on the adapter; ",
+        {
+         "t": "code",
+         "v": "--full-refresh"
+        },
+        " always replaces the object. Postgres is a special case: it has no automatic refresh, so there the data is refreshed only when dbt runs."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c48",
+       "lang": "dbt",
+       "t": "code",
+       "text": "{{ config(materialized='materialized_view') }}\n\nselect status, count(*) as number_of_orders\nfrom {{ ref('fct_orders') }}\ngroup by status"
+      },
+      {
+       "c": [
+        "Materialized views have fewer options and more restrictions than tables, and these depend on the platform. Since dbt 1.6 they are available on adapters such as Postgres, Redshift, Databricks and (since 1.7) BigQuery. ",
+        {
+         "c": [
+          "Snowflake"
+         ],
+         "t": "b"
+        },
+        " uses its own object instead, the ",
+        {
+         "en": [
+          "dynamic table"
+         ],
+         "fr": "table dynamique",
+         "id": "term-dynamic-table",
+         "t": "term"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "materialized='dynamic_table'"
+        },
+        ", with a warehouse to use (",
+        {
+         "t": "code",
+         "v": "snowflake_warehouse"
+        },
+        ") and a maximum delay (",
+        {
+         "t": "code",
+         "v": "target_lag"
+        },
+        ", for example ",
+        {
+         "t": "code",
+         "v": "'30 minutes'"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The config ",
+        {
+         "t": "code",
+         "v": "on_configuration_change"
+        },
+        " tells dbt what to do when you change the configuration of an existing materialized view:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Value"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Behaviour"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "apply"
+           },
+           " (default)"
+          ]
+         },
+         {
+          "c": [
+           "Apply the change to the existing object if possible (for example an index), otherwise rebuild it."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "continue"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Leave the object as it is, print a warning, continue the run."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "fail"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Stop with an error when a configuration change is detected."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "--full-refresh"
+        },
+        " ignores this setting: the materialized view is replaced."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "On DuckDB"
+         ],
+         "t": "b"
+        },
+        " (our setup), the materialization does not exist. We tried the model above:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c49",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "20:41:04  1 of 1 START sql materialized_view model dbt_adnane.mv_orders_by_status ........ [RUN]\n20:41:04  1 of 1 ERROR creating sql materialized_view model dbt_adnane.mv_orders_by_status  [ERROR in 0.02s]\n...\n20:41:04    Compilation Error in model mv_orders_by_status (models/marts/mv_orders_by_status.sql)\n  `get_create_materialized_view_as_sql` has not been implemented for this adapter.\n\n  > in macro default__get_create_materialized_view_as_sql (macros/relations/materialized_view/create.sql)"
+      },
+      {
+       "c": [
+        "Read the message: dbt found the generic ",
+        {
+         "t": "code",
+         "v": "materialized_view"
+        },
+        " materialization, but dbt-duckdb does not provide the macro that writes ",
+        {
+         "t": "code",
+         "v": "create materialized view"
+        },
+        " for DuckDB. We deleted the demo model."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"",
+            {
+             "t": "code",
+             "v": "materialized_view"
+            },
+            " works the same everywhere\""
+           ],
+           "t": "b"
+          },
+          " is false (trap T45). It exists only on platforms that support it, the options differ, Snowflake uses ",
+          {
+           "t": "code",
+           "v": "dynamic_table"
+          },
+          ", and contracts are not supported on it. When a question says \"the platform must keep the result fresh without dbt running\", think materialized view (or dynamic table). When it says \"process only the new rows in dbt\", think incremental."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch08-s8-0",
+     "title": [
+      "Materialized views and dynamic tables"
+     ],
+     "titleText": "Materialized views and dynamic tables"
+    }
+   ],
+   "title": [
+    "Materialized views and dynamic tables"
+   ],
+   "titleText": "Materialized views and dynamic tables"
+  },
+  {
+   "anchors": [
+    "sec-mat-full-refresh"
+   ],
+   "checkpoints": [],
+   "id": "ch08-s9",
+   "label": "sec:mat-full-refresh",
+   "labs": [],
+   "minutes": 5,
+   "number": "8.9",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "full refresh"
+         ],
+         "fr": "reconstruction complète",
+         "id": "term-full-refresh",
+         "t": "term"
+        },
+        " means \"throw away what you have and build it again from all the data\". The flag is ",
+        {
+         "t": "code",
+         "v": "--full-refresh"
+        },
+        " (short form ",
+        {
+         "t": "code",
+         "v": "-f"
+        },
+        ") on ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "dbt seed"
+        },
+        ". Its effect depends on the materialization:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Resource"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Effect of ",
+             {
+              "t": "code",
+              "v": "--full-refresh"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "view"
+           }
+          ]
+         },
+         {
+          "c": [
+           "None. A view is recreated at every run anyway."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "table"
+           }
+          ]
+         },
+         {
+          "c": [
+           "None. A table is rebuilt completely at every run anyway."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ephemeral"
+           }
+          ]
+         },
+         {
+          "c": [
+           "None. There is nothing to build."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "incremental"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The big one: the table is rebuilt from all the data; ",
+           {
+            "t": "code",
+            "v": "is_incremental()"
+           },
+           " is false."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "materialized_view"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The object is replaced, whatever ",
+           {
+            "t": "code",
+            "v": "on_configuration_change"
+           },
+           " says."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "seed"
+          ]
+         },
+         {
+          "c": [
+           "The table is dropped and recreated (needed when the CSV columns change, Chapter 12)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "snapshot"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt snapshot"
+           },
+           " has no ",
+           {
+            "t": "code",
+            "v": "--full-refresh"
+           },
+           " flag: history cannot be rebuilt (Chapter 13)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "We checked the first two lines. ",
+        {
+         "t": "code",
+         "v": "dbt run --select stg_jaffle_shop__orders fct_orders dim_customers --full-refresh"
+        },
+        " sent exactly the same statements as a normal run:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c50",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "create view \"practice\".\"dbt_adnane\".\"stg_jaffle_shop__orders__dbt_tmp\" as (\nalter view \"practice\".\"dbt_adnane\".\"stg_jaffle_shop__orders\" rename to \"stg_jaffle_shop__orders__dbt_backup\"\nalter view \"practice\".\"dbt_adnane\".\"stg_jaffle_shop__orders__dbt_tmp\" rename to \"stg_jaffle_shop__orders\"\ndrop view if exists \"practice\".\"dbt_adnane\".\"stg_jaffle_shop__orders__dbt_backup\" cascade\ncreate  table\nalter table \"practice\".\"dbt_adnane\".\"fct_orders\" rename to \"fct_orders__dbt_backup\"\nalter table \"practice\".\"dbt_adnane\".\"fct_orders__dbt_tmp\" rename to \"fct_orders\"\ndrop table if exists \"practice\".\"dbt_adnane\".\"fct_orders__dbt_backup\" cascade\n..."
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt run --help"
+        },
+        " even says it in its own words: the flag makes dbt \"drop incremental models and fully-recalculate the incremental table\". (An incremental model can refuse the flag with the config ",
+        {
+         "t": "code",
+         "v": "full_refresh: false"
+        },
+        ", to protect a huge table: Chapter 14.)"
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch08-s9-0",
+     "title": [
+      "What ",
+      {
+       "t": "code",
+       "v": "--full-refresh"
+      },
+      " does to each materialization"
+     ],
+     "titleText": "What --full-refresh does to each materialization"
+    }
+   ],
+   "title": [
+    "What ",
+    {
+     "t": "code",
+     "v": "--full-refresh"
+    },
+    " does to each materialization"
+   ],
+   "titleText": "What --full-refresh does to each materialization"
+  },
+  {
+   "anchors": [
+    "sec-mat-choose"
+   ],
+   "checkpoints": [],
+   "id": "ch08-s10",
+   "label": "sec:mat-choose",
+   "labs": [],
+   "minutes": 5,
+   "number": "8.10",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The dbt Labs project-structure guide, and most real projects, start from one materialization per layer (Chapter 9 explains the layers):"
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "One materialization per layer, from left to right: Sources (raw tables loaded by others, not built by dbt) → Staging (rename, cast, light cleaning: view) → Intermediate (reusable steps, joins, re-graining: ephemeral or view) → Marts (business entities read by people: table, later incremental) → Consumers (BI dashboards, notebooks, apps).",
+       "id": "ch08-fig3",
+       "src": "figures/ch08-fig3.svg",
+       "t": "figure"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Staging: ",
+              {
+               "t": "code",
+               "v": "view"
+              },
+              "."
+             ],
+             "t": "b"
+            },
+            " The logic is light, nobody outside the team queries it, and a view costs no storage and is always as fresh as the raw data."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Intermediate: ",
+              {
+               "t": "code",
+               "v": "ephemeral"
+              },
+              " or ",
+              {
+               "t": "code",
+               "v": "view"
+              },
+              "."
+             ],
+             "t": "b"
+            },
+            " Ephemeral keeps the warehouse clean; a view (often in a separate schema with limited access) is easier to debug. Our project uses both: ephemeral for the tiny ",
+            {
+             "t": "code",
+             "v": "int_payments__successful"
+            },
+            ", the folder default ",
+            {
+             "t": "code",
+             "v": "view"
+            },
+            " for the bigger intermediate models of Chapter 9."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Marts: ",
+              {
+               "t": "code",
+               "v": "table"
+              },
+              "."
+             ],
+             "t": "b"
+            },
+            " BI tools read them many times a day; the heavy work should happen once, during the run."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch08-s10-1",
+     "number": "8.10.1",
+     "title": [
+      "Choose by layer"
+     ],
+     "titleText": "Choose by layer"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt Labs' advice can be summed up as: ",
+        {
+         "c": [
+          "start with a view; when it is too slow to query, make it a table; when the table is too slow to build, make it incremental."
+         ],
+         "t": "i"
+        },
+        " Do not start with incremental models \"just in case\": they add complexity (strategies, filters, full refreshes) that you only want when the time or the cost is a real problem."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "One more warning sign: a long chain of views (or ephemeral models) on top of each other. Each read must compute the whole chain. The ",
+        {
+         "t": "code",
+         "v": "dbt_project_evaluator"
+        },
+        " package from dbt Labs flags chains of more than five non-physical models (its default threshold). Turning one model in the middle of the chain into a table usually fixes it."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Need"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "view"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "table"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "ephemeral"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "incremental"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Freshest data with no run"
+          ]
+         },
+         {
+          "c": [
+           "best"
+          ]
+         },
+         {
+          "c": [
+           "no (last run)"
+          ]
+         },
+         {
+          "c": [
+           "as its children"
+          ]
+         },
+         {
+          "c": [
+           "no (last run)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Fast reads"
+          ]
+         },
+         {
+          "c": [
+           "no"
+          ]
+         },
+         {
+          "c": [
+           "best"
+          ]
+         },
+         {
+          "c": [
+           "as its children"
+          ]
+         },
+         {
+          "c": [
+           "best"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Fast, cheap ",
+           {
+            "t": "code",
+            "v": "dbt run"
+           }
+          ]
+         },
+         {
+          "c": [
+           "best"
+          ]
+         },
+         {
+          "c": [
+           "full rebuild"
+          ]
+         },
+         {
+          "c": [
+           "nothing to build"
+          ]
+         },
+         {
+          "c": [
+           "only new rows"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Storage"
+          ]
+         },
+         {
+          "c": [
+           "none"
+          ]
+         },
+         {
+          "c": [
+           "full"
+          ]
+         },
+         {
+          "c": [
+           "none"
+          ]
+         },
+         {
+          "c": [
+           "full"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Easy to debug"
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           "harder"
+          ]
+         },
+         {
+          "c": [
+           "harder"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Queryable by BI"
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "no"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch08-s10-2",
+     "number": "8.10.2",
+     "title": [
+      "Then follow the evidence"
+     ],
+     "titleText": "Then follow the evidence"
+    }
+   ],
+   "title": [
+    "Choosing a materialization"
+   ],
+   "titleText": "Choosing a materialization"
+  },
+  {
+   "anchors": [
+    "sec-mat-python-custom"
+   ],
+   "checkpoints": [],
+   "id": "ch08-s11",
+   "label": "sec:mat-python-custom",
+   "labs": [],
+   "minutes": 5,
+   "number": "8.11",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A Python model (Chapter 15) returns a DataFrame. dbt must store that DataFrame somewhere, so only two materializations are allowed: ",
+        {
+         "t": "code",
+         "v": "table"
+        },
+        " (the default for Python) and ",
+        {
+         "t": "code",
+         "v": "incremental"
+        },
+        ". Not ",
+        {
+         "t": "code",
+         "v": "view"
+        },
+        ", not ",
+        {
+         "t": "code",
+         "v": "ephemeral"
+        },
+        ". We tried a view:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c51",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:08:40    Runtime Error in model py_payments (models/demo/py_payments.py)\n  Materialization \"materialization_view_default\" only supports languages ['sql']; got \"python\""
+      },
+      {
+       "c": [
+        "With ",
+        {
+         "t": "code",
+         "v": "dbt.config(materialized=\"ephemeral\")"
+        },
+        ", dbt 1.11.16 printed no error for the Python model itself; but a SQL model that ",
+        {
+         "t": "code",
+         "v": "ref"
+        },
+        "ed it failed with ",
+        {
+         "t": "code",
+         "v": "Parser Error: syntax error at or near \"def\""
+        },
+        ", because dbt had pasted the Python code into the SQL as a CTE. The rule to remember is simple: ",
+        {
+         "c": [
+          "Python models are ",
+          {
+           "t": "code",
+           "v": "table"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "incremental"
+          }
+         ],
+         "t": "b"
+        },
+        " (trap T80), and they cannot read an ephemeral model (trap T82)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch08-s11-1",
+     "number": "8.11.1",
+     "title": [
+      "Python models: ",
+      {
+       "t": "code",
+       "v": "table"
+      },
+      " or ",
+      {
+       "t": "code",
+       "v": "incremental"
+      },
+      " only"
+     ],
+     "titleText": "Python models: table or incremental only"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A materialization is a macro, so you can write your own: a ",
+        {
+         "en": [
+          "custom materialization"
+         ],
+         "fr": "matérialisation personnalisée",
+         "id": "term-custom-materialization",
+         "t": "term"
+        },
+        ". It is defined in the ",
+        {
+         "t": "code",
+         "v": "macros/"
+        },
+        " folder with a special block, ",
+        {
+         "t": "code",
+         "v": "{% materialization my_name, default %} … {% endmaterialization %}"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "default"
+        },
+        " = for every adapter; you can also write a version for one adapter, for example ",
+        {
+         "t": "code",
+         "v": "adapter='snowflake'"
+        },
+        "). Inside, it runs the hooks, executes its SQL, commits, and returns the relations it created. Models use it like any other: ",
+        {
+         "t": "code",
+         "v": "materialized='my_name'"
+        },
+        ". Very few projects need this, and the exam only expects you to know that it exists. You can see how dbt searches for materializations in this real error, caused by a typo (",
+        {
+         "t": "code",
+         "v": "'tabel'"
+        },
+        "):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch08-c52",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:09:57    Compilation Error in model typo_demo (models/marts/typo_demo.sql)\n  No materialization 'tabel' was found for adapter duckdb! (searched types 'default' and 'duckdb')"
+      }
+     ],
+     "id": "ch08-s11-2",
+     "number": "8.11.2",
+     "title": [
+      "Custom materializations"
+     ],
+     "titleText": "Custom materializations"
+    }
+   ],
+   "title": [
+    "Python models and custom materializations"
+   ],
+   "titleText": "Python models and custom materializations"
+  },
+  {
+   "anchors": [
+    "sec-mat-platform"
+   ],
+   "checkpoints": [],
+   "id": "ch08-s12",
+   "label": "sec:mat-platform",
+   "labs": [],
+   "minutes": 5,
+   "number": "8.12",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Everything in this chapter works the same in the dbt platform (formerly dbt Cloud): materializations are configs in your files, not settings of the tool."
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Studio IDE."
+             ],
+             "t": "b"
+            },
+            " Type ",
+            {
+             "t": "code",
+             "v": "dbt run"
+            },
+            " or ",
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            " in the command bar. The ",
+            {
+             "c": [
+              "Build"
+             ],
+             "t": "b"
+            },
+            " button offers ",
+            {
+             "t": "code",
+             "v": "run"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "build"
+            },
+            " or ",
+            {
+             "t": "code",
+             "v": "test"
+            },
+            " for the open model, alone or with its upstream or downstream models. The ",
+            {
+             "c": [
+              "Compile"
+             ],
+             "t": "b"
+            },
+            " button fills the ",
+            {
+             "c": [
+              "Compiled code"
+             ],
+             "t": "b"
+            },
+            " tab: for ",
+            {
+             "t": "code",
+             "v": "fct_orders"
+            },
+            " you will see ",
+            {
+             "t": "code",
+             "v": "__dbt__cte__int_payments__successful"
+            },
+            " there. ",
+            {
+             "c": [
+              "Preview"
+             ],
+             "t": "b"
+            },
+            " runs the query of the open file and shows the rows in the ",
+            {
+             "c": [
+              "Results"
+             ],
+             "t": "b"
+            },
+            " tab (like ",
+            {
+             "t": "code",
+             "v": "dbt show"
+            },
+            "). Each command appears in the invocation history; its ",
+            {
+             "c": [
+              "System Logs"
+             ],
+             "t": "i"
+            },
+            " toggle shows the full debug log, the same kind of content as ",
+            {
+             "t": "code",
+             "v": "logs/dbt.log"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Jobs and environments."
+             ],
+             "t": "b"
+            },
+            " A deployment job runs the same commands on a schedule (for example ",
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            " every night). Tables and incremental models are therefore as fresh as the ",
+            {
+             "c": [
+              "last job"
+             ],
+             "t": "i"
+            },
+            "; views are always as fresh as their inputs. The same materialization is used in every environment, unless you write it with Jinja on ",
+            {
+             "t": "code",
+             "v": "target.name"
+            },
+            " (tip in ",
+            {
+             "href": "/learn/ch08/ch08-s2/",
+             "label": "sec:mat-where",
+             "t": "ref",
+             "text": "Section 8.2"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Catalog"
+             ],
+             "t": "b"
+            },
+            " (formerly dbt Explorer). A model's page shows how it is materialized, and the lineage graph has a ",
+            {
+             "c": [
+              "Materialization type"
+             ],
+             "t": "i"
+            },
+            " lens that colours each node (table, view, incremental, ephemeral, materialized view). Search filters can also filter on the materialization."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch08-s12-0",
+     "title": [
+      "In the dbt platform"
+     ],
+     "titleText": "In the dbt platform"
+    }
+   ],
+   "title": [
+    "In the dbt platform"
+   ],
+   "titleText": "In the dbt platform"
+  }
+ ],
+ "minutes": 125,
+ "number": 8,
+ "objectives": [
+  "1.2",
+  "1.6",
+  "1.8",
+  "1.11",
+  "1.14",
+  "3.2"
+ ],
+ "part": 2,
+ "partLabel": "Part II",
+ "partTitle": "Building with dbt",
+ "printed": "8",
+ "quiz": [
+  "q-ch08-01",
+  "q-ch08-02",
+  "q-ch08-03",
+  "q-ch08-04",
+  "q-ch08-05",
+  "q-ch08-06",
+  "q-ch08-07",
+  "q-ch08-08",
+  "q-ch08-09",
+  "q-ch08-10",
+  "q-ch08-11",
+  "q-ch08-12",
+  "q-ch08-13",
+  "q-ch08-14",
+  "q-ch08-15",
+  "q-ch08-16",
+  "q-ch08-17",
+  "q-ch08-18"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-mat-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch08-01",
+      "q-ch08-02",
+      "q-ch08-03",
+      "q-ch08-04",
+      "q-ch08-05",
+      "q-ch08-06",
+      "q-ch08-07",
+      "q-ch08-08",
+      "q-ch08-09",
+      "q-ch08-10",
+      "q-ch08-11",
+      "q-ch08-12",
+      "q-ch08-13",
+      "q-ch08-14",
+      "q-ch08-15",
+      "q-ch08-16",
+      "q-ch08-17",
+      "q-ch08-18"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch08-01",
+    "q-ch08-02",
+    "q-ch08-03",
+    "q-ch08-04",
+    "q-ch08-05",
+    "q-ch08-06",
+    "q-ch08-07",
+    "q-ch08-08",
+    "q-ch08-09",
+    "q-ch08-10",
+    "q-ch08-11",
+    "q-ch08-12",
+    "q-ch08-13",
+    "q-ch08-14",
+    "q-ch08-15",
+    "q-ch08-16",
+    "q-ch08-17",
+    "q-ch08-18"
+   ],
+   "label": "sec:mat-quiz",
+   "number": "8.13",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A materialization wraps your ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        " in the SQL that builds it. Five built-ins: ",
+        {
+         "t": "code",
+         "v": "view"
+        },
+        " (",
+        {
+         "c": [
+          "default"
+         ],
+         "t": "b"
+        },
+        "), ",
+        {
+         "t": "code",
+         "v": "table"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "ephemeral"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "incremental"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "materialized_view"
+        },
+        "; custom ones are possible."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Configure ",
+        {
+         "t": "code",
+         "v": "materialized"
+        },
+        " in ",
+        {
+         "t": "code",
+         "v": "config()"
+        },
+        ", in a properties YAML file, or per folder in ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "+materialized"
+        },
+        ", project name first). Most specific wins: file > YAML > project (deepest folder) > default."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A misspelled folder in ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        " gives only an \"unused configuration paths\" warning."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Views and tables are rebuilt at ",
+        {
+         "c": [
+          "every"
+         ],
+         "t": "i"
+        },
+        " run. dbt-duckdb uses a swap: build ",
+        {
+         "t": "code",
+         "v": "__dbt_tmp"
+        },
+        ", rename the old object to ",
+        {
+         "t": "code",
+         "v": "__dbt_backup"
+        },
+        ", rename, commit, drop the backup. If the ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        " fails, the old object stays."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "target/compiled"
+        },
+        " = the ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        "; ",
+        {
+         "t": "code",
+         "v": "target/run"
+        },
+        " = the ",
+        {
+         "t": "code",
+         "v": "create"
+        },
+        " wrapper; ",
+        {
+         "t": "code",
+         "v": "logs/dbt.log"
+        },
+        " = every statement."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Ephemeral = no object; SQL injected as ",
+        {
+         "t": "code",
+         "v": "__dbt__cte__<name>"
+        },
+        ". ",
+        {
+         "t": "code",
+         "v": "dbt run -s"
+        },
+        " builds nothing, ",
+        {
+         "t": "code",
+         "v": "dbt show"
+        },
+        " previews it, tests work; BI tools, ",
+        {
+         "t": "code",
+         "v": "run-operation"
+        },
+        ", Python models and contracts cannot use it, and its hooks never run."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt never drops what it no longer manages: switching to ephemeral or deleting a model leaves an orphan relation. The other way round (ephemeral → table or view), the relation is created and ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " now points to it."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "--full-refresh"
+        },
+        " matters for incremental models (and materialized views, seeds); it changes nothing for views, tables and ephemeral models. Snapshots have no such flag."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Materialized views are platform-specific (",
+        {
+         "t": "code",
+         "v": "on_configuration_change"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "apply"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "continue"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "fail"
+        },
+        "); Snowflake uses ",
+        {
+         "t": "code",
+         "v": "dynamic_table"
+        },
+        "; DuckDB does not implement them."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Choose by layer (staging views, intermediate ephemeral or views, marts tables), then follow the evidence: view → table → incremental. Python models: ",
+        {
+         "t": "code",
+         "v": "table"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "incremental"
+        },
+        " only."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "Materializations"
+}

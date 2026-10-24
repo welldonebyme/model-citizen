@@ -1,0 +1,2049 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt ls"
+     },
+     " parses and selects, never connects. A writes compiled files and may run metadata queries (and it does not show the list). C previews only one node and runs a query. D creates objects (empty) in the warehouse."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch16-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt compile -s tag:finance+"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt ls -s tag:finance+"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt show -s tag:finance+"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build -s tag:finance+ --empty"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "Adnane wants to know which nodes ",
+     {
+      "t": "code",
+      "v": "tag:finance+"
+     },
+     " selects, without building anything and without connecting to the warehouse. Which command should he use?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " The number on the left limits the ancestors to one level. A gives all ancestors; B gives the direct ",
+     {
+      "c": [
+       "children"
+      ],
+      "t": "i"
+     },
+     "; D gives the descendants and their other parents."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch16-02",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "+dim_customers"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dim_customers+1"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "1+dim_customers"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "@dim_customers"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Which selection returns ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     " and ",
+     {
+      "c": [
+       "only"
+      ],
+      "t": "i"
+     },
+     " its direct parents?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " Both mean the model, its descendants and all the ancestors of those descendants (",
+     {
+      "t": "code",
+      "v": "childrens_parents"
+     },
+     " is the YAML spelling of ",
+     {
+      "t": "code",
+      "v": "@"
+     },
+     "). B adds the ancestors of the ",
+     {
+      "c": [
+       "starting"
+      ],
+      "t": "i"
+     },
+     " node only, so the other parents (",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__customers"
+     },
+     ", the seed) are missing. D has the same problem. E is an intersection of a set with a bigger set that contains it: only ",
+     {
+      "t": "code",
+      "v": "stg_stripe__payments"
+     },
+     " (and its tests) remain."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch16-03",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build -s @stg_stripe__payments"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build -s +stg_stripe__payments+"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build --selector x"
+     },
+     ", where the selector ",
+     {
+      "t": "code",
+      "v": "x"
+     },
+     " has ",
+     {
+      "t": "code",
+      "v": "method: fqn"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "value: stg_stripe__payments"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "childrens_parents: true"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build -s stg_stripe__payments+"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build -s \"stg_stripe__payments,@stg_stripe__payments\""
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "In a new, empty CI schema, you must build ",
+     {
+      "t": "code",
+      "v": "stg_stripe__payments"
+     },
+     ", all its descendants, and every other parent that those descendants need. Which two options do this?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Intersection"
+      ],
+      "t": "b"
+     },
+     " (\"and\"). A space would mean union (\"or\"); the comma must not be followed by a space."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch16-04",
+  "key": {
+   "accepted": [
+    "Intersection"
+   ]
+  },
+  "keyRaw": "\\textbf{Intersection}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "dbt ls -s \"tag:finance,config.materialized:table\""
+     },
+     ", the comma between the two methods means ",
+     {
+      "t": "blank"
+     },
+     ": only the nodes that match both are kept."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-d, 3-b, 4-a."
+      ],
+      "t": "b"
+     },
+     " Eager is the most inclusive and the default; cautious is the most exclusive one that still adds tests; empty adds none."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch16-05",
+  "key": {
+   "1": "c",
+   "2": "d",
+   "3": "b",
+   "4": "a"
+  },
+  "keyRaw": "\\textbf{1-c, 2-d, 3-b, 4-a.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "eager"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "buildable"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "cautious"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "empty"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "No test is added to the selection."
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "A test is added only if ",
+      {
+       "c": [
+        "all"
+       ],
+       "t": "i"
+      },
+      " its parents are selected."
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "A test is added if ",
+      {
+       "c": [
+        "at least one"
+       ],
+       "t": "i"
+      },
+      " of its parents is selected."
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "A test is added if all its parents are selected or are ancestors of the selection."
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each indirect selection mode with its rule."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "e, c, b, d, a."
+      ],
+      "t": "b"
+     },
+     " Parents first (with their data tests right after them), then the unit test of ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " ",
+     {
+      "c": [
+       "before"
+      ],
+      "t": "i"
+     },
+     " the model, the model, and finally its data test."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch16-06",
+  "key": [
+   "E",
+   "C",
+   "B",
+   "D",
+   "A"
+  ],
+  "keyRaw": "\\textbf{e, c, b, d, a.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "the data test on ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " runs"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "the unit test of ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " runs"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "int_orders__enriched"
+     },
+     " is built"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " is built"
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     " is built and its data tests run"
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " has one unit test and one data test. Put these events of ",
+     {
+      "t": "code",
+      "v": "dbt build -s +fct_orders"
+     },
+     " in the order they happen for this chain:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 3."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt seed"
+     },
+     " has no ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     " option: \"No such option ",
+     {
+      "t": "code",
+      "v": "'--empty'"
+     },
+     "\". Lines 1, 2 and 4 are valid (line 4 is the safe empty build). Line 5 is valid syntax; it needs the artifacts folder to exist."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch16-c89",
+   "lines": 5,
+   "numbering": "listing"
+  },
+  "id": "q-ch16-07",
+  "key": 3,
+  "keyRaw": "\\textbf{Line 3.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "A CI script runs these commands one after the other. Which line stops the script with a usage error, before anything runs?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch16-c89",
+    "lang": "plain",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "dbt deps\ndbt parse\ndbt seed --empty\ndbt build --empty --exclude-resource-type snapshot\ndbt build -s state:modified+ --defer --state prod-artifacts"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, YES, NO, NO."
+      ],
+      "t": "b"
+     },
+     " Objects are created with 0 rows. Seeds load fully (",
+     {
+      "t": "code",
+      "v": "INSERT 6"
+     },
+     "). Only ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "source"
+     },
+     " are limited, so a hard-coded table is read in full. The usual data tests pass on empty tables (no failing rows); only a test that expects rows would fail. Unit tests still run with their fake rows."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch16-08",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": false,
+   "E": false
+  },
+  "keyRaw": "\\textbf{YES, NO, YES, NO, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It creates the selected models in the warehouse, with their columns and zero rows."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It loads the seeds with zero rows."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A table name hard-coded in a model (not ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "source"
+     },
+     ") is read in full."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The data tests fail, because the tables are empty."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "The unit tests are skipped."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "dbt build --empty"
+     },
+     ":"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "--sample"
+     },
+     " needs ",
+     {
+      "t": "code",
+      "v": "event_time"
+     },
+     " on the node behind the ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     "/",
+     {
+      "t": "code",
+      "v": "source"
+     },
+     ". B, C and D are unrelated configs (microbatch needs ",
+     {
+      "t": "code",
+      "v": "event_time"
+     },
+     " too, but the filter does not depend on the model being incremental)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch16-09",
+  "key": "A",
+  "keyRaw": "\\textbf{A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "the referenced node has an ",
+     {
+      "t": "code",
+      "v": "event_time"
+     },
+     " config."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "the model that contains the ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " is incremental."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "the referenced node has a ",
+     {
+      "t": "code",
+      "v": "unique_key"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "the source has a ",
+     {
+      "t": "code",
+      "v": "freshness"
+     },
+     " block."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "--sample"
+     },
+     " filters the input of a ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " only when…"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Allowed units: hour, day, month, year (singular or plural): \"Invalid grain size 'week\"'. A: there is no week. C: dbt does not ignore an invalid value. D: ",
+     {
+      "t": "code",
+      "v": "--sample"
+     },
+     " is a time window, never random."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch16-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The model is built on the last 14 days."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt stops with an error: the unit is not allowed."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The flag is ignored and the model is built on all rows."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt keeps a random 2% of the rows."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "What happens with ",
+     {
+      "t": "code",
+      "v": "dbt run -s stg_jaffle_shop__orders --sample=\"2 weeks\""
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt show"
+     },
+     " does not read the table: it runs the model's ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     ", including the ",
+     {
+      "t": "code",
+      "v": "is_incremental()"
+     },
+     " branch. A: it previews any SQL model (and ephemeral ones). C: the default limit is always 5. D: no lock is involved; to see the table, use ",
+     {
+      "t": "code",
+      "v": "--inline \"select * from {{ ref('fct_orders') }}\""
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch16-11",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt show"
+     },
+     " can only preview views."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt show"
+     },
+     " runs the compiled SQL of the model; the table exists, so the ",
+     {
+      "t": "code",
+      "v": "is_incremental()"
+     },
+     " filter keeps only rows newer than those already in the table."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The default ",
+     {
+      "t": "code",
+      "v": "--limit"
+     },
+     " of ",
+     {
+      "t": "code",
+      "v": "dbt show"
+     },
+     " is 0 for incremental models."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The table is locked by the warehouse during the preview."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " is an incremental table with 320 rows. ",
+     {
+      "t": "code",
+      "v": "dbt show -s fct_orders"
+     },
+     " prints the column names but no row. Why?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " In 1.11, ",
+     {
+      "t": "code",
+      "v": "--selector"
+     },
+     " wins and ",
+     {
+      "t": "code",
+      "v": "--select"
+     },
+     "/",
+     {
+      "t": "code",
+      "v": "--exclude"
+     },
+     " are silently ignored (1.12 adds a warning). A would need the 1.12 ",
+     {
+      "t": "code",
+      "v": "selector:"
+     },
+     " method. B is the opposite. D: there is no error."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch16-12",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The ",
+     {
+      "t": "code",
+      "v": "nightly"
+     },
+     " selection plus ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Only ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Only the ",
+     {
+      "t": "code",
+      "v": "nightly"
+     },
+     " selection: ",
+     {
+      "t": "code",
+      "v": "--select"
+     },
+     " is ignored."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Nothing: dbt stops with an error."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "With dbt 1.11, what does ",
+     {
+      "t": "code",
+      "v": "dbt build --selector nightly --select dim_customers"
+     },
+     " build?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " handles models only. Use ",
+     {
+      "t": "code",
+      "v": "dbt seed"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ". A, C and D describe things ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " never does with a seed."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch16-13",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The seed is reloaded with the new rows."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt prints \"Nothing to do\": ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " does not handle seeds."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt fails with \"node not found\"."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The seed and all its children are rebuilt."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "Someone added rows to ",
+     {
+      "t": "code",
+      "v": "seeds/country_regions.csv"
+     },
+     " and runs ",
+     {
+      "t": "code",
+      "v": "dbt run -s country_regions"
+     },
+     ". What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and D."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     " exists on ",
+     {
+      "t": "code",
+      "v": "run"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "build"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "compile"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "snapshot"
+     },
+     ". ",
+     {
+      "t": "code",
+      "v": "seed"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "test"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "show"
+     },
+     " answer \"No such option\"."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch16-14",
+  "key": [
+   "A",
+   "D"
+  ],
+  "keyRaw": "\\textbf{A and D.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt seed"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt test"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt show"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "Which commands accept the ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     " flag?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "-x"
+       }
+      ],
+      "t": "b"
+     },
+     " (",
+     {
+      "t": "code",
+      "v": "dbt build -x"
+     },
+     "). It stops the whole command at the first failure."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch16-15",
+  "key": {
+   "accepted": [
+    "-x"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{-x}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "The one-letter short form of ",
+     {
+      "t": "code",
+      "v": "--fail-fast"
+     },
+     " is ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "--resource-type model"
+     },
+     " is a final filter. A does not even remove the tests: their YAML files are inside ",
+     {
+      "t": "code",
+      "v": "models/staging"
+     },
+     ", so ",
+     {
+      "t": "code",
+      "v": "path:"
+     },
+     " selects them ",
+     {
+      "c": [
+       "directly"
+      ],
+      "t": "i"
+     },
+     " (we checked: still 20 lines), and it would keep the sources anyway. C removes the sources but keeps the tests. D only changes the format of the lines."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch16-16",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "--indirect-selection empty"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "--resource-type model"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "--exclude-resource-type source"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "--output name"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt ls -s path:models/staging"
+     },
+     " prints 5 models, 10 tests and 5 ",
+     {
+      "t": "code",
+      "v": "source:"
+     },
+     " lines. What is the simplest change to list only the models?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " We measured it: 100 current rows became 0, and the next normal snapshot added 100 new versions. A is wrong: ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " includes snapshots. C: nothing is dropped, and ",
+     {
+      "t": "code",
+      "v": "dbt snapshot"
+     },
+     " has no ",
+     {
+      "t": "code",
+      "v": "--full-refresh"
+     },
+     " option (snapshots ignore that flag in ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "). D: ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     " is accepted (",
+     {
+      "t": "code",
+      "v": "dbt snapshot --empty"
+     },
+     " exists too)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch16-17",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Nothing: dbt never runs snapshots with ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The source looks empty, so every current row of the snapshot is closed; exclude snapshots from empty runs (",
+     {
+      "t": "code",
+      "v": "--exclude-resource-type snapshot"
+     },
+     ")."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The snapshot table is dropped and recreated empty; run ",
+     {
+      "t": "code",
+      "v": "dbt snapshot --full-refresh"
+     },
+     " afterwards."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt stops with an error, because ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     " is not allowed on snapshots."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "A snapshot uses ",
+     {
+      "t": "code",
+      "v": "hard_deletes: invalidate"
+     },
+     ". A CI job runs ",
+     {
+      "t": "code",
+      "v": "dbt build --empty"
+     },
+     " in the schema where this snapshot already has history. What happens, and what is the good practice?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, NO, YES."
+      ],
+      "t": "b"
+     },
+     " Freshness is a separate command. Unit tests run before their model. A ",
+     {
+      "t": "code",
+      "v": "warn"
+     },
+     " test reports a warning and nothing is skipped. Seeds are part of ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch16-18",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": false,
+   "D": true
+  },
+  "keyRaw": "\\textbf{NO, YES, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It runs ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     " before the models."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It runs the unit tests of a model before building that model."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A failing test with ",
+     {
+      "t": "code",
+      "v": "severity: warn"
+     },
+     " skips the children of the tested model."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It loads the seeds."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ":"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-b, 2-a, 3-c, 4-d."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt ls"
+     },
+     " writes only the manifest files, never ",
+     {
+      "t": "code",
+      "v": "run_results.json"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch16-19",
+  "key": {
+   "1": "b",
+   "2": "a",
+   "3": "c",
+   "4": "d"
+  },
+  "keyRaw": "\\textbf{1-b, 2-a, 3-c, 4-d.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "sources.json"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "catalog.json"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "perf_info.json"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "run_results.json"
+      },
+      " (but not by ",
+      {
+       "t": "code",
+       "v": "dbt ls"
+      },
+      ")"
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt docs generate"
+      }
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt source freshness"
+      }
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt parse"
+      }
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt build"
+      }
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 19
+  },
+  "stem": [
+   {
+    "c": [
+     "In a fresh ",
+     {
+      "t": "code",
+      "v": "target/"
+     },
+     " folder, which command creates each file?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A."
+      ],
+      "t": "b"
+     },
+     " Commas inside each item first: (finance ",
+     {
+      "c": [
+       "and"
+      ],
+      "t": "i"
+     },
+     " table) = ",
+     {
+      "t": "code",
+      "v": "fct_monthly_revenue"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "fct_order_items"
+     },
+     "; (staging ",
+     {
+      "c": [
+       "and"
+      ],
+      "t": "i"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "stg_stripe__payments"
+     },
+     ") = ",
+     {
+      "t": "code",
+      "v": "stg_stripe__payments"
+     },
+     "; then the union. B ignores the commas. C: each intersection is non-empty. D forgets the second item."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch16-20",
+  "key": "A",
+  "keyRaw": "\\textbf{A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "fct_monthly_revenue"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "fct_order_items"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "stg_stripe__payments"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Every finance table and every staging model."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "None: the intersection is empty."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "fct_monthly_revenue"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "fct_order_items"
+     },
+     " only."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 16,
+   "kind": "chapter",
+   "n": 20
+  },
+  "stem": [
+   {
+    "c": [
+     "Which models does ",
+     {
+      "t": "code",
+      "v": "dbt ls -s \"tag:finance,config.materialized:table tag:staging,stg_stripe__payments\" --resource-type model"
+     },
+     " list?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

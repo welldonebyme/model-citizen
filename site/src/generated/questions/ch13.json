@@ -1,0 +1,1677 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " ignores snapshots (selecting one prints \"Nothing to do\"). A: the file name is free. C: ",
+     {
+      "t": "code",
+      "v": "--full-refresh"
+     },
+     " does not exist for snapshots, and the first run creates the table by itself. D: snapshots are built in any target (in dev, in your schema)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch13-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The YAML file must be named ",
+     {
+      "t": "code",
+      "v": "snapshots.yml"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " builds models only; snapshots run with ",
+     {
+      "t": "code",
+      "v": "dbt snapshot"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Snapshots need ",
+     {
+      "t": "code",
+      "v": "--full-refresh"
+     },
+     " the first time."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Snapshots are created only in production."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "You added a YAML snapshot and ran ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     ". The snapshot table was not created. Why?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "timestamp"
+     },
+     " needs ",
+     {
+      "t": "code",
+      "v": "unique_key"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "updated_at"
+     },
+     ". B is for ",
+     {
+      "t": "code",
+      "v": "check"
+     },
+     ". D is legacy and optional since 1.9. E is optional (default ",
+     {
+      "t": "code",
+      "v": "ignore"
+     },
+     ")."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch13-02",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "unique_key"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "check_cols"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "updated_at"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target_schema"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "hard_deletes"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "A snapshot uses ",
+     {
+      "t": "code",
+      "v": "strategy: timestamp"
+     },
+     ". Which two other configs are ",
+     {
+      "c": [
+       "required"
+      ],
+      "t": "b"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NULL."
+      ],
+      "t": "b"
+     },
+     " Only ",
+     {
+      "t": "code",
+      "v": "dbt_valid_to_current"
+     },
+     " (1.9+) changes it. Not \"today\", not 9999-12-31 by default."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch13-03",
+  "key": {
+   "accepted": [
+    "NULL"
+   ]
+  },
+  "keyRaw": "\\textbf{NULL.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "With default configs, the current version of each row in a snapshot has ",
+     {
+      "t": "code",
+      "v": "dbt_valid_to"
+     },
+     " equal to ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-d, 3-a, 4-b."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt_scd_id"
+     },
+     " is the version's hash; ",
+     {
+      "t": "code",
+      "v": "dbt_is_deleted"
+     },
+     " exists only with ",
+     {
+      "t": "code",
+      "v": "new_record"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch13-04",
+  "key": {
+   "1": "c",
+   "2": "d",
+   "3": "a",
+   "4": "b"
+  },
+  "keyRaw": "\\textbf{1-c, 2-d, 3-a, 4-b.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt_scd_id"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt_valid_from"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt_valid_to"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt_is_deleted"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "When this version stopped being valid (empty for the current one)."
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "True"
+      },
+      "/",
+      {
+       "t": "code",
+       "v": "False"
+      },
+      ", added only with ",
+      {
+       "t": "code",
+       "v": "hard_deletes: new_record"
+      },
+      "."
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "A hash that identifies one version of one row."
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "When this version became valid."
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each meta column with its description."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 6."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "unique_key: user_id"
+     },
+     " is not unique: several orders share a ",
+     {
+      "t": "code",
+      "v": "user_id"
+     },
+     ", so each run compares rows with the wrong partners and inserts false \"changes\" (we saw 320, 700, then 1912 rows without any data change). The other lines are valid."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch13-c67",
+   "lines": 8,
+   "numbering": "listing"
+  },
+  "id": "q-ch13-05",
+  "key": 6,
+  "keyRaw": "\\textbf{Line 6.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "This snapshot runs without errors, but its table grows on every run even when the source does not change. Which line causes it? (Each customer has several orders.)"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch13-c67",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "snapshots:\n  - name: orders_snapshot\n    relation: source('jaffle_shop', 'orders')\n    config:\n      schema: snapshots\n      unique_key: user_id\n      strategy: check\n      check_cols: ['status']"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B, D, C, A."
+      ],
+      "t": "b"
+     },
+     " Read the source, compute the changes in a temporary table, close the old versions, insert the new rows."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch13-06",
+  "key": [
+   "B",
+   "D",
+   "C",
+   "A"
+  ],
+  "keyRaw": "\\textbf{B, D, C, A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Insert the new versions of changed rows and the rows with new keys."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Read the source rows (the ",
+     {
+      "t": "code",
+      "v": "relation"
+     },
+     ")."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Set ",
+     {
+      "t": "code",
+      "v": "dbt_valid_to"
+     },
+     " on the current versions of the changed rows."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Build a temporary table of changes by comparing source rows with the current snapshot rows on ",
+     {
+      "t": "code",
+      "v": "unique_key"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Put in order what dbt does during the ",
+     {
+      "c": [
+       "second"
+      ],
+      "t": "i"
+     },
+     " run of a snapshot."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, YES, NO, YES."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "check"
+     },
+     " needs ",
+     {
+      "t": "code",
+      "v": "check_cols"
+     },
+     " and uses the run time. It knows nothing before its first run (we got 0 rows for a date before it). NULL to a value is a change (customer 17)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch13-07",
+  "key": {
+   "A": true,
+   "B": true,
+   "C": false,
+   "D": true
+  },
+  "keyRaw": "\\textbf{YES, YES, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It needs ",
+     {
+      "t": "code",
+      "v": "check_cols"
+     },
+     ", either a list or ",
+     {
+      "t": "code",
+      "v": "all"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_valid_from"
+     },
+     " of a new version is the time of the snapshot run."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It can answer \"what was the value two months before the first snapshot run?\"."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A NULL value that becomes a real value is detected as a change."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "About the ",
+     {
+      "t": "code",
+      "v": "check"
+     },
+     " strategy (no ",
+     {
+      "t": "code",
+      "v": "updated_at"
+     },
+     " configured):"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " The timestamp strategy only compares ",
+     {
+      "t": "code",
+      "v": "updated_at"
+     },
+     ", so the change is lost silently. A: no error exists for this. B is the ",
+     {
+      "t": "code",
+      "v": "check"
+     },
+     " behaviour. D: dbt only closes rows when it inserts a new version (or with ",
+     {
+      "t": "code",
+      "v": "hard_deletes"
+     },
+     ")."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch13-08",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt raises an error because the row changed without a new timestamp."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt records a new version with ",
+     {
+      "t": "code",
+      "v": "dbt_valid_from"
+     },
+     " = run time."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Nothing: the change is not detected and the old version stays current."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt closes the old version without inserting a new one."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "A snapshot uses ",
+     {
+      "t": "code",
+      "v": "strategy: timestamp"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "updated_at: updated_at"
+     },
+     ". An application changes a customer's address but forgets to update ",
+     {
+      "t": "code",
+      "v": "updated_at"
+     },
+     ". What happens at the next ",
+     {
+      "t": "code",
+      "v": "dbt snapshot"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A."
+      ],
+      "t": "b"
+     },
+     " The default ",
+     {
+      "t": "code",
+      "v": "hard_deletes: ignore"
+     },
+     " does nothing. B: snapshots never delete rows. C is ",
+     {
+      "t": "code",
+      "v": "invalidate"
+     },
+     ". D is ",
+     {
+      "t": "code",
+      "v": "new_record"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch13-09",
+  "key": "A",
+  "keyRaw": "\\textbf{A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The customer's last version, still current (",
+     {
+      "t": "code",
+      "v": "dbt_valid_to"
+     },
+     " NULL)."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "No row for that customer anymore."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The last version, closed with the run time."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A new row with ",
+     {
+      "t": "code",
+      "v": "dbt_is_deleted = True"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "A customer is deleted from the source. The snapshot has no ",
+     {
+      "t": "code",
+      "v": "hard_deletes"
+     },
+     " config. What does the snapshot show after the next run?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " dbt does not migrate snapshot tables: ",
+     {
+      "c": [
+       "Snapshot target is missing configured columns (missing \"dbt_is_deleted\")"
+      ],
+      "t": "i"
+     },
+     ". A, C, D do not happen; use ",
+     {
+      "t": "code",
+      "v": "new_record"
+     },
+     " on new snapshots or add the column yourself."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch13-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt adds the column ",
+     {
+      "t": "code",
+      "v": "dbt_is_deleted"
+     },
+     " and continues."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The run fails: the snapshot target is missing the configured column ",
+     {
+      "t": "code",
+      "v": "dbt_is_deleted"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt silently ignores the new config."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt rebuilds the snapshot table from scratch."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "An existing snapshot table was created with the default configs. You add ",
+     {
+      "t": "code",
+      "v": "hard_deletes: new_record"
+     },
+     " and run ",
+     {
+      "t": "code",
+      "v": "dbt snapshot"
+     },
+     ". What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " Since 1.9 ",
+     {
+      "t": "code",
+      "v": "schema"
+     },
+     " is a custom schema, and the default macro builds ",
+     {
+      "t": "code",
+      "v": "<target_schema>_<custom_schema>"
+     },
+     ". A is what legacy ",
+     {
+      "t": "code",
+      "v": "target_schema"
+     },
+     " would do (or a custom macro in prod). B happens with a macro like ours in dev. D is the wrong order."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch13-11",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "snapshots"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_lina"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_lina_snapshots"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "snapshots_dbt_lina"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "A project uses dbt's ",
+     {
+      "c": [
+       "default"
+      ],
+      "t": "i"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "generate_schema_name"
+     },
+     ". The dev target schema is ",
+     {
+      "t": "code",
+      "v": "dbt_lina"
+     },
+     ". A YAML snapshot has ",
+     {
+      "t": "code",
+      "v": "schema: snapshots"
+     },
+     ". Where is it built in dev?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Same source, same key and strategy; ",
+     {
+      "t": "code",
+      "v": "schema: snapshots"
+     },
+     " is the modern replacement for ",
+     {
+      "t": "code",
+      "v": "target_schema"
+     },
+     " (not identical: it goes through the macro). A reads a model, not the source. C changes the strategy. D: ",
+     {
+      "t": "code",
+      "v": "sql:"
+     },
+     " is not a snapshot key."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch13-12",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "relation: ref('orders')"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "config: {unique_key: id, strategy: timestamp, updated_at: updated_at}"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "relation: source('shop', 'orders')"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "config: {schema: snapshots, unique_key: id, strategy: timestamp, updated_at: updated_at}"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "relation: source('shop', 'orders')"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "config: {schema: snapshots, unique_key: id, strategy: check, check_cols: [updated_at]}"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "sql: \"select * from shop.orders\""
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "config: {target_schema: snapshots, strategy: timestamp}"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "You find this file in an old project. Which YAML snapshot is the modern equivalent?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch13-c68",
+    "lang": "dbt",
+    "t": "code",
+    "text": "{% snapshot orders_snapshot %}\n{{ config(target_schema='snapshots', unique_key='id',\n          strategy='timestamp', updated_at='updated_at') }}\nselect * from {{ source('shop', 'orders') }}\n{% endsnapshot %}"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B and C."
+      ],
+      "t": "b"
+     },
+     " A records logic changes as history. D: there is no full refresh, and rebuilding destroys history. E misses most changes."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch13-13",
+  "key": [
+   "B",
+   "C"
+  ],
+  "keyRaw": "\\textbf{B and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Snapshot the final mart models, so the history contains clean data."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Snapshot sources with ",
+     {
+      "t": "code",
+      "v": "select *"
+     },
+     ", as early as possible."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Put snapshots in a dedicated schema with restricted write access."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Rebuild snapshots with ",
+     {
+      "t": "code",
+      "v": "--full-refresh"
+     },
+     " once a month."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Run snapshots once a year to save money."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two are recommended practices for snapshots?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The option does not exist for ",
+     {
+      "t": "code",
+      "v": "dbt snapshot"
+     },
+     ". A would destroy the history; dbt never does it. C and D are inventions."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch13-14",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The snapshot is dropped and recreated with the current source rows."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt prints ",
+     {
+      "c": [
+       "No such option '--full-refresh'"
+      ],
+      "t": "i"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The history is kept and only current rows are refreshed."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt asks for confirmation."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "A colleague wants to rebuild a broken snapshot and types ",
+     {
+      "t": "code",
+      "v": "dbt snapshot --full-refresh"
+     },
+     ". What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, YES, NO, YES."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     " works with ",
+     {
+      "t": "code",
+      "v": "dbt snapshot"
+     },
+     ". On an existing snapshot that tracks hard deletes, the empty source looks like \"everything was deleted\": we got 0 current rows out of 105."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch13-15",
+  "key": {
+   "A": true,
+   "B": true,
+   "C": false,
+   "D": true
+  },
+  "keyRaw": "\\textbf{YES, YES, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt snapshot --empty"
+     },
+     " is a valid command."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "On a brand-new snapshot, it creates the table with the meta columns and zero rows."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "On an existing snapshot with ",
+     {
+      "t": "code",
+      "v": "hard_deletes: invalidate"
+     },
+     ", it is harmless."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It replaces the snapshot's ",
+     {
+      "t": "code",
+      "v": "relation"
+     },
+     " by a query that returns no rows."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "About ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     " and snapshots:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "dbt_valid_to_current"
+       }
+      ],
+      "t": "b"
+     },
+     ", for example ",
+     {
+      "t": "code",
+      "v": "\"cast('9999-12-31' as timestamp)\""
+     },
+     " (a static SQL expression for your warehouse)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch13-16",
+  "key": {
+   "accepted": [
+    "dbt_valid_to_current"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{dbt\\_valid\\_to\\_current}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "To store ",
+     {
+      "t": "code",
+      "v": "9999-12-31"
+     },
+     " instead of NULL in ",
+     {
+      "t": "code",
+      "v": "dbt_valid_to"
+     },
+     " for current rows (dbt 1.9+), set the config ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Half-open interval plus the current versions. A includes both ends (two versions at the exact change instant) and misses current rows (",
+     {
+      "t": "code",
+      "v": "between"
+     },
+     " with NULL is never true). C only matches the start instants. D gives the current state, not the state at ",
+     {
+      "t": "code",
+      "v": "T"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch13-17",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "T between dbt_valid_from and dbt_valid_to"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "T >= dbt_valid_from and (T < dbt_valid_to or dbt_valid_to is null)"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "T = dbt_updated_at"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_valid_to is null"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "Which condition returns the version of each order that was valid at the moment ",
+     {
+      "t": "code",
+      "v": "T"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "resource_type:snapshot"
+     },
+     " selects the snapshots, and indirect selection adds their tests. A runs no tests. B: ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " ignores snapshots. D runs the tests only, without updating the snapshots."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch13-18",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt snapshot"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run -s resource_type:snapshot"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build -s resource_type:snapshot"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt test -s resource_type:snapshot"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 13,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "Your snapshots have ",
+     {
+      "t": "code",
+      "v": "unique"
+     },
+     " tests on ",
+     {
+      "t": "code",
+      "v": "dbt_scd_id"
+     },
+     ". Which command runs the snapshots ",
+     {
+      "c": [
+       "and"
+      ],
+      "t": "i"
+     },
+     " those tests, and nothing else?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

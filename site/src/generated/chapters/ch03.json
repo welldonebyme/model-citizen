@@ -1,0 +1,5954 @@
+{
+ "id": "ch03",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "The official prerequisite: branching strategies (including development versus main branches), basic git commands, and pull requests."
+     ],
+     "id": "CP0-GIT"
+    },
+    {
+     "c": [
+      "Developing a fix on a branch and testing it ",
+      {
+       "c": [
+        "before"
+       ],
+       "t": "i"
+      },
+      " it is merged into main."
+     ],
+     "id": "3.4"
+    },
+    {
+     "c": [
+      "Preview: why comparing your branch with production (\"state\") is possible only because every change is versioned."
+     ],
+     "id": "7.1"
+    },
+    {
+     "c": [
+      "Exam style: expect short questions such as \"how do you bring your teammates' changes into your branch?\" (answer: ",
+      {
+       "t": "code",
+       "v": "git pull"
+      },
+      ")."
+     ],
+     "id": null
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "Imagine a folder on a shared drive with these files: ",
+      {
+       "t": "code",
+       "v": "revenue.sql"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "revenue_v2.sql"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "revenue_v2_final.sql"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "revenue_v2_final_REAL.sql"
+      },
+      ". Which one is used by the dashboard? Who changed the filter last week, and why? Can we go back to the version from Monday? Nobody knows."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "This is the problem that ",
+      {
+       "c": [
+        "Git"
+       ],
+       "t": "b"
+      },
+      " solves. Git records every change to your code, who made it, when, and why. It lets five people change the same project at the same time without destroying each other's work."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "For an analytics engineer, Git is not optional. A dbt project ",
+      {
+       "c": [
+        "is"
+       ],
+       "t": "i"
+      },
+      " a Git repository. In dbt Studio you can never commit directly to main: every change goes to a branch first. Every change to production goes through a pull request. And the exam expects you to know the basic commands, the difference between ",
+      {
+       "t": "code",
+       "v": "git fetch"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "git pull"
+      },
+      ", and how a change travels from your branch to main."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "Git saves your project as a series of snapshots called commits, stored in a hidden ",
+      {
+       "t": "code",
+       "v": ".git"
+      },
+      " folder. You work on a branch, a separate line of commits, so that main stays clean while you experiment. GitHub stores a shared copy of the repository online, where teammates review your branch in a pull request before it is merged into main."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:git",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-git-vocabulary"
+   ],
+   "checkpoints": [],
+   "id": "ch03-s1",
+   "label": "sec:git-vocabulary",
+   "labs": [],
+   "minutes": 5,
+   "number": "3.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Two names are often mixed up:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "en": [
+              "Git"
+             ],
+             "fr": "gestionnaire de versions",
+             "id": "term-git",
+             "t": "term"
+            },
+            " is a program that runs on your computer. It tracks the changes in a folder. It works without internet."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "GitHub"
+             ],
+             "t": "b"
+            },
+            " is a website that stores Git repositories online and adds collaboration tools: pull requests, reviews, comments, automatic checks. GitLab, Bitbucket and Azure DevOps are similar websites. dbt can connect to all of them."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch03-s1-1",
+     "number": "3.1.1",
+     "title": [
+      "Git is a tool, GitHub is a website"
+     ],
+     "titleText": "Git is a tool, GitHub is a website"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "repository"
+         ],
+         "fr": "dépôt",
+         "id": "term-repository",
+         "t": "term"
+        },
+        " (or \"repo\") is a folder whose changes are tracked by Git. Git keeps everything it knows in a hidden sub-folder called ",
+        {
+         "t": "code",
+         "v": ".git"
+        },
+        ". If you delete ",
+        {
+         "t": "code",
+         "v": ".git"
+        },
+        ", the folder becomes a normal folder again and the history is lost."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "commit"
+         ],
+         "fr": "commit (instantané validé)",
+         "id": "term-commit",
+         "t": "term"
+        },
+        " is a saved snapshot of your project at one moment, with a short message that explains the change. Each commit has a unique identifier called a ",
+        {
+         "en": [
+          "hash"
+         ],
+         "fr": "empreinte",
+         "id": "term-hash",
+         "t": "term"
+        },
+        ", for example ",
+        {
+         "t": "code",
+         "v": "e51091f"
+        },
+        " (the full hash is 40 characters; Git usually shows only the first 7, which are enough to identify it)."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Think of a photo album of your project. Each time you are happy with a piece of work, you take a photo (a commit) and write a caption under it (the commit message). You can always open the album, look at any old photo, and compare two photos to see what changed. Git does not store blurry copies: each photo is exact."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "The list of all commits, from the first to the latest, is the ",
+        {
+         "en": [
+          "history"
+         ],
+         "fr": "historique",
+         "id": "term-history",
+         "t": "term"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s1-2",
+     "number": "3.1.2",
+     "title": [
+      "Repository, commit, history"
+     ],
+     "titleText": "Repository, commit, history"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "This is the most important picture of the chapter. When you work with Git, your files live in three places."
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "en": [
+              "working directory"
+             ],
+             "fr": "répertoire de travail",
+             "id": "term-working-directory",
+             "t": "term"
+            },
+            ": the normal files you see and edit in VS Code."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "en": [
+              "staging area"
+             ],
+             "fr": "zone de préparation (index)",
+             "id": "term-staging-area",
+             "t": "term"
+            },
+            ": a waiting room where you put the changes you want in the ",
+            {
+             "c": [
+              "next"
+             ],
+             "t": "i"
+            },
+            " commit. You add files to it with ",
+            {
+             "t": "code",
+             "v": "git add"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "c": [
+              "repository"
+             ],
+             "t": "b"
+            },
+            " (the ",
+            {
+             "t": "code",
+             "v": ".git"
+            },
+            " folder): the permanent history. ",
+            {
+             "t": "code",
+             "v": "git commit"
+            },
+            " takes everything in the staging area and saves it as a new commit."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "alt": "The four places of Git and the commands that move changes between them: Working directory (your files) → git add → Staging area (next commit) → git commit → Local repository (.git history) → git push → Remote (GitHub, shared copy).",
+       "description": "Arrows back: git restore --staged moves a change from the staging area back to the working directory; git fetch brings commits from the remote into the local repository. A long arrow from the remote to the working directory says: git pull = git fetch + git merge (updates your files).",
+       "id": "ch03-fig1",
+       "src": "figures/ch03-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "Why a staging area? Because you often change many files but want to save them in separate, logical commits. For example, you fix a bug in one model and also start a new model. You can stage and commit the bug fix alone, with a clear message, and keep the new model for later."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s1-3",
+     "number": "3.1.3",
+     "title": [
+      "The three areas: working directory, staging area, repository"
+     ],
+     "titleText": "The three areas: working directory, staging area, repository"
+    }
+   ],
+   "title": [
+    "Git, GitHub and the vocabulary you need"
+   ],
+   "titleText": "Git, GitHub and the vocabulary you need"
+  },
+  {
+   "anchors": [
+    "sec-git-config"
+   ],
+   "checkpoints": [],
+   "id": "ch03-s2",
+   "label": "sec:git-config",
+   "labs": [],
+   "minutes": 5,
+   "number": "3.2",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "macOS already contains Git (it comes with the Xcode Command Line Tools). Check it in the terminal:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c1",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git --version\ngit version 2.50.1 (Apple Git-155)"
+      },
+      {
+       "c": [
+        "Your version number may be different; any version above 2.30 is fine. If macOS asks you to install the \"command line developer tools\", accept. You can also install a newer Git with ",
+        {
+         "t": "code",
+         "v": "brew install git"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Before your first commit, tell Git who you are. This name and email are written inside every commit you make. Use the same email as your GitHub account (you will create it in ",
+        {
+         "href": "/learn/ch03/ch03-s7/",
+         "label": "sec:git-remote",
+         "t": "ref",
+         "text": "Section 3.7"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c2",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git config --global user.name \"Adnane\"\n$ git config --global user.email \"adnane@example.com\"\n$ git config --global init.defaultBranch main\n$ git config --global pull.rebase false\n$ git config --global --list\nuser.name=Adnane\nuser.email=adnane@example.com\ninit.defaultbranch=main\npull.rebase=false"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "--global"
+            },
+            " means \"for every repository on this computer\". The settings are stored in the file ",
+            {
+             "t": "code",
+             "v": "~/.gitconfig"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "init.defaultBranch main"
+            },
+            " makes new repositories start on a branch called ",
+            {
+             "t": "code",
+             "v": "main"
+            },
+            ". Without this setting, Git (even version 2.50) still names the first branch ",
+            {
+             "t": "code",
+             "v": "master"
+            },
+            " and prints a long hint. GitHub, GitLab and dbt use ",
+            {
+             "t": "code",
+             "v": "main"
+            },
+            ", so we set ",
+            {
+             "t": "code",
+             "v": "main"
+            },
+            " here, one time, for all your future repositories."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "pull.rebase false"
+            },
+            " tells ",
+            {
+             "t": "code",
+             "v": "git pull"
+            },
+            " to ",
+            {
+             "c": [
+              "merge"
+             ],
+             "t": "i"
+            },
+            " (",
+            {
+             "href": "/learn/ch03/ch03-s7/#sec-fetch-pull",
+             "label": "sec:fetch-pull",
+             "t": "ref",
+             "text": "Section 3.7.3"
+            },
+            "). Without it, recent versions of Git stop with ",
+            {
+             "c": [
+              "fatal: Need to specify how to reconcile divergent branches"
+             ],
+             "t": "i"
+            },
+            " the first time a pull needs a merge commit."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Some commands open a text editor for a message: ",
+          {
+           "t": "code",
+           "v": "git commit"
+          },
+          " without ",
+          {
+           "t": "code",
+           "v": "-m"
+          },
+          ", or a merge without ",
+          {
+           "t": "code",
+           "v": "--no-edit"
+          },
+          ". By default this editor is usually Vim, inside the terminal. To save and quit Vim, type ",
+          {
+           "t": "code",
+           "v": ":wq"
+          },
+          " and press ",
+          {
+           "t": "key",
+           "v": "Enter"
+          },
+          ". To get VS Code instead, run ",
+          {
+           "t": "code",
+           "v": "git config --global core.editor \"code --wait\""
+          },
+          "; Git then waits until you close the message tab."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch03-s2-0",
+     "title": [
+      "Install and configure Git"
+     ],
+     "titleText": "Install and configure Git"
+    }
+   ],
+   "title": [
+    "Install and configure Git"
+   ],
+   "titleText": "Install and configure Git"
+  },
+  {
+   "anchors": [
+    "sec-git-first-repo",
+    "sec-gitignore"
+   ],
+   "checkpoints": [],
+   "id": "ch03-s3",
+   "label": "sec:git-first-repo",
+   "labs": [
+    "ch03-lab1"
+   ],
+   "minutes": 20,
+   "number": "3.3",
+   "objectives": [
+    "CP0-GIT"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "In ",
+        {
+         "href": "/learn/ch02/",
+         "label": "ch:cli",
+         "t": "ref",
+         "text": "Chapter 2"
+        },
+        " you created the folder ",
+        {
+         "t": "code",
+         "v": "~/dbt-course/practice"
+        },
+        ", with the CSV files, the ",
+        {
+         "t": "code",
+         "v": "setup.sql"
+        },
+        " script and the ",
+        {
+         "t": "code",
+         "v": "practice.duckdb"
+        },
+        " database. Now you will put it under Git."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s3-0",
+     "title": [
+      "Your first repository"
+     ],
+     "titleText": "Your first repository"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch03-c3",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ cd ~/dbt-course/practice\n$ git init\nInitialized empty Git repository in /Users/you/dbt-course/practice/.git/\n$ git status\nOn branch main\n\nNo commits yet\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n    data/\n    practice.duckdb\n    setup.sql\n\nnothing added to commit but untracked files present (use \"git add\" to track)",
+       "textBook": "$ cd ~/dbt-course/practice\n$ git init\nInitialized empty Git repository in /Users/mac/dbt-course/practice/.git/\n$ git status\nOn branch main\n\nNo commits yet\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n    data/\n    practice.duckdb\n    setup.sql\n\nnothing added to commit but untracked files present (use \"git add\" to track)"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "git init"
+        },
+        " created the hidden ",
+        {
+         "t": "code",
+         "v": ".git"
+        },
+        " folder. ",
+        {
+         "t": "code",
+         "v": "git status"
+        },
+        " is the command you will type most often: it tells you on which branch you are and what changed. Here every file is ",
+        {
+         "en": [
+          "untracked"
+         ],
+         "fr": "non suivi",
+         "id": "term-untracked",
+         "t": "term"
+        },
+        ": Git sees the files but does not follow them yet."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Look carefully at the list. Do we really want all of it in the history?"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "data/"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "setup.sql"
+            },
+            ": yes, this is the \"source code\" of the practice database."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "practice.duckdb"
+            },
+            ": ",
+            {
+             "c": [
+              "no"
+             ],
+             "t": "b"
+            },
+            ". It is a database file. It is generated from ",
+            {
+             "t": "code",
+             "v": "setup.sql"
+            },
+            ", it changes every time you run a query that writes, and it can become very large. Git is made for text files that people write."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "What about the Python virtual environment? Yours lives in ",
+        {
+         "t": "code",
+         "v": "~/dbt-course/.venv"
+        },
+        ", outside the ",
+        {
+         "t": "code",
+         "v": "practice"
+        },
+        " folder, so Git does not see it here. But if a ",
+        {
+         "t": "code",
+         "v": ".venv"
+        },
+        " folder is ever inside a repository, it must be ignored: it contains thousands of files that anyone can recreate with one command."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s3-1",
+     "number": "3.3.1",
+     "title": [
+      "git init and git status"
+     ],
+     "titleText": "git init and git status"
+    },
+    {
+     "anchor": "sec-gitignore",
+     "blocks": [
+      {
+       "c": [
+        "A file called ",
+        {
+         "t": "code",
+         "v": ".gitignore"
+        },
+        " lists the files and folders that Git must ignore. Create it in the ",
+        {
+         "t": "code",
+         "v": "practice"
+        },
+        " folder (with VS Code: ",
+        {
+         "t": "code",
+         "v": "code .gitignore"
+        },
+        ") and write:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c4",
+       "lang": "plain",
+       "t": "code",
+       "text": "# Python virtual environment\n.venv/\n\n# Database files: they are data, not code, and can be rebuilt with setup.sql\n*.duckdb\n*.duckdb.wal\n\n# macOS system files\n.DS_Store",
+       "title": "practice/.gitignore"
+      },
+      {
+       "c": [
+        "The syntax is simple: one pattern per line, ",
+        {
+         "t": "code",
+         "v": "#"
+        },
+        " starts a comment, a name ending with ",
+        {
+         "t": "code",
+         "v": "/"
+        },
+        " is a folder, and ",
+        {
+         "t": "code",
+         "v": "*"
+        },
+        " means \"any characters\" (so ",
+        {
+         "t": "code",
+         "v": "*.duckdb"
+        },
+        " matches every file ending in ",
+        {
+         "t": "code",
+         "v": ".duckdb"
+        },
+        "). Save the file and run ",
+        {
+         "t": "code",
+         "v": "git status"
+        },
+        " again:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c5",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git status\nOn branch main\n\nNo commits yet\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n    .gitignore\n    data/\n    setup.sql\n\nnothing added to commit but untracked files present (use \"git add\" to track)"
+      },
+      {
+       "c": [
+        "The database file has disappeared from the list. The ",
+        {
+         "t": "code",
+         "v": ".gitignore"
+        },
+        " file itself ",
+        {
+         "c": [
+          "is"
+         ],
+         "t": "i"
+        },
+        " listed: it is part of the project and must be committed, so that your teammates ignore the same files."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "When you create a dbt project with ",
+          {
+           "t": "code",
+           "v": "dbt init"
+          },
+          " (Chapter 6), dbt writes a ",
+          {
+           "t": "code",
+           "v": ".gitignore"
+          },
+          " for you with:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch03-c6",
+         "lang": "plain",
+         "t": "code",
+         "text": "target/\ndbt_packages/\nlogs/",
+         "title": ".gitignore created by dbt init"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "target/"
+              },
+              ": the compiled SQL and the artifacts (",
+              {
+               "t": "code",
+               "v": "manifest.json"
+              },
+              ", ",
+              {
+               "t": "code",
+               "v": "run_results.json"
+              },
+              ") that dbt writes at every run. They are ",
+              {
+               "c": [
+                "generated"
+               ],
+               "t": "i"
+              },
+              ", so they are not committed."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "dbt_packages/"
+              },
+              ": the code of the packages downloaded by ",
+              {
+               "t": "code",
+               "v": "dbt deps"
+              },
+              ". The ",
+              {
+               "c": [
+                "list"
+               ],
+               "t": "i"
+              },
+              " of packages (",
+              {
+               "t": "code",
+               "v": "packages.yml"
+              },
+              ") is committed; the downloaded code is not."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "logs/"
+              },
+              ": the ",
+              {
+               "t": "code",
+               "v": "dbt.log"
+              },
+              " file, useful for debugging but personal and temporary."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ul",
+         "t": "list"
+        },
+        {
+         "c": [
+          "And one file must ",
+          {
+           "c": [
+            "never"
+           ],
+           "t": "b"
+          },
+          " be committed: ",
+          {
+           "t": "code",
+           "v": "profiles.yml"
+          },
+          " with real passwords. By default it lives in ",
+          {
+           "t": "code",
+           "v": "~/.dbt/"
+          },
+          ", outside the project, exactly to avoid this. If you keep it in the project, read secrets with ",
+          {
+           "t": "code",
+           "v": "env_var()"
+          },
+          " (Chapter 10) and never write a password in a file that Git tracks."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch03-s3-2",
+     "number": "3.3.2",
+     "title": [
+      "The .gitignore file"
+     ],
+     "titleText": "The .gitignore file"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Now put the three items in the staging area, check, and commit:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c7",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git add .gitignore setup.sql data/\n$ git status\nOn branch main\n\nNo commits yet\n\nChanges to be committed:\n  (use \"git rm --cached <file>...\" to unstage)\n    new file:   .gitignore\n    new file:   data/customers.csv\n    new file:   data/order_items.csv\n    new file:   data/orders.csv\n    new file:   data/payments.csv\n    new file:   data/products.csv\n    new file:   setup.sql\n\n$ git commit -m \"Add practice data and setup script\"\n[main (root-commit) 1300631] Add practice data and setup script\n 7 files changed, 1416 insertions(+)\n create mode 100644 .gitignore\n create mode 100644 data/customers.csv\n create mode 100644 data/order_items.csv\n create mode 100644 data/orders.csv\n create mode 100644 data/payments.csv\n create mode 100644 data/products.csv\n create mode 100644 setup.sql"
+      },
+      {
+       "c": [
+        "Read the commit output line by line:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "[main (root-commit) 1300631]"
+            },
+            ": the commit was made on branch ",
+            {
+             "t": "code",
+             "v": "main"
+            },
+            "; it is the very first commit (\"root\"); its short hash is ",
+            {
+             "t": "code",
+             "v": "1300631"
+            },
+            ". ",
+            {
+             "c": [
+              "Your hash will be different"
+             ],
+             "t": "b"
+            },
+            ", because it depends on your name, the date and the content."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "7 files changed, 1416 insertions(+)"
+            },
+            ": 7 files and 1416 new lines entered the history."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "You can also write ",
+        {
+         "t": "code",
+         "v": "git add ."
+        },
+        " (with a dot) to stage everything in the current folder that is not ignored. It is convenient, but always run ",
+        {
+         "t": "code",
+         "v": "git status"
+        },
+        " first so you know what you are adding."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s3-3",
+     "number": "3.3.3",
+     "title": [
+      "git add and git commit"
+     ],
+     "titleText": "git add and git commit"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch03-c8",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git log\ncommit 130063169d037d517e121a79b40bcae246396f3a (HEAD -> main)\nAuthor: Adnane <adnane@example.com>\nDate:   Mon Jan 12 09:15:00 2026 +0100\n\n    Add practice data and setup script\n$ git status\nOn branch main\nnothing to commit, working tree clean"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "(HEAD -> main)"
+        },
+        " means \"you are on the branch ",
+        {
+         "t": "code",
+         "v": "main"
+        },
+        "\" (",
+        {
+         "href": "/learn/ch03/ch03-s5/",
+         "label": "sec:git-branches",
+         "t": "ref",
+         "text": "Section 3.5"
+        },
+        " explains it). \"Working tree clean\" means: nothing has changed since the last commit. This is the state you want before you switch branches or pull changes. (Press ",
+        {
+         "t": "key",
+         "v": "q"
+        },
+        " to leave ",
+        {
+         "t": "code",
+         "v": "git log"
+        },
+        " if the history is long and fills the screen.)"
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "Configure your name, email, default branch and pull behaviour with the ",
+              {
+               "t": "code",
+               "v": "git config --global"
+              },
+              " commands above."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "cd ~/dbt-course/practice"
+              },
+              " then ",
+              {
+               "t": "code",
+               "v": "git init"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Create ",
+              {
+               "t": "code",
+               "v": ".gitignore"
+              },
+              " with the content of ",
+              {
+               "href": "/learn/ch03/ch03-s3/#sec-gitignore",
+               "label": "sec:gitignore",
+               "t": "ref",
+               "text": "Section 3.3.2"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Run ",
+              {
+               "t": "code",
+               "v": "git status"
+              },
+              ": ",
+              {
+               "t": "code",
+               "v": "practice.duckdb"
+              },
+              " must ",
+              {
+               "c": [
+                "not"
+               ],
+               "t": "i"
+              },
+              " appear."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "git add .gitignore setup.sql data/"
+              },
+              ", then ",
+              {
+               "t": "code",
+               "v": "git status"
+              },
+              " again."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "git commit -m \"Add practice data and setup script\""
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "git log"
+              },
+              " to see your first commit."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "git status"
+          },
+          " says ",
+          {
+           "c": [
+            "nothing to commit, working tree clean"
+           ],
+           "t": "i"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "git log"
+          },
+          " shows exactly one commit."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch03-lab1",
+       "objectives": [
+        "CP0-GIT"
+       ],
+       "t": "lab",
+       "title": [
+        "Put your practice folder under Git"
+       ]
+      }
+     ],
+     "id": "ch03-s3-4",
+     "number": "3.3.4",
+     "title": [
+      "git log: reading the history"
+     ],
+     "titleText": "git log: reading the history"
+    }
+   ],
+   "title": [
+    "Your first repository"
+   ],
+   "titleText": "Your first repository"
+  },
+  {
+   "anchors": [
+    "sec-git-cycle"
+   ],
+   "checkpoints": [],
+   "id": "ch03-s4",
+   "label": "sec:git-cycle",
+   "labs": [],
+   "minutes": 5,
+   "number": "3.4",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "You will repeat this cycle hundreds of times. Create a folder ",
+        {
+         "t": "code",
+         "v": "queries"
+        },
+        " with a first query and commit it:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c9",
+       "lang": "sql",
+       "t": "code",
+       "text": "select status, count(*) as n_orders\nfrom jaffle_shop.orders\ngroup by status",
+       "title": "queries/orders_by_status.sql"
+      },
+      {
+       "id": "ch03-c10",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ mkdir queries\n$ git add queries/orders_by_status.sql\n$ git commit -m \"Add orders by status query\""
+      },
+      {
+       "c": [
+        "Now improve the query: add a last line ",
+        {
+         "t": "code",
+         "v": "order by n_orders desc"
+        },
+        ", save, and ask Git what changed."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c11",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git status\nOn branch main\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n    modified:   queries/orders_by_status.sql\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n$ git diff\ndiff --git a/queries/orders_by_status.sql b/queries/orders_by_status.sql\nindex d0f968c..909327e 100644\n--- a/queries/orders_by_status.sql\n+++ b/queries/orders_by_status.sql\n@@ -1,3 +1,4 @@\n select status, count(*) as n_orders\n from jaffle_shop.orders\n group by status\n+order by n_orders desc"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "git diff"
+        },
+        " shows the difference between your working directory and the staging area (here it is the same as the last commit, because nothing is staged yet). Lines starting with ",
+        {
+         "t": "code",
+         "v": "+"
+        },
+        " were added, lines starting with ",
+        {
+         "t": "code",
+         "v": "-"
+        },
+        " were removed, other lines are context. The line ",
+        {
+         "t": "code",
+         "v": "@@ -1,3 +1,4 @@"
+        },
+        " means: \"this block shows 3 lines of the old version, starting at line 1, and 4 lines of the new version, starting at line 1\"."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c12",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git add queries/orders_by_status.sql\n$ git diff\n$ git diff --staged\ndiff --git a/queries/orders_by_status.sql b/queries/orders_by_status.sql\nindex d0f968c..909327e 100644\n--- a/queries/orders_by_status.sql\n+++ b/queries/orders_by_status.sql\n@@ -1,3 +1,4 @@\n select status, count(*) as n_orders\n from jaffle_shop.orders\n group by status\n+order by n_orders desc\n$ git commit -m \"Sort statuses by number of orders\"\n[main e51091f] Sort statuses by number of orders\n 1 file changed, 1 insertion(+)\n$ git log --oneline\ne51091f (HEAD -> main) Sort statuses by number of orders\n1a6df95 Add orders by status query\n1300631 Add practice data and setup script"
+      },
+      {
+       "c": [
+        "Notice that after ",
+        {
+         "t": "code",
+         "v": "git add"
+        },
+        ", plain ",
+        {
+         "t": "code",
+         "v": "git diff"
+        },
+        " prints ",
+        {
+         "c": [
+          "nothing"
+         ],
+         "t": "i"
+        },
+        ": the change is no longer \"unstaged\". To see what is in the staging area, use ",
+        {
+         "t": "code",
+         "v": "git diff --staged"
+        },
+        ". This small detail surprises many beginners."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "git diff"
+          },
+          " compares the working directory with the staging area. ",
+          {
+           "t": "code",
+           "v": "git diff --staged"
+          },
+          " compares the staging area with the last commit. If a question asks \"how do you review what will go into the next commit?\", the answer is ",
+          {
+           "t": "code",
+           "v": "git diff --staged"
+          },
+          " (or ",
+          {
+           "t": "code",
+           "v": "git status"
+          },
+          " for the list of files)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch03-s4-0",
+     "title": [
+      "The everyday cycle: change, review, stage, commit"
+     ],
+     "titleText": "The everyday cycle: change, review, stage, commit"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Two situations happen every day."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "1. You changed a file by mistake and want the last committed version back."
+         ],
+         "t": "b"
+        }
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c13",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git status --short\n M setup.sql\n$ git restore setup.sql\n$ git status --short"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "git status --short"
+        },
+        " (or ",
+        {
+         "t": "code",
+         "v": "-s"
+        },
+        ") gives a compact view: ",
+        {
+         "t": "code",
+         "v": "M"
+        },
+        " means modified. After ",
+        {
+         "t": "code",
+         "v": "git restore"
+        },
+        ", the file is back to its committed version and the line disappears. ",
+        {
+         "c": [
+          "Careful:"
+         ],
+         "t": "b"
+        },
+        " your changes are gone for good; Git never saved them."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "2. You staged a file but do not want it in the next commit."
+         ],
+         "t": "b"
+        }
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c14",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git status --short\nM  queries/orders_by_status.sql\n$ git restore --staged queries/orders_by_status.sql\n$ git status --short\n M queries/orders_by_status.sql"
+      },
+      {
+       "c": [
+        "Look at the position of the ",
+        {
+         "t": "code",
+         "v": "M"
+        },
+        ". In the first column it means \"staged\"; in the second column it means \"modified but not staged\". ",
+        {
+         "t": "code",
+         "v": "git restore --staged"
+        },
+        " moved the change back from the staging area to the working directory. Your edit is still in the file; only the staging changed."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "You will also see the older command ",
+          {
+           "t": "code",
+           "v": "git checkout -- file"
+          },
+          " in tutorials and older documentation. It does the same as ",
+          {
+           "t": "code",
+           "v": "git restore file"
+          },
+          ". The big ",
+          {
+           "t": "code",
+           "v": "git checkout"
+          },
+          " command does two different jobs, so Git 2.23 added two clearer commands: ",
+          {
+           "t": "code",
+           "v": "git restore"
+          },
+          " (for files) and ",
+          {
+           "t": "code",
+           "v": "git switch"
+          },
+          " (for branches). Both styles still work."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch03-s4-1",
+     "number": "3.4.1",
+     "title": [
+      "Undo before committing: git restore"
+     ],
+     "titleText": "Undo before committing: git restore"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A commit message is a note to your future self and to your teammates. Compare:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Bad message"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Good message"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "update"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "Convert payment amount from cents to dollars"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "fix"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "Fix duplicate orders in stg_orders (dedupe on order_id)"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "changes friday"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "Add customers by country query"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "wip wip wip"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "Exclude test accounts from dim_customers"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Simple rules:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Write in the imperative mood, like an order: \"Add\", \"Fix\", \"Remove\", not \"Added\" or \"Fixing\". Read it as \"If applied, this commit will … add customers by country query.\""
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Keep the first line short (about 50 characters). If you need more, run ",
+            {
+             "t": "code",
+             "v": "git commit"
+            },
+            " without ",
+            {
+             "t": "code",
+             "v": "-m"
+            },
+            ": an editor opens and you can write a longer explanation after an empty line."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "One commit = one logical change. Do not mix a bug fix and a new feature."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch03-s4-2",
+     "number": "3.4.2",
+     "title": [
+      "Writing good commit messages"
+     ],
+     "titleText": "Writing good commit messages"
+    }
+   ],
+   "title": [
+    "The everyday cycle: change, review, stage, commit"
+   ],
+   "titleText": "The everyday cycle: change, review, stage, commit"
+  },
+  {
+   "anchors": [
+    "sec-git-branches"
+   ],
+   "checkpoints": [],
+   "id": "ch03-s5",
+   "label": "sec:git-branches",
+   "labs": [
+    "ch03-lab2"
+   ],
+   "minutes": 20,
+   "number": "3.5",
+   "objectives": [
+    "CP0-GIT"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "branch"
+         ],
+         "fr": "branche",
+         "id": "term-branch",
+         "t": "term"
+        },
+        " is a separate line of work. On your branch you can change anything, break anything, try anything. Main stays untouched until you decide to merge."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Technically, a branch is very light: it is just a ",
+        {
+         "c": [
+          "movable pointer"
+         ],
+         "t": "b"
+        },
+        " (a label) on one commit. When you commit on a branch, the label moves forward to the new commit. Creating a branch does not copy any file; it takes a fraction of a second."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "There is one more special pointer: ",
+        {
+         "t": "code",
+         "v": "HEAD"
+        },
+        ". It means \"where I am now\". Usually ",
+        {
+         "t": "code",
+         "v": "HEAD"
+        },
+        " points to a branch (in the logs you see ",
+        {
+         "t": "code",
+         "v": "HEAD -> main"
+        },
+        "), and that branch points to a commit."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A branch is a sticky note with a name, stuck on one photo of the album. Committing adds a new photo and moves the sticky note onto it. ",
+          {
+           "t": "code",
+           "v": "HEAD"
+          },
+          " is your finger, showing which sticky note you are following right now."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      }
+     ],
+     "id": "ch03-s5-1",
+     "number": "3.5.1",
+     "title": [
+      "What a branch really is"
+     ],
+     "titleText": "What a branch really is"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Let us add a revenue query on a new branch. Branch names usually describe the work, with a prefix: ",
+        {
+         "t": "code",
+         "v": "feature/..."
+        },
+        " for new work, ",
+        {
+         "t": "code",
+         "v": "fix/..."
+        },
+        " for bug fixes."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c15",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git switch -c feature/revenue-query\nSwitched to a new branch 'feature/revenue-query'"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "git switch -c"
+        },
+        " means \"create (",
+        {
+         "t": "code",
+         "v": "-c"
+        },
+        ") a new branch and switch to it\". The older equivalent, still very common, is ",
+        {
+         "t": "code",
+         "v": "git checkout -b feature/revenue-query"
+        },
+        ". Now create the file and commit:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c16",
+       "lang": "sql",
+       "t": "code",
+       "text": "-- revenue per payment method, in dollars (amount is stored in cents)\nselect\n    paymentmethod as payment_method,\n    sum(amount) / 100 as revenue\nfrom stripe.payments\nwhere status = 'success'\ngroup by paymentmethod\norder by revenue desc",
+       "title": "queries/revenue_by_method.sql"
+      },
+      {
+       "id": "ch03-c17",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git add queries/revenue_by_method.sql\n$ git commit -m \"Add revenue by payment method query\"\n[feature/revenue-query 9793973] Add revenue by payment method query\n 1 file changed, 8 insertions(+)\n create mode 100644 queries/revenue_by_method.sql\n$ git log --oneline --graph --all\n* 9793973 (HEAD -> feature/revenue-query) Add revenue by payment method query\n* e51091f (main) Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script"
+      },
+      {
+       "c": [
+        "The log shows the two labels: ",
+        {
+         "t": "code",
+         "v": "feature/revenue-query"
+        },
+        " is one commit ahead of ",
+        {
+         "t": "code",
+         "v": "main"
+        },
+        ". Now go back to main. The new file disappears from your folder (it exists only on the branch):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c18",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git switch main\nSwitched to branch 'main'\n$ ls queries\norders_by_status.sql\n$ git merge feature/revenue-query\nUpdating e51091f..9793973\nFast-forward\n queries/revenue_by_method.sql | 8 ++++++++\n 1 file changed, 8 insertions(+)\n create mode 100644 queries/revenue_by_method.sql\n$ git log --oneline --graph --all\n* 9793973 (HEAD -> main, feature/revenue-query) Add revenue by payment method query\n* e51091f Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script\n$ git branch -d feature/revenue-query\nDeleted branch feature/revenue-query (was 9793973)."
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "git merge feature/revenue-query"
+        },
+        " means \"bring the commits of that branch into the branch I am on (main)\". Git printed ",
+        {
+         "c": [
+          "Fast-forward"
+         ],
+         "t": "b"
+        },
+        ": main had not moved since the branch was created, so Git simply moved the ",
+        {
+         "t": "code",
+         "v": "main"
+        },
+        " label forward to the last commit of the branch. No new commit was needed."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "A fast-forward merge. Before the merge: commits 1a6 → e51 → 979; main points to e51 and the branch feature/revenue-query points to the new commit 979. After git merge: the same three commits, and the main label has simply moved forward to 979, next to the branch label.",
+       "id": "ch03-fig2",
+       "src": "figures/ch03-fig2.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "Deleting the branch with ",
+        {
+         "t": "code",
+         "v": "git branch -d"
+        },
+        " only removes the label. The commits stay in main's history. Git refuses ",
+        {
+         "t": "code",
+         "v": "-d"
+        },
+        " if the branch was not merged (to protect you); ",
+        {
+         "t": "code",
+         "v": "-D"
+        },
+        " forces it."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s5-2",
+     "number": "3.5.2",
+     "title": [
+      "Create a branch, commit, merge (fast-forward)"
+     ],
+     "titleText": "Create a branch, commit, merge (fast-forward)"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "In real teams, main moves while you work, because teammates merge their own work. Let us reproduce it. Create a branch, commit a query on it, then go back to main and commit something else there:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c19",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git switch -c feature/customer-count\nSwitched to a new branch 'feature/customer-count'\n$ git commit -m \"Add customers by country query\"\n[feature/customer-count eaadf20] Add customers by country query\n 1 file changed, 4 insertions(+)\n create mode 100644 queries/customers_by_country.sql\n$ git switch main\nSwitched to branch 'main'\n$ git commit -m \"Add README\"\n[main d41cc04] Add README\n 1 file changed, 2 insertions(+)\n create mode 100644 README.md\n$ git log --oneline --graph --all\n* d41cc04 (HEAD -> main) Add README\n| * eaadf20 (feature/customer-count) Add customers by country query\n|/\n* 9793973 Add revenue by payment method query\n* e51091f Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script"
+      },
+      {
+       "c": [
+        "(Creating the two files and the ",
+        {
+         "t": "code",
+         "v": "git add"
+        },
+        " commands are not shown to save space; you still need them.) The history has ",
+        {
+         "c": [
+          "diverged"
+         ],
+         "t": "b"
+        },
+        ": each branch has a commit the other does not have. A fast-forward is impossible. Git creates a ",
+        {
+         "en": [
+          "merge commit"
+         ],
+         "fr": "commit de fusion",
+         "id": "term-merge-commit",
+         "t": "term"
+        },
+        ", a special commit with two parents:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c20",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git merge feature/customer-count --no-edit\nMerge made by the 'ort' strategy.\n queries/customers_by_country.sql | 4 ++++\n 1 file changed, 4 insertions(+)\n create mode 100644 queries/customers_by_country.sql\n$ git log --oneline --graph --all\n*   39d4e04 (HEAD -> main) Merge branch 'feature/customer-count'\n|\\\n| * eaadf20 (feature/customer-count) Add customers by country query\n* | d41cc04 Add README\n|/\n* 9793973 Add revenue by payment method query\n* e51091f Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script"
+      },
+      {
+       "c": [
+        "(",
+        {
+         "t": "code",
+         "v": "--no-edit"
+        },
+        " accepts the default message ",
+        {
+         "c": [
+          "Merge branch 'feature/customer-count'"
+         ],
+         "t": "i"
+        },
+        "; without it, Git opens an editor so you can change the message. \"ort\" is just the name of Git's merge algorithm.)"
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "A merge commit. After commit 979, main has a new commit d41 and the branch feature/customer-count has a commit eaa. The merge commit 39d on main has two parents: d41 and eaa.",
+       "id": "ch03-fig3",
+       "src": "figures/ch03-fig3.svg",
+       "t": "figure"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A merge is ",
+          {
+           "c": [
+            "fast-forward"
+           ],
+           "t": "b"
+          },
+          " only when the branch you merge ",
+          {
+           "c": [
+            "into"
+           ],
+           "t": "i"
+          },
+          " has no new commits since the other branch was created. If both sides have new commits, Git makes a ",
+          {
+           "c": [
+            "merge commit"
+           ],
+           "t": "b"
+          },
+          ". Neither is an error. A conflict happens only if both sides changed ",
+          {
+           "c": [
+            "the same lines of the same file"
+           ],
+           "t": "i"
+          },
+          " (next section)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "In dbt, your branch is your private workshop. In development, dbt builds your models in ",
+          {
+           "c": [
+            "your own"
+           ],
+           "t": "i"
+          },
+          " schema (for example ",
+          {
+           "t": "code",
+           "v": "dbt_adnane"
+          },
+          "), and your code comes from ",
+          {
+           "c": [
+            "your"
+           ],
+           "t": "i"
+          },
+          " branch. You can break things freely: production reads from ",
+          {
+           "t": "code",
+           "v": "main"
+          },
+          " and builds in the production schema. Your work reaches production only after it is merged into main. Chapter 25 shows how environments, branches and schemas fit together."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "From main, create ",
+              {
+               "t": "code",
+               "v": "feature/revenue-query"
+              },
+              " with ",
+              {
+               "t": "code",
+               "v": "git switch -c"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Create ",
+              {
+               "t": "code",
+               "v": "queries/revenue_by_method.sql"
+              },
+              " (code above), stage it, commit it."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Run ",
+              {
+               "t": "code",
+               "v": "git log --oneline --graph --all"
+              },
+              " and find the two labels."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "git switch main"
+              },
+              ", check that the file disappeared with ",
+              {
+               "t": "code",
+               "v": "ls queries"
+              },
+              ", then merge the branch. You must read ",
+              {
+               "c": [
+                "Fast-forward"
+               ],
+               "t": "i"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Delete the branch with ",
+              {
+               "t": "code",
+               "v": "git branch -d"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Repeat with ",
+              {
+               "t": "code",
+               "v": "feature/customer-count"
+              },
+              ", but this time commit a ",
+              {
+               "t": "code",
+               "v": "README.md"
+              },
+              " on main ",
+              {
+               "c": [
+                "before"
+               ],
+               "t": "i"
+              },
+              " merging. You must get a merge commit."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the graph looks like the one above, with a ",
+          {
+           "t": "code",
+           "v": "Merge branch 'feature/customer-count'"
+          },
+          " commit at the top."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch03-lab2",
+       "objectives": [
+        "CP0-GIT"
+       ],
+       "t": "lab",
+       "title": [
+        "Branch, change, merge"
+       ]
+      }
+     ],
+     "id": "ch03-s5-3",
+     "number": "3.5.3",
+     "title": [
+      "When both branches moved: the merge commit"
+     ],
+     "titleText": "When both branches moved: the merge commit"
+    }
+   ],
+   "title": [
+    "Branches"
+   ],
+   "titleText": "Branches"
+  },
+  {
+   "anchors": [
+    "sec-git-conflicts"
+   ],
+   "checkpoints": [],
+   "id": "ch03-s6",
+   "label": "sec:git-conflicts",
+   "labs": [
+    "ch03-lab3"
+   ],
+   "minutes": 20,
+   "number": "3.6",
+   "objectives": [
+    "CP0-GIT"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "merge conflict"
+         ],
+         "fr": "conflit de fusion",
+         "id": "term-merge-conflict",
+         "t": "term"
+        },
+        " happens when two branches changed ",
+        {
+         "c": [
+          "the same lines"
+         ],
+         "t": "b"
+        },
+        " of the same file in different ways. Git cannot guess which version is correct, so it stops and asks you to decide. This is normal, not a disaster."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Let us create one on purpose. On a branch, Adnane excludes orders that are not paid yet:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c21",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git switch -c feature/status-filter\nSwitched to a new branch 'feature/status-filter'\n$ git commit -m \"Exclude unpaid placed orders\"\n[feature/status-filter 950d307] Exclude unpaid placed orders\n 1 file changed, 1 insertion(+)"
+      },
+      {
+       "c": [
+        "The file on the branch now contains ",
+        {
+         "t": "code",
+         "v": "where status <> 'placed'"
+        },
+        " on line 3. Meanwhile, on main, someone keeps only the orders of the second half of 2025, ",
+        {
+         "c": [
+          "on the same line"
+         ],
+         "t": "i"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c22",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git switch main\nSwitched to branch 'main'\n$ git commit -m \"Keep only orders from the second half of 2025\"\n[main 92213b5] Keep only orders from the second half of 2025\n 1 file changed, 1 insertion(+)\n$ git merge feature/status-filter\nAuto-merging queries/orders_by_status.sql\nCONFLICT (content): Merge conflict in queries/orders_by_status.sql\nAutomatic merge failed; fix conflicts and then commit the result."
+      }
+     ],
+     "id": "ch03-s6-1",
+     "number": "3.6.1",
+     "title": [
+      "Why conflicts happen"
+     ],
+     "titleText": "Why conflicts happen"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch03-c23",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git status\nOn branch main\nYou have unmerged paths.\n  (fix conflicts and run \"git commit\")\n  (use \"git merge --abort\" to abort the merge)\n\nUnmerged paths:\n  (use \"git add <file>...\" to mark resolution)\n    both modified:   queries/orders_by_status.sql\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "both modified"
+        },
+        " is the signal of a conflict. Open the file:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c24",
+       "lang": "plain",
+       "t": "code",
+       "text": "select status, count(*) as n_orders\nfrom jaffle_shop.orders\n<<<<<<< HEAD\nwhere order_date >= '2025-07-01'\n=======\nwhere status <> 'placed'\n>>>>>>> feature/status-filter\ngroup by status\norder by n_orders desc",
+       "title": "queries/orders_by_status.sql during the conflict"
+      },
+      {
+       "c": [
+        "Git wrote both versions into the file, separated by three ",
+        {
+         "en": [
+          "conflict markers"
+         ],
+         "fr": "marqueurs de conflit",
+         "id": "term-conflict-marker",
+         "t": "term"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Marker"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "<<<<<<< HEAD"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Start of ",
+           {
+            "c": [
+             "your"
+            ],
+            "t": "i"
+           },
+           " version: the branch you are on (here main)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "======="
+           }
+          ]
+         },
+         {
+          "c": [
+           "Separator between the two versions."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ">>>>>>> feature/status-filter"
+           }
+          ]
+         },
+         {
+          "c": [
+           "End of the ",
+           {
+            "c": [
+             "incoming"
+            ],
+            "t": "i"
+           },
+           " version: the branch you are merging in."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch03-s6-2",
+     "number": "3.6.2",
+     "title": [
+      "Reading the conflict"
+     ],
+     "titleText": "Reading the conflict"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "To resolve, you edit the file so that it contains the final, correct code, and you ",
+        {
+         "c": [
+          "delete the three marker lines"
+         ],
+         "t": "b"
+        },
+        ". Here the two filters are both useful, so we keep both:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c25",
+       "lang": "sql",
+       "t": "code",
+       "text": "select status, count(*) as n_orders\nfrom jaffle_shop.orders\nwhere order_date >= '2025-07-01'\n  and status <> 'placed'\ngroup by status\norder by n_orders desc",
+       "title": "queries/orders_by_status.sql after resolution"
+      },
+      {
+       "c": [
+        "Then tell Git the conflict is solved (",
+        {
+         "t": "code",
+         "v": "git add"
+        },
+        ") and finish the merge (",
+        {
+         "t": "code",
+         "v": "git commit"
+        },
+        "):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c26",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git add queries/orders_by_status.sql\n$ git status\nOn branch main\nAll conflicts fixed but you are still merging.\n  (use \"git commit\" to conclude merge)\n\nChanges to be committed:\n    modified:   queries/orders_by_status.sql\n\n$ git commit -m \"Merge feature/status-filter: keep both filters\"\n[main a694e58] Merge feature/status-filter: keep both filters"
+      },
+      {
+       "c": [
+        "The recipe is always the same:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "git status"
+            },
+            ": find the files marked ",
+            {
+             "t": "code",
+             "v": "both modified"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Open each file, choose the correct code, delete the markers."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Test"
+             ],
+             "t": "b"
+            },
+            " the result (run the query, or ",
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            " in a dbt project). A file without markers can still be wrong."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "git add"
+            },
+            " each fixed file, then ",
+            {
+             "t": "code",
+             "v": "git commit"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "c": [
+        "If you feel lost in the middle of a conflict, ",
+        {
+         "t": "code",
+         "v": "git merge --abort"
+        },
+        " cancels the merge and puts everything back as it was before you typed ",
+        {
+         "t": "code",
+         "v": "git merge"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "A conflict is resolved by ",
+              {
+               "c": [
+                "editing the file"
+               ],
+               "t": "i"
+              },
+              ", not by a special command. ",
+              {
+               "t": "code",
+               "v": "git add"
+              },
+              " marks it as resolved."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Conflicts can be resolved anywhere: in VS Code, in the terminal, in dbt Studio, or on GitHub for simple cases. A statement like \"conflicts ",
+              {
+               "c": [
+                "must"
+               ],
+               "t": "i"
+              },
+              " be resolved in the dbt IDE\" is false."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Never commit a file that still contains ",
+              {
+               "t": "code",
+               "v": "<<<<<<<"
+              },
+              " or ",
+              {
+               "t": "code",
+               "v": ">>>>>>>"
+              },
+              ". In a dbt model this produces a SQL syntax error at the next run."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ul",
+         "t": "list"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "On a new branch ",
+              {
+               "t": "code",
+               "v": "feature/status-filter"
+              },
+              ", add ",
+              {
+               "t": "code",
+               "v": "where status <> 'placed'"
+              },
+              " as line 3 of ",
+              {
+               "t": "code",
+               "v": "queries/orders_by_status.sql"
+              },
+              ". Commit."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Switch to main. Add ",
+              {
+               "t": "code",
+               "v": "where order_date >= '2025-07-01'"
+              },
+              " as line 3 of the same file. Commit."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "git merge feature/status-filter"
+              },
+              ". Read the ",
+              {
+               "t": "code",
+               "v": "CONFLICT"
+              },
+              " message."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Open the file in VS Code. VS Code colours the two versions and offers buttons (",
+              {
+               "c": [
+                "Accept Current Change"
+               ],
+               "t": "i"
+              },
+              ", ",
+              {
+               "c": [
+                "Accept Incoming Change"
+               ],
+               "t": "i"
+              },
+              ", ",
+              {
+               "c": [
+                "Accept Both Changes"
+               ],
+               "t": "i"
+              },
+              "); you may use them, but make sure the final SQL is valid: two ",
+              {
+               "t": "code",
+               "v": "where"
+              },
+              " keywords is an error."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Write the final version with ",
+              {
+               "t": "code",
+               "v": "where ... and ..."
+              },
+              ", run it in DuckDB to check it works."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "git add"
+              },
+              " the file, ",
+              {
+               "t": "code",
+               "v": "git commit"
+              },
+              ", and look at ",
+              {
+               "t": "code",
+               "v": "git log --oneline --graph"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the query returns rows, and the log shows a merge commit with two parents."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch03-lab3",
+       "objectives": [
+        "CP0-GIT"
+       ],
+       "t": "lab",
+       "title": [
+        "Create a conflict and fix it"
+       ]
+      }
+     ],
+     "id": "ch03-s6-3",
+     "number": "3.6.3",
+     "title": [
+      "Resolving the conflict"
+     ],
+     "titleText": "Resolving the conflict"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Sometimes you are in the middle of a change and must switch branch urgently (a colleague asks you to look at a bug). Switching branches with unfinished changes is risky: Git refuses if the switch would overwrite them, and otherwise the changes follow you to the other branch. ",
+        {
+         "t": "code",
+         "v": "git stash"
+        },
+        " puts your changes in a temporary drawer:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c27",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git status --short\n M queries/revenue_by_method.sql\n$ git stash\nSaved working directory and index state WIP on main: a694e58 Merge feature/status-filter: keep both filters\n$ git status --short\n$ git stash list\nstash@{0}: WIP on main: a694e58 Merge feature/status-filter: keep both filters\n$ git stash pop\nOn branch main\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n    modified:   queries/revenue_by_method.sql\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\nDropped refs/stash@{0} (1158d93bc86b1319764385a749c9cd0da78de984)"
+      },
+      {
+       "c": [
+        "After ",
+        {
+         "t": "code",
+         "v": "git stash"
+        },
+        " the working tree is clean; you can switch branches. ",
+        {
+         "t": "code",
+         "v": "git stash pop"
+        },
+        " takes the changes back out of the drawer. (WIP means \"work in progress\".)"
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s6-4",
+     "number": "3.6.4",
+     "title": [
+      "Putting work aside: git stash"
+     ],
+     "titleText": "Putting work aside: git stash"
+    }
+   ],
+   "title": [
+    "Merge conflicts"
+   ],
+   "titleText": "Merge conflicts"
+  },
+  {
+   "anchors": [
+    "sec-git-remote",
+    "sec-fetch-pull"
+   ],
+   "checkpoints": [],
+   "id": "ch03-s7",
+   "label": "sec:git-remote",
+   "labs": [],
+   "minutes": 10,
+   "number": "3.7",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Until now, everything stayed on your laptop. A ",
+        {
+         "en": [
+          "remote"
+         ],
+         "fr": "dépôt distant",
+         "id": "term-remote",
+         "t": "term"
+        },
+        " is another copy of the same repository, usually on a server such as GitHub. By convention the main remote is called ",
+        {
+         "t": "code",
+         "v": "origin"
+        },
+        ". Four commands talk to the remote:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Command"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it does"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git clone <url>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Download a full copy of a remote repository (once, at the start)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git push"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Upload your local commits to the remote."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git fetch"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Download the new commits of the remote, ",
+           {
+            "c": [
+             "without"
+            ],
+            "t": "b"
+           },
+           " changing your files or your branches."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git pull"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git fetch"
+           },
+           " ",
+           {
+            "c": [
+             "plus"
+            ],
+            "t": "b"
+           },
+           " ",
+           {
+            "t": "code",
+            "v": "git merge"
+           },
+           ": download the new commits and merge them into your current branch."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch03-s7-1",
+     "number": "3.7.1",
+     "title": [
+      "What a remote is"
+     ],
+     "titleText": "What a remote is"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Create a free account on ",
+            {
+             "c": [
+              "https://github.com"
+             ],
+             "href": "https://github.com",
+             "t": "link"
+            },
+            " (if you do not have one). Choose a professional username; recruiters will see it. In the examples below the username is ",
+            {
+             "t": "code",
+             "v": "adnane-data"
+            },
+            ": replace it with yours."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Click ",
+            {
+             "c": [
+              "New repository"
+             ],
+             "t": "b"
+            },
+            ". Name: ",
+            {
+             "t": "code",
+             "v": "dbt-course-practice"
+            },
+            ". Visibility: Private is fine. ",
+            {
+             "c": [
+              "Do not"
+             ],
+             "t": "b"
+            },
+            " tick \"Add a README\", \".gitignore\" or \"license\": your local repository already has history, and an empty remote makes the first push simple."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Authenticate your terminal. GitHub does ",
+            {
+             "c": [
+              "not"
+             ],
+             "t": "b"
+            },
+            " accept your account password for Git commands in the terminal: you need the ",
+            {
+             "t": "code",
+             "v": "gh"
+            },
+            " tool or a token. The easiest way on a Mac:"
+           ],
+           "t": "p"
+          },
+          {
+           "id": "ch03-c28",
+           "lang": "bash",
+           "t": "code",
+           "text": "$ brew install gh\n$ gh auth login"
+          },
+          {
+           "c": [
+            "Answer the questions: ",
+            {
+             "c": [
+              "GitHub.com"
+             ],
+             "t": "i"
+            },
+            ", ",
+            {
+             "c": [
+              "HTTPS"
+             ],
+             "t": "i"
+            },
+            ", ",
+            {
+             "c": [
+              "Yes"
+             ],
+             "t": "i"
+            },
+            " (authenticate Git with your GitHub credentials), then ",
+            {
+             "c": [
+              "Login with a web browser"
+             ],
+             "t": "i"
+            },
+            ". The ",
+            {
+             "t": "code",
+             "v": "gh"
+            },
+            " tool then gives Git your credentials. The alternative is a ",
+            {
+             "en": [
+              "personal access token"
+             ],
+             "fr": "jeton d'accès personnel",
+             "id": "term-personal-access-token",
+             "t": "term"
+            },
+            ": on GitHub, ",
+            {
+             "c": [
+              "Settings → Developer settings → Personal access tokens"
+             ],
+             "t": "i"
+            },
+            "; when Git asks for a password, paste the token. A token is a secret: never write it in a file of the repository."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "c": [
+        "Now connect your local repository to GitHub and push:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c29",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git remote add origin https://github.com/adnane-data/dbt-course-practice.git\n$ git remote -v\norigin  https://github.com/adnane-data/dbt-course-practice.git (fetch)\norigin  https://github.com/adnane-data/dbt-course-practice.git (push)\n$ git push -u origin main\nTo https://github.com/adnane-data/dbt-course-practice.git\n * [new branch]      main -> main\nbranch 'main' set up to track 'origin/main'."
+      },
+      {
+       "c": [
+        "(Git may print a few more progress lines such as ",
+        {
+         "c": [
+          "Enumerating objects"
+         ],
+         "t": "i"
+        },
+        " or ",
+        {
+         "c": [
+          "Writing objects"
+         ],
+         "t": "i"
+        },
+        "; that is normal.) The option ",
+        {
+         "t": "code",
+         "v": "-u"
+        },
+        " (\"upstream\") links your local ",
+        {
+         "t": "code",
+         "v": "main"
+        },
+        " with ",
+        {
+         "t": "code",
+         "v": "origin/main"
+        },
+        ". (",
+        {
+         "t": "code",
+         "v": "origin/main"
+        },
+        " is your laptop's memory of the ",
+        {
+         "t": "code",
+         "v": "main"
+        },
+        " branch on GitHub, as it was the last time you talked to GitHub.) After that, a simple ",
+        {
+         "t": "code",
+         "v": "git push"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "git pull"
+        },
+        " on this branch knows where to go. Refresh the GitHub page: your files and your history are online."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s7-2",
+     "number": "3.7.2",
+     "title": [
+      "Create the GitHub repository and connect it"
+     ],
+     "titleText": "Create the GitHub repository and connect it"
+    },
+    {
+     "anchor": "sec-fetch-pull",
+     "blocks": [
+      {
+       "c": [
+        "This difference is an exam favourite. Suppose your teammate Sara cloned the repository and pushed a commit ",
+        {
+         "c": [
+          "Add products by category query"
+         ],
+         "t": "i"
+        },
+        ". Your laptop does not know it yet:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c30",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git status\nOn branch main\nYour branch is up to date with 'origin/main'.\n\nnothing to commit, working tree clean"
+      },
+      {
+       "c": [
+        "\"Up to date\" is only true ",
+        {
+         "c": [
+          "according to the last time you talked to GitHub"
+         ],
+         "t": "i"
+        },
+        ". Ask GitHub for news with ",
+        {
+         "t": "code",
+         "v": "git fetch"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c31",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git fetch\nFrom https://github.com/adnane-data/dbt-course-practice\n   a694e58..7fc4b09  main       -> origin/main\n$ git status\nOn branch main\nYour branch is behind 'origin/main' by 1 commit, and can be fast-forwarded.\n  (use \"git pull\" to update your local branch)\n\nnothing to commit, working tree clean\n$ git log --oneline --all -3\n7fc4b09 (origin/main, origin/HEAD) Add products by category query\na694e58 (HEAD -> main) Merge feature/status-filter: keep both filters\n92213b5 Keep only orders from the second half of 2025"
+      },
+      {
+       "c": [
+        "After ",
+        {
+         "t": "code",
+         "v": "git fetch"
+        },
+        ", Git knows the new commit (the label ",
+        {
+         "t": "code",
+         "v": "origin/main"
+        },
+        " moved), but your ",
+        {
+         "t": "code",
+         "v": "main"
+        },
+        " and your files ",
+        {
+         "c": [
+          "did not change"
+         ],
+         "t": "b"
+        },
+        ": Sara's file is not in your ",
+        {
+         "t": "code",
+         "v": "queries"
+        },
+        " folder. (",
+        {
+         "t": "code",
+         "v": "origin/HEAD"
+        },
+        " only says which branch is the default one on GitHub; you can ignore it.) Now ",
+        {
+         "t": "code",
+         "v": "git pull"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c32",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git pull\nUpdating a694e58..7fc4b09\nFast-forward\n queries/products_by_category.sql | 3 +++\n 1 file changed, 3 insertions(+)\n create mode 100644 queries/products_by_category.sql\n$ git log --oneline -3\n7fc4b09 (HEAD -> main, origin/main, origin/HEAD) Add products by category query\na694e58 Merge feature/status-filter: keep both filters\n92213b5 Keep only orders from the second half of 2025"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "git pull"
+            },
+            " = ",
+            {
+             "t": "code",
+             "v": "git fetch"
+            },
+            " + ",
+            {
+             "t": "code",
+             "v": "git merge"
+            },
+            "."
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "git fetch"
+              },
+              " only downloads. It is always safe; it never touches your files."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "git pull"
+              },
+              " downloads ",
+              {
+               "c": [
+                "and"
+               ],
+               "t": "i"
+              },
+              " merges into your current branch, so it can create a merge commit or a conflict."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "If a question asks how to bring your teammates' merged work into your own copy, the expected answer is ",
+              {
+               "t": "code",
+               "v": "git pull"
+              },
+              " (or fetch then merge), not ",
+              {
+               "t": "code",
+               "v": "git fetch"
+              },
+              " alone and not ",
+              {
+               "t": "code",
+               "v": "git push"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "git clone"
+              },
+              " is used once, to get the repository the first time; you do not clone again to get updates."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ul",
+         "t": "list"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "git pull --rebase"
+          },
+          " is a variant: instead of creating a merge commit, it replays your local commits on top of the new remote commits, which gives a straight, linear history. Many teams like it. It rewrites your local commits, so use it only on commits that you have not shared yet. For this book and for the exam, the plain merge behaviour of ",
+          {
+           "t": "code",
+           "v": "git pull"
+          },
+          " (the setting ",
+          {
+           "t": "code",
+           "v": "pull.rebase false"
+          },
+          " from ",
+          {
+           "href": "/learn/ch03/ch03-s2/",
+           "label": "sec:git-config",
+           "t": "ref",
+           "text": "Section 3.2"
+          },
+          ") is what you need."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "deep",
+       "t": "callout"
+      }
+     ],
+     "id": "ch03-s7-3",
+     "number": "3.7.3",
+     "title": [
+      "git fetch versus git pull"
+     ],
+     "titleText": "git fetch versus git pull"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "You work on ",
+        {
+         "t": "code",
+         "v": "feature/top-customers"
+        },
+        " for two days. Meanwhile, teammates merge into main. Before you open a pull request, bring main's new commits into your branch, so that you test your code with the latest version of the project:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c33",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git switch main\nSwitched to branch 'main'\nYour branch is up to date with 'origin/main'.\n$ git pull\nFrom https://github.com/adnane-data/dbt-course-practice\n   7fc4b09..bf4e4b8  main       -> origin/main\nUpdating 7fc4b09..bf4e4b8\nFast-forward\n README.md | 1 +\n 1 file changed, 1 insertion(+)\n$ git switch feature/top-customers\nSwitched to branch 'feature/top-customers'\n$ git merge main --no-edit\nMerge made by the 'ort' strategy.\n README.md | 1 +\n 1 file changed, 1 insertion(+)\n$ git push -u origin feature/top-customers\nTo https://github.com/adnane-data/dbt-course-practice.git\n * [new branch]      feature/top-customers -> feature/top-customers\nbranch 'feature/top-customers' set up to track 'origin/feature/top-customers'."
+      },
+      {
+       "c": [
+        "Three moves: update your local main (",
+        {
+         "t": "code",
+         "v": "git pull"
+        },
+        "), go back to your branch, merge main into it. Any conflict appears now, on ",
+        {
+         "c": [
+          "your"
+         ],
+         "t": "i"
+        },
+        " branch, where you can fix and test it calmly, instead of breaking main. Then you push your branch to GitHub, ready for a pull request."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s7-4",
+     "number": "3.7.4",
+     "title": [
+      "Keeping your feature branch up to date with main"
+     ],
+     "titleText": "Keeping your feature branch up to date with main"
+    }
+   ],
+   "title": [
+    "Remotes and GitHub"
+   ],
+   "titleText": "Remotes and GitHub"
+  },
+  {
+   "anchors": [
+    "sec-git-pr"
+   ],
+   "checkpoints": [],
+   "id": "ch03-s8",
+   "label": "sec:git-pr",
+   "labs": [
+    "ch03-lab4"
+   ],
+   "minutes": 15,
+   "number": "3.8",
+   "objectives": [
+    "CP0-GIT",
+    "3.4"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "pull request"
+         ],
+         "fr": "demande de fusion (pull request)",
+         "id": "term-pull-request",
+         "t": "term"
+        },
+        " (PR) is a request, made on GitHub, to merge one branch into another (usually into main). GitLab calls it a ",
+        {
+         "c": [
+          "merge request"
+         ],
+         "t": "i"
+        },
+        "; it is the same idea. A PR is where the team:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "reads the changes (the diff, file by file),"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "comments on lines and asks questions,"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "sees the results of automatic checks (for dbt: a CI job, for \"continuous integration\", that builds and tests the changed models),"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "approves, and finally merges."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "alt": "The pull request workflow in eight steps: 1. Create branch, 2. Edit, test, commit, 3. Push branch, 4. Open pull request, 5. CI checks + review, 6. Fix if needed (new commits go back to step 5), 7. Merge into main (when approved and green), 8. Pull main, delete branch.",
+       "id": "ch03-fig4",
+       "src": "figures/ch03-fig4.svg",
+       "t": "figure"
+      }
+     ],
+     "id": "ch03-s8-0",
+     "title": [
+      "Pull requests"
+     ],
+     "titleText": "Pull requests"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Most teams ",
+        {
+         "en": [
+          "protect"
+         ],
+         "fr": "protéger",
+         "id": "term-protect",
+         "t": "term"
+        },
+        " the main branch on GitHub (",
+        {
+         "c": [
+          "Settings → Branches"
+         ],
+         "t": "i"
+        },
+        ", or the newer ",
+        {
+         "c": [
+          "Settings → Rules → Rulesets"
+         ],
+         "t": "i"
+        },
+        "): nobody can push directly to main, every change must come through a PR, the PR needs at least one approval, and the automatic checks must pass. This is how you make sure that production only runs reviewed and tested code."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s8-1",
+     "number": "3.8.1",
+     "title": [
+      "Protected main branch"
+     ],
+     "titleText": "Protected main branch"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A reviewer must understand your PR in two minutes. Teams often use a PR template, a markdown file (",
+        {
+         "t": "code",
+         "v": ".github/pull_request_template.md"
+        },
+        ") that pre-fills every new PR. A typical analytics template asks:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch03-c34",
+       "lang": "plain",
+       "t": "code",
+       "text": "## What changed and why\n- Added stg_payments and converted amount from cents to dollars\n- Closes ticket DATA-42\n\n## How I tested it\n- dbt build --select stg_payments+   (all models and tests pass)\n- Compared row counts with the old query: 341 rows in both\n\n## Screenshots / lineage\n(paste the lineage graph or a sample of the results)\n\n## Checklist\n- [ ] Tests added for new primary keys (unique, not_null)\n- [ ] Descriptions added in the .yml file\n- [ ] No hard-coded table names (ref and source only)",
+       "title": ".github/pull_request_template.md"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "On a dbt project, opening a PR usually triggers a ",
+          {
+           "c": [
+            "CI job"
+           ],
+           "t": "b"
+          },
+          " (continuous integration). The dbt platform (or GitHub Actions) builds only the models you changed and everything downstream of them, in a temporary schema, and runs their tests: something like ",
+          {
+           "t": "code",
+           "v": "dbt build --select state:modified+"
+          },
+          ". If a test fails, the PR shows a red cross; when main is protected with required checks, the PR cannot be merged. This is exactly the exam objective \"developing and implementing a fix and testing it prior to merging\". You will build such a CI job in Chapters 24 and 25."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "Create the empty repository ",
+              {
+               "t": "code",
+               "v": "dbt-course-practice"
+              },
+              " on GitHub and authenticate with ",
+              {
+               "t": "code",
+               "v": "gh auth login"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Connect and push (replace ",
+              {
+               "t": "code",
+               "v": "<your-username>"
+              },
+              "):"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch03-c35",
+             "lang": "bash",
+             "t": "code",
+             "text": "$ git remote add origin https://github.com/<your-username>/dbt-course-practice.git\n$ git push -u origin main"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "git switch -c feature/top-customers"
+              },
+              ". Create ",
+              {
+               "t": "code",
+               "v": "queries/top_customers.sql"
+              },
+              ":"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch03-c36",
+             "lang": "sql",
+             "t": "code",
+             "text": "select user_id, count(*) as n_orders\nfrom jaffle_shop.orders\ngroup by user_id\norder by n_orders desc\nlimit 10"
+            },
+            {
+             "c": [
+              "Run it in DuckDB, then commit it."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "git push -u origin feature/top-customers"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "On GitHub, a yellow banner offers ",
+              {
+               "c": [
+                "Compare & pull request"
+               ],
+               "t": "b"
+              },
+              ". Click it. Write a title and a description (what changed, how you tested it). Click ",
+              {
+               "c": [
+                "Create pull request"
+               ],
+               "t": "b"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Look at the ",
+              {
+               "c": [
+                "Files changed"
+               ],
+               "t": "i"
+              },
+              " tab: this is what a reviewer sees. Add a comment on one line, to practise."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Click ",
+              {
+               "c": [
+                "Merge pull request"
+               ],
+               "t": "b"
+              },
+              ", then ",
+              {
+               "c": [
+                "Confirm merge"
+               ],
+               "t": "b"
+              },
+              ", then ",
+              {
+               "c": [
+                "Delete branch"
+               ],
+               "t": "b"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Back in the terminal, update main and delete the local branch:"
+             ],
+             "t": "p"
+            },
+            {
+             "id": "ch03-c37",
+             "lang": "bash",
+             "t": "code",
+             "text": "$ git switch main\n$ git pull\n$ git branch -d feature/top-customers"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "git log --oneline -3"
+          },
+          " on your laptop shows the merge commit created by GitHub (",
+          {
+           "c": [
+            "Merge pull request #1 from …"
+           ],
+           "t": "i"
+          },
+          "), and ",
+          {
+           "t": "code",
+           "v": "queries/top_customers.sql"
+          },
+          " is on main. (Alternative for step 5: ",
+          {
+           "t": "code",
+           "v": "gh pr create"
+          },
+          " in the terminal.)"
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch03-lab4",
+       "objectives": [
+        "CP0-GIT",
+        "3.4"
+       ],
+       "t": "lab",
+       "title": [
+        "Push to GitHub and merge a pull request"
+       ]
+      }
+     ],
+     "id": "ch03-s8-2",
+     "number": "3.8.2",
+     "title": [
+      "A good PR description"
+     ],
+     "titleText": "A good PR description"
+    }
+   ],
+   "title": [
+    "Pull requests"
+   ],
+   "titleText": "Pull requests"
+  },
+  {
+   "anchors": [
+    "sec-git-strategies"
+   ],
+   "checkpoints": [],
+   "id": "ch03-s9",
+   "label": "sec:git-strategies",
+   "labs": [],
+   "minutes": 5,
+   "number": "3.9",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "branching strategy"
+         ],
+         "fr": "stratégie de branches",
+         "id": "term-branching-strategy",
+         "t": "term"
+        },
+        " is the team's agreement on which branches exist and how code moves between them. Two strategies cover almost every dbt team."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s9-0",
+     "title": [
+      "Branching strategies"
+     ],
+     "titleText": "Branching strategies"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "There is one long-lived branch, ",
+        {
+         "t": "code",
+         "v": "main"
+        },
+        ", which always reflects production. Every change happens on a short-lived feature branch (a few hours to a few days), goes through a PR with CI checks, and is merged into main. The production job runs from main. This is the simplest strategy and the one dbt Labs recommends for most teams (dbt Labs articles call it ",
+        {
+         "c": [
+          "direct promotion"
+         ],
+         "t": "i"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s9-1",
+     "number": "3.9.1",
+     "title": [
+      "Strategy 1: main plus short-lived feature branches"
+     ],
+     "titleText": "Strategy 1: main plus short-lived feature branches"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Some organisations want an extra step of validation, for example business users who test in a QA environment before production. They keep several long-lived branches: feature branches are merged into ",
+        {
+         "t": "code",
+         "v": "qa"
+        },
+        " (or ",
+        {
+         "t": "code",
+         "v": "dev"
+        },
+        ") first; when a batch of changes is validated, ",
+        {
+         "t": "code",
+         "v": "qa"
+        },
+        " is merged into ",
+        {
+         "t": "code",
+         "v": "main"
+        },
+        ". Each long-lived branch is linked to its own environment. dbt Labs articles call this ",
+        {
+         "c": [
+          "indirect promotion"
+         ],
+         "t": "i"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "Branching strategy 1, main + feature branches: short branches feature/a and feature/b start from main and are merged back into main. The production job runs on main.",
+       "id": "ch03-fig5",
+       "src": "figures/ch03-fig5.svg",
+       "t": "figure"
+      },
+      {
+       "alt": "Branching strategy 2, promotion branches: feature/a is merged into the long-lived branch qa (QA environment); after QA, qa is merged into main (production) as a release.",
+       "id": "ch03-fig6",
+       "src": "figures/ch03-fig6.svg",
+       "t": "figure"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Main + feature branches"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Promotion branches"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Long-lived branches"
+          ]
+         },
+         {
+          "c": [
+           "only ",
+           {
+            "t": "code",
+            "v": "main"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dev"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "qa"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "main"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Speed to production"
+          ]
+         },
+         {
+          "c": [
+           "fast (each PR)"
+          ]
+         },
+         {
+          "c": [
+           "slower (batches)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Complexity"
+          ]
+         },
+         {
+          "c": [
+           "low"
+          ]
+         },
+         {
+          "c": [
+           "higher (branches drift apart, more merges)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Good for"
+          ]
+         },
+         {
+          "c": [
+           "most teams"
+          ]
+         },
+         {
+          "c": [
+           "teams with formal QA or release dates"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch03-s9-2",
+     "number": "3.9.2",
+     "title": [
+      "Strategy 2: promotion branches (dev, qa, main)"
+     ],
+     "titleText": "Strategy 2: promotion branches (dev, qa, main)"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Whatever the strategy, the logic is the same, and you will see it again in Chapter 25:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Environment"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Code comes from"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Builds into schema"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Who runs it"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Development"
+          ]
+         },
+         {
+          "c": [
+           "your feature branch"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_adnane"
+           }
+          ]
+         },
+         {
+          "c": [
+           "you, by hand"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "CI (pull request)"
+          ]
+         },
+         {
+          "c": [
+           "the PR's branch"
+          ]
+         },
+         {
+          "c": [
+           "temporary ",
+           {
+            "t": "code",
+            "v": "dbt_cloud_pr_…"
+           }
+          ]
+         },
+         {
+          "c": [
+           "automatic, on each PR"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Production"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "main"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "analytics"
+           }
+          ]
+         },
+         {
+          "c": [
+           "scheduled job"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "\"Development versus main\" in the exam guide means exactly this: you develop on a branch, in a development environment, and only what is merged into main reaches production."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s9-3",
+     "number": "3.9.3",
+     "title": [
+      "How branches map to dbt environments"
+     ],
+     "titleText": "How branches map to dbt environments"
+    }
+   ],
+   "title": [
+    "Branching strategies"
+   ],
+   "titleText": "Branching strategies"
+  },
+  {
+   "anchors": [
+    "sec-git-studio"
+   ],
+   "checkpoints": [],
+   "id": "ch03-s10",
+   "label": "sec:git-studio",
+   "labs": [],
+   "minutes": 5,
+   "number": "3.10",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "If you use the dbt platform (formerly dbt Cloud), its in-browser editor ",
+        {
+         "c": [
+          "dbt Studio"
+         ],
+         "t": "b"
+        },
+        " (formerly the dbt Cloud IDE) runs Git for you with buttons. The commands are the same as in this chapter; only the interface changes. The main facts:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Main is protected."
+             ],
+             "t": "b"
+            },
+            " Studio never commits directly to the main (primary) branch. In the current version you may edit files and run dbt commands while you are on main, but when you commit, Studio asks you to commit to a ",
+            {
+             "c": [
+              "new branch"
+             ],
+             "t": "i"
+            },
+            ". Older versions made main read-only: you clicked ",
+            {
+             "c": [
+              "Create new branch"
+             ],
+             "t": "b"
+            },
+            " before you could edit anything. Either way, your work always ends up on a branch."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The Version Control area shows a Git button whose label changes with the situation: ",
+            {
+             "c": [
+              "Create new branch"
+             ],
+             "t": "b"
+            },
+            "; ",
+            {
+             "c": [
+              "Commit and sync"
+             ],
+             "t": "b"
+            },
+            " (some pages show just ",
+            {
+             "c": [
+              "Commit"
+             ],
+             "t": "b"
+            },
+            ": it commits your changes on your branch ",
+            {
+             "c": [
+              "and"
+             ],
+             "t": "i"
+            },
+            " pushes them to the remote); ",
+            {
+             "c": [
+              "Pull changes from main"
+             ],
+             "t": "b"
+            },
+            " (your branch is behind main); ",
+            {
+             "c": [
+              "Pull from remote"
+             ],
+             "t": "b"
+            },
+            " (you are on main and the remote main has new commits); ",
+            {
+             "c": [
+              "Open pull request"
+             ],
+             "t": "b"
+            },
+            " (opens the pull request page in your git provider, for example GitHub). Other actions: ",
+            {
+             "c": [
+              "Change branch"
+             ],
+             "t": "b"
+            },
+            ", ",
+            {
+             "c": [
+              "Refresh git state"
+             ],
+             "t": "b"
+            },
+            ", ",
+            {
+             "c": [
+              "Abort merge"
+             ],
+             "t": "b"
+            },
+            ", ",
+            {
+             "c": [
+              "Rollback to remote"
+             ],
+             "t": "b"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Conflicts in Studio:"
+             ],
+             "t": "b"
+            },
+            " the button becomes ",
+            {
+             "c": [
+              "Commit and resolve"
+             ],
+             "t": "b"
+            },
+            "; the conflicted file opens with the same markers you learned (",
+            {
+             "t": "code",
+             "v": "<<<<<<< HEAD"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "======="
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": ">>>>>>>"
+            },
+            "). You keep the right lines, delete the markers, save, then click ",
+            {
+             "c": [
+              "Commit and resolve"
+             ],
+             "t": "b"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Button labels change from time to time in the dbt platform. Do not memorise labels; memorise the ",
+          {
+           "c": [
+            "flow"
+           ],
+           "t": "i"
+          },
+          ": create a branch, change, commit, keep up to date with main, open a PR, merge. The exam tests the flow."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch03-s10-0",
+     "title": [
+      "Git inside dbt Studio"
+     ],
+     "titleText": "Git inside dbt Studio"
+    }
+   ],
+   "title": [
+    "Git inside dbt Studio"
+   ],
+   "titleText": "Git inside dbt Studio"
+  },
+  {
+   "anchors": [
+    "sec-git-undo"
+   ],
+   "checkpoints": [],
+   "id": "ch03-s11",
+   "label": "sec:git-undo",
+   "labs": [],
+   "minutes": 5,
+   "number": "3.11",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Git almost never loses committed work, but some commands can destroy work that is not committed, or rewrite history that teammates already have. Choose the right tool:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Situation"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Command"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Safe on a shared branch?"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Discard changes in a file (not committed)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git restore <file>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "yes (changes lost)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Unstage a file"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git restore --staged <file>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Fix the message or content of the ",
+           {
+            "c": [
+             "last"
+            ],
+            "t": "i"
+           },
+           " commit, not pushed yet"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git commit --amend"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "no"
+            ],
+            "t": "b"
+           },
+           " if already pushed"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Undo a commit that is already pushed"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git revert <hash>"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "yes"
+            ],
+            "t": "b"
+           },
+           ": adds a new commit"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Move the branch back, keep the changes (staged)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git reset --soft HEAD~1"
+           }
+          ]
+         },
+         {
+          "c": [
+           "no"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Move the branch back and ",
+           {
+            "c": [
+             "delete"
+            ],
+            "t": "b"
+           },
+           " changes"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git reset --hard HEAD~1"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "no, dangerous"
+            ],
+            "t": "b"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch03-s11-0",
+     "title": [
+      "Undoing things safely"
+     ],
+     "titleText": "Undoing things safely"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch03-c38",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git commit -m \"Show top 5 cusotmers\"\n[feature/top-customers abfd6b8] Show top 5 cusotmers\n 1 file changed, 1 insertion(+), 1 deletion(-)\n$ git commit --amend -m \"Show top 5 customers\"\n[feature/top-customers 7b6714d] Show top 5 customers\n Date: Tue Jan 13 11:00:00 2026 +0100\n 1 file changed, 1 insertion(+), 1 deletion(-)"
+      },
+      {
+       "c": [
+        "The typo is fixed, but notice the hash changed (",
+        {
+         "t": "code",
+         "v": "abfd6b8"
+        },
+        " became ",
+        {
+         "t": "code",
+         "v": "7b6714d"
+        },
+        "): amend ",
+        {
+         "c": [
+          "replaces"
+         ],
+         "t": "i"
+        },
+        " the commit. That is fine on your laptop, but if the old commit was already pushed, your history and the remote history no longer match."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s11-1",
+     "number": "3.11.1",
+     "title": [
+      "Amend: fix the last commit"
+     ],
+     "titleText": "Amend: fix the last commit"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch03-c39",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git revert --no-edit HEAD\n[feature/top-customers 62ddbd3] Revert \"Show top 5 customers\"\n Date: Tue Jan 13 11:05:00 2026 +0100\n 1 file changed, 1 insertion(+), 1 deletion(-)\n$ git log --oneline -3\n62ddbd3 (HEAD -> feature/top-customers) Revert \"Show top 5 customers\"\n7b6714d Show top 5 customers\ne3eb675 (origin/feature/top-customers) Merge branch 'main' into feature/top-customers"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "git revert"
+        },
+        " creates a ",
+        {
+         "c": [
+          "new"
+         ],
+         "t": "i"
+        },
+        " commit that does the opposite of the chosen commit (",
+        {
+         "t": "code",
+         "v": "HEAD"
+        },
+        " means \"the last commit\"; you can also give a hash). The history is not rewritten: the mistake and its correction are both visible. This is the right way to undo something on main or on any branch that others use."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch03-s11-2",
+     "number": "3.11.2",
+     "title": [
+      "Revert: undo a pushed commit the safe way"
+     ],
+     "titleText": "Revert: undo a pushed commit the safe way"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch03-c40",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git reset --hard HEAD~1\nHEAD is now at 7b6714d Show top 5 customers"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "HEAD~1"
+        },
+        " means \"one commit before HEAD\". ",
+        {
+         "t": "code",
+         "v": "git reset --hard"
+        },
+        " moved the branch back one commit ",
+        {
+         "c": [
+          "and"
+         ],
+         "t": "b"
+        },
+        " overwrote the files: the revert commit is gone from the branch, and any uncommitted change in your files is destroyed without warning. Use ",
+        {
+         "t": "code",
+         "v": "reset --hard"
+        },
+        " only on your own local work, and never on a branch that teammates use."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "On a shared branch (main, or a branch already pushed and used by others), undo with ",
+          {
+           "t": "code",
+           "v": "git revert"
+          },
+          ". Rewriting history with ",
+          {
+           "t": "code",
+           "v": "reset"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "amend"
+          },
+          " followed by a force push (",
+          {
+           "t": "code",
+           "v": "git push --force"
+          },
+          ") breaks your teammates' copies."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch03-s11-3",
+     "number": "3.11.3",
+     "title": [
+      "Reset: powerful, use with care"
+     ],
+     "titleText": "Reset: powerful, use with care"
+    }
+   ],
+   "title": [
+    "Undoing things safely"
+   ],
+   "titleText": "Undoing things safely"
+  },
+  {
+   "anchors": [
+    "sec-git-cheatsheet"
+   ],
+   "checkpoints": [],
+   "id": "ch03-s12",
+   "label": "sec:git-cheatsheet",
+   "labs": [],
+   "minutes": 5,
+   "number": "3.12",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "groupRows": [
+        0,
+        4,
+        13,
+        20,
+        25
+       ],
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Command"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Use"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Setup"
+            ],
+            "t": "i"
+           }
+          ],
+          "colspan": 2
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git config --global user.name \"...\""
+           }
+          ]
+         },
+         {
+          "c": [
+           "Set your name (also ",
+           {
+            "t": "code",
+            "v": "user.email"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git init"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Turn the current folder into a repository"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git clone <url>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Copy a remote repository to your laptop"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Daily cycle"
+            ],
+            "t": "i"
+           }
+          ],
+          "colspan": 2
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git status"
+           },
+           " (",
+           {
+            "t": "code",
+            "v": "-s"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "What changed? Which branch am I on?"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git diff"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "git diff --staged"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Unstaged changes / staged changes"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git add <file>"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "git add ."
+           }
+          ]
+         },
+         {
+          "c": [
+           "Stage a file / stage everything (not ignored)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git commit -m \"...\""
+           }
+          ]
+         },
+         {
+          "c": [
+           "Save the staged changes as a commit"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git log --oneline --graph --all"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Compact history with branches"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git restore <file>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Discard uncommitted changes in a file"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git restore --staged <file>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Unstage a file"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git stash"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "git stash pop"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Put changes aside / take them back"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Branches"
+            ],
+            "t": "i"
+           }
+          ],
+          "colspan": 2
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git branch"
+           },
+           " (",
+           {
+            "t": "code",
+            "v": "-a"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "List local (and remote) branches"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git switch -c <name>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Create a branch and switch to it (= ",
+           {
+            "t": "code",
+            "v": "git checkout -b"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git switch <name>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Switch to an existing branch (= ",
+           {
+            "t": "code",
+            "v": "git checkout <name>"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git merge <branch>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Merge ",
+           {
+            "t": "code",
+            "v": "<branch>"
+           },
+           " into the current branch"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git merge --abort"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Cancel a merge with conflicts"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git branch -d <name>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Delete a merged branch"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Remote"
+            ],
+            "t": "i"
+           }
+          ],
+          "colspan": 2
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git remote add origin <url>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Connect to a remote"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git push -u origin <branch>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "First push of a branch (then just ",
+           {
+            "t": "code",
+            "v": "git push"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git fetch"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Download remote commits, change nothing locally"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git pull"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Fetch + merge into the current branch"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Undo"
+            ],
+            "t": "i"
+           }
+          ],
+          "colspan": 2
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git commit --amend"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Replace the last commit (only if not pushed)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git revert <hash>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "New commit that undoes another one (safe)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git reset --hard <ref>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Move branch back and erase changes (dangerous)"
+          ]
+         }
+        ]
+       ],
+       "rules": [
+        4,
+        13,
+        20,
+        25
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch03-s12-0",
+     "title": [
+      "Git cheat sheet"
+     ],
+     "titleText": "Git cheat sheet"
+    }
+   ],
+   "title": [
+    "Git cheat sheet"
+   ],
+   "titleText": "Git cheat sheet"
+  }
+ ],
+ "minutes": 145,
+ "number": 3,
+ "objectives": [
+  "CP0-GIT",
+  "3.4",
+  "7.1"
+ ],
+ "part": 1,
+ "partLabel": "Part I",
+ "partTitle": "Foundations Refresh",
+ "printed": "3",
+ "quiz": [
+  "q-ch03-01",
+  "q-ch03-02",
+  "q-ch03-03",
+  "q-ch03-04",
+  "q-ch03-05",
+  "q-ch03-06",
+  "q-ch03-07",
+  "q-ch03-08",
+  "q-ch03-09",
+  "q-ch03-10",
+  "q-ch03-11",
+  "q-ch03-12",
+  "q-ch03-13",
+  "q-ch03-14",
+  "q-ch03-15"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-git-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch03-01",
+      "q-ch03-02",
+      "q-ch03-03",
+      "q-ch03-04",
+      "q-ch03-05",
+      "q-ch03-06",
+      "q-ch03-07",
+      "q-ch03-08",
+      "q-ch03-09",
+      "q-ch03-10",
+      "q-ch03-11",
+      "q-ch03-12",
+      "q-ch03-13",
+      "q-ch03-14",
+      "q-ch03-15"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch03-01",
+    "q-ch03-02",
+    "q-ch03-03",
+    "q-ch03-04",
+    "q-ch03-05",
+    "q-ch03-06",
+    "q-ch03-07",
+    "q-ch03-08",
+    "q-ch03-09",
+    "q-ch03-10",
+    "q-ch03-11",
+    "q-ch03-12",
+    "q-ch03-13",
+    "q-ch03-14",
+    "q-ch03-15"
+   ],
+   "label": "sec:git-quiz",
+   "number": "3.13",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Git tracks changes as commits (snapshots) in the hidden ",
+        {
+         "t": "code",
+         "v": ".git"
+        },
+        " folder; GitHub hosts a shared copy and adds pull requests."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The cycle: edit → ",
+        {
+         "t": "code",
+         "v": "git status"
+        },
+        " / ",
+        {
+         "t": "code",
+         "v": "git diff"
+        },
+        " → ",
+        {
+         "t": "code",
+         "v": "git add"
+        },
+        " → ",
+        {
+         "t": "code",
+         "v": "git commit -m \"Imperative message\""
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": ".gitignore"
+        },
+        " keeps generated files out: ",
+        {
+         "t": "code",
+         "v": "target/"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt_packages/"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "logs/"
+        },
+        ", virtual environments, database files. Secrets (",
+        {
+         "t": "code",
+         "v": "profiles.yml"
+        },
+        ") never go in Git."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A branch is a light, movable pointer. Merging is a fast-forward if main did not move, otherwise a merge commit."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A conflict = same lines changed on both sides. Edit, delete the markers, test, ",
+        {
+         "t": "code",
+         "v": "git add"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "git commit"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "git fetch"
+        },
+        " downloads only; ",
+        {
+         "t": "code",
+         "v": "git pull"
+        },
+        " = fetch + merge. Keep your branch up to date by pulling main and merging it into your branch."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Changes reach main through a pull request with review and CI checks; main is protected."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Main + short-lived feature branches is the simplest strategy; promotion branches (dev/qa/main) add a validation step."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "In dbt Studio, main is protected: you never commit to it directly, your changes go to a branch. The flow is identical to the command line."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Undo safely: ",
+        {
+         "t": "code",
+         "v": "restore"
+        },
+        " (files), ",
+        {
+         "t": "code",
+         "v": "revert"
+        },
+        " (shared commits); ",
+        {
+         "t": "code",
+         "v": "amend"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "reset --hard"
+        },
+        " only on local, unpushed work."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "Git and GitHub from Zero"
+}

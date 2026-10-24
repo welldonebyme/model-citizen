@@ -1,0 +1,7527 @@
+{
+ "id": "ch24",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "Understanding state: the artifacts dbt writes, what a ",
+      {
+       "c": [
+        "state"
+       ],
+       "t": "i"
+      },
+      " is, the ",
+      {
+       "t": "code",
+       "v": "state:"
+      },
+      " selection method and its sub-selectors, the ",
+      {
+       "t": "code",
+       "v": "result:"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "source_status:"
+      },
+      " methods, ",
+      {
+       "t": "code",
+       "v": "--defer"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "--favor-state"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "--defer-state"
+      },
+      "."
+     ],
+     "id": "7.1"
+    },
+    {
+     "c": [
+      "Using ",
+      {
+       "t": "code",
+       "v": "dbt retry"
+      },
+      ": where it restarts, what it re-runs, which flags it keeps, and when it says \"Nothing to do\"."
+     ],
+     "id": "7.2"
+    },
+    {
+     "c": [
+      "Managing failure points in the DAG: re-running only what failed or was skipped."
+     ],
+     "id": "4.1"
+    },
+    {
+     "c": [
+      "Defer versus ",
+      {
+       "t": "code",
+       "v": "dbt clone"
+      },
+      ": when each one is the right tool."
+     ],
+     "id": "4.2"
+    },
+    {
+     "c": [
+      "Testing a change before merging: the \"slim CI\" command, used again in ",
+      {
+       "href": "/learn/ch25/",
+       "label": "ch:environments-ci",
+       "t": "ref",
+       "text": "Chapter 25"
+      },
+      "."
+     ],
+     "id": "3.4"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "Your practice project has 15 models. A real project can have 1 500. When you change one model, you do not want to rebuild 1 500 models to check your change: it takes an hour and costs money in the warehouse. And when the nightly job fails at model 1 200, you do not want to start again from model 1."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "dbt solves both problems with ",
+      {
+       "c": [
+        "memory"
+       ],
+       "t": "i"
+      },
+      ". After every command it writes files that describe the project and the results of the run. Later commands can read these files: \"what changed since production?\", \"what failed last time?\", \"where does production keep this table?\". This memory is called ",
+      {
+       "c": [
+        "state"
+       ],
+       "t": "i"
+      },
+      ". It powers the fast CI jobs of ",
+      {
+       "href": "/learn/ch25/",
+       "label": "ch:environments-ci",
+       "t": "ref",
+       "text": "Chapter 25"
+      },
+      ", it lets you work in an empty development schema, and it lets you restart a failed run from the point of failure. Topic 7 of the exam (\"Leveraging dbt state\") is entirely about this chapter, and it is full of small details that the exam loves: which changes ",
+      {
+       "t": "code",
+       "v": "state:modified"
+      },
+      " detects, why ",
+      {
+       "t": "code",
+       "v": "result:error+"
+      },
+      " misses a failed test, what ",
+      {
+       "t": "code",
+       "v": "dbt retry"
+      },
+      " does after a ",
+      {
+       "t": "code",
+       "v": "dbt compile"
+      },
+      "…"
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "Every dbt command writes artifacts (JSON files such as ",
+      {
+       "t": "code",
+       "v": "manifest.json"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "run_results.json"
+      },
+      ") in ",
+      {
+       "t": "code",
+       "v": "target/"
+      },
+      ", and a copy of the artifacts of an earlier run is called the ",
+      {
+       "c": [
+        "state"
+       ],
+       "t": "i"
+      },
+      ". With ",
+      {
+       "t": "code",
+       "v": "--state"
+      },
+      ", dbt compares the current project with that state to select only what changed (",
+      {
+       "t": "code",
+       "v": "state:modified+"
+      },
+      ") or what failed (",
+      {
+       "t": "code",
+       "v": "result:error"
+      },
+      "), and with ",
+      {
+       "t": "code",
+       "v": "--defer"
+      },
+      " it reads unbuilt parents from the environment described by the state. ",
+      {
+       "t": "code",
+       "v": "dbt retry"
+      },
+      " reads the last ",
+      {
+       "t": "code",
+       "v": "run_results.json"
+      },
+      " and re-runs only the nodes that errored, failed or were skipped, with the same command and selection."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:state-defer-retry",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-sdr-artifacts"
+   ],
+   "checkpoints": [],
+   "id": "ch24-s1",
+   "label": "sec:sdr-artifacts",
+   "labs": [],
+   "minutes": 5,
+   "number": "24.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "blocks": [
+        {
+         "c": [
+          "Think of the black box (flight recorder) of an aeroplane. During the flight it records everything: the plan of the flight, every action, every alarm. After landing, engineers read it to understand what happened. dbt's artifacts are the black box of a dbt command: the plan (the manifest), what happened to each node (the run results), and a few more recordings."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "An ",
+        {
+         "en": [
+          "artifact"
+         ],
+         "fr": "artefact",
+         "id": "term-artifact",
+         "t": "term"
+        },
+        " is a file that dbt writes as a by-product of a command. dbt writes them in the ",
+        {
+         "t": "code",
+         "v": "target/"
+        },
+        " folder of your project. Run a small build and look inside:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c1",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ cd ~/dbt-course/jaffle_dbt\n$ dbt build -s fct_monthly_revenue -q\n$ ls target\ncompiled\ngraph.gpickle\ngraph_summary.json\nmanifest.json\npartial_parse.msgpack\nrun\nrun_results.json\nsemantic_manifest.json"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "compiled/"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "run/"
+        },
+        " hold the SQL (",
+        {
+         "href": "/learn/ch22/",
+         "label": "ch:debugging",
+         "t": "ref",
+         "text": "Chapter 22"
+        },
+        "). ",
+        {
+         "t": "code",
+         "v": "partial_parse.msgpack"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "graph.gpickle"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "graph_summary.json"
+        },
+        " are internal files (caches of the parse and of the DAG). The other JSON files are the artifacts that matter for the exam:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Artifact"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it contains"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Written by (tested with dbt 1.11.16)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "manifest.json"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The full description of the project: every node (models, tests, seeds, snapshots, sources, exposures, macros…) with its SQL, its configs, its dependencies (",
+           {
+            "t": "code",
+            "v": "parent_map"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "child_map"
+           },
+           ") and a checksum of its file."
+          ]
+         },
+         {
+          "c": [
+           "Every command that parses the project: ",
+           {
+            "t": "code",
+            "v": "parse"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "ls"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "compile"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "run"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "build"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "test"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "seed"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "snapshot"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "show"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "docs generate"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "source freshness"
+           },
+           "…"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "run_results.json"
+           }
+          ]
+         },
+         {
+          "c": [
+           "One entry per node that was executed: ",
+           {
+            "t": "code",
+            "v": "status"
+           },
+           ", timing, message, number of failures, compiled SQL, plus the ",
+           {
+            "t": "code",
+            "v": "args"
+           },
+           " of the command (which command, which selection, which target)."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "build"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "run"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "test"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "seed"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "snapshot"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "compile"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "show"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "run-operation"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "clone"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "docs generate"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "retry"
+           },
+           ". ",
+           {
+            "c": [
+             "Not"
+            ],
+            "t": "b"
+           },
+           " ",
+           {
+            "t": "code",
+            "v": "ls"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "parse"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "source freshness"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "catalog.json"
+           }
+          ]
+         },
+         {
+          "c": [
+           "What the warehouse says about each relation: columns, data types, statistics."
+          ]
+         },
+         {
+          "c": [
+           "Only ",
+           {
+            "t": "code",
+            "v": "dbt docs generate"
+           },
+           " (",
+           {
+            "href": "/learn/ch20/",
+            "label": "ch:documentation",
+            "t": "ref",
+            "text": "Chapter 20"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "sources.json"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The result of each freshness check: ",
+           {
+            "t": "code",
+            "v": "max_loaded_at"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "snapshotted_at"
+           },
+           ", age, status."
+          ]
+         },
+         {
+          "c": [
+           "Only ",
+           {
+            "t": "code",
+            "v": "dbt source freshness"
+           },
+           " (",
+           {
+            "href": "/learn/ch21/",
+            "label": "ch:freshness-exposures",
+            "t": "ref",
+            "text": "Chapter 21"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "semantic_manifest.json"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The semantic layer objects (semantic models, metrics). Empty in our project."
+          ]
+         },
+         {
+          "c": [
+           "Every command that parses."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt debug"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt deps"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "dbt clean"
+        },
+        " write no artifacts. We checked the table above by deleting ",
+        {
+         "t": "code",
+         "v": "target/"
+        },
+        " before each command and listing what appeared."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch24-s1-0",
+     "title": [
+      "Artifacts: what dbt writes after each command"
+     ],
+     "titleText": "Artifacts: what dbt writes after each command"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The artifacts are plain JSON. You never edit them, but reading them once helps a lot. This one-liner prints the command and the status of every node of the last run:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c2",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ python -c \"import json; r=json.load(open('target/run_results.json')); print(r['args']['which'], r['args']['select']); [print(x['unique_id'], x['status']) for x in r['results']]\""
+      },
+      {
+       "id": "ch24-c3",
+       "lang": "output",
+       "t": "code",
+       "text": "build ['fct_monthly_revenue']\nmodel.jaffle_dbt.fct_monthly_revenue success\ntest.jaffle_dbt.dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country.1e2e11612a pass"
+      },
+      {
+       "c": [
+        "Three things to notice:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Each node is identified by its ",
+            {
+             "en": [
+              "unique ID"
+             ],
+             "fr": "identifiant unique",
+             "id": "term-unique-id",
+             "t": "term"
+            },
+            ": ",
+            {
+             "t": "code",
+             "v": "<resource type>.<project>.<name>"
+            },
+            " (tests get a hash at the end). State comparison matches nodes by this ID."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Models, seeds and snapshots end with ",
+            {
+             "t": "code",
+             "v": "success"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "error"
+            },
+            " or ",
+            {
+             "t": "code",
+             "v": "skipped"
+            },
+            ". Tests end with ",
+            {
+             "t": "code",
+             "v": "pass"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "fail"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "warn"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "error"
+            },
+            " or ",
+            {
+             "t": "code",
+             "v": "skipped"
+            },
+            ". A microbatch model can end with ",
+            {
+             "t": "code",
+             "v": "partial success"
+            },
+            ", an exposure with ",
+            {
+             "t": "code",
+             "v": "no-op"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The file remembers the ",
+            {
+             "c": [
+              "arguments"
+             ],
+             "t": "i"
+            },
+            " of the command (",
+            {
+             "t": "code",
+             "v": "args"
+            },
+            "): ",
+            {
+             "t": "code",
+             "v": "dbt retry"
+            },
+            " uses them in ",
+            {
+             "href": "/learn/ch24/ch24-s8/",
+             "label": "sec:sdr-retry",
+             "t": "ref",
+             "text": "Section 24.8"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "The top-level keys of the two main files are:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c4",
+       "lang": "output",
+       "t": "code",
+       "text": "run_results.json: ['metadata', 'results', 'elapsed_time', 'args']\nmanifest.json:    ['metadata', 'nodes', 'sources', 'macros', 'docs', 'exposures', 'metrics', 'groups',\n                   'selectors', 'disabled', 'parent_map', 'child_map', 'group_map', 'saved_queries',\n                   'semantic_models', 'unit_tests', 'functions']"
+      }
+     ],
+     "id": "ch24-s1-1",
+     "number": "24.1.1",
+     "title": [
+      "A look inside"
+     ],
+     "titleText": "A look inside"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The folder is ",
+        {
+         "t": "code",
+         "v": "target/"
+        },
+        " by default. The flag ",
+        {
+         "t": "code",
+         "v": "--target-path"
+        },
+        " (or the environment variable ",
+        {
+         "t": "code",
+         "v": "DBT_TARGET_PATH"
+        },
+        ") writes everything somewhere else:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c5",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt parse --target-path target-ci -q\n$ ls target-ci\nmanifest.json\npartial_parse.msgpack\nperf_info.json\nsemantic_manifest.json"
+      },
+      {
+       "c": [
+        "This is useful when two runs must not overwrite each other's files, for example a CI job that keeps the production artifacts in one folder and writes its own artifacts in another."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Every command overwrites the artifacts of the previous one."
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "target/manifest.json"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "target/run_results.json"
+          },
+          " always describe the ",
+          {
+           "c": [
+            "last"
+           ],
+           "t": "i"
+          },
+          " command, not the last production run. If you want to keep the artifacts of a run (for example the production build), copy them to another folder right away, as you did with ",
+          {
+           "t": "code",
+           "v": "prod-artifacts/"
+          },
+          " in ",
+          {
+           "href": "/learn/ch23/",
+           "label": "ch:pipelines-clone",
+           "t": "ref",
+           "text": "Chapter 23"
+          },
+          ". And remember: ",
+          {
+           "t": "code",
+           "v": "catalog.json"
+          },
+          " comes only from ",
+          {
+           "t": "code",
+           "v": "dbt docs generate"
+          },
+          "; ",
+          {
+           "t": "code",
+           "v": "sources.json"
+          },
+          " only from ",
+          {
+           "t": "code",
+           "v": "dbt source freshness"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "In the ",
+          {
+           "c": [
+            "dbt platform"
+           ],
+           "t": "b"
+          },
+          ", every job run keeps its artifacts (you can download them from the ",
+          {
+           "c": [
+            "Artifacts"
+           ],
+           "t": "b"
+          },
+          " tab of the run). The platform uses them for you: Catalog shows the latest production state, CI jobs compare pull requests with the last successful production run, and the Studio IDE can defer to production. You almost never copy artifacts by hand there; with dbt Core, you do."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch24-s1-2",
+     "number": "24.1.2",
+     "title": [
+      "Choosing another folder: ",
+      {
+       "t": "code",
+       "v": "--target-path"
+      }
+     ],
+     "titleText": "Choosing another folder: --target-path"
+    }
+   ],
+   "title": [
+    "Artifacts: what dbt writes after each command"
+   ],
+   "titleText": "Artifacts: what dbt writes after each command"
+  },
+  {
+   "anchors": [
+    "sec-sdr-state"
+   ],
+   "checkpoints": [],
+   "id": "ch24-s2",
+   "label": "sec:sdr-state",
+   "labs": [
+    "ch24-lab1"
+   ],
+   "minutes": 20,
+   "number": "24.2",
+   "objectives": [
+    "7.1"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "In dbt, a ",
+        {
+         "en": [
+          "state"
+         ],
+         "fr": "état",
+         "id": "term-state",
+         "t": "term"
+        },
+        " is simply ",
+        {
+         "c": [
+          "a folder that contains the artifacts of an earlier run"
+         ],
+         "t": "b"
+        },
+        ", most of the time the ",
+        {
+         "t": "code",
+         "v": "manifest.json"
+        },
+        " of the last production build. You give the folder to dbt with ",
+        {
+         "t": "code",
+         "v": "--state <folder>"
+        },
+        " or with an environment variable. dbt 1.11 renamed the environment variables of its own flags with the prefix ",
+        {
+         "t": "code",
+         "v": "DBT_ENGINE_"
+        },
+        ": the 1.11 documentation calls this one ",
+        {
+         "t": "code",
+         "v": "DBT_ENGINE_STATE"
+        },
+        ", and the older name ",
+        {
+         "t": "code",
+         "v": "DBT_STATE"
+        },
+        " still works in 1.11.16 (if both are set, the ",
+        {
+         "t": "code",
+         "v": "DBT_ENGINE_"
+        },
+        " name wins). dbt then has two descriptions of the project side by side and can compare them node by node."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "How state comparison works. The state (the past: prod-artifacts/manifest.json, the last production build) and the current project (your files, parsed now, on your branch) go into a comparison, node by node, by unique ID. The comparison selects state:new, state:modified and state:old / unmodified.",
+       "id": "ch24-fig1",
+       "src": "figures/ch24-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "Two important consequences:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "State is ",
+            {
+             "c": [
+              "not Git"
+             ],
+             "t": "b"
+            },
+            ". dbt does not look at commits or branches. It compares two manifests (files on disk): it needs no connection to production, and ",
+            {
+             "t": "code",
+             "v": "dbt ls"
+            },
+            " does not even query the warehouse. If your state folder is old (production was rebuilt since), the comparison is against that old picture (see trap T140 in ",
+            {
+             "href": "/learn/ch27/",
+             "label": "ch:exam-strategy",
+             "t": "ref",
+             "text": "Chapter 27"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Without a state, a ",
+            {
+             "t": "code",
+             "v": "state:"
+            },
+            " selector cannot work:"
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "id": "ch24-c6",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt ls -s state:modified"
+      },
+      {
+       "id": "ch24-c7",
+       "lang": "output",
+       "t": "code",
+       "text": "22:16:17  Encountered an error:\nRuntime Error\n  Got a state selector method, but no comparison manifest"
+      },
+      {
+       "c": [
+        "(To save space, the outputs of this chapter often leave out the lines that every command prints first: ",
+        {
+         "t": "code",
+         "v": "Running with dbt=1.11.16"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "Registered adapter: duckdb=1.11.0"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "Found 15 models, …"
+        },
+        ".)"
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "With the environment variable, no flag is needed (",
+        {
+         "t": "code",
+         "v": "DBT_STATE"
+        },
+        " gave exactly the same output, without any warning):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c8",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ DBT_ENGINE_STATE=prod-artifacts dbt ls -s state:modified"
+      },
+      {
+       "id": "ch24-c9",
+       "lang": "output",
+       "t": "code",
+       "text": "...\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Where does the state come from? With dbt Core, ",
+          {
+           "c": [
+            "you"
+           ],
+           "t": "i"
+          },
+          " produce it: build production, then copy ",
+          {
+           "t": "code",
+           "v": "target/manifest.json"
+          },
+          " (and ",
+          {
+           "t": "code",
+           "v": "run_results.json"
+          },
+          ") to a folder such as ",
+          {
+           "t": "code",
+           "v": "prod-artifacts/"
+          },
+          ", or download it from wherever your production job stores it. In the dbt platform, the state is the manifest of the latest successful run in the environment you choose (normally Production)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " change one model on a branch and let dbt find it by comparison with production."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Go to the project and check that the production artifacts of ",
+          {
+           "href": "/learn/ch23/",
+           "label": "ch:pipelines-clone",
+           "t": "ref",
+           "text": "Chapter 23"
+          },
+          " are there:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c10",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ ls prod-artifacts\nmanifest.json\nrun_results.json"
+        },
+        {
+         "c": [
+          "If the folder is missing, rebuild production ",
+          {
+           "c": [
+            "before"
+           ],
+           "t": "i"
+          },
+          " changing any file: ",
+          {
+           "t": "code",
+           "v": "dbt build --target prod --exclude-resource-type unit_test"
+          },
+          ", then ",
+          {
+           "t": "code",
+           "v": "mkdir -p prod-artifacts && cp target/manifest.json target/run_results.json prod-artifacts/"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Add a third output to ",
+          {
+           "t": "code",
+           "v": "~/.dbt/profiles.yml"
+          },
+          ", between ",
+          {
+           "t": "code",
+           "v": "dev"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "prod"
+          },
+          ". It is an ",
+          {
+           "c": [
+            "empty"
+           ],
+           "t": "i"
+          },
+          " schema where you will check a change in isolation (",
+          {
+           "href": "/learn/ch25/",
+           "label": "ch:environments-ci",
+           "t": "ref",
+           "text": "Chapter 25"
+          },
+          " uses it for CI):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c11",
+         "lang": "yaml",
+         "t": "code",
+         "text": "    ci:\n      # an EMPTY schema used to check a change in isolation (Chapters 24-25)\n      type: duckdb\n      path: \"{{ env_var('DBT_DUCKDB_PATH', '../practice/practice.duckdb') }}\"\n      schema: dbt_ci\n      threads: 4",
+         "title": "~/.dbt/profiles.yml (new block under outputs:)"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Work on a branch, as a professional would (",
+          {
+           "href": "/learn/ch03/",
+           "label": "ch:git",
+           "t": "ref",
+           "text": "Chapter 3"
+          },
+          "):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c12",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git switch -c feature/average-order-value\nSwitched to a new branch 'feature/average-order-value'"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "models/marts/fct_monthly_revenue.sql"
+          },
+          ", add a column after ",
+          {
+           "t": "code",
+           "v": "revenue"
+          },
+          " (do not forget the comma):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c13",
+         "lang": "dbt",
+         "t": "code",
+         "text": "final as (\n\n    select\n        cast(date_trunc('month', order_date) as date) as order_month,\n        country,\n        count(*) as number_of_orders,\n        sum(paid_amount) as revenue,\n        round(sum(paid_amount) / count(*), 2) as average_order_value\n\n    from valid_orders\n    group by 1, 2\n\n)",
+         "title": "models/marts/fct_monthly_revenue.sql (the final CTE)"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Ask dbt what changed compared with production, then with the children:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c14",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt ls --select state:modified --state prod-artifacts\n$ dbt ls --select state:modified+ --state prod-artifacts"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6."
+           ],
+           "t": "b"
+          },
+          " Try two sub-selectors and ",
+          {
+           "t": "code",
+           "v": "state:new"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c15",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt ls --select state:modified.body --state prod-artifacts\n$ dbt ls --select state:modified.configs --state prod-artifacts\n$ dbt ls --select state:new --state prod-artifacts"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (the first lines of each command, ",
+          {
+           "t": "code",
+           "v": "Running with"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "Registered adapter"
+          },
+          ", are removed):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c16",
+         "lang": "output",
+         "t": "code",
+         "text": "$ dbt ls --select state:modified --state prod-artifacts\n21:38:43  Found 15 models, 2 analyses, 45 data tests, 1 seed, 2 snapshots, 5 sources, 2 exposures, 670 macros, 2 groups, 5 unit tests\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country\n\n$ dbt ls --select state:modified+ --state prod-artifacts\nexposure:jaffle_dbt.monthly_revenue_dashboard\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country\n\n$ dbt ls --select state:modified.body --state prod-artifacts\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country\n\n$ dbt ls --select state:modified.configs --state prod-artifacts\n21:38:51  The selection criterion 'state:modified.configs' does not match any enabled nodes\n21:38:51  No nodes selected!\n\n$ dbt ls --select state:new --state prod-artifacts\n21:38:54  The selection criterion 'state:new' does not match any enabled nodes\n21:38:54  No nodes selected!"
+        },
+        {
+         "c": [
+          "Read it line by line. Only ",
+          {
+           "t": "code",
+           "v": "fct_monthly_revenue"
+          },
+          " changed, and only its SQL (",
+          {
+           "t": "code",
+           "v": ".body"
+          },
+          "), not its configs. Its test appears because of indirect selection (",
+          {
+           "href": "/learn/ch16/",
+           "label": "ch:commands-selection",
+           "t": "ref",
+           "text": "Chapter 16"
+          },
+          "): when a model is selected, its tests come with it. With the ",
+          {
+           "t": "code",
+           "v": "+"
+          },
+          ", the exposure that depends on the model joins the list. Nothing is new: the model existed in production already."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch24-lab1",
+       "objectives": [
+        "7.1"
+       ],
+       "t": "lab",
+       "title": [
+        "Your first state comparison"
+       ]
+      }
+     ],
+     "id": "ch24-s2-0",
+     "title": [
+      "What \"state\" means"
+     ],
+     "titleText": "What \"state\" means"
+    }
+   ],
+   "title": [
+    "What \"state\" means"
+   ],
+   "titleText": "What \"state\" means"
+  },
+  {
+   "anchors": [
+    "sec-sdr-methods",
+    "sec-sdr-detect"
+   ],
+   "checkpoints": [],
+   "id": "ch24-s3",
+   "label": "sec:sdr-methods",
+   "labs": [
+    "ch24-lab2"
+   ],
+   "minutes": 25,
+   "number": "24.3",
+   "objectives": [
+    "7.1"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The method ",
+        {
+         "t": "code",
+         "v": "state:"
+        },
+        " has four values and six sub-selectors. Learn this table by heart."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Selector"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Selects"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "state:new"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Nodes whose unique ID does ",
+           {
+            "c": [
+             "not"
+            ],
+            "t": "i"
+           },
+           " exist in the state manifest (new files, renamed models)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "state:old"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Nodes whose unique ID ",
+           {
+            "c": [
+             "does"
+            ],
+            "t": "i"
+           },
+           " exist in the state manifest (changed or not)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "state:modified"
+           }
+          ]
+         },
+         {
+          "c": [
+           "All new nodes ",
+           {
+            "c": [
+             "plus"
+            ],
+            "t": "b"
+           },
+           " every existing node with a change."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "state:unmodified"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Existing nodes with no change."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "state:modified.body"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The body changed: the SQL (or Python) of a model, the values of a seed."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "state:modified.configs"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A config changed (",
+           {
+            "t": "code",
+            "v": "materialized"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "persist_docs"
+           },
+           ", hooks, ",
+           {
+            "t": "code",
+            "v": "contract"
+           },
+           "…). The documentation excludes ",
+           {
+            "t": "code",
+            "v": "database"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "schema"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "alias"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "tags"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "meta"
+           },
+           ". (In dbt 1.11.16, ",
+           {
+            "t": "code",
+            "v": "meta"
+           },
+           " ",
+           {
+            "c": [
+             "is"
+            ],
+            "t": "i"
+           },
+           " compared and ",
+           {
+            "t": "code",
+            "v": "group"
+           },
+           " is excluded: see the tip below.)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "state:modified.relation"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The configured ",
+           {
+            "t": "code",
+            "v": "database"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "schema"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "alias"
+           },
+           " changed (where the object is built)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "state:modified.persisted_descriptions"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A model or column description changed ",
+           {
+            "c": [
+             "and"
+            ],
+            "t": "i"
+           },
+           " ",
+           {
+            "t": "code",
+            "v": "persist_docs"
+           },
+           " is on for that level."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "state:modified.macros"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A macro used by the node changed, directly or through another macro."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "state:modified.contract"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The contract changed (columns, ",
+           {
+            "t": "code",
+            "v": "data_type"
+           },
+           "). A breaking change raises an error."
+          ]
+         }
+        ]
+       ],
+       "rules": [
+        4
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "The four values on our project, compared with production (models only, to keep the lists short):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c17",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt ls -s state:modified --state prod-artifacts --resource-type model\njaffle_dbt.marts.fct_monthly_revenue\n$ dbt ls -s state:new --state prod-artifacts --resource-type model\n22:20:20  The selection criterion 'state:new' does not match any enabled nodes\n22:20:20  No nodes selected!\n$ dbt ls -s state:unmodified --state prod-artifacts --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers.v1\n...\njaffle_dbt.staging.stripe.stg_stripe__payments"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "state:unmodified"
+        },
+        " returned the 14 other models and ",
+        {
+         "t": "code",
+         "v": "state:old"
+        },
+        " returned all 15: every model already exists in production."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "state:modified"
+            },
+            " includes the new nodes."
+           ],
+           "t": "b"
+          },
+          " Many candidates think it only means \"changed\". In fact ",
+          {
+           "t": "code",
+           "v": "state:modified"
+          },
+          " = new + changed, and ",
+          {
+           "t": "code",
+           "v": "state:new"
+          },
+          " = new only (trap T139 in ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          "). When we added a brand-new model ",
+          {
+           "t": "code",
+           "v": "fct_daily_revenue"
+          },
+          ", both selectors returned it:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c18",
+         "lang": "output",
+         "t": "code",
+         "text": "$ dbt ls -s state:new --state prod-artifacts --exclude fct_monthly_revenue\n21:40:03  Found 16 models, 1 seed, 45 data tests, 2 snapshots, 2 analyses, 5 sources, 2 exposures, 670 macros, 2 groups, 5 unit tests\njaffle_dbt.marts.fct_daily_revenue\n$ dbt ls -s state:modified --state prod-artifacts --exclude fct_monthly_revenue\njaffle_dbt.marts.fct_daily_revenue"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch24-s3-0",
+     "title": [
+      "The state selection method"
+     ],
+     "titleText": "The state selection method"
+    },
+    {
+     "anchor": "sec-sdr-detect",
+     "blocks": [
+      {
+       "c": [
+        "For each node that exists in both manifests, dbt compares several properties. The body is compared through the code itself (a ",
+        {
+         "en": [
+          "checksum"
+         ],
+         "fr": "somme de contrôle",
+         "id": "term-checksum",
+         "t": "term"
+        },
+        ", a short fingerprint of the file). The configs are compared ",
+        {
+         "c": [
+          "as you wrote them"
+         ],
+         "t": "b"
+        },
+        " (the \"unrendered\" value, with the Jinja still inside), not as they were rendered for one target. This is why your development manifest and the production manifest do not look different everywhere, although ",
+        {
+         "t": "code",
+         "v": "fct_monthly_revenue"
+        },
+        " is built in ",
+        {
+         "t": "code",
+         "v": "dbt_adnane"
+        },
+        " in dev and in ",
+        {
+         "t": "code",
+         "v": "marts"
+        },
+        " in prod, and gets grants only in prod (",
+        {
+         "href": "/learn/ch10/",
+         "label": "ch:configuration",
+         "t": "ref",
+         "text": "Chapter 10"
+        },
+        "):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c19",
+       "lang": "output",
+       "t": "code",
+       "text": "target/manifest.json (dev)\nschema: dbt_adnane | configured schema: marts\ngrants: {} | configured grants: {{ {'select': ['reporter']} if target.name == 'prod' else {} }}\nprod-artifacts/manifest.json (prod)\nschema: marts | configured schema: marts\ngrants: {'select': ['reporter']} | configured grants: {{ {'select': ['reporter']} if target.name == 'prod' else {} }}",
+       "title": "two fields of the node fct_monthly_revenue, in each manifest"
+      },
+      {
+       "c": [
+        "The rendered values differ (",
+        {
+         "t": "code",
+         "v": "dbt_adnane"
+        },
+        " versus ",
+        {
+         "t": "code",
+         "v": "marts"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "{}"
+        },
+        " versus a real grant), but the configured values are identical, so the node is ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " modified. This avoids ",
+        {
+         "en": [
+          "false positives"
+         ],
+         "fr": "faux positifs",
+         "id": "term-false-positive",
+         "t": "term"
+        },
+        ": nodes reported as changed only because the target is different."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Where the config is written matters. Configs set in ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        " (like our ",
+        {
+         "t": "code",
+         "v": "+schema"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "+grants"
+        },
+        ") and the ",
+        {
+         "t": "code",
+         "v": "database"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "schema"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "alias"
+        },
+        " keys are always compared as written. Configs set in a ",
+        {
+         "t": "code",
+         "v": "config()"
+        },
+        " block of a ",
+        {
+         "t": "code",
+         "v": ".sql"
+        },
+        " file or in a properties YAML file are compared as written only when the behaviour flag ",
+        {
+         "t": "code",
+         "v": "state_modified_compare_more_unrendered_values"
+        },
+        " is ",
+        {
+         "t": "code",
+         "v": "true"
+        },
+        ". It is ",
+        {
+         "t": "code",
+         "v": "false"
+        },
+        " by default in 1.11 (later versions turn it on); our ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        " sets it to ",
+        {
+         "t": "code",
+         "v": "true"
+        },
+        " since ",
+        {
+         "href": "/learn/ch22/",
+         "label": "ch:debugging",
+         "t": "ref",
+         "text": "Chapter 22"
+        },
+        ". We tested this line at the top of ",
+        {
+         "t": "code",
+         "v": "fct_order_items.sql"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c20",
+       "lang": "dbt",
+       "t": "code",
+       "text": "{{ config(materialized=('table' if target.name == 'prod' else 'view')) }}"
+      },
+      {
+       "c": [
+        "With the flag ",
+        {
+         "t": "code",
+         "v": "false"
+        },
+        ", comparing dev with a prod manifest selected ",
+        {
+         "t": "code",
+         "v": "fct_order_items"
+        },
+        " (a false positive); with the flag ",
+        {
+         "t": "code",
+         "v": "true"
+        },
+        ", nothing was selected. The state folder must be produced with the same setting (rebuild it after you change the flag)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch24-s3-1",
+     "number": "24.3.1",
+     "title": [
+      "How dbt decides that a node \"changed\""
+     ],
+     "titleText": "How dbt decides that a node \"changed\""
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "We tested every case below on our project, each change made alone and then reverted, always against ",
+        {
+         "t": "code",
+         "v": "prod-artifacts"
+        },
+        ". This table is worth a lot of exam points."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Change"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "state:modified"
+             },
+             "?"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Sub-selector that sees it / remark"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "SQL of a model (new column)"
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".body"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "materialized: view"
+           },
+           " added in a properties file"
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".configs"
+           },
+           " only (not ",
+           {
+            "t": "code",
+            "v": ".body"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "tags"
+           },
+           " changed (",
+           {
+            "t": "code",
+            "v": "['finance']"
+           },
+           " → ",
+           {
+            "t": "code",
+            "v": "['finance', 'daily']"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "no"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           "tags are metadata"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "group"
+           },
+           " changed (",
+           {
+            "t": "code",
+            "v": "finance"
+           },
+           " → ",
+           {
+            "t": "code",
+            "v": "marketing"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "no"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           "excluded in 1.11.16 (the docs differ: see the tip)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "meta"
+           },
+           " changed in ",
+           {
+            "t": "code",
+            "v": "dbt_project.yml"
+           },
+           " or in a model ",
+           {
+            "t": "code",
+            "v": "config:"
+           }
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".configs"
+           },
+           " (the docs say no: see the tip)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "meta"
+           },
+           " added to a ",
+           {
+            "c": [
+             "column"
+            ],
+            "t": "i"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "no"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           "columns are not compared (except contract and persisted descriptions)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "alias"
+           },
+           " set in the YAML ",
+           {
+            "t": "code",
+            "v": "config:"
+           }
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".relation"
+           },
+           " only (not ",
+           {
+            "t": "code",
+            "v": ".configs"
+           },
+           ", not ",
+           {
+            "t": "code",
+            "v": ".body"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "alias"
+           },
+           " set with ",
+           {
+            "t": "code",
+            "v": "{{ config(alias=...) }}"
+           },
+           " in the SQL"
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".relation"
+           },
+           " ",
+           {
+            "c": [
+             "and"
+            ],
+            "t": "b"
+           },
+           " ",
+           {
+            "t": "code",
+            "v": ".body"
+           },
+           " (the file changed)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "+schema: marts"
+           },
+           " → ",
+           {
+            "t": "code",
+            "v": "+schema: analytics"
+           }
+          ]
+         },
+         {
+          "c": [
+           "yes, all marts"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".relation"
+           },
+           " only"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Model description, ",
+           {
+            "t": "code",
+            "v": "persist_docs"
+           },
+           " on (marts)"
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".persisted_descriptions"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Model description, no ",
+           {
+            "t": "code",
+            "v": "persist_docs"
+           },
+           " (staging)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "no"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           "documentation only"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "A macro (",
+           {
+            "t": "code",
+            "v": "cents_to_dollars"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "yes, every model using it"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".macros"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Seed value in ",
+           {
+            "t": "code",
+            "v": "country_regions.csv"
+           }
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".body"
+           },
+           " (seeds under 1 MiB are hashed)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Source ",
+           {
+            "t": "code",
+            "v": "warn_after"
+           },
+           " (freshness)"
+          ]
+         },
+         {
+          "c": [
+           "yes, the source"
+          ]
+         },
+         {
+          "c": [
+           "also ",
+           {
+            "t": "code",
+            "v": ".configs"
+           },
+           " (our freshness is under ",
+           {
+            "t": "code",
+            "v": "config:"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Source description"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "no"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": []
+         }
+        ],
+        [
+         {
+          "c": [
+           "A properties YAML file renamed"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "no"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           "dbt compares nodes, not file names"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "A ",
+           {
+            "t": "code",
+            "v": "var"
+           },
+           " value in ",
+           {
+            "t": "code",
+            "v": "dbt_project.yml"
+           },
+           ", or ",
+           {
+            "t": "code",
+            "v": "--vars"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "no"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           "even when the compiled SQL changes"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "The value of an environment variable read with ",
+           {
+            "t": "code",
+            "v": "env_var()"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "no"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           "even when the compiled SQL changes"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Contract: a column removed"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "error"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           "\"Breaking change to contract\" (below)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Contract: a column added"
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".contract"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Here are two of these runs. First, the alias set in the YAML file of ",
+        {
+         "t": "code",
+         "v": "fct_order_items"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c21",
+       "lang": "output",
+       "t": "code",
+       "text": "$ dbt ls -s state:modified.relation --state prod-artifacts --resource-type model --exclude fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\n$ dbt ls -s state:modified.body --state prod-artifacts --resource-type model --exclude fct_monthly_revenue\n22:21:18  No nodes selected!\n$ dbt ls -s state:modified.configs --state prod-artifacts --resource-type model --exclude fct_monthly_revenue\n22:21:21  The selection criterion 'state:modified.configs' does not match any enabled nodes\n22:21:21  No nodes selected!"
+      },
+      {
+       "c": [
+        "Second, an environment variable used inside a model (",
+        {
+         "t": "code",
+         "v": "-- demo: {{ env_var('DBT_DEMO_LABEL', 'none') }}"
+        },
+        "), with a state saved before the value changed:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c22",
+       "lang": "output",
+       "t": "code",
+       "text": "$ DBT_DEMO_LABEL=changed dbt ls -s state:modified --state demo-state\n22:22:34  The selection criterion 'state:modified' does not match any enabled nodes\n22:22:34  No nodes selected!\n$ DBT_DEMO_LABEL=changed dbt compile -s stg_jaffle_shop__products | grep demo\n-- demo: changed"
+      },
+      {
+       "c": [
+        "The compiled SQL is different, but ",
+        {
+         "t": "code",
+         "v": "state:modified"
+        },
+        " sees nothing: it compares the code as written, and the code did not change. This is a ",
+        {
+         "en": [
+          "false negative"
+         ],
+         "fr": "faux négatif",
+         "id": "term-false-negative",
+         "t": "term"
+        },
+        ": a real change that state selection misses."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Four classic \"not detected\" cases."
+           ],
+           "t": "b"
+          },
+          " (1) ",
+          {
+           "t": "code",
+           "v": "tags"
+          },
+          " changes are never modifications (the documentation says the same of ",
+          {
+           "t": "code",
+           "v": "meta"
+          },
+          "; see the tip below). (2) A description change counts only when ",
+          {
+           "t": "code",
+           "v": "persist_docs"
+          },
+          " writes that description into the warehouse. (3) A new value of a ",
+          {
+           "t": "code",
+           "v": "var"
+          },
+          " or of an ",
+          {
+           "t": "code",
+           "v": "env_var"
+          },
+          " is not detected: if a deployment depends on a variable, do not rely on ",
+          {
+           "t": "code",
+           "v": "state:modified"
+          },
+          " to rebuild it. (4) ",
+          {
+           "t": "code",
+           "v": "alias"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "schema"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "database"
+          },
+          " are ",
+          {
+           "c": [
+            "not"
+           ],
+           "t": "i"
+          },
+          " in ",
+          {
+           "t": "code",
+           "v": ".configs"
+          },
+          ": they have their own sub-selector, ",
+          {
+           "t": "code",
+           "v": ".relation"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "meta"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "group"
+            },
+            ": the documentation and dbt 1.11.16 disagree."
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "The documentation"
+               ],
+               "t": "b"
+              },
+              " says that ",
+              {
+               "t": "code",
+               "v": "tags"
+              },
+              " and ",
+              {
+               "t": "code",
+               "v": "meta"
+              },
+              " are metadata: changing them (on the resource or on a column) never triggers ",
+              {
+               "t": "code",
+               "v": "state:modified"
+              },
+              ", and ",
+              {
+               "t": "code",
+               "v": ".configs"
+              },
+              " excludes them. About ",
+              {
+               "t": "code",
+               "v": "group"
+              },
+              ", it says the opposite: ",
+              {
+               "t": "code",
+               "v": "group"
+              },
+              " is a config, so a group change can flag the nodes as modified."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Our tests with dbt Core 1.11.16"
+               ],
+               "t": "b"
+              },
+              " (and its source code) give: ",
+              {
+               "t": "code",
+               "v": "tags"
+              },
+              " never selected; a ",
+              {
+               "t": "code",
+               "v": "meta"
+              },
+              " change in a model config or in ",
+              {
+               "t": "code",
+               "v": "dbt_project.yml"
+              },
+              " ",
+              {
+               "c": [
+                "selected"
+               ],
+               "t": "i"
+              },
+              " by ",
+              {
+               "t": "code",
+               "v": "state:modified.configs"
+              },
+              " (",
+              {
+               "t": "code",
+               "v": "owner: analytics-engineering"
+              },
+              " → ",
+              {
+               "t": "code",
+               "v": "owner: analytics-team"
+              },
+              " selected the three marts that do not override ",
+              {
+               "t": "code",
+               "v": "owner"
+              },
+              "); column-level ",
+              {
+               "t": "code",
+               "v": "meta"
+              },
+              " not selected; a ",
+              {
+               "t": "code",
+               "v": "group"
+              },
+              " change ",
+              {
+               "c": [
+                "not"
+               ],
+               "t": "i"
+              },
+              " selected."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "For the exam"
+               ],
+               "t": "b"
+              },
+              ", answer with the documentation: ",
+              {
+               "t": "code",
+               "v": "tags"
+              },
+              " and ",
+              {
+               "t": "code",
+               "v": "meta"
+              },
+              " are the changes that ",
+              {
+               "t": "code",
+               "v": "state:modified"
+              },
+              " ignores (",
+              {
+               "t": "code",
+               "v": "tags"
+              },
+              " is the safest example of \"not detected\"), and do not use ",
+              {
+               "t": "code",
+               "v": "group"
+              },
+              " as an example of either case. In real work, check with ",
+              {
+               "t": "code",
+               "v": "dbt ls"
+              },
+              " before you trust a rule."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ul",
+         "t": "list"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch24-s3-2",
+     "number": "24.3.2",
+     "title": [
+      "What is detected and what is not"
+     ],
+     "titleText": "What is detected and what is not"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "href": "/learn/ch17/",
+         "label": "ch:governance",
+         "t": "ref",
+         "text": "Chapter 17"
+        },
+        " put an enforced contract on ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        ". State comparison knows the previous contract, so it can warn you before you break your consumers. Removing the column ",
+        {
+         "t": "code",
+         "v": "email"
+        },
+        " from version 2 gave this, for ",
+        {
+         "t": "code",
+         "v": "dbt ls"
+        },
+        " and for ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " alike:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c23",
+       "lang": "output",
+       "t": "code",
+       "text": "$ dbt ls --select state:modified.contract --state prod-artifacts\n21:40:31  Encountered an error:\nBreaking change to contract Error in model dim_customers (models/marts/dim_customers_v2.sql)\n  While comparing to previous project state, dbt detected a breaking change to an enforced contract.\n    - Columns were removed:\n      - email\n  Consider making an additive (non-breaking) change instead, if possible.\n  Otherwise, create a new model version: https://docs.getdbt.com/docs/collaborate/govern/model-versions"
+      },
+      {
+       "c": [
+        "(exit code 2.) Adding a column (",
+        {
+         "t": "code",
+         "v": "loyalty_points"
+        },
+        ") is not breaking: ",
+        {
+         "t": "code",
+         "v": "state:modified.contract"
+        },
+        " simply selects ",
+        {
+         "t": "code",
+         "v": "dim_customers.v2"
+        },
+        ", its test and its unit test."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Other details we checked."
+           ],
+           "t": "b"
+          },
+          " Moving a model file to another folder changes its ",
+          {
+           "t": "code",
+           "v": "fqn"
+          },
+          " (fully qualified name): the model is ",
+          {
+           "t": "code",
+           "v": "state:modified"
+          },
+          ", but no sub-selector selects it. A ",
+          {
+           "c": [
+            "new"
+           ],
+           "t": "i"
+          },
+          " model is selected by ",
+          {
+           "t": "code",
+           "v": "state:new"
+          },
+          ", by ",
+          {
+           "t": "code",
+           "v": "state:modified"
+          },
+          " and also by ",
+          {
+           "t": "code",
+           "v": ".body"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": ".configs"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": ".relation"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": ".persisted_descriptions"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": ".contract"
+          },
+          " (by ",
+          {
+           "t": "code",
+           "v": ".macros"
+          },
+          " only if it calls a changed macro). A deleted model is never selected (there is nothing left to build), and dbt does not drop its relation for you. ",
+          {
+           "t": "code",
+           "v": "state:modified"
+          },
+          " also includes ",
+          {
+           "c": [
+            "unit tests"
+           ],
+           "t": "i"
+          },
+          " whose definition changed and data tests that are new or changed."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "deep",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " see with your own eyes which change each sub-selector catches. Keep your ",
+          {
+           "t": "code",
+           "v": "fct_monthly_revenue"
+          },
+          " change; every command below excludes it with ",
+          {
+           "t": "code",
+           "v": "--exclude fct_monthly_revenue"
+          },
+          " so you only see the demo. ",
+          {
+           "c": [
+            "Revert each demo before the next one."
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Demo A: a config."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "models/marts/_marts__models.yml"
+          },
+          ", in the ",
+          {
+           "t": "code",
+           "v": "config:"
+          },
+          " block of ",
+          {
+           "t": "code",
+           "v": "fct_order_items"
+          },
+          ", add the line ",
+          {
+           "t": "code",
+           "v": "materialized: view"
+          },
+          " (same indentation as ",
+          {
+           "t": "code",
+           "v": "group:"
+          },
+          "). Run:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c24",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt ls -s state:modified.configs --state prod-artifacts --exclude fct_monthly_revenue\n$ dbt ls -s state:modified.body --state prod-artifacts --exclude fct_monthly_revenue\n$ git checkout -- models/marts/_marts__models.yml"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Demo B: a tag."
+           ],
+           "t": "b"
+          },
+          " In the same block of ",
+          {
+           "t": "code",
+           "v": "fct_order_items"
+          },
+          ", change ",
+          {
+           "t": "code",
+           "v": "tags: ['finance']"
+          },
+          " to ",
+          {
+           "t": "code",
+           "v": "tags: ['finance', 'daily']"
+          },
+          ". Run ",
+          {
+           "t": "code",
+           "v": "dbt ls -s state:modified --state prod-artifacts --exclude fct_monthly_revenue"
+          },
+          ", then revert with ",
+          {
+           "t": "code",
+           "v": "git checkout"
+          },
+          " as above."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Demo C: a persisted description."
+           ],
+           "t": "b"
+          },
+          " Change the description of ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " to ",
+          {
+           "t": "code",
+           "v": "One row per order, with the amount paid (only successful payments)."
+          },
+          " Run ",
+          {
+           "t": "code",
+           "v": "state:modified"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "state:modified.persisted_descriptions"
+          },
+          " (same flags), then revert."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Demo D: a macro."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "macros/cents_to_dollars.sql"
+          },
+          ", change ",
+          {
+           "t": "code",
+           "v": "/ 100"
+          },
+          " to ",
+          {
+           "t": "code",
+           "v": "/ 100.0"
+          },
+          ". Run ",
+          {
+           "t": "code",
+           "v": "state:modified"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "state:modified.macros"
+          },
+          ", then ",
+          {
+           "t": "code",
+           "v": "git checkout -- macros/cents_to_dollars.sql"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (only the selected nodes are shown):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c25",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "Demo A, state:modified.configs:\njaffle_dbt.marts.fct_order_items\njaffle_dbt.assert_paid_orders_match_items\njaffle_dbt.marts.dbt_utils_accepted_range_fct_order_items_quantity__10__1\njaffle_dbt.marts.dbt_utils_expression_is_true_fct_order_items_line_amount_quantity_unit_price\njaffle_dbt.marts.dbt_utils_unique_combination_of_columns_fct_order_items_order_id__product_id\njaffle_dbt.marts.not_null_fct_order_items_order_item_key\njaffle_dbt.marts.unique_fct_order_items_order_item_key\nDemo A, state:modified.body:\n21:39:29  No nodes selected!\n\nDemo B, state:modified:\n21:39:33  No nodes selected!\n\nDemo C, state:modified and state:modified.persisted_descriptions (same list):\njaffle_dbt.marts.fct_orders\njaffle_dbt.assert_paid_orders_match_items\njaffle_dbt.assert_payments_match_order_totals\njaffle_dbt.marts.is_positive_fct_orders_True__amount\njaffle_dbt.marts.not_null_fct_orders_order_id\njaffle_dbt.marts.unique_fct_orders_order_id\nunit_test:jaffle_dbt.test_fct_orders_full_refresh_keeps_all_rows\nunit_test:jaffle_dbt.test_fct_orders_incremental_keeps_only_new_rows\n\nDemo D, state:modified and state:modified.macros (same list):\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products\njaffle_dbt.staging.stripe.stg_stripe__payments\n...\njaffle_dbt.assert_payments_match_order_totals\njaffle_dbt.staging.jaffle_shop.is_positive_stg_jaffle_shop__products_price\njaffle_dbt.staging.stripe.is_positive_stg_stripe__payments_amount\n...\nunit_test:jaffle_dbt.test_stg_stripe__payments_cents_to_dollars"
+        },
+        {
+         "c": [
+          "In Demo D, both staging models that call the macro are selected, although their own files did not change. Finish with ",
+          {
+           "t": "code",
+           "v": "git status --short"
+          },
+          ": only ",
+          {
+           "t": "code",
+           "v": "models/marts/fct_monthly_revenue.sql"
+          },
+          " must be modified."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch24-lab2",
+       "objectives": [
+        "7.1"
+       ],
+       "t": "lab",
+       "title": [
+        "The sub-selectors, one change at a time"
+       ]
+      }
+     ],
+     "id": "ch24-s3-3",
+     "number": "24.3.3",
+     "title": [
+      "Contracts: a breaking change stops the command"
+     ],
+     "titleText": "Contracts: a breaking change stops the command"
+    }
+   ],
+   "title": [
+    "The state selection method"
+   ],
+   "titleText": "The state selection method"
+  },
+  {
+   "anchors": [
+    "sec-sdr-plus"
+   ],
+   "checkpoints": [],
+   "id": "ch24-s4",
+   "label": "sec:sdr-plus",
+   "labs": [],
+   "minutes": 5,
+   "number": "24.4",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "When you change a model, you can break its ",
+        {
+         "c": [
+          "children"
+         ],
+         "t": "i"
+        },
+        ": a column they read may be gone, a type may be different, a business rule may now give other numbers. So you build the changed nodes ",
+        {
+         "c": [
+          "and everything downstream"
+         ],
+         "t": "b"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "state:modified+"
+        },
+        ". A change upstream can make the list long. In our test, changing the freshness rule of the source ",
+        {
+         "t": "code",
+         "v": "jaffle_shop.orders"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "warn_after"
+        },
+        " 12 → 6 hours) gave:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c26",
+       "lang": "output",
+       "t": "code",
+       "text": "$ dbt ls -s state:modified --state prod-artifacts --exclude fct_monthly_revenue\nsource:jaffle_dbt.jaffle_shop.orders\njaffle_dbt.staging.jaffle_shop.source_not_null_jaffle_shop_orders_id\njaffle_dbt.staging.jaffle_shop.source_unique_jaffle_shop_orders_id\n$ dbt ls -s state:modified+ --state prod-artifacts --exclude fct_monthly_revenue --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers.v1\njaffle_dbt.marts.dim_customers.v2\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders"
+      },
+      {
+       "c": [
+        "What about the ",
+        {
+         "c": [
+          "parents"
+         ],
+         "t": "i"
+        },
+        " of the changed models? In an empty schema they do not exist. You could build them too (",
+        {
+         "t": "code",
+         "v": "+state:modified+"
+        },
+        ", or ",
+        {
+         "t": "code",
+         "v": "@state:modified"
+        },
+        " from ",
+        {
+         "href": "/learn/ch16/",
+         "label": "ch:commands-selection",
+         "t": "ref",
+         "text": "Chapter 16"
+        },
+        "), but that rebuilds a lot of unchanged work. The better answer is ",
+        {
+         "t": "code",
+         "v": "--defer"
+        },
+        " (",
+        {
+         "href": "/learn/ch24/ch24-s6/",
+         "label": "sec:sdr-defer",
+         "t": "ref",
+         "text": "Section 24.6"
+        },
+        "): parents that you do not build are read from production."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "state:modified"
+            },
+            " in a scheduled production job."
+           ],
+           "t": "b"
+          },
+          " State selection detects ",
+          {
+           "c": [
+            "code"
+           ],
+           "t": "i"
+          },
+          " changes, never new ",
+          {
+           "c": [
+            "data"
+           ],
+           "t": "i"
+          },
+          ". A nightly job with ",
+          {
+           "t": "code",
+           "v": "--select state:modified+"
+          },
+          " that defers to its own last run builds nothing on a night without code changes, and still ends \"successfully\". Use state selection for CI and merge jobs; a job that must refresh data selects the models normally."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch24-s4-0",
+     "title": [
+      "Why ",
+      {
+       "t": "code",
+       "v": "state:modified+"
+      },
+      " and not just ",
+      {
+       "t": "code",
+       "v": "state:modified"
+      }
+     ],
+     "titleText": "Why state:modified+ and not just state:modified"
+    }
+   ],
+   "title": [
+    "Why ",
+    {
+     "t": "code",
+     "v": "state:modified+"
+    },
+    " and not just ",
+    {
+     "t": "code",
+     "v": "state:modified"
+    }
+   ],
+   "titleText": "Why state:modified+ and not just state:modified"
+  },
+  {
+   "anchors": [
+    "sec-sdr-result"
+   ],
+   "checkpoints": [],
+   "id": "ch24-s5",
+   "label": "sec:sdr-result",
+   "labs": [],
+   "minutes": 10,
+   "number": "24.5",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The method ",
+        {
+         "t": "code",
+         "v": "result:<status>"
+        },
+        " reads the ",
+        {
+         "t": "code",
+         "v": "run_results.json"
+        },
+        " of the state folder and selects the nodes that ended with that status. Typical uses after a failed run: ",
+        {
+         "t": "code",
+         "v": "result:error"
+        },
+        " (what errored), ",
+        {
+         "t": "code",
+         "v": "result:error+"
+        },
+        " (what errored and everything after it), ",
+        {
+         "t": "code",
+         "v": "result:fail"
+        },
+        " (failed tests), ",
+        {
+         "t": "code",
+         "v": "result:skipped"
+        },
+        ". It is the manual ancestor of ",
+        {
+         "t": "code",
+         "v": "dbt retry"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Let's break the project on purpose. In ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__products.sql"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "category"
+        },
+        " becomes ",
+        {
+         "t": "code",
+         "v": "categoryy as category"
+        },
+        " (a typo), then:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c27",
+       "lang": "output",
+       "t": "code",
+       "text": "$ dbt build --exclude-resource-type unit_test\n...\n21:41:34  19 of 64 ERROR creating sql view model dbt_adnane.stg_jaffle_shop__products .... [ERROR in 0.06s]\n...\n21:41:34  31 of 64 SKIP test is_positive_stg_jaffle_shop__products_price ................. [SKIP]\n...\n21:41:34  39 of 64 SKIP relation dbt_adnane.fct_order_items .............................. [SKIP]\n...\n21:41:34  45 of 64 SKIP relation dbt_adnane.fct_order_items_daily ........................ [SKIP]\n...\n21:41:35    Runtime Error in model stg_jaffle_shop__products (models/staging/jaffle_shop/stg_jaffle_shop__products.sql)\n  Binder Error: Referenced column \"categoryy\" not found in FROM clause!\n  Candidate bindings: \"category\", \"name\"\n...\n21:41:35  Done. PASS=49 WARN=1 ERROR=1 SKIP=11 NO-OP=2 TOTAL=64"
+      },
+      {
+       "c": [
+        "(DuckDB reports the SQL problem as a ",
+        {
+         "c": [
+          "Runtime Error … Binder Error"
+         ],
+         "t": "i"
+        },
+        "; Snowflake or BigQuery would say ",
+        {
+         "c": [
+          "Database Error"
+         ],
+         "t": "i"
+        },
+        ".)"
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The statuses saved in ",
+        {
+         "t": "code",
+         "v": "target/run_results.json"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c28",
+       "lang": "output",
+       "t": "code",
+       "text": "build Counter({'pass': 35, 'success': 14, 'skipped': 11, 'no-op': 2, 'error': 1, 'warn': 1})\nmodel.jaffle_dbt.stg_jaffle_shop__products error\ntest.jaffle_dbt.is_positive_stg_jaffle_shop__products_price.e025692b64 skipped\n...\nmodel.jaffle_dbt.fct_order_items skipped\n...\nmodel.jaffle_dbt.fct_order_items_daily skipped\ntest.jaffle_dbt.assert_paid_orders_match_items skipped"
+      },
+      {
+       "c": [
+        "Now copy the run results with the manifest to a folder and select from them:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c29",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ mkdir -p ../last_run && cp target/run_results.json target/manifest.json ../last_run/\n$ dbt ls --select result:error --state ../last_run\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products\njaffle_dbt.staging.jaffle_shop.is_positive_stg_jaffle_shop__products_price\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__products_product_id\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__products_product_id\n$ dbt ls --select result:error+ --state ../last_run --resource-type model\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products\n$ dbt ls --select result:skipped --state ../last_run --resource-type model\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily"
+      },
+      {
+       "c": [
+        "(The three tests in the first list come from indirect selection: they were ",
+        {
+         "c": [
+          "skipped"
+         ],
+         "t": "i"
+        },
+        ", not in error, but they test the selected model.) After the fix, ",
+        {
+         "t": "code",
+         "v": "dbt build --select result:error+ --state ../last_run"
+        },
+        " would rebuild exactly the broken model and its descendants."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The other statuses work the same way. After a normal, successful dev build (whose only problem is the expected warning on order 159), copied again to ",
+        {
+         "t": "code",
+         "v": "../last_run"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c30",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "$ dbt ls -s result:warn --state ../last_run\njaffle_dbt.staging.jaffle_shop.relationships_stg_jaffle_shop__orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_\n$ dbt ls -s result:success --state ../last_run --resource-type seed --resource-type snapshot\njaffle_dbt.country_regions\njaffle_dbt.customers_snapshot\njaffle_dbt.orders_snapshot"
+      },
+      {
+       "c": [
+        "(Models, seeds and snapshots succeed with ",
+        {
+         "t": "code",
+         "v": "success"
+        },
+        "; tests succeed with ",
+        {
+         "t": "code",
+         "v": "pass"
+        },
+        ", so ",
+        {
+         "t": "code",
+         "v": "result:pass"
+        },
+        " is the selector for them.)"
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "You can also point ",
+          {
+           "t": "code",
+           "v": "--state"
+          },
+          " directly at ",
+          {
+           "t": "code",
+           "v": "target"
+          },
+          ". It works, but dbt warns you, because the next command will overwrite the files it reads:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c31",
+         "lang": "output",
+         "t": "code",
+         "text": "$ dbt ls -s result:fail --state target\n22:23:48  Warning: The state and target directories are the same: 'target'. This could lead to missing changes due to overwritten state including non-idempotent retries."
+        },
+        {
+         "c": [
+          "A separate folder (",
+          {
+           "t": "code",
+           "v": "../last_run"
+          },
+          ") avoids the problem. Never use the same folder for ",
+          {
+           "t": "code",
+           "v": "--state"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "--target-path"
+          },
+          " with ",
+          {
+           "t": "code",
+           "v": "state:modified"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "--defer"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch24-s5-0",
+     "title": [
+      "Result selectors: re-running what failed"
+     ],
+     "titleText": "Result selectors: re-running what failed"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A failing ",
+        {
+         "c": [
+          "test"
+         ],
+         "t": "i"
+        },
+        " does not end with ",
+        {
+         "t": "code",
+         "v": "error"
+        },
+        ": its status is ",
+        {
+         "t": "code",
+         "v": "fail"
+        },
+        ". To see it, we added a singular test that fails on purpose (",
+        {
+         "t": "code",
+         "v": "select … from {{ ref('stg_jaffle_shop__products') }} where price > 0"
+        },
+        ") and ran ",
+        {
+         "t": "code",
+         "v": "dbt build -s stg_jaffle_shop__products+"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c32",
+       "lang": "output",
+       "t": "code",
+       "text": "22:23:39  2 of 13 FAIL 12 assert_products_have_no_price .................................. [FAIL 12 in 0.04s]\n22:23:39  6 of 13 SKIP relation dbt_adnane.fct_order_items ............................... [SKIP]\n...\n22:23:39  13 of 13 SKIP relation dbt_adnane.fct_order_items_daily ........................ [SKIP]\n22:23:39  Completed with 1 error, 0 partial successes, and 0 warnings:\n22:23:39  Done. PASS=4 WARN=0 ERROR=1 SKIP=8 NO-OP=0 TOTAL=13"
+      },
+      {
+       "c": [
+        "The summary line says ",
+        {
+         "t": "code",
+         "v": "ERROR=1"
+        },
+        ", but in ",
+        {
+         "t": "code",
+         "v": "run_results.json"
+        },
+        " the test is ",
+        {
+         "t": "code",
+         "v": "fail"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "Counter({'skipped': 8, 'pass': 3, 'success': 1, 'fail': 1})"
+        },
+        "). So:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c33",
+       "lang": "output",
+       "t": "code",
+       "text": "$ dbt ls -s result:error+ --state target\n22:23:45  The selection criterion 'result:error+' does not match any enabled nodes\n22:23:45  No nodes selected!\n$ dbt ls -s result:fail --state target\njaffle_dbt.assert_products_have_no_price\n$ dbt ls -s 1+result:fail+ --state target --resource-type model\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products\n$ dbt ls -s result:fail result:skipped --state target --resource-type model --resource-type test\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.assert_paid_orders_match_items\njaffle_dbt.assert_products_have_no_price\n..."
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "1+result:fail"
+        },
+        " adds the model the test checks. The ",
+        {
+         "t": "code",
+         "v": "+"
+        },
+        " after a test adds nothing, because a test has no children in the DAG; the skipped models must be added with ",
+        {
+         "t": "code",
+         "v": "result:skipped"
+        },
+        ". Or, much simpler, use ",
+        {
+         "t": "code",
+         "v": "dbt retry"
+        },
+        " (",
+        {
+         "href": "/learn/ch24/ch24-s8/",
+         "label": "sec:sdr-retry",
+         "t": "ref",
+         "text": "Section 24.8"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "1+result:fail+"
+            },
+            ": what the documentation says and what dbt 1.11.16 does."
+           ],
+           "t": "b"
+          },
+          " The documentation states that ",
+          {
+           "t": "code",
+           "v": "result:fail+"
+          },
+          " returns only the failed test (tests have no downstream nodes). In the same section, its example presents ",
+          {
+           "t": "code",
+           "v": "dbt build --select \"1+result:fail+\""
+          },
+          " as re-running the models of the failed tests ",
+          {
+           "c": [
+            "and all their downstream dependencies"
+           ],
+           "t": "i"
+          },
+          ". In our runs, the last ",
+          {
+           "t": "code",
+           "v": "+"
+          },
+          " added nothing, with ",
+          {
+           "t": "code",
+           "v": "dbt ls"
+          },
+          " and with ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          ": the build ran 5 nodes (",
+          {
+           "t": "code",
+           "v": "stg_jaffle_shop__products"
+          },
+          " and its 4 tests), and the skipped ",
+          {
+           "t": "code",
+           "v": "fct_order_items"
+          },
+          " was not among them. ",
+          {
+           "c": [
+            "For the exam:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "result:fail"
+          },
+          " selects failed tests only; ",
+          {
+           "t": "code",
+           "v": "1+result:fail"
+          },
+          " selects the models those tests check; if a question describes ",
+          {
+           "t": "code",
+           "v": "1+result:fail+"
+          },
+          " as \"the models of the failed tests and everything downstream\", that is the documentation's own description, so accept it. In practice, add ",
+          {
+           "t": "code",
+           "v": "result:skipped"
+          },
+          " or use ",
+          {
+           "t": "code",
+           "v": "dbt retry"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "State and result selectors can be combined in one selection (a space means ",
+        {
+         "c": [
+          "union"
+         ],
+         "t": "i"
+        },
+        "), for example in a CI job that re-runs what changed plus what failed in its previous run: ",
+        {
+         "t": "code",
+         "v": "dbt build --select state:modified+ result:error+ result:fail+ --defer --state <folder>"
+        },
+        ". The folder must then hold ",
+        {
+         "c": [
+          "both"
+         ],
+         "t": "i"
+        },
+        " the ",
+        {
+         "t": "code",
+         "v": "manifest.json"
+        },
+        " and the ",
+        {
+         "t": "code",
+         "v": "run_results.json"
+        },
+        " of that previous run (we checked that ",
+        {
+         "t": "code",
+         "v": "dbt ls"
+        },
+        " accepts this union)."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "result:error"
+            },
+            " versus ",
+            {
+             "t": "code",
+             "v": "result:fail"
+            },
+            "."
+           ],
+           "t": "b"
+          },
+          " Models that break are ",
+          {
+           "t": "code",
+           "v": "error"
+          },
+          "; tests that find bad rows are ",
+          {
+           "t": "code",
+           "v": "fail"
+          },
+          " (a test whose SQL itself breaks is ",
+          {
+           "t": "code",
+           "v": "error"
+          },
+          "). The ",
+          {
+           "t": "code",
+           "v": "Done."
+          },
+          " line counts failed tests under ",
+          {
+           "t": "code",
+           "v": "ERROR"
+          },
+          ", which fools many people. After a build where only a test failed, ",
+          {
+           "t": "code",
+           "v": "result:error+"
+          },
+          " selects nothing. Remember also that ",
+          {
+           "t": "code",
+           "v": "result:"
+          },
+          " reads ",
+          {
+           "t": "code",
+           "v": "run_results.json"
+          },
+          " from the ",
+          {
+           "t": "code",
+           "v": "--state"
+          },
+          " folder: without ",
+          {
+           "t": "code",
+           "v": "--state"
+          },
+          ", it cannot work (trap T144)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch24-s5-1",
+     "number": "24.5.1",
+     "title": [
+      "Why ",
+      {
+       "t": "code",
+       "v": "result:error+"
+      },
+      " misses a failed test"
+     ],
+     "titleText": "Why result:error+ misses a failed test"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The third selection method of Topic 7 reads ",
+        {
+         "t": "code",
+         "v": "sources.json"
+        },
+        " (",
+        {
+         "href": "/learn/ch21/",
+         "label": "ch:freshness-exposures",
+         "t": "ref",
+         "text": "Chapter 21"
+        },
+        "). It needs two freshness runs: an old ",
+        {
+         "t": "code",
+         "v": "sources.json"
+        },
+        " in the state folder and a new one in ",
+        {
+         "t": "code",
+         "v": "target/"
+        },
+        ". ",
+        {
+         "t": "code",
+         "v": "source_status:fresher"
+        },
+        " selects the sources whose ",
+        {
+         "t": "code",
+         "v": "max_loaded_at"
+        },
+        " moved forward; ",
+        {
+         "t": "code",
+         "v": "source_status:fresher+"
+        },
+        " adds everything downstream. We tested it on a ",
+        {
+         "c": [
+          "copy"
+         ],
+         "t": "i"
+        },
+        " of the database (so that your data stays as the book expects):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c34",
+       "lang": "output",
+       "t": "code",
+       "text": "$ dbt source freshness\n22:26:57  1 of 2 PASS freshness of jaffle_shop.orders .................................... [PASS in 0.01s]\n22:26:57  2 of 2 PASS freshness of stripe.payments ....................................... [PASS in 0.02s]\n$ mkdir -p ../last-freshness && cp target/sources.json ../last-freshness/\n   (new rows loaded into orders and payments with fresh_load.sql)\n$ dbt source freshness -q\n$ dbt ls -s source_status:fresher --state ../last-freshness\nsource:jaffle_dbt.jaffle_shop.orders\nsource:jaffle_dbt.stripe.payments\njaffle_dbt.staging.jaffle_shop.source_not_null_jaffle_shop_orders_id\n...\n$ dbt ls -s source_status:fresher+ --state ../last-freshness --resource-type model\njaffle_dbt.marts.customer_segments\n...\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments"
+      },
+      {
+       "c": [
+        "A state folder with only ",
+        {
+         "t": "code",
+         "v": "sources.json"
+        },
+        " was enough. The typical job: ",
+        {
+         "t": "code",
+         "v": "dbt source freshness"
+        },
+        ", then ",
+        {
+         "t": "code",
+         "v": "dbt build --select source_status:fresher+ --state <previous artifacts>"
+        },
+        ". Do not run freshness on a subset of sources between the two runs: a partial run replaces ",
+        {
+         "t": "code",
+         "v": "sources.json"
+        },
+        " (",
+        {
+         "href": "/learn/ch21/",
+         "label": "ch:freshness-exposures",
+         "t": "ref",
+         "text": "Chapter 21"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The exact rules, checked in our runs and in the source code of dbt-core 1.11.16:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "fresher"
+            },
+            " is the only value of ",
+            {
+             "t": "code",
+             "v": "source_status:"
+            },
+            " in 1.11. Another value, such as ",
+            {
+             "t": "code",
+             "v": "source_status:stale"
+            },
+            ", raises no error: it simply selects nothing (\"does not match any enabled nodes\")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A source is \"fresher\" when its ",
+            {
+             "t": "code",
+             "v": "max_loaded_at"
+            },
+            " is later than in the old ",
+            {
+             "t": "code",
+             "v": "sources.json"
+            },
+            ", or when it is absent from the old file. The freshness ",
+            {
+             "c": [
+              "status"
+             ],
+             "t": "i"
+            },
+            " (pass, warn, error) does not matter, and a source whose freshness query hit a runtime error is left out."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Both files are required. Without a ",
+            {
+             "t": "code",
+             "v": "sources.json"
+            },
+            " in the state folder (for example ",
+            {
+             "t": "code",
+             "v": "--state prod-artifacts"
+            },
+            ", which holds only a manifest and run results), or without a new one in ",
+            {
+             "t": "code",
+             "v": "target/"
+            },
+            ", dbt stops:"
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "id": "ch24-c35",
+       "lang": "output",
+       "t": "code",
+       "text": "$ dbt ls -s source_status:fresher --state prod-artifacts\n23:18:10  Encountered an error:\nInternal Error\n  No previous state comparison freshness results in sources.json\n$ rm target/sources.json && dbt ls -s source_status:fresher --state ../last-freshness\n23:18:27  Encountered an error:\nInternal Error\n  No current state comparison freshness results in sources.json"
+      }
+     ],
+     "id": "ch24-s5-2",
+     "number": "24.5.2",
+     "title": [
+      {
+       "t": "code",
+       "v": "source_status:fresher"
+      },
+      ": rebuild only where new data arrived"
+     ],
+     "titleText": "source_status:fresher: rebuild only where new data arrived"
+    }
+   ],
+   "title": [
+    "Result selectors: re-running what failed"
+   ],
+   "titleText": "Result selectors: re-running what failed"
+  },
+  {
+   "anchors": [
+    "sec-sdr-defer"
+   ],
+   "checkpoints": [],
+   "id": "ch24-s6",
+   "label": "sec:sdr-defer",
+   "labs": [
+    "ch24-lab3"
+   ],
+   "minutes": 20,
+   "number": "24.6",
+   "objectives": [
+    "3.4",
+    "7.1"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "blocks": [
+        {
+         "c": [
+          "You are a new cook preparing one new dessert in a test kitchen. The dessert needs a sauce that the restaurant already makes every morning. You do not cook the sauce again: you borrow a jar from the main kitchen. You cook only your dessert. ",
+          {
+           "c": [
+            "Defer"
+           ],
+           "t": "i"
+          },
+          " is that borrowing: your model is built in your schema, but the parents you did not build are read from production."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "The ",
+        {
+         "en": [
+          "defer"
+         ],
+         "fr": "différer, renvoyer vers la production",
+         "id": "term-defer",
+         "t": "term"
+        },
+        " feature changes how dbt resolves ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        ". With ",
+        {
+         "t": "code",
+         "v": "--defer"
+        },
+        " and a state manifest, a ",
+        {
+         "t": "code",
+         "v": "ref('x')"
+        },
+        " points to the relation recorded ",
+        {
+         "c": [
+          "in the state manifest"
+         ],
+         "t": "i"
+        },
+        " when ",
+        {
+         "c": [
+          "both"
+         ],
+         "t": "b"
+        },
+        " conditions are true:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "x"
+            },
+            " is ",
+            {
+             "c": [
+              "not selected"
+             ],
+             "t": "b"
+            },
+            " in the current command, and"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "x"
+            },
+            " does ",
+            {
+             "c": [
+              "not exist"
+             ],
+             "t": "b"
+            },
+            " in your target schema."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "c": [
+        "Otherwise the ",
+        {
+         "t": "code",
+         "v": "ref"
+        },
+        " keeps pointing to your own schema. ",
+        {
+         "t": "code",
+         "v": "--favor-state"
+        },
+        " removes condition 2: unselected nodes are read from the state even when a development copy exists. Selected nodes are never deferred, and ephemeral models are never deferred (they are inlined as CTEs)."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "Where ref('x') points with --defer --state. Is x selected in this command? Yes: my schema (dbt_ci.x). No: does x exist in my target schema? Yes: my schema (unless --favor-state). No: the state's relation (prod.x).",
+       "id": "ch24-fig2",
+       "src": "figures/ch24-fig2.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "Defer needs a manifest. Without one, dbt refuses to start:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c36",
+       "lang": "output",
+       "t": "code",
+       "text": "$ dbt build -s fct_monthly_revenue --target ci --defer\n22:23:11  Encountered an error:\nRuntime Error\n  --state or --defer-state are required for deferral, but neither was provided"
+      }
+     ],
+     "id": "ch24-s6-0",
+     "title": [
+      "Defer: borrow the parents from production"
+     ],
+     "titleText": "Defer: borrow the parents from production"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "--state"
+        },
+        " serves both state selection and deferral. ",
+        {
+         "t": "code",
+         "v": "--defer-state"
+        },
+        " gives deferral its ",
+        {
+         "c": [
+          "own"
+         ],
+         "t": "i"
+        },
+        " folder: dbt then compares with the manifest in ",
+        {
+         "t": "code",
+         "v": "--state"
+        },
+        " (for ",
+        {
+         "t": "code",
+         "v": "state:modified"
+        },
+        ") but resolves deferred refs with the manifest in ",
+        {
+         "t": "code",
+         "v": "--defer-state"
+        },
+        ". When ",
+        {
+         "t": "code",
+         "v": "--defer-state"
+        },
+        " is absent, deferral uses ",
+        {
+         "t": "code",
+         "v": "--state"
+        },
+        ". Our test with ",
+        {
+         "t": "code",
+         "v": "--defer-state"
+        },
+        " alone:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c37",
+       "lang": "output",
+       "t": "code",
+       "text": "$ dbt compile -s fct_monthly_revenue --target ci --defer --defer-state prod-artifacts\n...\n    select * from \"practice\".\"prod\".\"int_orders__enriched\""
+      },
+      {
+       "c": [
+        "The reverse is not true: ",
+        {
+         "t": "code",
+         "v": "--defer-state"
+        },
+        " does not feed the ",
+        {
+         "t": "code",
+         "v": "state:"
+        },
+        " selectors. ",
+        {
+         "t": "code",
+         "v": "dbt ls -s state:modified --defer-state prod-artifacts"
+        },
+        " stopped with \"Got a state selector method, but no comparison manifest\"."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The flags also exist as environment variables. In 1.11 the documented names are ",
+        {
+         "t": "code",
+         "v": "DBT_ENGINE_DEFER"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "DBT_ENGINE_STATE"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "DBT_ENGINE_DEFER_STATE"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "DBT_ENGINE_FAVOR_STATE"
+        },
+        "; the older names without ",
+        {
+         "t": "code",
+         "v": "ENGINE_"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "DBT_DEFER"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "DBT_STATE"
+        },
+        "…) still work in 1.11.16 and gave the same results. The first command below gives the same result as the flags; the second one shows that ",
+        {
+         "t": "code",
+         "v": "--favor-state"
+        },
+        " without ",
+        {
+         "t": "code",
+         "v": "--defer"
+        },
+        " changes nothing:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c38",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ DBT_ENGINE_DEFER=true DBT_ENGINE_STATE=prod-artifacts DBT_ENGINE_FAVOR_STATE=true \\\n    dbt compile -s fct_monthly_revenue -q | grep -m1 'from \"practice\"'\n    select * from \"practice\".\"prod\".\"int_orders__enriched\"\n$ dbt compile -s fct_monthly_revenue --state prod-artifacts --favor-state -q | grep -m1 'from \"practice\"'\n    select * from \"practice\".\"dbt_adnane\".\"int_orders__enriched\""
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " build only ",
+          {
+           "t": "code",
+           "v": "fct_monthly_revenue"
+          },
+          " in the empty schema ",
+          {
+           "t": "code",
+           "v": "dbt_ci"
+          },
+          ", reading its parent from production."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Check that ",
+          {
+           "t": "code",
+           "v": "dbt_ci"
+          },
+          " is empty (it does not even exist yet):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c39",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt show --inline \"select count(*) as relations_in_dbt_ci from information_schema.tables where table_schema = 'dbt_ci'\" -q"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Build without defer, then with defer:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c40",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --select fct_monthly_revenue --target ci\n$ dbt build --select fct_monthly_revenue --target ci --defer --state prod-artifacts"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Look at the compiled SQL and at the schema:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c41",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ sed -n '1,8p' target/compiled/jaffle_dbt/models/marts/fct_monthly_revenue.sql\n$ dbt show --inline \"select table_schema, table_name, table_type from information_schema.tables where table_schema = 'dbt_ci'\" -q"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Compare ",
+          {
+           "t": "code",
+           "v": "--defer"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "--favor-state"
+          },
+          " in dev, where every parent exists:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c42",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt compile --select fct_monthly_revenue --defer --state prod-artifacts | grep -m1 'from \"practice\"'\n$ dbt compile --select fct_monthly_revenue --defer --state prod-artifacts --favor-state | grep -m1 'from \"practice\"'"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result."
+           ],
+           "t": "b"
+          },
+          " Step 1:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c43",
+         "lang": "output",
+         "t": "code",
+         "text": "| relations_in_dbt_ci |\n| ------------------- |\n|                   0 |"
+        },
+        {
+         "c": [
+          "In Step 2, the first build fails because the parent is not in ",
+          {
+           "t": "code",
+           "v": "dbt_ci"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c44",
+         "lang": "output",
+         "t": "code",
+         "text": "21:40:57  1 of 2 ERROR creating sql table model dbt_ci.fct_monthly_revenue ............... [ERROR in 0.04s]\n21:40:57  2 of 2 SKIP test dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country  [SKIP]\n...\n  Catalog Error: Table with name int_orders__enriched does not exist!\n  Did you mean \"dbt_adnane.int_orders__enriched or prod.int_orders__enriched\"?\n\n  LINE 14:     select * from \"practice\".\"dbt_ci\".\"int_orders__enriched\"\n...\n21:40:57  Done. PASS=0 WARN=0 ERROR=1 SKIP=1 NO-OP=0 TOTAL=2"
+        },
+        {
+         "c": [
+          "The second build works:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c45",
+         "lang": "output",
+         "t": "code",
+         "text": "21:41:00  Concurrency: 4 threads (target='ci')\n21:41:00  1 of 2 START sql table model dbt_ci.fct_monthly_revenue ........................ [RUN]\n21:41:01  1 of 2 OK created sql table model dbt_ci.fct_monthly_revenue ................... [OK in 0.07s]\n21:41:01  2 of 2 START test dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country  [RUN]\n21:41:01  2 of 2 PASS dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country  [PASS in 0.03s]\n...\n21:41:01  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=2"
+        },
+        {
+         "c": [
+          "Step 3: the ",
+          {
+           "t": "code",
+           "v": "ref"
+          },
+          " now reads production, and ",
+          {
+           "t": "code",
+           "v": "dbt_ci"
+          },
+          " holds exactly one table:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c46",
+         "lang": "output",
+         "t": "code",
+         "text": "with\n\norders as (\n\n    select * from \"practice\".\"prod\".\"int_orders__enriched\"\n\n),\n| table_schema | table_name          | table_type |\n| ------------ | ------------------- | ---------- |\n| dbt_ci       | fct_monthly_revenue | BASE TABLE |"
+        },
+        {
+         "c": [
+          "Step 4: with ",
+          {
+           "t": "code",
+           "v": "--defer"
+          },
+          " alone, dbt keeps your own parent because it exists in ",
+          {
+           "t": "code",
+           "v": "dbt_adnane"
+          },
+          "; ",
+          {
+           "t": "code",
+           "v": "--favor-state"
+          },
+          " reads production:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c47",
+         "lang": "output",
+         "t": "code",
+         "text": "    select * from \"practice\".\"dbt_adnane\".\"int_orders__enriched\"\n    select * from \"practice\".\"prod\".\"int_orders__enriched\""
+        }
+       ],
+       "id": "ch24-lab3",
+       "objectives": [
+        "7.1",
+        "3.4"
+       ],
+       "t": "lab",
+       "title": [
+        "Build one model in an empty schema with --defer"
+       ]
+      }
+     ],
+     "id": "ch24-s6-1",
+     "number": "24.6.1",
+     "title": [
+      {
+       "t": "code",
+       "v": "--state"
+      },
+      " versus ",
+      {
+       "t": "code",
+       "v": "--defer-state"
+      }
+     ],
+     "titleText": "--state versus --defer-state"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Tests are nodes with ",
+        {
+         "t": "code",
+         "v": "ref"
+        },
+        "s too. With ",
+        {
+         "t": "code",
+         "v": "dbt_ci"
+        },
+        " still empty, ",
+        {
+         "t": "code",
+         "v": "dbt test -s fct_monthly_revenue --target ci"
+        },
+        " errored (",
+        {
+         "t": "code",
+         "v": "Table with name \"dbt_ci.fct_monthly_revenue\" does not exist"
+        },
+        "). With ",
+        {
+         "t": "code",
+         "v": "--defer --state prod-artifacts"
+        },
+        " it passed: the model was not selected (only its test), it did not exist in ",
+        {
+         "t": "code",
+         "v": "dbt_ci"
+        },
+        ", so the test read ",
+        {
+         "t": "code",
+         "v": "\"practice\".\"marts\".\"fct_monthly_revenue\""
+        },
+        ". In other words, it tested ",
+        {
+         "c": [
+          "production data, not your change"
+         ],
+         "t": "b"
+        },
+        ". Be careful with deferred tests, especially tests with two parents (",
+        {
+         "t": "code",
+         "v": "relationships"
+        },
+        "): one side can come from your schema and the other from production."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "--defer"
+            },
+            " builds nothing."
+           ],
+           "t": "b"
+          },
+          " It only changes where unselected, missing parents are read from (trap T141). It does not copy production tables into your schema (that is ",
+          {
+           "t": "code",
+           "v": "dbt clone"
+          },
+          "), and it does not run the parents. If a parent is selected, it is built in your schema like any selected node."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch24-s6-2",
+     "number": "24.6.2",
+     "title": [
+      "Defer also applies to tests"
+     ],
+     "titleText": "Defer also applies to tests"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "--defer"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "dbt clone"
+             }
+            ],
+            "t": "b"
+           },
+           " (",
+           {
+            "href": "/learn/ch23/",
+            "label": "ch:pipelines-clone",
+            "t": "ref",
+            "text": "Chapter 23"
+           },
+           ")"
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "What it does"
+          ]
+         },
+         {
+          "c": [
+           "Rewrites ",
+           {
+            "t": "code",
+            "v": "ref()"
+           },
+           " of unselected, missing nodes to the state's relations."
+          ]
+         },
+         {
+          "c": [
+           "Creates objects in your schema that copy the state's relations (zero-copy clones on Snowflake, Databricks, BigQuery; views elsewhere, like on DuckDB)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Creates objects?"
+          ]
+         },
+         {
+          "c": [
+           "No"
+          ]
+         },
+         {
+          "c": [
+           "Yes (some compute, extra objects)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Visible outside dbt (BI tool)?"
+          ]
+         },
+         {
+          "c": [
+           "No"
+          ]
+         },
+         {
+          "c": [
+           "Yes"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Typical use"
+          ]
+         },
+         {
+          "c": [
+           "Slim CI, working in an empty dev schema"
+          ]
+         },
+         {
+          "c": [
+           "Testing a change with a BI tool, preparing incremental models for CI, blue/green deployments"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Needs a state?"
+          ]
+         },
+         {
+          "c": [
+           "Yes (",
+           {
+            "t": "code",
+            "v": "--state"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "--defer-state"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "Yes (same)"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "dbt Labs presents deferral as the cheaper and simpler option in most cases; clone covers the cases where deferral cannot help (trap T117). The classic example combines both with state selection: before the CI build, clone only the modified incremental models that production already has, so that they are built in incremental mode instead of from scratch:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c48",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt clone --select \"state:modified+,config.materialized:incremental,state:old\" --state prod-artifacts --target ci"
+      },
+      {
+       "c": [
+        "The commas make an ",
+        {
+         "c": [
+          "intersection"
+         ],
+         "t": "i"
+        },
+        " (",
+        {
+         "href": "/learn/ch16/",
+         "label": "ch:commands-selection",
+         "t": "ref",
+         "text": "Chapter 16"
+        },
+        "); ",
+        {
+         "t": "code",
+         "v": "state:old"
+        },
+        " leaves out brand-new models, which have nothing to clone. With ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " modified, ",
+        {
+         "t": "code",
+         "v": "dbt ls"
+        },
+        " with this selection returned ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " (and its tests)."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Defer in the dbt platform."
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Studio IDE:"
+               ],
+               "t": "b"
+              },
+              " a toggle in the command bar, ",
+              {
+               "c": [
+                "Defer to staging/production"
+               ],
+               "t": "b"
+              },
+              ". When it is on, Studio passes ",
+              {
+               "t": "code",
+               "v": "--defer"
+              },
+              " to every command that accepts it, with the manifest of the latest successful run in the Staging environment if one exists, otherwise in Production. It needs at least one successful deployment run there."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "dbt platform CLI:"
+               ],
+               "t": "b"
+              },
+              " ",
+              {
+               "t": "code",
+               "v": "--defer"
+              },
+              " is on by default; ",
+              {
+               "t": "code",
+               "v": "--no-defer"
+              },
+              " turns it off."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Jobs:"
+               ],
+               "t": "b"
+              },
+              " the setting ",
+              {
+               "c": [
+                "Compare changes against"
+               ],
+               "t": "b"
+              },
+              " chooses the state. CI jobs default to the Production environment; deploy jobs default to ",
+              {
+               "c": [
+                "No deferral"
+               ],
+               "t": "i"
+              },
+              ". The comparison manifest is the one of the latest successful run in that environment (any job that updates artifacts there, not CI runs)."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Only one environment per project can be marked as ",
+              {
+               "c": [
+                "Production"
+               ],
+               "t": "i"
+              },
+              "; it is the default target of deferral."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ul",
+         "t": "list"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch24-s6-3",
+     "number": "24.6.3",
+     "title": [
+      "Defer versus clone"
+     ],
+     "titleText": "Defer versus clone"
+    }
+   ],
+   "title": [
+    "Defer: borrow the parents from production"
+   ],
+   "titleText": "Defer: borrow the parents from production"
+  },
+  {
+   "anchors": [
+    "sec-sdr-slimci"
+   ],
+   "checkpoints": [],
+   "id": "ch24-s7",
+   "label": "sec:sdr-slimci",
+   "labs": [],
+   "minutes": 5,
+   "number": "24.7",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Put the two ideas together: ",
+        {
+         "c": [
+          "select"
+         ],
+         "t": "i"
+        },
+        " only what changed and its children, and ",
+        {
+         "c": [
+          "defer"
+         ],
+         "t": "i"
+        },
+        " every other parent to production. That is the famous ",
+        {
+         "en": [
+          "slim CI"
+         ],
+         "fr": "CI allégée",
+         "id": "term-slim-ci",
+         "t": "term"
+        },
+        " command (trap T145):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c49",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt build --select state:modified+ --defer --state prod-artifacts --target ci"
+      },
+      {
+       "id": "ch24-c50",
+       "lang": "output",
+       "t": "code",
+       "text": "21:41:04  Concurrency: 4 threads (target='ci')\n21:41:04\n21:41:04  1 of 3 START sql table model dbt_ci.fct_monthly_revenue ........................ [RUN]\n21:41:04  1 of 3 OK created sql table model dbt_ci.fct_monthly_revenue ................... [OK in 0.07s]\n21:41:04  3 of 3 START test dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country  [RUN]\n21:41:04  2 of 3 NO-OP exposure monthly_revenue_dashboard ................................ [NO-OP in 0.00s]\n21:41:04  3 of 3 PASS dbt_utils_unique_combination_of_columns_fct_monthly_revenue_order_month__country  [PASS in 0.03s]\n21:41:04\n21:41:04  Finished running 1 exposure, 1 table model, 1 test in 0 hours 0 minutes and 0.18 seconds (0.18s).\n21:41:04  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=1 TOTAL=3"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Part"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Role"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt build"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Models, tests, seeds, snapshots (and unit tests) in DAG order; a failing test stops its children."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--select state:modified+"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Only the changed nodes and their descendants."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--defer"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Unbuilt parents are read from production instead of failing."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--state prod-artifacts"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The production manifest used both to compare and to defer."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--target ci"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Build into a separate, throwaway schema (",
+           {
+            "t": "code",
+            "v": "dbt_ci"
+           },
+           "), never into production."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Three nodes instead of 64. ",
+        {
+         "href": "/learn/ch25/",
+         "label": "ch:environments-ci",
+         "t": "ref",
+         "text": "Chapter 25"
+        },
+        " runs this command automatically on every pull request, and explains the extra ",
+        {
+         "t": "code",
+         "v": "--empty"
+        },
+        " step that new incremental models with unit tests need."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch24-s7-0",
+     "title": [
+      "Slim CI in one command"
+     ],
+     "titleText": "Slim CI in one command"
+    }
+   ],
+   "title": [
+    "Slim CI in one command"
+   ],
+   "titleText": "Slim CI in one command"
+  },
+  {
+   "anchors": [
+    "sec-sdr-retry"
+   ],
+   "checkpoints": [],
+   "id": "ch24-s8",
+   "label": "sec:sdr-retry",
+   "labs": [
+    "ch24-lab4"
+   ],
+   "minutes": 20,
+   "number": "24.8",
+   "objectives": [
+    "4.1",
+    "7.2"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt retry"
+        },
+        " reads ",
+        {
+         "t": "code",
+         "v": "target/run_results.json"
+        },
+        " (the results of the ",
+        {
+         "c": [
+          "previous"
+         ],
+         "t": "i"
+        },
+        " command; ",
+        {
+         "t": "code",
+         "v": "dbt retry --state <folder>"
+        },
+        " reads the file of that folder instead) and runs that same command again, but only for the nodes whose status was ",
+        {
+         "t": "code",
+         "v": "error"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "fail"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "skipped"
+        },
+        " (and ",
+        {
+         "t": "code",
+         "v": "partial success"
+        },
+        " for microbatch models). Nodes that succeeded are not run again. In short: it restarts from the ",
+        {
+         "en": [
+          "point of failure"
+         ],
+         "fr": "point d'échec",
+         "id": "term-point-of-failure",
+         "t": "term"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "How dbt retry works: dbt build ends with 1 error and 11 skipped and writes target/run_results.json; you fix the code; dbt retry reads the file and re-runs the 12 nodes with the same arguments.",
+       "id": "ch24-fig3",
+       "src": "figures/ch24-fig3.svg",
+       "t": "figure"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " see that ",
+          {
+           "t": "code",
+           "v": "dbt retry"
+          },
+          " re-runs only the error and the skipped nodes. You are still in dev (",
+          {
+           "t": "code",
+           "v": "target='dev'"
+          },
+          ")."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "models/staging/jaffle_shop/stg_jaffle_shop__products.sql"
+          },
+          ", replace ",
+          {
+           "t": "code",
+           "v": "category,"
+          },
+          " with ",
+          {
+           "t": "code",
+           "v": "categoryy as category,"
+          },
+          " and run a full build (unit tests excluded to keep it short):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c51",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --exclude-resource-type unit_test"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Look at the statuses saved in ",
+          {
+           "t": "code",
+           "v": "run_results.json"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c52",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ python -c \"import json; r=json.load(open('target/run_results.json')); from collections import Counter; print(r['args']['which'], Counter(x['status'] for x in r['results']))\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Fix the typo (back to ",
+          {
+           "t": "code",
+           "v": "category,"
+          },
+          "), then retry. Retry a second time."
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c53",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git diff --stat models/staging\n$ dbt retry\n$ dbt retry"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result."
+           ],
+           "t": "b"
+          },
+          " Step 1 ends with ",
+          {
+           "t": "code",
+           "v": "Done. PASS=49 WARN=1 ERROR=1 SKIP=11 NO-OP=2 TOTAL=64"
+          },
+          " (the warning is the ",
+          {
+           "t": "code",
+           "v": "relationships"
+          },
+          " test on order 159, by design since ",
+          {
+           "href": "/learn/ch18/",
+           "label": "ch:data-tests",
+           "t": "ref",
+           "text": "Chapter 18"
+          },
+          "). Step 2 prints ",
+          {
+           "t": "code",
+           "v": "build Counter({'pass': 35, 'success': 14, 'skipped': 11, 'no-op': 2, 'error': 1, 'warn': 1})"
+          },
+          ". ",
+          {
+           "t": "code",
+           "v": "git diff --stat"
+          },
+          " prints nothing (the file is back to its committed version). The first retry runs 12 nodes, not 64:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c54",
+         "lang": "output",
+         "t": "code",
+         "text": "21:41:46  Concurrency: 4 threads (target='dev')\n21:41:46\n21:41:46  1 of 12 START sql view model dbt_adnane.stg_jaffle_shop__products .............. [RUN]\n21:41:46  1 of 12 OK created sql view model dbt_adnane.stg_jaffle_shop__products ......... [OK in 0.05s]\n21:41:46  2 of 12 START test is_positive_stg_jaffle_shop__products_price ................. [RUN]\n...\n21:41:46  5 of 12 START sql table model dbt_adnane.fct_order_items ....................... [RUN]\n21:41:46  5 of 12 OK created sql table model dbt_adnane.fct_order_items .................. [OK in 0.08s]\n...\n21:41:46  12 of 12 START sql microbatch model dbt_adnane.fct_order_items_daily ........... [RUN]\n21:41:46  Batch 1 of 2 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]\n21:41:47  Batch 1 of 2 OK created batch 2026-09 of dbt_adnane.fct_order_items_daily ............ [OK in 0.05s]\n21:41:47  Batch 2 of 2 START batch 2026-10 of dbt_adnane.fct_order_items_daily ................. [RUN]\n21:41:47  Batch 2 of 2 OK created batch 2026-10 of dbt_adnane.fct_order_items_daily ............ [OK in 0.02s]\n21:41:47  12 of 12 OK created sql microbatch model dbt_adnane.fct_order_items_daily ...... [SUCCESS in 0.08s]\n...\n21:41:47  Done. PASS=12 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=12"
+        },
+        {
+         "c": [
+          "1 error + 11 skipped = 12. The second retry has nothing to re-run:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c55",
+         "lang": "output",
+         "t": "code",
+         "text": "21:41:49  Nothing to do. Try checking your model configs and model specification args"
+        },
+        {
+         "c": [
+          "(The batches of your run depend on today's date: a normal microbatch run processes the current month and one month of lookback.)"
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch24-lab4",
+       "objectives": [
+        "7.2",
+        "4.1"
+       ],
+       "t": "lab",
+       "title": [
+        "Break, fix and retry"
+       ]
+      }
+     ],
+     "id": "ch24-s8-0",
+     "title": [
+      "dbt retry: restart from the point of failure"
+     ],
+     "titleText": "dbt retry: restart from the point of failure"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Retry without a fix gives the same failure."
+             ],
+             "t": "b"
+            },
+            " We ran ",
+            {
+             "t": "code",
+             "v": "dbt retry"
+            },
+            " before fixing the failing test of ",
+            {
+             "href": "/learn/ch24/ch24-s5/",
+             "label": "sec:sdr-result",
+             "t": "ref",
+             "text": "Section 24.5"
+            },
+            ": ",
+            {
+             "t": "code",
+             "v": "1 of 9 FAIL 12 assert_products_have_no_price"
+            },
+            ", then 8 ",
+            {
+             "t": "code",
+             "v": "SKIP"
+            },
+            " again. Retry runs the same code; it does not repair anything (trap T143)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Failed tests are re-run."
+             ],
+             "t": "b"
+            },
+            " After we corrected that test, ",
+            {
+             "t": "code",
+             "v": "dbt retry"
+            },
+            " ran 9 nodes (the test and its 8 skipped descendants) and ended ",
+            {
+             "t": "code",
+             "v": "Done. PASS=9"
+            },
+            ". This is the easy answer to the \"",
+            {
+             "t": "code",
+             "v": "result:error+"
+            },
+            " misses test failures\" problem."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Warnings are not re-run."
+             ],
+             "t": "b"
+            },
+            " A ",
+            {
+             "t": "code",
+             "v": "WARN"
+            },
+            " is not a failure. ",
+            {
+             "t": "code",
+             "v": "dbt retry"
+            },
+            " after a run whose only problem was a warning said \"Nothing to do\". If you pass ",
+            {
+             "t": "code",
+             "v": "--warn-error"
+            },
+            " ",
+            {
+             "c": [
+              "to the retry command"
+             ],
+             "t": "i"
+            },
+            ", the warned nodes are re-run (and fail)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "The last command succeeded:"
+             ],
+             "t": "b"
+            },
+            " \"Nothing to do. Try checking your model configs and model specification args\"."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Another command overwrote ",
+              {
+               "t": "code",
+               "v": "run_results.json"
+              },
+              "."
+             ],
+             "t": "b"
+            },
+            " This is the classic trap. We broke the build, then ran ",
+            {
+             "t": "code",
+             "v": "dbt compile -s stg_jaffle_shop__products"
+            },
+            " to look at the SQL, then retried:"
+           ],
+           "t": "p"
+          },
+          {
+           "id": "ch24-c56",
+           "lang": "output",
+           "t": "code",
+           "text": "$ dbt compile -s stg_jaffle_shop__products -q\n$ dbt retry\n22:24:49  Nothing to do. Try checking your model configs and model specification args"
+          },
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "run_results.json"
+            },
+            " now described a successful ",
+            {
+             "t": "code",
+             "v": "compile"
+            },
+            ". ",
+            {
+             "t": "code",
+             "v": "dbt show"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "dbt docs generate"
+            },
+            " also overwrite the file (with 1.11.16, a retry after them even crashed with a Python traceback instead of a clear message). ",
+            {
+             "t": "code",
+             "v": "dbt ls"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "dbt parse"
+            },
+            " do not touch ",
+            {
+             "t": "code",
+             "v": "run_results.json"
+            },
+            ", so a retry after them still works."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "No ",
+              {
+               "t": "code",
+               "v": "run_results.json"
+              },
+              " at all:"
+             ],
+             "t": "b"
+            }
+           ],
+           "t": "p"
+          },
+          {
+           "id": "ch24-c57",
+           "lang": "output",
+           "t": "code",
+           "text": "$ dbt retry\n22:25:14  Encountered an error:\nRuntime Error\n  Could not find previous run in 'target' target directory"
+          },
+          {
+           "c": [
+            "We got the same message for a second ",
+            {
+             "t": "code",
+             "v": "dbt retry"
+            },
+            " right after a \"Nothing to do\" retry: that retry had replaced the file with a run of zero nodes."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch24-s8-1",
+     "number": "24.8.1",
+     "title": [
+      "What retry re-runs, and the \"Nothing to do\" cases"
+     ],
+     "titleText": "What retry re-runs, and the \"Nothing to do\" cases"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Retry takes the arguments saved in ",
+        {
+         "t": "code",
+         "v": "run_results.json"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "args"
+        },
+        ") and runs the same command with them. We broke ",
+        {
+         "t": "code",
+         "v": "fct_monthly_revenue"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "paid_amountt"
+        },
+        ") and ran ",
+        {
+         "t": "code",
+         "v": "dbt build -s fct_monthly_revenue --target ci --defer --state prod-artifacts"
+        },
+        ". The saved arguments were:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c58",
+       "lang": "output",
+       "t": "code",
+       "text": "which = build\nselect = ['fct_monthly_revenue']\ntarget = ci\ndefer = True\nstate = prod-artifacts"
+      },
+      {
+       "c": [
+        "Then we tried to change the target on the retry command, before the fix:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c59",
+       "lang": "output",
+       "t": "code",
+       "text": "$ dbt retry --target dev\n22:25:44  Concurrency: 4 threads (target='ci')\n22:25:44  1 of 2 START sql table model dbt_ci.fct_monthly_revenue ........................ [RUN]\n22:25:45  1 of 2 ERROR creating sql table model dbt_ci.fct_monthly_revenue ............... [ERROR in 0.04s]"
+      },
+      {
+       "c": [
+        "The target stayed ",
+        {
+         "t": "code",
+         "v": "ci"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "--target"
+        },
+        " on the retry command was ignored. After the fix, ",
+        {
+         "t": "code",
+         "v": "dbt retry --threads 1"
+        },
+        " ran with ",
+        {
+         "t": "code",
+         "v": "Concurrency: 1 threads (target='ci')"
+        },
+        ", and the compiled SQL still read ",
+        {
+         "t": "code",
+         "v": "\"practice\".\"prod\".\"int_orders__enriched\""
+        },
+        " (defer kept). The rules, from these runs and from the source code of dbt-core 1.11.16:"
+       ],
+       "t": "p"
+      },
+      {
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Kept from the failed command"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the command itself (",
+           {
+            "t": "code",
+            "v": "build"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "run"
+           },
+           "…), ",
+           {
+            "t": "code",
+            "v": "--select"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "--exclude"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "--selector"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--target"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--defer"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--state"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--full-refresh"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--exclude-resource-type"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--vars"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--threads"
+           },
+           "…"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Can be overridden on ",
+             {
+              "t": "code",
+              "v": "dbt retry"
+             }
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--threads"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "--vars"
+           },
+           " only"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Not kept"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--warn-error"
+           },
+           " (taken from the retry command), ",
+           {
+            "t": "code",
+            "v": "--defer-state"
+           },
+           ", and the paths: ",
+           {
+            "t": "code",
+            "v": "--target-path"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--profiles-dir"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--project-dir"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--log-path"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Not available"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--select"
+           },
+           " on ",
+           {
+            "t": "code",
+            "v": "dbt retry"
+           },
+           " (dbt Core 1.11): you cannot change the selection"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "So retry repeats your choices, ",
+        {
+         "c": [
+          "including your mistakes"
+         ],
+         "t": "i"
+        },
+        ": if the failed command forgot ",
+        {
+         "t": "code",
+         "v": "--defer"
+        },
+        ", the retry forgets it too. One trap in the other direction: ",
+        {
+         "t": "code",
+         "v": "--defer-state"
+        },
+        " is ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " kept. After a failed ",
+        {
+         "t": "code",
+         "v": "dbt build -s fct_monthly_revenue --target ci --defer --defer-state prod-artifacts"
+        },
+        ", a plain ",
+        {
+         "t": "code",
+         "v": "dbt retry"
+        },
+        " stopped with \"--state or --defer-state are required for deferral\"; ",
+        {
+         "t": "code",
+         "v": "dbt retry --defer-state prod-artifacts"
+        },
+        " worked."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "The documentation lists more retry flags."
+           ],
+           "t": "b"
+          },
+          " The ",
+          {
+           "t": "code",
+           "v": "dbt retry"
+          },
+          " page of the documentation also shows ",
+          {
+           "t": "code",
+           "v": "--target"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "--profile"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "--full-refresh"
+          },
+          " as flags that \"override\" the original run. The 1.11.16 command line accepts them, but they had no effect in our runs: ",
+          {
+           "t": "code",
+           "v": "--target dev"
+          },
+          " kept ",
+          {
+           "t": "code",
+           "v": "target='ci'"
+          },
+          ", and ",
+          {
+           "t": "code",
+           "v": "dbt retry --full-refresh"
+          },
+          " on the incremental ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " still ran a ",
+          {
+           "t": "code",
+           "v": "MERGE"
+          },
+          " (incremental), because both values come from the saved arguments. What the documentation and dbt agree on, and what the exam asks: retry reuses the previous command and its selection, and in dbt Core you cannot change the selection (",
+          {
+           "t": "code",
+           "v": "--select"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "--exclude"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "--selector"
+          },
+          ") on retry."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "Retry works after these commands (the documentation's list): ",
+        {
+         "t": "code",
+         "v": "build"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "run"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "test"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "seed"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "snapshot"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "compile"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "clone"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "docs generate"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "run-operation"
+        },
+        ". It cannot retry ",
+        {
+         "t": "code",
+         "v": "show"
+        },
+        " (in 1.11.16, a retry right after ",
+        {
+         "t": "code",
+         "v": "dbt show"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "dbt docs generate"
+        },
+        " crashed, as noted above). ",
+        {
+         "t": "code",
+         "v": "ls"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "parse"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "source freshness"
+        },
+        " do not write ",
+        {
+         "t": "code",
+         "v": "run_results.json"
+        },
+        ", so a retry after them retries the command that ran before them."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt retry"
+            },
+            " is not \"run everything again\""
+           ],
+           "t": "b"
+          },
+          " (trap T142). It reads the ",
+          {
+           "c": [
+            "last"
+           ],
+           "t": "i"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "run_results.json"
+          },
+          " in the target folder and re-runs only errors, failures and skips, with the same command and selection. Two consequences the exam likes: (1) any command that rewrites ",
+          {
+           "t": "code",
+           "v": "run_results.json"
+          },
+          " in between (",
+          {
+           "t": "code",
+           "v": "compile"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "show"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "docs generate"
+          },
+          ", another ",
+          {
+           "t": "code",
+           "v": "run"
+          },
+          "…) destroys the information; (2) fix first, then retry, otherwise you get the same failure."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch24-s8-2",
+     "number": "24.8.2",
+     "title": [
+      "Which flags does retry keep?"
+     ],
+     "titleText": "Which flags does retry keep?"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A microbatch model (",
+        {
+         "href": "/learn/ch14/",
+         "label": "ch:incremental-microbatch",
+         "t": "ref",
+         "text": "Chapter 14"
+        },
+        ") is built batch by batch, and each batch can succeed or fail alone. We added a temporary bug that breaks only the August batch, and ran four monthly batches:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c60",
+       "lang": "output",
+       "t": "code",
+       "text": "$ dbt run -s fct_order_items_daily --event-time-start 2026-06-01 --event-time-end 2026-10-01\n22:26:40  Batch 1 of 4 OK created batch 2026-06 of dbt_adnane.fct_order_items_daily ............ [OK in 0.07s]\n22:26:40  Batch 2 of 4 OK created batch 2026-07 of dbt_adnane.fct_order_items_daily ............ [OK in 0.02s]\n22:26:40  Batch 3 of 4 ERROR creating batch 2026-08 of dbt_adnane.fct_order_items_daily ........ [ERROR in 0.01s]\n22:26:40  Batch 4 of 4 OK created batch 2026-09 of dbt_adnane.fct_order_items_daily ............ [OK in 0.02s]\n22:26:40  1 of 1 PARTIALLY created sql microbatch model dbt_adnane.fct_order_items_daily . [PARTIAL SUCCESS (3/4) in 0.13s]\n22:26:40  Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "run_results.json"
+        },
+        " saved the model as ",
+        {
+         "t": "code",
+         "v": "partial success"
+        },
+        ", with the list of successful and failed batches. After removing the bug:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch24-c61",
+       "lang": "output",
+       "t": "code",
+       "text": "$ dbt retry\n22:26:43  1 of 1 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]\n22:26:43  Batch 1 of 1 START batch 2026-08 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:26:43  Batch 1 of 1 OK created batch 2026-08 of dbt_adnane.fct_order_items_daily ............ [OK in 0.08s]\n22:26:43  1 of 1 OK created sql microbatch model dbt_adnane.fct_order_items_daily ........ [SUCCESS in 0.08s]\n22:26:43  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1"
+      },
+      {
+       "c": [
+        "Only the August batch ran again (trap T79). (When ",
+        {
+         "c": [
+          "every"
+         ],
+         "t": "i"
+        },
+        " batch of the model failed, there is no list of successful batches to keep, and retry runs the whole model again, all its batches, with the same arguments.)"
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Retry in the dbt platform."
+           ],
+           "t": "b"
+          },
+          " When a job run ends with the status ",
+          {
+           "c": [
+            "Error"
+           ],
+           "t": "i"
+          },
+          ", the run page offers ",
+          {
+           "c": [
+            "Rerun"
+           ],
+           "t": "b"
+          },
+          " → ",
+          {
+           "c": [
+            "Rerun from start"
+           ],
+           "t": "b"
+          },
+          " or ",
+          {
+           "c": [
+            "Rerun from failure"
+           ],
+           "t": "b"
+          },
+          ". ",
+          {
+           "c": [
+            "Rerun from failure"
+           ],
+           "t": "i"
+          },
+          " lists the failed step and the skipped steps, and restarts from the failed command like ",
+          {
+           "t": "code",
+           "v": "dbt retry"
+          },
+          "; a banner says the run \"resumed execution from last failed step\". Conditions: the latest run of the job is ",
+          {
+           "c": [
+            "Error"
+           ],
+           "t": "i"
+          },
+          ", dbt can parse the project, and the failed command is one that supports retry. As with the CLI, commit the fix first. In the Studio IDE and the dbt platform CLI you can type ",
+          {
+           "t": "code",
+           "v": "dbt retry"
+          },
+          " yourself."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch24-s8-3",
+     "number": "24.8.3",
+     "title": [
+      "Microbatch: retry only the failed batches"
+     ],
+     "titleText": "Microbatch: retry only the failed batches"
+    }
+   ],
+   "title": [
+    "dbt retry: restart from the point of failure"
+   ],
+   "titleText": "dbt retry: restart from the point of failure"
+  },
+  {
+   "anchors": [
+    "sec-sdr-finish"
+   ],
+   "checkpoints": [],
+   "id": "ch24-s9",
+   "label": "sec:sdr-finish",
+   "labs": [
+    "ch24-lab5"
+   ],
+   "minutes": 15,
+   "number": "24.9",
+   "objectives": [
+    "3.4",
+    "7.1"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Your change is tested in dev and in an isolated schema. Time to ship it, the way a team would."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Build the change and its children in dev:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c62",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --select fct_monthly_revenue+"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Empty the CI schema: CI schemas are throwaway. dbt cannot run a ",
+          {
+           "t": "code",
+           "v": "drop"
+          },
+          " through ",
+          {
+           "t": "code",
+           "v": "dbt show"
+          },
+          ", so use Python (the DuckDB library is in your environment; the DuckDB CLI would work too):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c63",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ python -c \"import duckdb; duckdb.connect('../practice/practice.duckdb').execute('drop schema if exists dbt_ci cascade'); print('dbt_ci dropped')\"\ndbt_ci dropped"
+        },
+        {
+         "c": [
+          "If you typed the commands of ",
+          {
+           "href": "/learn/ch24/ch24-s5/",
+           "label": "sec:sdr-result",
+           "t": "ref",
+           "text": "Section 24.5"
+          },
+          ", remove their folder too: ",
+          {
+           "t": "code",
+           "v": "rm -rf ../last_run"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Commit on the branch, merge into ",
+          {
+           "t": "code",
+           "v": "main"
+          },
+          ", delete the branch:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c64",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git add .\n$ git commit -m 'fct_monthly_revenue: add average_order_value'\n$ git switch main\n$ git merge feature/average-order-value\n$ git branch -d feature/average-order-value"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " \"Deploy\": build production from ",
+          {
+           "t": "code",
+           "v": "main"
+          },
+          " (unit tests excluded, as a production job does, ",
+          {
+           "href": "/learn/ch19/",
+           "label": "ch:unit-tests",
+           "t": "ref",
+           "text": "Chapter 19"
+          },
+          "), refresh the state, and compare again:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c65",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --target prod --exclude-resource-type unit_test -q; echo \"exit code: $?\"\n$ cp target/manifest.json target/run_results.json prod-artifacts/\n$ dbt ls --select state:modified --state prod-artifacts"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result."
+           ],
+           "t": "b"
+          },
+          " Step 1 ends with ",
+          {
+           "t": "code",
+           "v": "Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=1 TOTAL=3"
+          },
+          ". Step 3:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c66",
+         "lang": "output",
+         "t": "code",
+         "text": "[feature/average-order-value 3aa24d2] fct_monthly_revenue: add average_order_value\n 1 file changed, 2 insertions(+), 1 deletion(-)\nSwitched to branch 'main'\nUpdating 64f3c63..3aa24d2\nFast-forward\n models/marts/fct_monthly_revenue.sql | 3 ++-\n 1 file changed, 2 insertions(+), 1 deletion(-)\nDeleted branch feature/average-order-value (was 3aa24d2)."
+        },
+        {
+         "c": [
+          "(Your commit hashes are different.) Step 4:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c67",
+         "lang": "output",
+         "t": "code",
+         "text": "exit code: 0\n23:22:30  Unable to do partial parsing because config vars, config profile, or config target have changed\n23:22:30  Unable to do partial parsing because profile has changed\n23:22:31  Found 15 models, 2 analyses, 45 data tests, 1 seed, 2 snapshots, 5 sources, 2 exposures, 670 macros, 2 groups, 5 unit tests\n23:22:31  The selection criterion 'state:modified' does not match any enabled nodes\n23:22:31  No nodes selected!"
+        },
+        {
+         "c": [
+          "Production and your project are the same again, so nothing is modified. The state is fresh for the next change."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Compare with the reference"
+           ],
+           "t": "b"
+          },
+          " (the remote ",
+          {
+           "t": "code",
+           "v": "reference"
+          },
+          " and the ",
+          {
+           "t": "code",
+           "v": "ref-*"
+          },
+          " tags are explained in the README of the reference repository; fetch again to get the new tags):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch24-c68",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch24 --stat"
+        },
+        {
+         "c": [
+          "Nothing is printed when your project matches the end of Chapter 24. The only file of this chapter is ",
+          {
+           "t": "code",
+           "v": "models/marts/fct_monthly_revenue.sql"
+          },
+          "; the ",
+          {
+           "t": "code",
+           "v": "ci"
+          },
+          " output lives in ",
+          {
+           "t": "code",
+           "v": "~/.dbt/profiles.yml"
+          },
+          ", outside the repository (see ",
+          {
+           "t": "code",
+           "v": "profiles.example.yml"
+          },
+          " in the reference)."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch24-lab5",
+       "objectives": [
+        "7.1",
+        "3.4"
+       ],
+       "t": "lab",
+       "title": [
+        "Merge, deploy to production and refresh prod-artifacts"
+       ]
+      }
+     ],
+     "id": "ch24-s9-0",
+     "title": [
+      "Finish the chapter: merge, deploy, refresh the state"
+     ],
+     "titleText": "Finish the chapter: merge, deploy, refresh the state"
+    }
+   ],
+   "title": [
+    "Finish the chapter: merge, deploy, refresh the state"
+   ],
+   "titleText": "Finish the chapter: merge, deploy, refresh the state"
+  }
+ ],
+ "minutes": 155,
+ "number": 24,
+ "objectives": [
+  "3.4",
+  "4.1",
+  "4.2",
+  "7.1",
+  "7.2"
+ ],
+ "part": 7,
+ "partLabel": "Part VII",
+ "partTitle": "State, CI and Deployment",
+ "printed": "24",
+ "quiz": [
+  "q-ch24-01",
+  "q-ch24-02",
+  "q-ch24-03",
+  "q-ch24-04",
+  "q-ch24-05",
+  "q-ch24-06",
+  "q-ch24-07",
+  "q-ch24-08",
+  "q-ch24-09",
+  "q-ch24-10",
+  "q-ch24-11",
+  "q-ch24-12",
+  "q-ch24-13",
+  "q-ch24-14",
+  "q-ch24-15",
+  "q-ch24-16",
+  "q-ch24-17",
+  "q-ch24-18",
+  "q-ch24-19"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-sdr-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch24-01",
+      "q-ch24-02",
+      "q-ch24-03",
+      "q-ch24-04",
+      "q-ch24-05",
+      "q-ch24-06",
+      "q-ch24-07",
+      "q-ch24-08",
+      "q-ch24-09",
+      "q-ch24-10",
+      "q-ch24-11",
+      "q-ch24-12",
+      "q-ch24-13",
+      "q-ch24-14",
+      "q-ch24-15",
+      "q-ch24-16",
+      "q-ch24-17",
+      "q-ch24-18",
+      "q-ch24-19"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch24-01",
+    "q-ch24-02",
+    "q-ch24-03",
+    "q-ch24-04",
+    "q-ch24-05",
+    "q-ch24-06",
+    "q-ch24-07",
+    "q-ch24-08",
+    "q-ch24-09",
+    "q-ch24-10",
+    "q-ch24-11",
+    "q-ch24-12",
+    "q-ch24-13",
+    "q-ch24-14",
+    "q-ch24-15",
+    "q-ch24-16",
+    "q-ch24-17",
+    "q-ch24-18",
+    "q-ch24-19"
+   ],
+   "label": "sec:sdr-quiz",
+   "number": "24.10",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Every command writes artifacts in ",
+        {
+         "t": "code",
+         "v": "target/"
+        },
+        " (or ",
+        {
+         "t": "code",
+         "v": "--target-path"
+        },
+        "): ",
+        {
+         "t": "code",
+         "v": "manifest.json"
+        },
+        " (the project), ",
+        {
+         "t": "code",
+         "v": "run_results.json"
+        },
+        " (statuses and args), ",
+        {
+         "t": "code",
+         "v": "catalog.json"
+        },
+        " (only ",
+        {
+         "t": "code",
+         "v": "docs generate"
+        },
+        "), ",
+        {
+         "t": "code",
+         "v": "sources.json"
+        },
+        " (only ",
+        {
+         "t": "code",
+         "v": "source freshness"
+        },
+        "). The next command overwrites them."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "c": [
+          "state"
+         ],
+         "t": "b"
+        },
+        " is a folder with the artifacts of an earlier run, usually production, given with ",
+        {
+         "t": "code",
+         "v": "--state"
+        },
+        " (or ",
+        {
+         "t": "code",
+         "v": "DBT_ENGINE_STATE"
+        },
+        ", formerly ",
+        {
+         "t": "code",
+         "v": "DBT_STATE"
+        },
+        "). It is not Git."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "state:new"
+        },
+        " (absent before), ",
+        {
+         "t": "code",
+         "v": "state:modified"
+        },
+        " (new + changed), ",
+        {
+         "t": "code",
+         "v": "state:old"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "state:unmodified"
+        },
+        "; sub-selectors ",
+        {
+         "t": "code",
+         "v": ".body"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": ".configs"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": ".relation"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": ".persisted_descriptions"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": ".macros"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": ".contract"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Not detected: ",
+        {
+         "t": "code",
+         "v": "tags"
+        },
+        " (and, says the documentation, ",
+        {
+         "t": "code",
+         "v": "meta"
+        },
+        "; 1.11.16 does detect ",
+        {
+         "t": "code",
+         "v": "meta"
+        },
+        "), descriptions without ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        ", new values of ",
+        {
+         "t": "code",
+         "v": "var"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "env_var"
+        },
+        ". Configs of ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        " are compared as written (those of ",
+        {
+         "t": "code",
+         "v": "config()"
+        },
+        " and properties files too, with the flag ",
+        {
+         "t": "code",
+         "v": "state_modified_compare_more_unrendered_values"
+        },
+        "), so target-dependent configs give no false positives. A breaking contract change raises an error."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Build changes with ",
+        {
+         "t": "code",
+         "v": "state:modified+"
+        },
+        ": a change can break the children."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "result:<status>"
+        },
+        " reads ",
+        {
+         "t": "code",
+         "v": "run_results.json"
+        },
+        " from ",
+        {
+         "t": "code",
+         "v": "--state"
+        },
+        ". A failed test is ",
+        {
+         "t": "code",
+         "v": "fail"
+        },
+        ", so ",
+        {
+         "t": "code",
+         "v": "result:error+"
+        },
+        " misses it; ",
+        {
+         "t": "code",
+         "v": "result:fail+"
+        },
+        " adds nothing after a test. ",
+        {
+         "t": "code",
+         "v": "source_status:fresher+"
+        },
+        " (the only value) compares the ",
+        {
+         "t": "code",
+         "v": "max_loaded_at"
+        },
+        " of two ",
+        {
+         "t": "code",
+         "v": "sources.json"
+        },
+        ", both required."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "--defer"
+        },
+        " resolves refs of unselected nodes missing from your target to the state's relations; ",
+        {
+         "t": "code",
+         "v": "--favor-state"
+        },
+        " prefers the state even if your copy exists; ",
+        {
+         "t": "code",
+         "v": "--defer-state"
+        },
+        " gives deferral its own manifest. Defer builds nothing; clone creates objects."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Slim CI: ",
+        {
+         "t": "code",
+         "v": "dbt build --select state:modified+ --defer --state <prod artifacts> --target ci"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt retry"
+        },
+        " re-runs only error, fail, skipped (and failed microbatch batches) of the ",
+        {
+         "c": [
+          "last"
+         ],
+         "t": "i"
+        },
+        " command, with its command, selection, target and defer settings; only ",
+        {
+         "t": "code",
+         "v": "--threads"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "--vars"
+        },
+        " can change; ",
+        {
+         "t": "code",
+         "v": "--warn-error"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "--defer-state"
+        },
+        " are not kept. \"Nothing to do\" when the last command succeeded or another command overwrote ",
+        {
+         "t": "code",
+         "v": "run_results.json"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt platform: Studio \"Defer to staging/production\", CI jobs defer to Production by default, \"Rerun from failure\" = ",
+        {
+         "t": "code",
+         "v": "dbt retry"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "State, Defer and dbt retry"
+}

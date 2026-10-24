@@ -1,0 +1,448 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The 2026 study guide targets dbt Core 1.11. 1.7 is the old version; 1.12 exists but is not tested yet; Fusion is a different engine, out of scope."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch00-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt Core 1.7"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt Core 1.11"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt Core 1.12"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The Fusion engine"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 0,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "Which version of dbt does the current exam test?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 3,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "65, 2, 65."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch00-02",
+  "key": {
+   "blanks": [
+    [
+     "65"
+    ],
+    [
+     "2"
+    ],
+    [
+     "65"
+    ]
+   ]
+  },
+  "keyRaw": "\\textbf{65, 2, 65.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 0,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "The exam has ___ questions, lasts ___ hours, and the passing score is ___%."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A: NO"
+      ],
+      "t": "b"
+     },
+     " (not open book). ",
+     {
+      "c": [
+       "B: YES"
+      ],
+      "t": "b"
+     },
+     " (no penalty for wrong answers, so always answer). ",
+     {
+      "c": [
+       "C: NO"
+      ],
+      "t": "b"
+     },
+     " (DOMC options cannot be revisited)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch00-03",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": false
+  },
+  "keyRaw": "\\textbf{A: NO}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "…open the dbt documentation in another tab."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "…answer a question even if you are not sure, without losing points."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "…go back to a DOMC option you already answered."
+    ],
+    "id": "C"
+   }
+  ],
+  "source": {
+   "chapter": 0,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "Statement: ",
+     {
+      "c": [
+       "\"During the exam, you may…\""
+      ],
+      "t": "i"
+     }
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A."
+      ],
+      "t": "b"
+     },
+     " A wrong answer gives 0 points; there is no negative marking."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch00-04",
+  "key": "A",
+  "keyRaw": "\\textbf{A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "0"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "0.25"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "0.5"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "1"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 0,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "You answered a question wrongly. How many points do you lose?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B and C."
+      ],
+      "t": "b"
+     },
+     " The guide does not publish weights (our table is an estimate), and documentation is no longer a separate topic in the 1.11 outline."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch00-05",
+  "key": [
+   "B",
+   "C"
+  ],
+  "keyRaw": "\\textbf{B and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It publishes an exact percentage weight for each topic."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It lists 7 topics."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It expects familiarity with joins, aggregations, CTEs and window functions."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It says that documentation is a separate topic with its own sub-objectives."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 0,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "Which statements about the official study guide are true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Read, Do, Test, Review."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch00-06",
+  "key": [
+   "D",
+   "B",
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{Read, Do, Test, Review.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Test"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Do"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Review"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Read"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 0,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Order the four steps of the study loop:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " Memorising questions is useless: the exam uses different wording. Understanding is the goal."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch00-07",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Two mock exams at 80% or more, under time conditions."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The capstone project is finished."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "You have memorised the official sample questions."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Your error notebook has been re-read."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 0,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "Which condition is ",
+     {
+      "c": [
+       "not"
+      ],
+      "t": "i"
+     },
+     " part of this bible's rule for booking the exam?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

@@ -1,0 +1,1847 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The default access is ",
+     {
+      "t": "code",
+      "v": "protected"
+     },
+     ". A is wrong: ",
+     {
+      "t": "code",
+      "v": "public"
+     },
+     " must be set explicitly. C is wrong: ",
+     {
+      "t": "code",
+      "v": "private"
+     },
+     " is never a default (and a private model without a group cannot be referenced at all). D is wrong: no access config is needed."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch17-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It is ",
+     {
+      "t": "code",
+      "v": "public"
+     },
+     ", so any project can ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " it."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It is ",
+     {
+      "t": "code",
+      "v": "protected"
+     },
+     ": any model of the same project can ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " it."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It is ",
+     {
+      "t": "code",
+      "v": "private"
+     },
+     ": only models without a group can ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " it."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt raises an error, because every model needs an access level."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "A model has no ",
+     {
+      "t": "code",
+      "v": "access"
+     },
+     " config and no ",
+     {
+      "t": "code",
+      "v": "group"
+     },
+     ". Which statement is true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " The contract must be enforced, and every column needs ",
+     {
+      "t": "code",
+      "v": "name"
+     },
+     " + ",
+     {
+      "t": "code",
+      "v": "data_type"
+     },
+     ". B: constraints are optional. D: the pre-flight check ignores the order. E: views and incremental models can also have contracts."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch17-02",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "contract: {enforced: true}"
+     },
+     " in the model's config."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "At least one constraint on the primary key."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "name"
+     },
+     " and a ",
+     {
+      "t": "code",
+      "v": "data_type"
+     },
+     " for every column the model returns."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The SQL columns in the same order as the YAML columns."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "materialized: table"
+     },
+     "."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two things are required for an enforced model contract to pass the pre-flight check?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "append_new_columns"
+       },
+       " or ",
+       {
+        "t": "code",
+        "v": "fail"
+       },
+       "."
+      ],
+      "t": "b"
+     },
+     " The default ",
+     {
+      "t": "code",
+      "v": "ignore"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "sync_all_columns"
+     },
+     " are refused when the project is parsed (\"Models materialized as incremental with contracts enabled must set on_schema_change to 'append_new_columns' or 'fail' \")."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch17-03",
+  "key": null,
+  "keyNote": "the key lists alternatives: 'append_new_columns or fail.'",
+  "keyRaw": "\\textbf{\\code{append\\_new\\_columns} or \\code{fail}.}",
+  "keyStatus": "todo",
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "A contracted incremental model must set ",
+     {
+      "t": "code",
+      "v": "on_schema_change"
+     },
+     " to ",
+     {
+      "t": "blank"
+     },
+     " or ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 8."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "sync_all_columns"
+     },
+     " can remove columns, which a contract forbids. The other lines are valid: an incremental model with a ",
+     {
+      "t": "code",
+      "v": "unique_key"
+     },
+     " and full column types is fine."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch17-c85",
+   "lines": 15,
+   "numbering": "listing"
+  },
+  "id": "q-ch17-04",
+  "key": 8,
+  "keyRaw": "\\textbf{Line 8.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "This properties file makes ",
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " fail. Which line is the cause?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch17-c85",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "version: 2\n\nmodels:\n  - name: fct_payments_daily\n    config:\n      materialized: incremental\n      unique_key: payment_date\n      on_schema_change: sync_all_columns\n      contract:\n        enforced: true\n    columns:\n      - name: payment_date\n        data_type: date\n      - name: amount\n        data_type: decimal(16, 2)"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-b, 2-c, 3-a, 4-d."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " is enforced everywhere; a primary key is metadata on BigQuery (and on every warehouse of the table except Postgres); ",
+     {
+      "t": "code",
+      "v": "check"
+     },
+     " is not supported on Redshift, Snowflake and BigQuery (it is enforced on Postgres and Databricks); a ",
+     {
+      "t": "code",
+      "v": "custom"
+     },
+     " constraint is written as it is, without any support check or warning."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch17-05",
+  "key": {
+   "1": "b",
+   "2": "c",
+   "3": "a",
+   "4": "d"
+  },
+  "keyRaw": "\\textbf{1-b, 2-c, 3-a, 4-d.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "not_null"
+      },
+      " on Snowflake"
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "primary_key"
+      },
+      " on BigQuery"
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "check"
+      },
+      " on Redshift"
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "custom"
+      },
+      " on any platform"
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "Not supported: left out of the DDL, with a warning"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "Enforced: bad rows make the build fail"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "Metadata only: in the DDL, not enforced, with a warning"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "Its expression is added to the DDL; dbt does not check support"
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each constraint (on the platform shown) with what happens, according to the dbt documentation."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B, E, C, D, A, F."
+      ],
+      "t": "b"
+     },
+     " Query shape, contract shape, compare, create the empty typed table, insert by name, rename. If C finds a mismatch, dbt stops and D, A and F never happen."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch17-06",
+  "key": [
+   "B",
+   "E",
+   "C",
+   "D",
+   "A",
+   "F"
+  ],
+  "keyRaw": "\\textbf{B, E, C, D, A, F.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Insert the rows, selecting the columns by name."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Run the model query with ",
+     {
+      "t": "code",
+      "v": "where false limit 0"
+     },
+     " to read its column names and types."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Compare the two lists of names and types."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Create an empty temporary table with the declared types and constraints."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Read the platform's types for the YAML columns (",
+     {
+      "t": "code",
+      "v": "cast(null as <data_type>)"
+     },
+     ")."
+    ],
+    "id": "E"
+   },
+   {
+    "c": [
+     "Rename the temporary table to the final name."
+    ],
+    "id": "F"
+   }
+  ],
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Put in order what dbt does when it runs a contracted ",
+     {
+      "t": "code",
+      "v": "table"
+     },
+     " model:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, YES, YES."
+      ],
+      "t": "b"
+     },
+     " An unpinned ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " follows ",
+     {
+      "t": "code",
+      "v": "latest_version"
+     },
+     " (2), not the highest number. Version 3, above the latest, is a prerelease. Selecting the model name selects every version. The default alias is ",
+     {
+      "t": "code",
+      "v": "<model>_v<v>"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch17-07",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": true,
+   "D": true
+  },
+  "keyRaw": "\\textbf{NO, YES, YES, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ref('orders_mart')"
+     },
+     " resolves to version 3, the highest."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Version 3 is a prerelease."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run --select orders_mart"
+     },
+     " builds the three versions."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "By default, version 3 is built in a relation named ",
+     {
+      "t": "code",
+      "v": "orders_mart_v3"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "Model ",
+     {
+      "t": "code",
+      "v": "orders_mart"
+     },
+     " has ",
+     {
+      "t": "code",
+      "v": "latest_version: 2"
+     },
+     " and versions 1, 2 and 3."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Reading the public interface respects the producer's decision. A works but exposes internals the team wants to keep private. C changes nothing: a model with no group is still outside the finance group. D: access is checked at parse time; a full refresh is about incremental models."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch17-08",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Set ",
+     {
+      "t": "code",
+      "v": "access: public"
+     },
+     " on ",
+     {
+      "t": "code",
+      "v": "int_orders__enriched"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Make ",
+     {
+      "t": "code",
+      "v": "mkt_orders"
+     },
+     " read the public mart ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " instead."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Remove the ",
+     {
+      "t": "code",
+      "v": "group"
+     },
+     " config from ",
+     {
+      "t": "code",
+      "v": "mkt_orders"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Run ",
+     {
+      "t": "code",
+      "v": "dbt build --full-refresh"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " prints: ",
+     {
+      "t": "code",
+      "v": "Node model.jaffle_dbt.mkt_orders attempted to reference node model.jaffle_dbt.int_orders__enriched, which is not allowed because the referenced node is private to the 'finance' group."
+     },
+     " The finance team does not want to expose its intermediate models. What is the best fix?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "missing in definition"
+     },
+     " (in the YAML, not in the SQL) plus ",
+     {
+      "t": "code",
+      "v": "missing in contract"
+     },
+     " (in the SQL, not in the YAML) is the signature of a rename. A would be a ",
+     {
+      "t": "code",
+      "v": "data type mismatch"
+     },
+     ". C: VARCHAR is fine. D: order is ignored."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch17-09",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The YAML declares ",
+     {
+      "t": "code",
+      "v": "sales_region"
+     },
+     " with the wrong type."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A column was renamed in the SQL from ",
+     {
+      "t": "code",
+      "v": "region"
+     },
+     " to ",
+     {
+      "t": "code",
+      "v": "sales_region"
+     },
+     ", but not in the YAML."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The platform does not support ",
+     {
+      "t": "code",
+      "v": "VARCHAR"
+     },
+     " in contracts."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The columns are in a different order in the SQL and in the YAML."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "A contracted model fails with this table. What happened?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch17-c86",
+    "lang": "output",
+    "t": "code",
+    "text": "  | column_name  | definition_type | contract_type | mismatch_reason       |\n  | ------------ | --------------- | ------------- | --------------------- |\n  | region       |                 | VARCHAR       | missing in definition |\n  | sales_region | VARCHAR         |               | missing in contract   |"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "D."
+      ],
+      "t": "b"
+     },
+     " Constraints are only written into the typed DDL of an enforced contract; without it they are silently ignored. A would be true ",
+     {
+      "c": [
+       "with"
+      ],
+      "t": "i"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "contract: {enforced: true}"
+     },
+     " (Postgres enforces both). B describes Snowflake-like platforms with a contract. C: the YAML is valid."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch17-10",
+  "key": "D",
+  "keyRaw": "\\textbf{D.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The constraints are created and enforced."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The constraints are created as metadata only."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt raises a parsing error."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The table is built with no constraint, and dbt prints no warning."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "The YAML has constraints ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "primary_key"
+     },
+     " on ",
+     {
+      "t": "code",
+      "v": "customer_id"
+     },
+     ", and no ",
+     {
+      "t": "code",
+      "v": "contract"
+     },
+     " config. What happens on Postgres when the model is built as a table?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B and D."
+      ],
+      "t": "b"
+     },
+     " Changing a type and removing a column can break consumers. A and C are additive. E changes values, not the shape: not a contract change (but tell your consumers)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch17-11",
+  "key": [
+   "B",
+   "D"
+  ],
+  "keyRaw": "\\textbf{B and D.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Adding a new column ",
+     {
+      "t": "code",
+      "v": "loyalty_points"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Changing the ",
+     {
+      "t": "code",
+      "v": "data_type"
+     },
+     " of ",
+     {
+      "t": "code",
+      "v": "lifetime_value"
+     },
+     " from ",
+     {
+      "t": "code",
+      "v": "decimal(38, 2)"
+     },
+     " to ",
+     {
+      "t": "code",
+      "v": "double"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Adding a ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " constraint to ",
+     {
+      "t": "code",
+      "v": "country"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Removing the column ",
+     {
+      "t": "code",
+      "v": "email"
+     },
+     "."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Fixing a bug in how ",
+     {
+      "t": "code",
+      "v": "lifetime_value"
+     },
+     " is calculated."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two changes to a contracted model are breaking changes?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "v"
+       }
+      ],
+      "t": "b"
+     },
+     " (",
+     {
+      "t": "code",
+      "v": "version"
+     },
+     " works too). Without it, the ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " follows ",
+     {
+      "t": "code",
+      "v": "latest_version"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch17-12",
+  "key": {
+   "accepted": [
+    "v"
+   ]
+  },
+  "keyNote": "alternative answers mentioned after the key: '(version works too)'",
+  "keyRaw": "\\textbf{\\code{v}}",
+  "keyStatus": "todo",
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "Complete the reference so that it always uses version 1 of ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "{{ ref('dim_customers', "
+     },
+     {
+      "t": "blank"
+     },
+     {
+      "t": "code",
+      "v": "=1) }}"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " For unversioned models, a breaking change is a warning. A is the behaviour for versioned models. C is wrong: unversioned contracted models are checked too. D: dbt never creates versions for you."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch17-13",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It stops with a \"Breaking change to contract\" error."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It prints a warning \"Breaking change to contracted, unversioned model\" and continues."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Nothing: breaking changes are only detected for versioned models."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It automatically creates version 2 of the model."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "In a CI job, dbt compares the project with the production state. A column was removed from a contracted model that has ",
+     {
+      "c": [
+       "no"
+      ],
+      "t": "i"
+     },
+     " versions. What does dbt do?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " Deprecation produces warnings only (",
+     {
+      "t": "code",
+      "v": "DeprecatedModel"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "DeprecatedReference"
+     },
+     "); nothing is skipped or dropped (A, B). D would need ",
+     {
+      "t": "code",
+      "v": "--warn-error-options"
+     },
+     " promoting the warning to an error."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch17-14",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Version 1 is skipped and its consumers fail."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt drops the relation of version 1."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt prints deprecation warnings, and everything builds as before."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The build fails with a compilation error."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "Version 1 of a model passed its ",
+     {
+      "t": "code",
+      "v": "deprecation_date"
+     },
+     " last month, and three models still ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " it with ",
+     {
+      "t": "code",
+      "v": "v=1"
+     },
+     ". What happens at the next ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, YES, YES."
+      ],
+      "t": "b"
+     },
+     " An enforced constraint blocks the write. Ephemeral models have no table, so no constraint (and no contract support). On Snowflake ",
+     {
+      "t": "code",
+      "v": "unique"
+     },
+     " is metadata only, so a test is needed. Severity is a test config."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch17-15",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": true
+  },
+  "keyRaw": "\\textbf{YES, NO, YES, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "An enforced ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " constraint stops bad rows before they land in the table."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A constraint can be added to an ephemeral model if the model has a contract."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "On Snowflake, a ",
+     {
+      "t": "code",
+      "v": "unique"
+     },
+     " data test is still needed to guarantee uniqueness."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A data test can be configured with ",
+     {
+      "t": "code",
+      "v": "severity: warn"
+     },
+     "; a constraint cannot."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "Constraints versus data tests:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A."
+      ],
+      "t": "b"
+     },
+     " Project dependency in ",
+     {
+      "t": "code",
+      "v": "dependencies.yml"
+     },
+     ", a public model, a two-argument ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     ". B mixes packages and ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     ". C: protected models are not visible to other projects. D: grants are database permissions, not dbt references."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch17-16",
+  "key": "A",
+  "keyRaw": "\\textbf{A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "List ",
+     {
+      "t": "code",
+      "v": "jaffle_finance"
+     },
+     " under ",
+     {
+      "t": "code",
+      "v": "projects:"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "dependencies.yml"
+     },
+     ", make ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " public, and write ",
+     {
+      "t": "code",
+      "v": "ref('jaffle_finance', 'fct_orders')"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "List ",
+     {
+      "t": "code",
+      "v": "jaffle_finance"
+     },
+     " under ",
+     {
+      "t": "code",
+      "v": "packages:"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "restrict-access: false"
+     },
+     ", and write ",
+     {
+      "t": "code",
+      "v": "source('jaffle_finance', 'fct_orders')"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Make ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " protected, and write ",
+     {
+      "t": "code",
+      "v": "ref('fct_orders')"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Add a ",
+     {
+      "t": "code",
+      "v": "grants"
+     },
+     " config to ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     "; no other change is needed."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "A marketing project wants to read ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " from the ",
+     {
+      "t": "code",
+      "v": "jaffle_finance"
+     },
+     " project with dbt Mesh. Which setup is correct?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 9."
+      ],
+      "t": "b"
+     },
+     " A group owner needs at least ",
+     {
+      "t": "code",
+      "v": "name"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "email"
+     },
+     "; ",
+     {
+      "t": "code",
+      "v": "slack"
+     },
+     " alone fails (\"Group owner must have at least one of 'name' or 'email' \"). Lines 14 and 15 are fine: a private model in a group."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch17-c87",
+   "lines": 15,
+   "numbering": "listing"
+  },
+  "id": "q-ch17-17",
+  "key": 9,
+  "keyRaw": "\\textbf{Line 9.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "Which line makes this file fail to parse?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch17-c87",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "version: 2\n\ngroups:\n  - name: finance\n    owner:\n      email: finance-data@jaffle.example\n  - name: ops\n    owner:\n      slack: \"#ops-data\"\n\nmodels:\n  - name: fct_payouts\n    config:\n      group: ops\n      access: private"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-b, 2-c, 3-d, 4-a."
+      ],
+      "t": "b"
+     },
+     " The latest version is the one unpinned refs get (",
+     {
+      "t": "code",
+      "v": "latest_version"
+     },
+     ", or the highest ",
+     {
+      "t": "code",
+      "v": "v"
+     },
+     "); prerelease = above it, old = below it; ",
+     {
+      "t": "code",
+      "v": "none"
+     },
+     " = models that have no ",
+     {
+      "t": "code",
+      "v": "versions"
+     },
+     " block at all."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch17-18",
+  "key": {
+   "1": "b",
+   "2": "c",
+   "3": "d",
+   "4": "a"
+  },
+  "keyRaw": "\\textbf{1-b, 2-c, 3-d, 4-a.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "version:latest"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "version:prerelease"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "version:old"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "version:none"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "Models that have no versions"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "The version that unpinned refs resolve to"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "Versions above ",
+      {
+       "t": "code",
+       "v": "latest_version"
+      }
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "Versions below ",
+      {
+       "t": "code",
+       "v": "latest_version"
+      }
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each selector with what it selects."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The documented behaviour: sizes, precision and scale are not compared (DuckDB is stricter with decimals, but the exam asks about dbt). A would need a different base type. C is about a column absent from the YAML. D: dbt never edits your YAML."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch17-19",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It fails with ",
+     {
+      "t": "code",
+      "v": "data type mismatch"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It passes: dbt does not compare size, precision or scale."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It fails with ",
+     {
+      "t": "code",
+      "v": "missing in contract"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt changes the YAML to ",
+     {
+      "t": "code",
+      "v": "varchar(300)"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 17,
+   "kind": "chapter",
+   "n": 19
+  },
+  "stem": [
+   {
+    "c": [
+     "A contract on Snowflake declares ",
+     {
+      "t": "code",
+      "v": "data_type: varchar(256)"
+     },
+     ", and the query returns ",
+     {
+      "t": "code",
+      "v": "varchar(300)"
+     },
+     ". According to the dbt documentation, what happens in the pre-flight check?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

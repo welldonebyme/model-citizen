@@ -1,0 +1,7734 @@
+{
+ "id": "ch13",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "Creating snapshots in YAML (dbt 1.9+): ",
+      {
+       "t": "code",
+       "v": "relation"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "unique_key"
+      },
+      ", the ",
+      {
+       "t": "code",
+       "v": "timestamp"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "check"
+      },
+      " strategies, ",
+      {
+       "t": "code",
+       "v": "hard_deletes"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt_valid_to_current"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "snapshot_meta_column_names"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "schema"
+      },
+      "/",
+      {
+       "t": "code",
+       "v": "database"
+      },
+      "/",
+      {
+       "t": "code",
+       "v": "alias"
+      },
+      "."
+     ],
+     "id": "1.10"
+    },
+    {
+     "c": [
+      "Reading a snapshot table: the meta columns ",
+      {
+       "t": "code",
+       "v": "dbt_scd_id"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt_updated_at"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt_valid_from"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt_valid_to"
+      },
+      " (and ",
+      {
+       "t": "code",
+       "v": "dbt_is_deleted"
+      },
+      "), current rows, history and point-in-time queries."
+     ],
+     "id": "1.10"
+    },
+    {
+     "c": [
+      "Recognising the legacy SQL syntax (",
+      {
+       "t": "code",
+       "v": "{% snapshot %}"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "target_schema"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "invalidate_hard_deletes"
+      },
+      ")."
+     ],
+     "id": "1.10"
+    },
+    {
+     "c": [
+      "The ",
+      {
+       "t": "code",
+       "v": "dbt snapshot"
+      },
+      " command, snapshots inside ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      ", selection, and what ",
+      {
+       "t": "code",
+       "v": "dbt run"
+      },
+      " ignores."
+     ],
+     "id": "1.4"
+    },
+    {
+     "c": [
+      "What ",
+      {
+       "t": "code",
+       "v": "--empty"
+      },
+      " does to a snapshot (and the one case where it destroys history)."
+     ],
+     "id": "1.12"
+    },
+    {
+     "c": [
+      "Snapshot configs in ",
+      {
+       "t": "code",
+       "v": "dbt_project.yml"
+      },
+      " and how ",
+      {
+       "t": "code",
+       "v": "generate_schema_name"
+      },
+      " decides where snapshots are built."
+     ],
+     "id": "1.6"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "On 2 January the marketing team asks a simple question: \"How much revenue did our customers ",
+      {
+       "c": [
+        "in Morocco"
+       ],
+       "t": "i"
+      },
+      " bring last year?\" You run the query and get a number. A week later the finance team runs the same query and gets a smaller one. Nobody changed the SQL. What changed is the data: three customers moved to another country, and the source system simply ",
+      {
+       "c": [
+        "overwrote"
+       ],
+       "t": "i"
+      },
+      " their ",
+      {
+       "t": "code",
+       "v": "country"
+      },
+      ". The old value is gone. Your warehouse only knows the present."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "Source systems are built to run the business ",
+      {
+       "c": [
+        "today"
+       ],
+       "t": "i"
+      },
+      ", so they update rows in place. Analytics often needs ",
+      {
+       "c": [
+        "yesterday"
+       ],
+       "t": "i"
+      },
+      " too: what was the status of this order on 31 December? Which plan did this customer have when they cancelled? dbt answers with ",
+      {
+       "c": [
+        "snapshots"
+       ],
+       "t": "b"
+      },
+      ". A snapshot is a table that dbt maintains for you, where every change in a source table becomes a new row with a validity period. Snapshots are an official exam objective (1.10, \"creating snapshots in YAML\"), and the exam likes them because they are full of small, precise rules: which strategy needs which config, what ",
+      {
+       "t": "code",
+       "v": "dbt_valid_to"
+      },
+      " contains, what happens to deleted rows, which command runs them. This chapter gives you all those rules, and you will see each one happen in your own project."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "A snapshot is a table that dbt builds from a source and then updates on every ",
+      {
+       "t": "code",
+       "v": "dbt snapshot"
+      },
+      " (or ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      "): when a row changes, dbt closes the old version (it fills ",
+      {
+       "t": "code",
+       "v": "dbt_valid_to"
+      },
+      ") and inserts a new version, so the full history is kept. dbt detects changes either with a trustworthy \"last updated\" column (",
+      {
+       "t": "code",
+       "v": "timestamp"
+      },
+      " strategy) or by comparing chosen columns (",
+      {
+       "t": "code",
+       "v": "check"
+      },
+      " strategy), always matching rows by a ",
+      {
+       "t": "code",
+       "v": "unique_key"
+      },
+      ". Since dbt 1.9 you declare snapshots in YAML, and because history cannot be rebuilt from the source, you protect snapshot tables and run them often."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:snapshots",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-snap-why"
+   ],
+   "checkpoints": [],
+   "id": "ch13-s1",
+   "label": "sec:snap-why",
+   "labs": [],
+   "minutes": 5,
+   "number": "13.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "In ",
+        {
+         "href": "/learn/ch01/",
+         "label": "ch:data-world",
+         "t": "ref",
+         "text": "Chapter 1"
+        },
+        " (",
+        {
+         "href": "/learn/ch01/ch01-s6/",
+         "label": "sec:dw-modeling",
+         "t": "ref",
+         "text": "Section 1.6"
+        },
+        ") you met the ",
+        {
+         "c": [
+          "slowly changing dimension"
+         ],
+         "t": "b"
+        },
+        " (SCD): a dimension whose values change from time to time, like the country of a customer. There are two classic answers:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "SCD Type 1"
+             ],
+             "t": "b"
+            },
+            ": overwrite the old value. This is what our source system does. Simple, but the past is lost."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "SCD Type 2"
+             ],
+             "t": "b"
+            },
+            ": keep ",
+            {
+             "c": [
+              "every version"
+             ],
+             "t": "i"
+            },
+            " of the row. Each version has a start (\"valid from\") and an end (\"valid to\"). The current version has no end yet."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "A dbt snapshot is SCD Type 2, built and maintained automatically."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Think of a whiteboard in a shop. Every morning the manager erases yesterday's prices and writes today's prices. If you only look at the whiteboard, you can never know last week's price of a croissant. A snapshot is a notebook next to the whiteboard. Each time you look at the board, you compare it with the last page of your notebook, and you write down ",
+          {
+           "c": [
+            "only what changed"
+           ],
+           "t": "i"
+          },
+          ", with the date. The notebook grows slowly, and it can answer questions about any day since you started writing. Notice two things: you must look at the board ",
+          {
+           "c": [
+            "often"
+           ],
+           "t": "i"
+          },
+          " (a price that changes twice between two visits is only noted once), and you can never fill the notebook for the days ",
+          {
+           "c": [
+            "before"
+           ],
+           "t": "i"
+          },
+          " you bought it."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s1-1",
+     "number": "13.1.1",
+     "title": [
+      "A quick recap of SCD Type 2"
+     ],
+     "titleText": "A quick recap of SCD Type 2"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Here is customer 5 after two snapshot runs in our project (you will produce this table, with your own timestamps, in Lab 2). Between the two runs, the customer moved from Morocco to France:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c1",
+       "lang": "output",
+       "t": "code",
+       "text": "+----+---------+----------------------------+----------------------------+\n| id | country | dbt_valid_from             | dbt_valid_to               |\n+----+---------+----------------------------+----------------------------+\n|  5 | Morocco | 2026-10-21 20:53:41.428855 | 2026-10-21 20:54:01.282770 |\n|  5 | France  | 2026-10-21 20:54:01.282770 | NULL                       |\n+----+---------+----------------------------+----------------------------+"
+      },
+      {
+       "c": [
+        "Two rows for one customer: the old version is ",
+        {
+         "c": [
+          "closed"
+         ],
+         "t": "i"
+        },
+        " (it has a ",
+        {
+         "t": "code",
+         "v": "dbt_valid_to"
+        },
+        "), the new version is ",
+        {
+         "c": [
+          "current"
+         ],
+         "t": "i"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "dbt_valid_to"
+        },
+        " is NULL). The end of one version is exactly the start of the next one, so there is no gap and no overlap."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "A snapshot timeline for one customer. Version 1 (Morocco) is valid from run 1 (20:53:41) to run 2 (20:54:01); it is closed: dbt_valid_to = run 2. Version 2 (France) starts at run 2 and is current: dbt_valid_to = NULL. There is no gap and no overlap between the versions.",
+       "id": "ch13-fig1",
+       "src": "figures/ch13-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "With such a table you can answer three kinds of questions:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Current state"
+             ],
+             "t": "b"
+            },
+            ": ",
+            {
+             "t": "code",
+             "v": "where dbt_valid_to is null"
+            },
+            " gives one row per customer, as today."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "History of one key"
+             ],
+             "t": "b"
+            },
+            ": ",
+            {
+             "t": "code",
+             "v": "where id = 5 order by dbt_valid_from"
+            },
+            " tells the whole story of customer 5."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "State at a moment"
+             ],
+             "t": "b"
+            },
+            " (a ",
+            {
+             "en": [
+              "point-in-time query"
+             ],
+             "fr": "requête à une date donnée",
+             "id": "term-point-in-time-query",
+             "t": "term"
+            },
+            "): which version was valid at time ",
+            {
+             "c": [
+              "T"
+             ],
+             "t": "i"
+            },
+            "? The rule is ",
+            {
+             "t": "code",
+             "v": "T >= dbt_valid_from and (T < dbt_valid_to or dbt_valid_to is null)"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch13-s1-2",
+     "number": "13.1.2",
+     "title": [
+      "What a snapshot looks like"
+     ],
+     "titleText": "What a snapshot looks like"
+    }
+   ],
+   "title": [
+    "Why keep history?"
+   ],
+   "titleText": "Why keep history?"
+  },
+  {
+   "anchors": [
+    "sec-snap-what"
+   ],
+   "checkpoints": [],
+   "id": "ch13-s2",
+   "label": "sec:snap-what",
+   "labs": [],
+   "minutes": 5,
+   "number": "13.2",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A snapshot is a ",
+        {
+         "c": [
+          "resource type"
+         ],
+         "t": "b"
+        },
+        ", like a model, a seed or a test. It has a name, a config, a node in the DAG, and it creates one table in the warehouse. But it behaves differently from a model:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Table model"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Snapshot"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Each run"
+          ]
+         },
+         {
+          "c": [
+           "Rebuilds the table from scratch (drop and recreate)."
+          ]
+         },
+         {
+          "c": [
+           "Compares the source with the table and ",
+           {
+            "c": [
+             "adds"
+            ],
+            "t": "i"
+           },
+           " rows. Never rebuilds."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "History"
+          ]
+         },
+         {
+          "c": [
+           "None: the table shows the source as it is now."
+          ]
+         },
+         {
+          "c": [
+           "Every version of every row since the first run."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Can be recreated?"
+          ]
+         },
+         {
+          "c": [
+           "Yes, any time, from the sources."
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "No"
+            ],
+            "t": "b"
+           },
+           ". If you drop it, the past is lost forever."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Command"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt run"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "dbt build"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt snapshot"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "dbt build"
+           },
+           " (not ",
+           {
+            "t": "code",
+            "v": "dbt run"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Defined in"
+          ]
+         },
+         {
+          "c": [
+           "a ",
+           {
+            "t": "code",
+            "v": ".sql"
+           },
+           " (or ",
+           {
+            "t": "code",
+            "v": ".py"
+           },
+           ") file in ",
+           {
+            "t": "code",
+            "v": "models/"
+           }
+          ]
+         },
+         {
+          "c": [
+           "a YAML entry under ",
+           {
+            "t": "code",
+            "v": "snapshots:"
+           },
+           " (1.9+), or a legacy ",
+           {
+            "t": "code",
+            "v": ".sql"
+           },
+           " file"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch13-s2-0",
+     "title": [
+      "Snapshots in dbt: the big picture"
+     ],
+     "titleText": "Snapshots in dbt: the big picture"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "First run"
+             ],
+             "t": "b"
+            },
+            ": the table does not exist. dbt creates it with every row of the source plus four extra columns, the ",
+            {
+             "en": [
+              "meta columns"
+             ],
+             "fr": "colonnes de métadonnées",
+             "id": "term-meta-column",
+             "t": "term"
+            },
+            ". Every row is current (",
+            {
+             "t": "code",
+             "v": "dbt_valid_to"
+            },
+            " is NULL)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Every later run"
+             ],
+             "t": "b"
+            },
+            ": dbt reads the source again and matches each source row with the ",
+            {
+             "c": [
+              "current"
+             ],
+             "t": "i"
+            },
+            " snapshot row that has the same ",
+            {
+             "t": "code",
+             "v": "unique_key"
+            },
+            ". Then, for each key:"
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Situation"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What dbt does"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "New key (not in the snapshot yet)"
+          ]
+         },
+         {
+          "c": [
+           "Inserts it as a new current row."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Key exists and the row ",
+           {
+            "c": [
+             "changed"
+            ],
+            "t": "i"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Closes the current version (sets its ",
+           {
+            "t": "code",
+            "v": "dbt_valid_to"
+           },
+           ") and inserts a new current version."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Key exists and nothing changed"
+          ]
+         },
+         {
+          "c": [
+           "Nothing."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Key no longer in the source (",
+           {
+            "en": [
+             "hard delete"
+            ],
+            "fr": "suppression physique",
+            "id": "term-hard-delete",
+            "t": "term"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "Nothing by default; see ",
+           {
+            "t": "code",
+            "v": "hard_deletes"
+           },
+           " (",
+           {
+            "href": "/learn/ch13/ch13-s8/",
+            "label": "sec:snap-hard-deletes",
+            "t": "ref",
+            "text": "Section 13.8"
+           },
+           ")."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "How does dbt decide that a row \"changed\"? That is the job of the ",
+        {
+         "en": [
+          "snapshot strategy"
+         ],
+         "fr": "stratégie de snapshot",
+         "id": "term-snapshot-strategy",
+         "t": "term"
+        },
+        " (",
+        {
+         "href": "/learn/ch13/ch13-s4/",
+         "label": "sec:snap-strategies",
+         "t": "ref",
+         "text": "Section 13.4"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch13-s2-1",
+     "number": "13.2.1",
+     "title": [
+      "What dbt does on each run"
+     ],
+     "titleText": "What dbt does on each run"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Column"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_scd_id"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A unique id for each ",
+           {
+            "c": [
+             "version"
+            ],
+            "t": "i"
+           },
+           " (each snapshot row): a hash (MD5) of the ",
+           {
+            "t": "code",
+            "v": "unique_key"
+           },
+           " and the change time. dbt uses it internally to find the row to close."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_updated_at"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The change time dbt recorded for this version: the ",
+           {
+            "t": "code",
+            "v": "updated_at"
+           },
+           " value (",
+           {
+            "t": "code",
+            "v": "timestamp"
+           },
+           " strategy) or the time of the snapshot run (",
+           {
+            "t": "code",
+            "v": "check"
+           },
+           " strategy)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_valid_from"
+           }
+          ]
+         },
+         {
+          "c": [
+           "When this version became valid. Same value as ",
+           {
+            "t": "code",
+            "v": "dbt_updated_at"
+           },
+           " when the row is inserted."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_valid_to"
+           }
+          ]
+         },
+         {
+          "c": [
+           "When this version stopped being valid. ",
+           {
+            "c": [
+             "NULL for the current version"
+            ],
+            "t": "b"
+           },
+           " (unless you set ",
+           {
+            "t": "code",
+            "v": "dbt_valid_to_current"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_is_deleted"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Only with ",
+           {
+            "t": "code",
+            "v": "hard_deletes: new_record"
+           },
+           ": ",
+           {
+            "t": "code",
+            "v": "True"
+           },
+           " on the row that records a deletion, ",
+           {
+            "t": "code",
+            "v": "False"
+           },
+           " otherwise."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"Current rows have ",
+            {
+             "t": "code",
+             "v": "dbt_valid_to"
+            },
+            " = today.\""
+           ],
+           "t": "b"
+          },
+          " No. By default the current version has ",
+          {
+           "t": "code",
+           "v": "dbt_valid_to"
+          },
+          " = ",
+          {
+           "c": [
+            "NULL"
+           ],
+           "t": "b"
+          },
+          ". A query for current rows is ",
+          {
+           "t": "code",
+           "v": "where dbt_valid_to is null"
+          },
+          ", not ",
+          {
+           "t": "code",
+           "v": "where dbt_valid_to = current_date"
+          },
+          ". Since 1.9 the config ",
+          {
+           "t": "code",
+           "v": "dbt_valid_to_current"
+          },
+          " can replace NULL by a far-future date such as 9999-12-31 (",
+          {
+           "href": "/learn/ch13/ch13-s9/",
+           "label": "sec:snap-more-configs",
+           "t": "ref",
+           "text": "Section 13.9"
+          },
+          "). See trap T62 in ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"",
+            {
+             "t": "code",
+             "v": "dbt run"
+            },
+            " also updates my snapshots.\""
+           ],
+           "t": "b"
+          },
+          " It does not. ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          " builds models only. Snapshots run with ",
+          {
+           "t": "code",
+           "v": "dbt snapshot"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          ". We tried to select a snapshot with ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c2",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt run -s customers_snapshot"
+        },
+        {
+         "id": "ch13-c3",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "22:05:12  Found 12 models, 2 analyses, 1 seed, 12 data tests, 2 snapshots, 5 sources, 669 macros\n22:05:12  Nothing to do. Try checking your model configs and model specification args"
+        },
+        {
+         "c": [
+          "No error, just \"Nothing to do\". Traps T60 and T29 in ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s2-2",
+     "number": "13.2.2",
+     "title": [
+      "The meta columns"
+     ],
+     "titleText": "The meta columns"
+    }
+   ],
+   "title": [
+    "Snapshots in dbt: the big picture"
+   ],
+   "titleText": "Snapshots in dbt: the big picture"
+  },
+  {
+   "anchors": [
+    "sec-snap-yaml",
+    "sec-snap-schema"
+   ],
+   "checkpoints": [],
+   "id": "ch13-s3",
+   "label": "sec:snap-yaml",
+   "labs": [],
+   "minutes": 10,
+   "number": "13.3",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Since dbt 1.9, a snapshot is a YAML entry under the top-level key ",
+        {
+         "t": "code",
+         "v": "snapshots:"
+        },
+        ". The usual place is the ",
+        {
+         "t": "code",
+         "v": "snapshots/"
+        },
+        " folder that ",
+        {
+         "t": "code",
+         "v": "dbt init"
+        },
+        " created in Chapter 6 (the ",
+        {
+         "t": "code",
+         "v": "snapshot-paths: [\"snapshots\"]"
+        },
+        " line of ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        "). The file name is free; we use ",
+        {
+         "t": "code",
+         "v": "snapshots/snapshots.yml"
+        },
+        ". dbt also accepts snapshot YAML entries in a ",
+        {
+         "t": "code",
+         "v": ".yml"
+        },
+        " file inside ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        ": we tested a snapshot declared in ",
+        {
+         "t": "code",
+         "v": "models/staging/jaffle_shop/_demo_snapshots.yml"
+        },
+        " and it was built normally. Keeping them in ",
+        {
+         "t": "code",
+         "v": "snapshots/"
+        },
+        " is clearer."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch13-s3-1",
+     "number": "13.3.1",
+     "title": [
+      "Where the file goes"
+     ],
+     "titleText": "Where the file goes"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Here are the two snapshots of our project, exactly as in the reference repository (tag ",
+        {
+         "t": "code",
+         "v": "ch13"
+        },
+        "):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c4",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nsnapshots:\n  - name: customers_snapshot\n    description: History of each customer's email and country (check strategy).\n    relation: source('jaffle_shop', 'customers')\n    config:\n      schema: snapshots\n      unique_key: id\n      strategy: check\n      check_cols: ['email', 'country']\n\n  - name: orders_snapshot\n    description: History of each order (timestamp strategy on _loaded_at).\n    relation: source('jaffle_shop', 'orders')\n    config:\n      schema: snapshots\n      unique_key: id\n      strategy: timestamp\n      updated_at: _loaded_at",
+       "title": "snapshots/snapshots.yml"
+      },
+      {
+       "c": [
+        "Line by line:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "name"
+            },
+            ": the name of the snapshot and, by default, of the table it creates (",
+            {
+             "t": "code",
+             "v": "customers_snapshot"
+            },
+            "). It must be unique among models, seeds and snapshots, because you can ",
+            {
+             "t": "code",
+             "v": "ref()"
+            },
+            " a snapshot."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "description"
+            },
+            ": documentation, like for a model. You can also add ",
+            {
+             "t": "code",
+             "v": "columns:"
+            },
+            " with descriptions and ",
+            {
+             "t": "code",
+             "v": "data_tests:"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "relation"
+            },
+            ": ",
+            {
+             "c": [
+              "what"
+             ],
+             "t": "b"
+            },
+            " to snapshot. It is either ",
+            {
+             "t": "code",
+             "v": "source('source_name', 'table_name')"
+            },
+            " or ",
+            {
+             "t": "code",
+             "v": "ref('model_name')"
+            },
+            ". dbt reads ",
+            {
+             "c": [
+              "all"
+             ],
+             "t": "i"
+            },
+            " the columns (",
+            {
+             "t": "code",
+             "v": "select *"
+            },
+            ") of that relation. It also creates the DAG edge: the snapshot depends on it."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "config"
+            },
+            ": ",
+            {
+             "c": [
+              "how"
+             ],
+             "t": "b"
+            },
+            " to snapshot. The rest of this section and the next one explain each key."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "relation"
+          },
+          " takes a Jinja-like expression ",
+          {
+           "c": [
+            "without"
+           ],
+           "t": "i"
+          },
+          " the double braces: ",
+          {
+           "t": "code",
+           "v": "relation: source('jaffle_shop', 'orders')"
+          },
+          ", not ",
+          {
+           "t": "code",
+           "v": "relation: \"{{ source('jaffle_shop', 'orders') }}\""
+          },
+          ". It can point to an ephemeral model too: we snapshotted ",
+          {
+           "t": "code",
+           "v": "ref('int_payments__successful')"
+          },
+          " (ephemeral) and dbt inlined it as a CTE. This is the documented way to clean or select columns before snapshotting, but keep that model very simple (",
+          {
+           "href": "/learn/ch13/ch13-s11/",
+           "label": "sec:snap-best-practices",
+           "t": "ref",
+           "text": "Section 13.11"
+          },
+          ")."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Two YAML mistakes that look harmless."
+           ],
+           "t": "b"
+          },
+          " (1) Every ",
+          {
+           "c": [
+            "config"
+           ],
+           "t": "i"
+          },
+          " goes under ",
+          {
+           "t": "code",
+           "v": "config:"
+          },
+          ". We moved ",
+          {
+           "t": "code",
+           "v": "unique_key: id"
+          },
+          " one level up, next to ",
+          {
+           "t": "code",
+           "v": "relation"
+          },
+          ": dbt no longer saw it and ",
+          {
+           "t": "code",
+           "v": "dbt parse"
+          },
+          " stopped with ",
+          {
+           "c": [
+            "Snapshots must be configured with a 'strategy' and 'unique_key'"
+           ],
+           "t": "i"
+          },
+          ", although the word ",
+          {
+           "t": "code",
+           "v": "unique_key"
+          },
+          " was in the file. Only properties such as ",
+          {
+           "t": "code",
+           "v": "name"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "relation"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "description"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "columns"
+          },
+          " sit at the top level of the entry. (2) ",
+          {
+           "t": "code",
+           "v": "relation"
+          },
+          " must be a ",
+          {
+           "t": "code",
+           "v": "source()"
+          },
+          " or a ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          ". A plain table name (",
+          {
+           "t": "code",
+           "v": "relation: jaffle_shop.customers"
+          },
+          ") is a ",
+          {
+           "c": [
+            "Parsing Error: Invalid jinja expression: jaffle_shop.customers"
+           ],
+           "t": "i"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s3-2",
+     "number": "13.3.2",
+     "title": [
+      "The anatomy of a YAML snapshot"
+     ],
+     "titleText": "The anatomy of a YAML snapshot"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Config"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Required?"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "unique_key"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The column(s) that identify one row of the source."
+          ]
+         },
+         {
+          "c": [
+           "Always"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "strategy"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "timestamp"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "check"
+           },
+           "."
+          ]
+         },
+         {
+          "c": [
+           "Always"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "updated_at"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The \"last modified\" column."
+          ]
+         },
+         {
+          "c": [
+           "With ",
+           {
+            "t": "code",
+            "v": "timestamp"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "check_cols"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A list of columns to compare, or the string ",
+           {
+            "t": "code",
+            "v": "all"
+           },
+           "."
+          ]
+         },
+         {
+          "c": [
+           "With ",
+           {
+            "t": "code",
+            "v": "check"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "A missing required config stops every command at parse time. We removed them one by one; dbt printed ",
+        {
+         "c": [
+          "Encountered an error:"
+         ],
+         "t": "i"
+        },
+        " followed by one of these messages (and a Python traceback):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c5",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "Snapshots must be configured with a 'strategy' and 'unique_key'.\nA snapshot configured with the timestamp strategy must specify an updated_at configuration.\nA snapshot configured with the check strategy must specify a check_cols configuration."
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"Both strategies need the same configs.\""
+           ],
+           "t": "b"
+          },
+          " Both need ",
+          {
+           "t": "code",
+           "v": "unique_key"
+          },
+          " (and ",
+          {
+           "t": "code",
+           "v": "strategy"
+          },
+          "). Then ",
+          {
+           "t": "code",
+           "v": "timestamp"
+          },
+          " needs ",
+          {
+           "t": "code",
+           "v": "updated_at"
+          },
+          ", and ",
+          {
+           "t": "code",
+           "v": "check"
+          },
+          " needs ",
+          {
+           "t": "code",
+           "v": "check_cols"
+          },
+          ". Do not mix them up in a \"which config is missing?\" question. Trap T61 in ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s3-3",
+     "number": "13.3.3",
+     "title": [
+      "The required configs"
+     ],
+     "titleText": "The required configs"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "unique_key"
+        },
+        " is how dbt recognises \"the same row\" from one run to the next. It can be:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "one column: ",
+            {
+             "t": "code",
+             "v": "unique_key: id"
+            },
+            ";"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "a list of columns (a composite key, dbt 1.9+): ",
+            {
+             "t": "code",
+             "v": "unique_key: [order_id, product_id]"
+            },
+            ";"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "a SQL expression, for example ",
+            {
+             "t": "code",
+             "v": "unique_key: \"order_id || '-' || product_id\""
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "We snapshotted the order items with a composite key. dbt simply includes every key column in the hash of ",
+        {
+         "t": "code",
+         "v": "dbt_scd_id"
+        },
+        " (from ",
+        {
+         "t": "code",
+         "v": "target/run/"
+        },
+        "):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c6",
+       "lang": "plain",
+       "t": "code",
+       "text": "        md5(coalesce(cast(order_id as varchar ), '')\n         || '|' || coalesce(cast(product_id as varchar ), '')\n         || '|' || coalesce(cast(now()::timestamp as varchar ), '')\n        ) as dbt_scd_id,"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "The key must really be unique."
+           ],
+           "t": "b"
+          },
+          " dbt does not check it. We made a deliberate mistake: a snapshot of the orders with ",
+          {
+           "t": "code",
+           "v": "unique_key: user_id"
+          },
+          " (a customer has several orders). Then we ran ",
+          {
+           "t": "code",
+           "v": "dbt snapshot"
+          },
+          " three times ",
+          {
+           "c": [
+            "without changing any data"
+           ],
+           "t": "i"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c7",
+         "lang": "output",
+         "t": "code",
+         "text": "run 1:  n_rows = 320    n_current = 320\nrun 2:  n_rows = 700    n_current = 529\nrun 3:  n_rows = 1912   n_current = 1361"
+        },
+        {
+         "c": [
+          "Every run ended with ",
+          {
+           "t": "code",
+           "v": "OK snapshotted"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "PASS=1"
+          },
+          ", but the table exploded: each order was compared with the other orders of the same customer and looked \"changed\". This kind of damage cannot be undone by a rerun. Protect yourself with a ",
+          {
+           "t": "code",
+           "v": "unique"
+          },
+          " test on the key in the source (Chapter 18), and choose the key carefully."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s3-4",
+     "number": "13.3.4",
+     "title": [
+      {
+       "t": "code",
+       "v": "unique_key"
+      },
+      ": one column, several columns, or an expression"
+     ],
+     "titleText": "unique_key: one column, several columns, or an expression"
+    },
+    {
+     "anchor": "sec-snap-schema",
+     "blocks": [
+      {
+       "c": [
+        "Since 1.9, snapshots use the same location configs as models:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "schema"
+            },
+            ": a ",
+            {
+             "c": [
+              "custom"
+             ],
+             "t": "i"
+            },
+            " schema. It goes through the ",
+            {
+             "t": "code",
+             "v": "generate_schema_name"
+            },
+            " macro, exactly like a model's ",
+            {
+             "t": "code",
+             "v": "+schema"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "database"
+            },
+            ": a custom database, through ",
+            {
+             "t": "code",
+             "v": "generate_database_name"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "alias"
+            },
+            ": the table name (default: the snapshot ",
+            {
+             "t": "code",
+             "v": "name"
+            },
+            "). We tested ",
+            {
+             "t": "code",
+             "v": "alias: customers_history"
+            },
+            " and dbt built ",
+            {
+             "t": "code",
+             "v": "dbt_adnane.customers_history"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "Without any of them, the snapshot goes to the target schema, like a model without a custom schema. With ",
+        {
+         "t": "code",
+         "v": "schema: snapshots"
+        },
+        ", the result depends on the macro. We listed the schemas with ",
+        {
+         "t": "code",
+         "v": "dbt ls"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "generate_schema_name"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "target ",
+             {
+              "t": "code",
+              "v": "dev"
+             },
+             " (schema ",
+             {
+              "t": "code",
+              "v": "dbt_adnane"
+             },
+             ")"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "target ",
+             {
+              "t": "code",
+              "v": "prod"
+             },
+             " (schema ",
+             {
+              "t": "code",
+              "v": "prod"
+             },
+             ")"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "dbt's default macro"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_adnane_snapshots"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "prod_snapshots"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "our project's macro (Chapter 10)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_adnane"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "snapshots"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Our macro sends everything to the developer's schema in dev, and uses the custom schema as it is in prod. So in your dev environment the snapshots live in ",
+        {
+         "t": "code",
+         "v": "dbt_adnane"
+        },
+        ", and the production snapshots will live in a schema called ",
+        {
+         "t": "code",
+         "v": "snapshots"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"",
+            {
+             "t": "code",
+             "v": "schema: snapshots"
+            },
+            " writes into a schema named ",
+            {
+             "t": "code",
+             "v": "snapshots"
+            },
+            ".\""
+           ],
+           "t": "b"
+          },
+          " Not with dbt's default macro: since 1.9 the snapshot ",
+          {
+           "t": "code",
+           "v": "schema"
+          },
+          " is a custom schema, so in dev you get ",
+          {
+           "t": "code",
+           "v": "<target_schema>_snapshots"
+          },
+          " (we saw ",
+          {
+           "t": "code",
+           "v": "dbt_adnane_snapshots"
+          },
+          "). Only the legacy config ",
+          {
+           "t": "code",
+           "v": "target_schema"
+          },
+          " sets the exact schema for everybody (",
+          {
+           "href": "/learn/ch13/ch13-s12/",
+           "label": "sec:snap-legacy",
+           "t": "ref",
+           "text": "Section 13.12"
+          },
+          "). Trap T65 in ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s3-5",
+     "number": "13.3.5",
+     "title": [
+      "Where the snapshot is built: ",
+      {
+       "t": "code",
+       "v": "schema"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "database"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "alias"
+      }
+     ],
+     "titleText": "Where the snapshot is built: schema, database, alias"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Like models and seeds, snapshots can get configs from ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        ", under a ",
+        {
+         "t": "code",
+         "v": "snapshots:"
+        },
+        " key, with the ",
+        {
+         "t": "code",
+         "v": "+"
+        },
+        " prefix:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c8",
+       "lang": "yaml",
+       "t": "code",
+       "text": "snapshots:\n  jaffle_dbt:\n    +schema: snapshots\n    +tags: ['history']",
+       "title": "dbt_project.yml (example, not in our project)"
+      },
+      {
+       "c": [
+        "We tested ",
+        {
+         "t": "code",
+         "v": "+tags"
+        },
+        " this way: ",
+        {
+         "t": "code",
+         "v": "dbt ls -s tag:history"
+        },
+        " listed both snapshots. The usual precedence applies: a config in the snapshot's own ",
+        {
+         "t": "code",
+         "v": "config:"
+        },
+        " block wins over ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        ". A YAML snapshot's path in the project is simply ",
+        {
+         "t": "code",
+         "v": "jaffle_dbt.customers_snapshot"
+        },
+        " (its ",
+        {
+         "t": "code",
+         "v": "fqn"
+        },
+        "), so you can also target one snapshot by name under ",
+        {
+         "t": "code",
+         "v": "jaffle_dbt:"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch13-s3-6",
+     "number": "13.3.6",
+     "title": [
+      "Configuring snapshots in ",
+      {
+       "t": "code",
+       "v": "dbt_project.yml"
+      }
+     ],
+     "titleText": "Configuring snapshots in dbt_project.yml"
+    }
+   ],
+   "title": [
+    "Defining a snapshot in YAML"
+   ],
+   "titleText": "Defining a snapshot in YAML"
+  },
+  {
+   "anchors": [
+    "sec-snap-strategies"
+   ],
+   "checkpoints": [],
+   "id": "ch13-s4",
+   "label": "sec:snap-strategies",
+   "labs": [],
+   "minutes": 5,
+   "number": "13.4",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "You give dbt a column that the source system updates every time the row changes, such as ",
+        {
+         "t": "code",
+         "v": "updated_at"
+        },
+        ". In our raw orders, the loader writes ",
+        {
+         "t": "code",
+         "v": "_loaded_at"
+        },
+        " each time it (re)loads a row, so ",
+        {
+         "t": "code",
+         "v": "orders_snapshot"
+        },
+        " uses ",
+        {
+         "t": "code",
+         "v": "updated_at: _loaded_at"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The rule is simple: ",
+        {
+         "c": [
+          "a row has changed if its ",
+          {
+           "t": "code",
+           "v": "updated_at"
+          },
+          " is newer than the ",
+          {
+           "t": "code",
+           "v": "dbt_valid_from"
+          },
+          " of its current version."
+         ],
+         "t": "i"
+        },
+        " This is the real condition from ",
+        {
+         "t": "code",
+         "v": "logs/dbt.log"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c9",
+       "lang": "plain",
+       "t": "code",
+       "text": "        where (\n            (snapshotted_data.dbt_valid_from < source_data._loaded_at)\n        )"
+      },
+      {
+       "c": [
+        "And the validity dates come from the data itself: ",
+        {
+         "t": "code",
+         "v": "dbt_valid_from"
+        },
+        " = ",
+        {
+         "t": "code",
+         "v": "dbt_updated_at"
+        },
+        " = the ",
+        {
+         "t": "code",
+         "v": "updated_at"
+        },
+        " value. The first-run SQL in ",
+        {
+         "t": "code",
+         "v": "target/run/"
+        },
+        " shows it:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c10",
+       "lang": "plain",
+       "t": "code",
+       "text": "        _loaded_at as dbt_updated_at,\n        _loaded_at as dbt_valid_from,"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Strengths."
+         ],
+         "t": "b"
+        },
+        " It is cheap (one comparison per row), it does not care about which columns exist, and the history uses the ",
+        {
+         "c": [
+          "real"
+         ],
+         "t": "i"
+        },
+        " change times, even for changes that happened before your first snapshot run. dbt recommends it whenever the source has a reliable ",
+        {
+         "t": "code",
+         "v": "updated_at"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Weakness."
+         ],
+         "t": "b"
+        },
+        " It trusts ",
+        {
+         "t": "code",
+         "v": "updated_at"
+        },
+        " completely. We changed the status of order 301 ",
+        {
+         "c": [
+          "without"
+         ],
+         "t": "i"
+        },
+        " touching ",
+        {
+         "t": "code",
+         "v": "_loaded_at"
+        },
+        ", then ran the snapshot:"
+       ],
+       "t": "p"
+      },
+      {
+       "expected": "ch13-c12",
+       "id": "ch13-c11",
+       "lang": "sql",
+       "t": "code",
+       "text": "update jaffle_shop.orders set status = 'returned' where id = 301;"
+      },
+      {
+       "id": "ch13-c12",
+       "lang": "output",
+       "t": "code",
+       "text": "+-----+-----------+---------------------+---------------------+--------------+\n| id  | status    | _loaded_at          | dbt_valid_from      | dbt_valid_to |\n+-----+-----------+---------------------+---------------------+--------------+\n| 301 | completed | 2026-01-01 08:00:00 | 2026-01-01 08:00:00 | NULL         |\n+-----+-----------+---------------------+---------------------+--------------+"
+      },
+      {
+       "c": [
+        "The source now says ",
+        {
+         "t": "code",
+         "v": "returned"
+        },
+        ", but the snapshot still shows ",
+        {
+         "t": "code",
+         "v": "completed"
+        },
+        " as the current version: the change was ",
+        {
+         "c": [
+          "silently lost"
+         ],
+         "t": "b"
+        },
+        ", with ",
+        {
+         "t": "code",
+         "v": "OK snapshotted"
+        },
+        " in the log. When we also moved ",
+        {
+         "t": "code",
+         "v": "_loaded_at"
+        },
+        " to 2026-01-05 09:00 and ran again, the new version appeared:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c13",
+       "lang": "output",
+       "t": "code",
+       "text": "+-----+-----------+---------------------+---------------------+---------------------+\n| id  | status    | _loaded_at          | dbt_valid_from      | dbt_valid_to        |\n+-----+-----------+---------------------+---------------------+---------------------+\n| 301 | completed | 2026-01-01 08:00:00 | 2026-01-01 08:00:00 | 2026-01-05 09:00:00 |\n| 301 | returned  | 2026-01-05 09:00:00 | 2026-01-05 09:00:00 | NULL                |\n+-----+-----------+---------------------+---------------------+---------------------+"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Timestamp strategy + a column that is not updated = lost history."
+           ],
+           "t": "b"
+          },
+          " If the source can change a row without changing its ",
+          {
+           "t": "code",
+           "v": "updated_at"
+          },
+          ", the ",
+          {
+           "t": "code",
+           "v": "timestamp"
+          },
+          " strategy does not see the change. No error, no warning. Use ",
+          {
+           "t": "code",
+           "v": "timestamp"
+          },
+          " only when the column is trustworthy; otherwise use ",
+          {
+           "t": "code",
+           "v": "check"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s4-1",
+     "number": "13.4.1",
+     "title": [
+      "The ",
+      {
+       "t": "code",
+       "v": "timestamp"
+      },
+      " strategy"
+     ],
+     "titleText": "The timestamp strategy"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "When there is no reliable \"last modified\" column, you tell dbt which columns to compare: ",
+        {
+         "t": "code",
+         "v": "check_cols: ['email', 'country']"
+        },
+        ". At each run, dbt compares those columns between the source row and the current snapshot row. If at least one is different, the row has changed. dbt even compares NULLs correctly (a NULL email that becomes a real email counts as a change; you will see it with customer 17). Here is a piece of the real comparison for ",
+        {
+         "t": "code",
+         "v": "customers_snapshot"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c14",
+       "lang": "plain",
+       "small": true,
+       "t": "code",
+       "text": "               (snapshotted_data.\"email\" != source_data.\"email\"\n        or\n        (\n            ((snapshotted_data.\"email\" is null) and not (source_data.\"email\" is null))\n            or\n            ((not snapshotted_data.\"email\" is null) and (source_data.\"email\" is null))\n        ) or snapshotted_data.\"country\" != source_data.\"country\"\n        ..."
+      },
+      {
+       "c": [
+        "The other side of the rule: a change in a column that is ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " in ",
+        {
+         "t": "code",
+         "v": "check_cols"
+        },
+        " is invisible. If customer 8 changes their ",
+        {
+         "t": "code",
+         "v": "first_name"
+        },
+        " between two runs, dbt creates no new version, and the current row keeps showing the ",
+        {
+         "c": [
+          "old"
+         ],
+         "t": "i"
+        },
+        " first name: a snapshot never updates a row in place, it only closes versions and inserts new ones."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Because the source does not say ",
+        {
+         "c": [
+          "when"
+         ],
+         "t": "i"
+        },
+        " the row changed, dbt uses ",
+        {
+         "c": [
+          "the time of the snapshot run"
+         ],
+         "t": "b"
+        },
+        " for ",
+        {
+         "t": "code",
+         "v": "dbt_valid_from"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "dbt_updated_at"
+        },
+        " (the first-run SQL shows ",
+        {
+         "t": "code",
+         "v": "now()::timestamp as dbt_valid_from"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "check_cols: all"
+          },
+          "."
+         ],
+         "t": "b"
+        },
+        " Instead of a list you can write ",
+        {
+         "t": "code",
+         "v": "check_cols: all"
+        },
+        " to compare every column. It works (we tested it), but it is more expensive on wide tables, and a column you do not care about (like a technical ",
+        {
+         "t": "code",
+         "v": "_loaded_at"
+        },
+        ") then creates new versions. dbt's advice: list the columns you really want to track."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "check"
+          },
+          " with ",
+          {
+           "t": "code",
+           "v": "updated_at"
+          },
+          "."
+         ],
+         "t": "b"
+        },
+        " You may add ",
+        {
+         "t": "code",
+         "v": "updated_at"
+        },
+        " to a ",
+        {
+         "t": "code",
+         "v": "check"
+        },
+        " snapshot. Changes are still detected by comparing ",
+        {
+         "t": "code",
+         "v": "check_cols"
+        },
+        ", but the validity dates come from the ",
+        {
+         "t": "code",
+         "v": "updated_at"
+        },
+        " column instead of the run time. We built ",
+        {
+         "t": "code",
+         "v": "orders_check_snapshot"
+        },
+        " with ",
+        {
+         "t": "code",
+         "v": "check_cols: ['status']"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "updated_at: _loaded_at"
+        },
+        ": its rows had ",
+        {
+         "t": "code",
+         "v": "dbt_valid_from"
+        },
+        " = ",
+        {
+         "t": "code",
+         "v": "_loaded_at"
+        },
+        " (for example 2026-01-02 07:50:00 for order 255), not the run time."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"With ",
+            {
+             "t": "code",
+             "v": "check"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "dbt_valid_from"
+            },
+            " is the moment the source row changed.\""
+           ],
+           "t": "b"
+          },
+          " No: by default it is the moment ",
+          {
+           "c": [
+            "dbt noticed"
+           ],
+           "t": "i"
+          },
+          " the change, the time of the snapshot run. If customer 5 moved on 15 December and you snapshot on 2 January, the new version starts on 2 January. Only ",
+          {
+           "t": "code",
+           "v": "timestamp"
+          },
+          " (or ",
+          {
+           "t": "code",
+           "v": "check"
+          },
+          " + ",
+          {
+           "t": "code",
+           "v": "updated_at"
+          },
+          ") uses a date from the data. Trap T63 in ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s4-2",
+     "number": "13.4.2",
+     "title": [
+      "The ",
+      {
+       "t": "code",
+       "v": "check"
+      },
+      " strategy"
+     ],
+     "titleText": "The check strategy"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "timestamp"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "check"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Extra config"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "updated_at"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "check_cols"
+           },
+           " (list or ",
+           {
+            "t": "code",
+            "v": "all"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Change detected when"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "updated_at"
+           },
+           " is newer than the current version's ",
+           {
+            "t": "code",
+            "v": "dbt_valid_from"
+           }
+          ]
+         },
+         {
+          "c": [
+           "at least one checked column differs"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_valid_from"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the ",
+           {
+            "t": "code",
+            "v": "updated_at"
+           },
+           " value"
+          ]
+         },
+         {
+          "c": [
+           "the snapshot run time (or ",
+           {
+            "t": "code",
+            "v": "updated_at"
+           },
+           " if set)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "History before the first run"
+          ]
+         },
+         {
+          "c": [
+           "partly: the current versions carry their real dates"
+          ]
+         },
+         {
+          "c": [
+           "none: history starts at the first run"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Cost"
+          ]
+         },
+         {
+          "c": [
+           "low"
+          ]
+         },
+         {
+          "c": [
+           "higher (compares columns)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Risk"
+          ]
+         },
+         {
+          "c": [
+           "misses changes when ",
+           {
+            "t": "code",
+            "v": "updated_at"
+           },
+           " is not maintained"
+          ]
+         },
+         {
+          "c": [
+           "misses columns you did not list"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Recommended when"
+          ]
+         },
+         {
+          "c": [
+           "the source has a reliable ",
+           {
+            "t": "code",
+            "v": "updated_at"
+           }
+          ]
+         },
+         {
+          "c": [
+           "no reliable ",
+           {
+            "t": "code",
+            "v": "updated_at"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Both strategies share one limit: a snapshot only sees the source ",
+        {
+         "c": [
+          "at the moment it runs"
+         ],
+         "t": "i"
+        },
+        ". If a row changes twice between two runs, only the last value is recorded. That is why you run snapshots often (",
+        {
+         "href": "/learn/ch13/ch13-s11/",
+         "label": "sec:snap-best-practices",
+         "t": "ref",
+         "text": "Section 13.11"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "The same change seen by both strategies."
+           ],
+           "t": "b"
+          },
+          " After the experiment above, order 301 was ",
+          {
+           "t": "code",
+           "v": "returned"
+          },
+          " with ",
+          {
+           "t": "code",
+           "v": "_loaded_at"
+          },
+          " = 2026-01-05 09:00. We changed its status again, to ",
+          {
+           "t": "code",
+           "v": "return_pending"
+          },
+          ", still without touching ",
+          {
+           "t": "code",
+           "v": "_loaded_at"
+          },
+          ", and ran both ",
+          {
+           "t": "code",
+           "v": "orders_snapshot"
+          },
+          " (timestamp) and ",
+          {
+           "t": "code",
+           "v": "orders_check_snapshot"
+          },
+          " (check on ",
+          {
+           "t": "code",
+           "v": "status"
+          },
+          " + ",
+          {
+           "t": "code",
+           "v": "updated_at"
+          },
+          "). The timestamp snapshot missed it again. The check snapshot caught it:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c15",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "+-----+----------------+---------------------+---------------------+---------------------+\n| id  | status         | _loaded_at          | dbt_valid_from      | dbt_valid_to        |\n+-----+----------------+---------------------+---------------------+---------------------+\n| 301 | returned       | 2026-01-05 09:00:00 | 2026-01-05 09:00:00 | 2026-01-05 09:00:00 |\n| 301 | return_pending | 2026-01-05 09:00:00 | 2026-01-05 09:00:00 | NULL                |\n+-----+----------------+---------------------+---------------------+---------------------+"
+        },
+        {
+         "c": [
+          "Look at the first row: it starts and ends at the same instant (a version that lasted zero seconds), because ",
+          {
+           "t": "code",
+           "v": "updated_at"
+          },
+          " did not move. The change is recorded, but its dates are wrong. Good data needs a good ",
+          {
+           "t": "code",
+           "v": "updated_at"
+          },
+          ", whatever the strategy."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "deep",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s4-3",
+     "number": "13.4.3",
+     "title": [
+      "Choosing a strategy"
+     ],
+     "titleText": "Choosing a strategy"
+    }
+   ],
+   "title": [
+    "The two strategies: timestamp and check"
+   ],
+   "titleText": "The two strategies: timestamp and check"
+  },
+  {
+   "anchors": [
+    "sec-snap-first-run"
+   ],
+   "checkpoints": [],
+   "id": "ch13-s5",
+   "label": "sec:snap-first-run",
+   "labs": [
+    "ch13-lab1"
+   ],
+   "minutes": 20,
+   "number": "13.5",
+   "objectives": [
+    "1.4",
+    "1.10"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "You are ready to add the two snapshots to your project. Your raw data is still the \"day 1\" data you loaded in Chapter 2."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " create ",
+          {
+           "t": "code",
+           "v": "customers_snapshot"
+          },
+          " (check) and ",
+          {
+           "t": "code",
+           "v": "orders_snapshot"
+          },
+          " (timestamp), run them, and read the new tables."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 0."
+           ],
+           "t": "b"
+          },
+          " Open a terminal, go to the project and activate the environment. Make sure no DuckDB command line is open on ",
+          {
+           "t": "code",
+           "v": "practice.duckdb"
+          },
+          " (type ",
+          {
+           "t": "code",
+           "v": ".quit"
+          },
+          " in it): DuckDB allows one writer at a time, and dbt fails with ",
+          {
+           "c": [
+            "IO Error: Could not set lock on file"
+           ],
+           "t": "i"
+          },
+          " while another program holds the file."
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c16",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cd ~/dbt-course && source .venv/bin/activate\n$ cd jaffle_dbt && git status --short     # nothing: Chapter 12 is committed"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Create ",
+          {
+           "t": "code",
+           "v": "snapshots/snapshots.yml"
+          },
+          " with the content shown in ",
+          {
+           "href": "/learn/ch13/ch13-s3/",
+           "label": "sec:snap-yaml",
+           "t": "ref",
+           "text": "Section 13.3"
+          },
+          " (two snapshots, ",
+          {
+           "t": "code",
+           "v": "schema: snapshots"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "unique_key: id"
+          },
+          "). Type it yourself: the indentation matters."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Ask dbt where it will build them:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c17",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt ls --resource-type snapshot --output json --output-keys name schema"
+        },
+        {
+         "id": "ch13-c18",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "20:53:38  Found 12 models, 12 data tests, 2 analyses, 1 seed, 2 snapshots, 5 sources, 669 macros\n{\"name\": \"customers_snapshot\", \"schema\": \"dbt_adnane\"}\n{\"name\": \"orders_snapshot\", \"schema\": \"dbt_adnane\"}"
+        },
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "2 snapshots"
+          },
+          " in the \"Found\" line, and the schema is ",
+          {
+           "t": "code",
+           "v": "dbt_adnane"
+          },
+          ": our ",
+          {
+           "t": "code",
+           "v": "generate_schema_name"
+          },
+          " ignores custom schemas outside prod (",
+          {
+           "href": "/learn/ch13/ch13-s3/#sec-snap-schema",
+           "label": "sec:snap-schema",
+           "t": "ref",
+           "text": "Section 13.3.5"
+          },
+          ")."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Take the first snapshot:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c19",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt snapshot"
+        },
+        {
+         "id": "ch13-c20",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "20:53:41  Concurrency: 4 threads (target='dev')\n20:53:41\n20:53:41  1 of 2 START snapshot dbt_adnane.customers_snapshot ............................ [RUN]\n20:53:41  2 of 2 START snapshot dbt_adnane.orders_snapshot ............................... [RUN]\n20:53:41  2 of 2 OK snapshotted dbt_adnane.orders_snapshot ............................... [OK in 0.04s]\n20:53:41  1 of 2 OK snapshotted dbt_adnane.customers_snapshot ............................ [OK in 0.08s]\n20:53:41\n20:53:41  Finished running 2 snapshots in 0 hours 0 minutes and 0.15 seconds (0.15s).\n20:53:41\n20:53:41  Completed successfully\n20:53:41\n20:53:41  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=2"
+        },
+        {
+         "c": [
+          "The status word for a snapshot is ",
+          {
+           "t": "code",
+           "v": "snapshotted"
+          },
+          ". Both ran in parallel: they only depend on sources."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Open the database (",
+          {
+           "t": "code",
+           "v": "duckdb ../practice/practice.duckdb"
+          },
+          ") and look at the columns of ",
+          {
+           "t": "code",
+           "v": "orders_snapshot"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c21",
+         "lang": "sql",
+         "t": "code",
+         "text": "select column_name, data_type\nfrom information_schema.columns\nwhere table_schema = 'dbt_adnane' and table_name = 'orders_snapshot'\norder by ordinal_position;"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Count all rows and current rows of both snapshots:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c22",
+         "lang": "sql",
+         "t": "code",
+         "text": "select 'customers_snapshot' as snapshot, count(*) as n_rows,\n       count(*) filter (where dbt_valid_to is null) as n_current\nfrom dbt_adnane.customers_snapshot\nunion all\nselect 'orders_snapshot', count(*), count(*) filter (where dbt_valid_to is null)\nfrom dbt_adnane.orders_snapshot;"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6."
+           ],
+           "t": "b"
+          },
+          " Look at three customers and at their meta columns, then at two orders:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c23",
+         "lang": "sql",
+         "t": "code",
+         "text": "select id, email, country, dbt_valid_from, dbt_valid_to\nfrom dbt_adnane.customers_snapshot where id in (5, 11, 17) order by id;\n\nselect id, dbt_updated_at, dbt_scd_id\nfrom dbt_adnane.customers_snapshot where id in (5, 11, 17) order by id;\n\nselect id, status, _loaded_at, dbt_valid_from, dbt_valid_to\nfrom dbt_adnane.orders_snapshot where id in (255, 288) order by id;"
+        },
+        {
+         "c": [
+          "Then type ",
+          {
+           "t": "code",
+           "v": ".quit"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (the DuckDB command line draws nicer borders and also prints the column types; your timestamps, and therefore your ",
+          {
+           "t": "code",
+           "v": "dbt_scd_id"
+          },
+          " hashes, are your own):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c24",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "+----------------+-----------+\n| column_name    | data_type |\n+----------------+-----------+\n| id             | INTEGER   |\n| user_id        | INTEGER   |\n| order_date     | DATE      |\n| status         | VARCHAR   |\n| _loaded_at     | TIMESTAMP |\n| dbt_scd_id     | VARCHAR   |\n| dbt_updated_at | TIMESTAMP |\n| dbt_valid_from | TIMESTAMP |\n| dbt_valid_to   | TIMESTAMP |\n+----------------+-----------+\n\n+--------------------+--------+-----------+\n| snapshot           | n_rows | n_current |\n+--------------------+--------+-----------+\n| customers_snapshot |    100 |       100 |\n| orders_snapshot    |    300 |       300 |\n+--------------------+--------+-----------+\n\n+----+------------------------------+---------+----------------------------+--------------+\n| id | email                        | country | dbt_valid_from             | dbt_valid_to |\n+----+------------------------------+---------+----------------------------+--------------+\n|  5 | adam.evans5@example.com      | Morocco | 2026-10-21 20:53:41.428855 | NULL         |\n| 11 | YOUSSEF.WILSON11@EXAMPLE.COM | Spain   | 2026-10-21 20:53:41.428855 | NULL         |\n| 17 | NULL                         | France  | 2026-10-21 20:53:41.428855 | NULL         |\n+----+------------------------------+---------+----------------------------+--------------+\n\n+----+----------------------------+----------------------------------+\n| id | dbt_updated_at             | dbt_scd_id                       |\n+----+----------------------------+----------------------------------+\n|  5 | 2026-10-21 20:53:41.428855 | 6f2867ce651c93680292dff69698c884 |\n| 11 | 2026-10-21 20:53:41.428855 | 9cb025f84ca823e442bf440a8b55f21d |\n| 17 | 2026-10-21 20:53:41.428855 | 0599a72df764a5f085033cb977bc3e4d |\n+----+----------------------------+----------------------------------+\n\n+-----+---------+---------------------+---------------------+--------------+\n| id  | status  | _loaded_at          | dbt_valid_from      | dbt_valid_to |\n+-----+---------+---------------------+---------------------+--------------+\n| 255 | shipped | 2025-11-25 16:34:00 | 2025-11-25 16:34:00 | NULL         |\n| 288 | placed  | 2025-12-21 22:15:00 | 2025-12-21 22:15:00 | NULL         |\n+-----+---------+---------------------+---------------------+--------------+"
+        },
+        {
+         "c": [
+          "Read it: the snapshot table = the 5 source columns + the 4 meta columns. Every row is current (100 of 100, 300 of 300). For customers (",
+          {
+           "t": "code",
+           "v": "check"
+          },
+          "), ",
+          {
+           "t": "code",
+           "v": "dbt_valid_from"
+          },
+          " is the run time, the same for all rows. For orders (",
+          {
+           "t": "code",
+           "v": "timestamp"
+          },
+          "), it is each order's own ",
+          {
+           "t": "code",
+           "v": "_loaded_at"
+          },
+          " (and ",
+          {
+           "t": "code",
+           "v": "dbt_updated_at"
+          },
+          " holds the same value). Do not commit yet: the chapter ends with one commit."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch13-lab1",
+       "objectives": [
+        "1.10",
+        "1.4"
+       ],
+       "t": "lab",
+       "title": [
+        "Write the two snapshots and take the first picture"
+       ]
+      }
+     ],
+     "id": "ch13-s5-0",
+     "title": [
+      "Your first snapshots"
+     ],
+     "titleText": "Your first snapshots"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The file ",
+        {
+         "t": "code",
+         "v": "customers_snapshot.sql"
+        },
+        ", deep inside ",
+        {
+         "t": "code",
+         "v": "target/run/jaffle_dbt/snapshots/"
+        },
+        ", contains what dbt executed the first time (blank lines removed):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c25",
+       "lang": "sql",
+       "t": "code",
+       "text": "    create  table\n      \"practice\".\"dbt_adnane\".\"customers_snapshot\"\n    as (\n    select *,\n        md5(coalesce(cast(id as varchar ), '')\n         || '|' || coalesce(cast(now()::timestamp as varchar ), '')\n        ) as dbt_scd_id,\n        now()::timestamp as dbt_updated_at,\n        now()::timestamp as dbt_valid_from,\n  coalesce(nullif(now()::timestamp, now()::timestamp), null)\n  as dbt_valid_to\nfrom (\n        select * from \"practice\".\"jaffle_shop\".\"customers\"\n    ) sbq\n    );"
+      },
+      {
+       "c": [
+        "A plain ",
+        {
+         "t": "code",
+         "v": "create table as select *"
+        },
+        " with four computed columns. The odd ",
+        {
+         "t": "code",
+         "v": "coalesce(nullif(x, x), null)"
+        },
+        " is just a way to produce NULL for ",
+        {
+         "t": "code",
+         "v": "dbt_valid_to"
+        },
+        " (or your ",
+        {
+         "t": "code",
+         "v": "dbt_valid_to_current"
+        },
+        " value when you set one)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch13-s5-1",
+     "number": "13.5.1",
+     "title": [
+      "The SQL behind the first run"
+     ],
+     "titleText": "The SQL behind the first run"
+    }
+   ],
+   "title": [
+    "Your first snapshots"
+   ],
+   "titleText": "Your first snapshots"
+  },
+  {
+   "anchors": [
+    "sec-snap-day2"
+   ],
+   "checkpoints": [],
+   "id": "ch13-s6",
+   "label": "sec:snap-day2",
+   "labs": [
+    "ch13-lab2"
+   ],
+   "minutes": 25,
+   "number": "13.6",
+   "objectives": [
+    "1.4",
+    "1.10"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "On the second run the table exists, so dbt works in three steps. Here is an excerpt of ",
+        {
+         "t": "code",
+         "v": "logs/dbt.log"
+        },
+        " for ",
+        {
+         "t": "code",
+         "v": "orders_snapshot"
+        },
+        " (we removed blank lines, split long lines and added the three comments):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c26",
+       "lang": "sql",
+       "t": "code",
+       "text": "-- 1. a temporary table with the changes ('insert' and 'update' rows)\n    create temporary table\n      \"orders_snapshot__dbt_tmp20261021220548660785\"\n    as (\n    with snapshot_query as (\n        select * from \"practice\".\"jaffle_shop\".\"orders\"\n    ),\n    snapshotted_data as (\n        select *,\n        id as dbt_unique_key\n        from \"practice\".\"dbt_adnane\".\"orders_snapshot\"\n        where\n                dbt_valid_to is null\n    ),\n    ...\n    select * from insertions\n    union all\n    select * from updates\n    );\n-- 2. close the old versions\n    update \"practice\".\"dbt_adnane\".\"orders_snapshot\"\n      as DBT_INTERNAL_TARGET\n    set dbt_valid_to = DBT_INTERNAL_SOURCE.dbt_valid_to\n    from \"orders_snapshot__dbt_tmp20261021220548660785\"\n      as DBT_INTERNAL_SOURCE\n    where DBT_INTERNAL_SOURCE.dbt_scd_id::text\n          = DBT_INTERNAL_TARGET.dbt_scd_id::text\n      and DBT_INTERNAL_SOURCE.dbt_change_type::text\n          in ('update'::text, 'delete'::text)\n      and DBT_INTERNAL_TARGET.dbt_valid_to is null;\n-- 3. insert the new versions and the new keys\n    insert into \"practice\".\"dbt_adnane\".\"orders_snapshot\"\n      (\"id\", \"user_id\", ..., \"dbt_scd_id\")\n    select DBT_INTERNAL_SOURCE.\"id\", ...\n    from \"orders_snapshot__dbt_tmp20261021220548660785\"\n      as DBT_INTERNAL_SOURCE\n    where DBT_INTERNAL_SOURCE.dbt_change_type::text = 'insert'::text;"
+      },
+      {
+       "c": [
+        "Notice three details:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "dbt only compares with ",
+            {
+             "c": [
+              "current"
+             ],
+             "t": "b"
+            },
+            " rows (",
+            {
+             "t": "code",
+             "v": "where dbt_valid_to is null"
+            },
+            "). Closed versions are never touched again."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The old version is found by its ",
+            {
+             "t": "code",
+             "v": "dbt_scd_id"
+            },
+            ": that is what this column is for."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Nothing is ever deleted. On other warehouses (Snowflake, BigQuery, Databricks…) dbt usually does steps 2 and 3 with one ",
+            {
+             "t": "code",
+             "v": "MERGE"
+            },
+            " statement; the idea is the same."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch13-s6-1",
+     "number": "13.6.1",
+     "title": [
+      "How dbt updates a snapshot"
+     ],
+     "titleText": "How dbt updates a snapshot"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The script ",
+        {
+         "t": "code",
+         "v": "labs/updates/day2.sql"
+        },
+        " in your bible folder simulates the next loading day (its README lists every change): 5 customers change (customers 5, 12 and 40 move to another country; customer 17 gets an email instead of NULL; customer 11 has their email rewritten in lower case), 13 orders change status with a new ",
+        {
+         "t": "code",
+         "v": "_loaded_at"
+        },
+        " on 2026-01-02, and 20 new orders (301 to 320) arrive, with their items and payments. You will use this script again in Chapter 14."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " change the raw data, run the snapshots again, and read the history they recorded."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Close every DuckDB session (",
+          {
+           "t": "code",
+           "v": ".quit"
+          },
+          "), even a ",
+          {
+           "t": "code",
+           "v": "duckdb -readonly"
+          },
+          " one: it would block the script and dbt. Copy the update scripts next to your database (once):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c27",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cp -r ~/dbt-course/kit/labs/updates ~/dbt-course/practice/\n$ ls ~/dbt-course/practice/updates\nREADME.md      day2.sql       fresh_load.sql",
+         "textBook": "$ cp -r ~/Documents/Adnane/dbt-bible/labs/updates ~/dbt-course/practice/\n$ ls ~/dbt-course/practice/updates\nREADME.md      day2.sql       fresh_load.sql"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Apply day 2 with the DuckDB command line, from the practice folder:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c28",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cd ~/dbt-course/practice\n$ duckdb practice.duckdb < updates/day2.sql"
+        },
+        {
+         "c": [
+          "The script ends with a check query. Expected counts (drawn with nicer borders by DuckDB):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c29",
+         "lang": "output",
+         "t": "code",
+         "text": "+-------------------------+--------+\n| table_name              | n_rows |\n+-------------------------+--------+\n| jaffle_shop.customers   |    100 |\n| jaffle_shop.orders      |    320 |\n| jaffle_shop.order_items |    638 |\n| jaffle_shop.products    |     12 |\n| stripe.payments         |    371 |\n+-------------------------+--------+"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Back in the project, take the second snapshot:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c30",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ dbt snapshot"
+        },
+        {
+         "id": "ch13-c31",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "20:54:01  1 of 2 START snapshot dbt_adnane.customers_snapshot ............................ [RUN]\n20:54:01  2 of 2 START snapshot dbt_adnane.orders_snapshot ............................... [RUN]\n20:54:01  2 of 2 OK snapshotted dbt_adnane.orders_snapshot ............................... [OK in 0.13s]\n20:54:01  1 of 2 OK snapshotted dbt_adnane.customers_snapshot ............................ [OK in 0.16s]\n...\n20:54:01  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=2"
+        },
+        {
+         "c": [
+          "The log looks exactly like the first run. The difference is inside the tables."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Open ",
+          {
+           "t": "code",
+           "v": "duckdb ../practice/practice.duckdb"
+          },
+          " and count again, now with closed versions:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c32",
+         "lang": "sql",
+         "t": "code",
+         "text": "select 'customers_snapshot' as snapshot, count(*) as n_rows,\n       count(*) filter (where dbt_valid_to is null) as n_current,\n       count(*) filter (where dbt_valid_to is not null) as n_closed\nfrom dbt_adnane.customers_snapshot\nunion all\nselect 'orders_snapshot', count(*),\n       count(*) filter (where dbt_valid_to is null),\n       count(*) filter (where dbt_valid_to is not null)\nfrom dbt_adnane.orders_snapshot;"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Read the history of the changed customers and of three orders:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c33",
+         "lang": "sql",
+         "small": true,
+         "t": "code",
+         "text": "select id, country, dbt_valid_from, dbt_valid_to\nfrom dbt_adnane.customers_snapshot where id in (5, 12, 40) order by id, dbt_valid_from;\n\nselect id, email, dbt_valid_from, dbt_valid_to\nfrom dbt_adnane.customers_snapshot where id in (11, 17) order by id, dbt_valid_from;\n\nselect id, status, _loaded_at, dbt_valid_from, dbt_valid_to\nfrom dbt_adnane.orders_snapshot where id in (255, 288, 301) order by id, dbt_valid_from;"
+        },
+        {
+         "c": [
+          "Type ",
+          {
+           "t": "code",
+           "v": ".quit"
+          },
+          " when you are done."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c34",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "+--------------------+--------+-----------+----------+\n| snapshot           | n_rows | n_current | n_closed |\n+--------------------+--------+-----------+----------+\n| customers_snapshot |    105 |       100 |        5 |\n| orders_snapshot    |    333 |       320 |       13 |\n+--------------------+--------+-----------+----------+\n\n+----+---------+----------------------------+----------------------------+\n| id | country | dbt_valid_from             | dbt_valid_to               |\n+----+---------+----------------------------+----------------------------+\n|  5 | Morocco | 2026-10-21 20:53:41.428855 | 2026-10-21 20:54:01.282770 |\n|  5 | France  | 2026-10-21 20:54:01.282770 | NULL                       |\n| 12 | Morocco | 2026-10-21 20:53:41.428855 | 2026-10-21 20:54:01.282770 |\n| 12 | Spain   | 2026-10-21 20:54:01.282770 | NULL                       |\n| 40 | Spain   | 2026-10-21 20:53:41.428855 | 2026-10-21 20:54:01.282770 |\n| 40 | Germany | 2026-10-21 20:54:01.282770 | NULL                       |\n+----+---------+----------------------------+----------------------------+\n\n+----+------------------------------+----------------------------+----------------------------+\n| id | email                        | dbt_valid_from             | dbt_valid_to               |\n+----+------------------------------+----------------------------+----------------------------+\n| 11 | YOUSSEF.WILSON11@EXAMPLE.COM | 2026-10-21 20:53:41.428855 | 2026-10-21 20:54:01.282770 |\n| 11 | youssef.wilson11@example.com | 2026-10-21 20:54:01.282770 | NULL                       |\n| 17 | NULL                         | 2026-10-21 20:53:41.428855 | 2026-10-21 20:54:01.282770 |\n| 17 | leo.fernandez17@example.com  | 2026-10-21 20:54:01.282770 | NULL                       |\n+----+------------------------------+----------------------------+----------------------------+\n\n+-----+-----------+---------------------+---------------------+---------------------+\n| id  | status    | _loaded_at          | dbt_valid_from      | dbt_valid_to        |\n+-----+-----------+---------------------+---------------------+---------------------+\n| 255 | shipped   | 2025-11-25 16:34:00 | 2025-11-25 16:34:00 | 2026-01-02 07:50:00 |\n| 255 | completed | 2026-01-02 07:50:00 | 2026-01-02 07:50:00 | NULL                |\n| 288 | placed    | 2025-12-21 22:15:00 | 2025-12-21 22:15:00 | 2026-01-02 07:00:00 |\n| 288 | shipped   | 2026-01-02 07:00:00 | 2026-01-02 07:00:00 | NULL                |\n| 301 | completed | 2026-01-01 08:00:00 | 2026-01-01 08:00:00 | NULL                |\n+-----+-----------+---------------------+---------------------+---------------------+"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6."
+           ],
+           "t": "b"
+          },
+          " Run ",
+          {
+           "t": "code",
+           "v": "dbt snapshot"
+          },
+          " a third time, without new data, and count again. Expected: ",
+          {
+           "t": "code",
+           "v": "PASS=2"
+          },
+          " and still 105 and 333 rows. A snapshot run without changes adds nothing."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 7."
+           ],
+           "t": "b"
+          },
+          " Rebuild the whole project on the new data (snapshots included), then check the mart sizes with the macro of Chapter 11:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c35",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build\n$ dbt run-operation print_row_counts"
+        },
+        {
+         "c": [
+          "Expected: ",
+          {
+           "t": "code",
+           "v": "Done. PASS=26"
+          },
+          " for ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          ", then ",
+          {
+           "t": "code",
+           "v": "dim_customers: 100 rows"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "fct_monthly_revenue: 71 rows"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "fct_order_items: 638 rows"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "fct_orders: 320 rows"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch13-lab2",
+       "objectives": [
+        "1.10",
+        "1.4"
+       ],
+       "t": "lab",
+       "title": [
+        "The next loading day: apply day2.sql and snapshot again"
+       ]
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Reading the result."
+         ],
+         "t": "b"
+        }
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Customers (check)."
+             ],
+             "t": "b"
+            },
+            " 5 changes, so 5 closed versions and 5 new ones: 100 + 5 = 105 rows, still 100 current. The 3 countries and the 2 emails were all detected, including NULL to a value (17) and a change of letter case only (11): the check compares values exactly. All changes start at the time of run 2, not on 2 January: the ",
+            {
+             "t": "code",
+             "v": "check"
+            },
+            " strategy cannot know better."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Orders (timestamp)."
+             ],
+             "t": "b"
+            },
+            " 13 changed orders (13 closed + 13 new versions) and 20 new orders: 300 + 13 + 20 = 333 rows, 320 current. The dates come from ",
+            {
+             "t": "code",
+             "v": "_loaded_at"
+            },
+            ": order 288 was ",
+            {
+             "t": "code",
+             "v": "placed"
+            },
+            " until 2026-01-02 07:00, which is the real loading time, not the time you ran dbt."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Order 301 has one row: a new key is simply inserted."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Do not \"reset\" carelessly."
+           ],
+           "t": "b"
+          },
+          " Chapter 14 starts by resetting the raw data to day 1 (",
+          {
+           "t": "code",
+           "v": "duckdb practice.duckdb < setup.sql"
+          },
+          "). After a reset, do not run ",
+          {
+           "t": "code",
+           "v": "dbt snapshot"
+          },
+          " or a full ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " before applying ",
+          {
+           "t": "code",
+           "v": "day2.sql"
+          },
+          " again: the snapshots would record the reset as a real change (all your day-2 values \"changing back\"). This is a small taste of why production snapshots must be protected."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s6-2",
+     "number": "13.6.2",
+     "title": [
+      "The data of 2 January"
+     ],
+     "titleText": "The data of 2 January"
+    }
+   ],
+   "title": [
+    "The next loading day"
+   ],
+   "titleText": "The next loading day"
+  },
+  {
+   "anchors": [
+    "sec-snap-query"
+   ],
+   "checkpoints": [],
+   "id": "ch13-s7",
+   "label": "sec:snap-query",
+   "labs": [],
+   "minutes": 5,
+   "number": "13.7",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The current version of each customer:"
+       ],
+       "t": "p"
+      },
+      {
+       "expected": "ch13-c37",
+       "id": "ch13-c36",
+       "lang": "sql",
+       "t": "code",
+       "text": "select id, country\nfrom dbt_adnane.customers_snapshot\nwhere dbt_valid_to is null and id in (5, 12, 40)\norder by id;"
+      },
+      {
+       "id": "ch13-c37",
+       "lang": "output",
+       "t": "code",
+       "text": "+----+---------+\n| id | country |\n+----+---------+\n|  5 | France  |\n| 12 | Spain   |\n| 40 | Germany |\n+----+---------+"
+      },
+      {
+       "c": [
+        "The history of one key is just ",
+        {
+         "t": "code",
+         "v": "where id = ... order by dbt_valid_from"
+        },
+        ", as in the lab."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch13-s7-1",
+     "number": "13.7.1",
+     "title": [
+      "Current rows and history"
+     ],
+     "titleText": "Current rows and history"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "\"Which status did orders 255, 288 and 301 have at the end of 2025?\" Use the validity rule with ",
+        {
+         "t": "code",
+         "v": "T = '2025-12-31 23:59:59'"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "expected": "ch13-c39",
+       "id": "ch13-c38",
+       "lang": "sql",
+       "t": "code",
+       "text": "select id, status\nfrom dbt_adnane.orders_snapshot\nwhere timestamp '2025-12-31 23:59:59' >= dbt_valid_from\n  and (timestamp '2025-12-31 23:59:59' < dbt_valid_to or dbt_valid_to is null)\n  and id in (255, 288, 301)\norder by id;"
+      },
+      {
+       "id": "ch13-c39",
+       "lang": "output",
+       "t": "code",
+       "text": "+-----+---------+\n| id  | status  |\n+-----+---------+\n| 255 | shipped |\n| 288 | placed  |\n+-----+---------+"
+      },
+      {
+       "c": [
+        "Correct: 255 was still ",
+        {
+         "t": "code",
+         "v": "shipped"
+        },
+        ", 288 still ",
+        {
+         "t": "code",
+         "v": "placed"
+        },
+        ", and 301 did not exist yet (no row). The timestamp strategy makes this possible because the history follows ",
+        {
+         "t": "code",
+         "v": "_loaded_at"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Now the same kind of question on ",
+        {
+         "t": "code",
+         "v": "customers_snapshot"
+        },
+        ": \"which country did customers 5, 12 and 40 have on 31 December 2025?\""
+       ],
+       "t": "p"
+      },
+      {
+       "expected": "ch13-c41",
+       "id": "ch13-c40",
+       "lang": "sql",
+       "t": "code",
+       "text": "select id, country\nfrom dbt_adnane.customers_snapshot\nwhere '2025-12-31'::timestamp >= dbt_valid_from\n  and ('2025-12-31'::timestamp < dbt_valid_to or dbt_valid_to is null)\n  and id in (5, 12, 40)\norder by id;"
+      },
+      {
+       "id": "ch13-c41",
+       "lang": "output",
+       "t": "code",
+       "text": "+----+---------+\n| id | country |\n+----+---------+\n+----+---------+\n(0 rows)"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Zero rows."
+         ],
+         "t": "b"
+        },
+        " With the ",
+        {
+         "t": "code",
+         "v": "check"
+        },
+        " strategy, the history only starts at the first snapshot run (21 October 2026 in this run). Before that moment, the snapshot knows nothing. At the moment of the first run, it shows the old countries:"
+       ],
+       "t": "p"
+      },
+      {
+       "expected": "ch13-c43",
+       "id": "ch13-c42",
+       "lang": "sql",
+       "small": true,
+       "t": "code",
+       "text": "with first_run as (select min(dbt_valid_from) as t from dbt_adnane.customers_snapshot)\nselect id, country\nfrom dbt_adnane.customers_snapshot, first_run\nwhere first_run.t >= dbt_valid_from\n  and (first_run.t < dbt_valid_to or dbt_valid_to is null)\n  and id in (5, 12, 40)\norder by id;"
+      },
+      {
+       "id": "ch13-c43",
+       "lang": "output",
+       "t": "code",
+       "text": "+----+---------+\n| id | country |\n+----+---------+\n|  5 | Morocco |\n| 12 | Morocco |\n| 40 | Spain   |\n+----+---------+"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Half-open intervals."
+           ],
+           "t": "b"
+          },
+          " A version is valid from ",
+          {
+           "t": "code",
+           "v": "dbt_valid_from"
+          },
+          " ",
+          {
+           "c": [
+            "included"
+           ],
+           "t": "i"
+          },
+          " to ",
+          {
+           "t": "code",
+           "v": "dbt_valid_to"
+          },
+          " ",
+          {
+           "c": [
+            "excluded"
+           ],
+           "t": "i"
+          },
+          ". Write ",
+          {
+           "t": "code",
+           "v": "T >= dbt_valid_from and T < dbt_valid_to"
+          },
+          ". With ",
+          {
+           "t": "code",
+           "v": "between"
+          },
+          " (which includes both ends), the exact instant of a change would return two versions. And never forget ",
+          {
+           "t": "code",
+           "v": "or dbt_valid_to is null"
+          },
+          ", otherwise the current versions disappear."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s7-2",
+     "number": "13.7.2",
+     "title": [
+      "Point-in-time queries"
+     ],
+     "titleText": "Point-in-time queries"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A snapshot is a node of the DAG, so models can read it with ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c44",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt compile --inline \"select * from {{ ref('customers_snapshot') }}\""
+      },
+      {
+       "id": "ch13-c45",
+       "lang": "output",
+       "t": "code",
+       "text": "Compiled inline node is:\nselect * from \"practice\".\"dbt_adnane\".\"customers_snapshot\""
+      },
+      {
+       "c": [
+        "In a real project, you usually put a small staging-like model on top of a snapshot: rename the meta columns (",
+        {
+         "t": "code",
+         "v": "valid_from"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "valid_to"
+        },
+        "), add an ",
+        {
+         "t": "code",
+         "v": "is_current"
+        },
+        " flag, and build history-aware marts from it (for example revenue by the country the customer had ",
+        {
+         "c": [
+          "at the time of the order"
+         ],
+         "t": "i"
+        },
+        "). We keep our project simple and do not add such a model."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch13-s7-3",
+     "number": "13.7.3",
+     "title": [
+      "Using a snapshot in models"
+     ],
+     "titleText": "Using a snapshot in models"
+    }
+   ],
+   "title": [
+    "Querying a snapshot"
+   ],
+   "titleText": "Querying a snapshot"
+  },
+  {
+   "anchors": [
+    "sec-snap-hard-deletes"
+   ],
+   "checkpoints": [],
+   "id": "ch13-s8",
+   "label": "sec:snap-hard-deletes",
+   "labs": [
+    "ch13-lab3"
+   ],
+   "minutes": 15,
+   "number": "13.8",
+   "objectives": [
+    "1.10"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Sometimes a row does not change: it disappears from the source (a customer asks to be removed, a test order is deleted). By default, the snapshot does not notice. The config ",
+        {
+         "t": "code",
+         "v": "hard_deletes"
+        },
+        " (dbt 1.9+) decides what to do. It works with both strategies."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "hard_deletes"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "When a key disappears from the source"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ignore"
+           },
+           " (default)"
+          ]
+         },
+         {
+          "c": [
+           "Nothing. The last version stays ",
+           {
+            "c": [
+             "current"
+            ],
+            "t": "i"
+           },
+           " (",
+           {
+            "t": "code",
+            "v": "dbt_valid_to"
+           },
+           " NULL), as if the row still existed."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "invalidate"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The current version is closed: ",
+           {
+            "t": "code",
+            "v": "dbt_valid_to"
+           },
+           " = time of the run. If the key comes back, a new current version starts (there is a gap)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "new_record"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The current version is closed ",
+           {
+            "c": [
+             "and"
+            ],
+            "t": "i"
+           },
+           " a new current row is inserted with ",
+           {
+            "t": "code",
+            "v": "dbt_is_deleted = True"
+           },
+           ". If the key comes back, another row with ",
+           {
+            "t": "code",
+            "v": "dbt_is_deleted = False"
+           },
+           ". No gap. Adds the column ",
+           {
+            "t": "code",
+            "v": "dbt_is_deleted"
+           },
+           "."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "invalidate"
+        },
+        " replaces the older boolean config ",
+        {
+         "t": "code",
+         "v": "invalidate_hard_deletes: true"
+        },
+        " (dbt 1.8 and earlier). The old config still works in 1.11: we deleted customer 100 with ",
+        {
+         "t": "code",
+         "v": "invalidate_hard_deletes: true"
+        },
+        " and its row was closed. But you cannot use both:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c46",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "  You cannot set both the invalidate_hard_deletes and hard_deletes config properties on the same snapshot."
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " see the three ",
+          {
+           "t": "code",
+           "v": "hard_deletes"
+          },
+          " behaviours without damaging your real snapshots."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Make a throwaway copy of the project ",
+          {
+           "c": [
+            "and"
+           ],
+           "t": "i"
+          },
+          " the database. The folder names inside stay the same, so the relative path ",
+          {
+           "t": "code",
+           "v": "../practice/practice.duckdb"
+          },
+          " of your profile points to the copy (and DuckDB still calls the database ",
+          {
+           "t": "code",
+           "v": "practice"
+          },
+          "):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c47",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ mkdir -p ~/dbt-course/throwaway\n$ cp -R ~/dbt-course/practice ~/dbt-course/jaffle_dbt ~/dbt-course/throwaway/\n$ cd ~/dbt-course/throwaway/jaffle_dbt"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "The cycle."
+           ],
+           "t": "b"
+          },
+          " Each of the next steps uses the same cycle on customer 100, with the DuckDB command line (",
+          {
+           "t": "code",
+           "v": "duckdb ../practice/practice.duckdb"
+          },
+          "; type ",
+          {
+           "t": "code",
+           "v": ".quit"
+          },
+          " before each dbt command):"
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "delete the customer: ",
+              {
+               "t": "code",
+               "v": "delete from jaffle_shop.customers where id = 100;"
+              }
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "run ",
+              {
+               "t": "code",
+               "v": "dbt snapshot --select customers_snapshot"
+              },
+              ", then look at the snapshot rows of customer 100;"
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "put the customer back with the insert below;"
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "run ",
+              {
+               "t": "code",
+               "v": "dbt snapshot --select customers_snapshot"
+              },
+              " again, and look again."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "marker": "(a)",
+         "t": "list"
+        },
+        {
+         "id": "ch13-c48",
+         "lang": "sql",
+         "small": true,
+         "t": "code",
+         "text": "insert into jaffle_shop.customers values\n  (100, 'Mehdi', 'Bernard', 'mehdi.bernard100@example.com', 'Morocco', date '2024-05-05');\n\nselect id, country, dbt_valid_from, dbt_valid_to\nfrom dbt_adnane.customers_snapshot where id = 100 order by dbt_valid_from;"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2 (ignore)."
+           ],
+           "t": "b"
+          },
+          " Do the cycle with the configuration unchanged (no ",
+          {
+           "t": "code",
+           "v": "hard_deletes"
+          },
+          ": the default is ",
+          {
+           "t": "code",
+           "v": "ignore"
+          },
+          ")."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3 (invalidate)."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "c": [
+            "this copy"
+           ],
+           "t": "i"
+          },
+          ", add one line to the config of ",
+          {
+           "t": "code",
+           "v": "customers_snapshot"
+          },
+          ", then do the cycle again:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c49",
+         "lang": "yaml",
+         "t": "code",
+         "text": "      check_cols: ['email', 'country']\n      hard_deletes: invalidate",
+         "title": "snapshots/snapshots.yml (throwaway copy, customers_snapshot config)"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4 (new_record on the existing table)."
+           ],
+           "t": "b"
+          },
+          " Change ",
+          {
+           "t": "code",
+           "v": "invalidate"
+          },
+          " to ",
+          {
+           "t": "code",
+           "v": "new_record"
+          },
+          " and do the cycle: both snapshot runs fail (see the expected result)."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5 (new_record on a new table)."
+           ],
+           "t": "b"
+          },
+          " In the DuckDB command line: ",
+          {
+           "t": "code",
+           "v": "drop table dbt_adnane.customers_snapshot;"
+          },
+          " (only in the throwaway copy!), ",
+          {
+           "t": "code",
+           "v": ".quit"
+          },
+          ". Run ",
+          {
+           "t": "code",
+           "v": "dbt snapshot --select customers_snapshot"
+          },
+          " to recreate the table, then do the cycle once more. This time, look at ",
+          {
+           "t": "code",
+           "v": "select id, dbt_valid_from, dbt_valid_to, dbt_is_deleted from dbt_adnane.customers_snapshot where id = 100 order by dbt_valid_from;"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result."
+           ],
+           "t": "b"
+          },
+          " With ",
+          {
+           "t": "code",
+           "v": "ignore"
+          },
+          " (Step 2), the deleted customer simply stays current, after the delete and after the return:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c50",
+         "lang": "output",
+         "t": "code",
+         "text": "+-----+---------+----------------------------+--------------+\n| id  | country | dbt_valid_from             | dbt_valid_to |\n+-----+---------+----------------------------+--------------+\n| 100 | Morocco | 2026-10-21 20:53:41.428855 | NULL         |\n+-----+---------+----------------------------+--------------+"
+        },
+        {
+         "c": [
+          "With ",
+          {
+           "t": "code",
+           "v": "invalidate"
+          },
+          ", after the delete, then after the customer came back:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c51",
+         "lang": "output",
+         "t": "code",
+         "text": "+-----+---------+----------------------------+----------------------------+\n| id  | country | dbt_valid_from             | dbt_valid_to               |\n+-----+---------+----------------------------+----------------------------+\n| 100 | Morocco | 2026-10-21 20:53:41.428855 | 2026-10-21 20:54:44.263108 |\n+-----+---------+----------------------------+----------------------------+\n\n+-----+---------+----------------------------+----------------------------+\n| id  | country | dbt_valid_from             | dbt_valid_to               |\n+-----+---------+----------------------------+----------------------------+\n| 100 | Morocco | 2026-10-21 20:53:41.428855 | 2026-10-21 20:54:44.263108 |\n| 100 | Morocco | 2026-10-21 20:54:47.106092 | NULL                       |\n+-----+---------+----------------------------+----------------------------+"
+        },
+        {
+         "c": [
+          "Between 20:54:44 and 20:54:47 the customer has no valid row: that is the \"gap\". In Step 4, both runs fail like this:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c52",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "20:54:50  1 of 1 ERROR snapshotting dbt_adnane.customers_snapshot ........................ [ERROR in 0.05s]\n...\n20:54:50  Failure in snapshot customers_snapshot (snapshots/snapshots.yml)\n20:54:50    Compilation Error in snapshot customers_snapshot (snapshots/snapshots.yml)\n  Snapshot target is missing configured columns (missing \"dbt_is_deleted\"). See https://docs.getdbt.com/docs/build/snapshots#snapshot-meta-fields for more information.\n\n  > in macro materialization_snapshot_default (macros/materializations/snapshots/snapshot.sql)\n  > called by snapshot customers_snapshot (snapshots/snapshots.yml)"
+        },
+        {
+         "c": [
+          "In Step 5 (the table created directly with ",
+          {
+           "t": "code",
+           "v": "new_record"
+          },
+          "), after the delete and after the return:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c53",
+         "lang": "output",
+         "t": "code",
+         "text": "+-----+----------------------------+----------------------------+----------------+\n| id  | dbt_valid_from             | dbt_valid_to               | dbt_is_deleted |\n+-----+----------------------------+----------------------------+----------------+\n| 100 | 2026-10-21 20:55:08.375900 | 2026-10-21 20:55:11.147476 | False          |\n| 100 | 2026-10-21 20:55:11.147476 | NULL                       | True           |\n+-----+----------------------------+----------------------------+----------------+\n\n+-----+----------------------------+----------------------------+----------------+\n| id  | dbt_valid_from             | dbt_valid_to               | dbt_is_deleted |\n+-----+----------------------------+----------------------------+----------------+\n| 100 | 2026-10-21 20:55:08.375900 | 2026-10-21 20:55:11.147476 | False          |\n| 100 | 2026-10-21 20:55:11.147476 | 2026-10-21 20:55:14.296435 | True           |\n| 100 | 2026-10-21 20:55:14.296435 | NULL                       | False          |\n+-----+----------------------------+----------------------------+----------------+"
+        },
+        {
+         "c": [
+          "A continuous history: present, deleted, present again. dbt's default snapshot macros write ",
+          {
+           "t": "code",
+           "v": "dbt_is_deleted"
+          },
+          " as the ",
+          {
+           "c": [
+            "text"
+           ],
+           "t": "i"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "'True'"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "'False'"
+          },
+          ", not as a boolean (on DuckDB the column is a VARCHAR), so compare it as text: ",
+          {
+           "t": "code",
+           "v": "where dbt_is_deleted = 'True'"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6."
+           ],
+           "t": "b"
+          },
+          " Clean up: ",
+          {
+           "t": "code",
+           "v": "cd ~/dbt-course/jaffle_dbt"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "rm -rf ~/dbt-course/throwaway"
+          },
+          ". Your real project and database were never touched."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch13-lab3",
+       "objectives": [
+        "1.10"
+       ],
+       "t": "lab",
+       "title": [
+        "Hard deletes in a throwaway copy"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"When a row disappears from the source, the snapshot closes it.\""
+           ],
+           "t": "b"
+          },
+          " Not by default: ",
+          {
+           "t": "code",
+           "v": "hard_deletes: ignore"
+          },
+          " keeps it as a current row forever. Choose ",
+          {
+           "t": "code",
+           "v": "invalidate"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "new_record"
+          },
+          " if deletions matter. And switching an ",
+          {
+           "c": [
+            "existing"
+           ],
+           "t": "i"
+          },
+          " snapshot to ",
+          {
+           "t": "code",
+           "v": "new_record"
+          },
+          " fails (",
+          {
+           "c": [
+            "missing \"dbt_is_deleted\""
+           ],
+           "t": "i"
+          },
+          "): dbt does not migrate snapshot tables. Plan this config for new snapshots, or add the column to the table yourself first. Trap T64 in ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s8-0",
+     "title": [
+      "Hard deletes"
+     ],
+     "titleText": "Hard deletes"
+    }
+   ],
+   "title": [
+    "Hard deletes"
+   ],
+   "titleText": "Hard deletes"
+  },
+  {
+   "anchors": [
+    "sec-snap-more-configs"
+   ],
+   "checkpoints": [],
+   "id": "ch13-s9",
+   "label": "sec:snap-more-configs",
+   "labs": [],
+   "minutes": 5,
+   "number": "13.9",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Many BI tools prefer a far-future date to NULL for \"still valid\". The config ",
+        {
+         "t": "code",
+         "v": "dbt_valid_to_current"
+        },
+        " takes a ",
+        {
+         "c": [
+          "static SQL expression"
+         ],
+         "t": "i"
+        },
+        " (no Jinja) that dbt writes into ",
+        {
+         "t": "code",
+         "v": "dbt_valid_to"
+        },
+        " for current rows. The syntax of the expression depends on your warehouse (",
+        {
+         "t": "code",
+         "v": "to_date('9999-12-31')"
+        },
+        " on Snowflake, ",
+        {
+         "t": "code",
+         "v": "cast('9999-12-31' as timestamp)"
+        },
+        " on DuckDB…)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch13-s9-1",
+     "number": "13.9.1",
+     "title": [
+      {
+       "t": "code",
+       "v": "dbt_valid_to_current"
+      }
+     ],
+     "titleText": "dbt_valid_to_current"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "You can rename the meta columns. The five keys are ",
+        {
+         "t": "code",
+         "v": "dbt_valid_from"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt_valid_to"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt_scd_id"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt_updated_at"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "dbt_is_deleted"
+        },
+        ". We tested both configs (and ",
+        {
+         "t": "code",
+         "v": "check_cols: all"
+        },
+        ") on a new snapshot in a throwaway copy:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c54",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nsnapshots:\n  - name: customers_snapshot_custom\n    relation: source('jaffle_shop', 'customers')\n    config:\n      unique_key: id\n      strategy: check\n      check_cols: all\n      dbt_valid_to_current: \"cast('9999-12-31' as timestamp)\"\n      snapshot_meta_column_names:\n        dbt_valid_from: valid_from\n        dbt_valid_to: valid_to",
+       "title": "snapshots/demo_meta.yml (throwaway)"
+      },
+      {
+       "id": "ch13-c55",
+       "lang": "output",
+       "t": "code",
+       "text": "+----+---------+----------------------------+---------------------+\n| id | country | valid_from                 | valid_to            |\n+----+---------+----------------------------+---------------------+\n|  5 | France  | 2026-10-21 20:55:41.884261 | 9999-12-31 00:00:00 |\n+----+---------+----------------------------+---------------------+"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "New configs on old tables."
+           ],
+           "t": "b"
+          },
+          " dbt does not migrate an existing snapshot table when you change these configs. For ",
+          {
+           "t": "code",
+           "v": "dbt_valid_to_current"
+          },
+          ", the existing current rows keep NULL and only new rows get your date, so you end up with both (the docs ask you to update the old NULLs yourself). For ",
+          {
+           "t": "code",
+           "v": "snapshot_meta_column_names"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "hard_deletes: new_record"
+          },
+          ", the column names no longer match and dbt raises an error, as you saw in the lab. Best: decide these configs when you create the snapshot."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s9-2",
+     "number": "13.9.2",
+     "title": [
+      {
+       "t": "code",
+       "v": "snapshot_meta_column_names"
+      }
+     ],
+     "titleText": "snapshot_meta_column_names"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Config"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Values and default"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Since"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "unique_key"
+           }
+          ]
+         },
+         {
+          "c": [
+           "column, list of columns, or expression (required)"
+          ]
+         },
+         {
+          "c": []
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "strategy"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "timestamp"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "check"
+           },
+           " (required)"
+          ]
+         },
+         {
+          "c": []
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "updated_at"
+           }
+          ]
+         },
+         {
+          "c": [
+           "column (required for ",
+           {
+            "t": "code",
+            "v": "timestamp"
+           },
+           "; optional for ",
+           {
+            "t": "code",
+            "v": "check"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": []
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "check_cols"
+           }
+          ]
+         },
+         {
+          "c": [
+           "list of columns or ",
+           {
+            "t": "code",
+            "v": "all"
+           },
+           " (required for ",
+           {
+            "t": "code",
+            "v": "check"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": []
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "hard_deletes"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ignore"
+           },
+           " (default), ",
+           {
+            "t": "code",
+            "v": "invalidate"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "new_record"
+           }
+          ]
+         },
+         {
+          "c": [
+           "1.9"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_valid_to_current"
+           }
+          ]
+         },
+         {
+          "c": [
+           "static SQL expression; default: NULL"
+          ]
+         },
+         {
+          "c": [
+           "1.9"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "snapshot_meta_column_names"
+           }
+          ]
+         },
+         {
+          "c": [
+           "mapping of the 5 meta names to your names"
+          ]
+         },
+         {
+          "c": [
+           "1.9"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "schema"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "database"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "alias"
+           }
+          ]
+         },
+         {
+          "c": [
+           "custom location, through the ",
+           {
+            "t": "code",
+            "v": "generate_*_name"
+           },
+           " macros"
+          ]
+         },
+         {
+          "c": [
+           "1.9"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "target_schema"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "target_database"
+           }
+          ]
+         },
+         {
+          "c": [
+           "legacy: exact location, no macro (optional since 1.9)"
+          ]
+         },
+         {
+          "c": [
+           "legacy"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "invalidate_hard_deletes"
+           }
+          ]
+         },
+         {
+          "c": [
+           "legacy boolean, = ",
+           {
+            "t": "code",
+            "v": "hard_deletes: invalidate"
+           }
+          ]
+         },
+         {
+          "c": [
+           "legacy"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "general configs"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "enabled"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "tags"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "meta"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "docs"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "persist_docs"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "grants"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "pre_hook"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "post_hook"
+           },
+           "…"
+          ]
+         },
+         {
+          "c": []
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch13-s9-3",
+     "number": "13.9.3",
+     "title": [
+      "All snapshot configs on one page"
+     ],
+     "titleText": "All snapshot configs on one page"
+    }
+   ],
+   "title": [
+    "More configs from dbt 1.9"
+   ],
+   "titleText": "More configs from dbt 1.9"
+  },
+  {
+   "anchors": [
+    "sec-snap-commands",
+    "sec-snap-empty"
+   ],
+   "checkpoints": [],
+   "id": "ch13-s10",
+   "label": "sec:snap-commands",
+   "labs": [],
+   "minutes": 5,
+   "number": "13.10",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt snapshot"
+        },
+        " runs every snapshot of the project (in parallel, according to ",
+        {
+         "t": "code",
+         "v": "threads"
+        },
+        "). It accepts the usual selection flags: ",
+        {
+         "t": "code",
+         "v": "dbt snapshot --select customers_snapshot"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "--exclude"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "--selector"
+        },
+        ", and also ",
+        {
+         "t": "code",
+         "v": "--empty"
+        },
+        " (below)."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " runs seeds, models, snapshots and tests ",
+        {
+         "c": [
+          "in DAG order"
+         ],
+         "t": "i"
+        },
+        ". Our two snapshots depend only on sources, so they start immediately, at the same time as the staging models. An excerpt of Step 7 of Lab 2:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c56",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "20:55:53  6 of 26 START seed file dbt_adnane.country_regions ............................. [RUN]\n20:55:53  7 of 26 START snapshot dbt_adnane.customers_snapshot ........................... [RUN]\n20:55:53  8 of 26 START snapshot dbt_adnane.orders_snapshot .............................. [RUN]\n...\n20:55:53  8 of 26 OK snapshotted dbt_adnane.orders_snapshot .............................. [OK in 0.18s]\n...\n20:55:53  7 of 26 OK snapshotted dbt_adnane.customers_snapshot ........................... [OK in 0.19s]\n...\n20:55:53  Finished running 1 seed, 2 snapshots, 4 table models, 12 data tests, 7 view models in 0 hours 0 minutes and 0.60 seconds (0.60s)."
+      },
+      {
+       "c": [
+        "A snapshot built on a model (",
+        {
+         "t": "code",
+         "v": "relation: ref(...)"
+        },
+        ") waits for that model ",
+        {
+         "c": [
+          "and its tests"
+         ],
+         "t": "i"
+        },
+        ". We tested a snapshot of ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__customers"
+        },
+        ": in ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        ", it ran after the model and after its two tests. And a model that refs a snapshot runs after the snapshot. Data tests declared on a snapshot (under ",
+        {
+         "t": "code",
+         "v": "columns:"
+        },
+        ") run right after it in ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch13-s10-1",
+     "number": "13.10.1",
+     "title": [
+      {
+       "t": "code",
+       "v": "dbt snapshot"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      }
+     ],
+     "titleText": "dbt snapshot and dbt build"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Command"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Effect"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt snapshot"
+           }
+          ]
+         },
+         {
+          "c": [
+           "all snapshots"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt snapshot -s orders_snapshot"
+           }
+          ]
+         },
+         {
+          "c": [
+           "one snapshot"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt build -s resource_type:snapshot"
+           }
+          ]
+         },
+         {
+          "c": [
+           "all snapshots ",
+           {
+            "c": [
+             "and the tests attached to them"
+            ],
+            "t": "i"
+           },
+           " (indirect selection)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt ls --resource-type snapshot"
+           }
+          ]
+         },
+         {
+          "c": [
+           "lists only snapshots"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt build -s customers_snapshot+"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the snapshot and everything downstream of it"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt run -s customers_snapshot"
+           }
+          ]
+         },
+         {
+          "c": [
+           "\"Nothing to do\" (",
+           {
+            "t": "code",
+            "v": "dbt run"
+           },
+           " ignores snapshots)"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch13-s10-2",
+     "number": "13.10.2",
+     "title": [
+      "Selecting snapshots"
+     ],
+     "titleText": "Selecting snapshots"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch13-c57",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt snapshot --full-refresh"
+      },
+      {
+       "id": "ch13-c58",
+       "lang": "output",
+       "t": "code",
+       "text": "Usage: dbt snapshot [OPTIONS]\nTry 'dbt snapshot --help' for help.\n\nError: No such option '--full-refresh'."
+      },
+      {
+       "c": [
+        "And ",
+        {
+         "t": "code",
+         "v": "dbt build --full-refresh"
+        },
+        ", which rebuilds tables and incremental models, leaves snapshots alone: we ran ",
+        {
+         "t": "code",
+         "v": "dbt build --full-refresh -s orders_snapshot"
+        },
+        " and the table still had its 333 rows. This is deliberate: a full refresh would destroy history that nothing can recreate."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"",
+            {
+             "t": "code",
+             "v": "dbt snapshot --full-refresh"
+            },
+            " rebuilds the history.\""
+           ],
+           "t": "b"
+          },
+          " The flag does not exist for ",
+          {
+           "t": "code",
+           "v": "dbt snapshot"
+          },
+          ", and ",
+          {
+           "t": "code",
+           "v": "--full-refresh"
+          },
+          " in ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " does not touch snapshots. The only way to \"rebuild\" is to drop the table yourself, which throws the history away. Trap T66 in ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s10-3",
+     "number": "13.10.3",
+     "title": [
+      "No full refresh for snapshots"
+     ],
+     "titleText": "No full refresh for snapshots"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "We added a column ",
+        {
+         "t": "code",
+         "v": "channel"
+        },
+        " to the raw orders and removed ",
+        {
+         "t": "code",
+         "v": "order_date"
+        },
+        ", then ran the snapshot. It succeeded: dbt ",
+        {
+         "c": [
+          "added"
+         ],
+         "t": "b"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "channel"
+        },
+        " to the snapshot table (NULL in the existing rows) and ",
+        {
+         "c": [
+          "kept"
+         ],
+         "t": "b"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "order_date"
+        },
+        " (old rows keep their values; new versions get NULL there). A snapshot never drops columns, because they belong to the history."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch13-s10-4",
+     "number": "13.10.4",
+     "title": [
+      "When the source columns change"
+     ],
+     "titleText": "When the source columns change"
+    },
+    {
+     "anchor": "sec-snap-empty",
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "--empty"
+        },
+        " (objective 1.12, Chapter 16) also works with ",
+        {
+         "t": "code",
+         "v": "dbt snapshot"
+        },
+        ": dbt replaces the relation by a query that returns no rows. We saw it in ",
+        {
+         "t": "code",
+         "v": "logs/dbt.log"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c59",
+       "lang": "plain",
+       "small": true,
+       "t": "code",
+       "text": "        select * from (select * from \"practice\".\"jaffle_shop\".\"customers\" where false limit 0)"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "On a ",
+            {
+             "c": [
+              "new"
+             ],
+             "t": "b"
+            },
+            " snapshot, ",
+            {
+             "t": "code",
+             "v": "dbt snapshot --empty"
+            },
+            " creates an empty table with all the meta columns (we got 0 rows; the next normal run then inserted the 320 orders). A good way to check the configuration cheaply."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "On an ",
+            {
+             "c": [
+              "existing"
+             ],
+             "t": "b"
+            },
+            " snapshot with the default ",
+            {
+             "t": "code",
+             "v": "hard_deletes: ignore"
+            },
+            ", nothing changes (we still had 105 and 333 rows)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "--empty"
+            },
+            " + ",
+            {
+             "t": "code",
+             "v": "hard_deletes"
+            },
+            " = destroyed history."
+           ],
+           "t": "b"
+          },
+          " For a snapshot with ",
+          {
+           "t": "code",
+           "v": "invalidate"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "new_record"
+          },
+          ", an empty input means \"every key was deleted\". We added ",
+          {
+           "t": "code",
+           "v": "hard_deletes: invalidate"
+          },
+          " to ",
+          {
+           "t": "code",
+           "v": "customers_snapshot"
+          },
+          " in a throwaway copy (state after Lab 2: 105 rows, 100 current) and ran the innocent-looking dry run of Chapter 16:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c60",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --empty"
+        },
+        {
+         "id": "ch13-c61",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "22:27:30  7 of 26 START snapshot dbt_adnane.customers_snapshot ........................... [RUN]\n22:27:30  7 of 26 OK snapshotted dbt_adnane.customers_snapshot ........................... [OK in 0.22s]\n...\n22:27:30  Done. PASS=26 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=26"
+        },
+        {
+         "c": [
+          "Everything green, but afterwards the snapshot had ",
+          {
+           "c": [
+            "105 rows and 0 current rows"
+           ],
+           "t": "b"
+          },
+          ": every current version had been closed. ",
+          {
+           "t": "code",
+           "v": "dbt snapshot --empty"
+          },
+          " did the same, and with ",
+          {
+           "t": "code",
+           "v": "new_record"
+          },
+          " the dry run added 100 rows with ",
+          {
+           "t": "code",
+           "v": "dbt_is_deleted = True"
+          },
+          ". The deletion logic is dbt's own snapshot logic, not a DuckDB quirk, so expect it on every warehouse."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Safe practice."
+           ],
+           "t": "b"
+          },
+          " Keep snapshots out of every ",
+          {
+           "t": "code",
+           "v": "--empty"
+          },
+          " run. Both forms worked for us (",
+          {
+           "t": "code",
+           "v": "PASS=24"
+          },
+          ", the snapshots were not run, and the table kept its 100 current rows):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c62",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --empty --exclude resource_type:snapshot\n$ dbt build --empty --exclude-resource-type snapshot"
+        },
+        {
+         "c": [
+          "Or run dry runs only in a separate, disposable schema (a CI schema), and do not use ",
+          {
+           "t": "code",
+           "v": "invalidate"
+          },
+          "/",
+          {
+           "t": "code",
+           "v": "new_record"
+          },
+          " on development snapshots that you test with ",
+          {
+           "t": "code",
+           "v": "--empty"
+          },
+          ". Chapter 16 (Commands and node selection) warns about this again when it teaches ",
+          {
+           "t": "code",
+           "v": "--empty"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s10-5",
+     "number": "13.10.5",
+     "title": [
+      "Snapshots and ",
+      {
+       "t": "code",
+       "v": "--empty"
+      }
+     ],
+     "titleText": "Snapshots and --empty"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Nothing changes in the dbt platform: snapshots are defined in the same YAML files and run with the same commands."
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "In ",
+            {
+             "c": [
+              "dbt Studio"
+             ],
+             "t": "b"
+            },
+            " (the IDE), you type ",
+            {
+             "t": "code",
+             "v": "dbt snapshot"
+            },
+            " or ",
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            " in the command bar. In development, snapshots are written to your own development schema (with the default macro, ",
+            {
+             "t": "code",
+             "v": "<your_schema>_snapshots"
+            },
+            "), so your experiments never touch production history."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "In ",
+            {
+             "c": [
+              "deployment jobs"
+             ],
+             "t": "b"
+            },
+            ", a ",
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            " step includes the snapshots. Many teams also schedule a separate, more frequent job with ",
+            {
+             "t": "code",
+             "v": "dbt snapshot"
+            },
+            " (for example every hour), because a snapshot only captures what exists when it runs."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "In ",
+            {
+             "c": [
+              "dbt Catalog"
+             ],
+             "t": "b"
+            },
+            " and in the docs lineage graph, snapshots appear as their own resource type, between their sources and the models that use them."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch13-s10-6",
+     "number": "13.10.6",
+     "title": [
+      "The dbt platform view"
+     ],
+     "titleText": "The dbt platform view"
+    }
+   ],
+   "title": [
+    "Snapshots in the DAG and in commands"
+   ],
+   "titleText": "Snapshots in the DAG and in commands"
+  },
+  {
+   "anchors": [
+    "sec-snap-best-practices"
+   ],
+   "checkpoints": [],
+   "id": "ch13-s11",
+   "label": "sec:snap-best-practices",
+   "labs": [],
+   "minutes": 5,
+   "number": "13.11",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Snapshot sources, not marts."
+             ],
+             "t": "b"
+            },
+            " Point ",
+            {
+             "t": "code",
+             "v": "relation"
+            },
+            " at the raw data, as early as possible, with little or no transformation. If you snapshot a mart, every change of business logic (a new formula, a bug fix) looks like a change in the data, and your history mixes data changes with code changes. Build marts ",
+            {
+             "c": [
+              "on top of"
+             ],
+             "t": "i"
+            },
+            " snapshots instead. (Trap T67.)"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Keep all the columns"
+             ],
+             "t": "b"
+            },
+            " (",
+            {
+             "t": "code",
+             "v": "select *"
+            },
+            "). A YAML snapshot does this for you. You cannot add a column to the past later, so capture everything now. If you really must clean first, use a very simple ephemeral or staging model."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Use a dedicated schema"
+             ],
+             "t": "b"
+            },
+            " (",
+            {
+             "t": "code",
+             "v": "schema: snapshots"
+            },
+            ") and protect it: separate privileges, or even a separate role for the jobs that write it. A snapshot table is not reproducible like a model."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Run snapshots often"
+             ],
+             "t": "b"
+            },
+            " (between hourly and daily is typical), because changes between two runs are invisible."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Never rebuild, never drop."
+             ],
+             "t": "b"
+            },
+            " There is no ",
+            {
+             "t": "code",
+             "v": "--full-refresh"
+            },
+            "; do not invent one by dropping tables."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Test the key"
+             ],
+             "t": "b"
+            },
+            ": a ",
+            {
+             "t": "code",
+             "v": "unique"
+            },
+            " (and ",
+            {
+             "t": "code",
+             "v": "not_null"
+            },
+            ") test on the ",
+            {
+             "t": "code",
+             "v": "unique_key"
+            },
+            " in the source. You can also test the snapshot itself (for example ",
+            {
+             "t": "code",
+             "v": "unique"
+            },
+            " on ",
+            {
+             "t": "code",
+             "v": "dbt_scd_id"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Prefer ",
+              {
+               "t": "code",
+               "v": "timestamp"
+              }
+             ],
+             "t": "b"
+            },
+            " when the source has a reliable ",
+            {
+             "t": "code",
+             "v": "updated_at"
+            },
+            "; use ",
+            {
+             "t": "code",
+             "v": "check"
+            },
+            " otherwise, with an explicit list of columns."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Decide the 1.9 configs at creation"
+             ],
+             "t": "b"
+            },
+            " (",
+            {
+             "t": "code",
+             "v": "hard_deletes"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "dbt_valid_to_current"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "snapshot_meta_column_names"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Keep snapshots out of dry runs"
+             ],
+             "t": "b"
+            },
+            ": ",
+            {
+             "t": "code",
+             "v": "--exclude resource_type:snapshot"
+            },
+            " with ",
+            {
+             "t": "code",
+             "v": "--empty"
+            },
+            " (",
+            {
+             "href": "/learn/ch13/ch13-s10/#sec-snap-empty",
+             "label": "sec:snap-empty",
+             "t": "ref",
+             "text": "Section 13.10.5"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"Snapshots should read my final mart models.\""
+           ],
+           "t": "b"
+          },
+          " The recommended input is the source (",
+          {
+           "t": "code",
+           "v": "relation: source(...)"
+          },
+          "), not a mart. A snapshot of a mart records your bugs and your refactorings as if they were history. Trap T67 in ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s11-0",
+     "title": [
+      "Best practices"
+     ],
+     "titleText": "Best practices"
+    }
+   ],
+   "title": [
+    "Best practices"
+   ],
+   "titleText": "Best practices"
+  },
+  {
+   "anchors": [
+    "sec-snap-legacy"
+   ],
+   "checkpoints": [],
+   "id": "ch13-s12",
+   "label": "sec:snap-legacy",
+   "labs": [],
+   "minutes": 5,
+   "number": "13.12",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Before dbt 1.9, a snapshot was a ",
+        {
+         "t": "code",
+         "v": ".sql"
+        },
+        " file in ",
+        {
+         "t": "code",
+         "v": "snapshots/"
+        },
+        " with a special Jinja block. The exam (and many existing projects) may still show it, so you must recognise it. Here is the same snapshot as ",
+        {
+         "t": "code",
+         "v": "customers_snapshot"
+        },
+        ", written the old way (we ran it in a throwaway copy):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c63",
+       "lang": "dbt",
+       "t": "code",
+       "text": "{% snapshot legacy_customers_snapshot %}\n\n{{\n    config(\n        target_schema='snapshots',\n        unique_key='id',\n        strategy='check',\n        check_cols=['email', 'country'],\n    )\n}}\n\nselect * from {{ source('jaffle_shop', 'customers') }}\n\n{% endsnapshot %}",
+       "title": "snapshots/legacy_customers_snapshot.sql (legacy syntax)"
+      },
+      {
+       "c": [
+        "How to read it:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "{% snapshot name %} … {% endsnapshot %}"
+            },
+            " wraps everything; the name in the block is the snapshot name."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "t": "code",
+             "v": "config()"
+            },
+            " call holds the same configs as the YAML ",
+            {
+             "t": "code",
+             "v": "config:"
+            },
+            " block, with Python-style arguments (",
+            {
+             "t": "code",
+             "v": "="
+            },
+            ", quotes)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "t": "code",
+             "v": "select"
+            },
+            " replaces ",
+            {
+             "t": "code",
+             "v": "relation"
+            },
+            ": it can be any query (this freedom is why people sometimes snapshotted transformed data, which the new syntax discourages)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "target_schema"
+            },
+            " was required before 1.9 (",
+            {
+             "t": "code",
+             "v": "target_database"
+            },
+            " was optional: by default, the target's database); both set the exact location."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "It still works in dbt 1.11:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch13-c64",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "20:55:28  Found 12 models, 2 analyses, 1 seed, 12 data tests, 3 snapshots, 5 sources, 669 macros\n...\n20:55:28  1 of 1 START snapshot snapshots.legacy_customers_snapshot ...................... [RUN]\n20:55:28  1 of 1 OK snapshotted snapshots.legacy_customers_snapshot ...................... [OK in 0.06s]"
+      },
+      {
+       "c": [
+        "Look at the schema: ",
+        {
+         "t": "code",
+         "v": "snapshots"
+        },
+        ", even though we ran in dev. ",
+        {
+         "t": "code",
+         "v": "target_schema"
+        },
+        " is used ",
+        {
+         "c": [
+          "as is"
+         ],
+         "t": "i"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "generate_schema_name"
+        },
+        " is not applied, so every developer and production write into the same schema. That is the main reason the new ",
+        {
+         "t": "code",
+         "v": "schema"
+        },
+        " config was introduced. (In 1.9+ a SQL snapshot may also use ",
+        {
+         "t": "code",
+         "v": "schema="
+        },
+        " instead: we tested ",
+        {
+         "t": "code",
+         "v": "schema='snapshots'"
+        },
+        " in a SQL snapshot and got ",
+        {
+         "t": "code",
+         "v": "dbt_adnane"
+        },
+        " in dev and ",
+        {
+         "t": "code",
+         "v": "snapshots"
+        },
+        " in prod, through our macro.)"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Legacy (before 1.9)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "YAML (1.9+, recommended)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "File"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "snapshots/*.sql"
+           },
+           " with ",
+           {
+            "t": "code",
+            "v": "{% snapshot %}"
+           }
+          ]
+         },
+         {
+          "c": [
+           "any ",
+           {
+            "t": "code",
+            "v": ".yml"
+           },
+           " under ",
+           {
+            "t": "code",
+            "v": "snapshots:"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "What to snapshot"
+          ]
+         },
+         {
+          "c": [
+           "a ",
+           {
+            "t": "code",
+            "v": "select"
+           },
+           " statement"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "relation: source(...)"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "ref(...)"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Configs"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{{ config(unique_key='id', ...) }}"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "config:"
+           },
+           " block"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Location"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "target_schema"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "target_database"
+           },
+           " (exact)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "schema"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "database"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "alias"
+           },
+           " (through the macros)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Deletes"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "invalidate_hard_deletes=true"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "hard_deletes: invalidate"
+           },
+           " (or ",
+           {
+            "t": "code",
+            "v": "new_record"
+           },
+           ")"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "In an exam question, old syntax is not automatically wrong (it still runs), but when the question asks for the ",
+          {
+           "c": [
+            "recommended"
+           ],
+           "t": "i"
+          },
+          " or ",
+          {
+           "c": [
+            "current"
+           ],
+           "t": "i"
+          },
+          " way to define a snapshot in dbt 1.9+, pick the YAML version with ",
+          {
+           "t": "code",
+           "v": "relation"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "schema"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "hard_deletes"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s12-0",
+     "title": [
+      "Recognising the legacy SQL syntax"
+     ],
+     "titleText": "Recognising the legacy SQL syntax"
+    }
+   ],
+   "title": [
+    "Recognising the legacy SQL syntax"
+   ],
+   "titleText": "Recognising the legacy SQL syntax"
+  },
+  {
+   "anchors": [
+    "sec-snap-commit"
+   ],
+   "checkpoints": [],
+   "id": "ch13-s13",
+   "label": "sec:snap-commit",
+   "labs": [
+    "ch13-lab4"
+   ],
+   "minutes": 10,
+   "number": "13.13",
+   "objectives": [
+    "CP0-GIT",
+    "1.10"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Only one file is new; the database changes are not in Git:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c65",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ git status --short\n?? snapshots/snapshots.yml\n$ git add snapshots/snapshots.yml\n$ git commit -m \"Chapter 13: snapshots in YAML (customers_snapshot, orders_snapshot)\"\n[main 03574f2] Chapter 13: snapshots in YAML (customers_snapshot, orders_snapshot)\n 1 file changed, 20 insertions(+)\n create mode 100644 snapshots/snapshots.yml"
+        },
+        {
+         "c": [
+          "(Your commit id is different.) Push if you use GitHub: ",
+          {
+           "t": "code",
+           "v": "git push"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Compare with the reference tag ",
+          {
+           "t": "code",
+           "v": "ch13"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch13-c66",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git diff ref-ch13 --stat"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " no output at all if your files match the reference. Otherwise ",
+          {
+           "t": "code",
+           "v": "git diff ref-ch13 -- snapshots/"
+          },
+          " shows the differences. Small differences (a comment, a blank line, quotes) are fine; look for differences in names, keys and indentation."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch13-lab4",
+       "objectives": [
+        "CP0-GIT",
+        "1.10"
+       ],
+       "t": "lab",
+       "title": [
+        "Commit Chapter 13 and compare with the reference"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The ",
+          {
+           "t": "code",
+           "v": "ref-ch13"
+          },
+          " tag comes from the reference repository. If you have not connected it yet, do it once (the reference README explains it): ",
+          {
+           "t": "code",
+           "textBook": "git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt",
+           "v": "git remote add reference ~/dbt-course/kit/labs/practice-project/jaffle_dbt"
+          },
+          ", then ",
+          {
+           "t": "code",
+           "v": "git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\""
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch13-s13-0",
+     "title": [
+      "Commit and compare"
+     ],
+     "titleText": "Commit and compare"
+    }
+   ],
+   "title": [
+    "Commit and compare"
+   ],
+   "titleText": "Commit and compare"
+  }
+ ],
+ "minutes": 145,
+ "number": 13,
+ "objectives": [
+  "1.4",
+  "1.6",
+  "1.10",
+  "1.12"
+ ],
+ "part": 2,
+ "partLabel": "Part II",
+ "partTitle": "Building with dbt",
+ "printed": "13",
+ "quiz": [
+  "q-ch13-01",
+  "q-ch13-02",
+  "q-ch13-03",
+  "q-ch13-04",
+  "q-ch13-05",
+  "q-ch13-06",
+  "q-ch13-07",
+  "q-ch13-08",
+  "q-ch13-09",
+  "q-ch13-10",
+  "q-ch13-11",
+  "q-ch13-12",
+  "q-ch13-13",
+  "q-ch13-14",
+  "q-ch13-15",
+  "q-ch13-16",
+  "q-ch13-17",
+  "q-ch13-18"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-snap-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch13-01",
+      "q-ch13-02",
+      "q-ch13-03",
+      "q-ch13-04",
+      "q-ch13-05",
+      "q-ch13-06",
+      "q-ch13-07",
+      "q-ch13-08",
+      "q-ch13-09",
+      "q-ch13-10",
+      "q-ch13-11",
+      "q-ch13-12",
+      "q-ch13-13",
+      "q-ch13-14",
+      "q-ch13-15",
+      "q-ch13-16",
+      "q-ch13-17",
+      "q-ch13-18"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch13-01",
+    "q-ch13-02",
+    "q-ch13-03",
+    "q-ch13-04",
+    "q-ch13-05",
+    "q-ch13-06",
+    "q-ch13-07",
+    "q-ch13-08",
+    "q-ch13-09",
+    "q-ch13-10",
+    "q-ch13-11",
+    "q-ch13-12",
+    "q-ch13-13",
+    "q-ch13-14",
+    "q-ch13-15",
+    "q-ch13-16",
+    "q-ch13-17",
+    "q-ch13-18"
+   ],
+   "label": "sec:snap-quiz",
+   "number": "13.14",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A snapshot is SCD Type 2 managed by dbt: changed rows get a closed old version and a new current version; nothing is ever deleted."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Define it in YAML (1.9+) under ",
+        {
+         "t": "code",
+         "v": "snapshots:"
+        },
+        " with ",
+        {
+         "t": "code",
+         "v": "name"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "relation"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        ") and ",
+        {
+         "t": "code",
+         "v": "config:"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Required: ",
+        {
+         "t": "code",
+         "v": "unique_key"
+        },
+        " (column, list or expression; it ",
+        {
+         "c": [
+          "must"
+         ],
+         "t": "b"
+        },
+        " be unique) and ",
+        {
+         "t": "code",
+         "v": "strategy"
+        },
+        "; plus ",
+        {
+         "t": "code",
+         "v": "updated_at"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "timestamp"
+        },
+        ") or ",
+        {
+         "t": "code",
+         "v": "check_cols"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "check"
+        },
+        ", list or ",
+        {
+         "t": "code",
+         "v": "all"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "timestamp"
+        },
+        ": valid dates = ",
+        {
+         "t": "code",
+         "v": "updated_at"
+        },
+        "; misses changes without a new timestamp. ",
+        {
+         "t": "code",
+         "v": "check"
+        },
+        ": valid dates = run time (or ",
+        {
+         "t": "code",
+         "v": "updated_at"
+        },
+        " if set); history starts at the first run."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Meta columns: ",
+        {
+         "t": "code",
+         "v": "dbt_scd_id"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt_updated_at"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt_valid_from"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt_valid_to"
+        },
+        " (NULL = current), plus ",
+        {
+         "t": "code",
+         "v": "dbt_is_deleted"
+        },
+        " with ",
+        {
+         "t": "code",
+         "v": "new_record"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "hard_deletes"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "ignore"
+        },
+        " (default), ",
+        {
+         "t": "code",
+         "v": "invalidate"
+        },
+        " (close, with a gap if the row returns), ",
+        {
+         "t": "code",
+         "v": "new_record"
+        },
+        " (deletion rows). ",
+        {
+         "t": "code",
+         "v": "invalidate_hard_deletes"
+        },
+        " is the legacy form; switching an existing table to ",
+        {
+         "t": "code",
+         "v": "new_record"
+        },
+        " fails."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "schema"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "database"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "alias"
+        },
+        " go through the ",
+        {
+         "t": "code",
+         "v": "generate_*_name"
+        },
+        " macros; legacy ",
+        {
+         "t": "code",
+         "v": "target_schema"
+        },
+        " is exact."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Run with ",
+        {
+         "t": "code",
+         "v": "dbt snapshot"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " (never ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        "); no ",
+        {
+         "t": "code",
+         "v": "--full-refresh"
+        },
+        "; ",
+        {
+         "t": "code",
+         "v": "--empty"
+        },
+        " works but empties the input, which closes every row of a snapshot that tracks hard deletes."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Best practices: snapshot sources with ",
+        {
+         "t": "code",
+         "v": "select *"
+        },
+        ", dedicated protected schema, run often, never rebuild, test the key."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Recognise the legacy ",
+        {
+         "t": "code",
+         "v": "{% snapshot %}"
+        },
+        " SQL block: same configs, inside ",
+        {
+         "t": "code",
+         "v": "config()"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "Snapshots"
+}

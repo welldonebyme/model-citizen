@@ -1,0 +1,4646 @@
+{
+ "id": "ch12",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "The commands ",
+      {
+       "t": "code",
+       "v": "dbt seed"
+      },
+      " (with ",
+      {
+       "t": "code",
+       "v": "--select"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "--full-refresh"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "--show"
+      },
+      ") and ",
+      {
+       "t": "code",
+       "v": "dbt compile"
+      },
+      " for analyses; ",
+      {
+       "t": "code",
+       "v": "dbt show"
+      },
+      " to preview an analysis; what ",
+      {
+       "t": "code",
+       "v": "dbt run"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      " do with seeds and analyses."
+     ],
+     "id": "1.4"
+    },
+    {
+     "c": [
+      "Seed configurations in ",
+      {
+       "t": "code",
+       "v": "dbt_project.yml"
+      },
+      " and in properties files: ",
+      {
+       "t": "code",
+       "v": "column_types"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "quote_columns"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "delimiter"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "schema"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "full_refresh"
+      },
+      "…"
+     ],
+     "id": "1.6"
+    },
+    {
+     "c": [
+      "Seeds as nodes of the DAG: ",
+      {
+       "t": "code",
+       "v": "ref('country_regions')"
+      },
+      ", lineage, build order."
+     ],
+     "id": "1.5"
+    },
+    {
+     "c": [
+      "Finding and reading compiled analyses in ",
+      {
+       "t": "code",
+       "v": "target/compiled/"
+      },
+      "."
+     ],
+     "id": "3.2"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "The finance team asks a new question: \"How much revenue do we make per ",
+      {
+       "c": [
+        "sales region"
+       ],
+       "t": "i"
+      },
+      "?\" Your data knows the country of each customer, but no system stores which country belongs to which region. Somebody keeps that list in a spreadsheet: six rows, changed maybe once a year. You could type it into a long SQL ",
+      {
+       "t": "code",
+       "v": "case when country = 'France' then 'Europe' ..."
+      },
+      ", but then data hides inside your logic, and nobody outside the data team can review it. You could ask the platform team to load the spreadsheet with an ingestion tool, but that is a big machine for six rows."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "dbt has a small tool for exactly this: a ",
+      {
+       "c": [
+        "seed"
+       ],
+       "t": "i"
+      },
+      ", a CSV file that lives in your Git repository and becomes a table with one command. And the finance question itself is a one-off query: it should be versioned and reviewed, it should use ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      " so it works in dev and prod, but it should not become a permanent table. dbt has a tool for that too: an ",
+      {
+       "c": [
+        "analysis"
+       ],
+       "t": "i"
+      },
+      "."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "The exam asks about both, often with traps: \"Is a seed a good way to load raw data?\", \"What does ",
+      {
+       "t": "code",
+       "v": "dbt run"
+      },
+      " do with a seed?\", \"What happens when a seed gets a new column?\", \"Where do you find the SQL of an analysis?\". This chapter answers all of them on the practice project."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "A seed is a small, static CSV file in ",
+      {
+       "t": "code",
+       "v": "seeds/"
+      },
+      " that ",
+      {
+       "t": "code",
+       "v": "dbt seed"
+      },
+      " (or ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      ") loads into a table in your target schema, and that models read with ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      ", like any other node of the DAG. Seeds are configured in YAML (",
+      {
+       "t": "code",
+       "v": "column_types"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "quote_columns"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "delimiter"
+      },
+      "…), they are reloaded by truncating the table, and they need ",
+      {
+       "t": "code",
+       "v": "--full-refresh"
+      },
+      " when their columns change. An analysis is a SQL file in ",
+      {
+       "t": "code",
+       "v": "analyses/"
+      },
+      " that dbt compiles (with ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      " and Jinja) into ",
+      {
+       "t": "code",
+       "v": "target/compiled/"
+      },
+      " but never runs or materializes; you copy the SQL or preview it with ",
+      {
+       "t": "code",
+       "v": "dbt show"
+      },
+      "."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:seeds-analyses",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-sa-seeds-what"
+   ],
+   "checkpoints": [],
+   "id": "ch12-s1",
+   "label": "sec:sa-seeds-what",
+   "labs": [],
+   "minutes": 5,
+   "number": "12.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "seed"
+         ],
+         "fr": "seed (fichier CSV chargé par dbt)",
+         "id": "term-seed",
+         "t": "term"
+        },
+        " is a CSV file stored in your dbt project, in the ",
+        {
+         "t": "code",
+         "v": "seeds/"
+        },
+        " folder. The command ",
+        {
+         "t": "code",
+         "v": "dbt seed"
+        },
+        " creates a table from it, in your target schema, with the same name as the file. Models then read it with ",
+        {
+         "t": "code",
+         "v": "{{ ref('country_regions') }}"
+        },
+        ", exactly as they read another model."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Think of a restaurant. The ingredients arrive every morning by truck: that is the raw data, loaded by an ingestion tool and declared as ",
+          {
+           "c": [
+            "sources"
+           ],
+           "t": "i"
+          },
+          ". On the wall of the kitchen there is also a small laminated card: \"table 1–6 = terrace, table 7–12 = inside\". Nobody delivers it by truck. The chef writes it once, and changes it when the room changes. A seed is that card: small reference information that belongs to the team and lives with the recipes (the dbt project)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "alt": "A seed compared with a source. The file seeds/country_regions.csv (in Git) becomes, with dbt seed or dbt build, the table dbt_adnane.country_regions, which dim_customers reads with ref('country_regions'). Raw data from an ingestion tool (every day) is read with source() and staging models, which also feed dim_customers.",
+       "id": "ch12-fig1",
+       "src": "figures/ch12-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "When is a seed the right tool? The test is simple: ",
+        {
+         "c": [
+          "small"
+         ],
+         "t": "i"
+        },
+        ", ",
+        {
+         "c": [
+          "static"
+         ],
+         "t": "i"
+        },
+        ", ",
+        {
+         "c": [
+          "owned by the data team"
+         ],
+         "t": "i"
+        },
+        ", ",
+        {
+         "c": [
+          "not secret"
+         ],
+         "t": "i"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Good seeds"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Bad seeds"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "A mapping country → region and currency (our seed)."
+          ]
+         },
+         {
+          "c": [
+           "A daily export of orders from the shop database (raw data: use an ingestion tool and a ",
+           {
+            "c": [
+             "source"
+            ],
+            "t": "i"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Order status codes → readable labels in French."
+          ]
+         },
+         {
+          "c": [
+           "A file of 2 million rows (dbt loads seeds slowly on most warehouses)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "A list of test or employee accounts to exclude from reports."
+          ]
+         },
+         {
+          "c": [
+           "Customer names, emails or passwords (personal data would be stored in Git, readable by everybody with repository access)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "A small fiscal calendar, a list of public holidays."
+          ]
+         },
+         {
+          "c": [
+           "A table that another system updates (the CSV in Git would always be late)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Seeds are not a loading tool"
+           ],
+           "t": "b"
+          },
+          " (trap T58). They are for small, static CSV files that belong in version control: lookup tables and mappings. Raw data, large files and data that changes outside the project are loaded by an ingestion tool (Fivetran, Airbyte, a script, ",
+          {
+           "t": "code",
+           "v": "COPY"
+          },
+          "…) and declared as ",
+          {
+           "c": [
+            "sources"
+           ],
+           "t": "i"
+          },
+          " (Chapter 7). An exam question that says \"load the daily export of 5 GB with ",
+          {
+           "t": "code",
+           "v": "dbt seed"
+          },
+          "\" describes a bad practice."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch12-s1-0",
+     "title": [
+      "Seeds: what they are for"
+     ],
+     "titleText": "Seeds: what they are for"
+    }
+   ],
+   "title": [
+    "Seeds: what they are for"
+   ],
+   "titleText": "Seeds: what they are for"
+  },
+  {
+   "anchors": [
+    "sec-sa-csv"
+   ],
+   "checkpoints": [],
+   "id": "ch12-s2",
+   "label": "sec:sa-csv",
+   "labs": [],
+   "minutes": 5,
+   "number": "12.2",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Here is the seed of the practice project:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c1",
+       "lang": "plain",
+       "t": "code",
+       "text": "country,region,currency\nFrance,Europe,EUR\nGermany,Europe,EUR\nMorocco,Africa,MAD\nSpain,Europe,EUR\nUnited Kingdom,Europe,GBP\nUnited States,North America,USD",
+       "title": "seeds/country_regions.csv"
+      },
+      {
+       "c": [
+        "The rules for a seed file:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "It lives in a folder listed in ",
+            {
+             "t": "code",
+             "v": "seed-paths"
+            },
+            " in ",
+            {
+             "t": "code",
+             "v": "dbt_project.yml"
+            },
+            " (default ",
+            {
+             "t": "code",
+             "v": "[\"seeds\"]"
+            },
+            "). Sub-folders are allowed."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "c": [
+              "file name"
+             ],
+             "t": "b"
+            },
+            " (without ",
+            {
+             "t": "code",
+             "v": ".csv"
+            },
+            ") is the name of the seed: the name of the table and the name you give to ",
+            {
+             "t": "code",
+             "v": "ref()"
+            },
+            ". Use lower-case ",
+            {
+             "t": "code",
+             "v": "snake_case"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "c": [
+              "first line is the header"
+             ],
+             "t": "b"
+            },
+            ": the column names. Keep them simple (lower-case, no spaces) to avoid quoting problems."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Values are separated by commas (another one-character separator is possible with the ",
+            {
+             "t": "code",
+             "v": "delimiter"
+            },
+            " config). A value that contains a comma is written between double quotes: ",
+            {
+             "t": "code",
+             "v": "\"Lyon, Part-Dieu\""
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "An empty value becomes ",
+            {
+             "t": "code",
+             "v": "NULL"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Give each seed a name that no model, seed or snapshot of the project already uses."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "We checked the two value rules with a throwaway seed:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c2",
+       "lang": "plain",
+       "t": "code",
+       "text": "store_id,store_name,manager_email\n1,\"Lyon, Part-Dieu\",anne@example.com\n2,Paris Centre,",
+       "title": "seeds/demo_csv_rules.csv (throwaway test)"
+      },
+      {
+       "id": "ch12-c3",
+       "lang": "output",
+       "t": "code",
+       "text": "Previewing inline node:\n| store_id | store_name      | manager_email    | email_is_null |\n| -------- | --------------- | ---------------- | ------------- |\n|        1 | Lyon, Part-Dieu | anne@example.com |         False |\n|        2 | Paris Centre    |                  |          True |"
+      },
+      {
+       "c": [
+        "The quoted comma stayed inside the value, and the empty email is a real ",
+        {
+         "t": "code",
+         "v": "NULL"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "email_is_null"
+        },
+        " was computed with ",
+        {
+         "t": "code",
+         "v": "manager_email is null"
+        },
+        "). And when we created a model ",
+        {
+         "t": "code",
+         "v": "models/country_regions.sql"
+        },
+        " next to the seed, dbt refused to work:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c4",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "Compilation Error\n  dbt found two resources with the database representation \"\"practice\".\"dbt_adnane\".\"country_regions\"\".\n  dbt cannot create two resources with identical database representations. To fix this,\n  change the configuration of one of these resources:\n  - model.jaffle_dbt.country_regions (models/country_regions.sql)\n  - seed.jaffle_dbt.country_regions (seeds/country_regions.csv)"
+      },
+      {
+       "c": [
+        "The error comes from the identical ",
+        {
+         "c": [
+          "table"
+         ],
+         "t": "i"
+        },
+        " name. dbt also printed a deprecation warning, ",
+        {
+         "t": "code",
+         "v": "DuplicateNameDistinctNodeTypesDeprecation"
+        },
+        ". We then gave the model another table name (",
+        {
+         "t": "code",
+         "v": "{{ config(alias='country_regions_m') }}"
+        },
+        "): the error disappeared, but the warning stayed, and ",
+        {
+         "t": "code",
+         "v": "ref('country_regions')"
+        },
+        " silently pointed to the ",
+        {
+         "c": [
+          "model"
+         ],
+         "t": "i"
+        },
+        ", not to the seed. So never reuse a name, even when dbt only warns."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch12-s2-0",
+     "title": [
+      "Writing the CSV file"
+     ],
+     "titleText": "Writing the CSV file"
+    }
+   ],
+   "title": [
+    "Writing the CSV file"
+   ],
+   "titleText": "Writing the CSV file"
+  },
+  {
+   "anchors": [
+    "sec-sa-dbt-seed"
+   ],
+   "checkpoints": [],
+   "id": "ch12-s3",
+   "label": "sec:sa-dbt-seed",
+   "labs": [
+    "ch12-lab1"
+   ],
+   "minutes": 20,
+   "number": "12.3",
+   "objectives": [
+    "1.4",
+    "1.6"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "id": "ch12-c5",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt seed"
+      },
+      {
+       "id": "ch12-c6",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "20:52:22  Running with dbt=1.11.16\n20:52:22  Registered adapter: duckdb=1.11.0\n20:52:23  Found 12 models, 12 data tests, 2 analyses, 1 seed, 5 sources, 669 macros\n20:52:23\n20:52:23  Concurrency: 4 threads (target='dev')\n20:52:23\n20:52:23  1 of 1 START seed file dbt_adnane.country_regions .............................. [RUN]\n20:52:23  1 of 1 OK loaded seed file dbt_adnane.country_regions .......................... [INSERT 6 in 0.04s]\n20:52:23\n20:52:23  Finished running 1 seed in 0 hours 0 minutes and 0.11 seconds (0.11s).\n20:52:23\n20:52:23  Completed successfully\n20:52:23\n20:52:23  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1"
+      },
+      {
+       "c": [
+        "Line by line: ",
+        {
+         "t": "code",
+         "v": "Found ... 1 seed"
+        },
+        " (dbt counts seeds as nodes); ",
+        {
+         "t": "code",
+         "v": "START seed file dbt_adnane.country_regions"
+        },
+        " (the table goes to your target schema, like a model); ",
+        {
+         "t": "code",
+         "v": "OK loaded seed file ... [INSERT 6 ...]"
+        },
+        " (6 rows loaded). ",
+        {
+         "t": "code",
+         "v": "dbt seed"
+        },
+        " only loads seeds: no model is built and no test is run."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "You can check the result without leaving dbt. ",
+        {
+         "t": "code",
+         "v": "dbt show --inline"
+        },
+        " runs any query:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c7",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt show --inline \"select column_name, data_type from information_schema.columns where table_schema = 'dbt_adnane' and table_name = 'country_regions' order by ordinal_position\""
+      },
+      {
+       "id": "ch12-c8",
+       "lang": "output",
+       "t": "code",
+       "text": "...\nPreviewing inline node:\n| column_name | data_type |\n| ----------- | --------- |\n| country     | VARCHAR   |\n| region      | VARCHAR   |\n| currency    | VARCHAR   |"
+      }
+     ],
+     "id": "ch12-s3-1",
+     "number": "12.3.1",
+     "title": [
+      "The first load"
+     ],
+     "titleText": "The first load"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The statements are in ",
+        {
+         "t": "code",
+         "v": "target/run/jaffle_dbt/seeds/country_regions.csv"
+        },
+        " and in ",
+        {
+         "t": "code",
+         "v": "logs/dbt.log"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "First load:"
+             ],
+             "t": "b"
+            },
+            " ",
+            {
+             "t": "code",
+             "v": "create table \"practice\".\"dbt_adnane\".\"country_regions\" (\"country\" varchar,\"region\" varchar,\"currency\" varchar)"
+            },
+            ", then the rows are loaded."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Every later ",
+              {
+               "t": "code",
+               "v": "dbt seed"
+              },
+              ":"
+             ],
+             "t": "b"
+            },
+            " ",
+            {
+             "t": "code",
+             "v": "truncate table \"practice\".\"dbt_adnane\".\"country_regions\";"
+            },
+            " then the rows are loaded again. The table itself is kept: views that read it keep working. The output still says ",
+            {
+             "t": "code",
+             "v": "INSERT 6"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "How the rows are loaded depends on the adapter. dbt-duckdb uses DuckDB's fast CSV reader: ",
+        {
+         "t": "code",
+         "v": "COPY \"practice\".\"dbt_adnane\".\"country_regions\" FROM '.../seeds/country_regions.csv' (FORMAT CSV, HEADER TRUE, DELIMITER ',')"
+        },
+        ". Many other adapters (Postgres, Redshift, Snowflake…) use dbt's default: dbt reads the CSV itself (with the Python library ",
+        {
+         "c": [
+          "agate"
+         ],
+         "t": "i"
+        },
+        ") and sends batches of ",
+        {
+         "t": "code",
+         "v": "insert into ... values (...)"
+        },
+        ". That is why big seeds are slow: one more reason to keep them small."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The \"create, then truncate and reload\" logic is dbt's ",
+        {
+         "c": [
+          "default"
+         ],
+         "t": "i"
+        },
+        " seed logic, used by dbt-duckdb, Postgres, Redshift and others. A few adapters replace some steps: dbt-bigquery, for example, drops the table and reloads it with a BigQuery load job at every ",
+        {
+         "t": "code",
+         "v": "dbt seed"
+        },
+        ". The exam expects the default behaviour, so this chapter teaches it."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch12-s3-2",
+     "number": "12.3.2",
+     "title": [
+      "What dbt does in the warehouse"
+     ],
+     "titleText": "What dbt does in the warehouse"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt guesses the type of each column from the values: this is called ",
+        {
+         "en": [
+          "type inference"
+         ],
+         "fr": "inférence de type",
+         "id": "term-type-inference",
+         "t": "term"
+        },
+        ". We loaded a throwaway seed:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c9",
+       "lang": "plain",
+       "t": "code",
+       "text": "store_id,zip_code,opened_on,is_open,rating\n1,01234,2024-03-15,true,4.5\n2,75001,2023-11-02,false,3.8",
+       "title": "seeds/demo_stores.csv (throwaway test)"
+      },
+      {
+       "id": "ch12-c10",
+       "lang": "output",
+       "t": "code",
+       "text": "| store_id    | INTEGER   |\n| zip_code    | INTEGER   |\n| opened_on   | DATE      |\n| is_open     | BOOLEAN   |\n| rating      | DOUBLE    |\n\n| store_id | zip_code |  opened_on | is_open | rating |\n| -------- | -------- | ---------- | ------- | ------ |\n|        1 |     1234 | 2024-03-15 |    True |    4.5 |\n|        2 |    75001 | 2023-11-02 |   False |    3.8 |",
+       "title": "Result (types in DuckDB, then the data)"
+      },
+      {
+       "c": [
+        "Dates and booleans were recognised, good. But ",
+        {
+         "t": "code",
+         "v": "zip_code"
+        },
+        " became a number, and the French postal code ",
+        {
+         "t": "code",
+         "v": "01234"
+        },
+        " lost its leading zero. A code is not a quantity: it must stay text. The fix is the ",
+        {
+         "t": "code",
+         "v": "column_types"
+        },
+        " config (",
+        {
+         "href": "/learn/ch12/ch12-s4/",
+         "label": "sec:sa-configs",
+         "t": "ref",
+         "text": "Section 12.4"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch12-s3-3",
+     "number": "12.3.3",
+     "title": [
+      "Types are guessed, and the guess can be wrong"
+     ],
+     "titleText": "Types are guessed, and the guess can be wrong"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt seed --select country_regions"
+            },
+            " (or ",
+            {
+             "t": "code",
+             "v": "-s"
+            },
+            ") loads only this seed. All selection methods work: ",
+            {
+             "t": "code",
+             "v": "-s path:seeds"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "-s resource_type:seed"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "-s tag:..."
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt seed --show"
+            },
+            " prints a sample of the loaded rows:"
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "id": "ch12-c11",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt seed --select country_regions --show"
+      },
+      {
+       "id": "ch12-c12",
+       "lang": "output",
+       "t": "code",
+       "text": "...\n22:14:31  Random sample of table: dbt_adnane.country_regions\n22:14:31  --------------------------------------------------\n| country        | region        | currency |\n| -------------- | ------------- | -------- |\n| Germany        | Europe        | EUR      |\n| Morocco        | Africa        | MAD      |\n| United States  | North America | USD      |\n| United Kingdom | Europe        | GBP      |\n| France         | Europe        | EUR      |\n| Spain          | Europe        | EUR      |\n..."
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt run"
+            },
+            " ignores seeds. Selecting one gives nothing to do:"
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "id": "ch12-c13",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt run -s country_regions"
+      },
+      {
+       "id": "ch12-c14",
+       "lang": "output",
+       "t": "code",
+       "text": "22:14:18  Running with dbt=1.11.16\n22:14:19  Registered adapter: duckdb=1.11.0\n22:14:19  Found 12 models, 2 analyses, 12 data tests, 1 seed, 5 sources, 669 macros\n22:14:19  Nothing to do. Try checking your model configs and model specification args"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            " loads seeds ",
+            {
+             "c": [
+              "and"
+             ],
+             "t": "i"
+            },
+            " runs their tests, in DAG order (",
+            {
+             "href": "/learn/ch12/ch12-s7/",
+             "label": "sec:sa-dag",
+             "t": "ref",
+             "text": "Section 12.7"
+            },
+            "). ",
+            {
+             "t": "code",
+             "v": "dbt test -s country_regions"
+            },
+            " runs only the tests of the seed."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt seed"
+            },
+            " has no ",
+            {
+             "t": "code",
+             "v": "--empty"
+            },
+            " flag (",
+            {
+             "t": "code",
+             "v": "Error: No such option '--empty'"
+            },
+            "), and ",
+            {
+             "t": "code",
+             "v": "dbt build --empty"
+            },
+            " still loads seeds completely (only ",
+            {
+             "t": "code",
+             "v": "ref"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "source"
+            },
+            " reads are emptied, see Chapter 16)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt run"
+            },
+            " does not load seeds"
+           ],
+           "t": "b"
+          },
+          " (trap T29). ",
+          {
+           "t": "code",
+           "v": "dbt run -s country_regions"
+          },
+          " prints \"Nothing to do\". To load seeds use ",
+          {
+           "t": "code",
+           "v": "dbt seed"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          ". The same is true for snapshots (Chapter 13): ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          " builds models only."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " add the seed file and its properties, load it, and check the table. Your project is at the end of Chapter 11 (tag ",
+          {
+           "t": "code",
+           "v": "ch11"
+          },
+          ")."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "~/dbt-course/jaffle_dbt"
+          },
+          ", create ",
+          {
+           "t": "code",
+           "v": "seeds/country_regions.csv"
+          },
+          " with the content shown in ",
+          {
+           "href": "/learn/ch12/ch12-s2/",
+           "label": "sec:sa-csv",
+           "t": "ref",
+           "text": "Section 12.2"
+          },
+          " (7 lines: the header and 6 countries). Check the spelling: the country names must match ",
+          {
+           "t": "code",
+           "v": "jaffle_shop.customers.country"
+          },
+          " exactly (",
+          {
+           "t": "code",
+           "v": "United Kingdom"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "United States"
+          },
+          ")."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Create ",
+          {
+           "t": "code",
+           "v": "seeds/_seeds.yml"
+          },
+          " with the content of ",
+          {
+           "href": "/learn/ch12/ch12-s6/",
+           "label": "sec:sa-properties",
+           "t": "ref",
+           "text": "Section 12.6"
+          },
+          " (description, ",
+          {
+           "t": "code",
+           "v": "column_types"
+          },
+          ", two tests on ",
+          {
+           "t": "code",
+           "v": "country"
+          },
+          ")."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Load the seed, then look at the table and its types:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch12-c15",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt seed\n$ dbt show --select country_regions\n$ dbt show --inline \"select column_name, data_type from information_schema.columns where table_schema = 'dbt_adnane' and table_name = 'country_regions' order by ordinal_position\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Run ",
+          {
+           "t": "code",
+           "v": "dbt seed"
+          },
+          " again, then ",
+          {
+           "t": "code",
+           "v": "dbt run -s country_regions"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result."
+           ],
+           "t": "b"
+          },
+          " Step 3: ",
+          {
+           "t": "code",
+           "v": "OK loaded seed file dbt_adnane.country_regions ... [INSERT 6 ...]"
+          },
+          ", six rows, and three ",
+          {
+           "t": "code",
+           "v": "VARCHAR"
+          },
+          " columns. Step 4: ",
+          {
+           "t": "code",
+           "v": "dbt seed"
+          },
+          " prints ",
+          {
+           "t": "code",
+           "v": "INSERT 6"
+          },
+          " again (the table was truncated and reloaded, not duplicated: ",
+          {
+           "t": "code",
+           "v": "dbt show"
+          },
+          " still finds 6 rows); ",
+          {
+           "t": "code",
+           "v": "dbt run -s country_regions"
+          },
+          " prints ",
+          {
+           "t": "code",
+           "v": "Nothing to do"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch12-lab1",
+       "objectives": [
+        "1.4",
+        "1.6"
+       ],
+       "t": "lab",
+       "title": [
+        "Create and load the country_regions seed"
+       ]
+      }
+     ],
+     "id": "ch12-s3-4",
+     "number": "12.3.4",
+     "title": [
+      "Selecting seeds, and what other commands do with them"
+     ],
+     "titleText": "Selecting seeds, and what other commands do with them"
+    }
+   ],
+   "title": [
+    "Loading a seed: ",
+    {
+     "t": "code",
+     "v": "dbt seed"
+    }
+   ],
+   "titleText": "Loading a seed: dbt seed"
+  },
+  {
+   "anchors": [
+    "sec-sa-configs"
+   ],
+   "checkpoints": [],
+   "id": "ch12-s4",
+   "label": "sec:sa-configs",
+   "labs": [],
+   "minutes": 5,
+   "number": "12.4",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A CSV file cannot contain configuration. Seeds are configured in YAML only, in two places:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "in ",
+            {
+             "t": "code",
+             "v": "dbt_project.yml"
+            },
+            ", under the key ",
+            {
+             "t": "code",
+             "v": "seeds:"
+            },
+            ", then the project name, then optional folders; config keys start with ",
+            {
+             "t": "code",
+             "v": "+"
+            },
+            ";"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "in a properties file (any ",
+            {
+             "t": "code",
+             "v": ".yml"
+            },
+            " in the seeds folder, by convention ",
+            {
+             "t": "code",
+             "v": "seeds/_seeds.yml"
+            },
+            "), under ",
+            {
+             "t": "code",
+             "v": "seeds:"
+            },
+            " → ",
+            {
+             "t": "code",
+             "v": "- name:"
+            },
+            " → ",
+            {
+             "t": "code",
+             "v": "config:"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "As for models (Chapter 10), the most specific place wins: the properties file beats ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        ", and a sub-folder beats the project level."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c16",
+       "lang": "yaml",
+       "t": "code",
+       "text": "seeds:\n  jaffle_dbt:\n    +schema: seeds              # custom schema (through generate_schema_name)\n    +quote_columns: false\n    lookups:                    # the folder seeds/lookups/\n      +tags: ['lookup']\n      +delimiter: \";\"",
+       "title": "dbt_project.yml (example, NOT in our project)"
+      }
+     ],
+     "id": "ch12-s4-1",
+     "number": "12.4.1",
+     "title": [
+      "Where seeds are configured"
+     ],
+     "titleText": "Where seeds are configured"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Config"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "column_types"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A dictionary ",
+           {
+            "t": "code",
+            "v": "column: type"
+           },
+           " that replaces the inferred types (for the columns you list; the others are still inferred)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "quote_columns"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "true"
+           },
+           ": column names are quoted when the table is created (case and special characters kept). ",
+           {
+            "t": "code",
+            "v": "false"
+           },
+           ": not quoted. When it is not set, the behaviour depends on the adapter; the docs advise to set it explicitly."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "delimiter"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The one-character separator of the file. Default: a comma (available since dbt 1.7)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Seeds also accept most general configs: ",
+        {
+         "t": "code",
+         "v": "enabled"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "tags"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "schema"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "database"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "alias"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "meta"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "docs"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "full_refresh"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "pre-hook"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "post-hook"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "grants"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "event_time"
+        },
+        ". ",
+        {
+         "t": "code",
+         "v": "materialized"
+        },
+        " is not one of them: a seed is always loaded as a table."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "column_types"
+        },
+        "."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "c": [
+        "The reference project fixes the types of the three columns, so that no future value (for example a country called ",
+        {
+         "t": "code",
+         "v": "1"
+        },
+        ") can change them:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c17",
+       "lang": "yaml",
+       "t": "code",
+       "text": "seeds:\n  - name: country_regions\n    config:\n      column_types:\n        country: varchar\n        region: varchar\n        currency: varchar",
+       "title": "seeds/_seeds.yml (extract)"
+      },
+      {
+       "c": [
+        "The type names are the warehouse's types (",
+        {
+         "t": "code",
+         "v": "varchar"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "varchar(5)"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "date"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "decimal(10,2)"
+        },
+        "…). For the zip code problem above, we added ",
+        {
+         "t": "code",
+         "v": "column_types: {zip_code: varchar}"
+        },
+        " to the throwaway seed and ran ",
+        {
+         "t": "code",
+         "v": "dbt seed"
+        },
+        " again:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c18",
+       "lang": "output",
+       "t": "code",
+       "text": "22:15:02  1 of 1 OK loaded seed file dbt_adnane.demo_stores .............................. [INSERT 2 in 0.04s]\n| zip_code | t       |\n| -------- | ------- |\n|     1234 | INTEGER |\n|    75001 | INTEGER |",
+       "title": "Result: dbt seed (no full refresh), then the type of zip_code"
+      },
+      {
+       "c": [
+        "Nothing changed! A normal ",
+        {
+         "t": "code",
+         "v": "dbt seed"
+        },
+        " truncates and reloads the ",
+        {
+         "c": [
+          "existing"
+         ],
+         "t": "i"
+        },
+        " table, which still has an ",
+        {
+         "t": "code",
+         "v": "INTEGER"
+        },
+        " column. dbt did not warn us. With ",
+        {
+         "t": "code",
+         "v": "--full-refresh"
+        },
+        " the table is recreated with the new type:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c19",
+       "lang": "output",
+       "t": "code",
+       "text": "22:15:09  1 of 1 OK loaded seed file dbt_adnane.demo_stores .............................. [CREATE 2 in 0.05s]\n| zip_code | t       |\n| -------- | ------- |\n| 01234    | VARCHAR |\n| 75001    | VARCHAR |",
+       "title": "Result: dbt seed --full-refresh, then the type of zip_code"
+      },
+      {
+       "c": [
+        "The leading zero is back. (We looked at the type with ",
+        {
+         "t": "code",
+         "v": "typeof(zip_code)"
+        },
+        ", a DuckDB function.)"
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "quote_columns"
+        },
+        "."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "c": [
+        "We loaded a throwaway seed whose header is ",
+        {
+         "t": "code",
+         "v": "Status Code,Label"
+        },
+        " (a space and capital letters). dbt-duckdb created ",
+        {
+         "t": "code",
+         "v": "create table ... (\"Status Code\" text,\"Label\" text)"
+        },
+        ": on DuckDB the names were quoted and kept as written. On Snowflake, an unquoted name is changed to upper case, and a quoted name keeps its exact case; so the same file can give different column names on different warehouses. The safe habit: simple lower-case headers, and an explicit ",
+        {
+         "t": "code",
+         "v": "quote_columns"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "delimiter"
+        },
+        "."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "c": [
+        "Many European spreadsheets export CSV files with semicolons. A throwaway seed ",
+        {
+         "t": "code",
+         "v": "order_status_labels.csv"
+        },
+        " with the header ",
+        {
+         "t": "code",
+         "v": "status;label_fr"
+        },
+        " loaded \"successfully\" as ",
+        {
+         "c": [
+          "one"
+         ],
+         "t": "i"
+        },
+        " column:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c20",
+       "lang": "output",
+       "t": "code",
+       "text": "| status;label_fr  |\n| ---------------- |\n| placed;passee    |\n| shipped;expediee |",
+       "title": "Result without the delimiter config"
+      },
+      {
+       "c": [
+        "No error, just a wrong table. With ",
+        {
+         "t": "code",
+         "v": "config: {delimiter: \";\"}"
+        },
+        " in the properties file and ",
+        {
+         "t": "code",
+         "v": "dbt seed --full-refresh"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c21",
+       "lang": "output",
+       "t": "code",
+       "text": "| status  | label_fr |\n| ------- | -------- |\n| placed  | passee   |\n| shipped | expediee |",
+       "title": "Result with delimiter: \";\""
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "schema"
+        },
+        "."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "c": [
+        "A seed goes to the target schema by default. With ",
+        {
+         "t": "code",
+         "v": "+schema: seeds"
+        },
+        ", the name goes through ",
+        {
+         "t": "code",
+         "v": "generate_schema_name"
+        },
+        ", like a model. With the macro of our project (Chapter 10) we tested it: ",
+        {
+         "t": "code",
+         "v": "{{ ref('country_regions') }}"
+        },
+        " compiled to ",
+        {
+         "t": "code",
+         "v": "\"practice\".\"dbt_adnane\".\"country_regions\""
+        },
+        " in dev and to ",
+        {
+         "t": "code",
+         "v": "\"practice\".\"seeds\".\"country_regions\""
+        },
+        " with ",
+        {
+         "t": "code",
+         "v": "--target prod"
+        },
+        ". With dbt's default macro it would be ",
+        {
+         "t": "code",
+         "v": "dbt_adnane_seeds"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Changing ",
+            {
+             "t": "code",
+             "v": "column_types"
+            },
+            " is silent without ",
+            {
+             "t": "code",
+             "v": "--full-refresh"
+            },
+            "."
+           ],
+           "t": "b"
+          },
+          " The existing table keeps its old types, the output says ",
+          {
+           "t": "code",
+           "v": "OK"
+          },
+          ", and nothing warns you. After changing ",
+          {
+           "t": "code",
+           "v": "column_types"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "quote_columns"
+          },
+          " or the header of a seed, run ",
+          {
+           "t": "code",
+           "v": "dbt seed --full-refresh -s <seed>"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch12-s4-2",
+     "number": "12.4.2",
+     "title": [
+      "The seed-specific configs"
+     ],
+     "titleText": "The seed-specific configs"
+    }
+   ],
+   "title": [
+    "Seed configurations"
+   ],
+   "titleText": "Seed configurations"
+  },
+  {
+   "anchors": [
+    "sec-sa-full-refresh"
+   ],
+   "checkpoints": [],
+   "id": "ch12-s5",
+   "label": "sec:sa-full-refresh",
+   "labs": [],
+   "minutes": 5,
+   "number": "12.5",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The difference between the two modes of ",
+        {
+         "t": "code",
+         "v": "dbt seed"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt seed"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt seed --full-refresh"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Statement"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "truncate table ..."
+           },
+           " then load"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "drop table if exists ... cascade"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "create table ..."
+           },
+           ", then load"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Output"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "[INSERT 6 ...]"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "[CREATE 6 ...]"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Table structure"
+          ]
+         },
+         {
+          "c": [
+           "Kept (old columns, old types)"
+          ]
+         },
+         {
+          "c": [
+           "Rebuilt from the CSV and the configs"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Objects that depend on the table"
+          ]
+         },
+         {
+          "c": [
+           "Untouched"
+          ]
+         },
+         {
+          "c": [
+           "May be dropped by ",
+           {
+            "t": "code",
+            "v": "cascade"
+           },
+           " on some warehouses"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Why does dbt truncate instead of dropping? Because dropping a table with ",
+        {
+         "t": "code",
+         "v": "cascade"
+        },
+        " can also drop the views built on it (on Postgres or Redshift, for example), and analysts using those views would suddenly see errors. Truncating keeps everything in place. The price: with this default logic, the structure of the table never changes during a normal ",
+        {
+         "t": "code",
+         "v": "dbt seed"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "So what happens when you add a column to the CSV? The reference project tried it with a fourth column ",
+        {
+         "t": "code",
+         "v": "continent"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c22",
+       "lang": "plain",
+       "t": "code",
+       "text": "country,region,currency,continent\nFrance,Europe,EUR,Europe\n...",
+       "title": "seeds/country_regions.csv (demo, reverted afterwards)"
+      },
+      {
+       "id": "ch12-c23",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt seed"
+      },
+      {
+       "id": "ch12-c24",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "20:53:01  1 of 1 START seed file dbt_adnane.country_regions .............................. [RUN]\n20:53:01  1 of 1 ERROR loading seed file dbt_adnane.country_regions ...................... [ERROR in 0.03s]\n...\n20:53:01  Failure in seed country_regions (seeds/country_regions.csv)\n20:53:01    Runtime Error in seed country_regions (seeds/country_regions.csv)\n  Invalid Input Error: Error when sniffing file \"/Users/you/dbt-course/jaffle_dbt/seeds/country_regions.csv\".\n  It was not possible to automatically detect the CSV parsing dialect\n...\n  * Columns are set as: \"columns = { 'country' : 'VARCHAR', 'region' : 'VARCHAR', 'currency' : 'VARCHAR'}\", and they contain: 3 columns. It does not match the number of columns found by the sniffer: 4. Verify the columns parameter is correctly set.\n...\n20:53:01  Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1",
+       "textBook": "20:53:01  1 of 1 START seed file dbt_adnane.country_regions .............................. [RUN]\n20:53:01  1 of 1 ERROR loading seed file dbt_adnane.country_regions ...................... [ERROR in 0.03s]\n...\n20:53:01  Failure in seed country_regions (seeds/country_regions.csv)\n20:53:01    Runtime Error in seed country_regions (seeds/country_regions.csv)\n  Invalid Input Error: Error when sniffing file \"/Users/mac/dbt-course/jaffle_dbt/seeds/country_regions.csv\".\n  It was not possible to automatically detect the CSV parsing dialect\n...\n  * Columns are set as: \"columns = { 'country' : 'VARCHAR', 'region' : 'VARCHAR', 'currency' : 'VARCHAR'}\", and they contain: 3 columns. It does not match the number of columns found by the sniffer: 4. Verify the columns parameter is correctly set.\n...\n20:53:01  Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1"
+      },
+      {
+       "c": [
+        "The DuckDB message is long, but one line says it all: the table has 3 columns, the file has 4. On other warehouses the message is different and usually shorter, because the ",
+        {
+         "t": "code",
+         "v": "insert"
+        },
+        " names a column that the table does not have: typically ",
+        {
+         "t": "code",
+         "v": "invalid identifier 'CONTINENT'"
+        },
+        " on Snowflake, ",
+        {
+         "t": "code",
+         "v": "column \"continent\" of relation \"country_regions\" does not exist"
+        },
+        " on Postgres. The cause and the fix are the same everywhere:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c25",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt seed --full-refresh"
+      },
+      {
+       "id": "ch12-c26",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "...\n20:53:03  1 of 1 START seed file dbt_adnane.country_regions .............................. [RUN]\n20:53:03  1 of 1 OK loaded seed file dbt_adnane.country_regions .......................... [CREATE 6 in 0.04s]\n...\n20:53:03  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "CREATE 6"
+        },
+        " instead of ",
+        {
+         "t": "code",
+         "v": "INSERT 6"
+        },
+        ": the table was dropped and recreated with four columns. (The reference project then put the file back to three columns and ran ",
+        {
+         "t": "code",
+         "v": "dbt seed --full-refresh"
+        },
+        " once more.)"
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "A new or renamed column in a seed needs ",
+            {
+             "t": "code",
+             "v": "--full-refresh"
+            }
+           ],
+           "t": "b"
+          },
+          " (trap T59). A normal ",
+          {
+           "t": "code",
+           "v": "dbt seed"
+          },
+          " fails because the existing table does not have the new column. ",
+          {
+           "t": "code",
+           "v": "dbt seed --full-refresh"
+          },
+          " drops (with ",
+          {
+           "t": "code",
+           "v": "cascade"
+          },
+          ") and recreates the table. The same flag exists for ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          ", where it also rebuilds incremental models (Chapter 14). A seed with the config ",
+          {
+           "t": "code",
+           "v": "full_refresh: false"
+          },
+          " ignores the flag: use it to protect a seed that must never be dropped."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch12-s5-0",
+     "title": [
+      "Full refresh: when the columns change"
+     ],
+     "titleText": "Full refresh: when the columns change"
+    }
+   ],
+   "title": [
+    "Full refresh: when the columns change"
+   ],
+   "titleText": "Full refresh: when the columns change"
+  },
+  {
+   "anchors": [
+    "sec-sa-properties"
+   ],
+   "checkpoints": [],
+   "id": "ch12-s6",
+   "label": "sec:sa-properties",
+   "labs": [],
+   "minutes": 5,
+   "number": "12.6",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Seeds have properties like models: a description, column descriptions and data tests. The reference project keeps them in ",
+        {
+         "t": "code",
+         "v": "seeds/_seeds.yml"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c27",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nseeds:\n  - name: country_regions\n    description: Static mapping from a customer country to its sales region and currency (maintained by hand).\n    config:\n      column_types:\n        country: varchar\n        region: varchar\n        currency: varchar\n    columns:\n      - name: country\n        description: Country name, exactly as in jaffle_shop.customers.country.\n        data_tests:\n          - unique\n          - not_null\n      - name: region\n        description: Sales region (Europe, Africa, North America).\n      - name: currency\n        description: ISO 4217 currency code used in that country.",
+       "title": "seeds/_seeds.yml"
+      },
+      {
+       "c": [
+        "Notes:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "The top key is ",
+            {
+             "t": "code",
+             "v": "seeds:"
+            },
+            ", not ",
+            {
+             "t": "code",
+             "v": "models:"
+            },
+            ". A seed described under ",
+            {
+             "t": "code",
+             "v": "models:"
+            },
+            " is not found."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "column_types"
+            },
+            " is a config, so it goes under ",
+            {
+             "t": "code",
+             "v": "config:"
+            },
+            " (",
+            {
+             "t": "code",
+             "v": "dbt_project.yml"
+            },
+            " would use ",
+            {
+             "t": "code",
+             "v": "+column_types"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The two tests on ",
+            {
+             "t": "code",
+             "v": "country"
+            },
+            " protect the joins: a duplicated country would duplicate customers in ",
+            {
+             "t": "code",
+             "v": "dim_customers"
+            },
+            ". They raised the number of data tests of the project from 10 to 12."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "id": "ch12-c28",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt test -s country_regions"
+      },
+      {
+       "id": "ch12-c29",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "...\n22:16:51  1 of 2 PASS not_null_country_regions_country ................................... [PASS in 0.03s]\n22:16:51  2 of 2 PASS unique_country_regions_country ..................................... [PASS in 0.03s]\n22:16:51  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=2"
+      },
+      {
+       "c": [
+        "The description appears in the documentation site and in dbt Catalog on the dbt platform, with the lineage of the seed (Chapter 20). This matters: a seed is maintained by hand, so the description should say who owns it and how to change it."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch12-s6-0",
+     "title": [
+      "Properties, tests and documentation"
+     ],
+     "titleText": "Properties, tests and documentation"
+    }
+   ],
+   "title": [
+    "Properties, tests and documentation"
+   ],
+   "titleText": "Properties, tests and documentation"
+  },
+  {
+   "anchors": [
+    "sec-sa-dag"
+   ],
+   "checkpoints": [],
+   "id": "ch12-s7",
+   "label": "sec:sa-dag",
+   "labs": [
+    "ch12-lab2"
+   ],
+   "minutes": 20,
+   "number": "12.7",
+   "objectives": [
+    "1.4",
+    "1.5"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " gains a ",
+        {
+         "t": "code",
+         "v": "region"
+        },
+        " column. The diff of the reference project:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c30",
+       "lang": "plain",
+       "t": "code",
+       "text": "+country_regions as (\n+\n+    select * from {{ ref('country_regions') }}\n+\n+),\n+\n ...\n         customers.country,\n+        country_regions.region,\n         customer_orders.first_order_date,\n ...\n     left join customer_orders\n         on customers.customer_id = customer_orders.customer_id\n+    left join country_regions\n+        on customers.country = country_regions.country",
+       "title": "git diff models/marts/dim_customers.sql (extract)"
+      },
+      {
+       "c": [
+        "A ",
+        {
+         "t": "code",
+         "v": "left join"
+        },
+        ", because a customer whose country is missing from the seed must stay in the dimension (with a ",
+        {
+         "t": "code",
+         "v": "NULL"
+        },
+        " region)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch12-s7-1",
+     "number": "12.7.1",
+     "title": [
+      "Using the seed in a model"
+     ],
+     "titleText": "Using the seed in a model"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "ref('country_regions')"
+        },
+        " only gives the ",
+        {
+         "c": [
+          "name"
+         ],
+         "t": "i"
+        },
+        " of the table. If the table does not exist yet, the warehouse fails. We ran the changed model before any ",
+        {
+         "t": "code",
+         "v": "dbt seed"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c31",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt run -s dim_customers"
+      },
+      {
+       "id": "ch12-c32",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "...\n22:14:16  1 of 1 ERROR creating sql table model dbt_adnane.dim_customers ................. [ERROR in 0.04s]\n...\n22:14:16  Failure in model dim_customers (models/marts/dim_customers.sql)\n22:14:16    Runtime Error in model dim_customers (models/marts/dim_customers.sql)\n  Catalog Error: Table with name country_regions does not exist!\n  Did you mean \"fct_orders\"?\n\n  LINE 26:     select * from \"practice\".\"dbt_adnane\".\"country_regions\"\n                             ^\n22:14:16\n22:14:16    compiled code at target/compiled/jaffle_dbt/models/marts/dim_customers.sql"
+      },
+      {
+       "c": [
+        "This is a database error (DuckDB writes ",
+        {
+         "t": "code",
+         "v": "Runtime Error ... Catalog Error"
+        },
+        "; Snowflake would say ",
+        {
+         "t": "code",
+         "v": "Database Error ... does not exist or not authorized"
+        },
+        "). The same happens in a fresh environment or a new CI schema. Two solutions: run ",
+        {
+         "t": "code",
+         "v": "dbt seed"
+        },
+        " before ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        ", or simply use ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        ", which loads the seed first because it is a parent in the DAG."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch12-s7-2",
+     "number": "12.7.2",
+     "title": [
+      "If you forget to load the seed"
+     ],
+     "titleText": "If you forget to load the seed"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch12-c33",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt ls --resource-type seed\n$ dbt ls --select country_regions+"
+      },
+      {
+       "id": "ch12-c34",
+       "lang": "output",
+       "t": "code",
+       "text": "...\njaffle_dbt.country_regions\n...\njaffle_dbt.marts.dim_customers\njaffle_dbt.country_regions\njaffle_dbt.not_null_country_regions_country\njaffle_dbt.unique_country_regions_country"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "country_regions+"
+        },
+        " selects the seed, its two tests and its child ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        ". ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " with this selector does everything in the right order:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c35",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt build --select country_regions+"
+      },
+      {
+       "id": "ch12-c36",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "...\n20:52:36  1 of 4 START seed file dbt_adnane.country_regions .............................. [RUN]\n20:52:36  1 of 4 OK loaded seed file dbt_adnane.country_regions .......................... [INSERT 6 in 0.04s]\n20:52:36  2 of 4 START test not_null_country_regions_country ............................. [RUN]\n20:52:36  3 of 4 START test unique_country_regions_country ............................... [RUN]\n20:52:36  2 of 4 PASS not_null_country_regions_country ................................... [PASS in 0.07s]\n20:52:36  3 of 4 PASS unique_country_regions_country ..................................... [PASS in 0.06s]\n20:52:36  4 of 4 START sql table model dbt_adnane.dim_customers .......................... [RUN]\n20:52:36  4 of 4 OK created sql table model dbt_adnane.dim_customers ..................... [OK in 0.05s]\n20:52:36\n20:52:36  Finished running 1 seed, 1 table model, 2 data tests in 0 hours 0 minutes and 0.24 seconds (0.24s).\n...\n20:52:36  Done. PASS=4 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=4"
+      },
+      {
+       "c": [
+        "The seed is loaded, ",
+        {
+         "c": [
+          "then"
+         ],
+         "t": "i"
+        },
+        " its tests run, ",
+        {
+         "c": [
+          "then"
+         ],
+         "t": "i"
+        },
+        " the model is built. If a test of the seed had failed, ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " would have been skipped (Chapter 16 and Chapter 18 explain this behaviour of ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        "). The new column:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c37",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt show --inline \"select region, count(*) as n_customers, sum(lifetime_value) as lifetime_value from {{ ref('dim_customers') }} group by region order by region\""
+      },
+      {
+       "id": "ch12-c38",
+       "lang": "output",
+       "t": "code",
+       "text": "...\nPreviewing inline node:\n| region        | n_customers | lifetime_value |\n| ------------- | ----------- | -------------- |\n| Africa        |          31 |        1,643.4 |\n| Europe        |          59 |        2,805.5 |\n| North America |          10 |          539.5 |"
+      },
+      {
+       "c": [
+        "100 customers, all with a region: every country of the raw data is in the seed."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Seeds and state comparison (Chapter 24)."
+           ],
+           "t": "b"
+          },
+          " For ",
+          {
+           "t": "code",
+           "v": "state:modified"
+          },
+          ", dbt stores a hash of the content of each seed file smaller than 1 MiB, so editing one value makes the seed \"modified\". For a file larger than 1 MiB, dbt cannot compare the content and only looks at the file path: a content change is ",
+          {
+           "c": [
+            "not"
+           ],
+           "t": "i"
+          },
+          " detected (dbt prints a warning). One more reason to keep seeds small."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "deep",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "On the dbt platform."
+           ],
+           "t": "b"
+          },
+          " Seed files appear in the file explorer of dbt Studio; you can edit the CSV there, then run ",
+          {
+           "t": "code",
+           "v": "dbt seed -s country_regions"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "dbt build -s country_regions+"
+          },
+          " from the command bar. In jobs, either add a ",
+          {
+           "t": "code",
+           "v": "dbt seed"
+          },
+          " step before ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          ", or (simpler) use ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          ", which loads the seeds in DAG order. dbt Catalog shows seeds as nodes of the lineage, with their description and columns."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " add the ",
+          {
+           "t": "code",
+           "v": "region"
+          },
+          " column to ",
+          {
+           "t": "code",
+           "v": "dim_customers"
+          },
+          ", see how ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          " resolves the seed, and build in DAG order."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Edit ",
+          {
+           "t": "code",
+           "v": "models/marts/dim_customers.sql"
+          },
+          ": add the CTE ",
+          {
+           "t": "code",
+           "v": "country_regions"
+          },
+          " after the CTE ",
+          {
+           "t": "code",
+           "v": "orders"
+          },
+          ", the column ",
+          {
+           "t": "code",
+           "v": "country_regions.region"
+          },
+          " after ",
+          {
+           "t": "code",
+           "v": "customers.country"
+          },
+          ", and the ",
+          {
+           "t": "code",
+           "v": "left join"
+          },
+          " at the end of the ",
+          {
+           "t": "code",
+           "v": "final"
+          },
+          " CTE, exactly as in the diff above."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Compile the model and look at what ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          " produced:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch12-c39",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt compile -s dim_customers"
+        },
+        {
+         "c": [
+          "Find the line ",
+          {
+           "t": "code",
+           "v": "select * from \"practice\".\"dbt_adnane\".\"country_regions\""
+          },
+          " in the compiled SQL: ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          " only gave the name of the seed table. If you had skipped ",
+          {
+           "t": "code",
+           "v": "dbt seed"
+          },
+          " in the first lab, ",
+          {
+           "t": "code",
+           "v": "dbt run -s dim_customers"
+          },
+          " would now fail with the ",
+          {
+           "t": "code",
+           "v": "Catalog Error"
+          },
+          " shown above."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Build the seed and everything downstream, then the whole project:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch12-c40",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --select country_regions+\n$ dbt build"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Query the new column with the ",
+          {
+           "t": "code",
+           "v": "dbt show --inline"
+          },
+          " command of this section."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result."
+           ],
+           "t": "b"
+          },
+          " Step 3: ",
+          {
+           "t": "code",
+           "v": "Done. PASS=4 ..."
+          },
+          " (seed, 2 tests, ",
+          {
+           "t": "code",
+           "v": "dim_customers"
+          },
+          "), then for the whole project:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch12-c41",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "20:53:09  Finished running 1 seed, 4 table models, 12 data tests, 7 view models in 0 hours 0 minutes and 0.54 seconds (0.54s).\n20:53:09\n20:53:09  Completed successfully\n20:53:09\n20:53:09  Done. PASS=24 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=24"
+        },
+        {
+         "c": [
+          "In the full build the seed is node ",
+          {
+           "t": "code",
+           "v": "6 of 24"
+          },
+          ": it has no parent, so dbt starts it as soon as one of the 4 threads is free, together with the staging views, and long before ",
+          {
+           "t": "code",
+           "v": "dim_customers"
+          },
+          " (node 24). Step 4: Africa 31 customers (1,643.4), Europe 59 (2,805.5), North America 10 (539.5)."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch12-lab2",
+       "objectives": [
+        "1.5",
+        "1.4"
+       ],
+       "t": "lab",
+       "title": [
+        "Use the seed in dim_customers"
+       ]
+      }
+     ],
+     "id": "ch12-s7-3",
+     "number": "12.7.3",
+     "title": [
+      "The seed is a node"
+     ],
+     "titleText": "The seed is a node"
+    }
+   ],
+   "title": [
+    "Seeds in the DAG"
+   ],
+   "titleText": "Seeds in the DAG"
+  },
+  {
+   "anchors": [
+    "sec-sa-analyses"
+   ],
+   "checkpoints": [],
+   "id": "ch12-s8",
+   "label": "sec:sa-analyses",
+   "labs": [],
+   "minutes": 10,
+   "number": "12.8",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "An ",
+        {
+         "c": [
+          "analysis"
+         ],
+         "t": "b"
+        },
+        " (you met one in Chapter 11) is a ",
+        {
+         "t": "code",
+         "v": ".sql"
+        },
+        " file in the ",
+        {
+         "t": "code",
+         "v": "analyses/"
+        },
+        " folder (",
+        {
+         "t": "code",
+         "v": "analysis-paths"
+        },
+        " in ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        "). You write it like a model: SQL, Jinja, ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        ", macros. dbt compiles it, so the ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " calls become real table names for your target, but dbt ",
+        {
+         "c": [
+          "never executes it and never creates anything"
+         ],
+         "t": "b"
+        },
+        " from it."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A model is a dish on the menu: the kitchen cooks it at every service (every ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          "). An analysis is a recipe card in the chef's binder: written with the house's ingredients and measures, reviewed and kept, but cooked only when somebody asks for it, by hand."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "Typical uses:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "one-off business questions, like the revenue per region of this chapter;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "audits and checks during a refactoring (the ",
+            {
+             "t": "code",
+             "v": "audit_fct_monthly_revenue"
+            },
+            " analysis of Chapter 11);"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "queries that you give to a BI tool, a notebook or a colleague, written once with ",
+            {
+             "t": "code",
+             "v": "ref()"
+            },
+            " so they always point to the right schema;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "SQL that you want to keep, review and version, without adding a table to the warehouse."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch12-s8-1",
+     "number": "12.8.1",
+     "title": [
+      "What an analysis is"
+     ],
+     "titleText": "What an analysis is"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch12-c42",
+       "lang": "dbt",
+       "t": "code",
+       "text": "-- Revenue per sales region (ad-hoc question from the finance team).\n-- Analyses are compiled by dbt but never run: copy the compiled SQL from\n-- target/compiled/jaffle_dbt/analyses/revenue_by_region.sql, or use dbt show.\n\nwith\n\nmonthly_revenue as (\n\n    select * from {{ ref('fct_monthly_revenue') }}\n\n),\n\ncountry_regions as (\n\n    select * from {{ ref('country_regions') }}\n\n)\n\nselect\n    country_regions.region,\n    sum(monthly_revenue.number_of_orders) as number_of_orders,\n    sum(monthly_revenue.revenue) as revenue\n\nfrom monthly_revenue\nleft join country_regions\n    on monthly_revenue.country = country_regions.country\ngroup by country_regions.region\norder by revenue desc",
+       "title": "analyses/revenue_by_region.sql"
+      }
+     ],
+     "id": "ch12-s8-2",
+     "number": "12.8.2",
+     "title": [
+      "The revenue_by_region analysis"
+     ],
+     "titleText": "The revenue_by_region analysis"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch12-c43",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt compile -s revenue_by_region"
+      },
+      {
+       "id": "ch12-c44",
+       "lang": "output",
+       "t": "code",
+       "text": "22:16:14  Running with dbt=1.11.16\n22:16:14  Registered adapter: duckdb=1.11.0\n22:16:15  Found 12 models, 2 analyses, 12 data tests, 1 seed, 5 sources, 669 macros\n22:16:15\n22:16:15  Concurrency: 4 threads (target='dev')\n22:16:15\nCompiled node 'revenue_by_region' is:\n-- Revenue per sales region (ad-hoc question from the finance team).\n-- Analyses are compiled by dbt but never run: copy the compiled SQL from\n-- target/compiled/jaffle_dbt/analyses/revenue_by_region.sql, or use dbt show.\n\nwith\n\nmonthly_revenue as (\n\n    select * from \"practice\".\"dbt_adnane\".\"fct_monthly_revenue\"\n\n),\n\ncountry_regions as (\n\n    select * from \"practice\".\"dbt_adnane\".\"country_regions\"\n\n)\n\nselect\n..."
+      },
+      {
+       "c": [
+        "The two ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " calls became full table names of the dev target. The compiled file is saved next to the other compiled analysis:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c45",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ ls target/compiled/jaffle_dbt/analyses/"
+      },
+      {
+       "id": "ch12-c46",
+       "lang": "output",
+       "t": "code",
+       "text": "audit_fct_monthly_revenue.sql\nrevenue_by_region.sql"
+      },
+      {
+       "c": [
+        "A plain ",
+        {
+         "t": "code",
+         "v": "dbt compile"
+        },
+        " (no selection) compiles every model, test and analysis, and also writes these files. Compiled with ",
+        {
+         "t": "code",
+         "v": "--target prod"
+        },
+        ", the same analysis would point to the prod tables: that is the advantage over a query saved on a laptop."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch12-s8-3",
+     "number": "12.8.3",
+     "title": [
+      "Compiling it"
+     ],
+     "titleText": "Compiling it"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch12-c47",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt run --select revenue_by_region"
+      },
+      {
+       "id": "ch12-c48",
+       "lang": "output",
+       "t": "code",
+       "text": "20:52:43  Running with dbt=1.11.16\n20:52:43  Registered adapter: duckdb=1.11.0\n20:52:44  Found 12 models, 12 data tests, 2 analyses, 1 seed, 5 sources, 669 macros\n20:52:44  Nothing to do. Try checking your model configs and model specification args"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " ignore analyses. You have three ways to get the result:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "copy the SQL from ",
+            {
+             "t": "code",
+             "v": "target/compiled/.../analyses/revenue_by_region.sql"
+            },
+            " into the DuckDB CLI, a SQL editor or a BI tool;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "in dbt Studio, open the file and use ",
+            {
+             "c": [
+              "Compile"
+             ],
+             "t": "i"
+            },
+            " (to see the SQL) or ",
+            {
+             "c": [
+              "Preview"
+             ],
+             "t": "i"
+            },
+            " (to run it and see the rows);"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "use ",
+            {
+             "t": "code",
+             "v": "dbt show"
+            },
+            ", which compiles the node, runs it with a limit (5 rows by default) and prints the result. Nothing is stored:"
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "id": "ch12-c49",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt show --select revenue_by_region"
+      },
+      {
+       "id": "ch12-c50",
+       "lang": "output",
+       "t": "code",
+       "text": "...\nPreviewing node 'revenue_by_region':\n| region        | number_of_orders | revenue |\n| ------------- | ---------------- | ------- |\n| Europe        |              153 | 2,523.7 |\n| Africa        |               87 | 1,451.6 |\n| North America |               29 |   505.6 |\n|               |                1 |    16.0 |"
+      },
+      {
+       "c": [
+        "The last row has no region: it is the orphan order 159 (customer 101 does not exist, so the country is ",
+        {
+         "t": "code",
+         "v": "NULL"
+        },
+        " in ",
+        {
+         "t": "code",
+         "v": "fct_monthly_revenue"
+        },
+        ", Chapter 9). The analysis just told the finance team something useful about data quality, too. Total: 270 orders and 4,496.9 of revenue, the same totals as ",
+        {
+         "t": "code",
+         "v": "fct_monthly_revenue"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Analyses are compiled, never run"
+           ],
+           "t": "b"
+          },
+          " (trap T33). ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "dbt test"
+          },
+          " do not execute files of ",
+          {
+           "t": "code",
+           "v": "analyses/"
+          },
+          "; ",
+          {
+           "t": "code",
+           "v": "dbt run -s revenue_by_region"
+          },
+          " prints \"Nothing to do\". ",
+          {
+           "t": "code",
+           "v": "dbt compile"
+          },
+          " writes their SQL in ",
+          {
+           "t": "code",
+           "v": "target/compiled/<project>/analyses/"
+          },
+          ". No table or view is created, even if the manifest shows a default ",
+          {
+           "t": "code",
+           "v": "materialized"
+          },
+          " value for them (we saw ",
+          {
+           "t": "code",
+           "v": "view"
+          },
+          " in ",
+          {
+           "t": "code",
+           "v": "manifest.json"
+          },
+          "): it is never used."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch12-s8-4",
+     "number": "12.8.4",
+     "title": [
+      "Running it: not with ",
+      {
+       "t": "code",
+       "v": "dbt run"
+      }
+     ],
+     "titleText": "Running it: not with dbt run"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch12-c51",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt ls --resource-type analysis"
+      },
+      {
+       "id": "ch12-c52",
+       "lang": "output",
+       "t": "code",
+       "text": "...\njaffle_dbt.analysis.audit_fct_monthly_revenue\njaffle_dbt.analysis.revenue_by_region"
+      },
+      {
+       "c": [
+        "An analysis is a leaf of the DAG: it can ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " models and seeds, but nothing can ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " an analysis, because it never becomes a table. We tried it with a throwaway model containing ",
+        {
+         "t": "code",
+         "v": "select * from {{ ref('revenue_by_region') }}"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c53",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "Compilation Error\n  Model 'model.jaffle_dbt.tmp_ref_analysis' (models/marts/tmp_ref_analysis.sql) depends on a node named 'revenue_by_region' which was not found"
+      },
+      {
+       "c": [
+        "Analyses appear in the manifest with their dependencies (",
+        {
+         "t": "code",
+         "v": "revenue_by_region"
+        },
+        " depends on ",
+        {
+         "t": "code",
+         "v": "fct_monthly_revenue"
+        },
+        " and on the seed), in the documentation site and in the ",
+        {
+         "t": "code",
+         "v": "Found ..."
+        },
+        " line (",
+        {
+         "t": "code",
+         "v": "2 analyses"
+        },
+        "). Note that ",
+        {
+         "t": "code",
+         "v": "dbt ls"
+        },
+        " hides analyses unless you ask for them: ",
+        {
+         "t": "code",
+         "v": "dbt ls -s revenue_by_region"
+        },
+        " answers ",
+        {
+         "t": "code",
+         "v": "No nodes selected!"
+        },
+        ", while ",
+        {
+         "t": "code",
+         "v": "dbt ls --resource-type analysis -s revenue_by_region"
+        },
+        " lists it. You can describe analyses in YAML under the key ",
+        {
+         "t": "code",
+         "v": "analyses:"
+        },
+        ". dbt 1.11 parsed this example, and the tag made the analysis selectable: ",
+        {
+         "t": "code",
+         "v": "dbt compile -s tag:finance"
+        },
+        " compiled it together with the finance models (optional, not in the reference project):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch12-c54",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nanalyses:\n  - name: revenue_by_region\n    description: Revenue and number of orders per sales region (ad-hoc question from finance).\n    config:\n      tags: ['finance']\n    columns:\n      - name: region\n        description: Sales region from the country_regions seed (NULL = customer unknown).",
+       "title": "analyses/_analyses.yml (optional)"
+      }
+     ],
+     "id": "ch12-s8-5",
+     "number": "12.8.5",
+     "title": [
+      "Analyses are nodes too"
+     ],
+     "titleText": "Analyses are nodes too"
+    }
+   ],
+   "title": [
+    "Analyses: SQL that dbt compiles but never runs"
+   ],
+   "titleText": "Analyses: SQL that dbt compiles but never runs"
+  },
+  {
+   "anchors": [
+    "sec-sa-compare"
+   ],
+   "checkpoints": [],
+   "id": "ch12-s9",
+   "label": "sec:sa-compare",
+   "labs": [
+    "ch12-lab3"
+   ],
+   "minutes": 15,
+   "number": "12.9",
+   "objectives": [
+    "CP0-GIT",
+    "1.4",
+    "3.2"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "All four are files in your project, and the exam likes to mix them up."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Model"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Analysis"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Singular test"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Seed"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Folder"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "models/"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "analyses/"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "tests/"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "seeds/"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "File"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".sql"
+           },
+           " (or ",
+           {
+            "t": "code",
+            "v": ".py"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".sql"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".sql"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": ".csv"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Jinja and ",
+           {
+            "t": "code",
+            "v": "ref()"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Yes"
+          ]
+         },
+         {
+          "c": [
+           "Yes"
+          ]
+         },
+         {
+          "c": [
+           "Yes"
+          ]
+         },
+         {
+          "c": [
+           "No (data only)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Commands that execute it"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "run"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "build"
+           }
+          ]
+         },
+         {
+          "c": [
+           "None (",
+           {
+            "t": "code",
+            "v": "show"
+           },
+           " previews it)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "test"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "build"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "seed"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "build"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Creates in the warehouse"
+          ]
+         },
+         {
+          "c": [
+           "A view, table…"
+          ]
+         },
+         {
+          "c": [
+           "Nothing"
+          ]
+         },
+         {
+          "c": [
+           "Nothing (unless ",
+           {
+            "t": "code",
+            "v": "store_failures"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "A table"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Result means"
+          ]
+         },
+         {
+          "c": [
+           "The data itself"
+          ]
+         },
+         {
+          "c": [
+           "Whatever you want to read"
+          ]
+         },
+         {
+          "c": [
+           "Returned rows = failures; 0 rows = pass"
+          ]
+         },
+         {
+          "c": [
+           "Reference data"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "A quick way to choose:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Will other models or users read the result regularly? → a ",
+            {
+             "c": [
+              "model"
+             ],
+             "t": "b"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Is it a question that must return ",
+            {
+             "c": [
+              "no rows"
+             ],
+             "t": "i"
+            },
+            " when the data is correct? → a ",
+            {
+             "c": [
+              "singular test"
+             ],
+             "t": "b"
+            },
+            " (Chapter 18)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Is it SQL you want to keep and compile, but run only by hand? → an ",
+            {
+             "c": [
+              "analysis"
+             ],
+             "t": "b"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Is it a small, static list maintained by people? → a ",
+            {
+             "c": [
+              "seed"
+             ],
+             "t": "b"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " write and compile the analysis, see why seeds need ",
+          {
+           "t": "code",
+           "v": "--full-refresh"
+          },
+          ", then commit and compare with the reference."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Create ",
+          {
+           "t": "code",
+           "v": "analyses/revenue_by_region.sql"
+          },
+          " (content in ",
+          {
+           "href": "/learn/ch12/ch12-s8/",
+           "label": "sec:sa-analyses",
+           "t": "ref",
+           "text": "Section 12.8"
+          },
+          "). Then:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch12-c55",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt compile -s revenue_by_region\n$ ls target/compiled/jaffle_dbt/analyses/\n$ dbt run -s revenue_by_region\n$ dbt show -s revenue_by_region"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Keep a copy of the seed, then add a fourth column: change the header to ",
+          {
+           "t": "code",
+           "v": "country,region,currency,continent"
+          },
+          " and add a value at the end of each line (",
+          {
+           "t": "code",
+           "v": "France,Europe,EUR,Europe"
+          },
+          ", …, ",
+          {
+           "t": "code",
+           "v": "United States,North America,USD,America"
+          },
+          ")."
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch12-c56",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cp seeds/country_regions.csv ../country_regions_backup.csv\n$ dbt seed                      # after editing the CSV: read the error\n$ dbt seed --full-refresh"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Put the original file back, recreate the table with three columns, and build everything:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch12-c57",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cp ../country_regions_backup.csv seeds/country_regions.csv\n$ dbt seed --full-refresh\n$ dbt build"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Commit and compare with the reference (the remote ",
+          {
+           "t": "code",
+           "v": "reference"
+          },
+          " was added in Chapter 11):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch12-c58",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git status --short\n$ git add .\n$ git commit -m \"Seeds and analyses: country_regions seed, region in dim_customers, revenue_by_region\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch12 --stat\n$ git diff ref-ch11 ref-ch12 --stat"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result."
+           ],
+           "t": "b"
+          },
+          " Step 1: the compiled SQL contains ",
+          {
+           "t": "code",
+           "v": "\"practice\".\"dbt_adnane\".\"fct_monthly_revenue\""
+          },
+          "; ",
+          {
+           "t": "code",
+           "v": "ls"
+          },
+          " shows ",
+          {
+           "t": "code",
+           "v": "audit_fct_monthly_revenue.sql"
+          },
+          " (compiled by ",
+          {
+           "t": "code",
+           "v": "dbt show"
+          },
+          " in Chapter 11; if you ran ",
+          {
+           "t": "code",
+           "v": "dbt clean"
+          },
+          " since, a plain ",
+          {
+           "t": "code",
+           "v": "dbt compile"
+          },
+          " brings it back) and ",
+          {
+           "t": "code",
+           "v": "revenue_by_region.sql"
+          },
+          "; ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          " says ",
+          {
+           "t": "code",
+           "v": "Nothing to do"
+          },
+          "; ",
+          {
+           "t": "code",
+           "v": "dbt show"
+          },
+          " prints the four rows above (Europe 153 orders, 2,523.7). Step 2: ",
+          {
+           "t": "code",
+           "v": "ERROR loading seed file"
+          },
+          " (the sniffer finds 4 columns, the table has 3), then ",
+          {
+           "t": "code",
+           "v": "CREATE 6"
+          },
+          " with ",
+          {
+           "t": "code",
+           "v": "--full-refresh"
+          },
+          ". Step 3: ",
+          {
+           "t": "code",
+           "v": "CREATE 6"
+          },
+          ", then ",
+          {
+           "t": "code",
+           "v": "Done. PASS=24"
+          },
+          ". Step 4, before the commit:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch12-c59",
+         "lang": "output",
+         "t": "code",
+         "text": " M models/marts/dim_customers.sql\n?? analyses/revenue_by_region.sql\n?? seeds/_seeds.yml\n?? seeds/country_regions.csv"
+        },
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "git diff ref-ch12 --stat"
+          },
+          " prints nothing (or only comments and blank lines), and ",
+          {
+           "t": "code",
+           "v": "git diff ref-ch11 ref-ch12 --stat"
+          },
+          " ends with ",
+          {
+           "t": "code",
+           "v": "4 files changed, 64 insertions(+)"
+          },
+          ". ",
+          {
+           "t": "code",
+           "v": "dbt ls"
+          },
+          " now reports ",
+          {
+           "t": "code",
+           "v": "Found 12 models, 2 analyses, 1 seed, 12 data tests, 5 sources, 669 macros"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch12-lab3",
+       "objectives": [
+        "1.4",
+        "3.2",
+        "CP0-GIT"
+       ],
+       "t": "lab",
+       "title": [
+        "The revenue_by_region analysis, a seed column change, and the end of the chapter"
+       ]
+      }
+     ],
+     "id": "ch12-s9-0",
+     "title": [
+      "Analyses, singular tests, models and seeds compared"
+     ],
+     "titleText": "Analyses, singular tests, models and seeds compared"
+    }
+   ],
+   "title": [
+    "Analyses, singular tests, models and seeds compared"
+   ],
+   "titleText": "Analyses, singular tests, models and seeds compared"
+  }
+ ],
+ "minutes": 115,
+ "number": 12,
+ "objectives": [
+  "1.4",
+  "1.5",
+  "1.6",
+  "3.2"
+ ],
+ "part": 2,
+ "partLabel": "Part II",
+ "partTitle": "Building with dbt",
+ "printed": "12",
+ "quiz": [
+  "q-ch12-01",
+  "q-ch12-02",
+  "q-ch12-03",
+  "q-ch12-04",
+  "q-ch12-05",
+  "q-ch12-06",
+  "q-ch12-07",
+  "q-ch12-08",
+  "q-ch12-09",
+  "q-ch12-10",
+  "q-ch12-11",
+  "q-ch12-12",
+  "q-ch12-13",
+  "q-ch12-14",
+  "q-ch12-15",
+  "q-ch12-16",
+  "q-ch12-17"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-sa-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch12-01",
+      "q-ch12-02",
+      "q-ch12-03",
+      "q-ch12-04",
+      "q-ch12-05",
+      "q-ch12-06",
+      "q-ch12-07",
+      "q-ch12-08",
+      "q-ch12-09",
+      "q-ch12-10",
+      "q-ch12-11",
+      "q-ch12-12",
+      "q-ch12-13",
+      "q-ch12-14",
+      "q-ch12-15",
+      "q-ch12-16",
+      "q-ch12-17"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch12-01",
+    "q-ch12-02",
+    "q-ch12-03",
+    "q-ch12-04",
+    "q-ch12-05",
+    "q-ch12-06",
+    "q-ch12-07",
+    "q-ch12-08",
+    "q-ch12-09",
+    "q-ch12-10",
+    "q-ch12-11",
+    "q-ch12-12",
+    "q-ch12-13",
+    "q-ch12-14",
+    "q-ch12-15",
+    "q-ch12-16",
+    "q-ch12-17"
+   ],
+   "label": "sec:sa-quiz",
+   "number": "12.10",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "c": [
+          "seed"
+         ],
+         "t": "b"
+        },
+        " is a small, static CSV in ",
+        {
+         "t": "code",
+         "v": "seeds/"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "seed-paths"
+        },
+        ") that belongs in Git: mappings, lookups, exclusion lists. Not raw data, not big files, not personal data (trap T58)."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The file name is the seed name; the first line is the header; an empty value is ",
+        {
+         "t": "code",
+         "v": "NULL"
+        },
+        "; never give a seed the name of a model (same table: compilation error; otherwise a deprecation warning and an ambiguous ",
+        {
+         "t": "code",
+         "v": "ref"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt seed"
+        },
+        " creates the table the first time, then ",
+        {
+         "c": [
+          "truncates and reloads"
+         ],
+         "t": "b"
+        },
+        " it (",
+        {
+         "t": "code",
+         "v": "INSERT n"
+        },
+        "). ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " ignores seeds (\"Nothing to do\"); ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " loads them in DAG order and runs their tests."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Types are inferred from the data; fix them with ",
+        {
+         "t": "code",
+         "v": "column_types"
+        },
+        ". Other seed configs: ",
+        {
+         "t": "code",
+         "v": "quote_columns"
+        },
+        " (adapter-dependent default), ",
+        {
+         "t": "code",
+         "v": "delimiter"
+        },
+        " (default comma), plus general configs such as ",
+        {
+         "t": "code",
+         "v": "schema"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "tags"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "enabled"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "full_refresh"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Seeds are configured only in YAML: ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "+column_types"
+        },
+        ") or a properties file under ",
+        {
+         "t": "code",
+         "v": "seeds:"
+        },
+        " → ",
+        {
+         "t": "code",
+         "v": "config:"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "New columns or new types need ",
+        {
+         "t": "code",
+         "v": "dbt seed --full-refresh"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "drop ... cascade"
+        },
+        " + create, output ",
+        {
+         "t": "code",
+         "v": "CREATE n"
+        },
+        "); without it a new column fails, and a type change is silently ignored."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Models read seeds with ",
+        {
+         "t": "code",
+         "v": "ref('seed_name')"
+        },
+        "; if the table was never loaded, the model fails in the warehouse."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "An ",
+        {
+         "c": [
+          "analysis"
+         ],
+         "t": "b"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "analyses/"
+        },
+        ") is compiled with Jinja and ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " into ",
+        {
+         "t": "code",
+         "v": "target/compiled/<project>/analyses/"
+        },
+        ", but never run or materialized; ",
+        {
+         "t": "code",
+         "v": "dbt show -s"
+        },
+        " previews it; ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " prints \"Nothing to do\" (trap T33); no model can ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " it."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Model = built object; analysis = compiled SQL for humans; singular test = query whose rows are failures; seed = reference data from a CSV."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "Seeds and Analyses"
+}

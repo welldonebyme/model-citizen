@@ -1,0 +1,5343 @@
+[
+ {
+  "chapters": [
+   4
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "count(email)"
+   },
+   " counts every customer.\""
+  ],
+  "id": "trap-001",
+  "n": 1,
+  "topic": "Prerequisites: SQL",
+  "truth": [
+   {
+    "t": "code",
+    "v": "count(*)"
+   },
+   " counts rows; ",
+   {
+    "t": "code",
+    "v": "count(column)"
+   },
+   " skips the NULL values of that column. On the practice data: 100 customers, but ",
+   {
+    "t": "code",
+    "v": "count(email)"
+   },
+   " = 95."
+  ],
+  "where": [
+   "Chapter 4"
+  ]
+ },
+ {
+  "chapters": [
+   4
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "where email = NULL"
+   },
+   " finds the rows without email.\""
+  ],
+  "id": "trap-002",
+  "n": 2,
+  "topic": "Prerequisites: SQL",
+  "truth": [
+   "Any comparison with NULL gives NULL (unknown), so no row matches. Use ",
+   {
+    "t": "code",
+    "v": "is null"
+   },
+   " / ",
+   {
+    "t": "code",
+    "v": "is not null"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 4"
+  ]
+ },
+ {
+  "chapters": [
+   4
+  ],
+  "confusion": [
+   "\"A condition on the right table of a LEFT JOIN can go in WHERE without changing anything.\""
+  ],
+  "id": "trap-003",
+  "n": 3,
+  "topic": "Prerequisites: SQL",
+  "truth": [
+   "A WHERE condition on the right table removes the rows where it is NULL: the LEFT JOIN behaves like an INNER JOIN. To keep every left row, put the condition in the ",
+   {
+    "t": "code",
+    "v": "on"
+   },
+   " clause."
+  ],
+  "where": [
+   "Chapter 4"
+  ]
+ },
+ {
+  "chapters": [
+   4
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "where sum(amount) > 100"
+   },
+   " filters the groups.\""
+  ],
+  "id": "trap-004",
+  "n": 4,
+  "topic": "Prerequisites: SQL",
+  "truth": [
+   "WHERE filters rows ",
+   {
+    "c": [
+     "before"
+    ],
+    "t": "i"
+   },
+   " grouping and cannot use aggregates. Use HAVING to filter groups (and QUALIFY, where supported, to filter on window functions)."
+  ],
+  "where": [
+   "Chapter 4"
+  ]
+ },
+ {
+  "chapters": [
+   4
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "row_number()"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "rank()"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "dense_rank()"
+   },
+   " give the same numbers.\""
+  ],
+  "id": "trap-005",
+  "n": 5,
+  "topic": "Prerequisites: SQL",
+  "truth": [
+   "Only without ties. With values 10, 20, 20, 30: ",
+   {
+    "t": "code",
+    "v": "row_number"
+   },
+   " gives 1,2,3,4; ",
+   {
+    "t": "code",
+    "v": "rank"
+   },
+   " 1,2,2,4; ",
+   {
+    "t": "code",
+    "v": "dense_rank"
+   },
+   " 1,2,2,3."
+  ],
+  "where": [
+   "Chapter 4"
+  ]
+ },
+ {
+  "chapters": [
+   4
+  ],
+  "confusion": [
+   "\"A window function reduces the number of rows, like GROUP BY.\""
+  ],
+  "id": "trap-006",
+  "n": 6,
+  "topic": "Prerequisites: SQL",
+  "truth": [
+   "A window function keeps every row and adds a computed column. GROUP BY collapses rows into groups."
+  ],
+  "where": [
+   "Chapter 4"
+  ]
+ },
+ {
+  "chapters": [
+   4
+  ],
+  "confusion": [
+   "\"UNION and UNION ALL are the same.\""
+  ],
+  "id": "trap-007",
+  "n": 7,
+  "topic": "Prerequisites: SQL",
+  "truth": [
+   "UNION removes duplicate rows (extra work); UNION ALL keeps all rows. Use UNION ALL when you do not need deduplication."
+  ],
+  "where": [
+   "Chapter 4"
+  ]
+ },
+ {
+  "chapters": [
+   4,
+   8
+  ],
+  "confusion": [
+   "\"A CTE is stored in the warehouse like a table.\""
+  ],
+  "id": "trap-008",
+  "n": 8,
+  "topic": "Prerequisites: SQL",
+  "truth": [
+   "A CTE (",
+   {
+    "t": "code",
+    "v": "with … as"
+   },
+   ") is a named subquery that exists only during the statement. dbt's ephemeral models are injected as CTEs."
+  ],
+  "where": [
+   "Chapters 4 and 8"
+  ]
+ },
+ {
+  "chapters": [
+   4
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "7 / 2"
+   },
+   " returns 3 everywhere.\""
+  ],
+  "id": "trap-009",
+  "n": 9,
+  "topic": "Prerequisites: SQL",
+  "truth": [
+   "It depends on the warehouse. DuckDB returns 3.5 (use ",
+   {
+    "t": "code",
+    "v": "//"
+   },
+   " for integer division); Postgres returns 3 for two integers. Cast explicitly when it matters."
+  ],
+  "where": [
+   "Chapter 4"
+  ]
+ },
+ {
+  "chapters": [
+   3
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "git commit"
+   },
+   " sends my work to GitHub.\""
+  ],
+  "id": "trap-010",
+  "n": 10,
+  "topic": "Prerequisites: Git",
+  "truth": [
+   "A commit is saved only in your local repository. ",
+   {
+    "t": "code",
+    "v": "git push"
+   },
+   " sends your commits to the remote."
+  ],
+  "where": [
+   "Chapter 3"
+  ]
+ },
+ {
+  "chapters": [
+   3
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "git fetch"
+   },
+   " updates my files.\""
+  ],
+  "id": "trap-011",
+  "n": 11,
+  "topic": "Prerequisites: Git",
+  "truth": [
+   {
+    "t": "code",
+    "v": "git fetch"
+   },
+   " downloads remote commits without touching your working branch. ",
+   {
+    "t": "code",
+    "v": "git pull"
+   },
+   " = fetch + merge (or rebase, if configured)."
+  ],
+  "where": [
+   "Chapter 3"
+  ]
+ },
+ {
+  "chapters": [
+   3
+  ],
+  "confusion": [
+   "\"Adding ",
+   {
+    "t": "code",
+    "v": "target/"
+   },
+   " to ",
+   {
+    "t": "code",
+    "v": ".gitignore"
+   },
+   " removes it from the repository.\""
+  ],
+  "id": "trap-012",
+  "n": 12,
+  "topic": "Prerequisites: Git",
+  "truth": [
+   {
+    "t": "code",
+    "v": ".gitignore"
+   },
+   " only affects files that are not tracked yet. A tracked folder must be untracked with ",
+   {
+    "t": "code",
+    "v": "git rm -r --cached target"
+   },
+   ", then committed."
+  ],
+  "where": [
+   "Chapter 3"
+  ]
+ },
+ {
+  "chapters": [
+   3,
+   25
+  ],
+  "confusion": [
+   "\"The quickest workflow is to commit directly on ",
+   {
+    "t": "code",
+    "v": "main"
+   },
+   ".\""
+  ],
+  "id": "trap-013",
+  "n": 13,
+  "topic": "Prerequisites: Git",
+  "truth": [
+   "Create a feature branch, commit, push, open a pull request, let reviewers and CI check it, then merge. In the dbt platform Studio IDE, the primary branch is protected: you commit your changes to a new branch."
+  ],
+  "where": [
+   "Chapters 3 and 25"
+  ]
+ },
+ {
+  "chapters": [
+   3
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "git revert"
+   },
+   " deletes a commit from the history.\""
+  ],
+  "id": "trap-014",
+  "n": 14,
+  "topic": "Prerequisites: Git",
+  "truth": [
+   {
+    "t": "code",
+    "v": "git revert"
+   },
+   " adds a ",
+   {
+    "c": [
+     "new"
+    ],
+    "t": "i"
+   },
+   " commit that undoes an old one, so it is safe on shared branches. ",
+   {
+    "t": "code",
+    "v": "git reset --hard"
+   },
+   " moves the branch and throws away changes."
+  ],
+  "where": [
+   "Chapter 3"
+  ]
+ },
+ {
+  "chapters": [
+   3
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "git diff"
+   },
+   " shows what I staged with ",
+   {
+    "t": "code",
+    "v": "git add"
+   },
+   ".\""
+  ],
+  "id": "trap-015",
+  "n": 15,
+  "topic": "Prerequisites: Git",
+  "truth": [
+   {
+    "t": "code",
+    "v": "git diff"
+   },
+   " shows changes that are ",
+   {
+    "c": [
+     "not"
+    ],
+    "t": "i"
+   },
+   " staged yet; ",
+   {
+    "t": "code",
+    "v": "git diff --staged"
+   },
+   " shows the staged ones."
+  ],
+  "where": [
+   "Chapter 3"
+  ]
+ },
+ {
+  "chapters": [
+   3
+  ],
+  "confusion": [
+   "\"A merge conflict means Git failed and my work is lost.\""
+  ],
+  "id": "trap-016",
+  "n": 16,
+  "topic": "Prerequisites: Git",
+  "truth": [
+   "Git stops and marks the competing lines with ",
+   {
+    "t": "code",
+    "v": "<<<<<<<"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "======="
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": ">>>>>>>"
+   },
+   ". You edit the file, ",
+   {
+    "t": "code",
+    "v": "git add"
+   },
+   " it and commit: nothing is lost."
+  ],
+  "where": [
+   "Chapter 3"
+  ]
+ },
+ {
+  "chapters": [
+   5
+  ],
+  "confusion": [
+   "\"Tabs and spaces are interchangeable for indentation.\""
+  ],
+  "id": "trap-017",
+  "n": 17,
+  "topic": "Prerequisites: YAML",
+  "truth": [
+   "YAML indentation must use spaces. A tab gives a ",
+   {
+    "c": [
+     "Parsing Error"
+    ],
+    "t": "i"
+   },
+   ", for example \"found character that cannot start any token\" or \"found a tab character that violates indentation\"."
+  ],
+  "where": [
+   "Chapter 5"
+  ]
+ },
+ {
+  "chapters": [
+   5,
+   18
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "values: [yes, no]"
+   },
+   " is a list of two strings.\""
+  ],
+  "id": "trap-018",
+  "n": 18,
+  "topic": "Prerequisites: YAML",
+  "truth": [
+   "Unquoted ",
+   {
+    "t": "code",
+    "v": "yes"
+   },
+   "/",
+   {
+    "t": "code",
+    "v": "no"
+   },
+   " are read as booleans: dbt received ",
+   {
+    "t": "code",
+    "v": "[True, False]"
+   },
+   ". Quote them: ",
+   {
+    "t": "code",
+    "v": "['yes', 'no']"
+   },
+   "."
+  ],
+  "where": [
+   "Chapters 5 and 18"
+  ]
+ },
+ {
+  "chapters": [
+   5,
+   20
+  ],
+  "confusion": [
+   "\"Jinja can be written in YAML without quotes: ",
+   {
+    "t": "code",
+    "v": "description: {{ doc('x') }}"
+   },
+   ".\""
+  ],
+  "id": "trap-019",
+  "n": 19,
+  "topic": "Prerequisites: YAML",
+  "truth": [
+   "A value starting with ",
+   {
+    "t": "code",
+    "v": "{"
+   },
+   " is read as a YAML mapping, so the file fails to parse. Quote it: ",
+   {
+    "t": "code",
+    "v": "description: \"{{ doc('x') }}\""
+   },
+   "."
+  ],
+  "where": [
+   "Chapters 5 and 20"
+  ]
+ },
+ {
+  "chapters": [
+   5
+  ],
+  "confusion": [
+   "\"A colon inside a text value is harmless: ",
+   {
+    "t": "code",
+    "v": "description: Note: built daily"
+   },
+   ".\""
+  ],
+  "id": "trap-020",
+  "n": 20,
+  "topic": "Prerequisites: YAML",
+  "truth": [
+   "A colon followed by a space inside an unquoted value breaks parsing (\"mapping values are not allowed\"). Quote the whole text."
+  ],
+  "where": [
+   "Chapter 5"
+  ]
+ },
+ {
+  "chapters": [
+   5
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "columns:"
+   },
+   " is a mapping from column names to properties.\""
+  ],
+  "id": "trap-021",
+  "n": 21,
+  "topic": "Prerequisites: YAML",
+  "truth": [
+   {
+    "t": "code",
+    "v": "columns:"
+   },
+   " is a ",
+   {
+    "c": [
+     "list"
+    ],
+    "t": "i"
+   },
+   ": each column starts with ",
+   {
+    "t": "code",
+    "v": "- name:"
+   },
+   ". The same is true for ",
+   {
+    "t": "code",
+    "v": "models:"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "sources:"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "tables:"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "data_tests:"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 5"
+  ]
+ },
+ {
+  "chapters": [
+   5
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "{{ }}"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "{% %}"
+   },
+   " do the same thing.\""
+  ],
+  "id": "trap-022",
+  "n": 22,
+  "topic": "Prerequisites: Jinja",
+  "truth": [
+   {
+    "t": "code",
+    "v": "{{ … }}"
+   },
+   " prints an expression into the SQL. ",
+   {
+    "t": "code",
+    "v": "{% … %}"
+   },
+   " runs a statement (",
+   {
+    "t": "code",
+    "v": "set"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "if"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "for"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "macro"
+   },
+   ") and prints nothing. ",
+   {
+    "t": "code",
+    "v": "{# … #}"
+   },
+   " is a comment."
+  ],
+  "where": [
+   "Chapter 5"
+  ]
+ },
+ {
+  "chapters": [
+   5,
+   11
+  ],
+  "confusion": [
+   "\"A SQL comment hides Jinja: ",
+   {
+    "t": "code",
+    "v": "-- {{ ref('dim_customers') }}"
+   },
+   " does nothing.\""
+  ],
+  "id": "trap-023",
+  "n": 23,
+  "topic": "Prerequisites: Jinja",
+  "truth": [
+   "Jinja is rendered before SQL exists, so it ignores SQL comments: that ",
+   {
+    "t": "code",
+    "v": "ref"
+   },
+   " still creates a dependency in the DAG (we checked it with ",
+   {
+    "t": "code",
+    "v": "dbt ls"
+   },
+   "). Use a Jinja comment ",
+   {
+    "t": "code",
+    "v": "{# #}"
+   },
+   " instead."
+  ],
+  "where": [
+   "Chapters 5 and 11"
+  ]
+ },
+ {
+  "chapters": [
+   5,
+   22
+  ],
+  "confusion": [
+   "\"The warehouse executes the Jinja.\""
+  ],
+  "id": "trap-024",
+  "n": 24,
+  "topic": "Prerequisites: Jinja",
+  "truth": [
+   "dbt renders Jinja into plain SQL first (compilation). The warehouse only receives the compiled SQL, which you can read in ",
+   {
+    "t": "code",
+    "v": "target/compiled"
+   },
+   "."
+  ],
+  "where": [
+   "Chapters 5 and 22"
+  ]
+ },
+ {
+  "chapters": [
+   11
+  ],
+  "confusion": [
+   "\"The result of ",
+   {
+    "t": "code",
+    "v": "run_query"
+   },
+   " is available everywhere.\""
+  ],
+  "id": "trap-025",
+  "n": 25,
+  "topic": "Prerequisites: Jinja",
+  "truth": [
+   "During parsing, ",
+   {
+    "t": "code",
+    "v": "execute"
+   },
+   " is false and ",
+   {
+    "t": "code",
+    "v": "run_query"
+   },
+   " returns nothing; using its result without a guard fails (\"'None' has no attribute 'table\"'). Wrap the code in ",
+   {
+    "t": "code",
+    "v": "{% if execute %}"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 11"
+  ]
+ },
+ {
+  "chapters": [
+   11
+  ],
+  "confusion": [
+   "\"A macro returns a list by printing it with ",
+   {
+    "t": "code",
+    "v": "{{ }}"
+   },
+   ".\""
+  ],
+  "id": "trap-026",
+  "n": 26,
+  "topic": "Prerequisites: Jinja",
+  "truth": [
+   "Printing produces text. To give back a real object (list, dictionary), use ",
+   {
+    "t": "code",
+    "v": "{{ return(…) }}"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 11"
+  ]
+ },
+ {
+  "chapters": [
+   11
+  ],
+  "confusion": [
+   "\"A for loop that writes columns handles the last comma by itself.\""
+  ],
+  "id": "trap-027",
+  "n": 27,
+  "topic": "Prerequisites: Jinja",
+  "truth": [
+   "You must avoid the trailing comma yourself, usually with ",
+   {
+    "t": "code",
+    "v": "{% if not loop.last %},{% endif %}"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 11"
+  ]
+ },
+ {
+  "chapters": [
+   16
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt run"
+   },
+   " also runs my tests.\""
+  ],
+  "id": "trap-028",
+  "n": 28,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "dbt run"
+   },
+   " builds models only. ",
+   {
+    "t": "code",
+    "v": "dbt test"
+   },
+   " runs data tests ",
+   {
+    "c": [
+     "and"
+    ],
+    "t": "i"
+   },
+   " unit tests. ",
+   {
+    "t": "code",
+    "v": "dbt build"
+   },
+   " runs seeds, snapshots, models and their tests together, in DAG order."
+  ],
+  "where": [
+   "Chapter 16"
+  ]
+ },
+ {
+  "chapters": [
+   12,
+   13,
+   16
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt run -s country_regions"
+   },
+   " loads my seed.\""
+  ],
+  "id": "trap-029",
+  "n": 29,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "dbt run"
+   },
+   " ignores seeds and snapshots: selecting one prints \"Nothing to do\". Use ",
+   {
+    "t": "code",
+    "v": "dbt seed"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "dbt snapshot"
+   },
+   " or ",
+   {
+    "t": "code",
+    "v": "dbt build"
+   },
+   "."
+  ],
+  "where": [
+   "Chapters 12, 13 and 16"
+  ]
+ },
+ {
+  "chapters": [
+   16,
+   18
+  ],
+  "confusion": [
+   "\"In ",
+   {
+    "t": "code",
+    "v": "dbt build"
+   },
+   ", a failing test only prints a message and the models below it still build.\""
+  ],
+  "id": "trap-030",
+  "n": 30,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "A failing test with severity ",
+   {
+    "t": "code",
+    "v": "error"
+   },
+   " makes every downstream node ",
+   {
+    "t": "code",
+    "v": "SKIP"
+   },
+   ". With severity ",
+   {
+    "t": "code",
+    "v": "warn"
+   },
+   ", the build continues."
+  ],
+  "where": [
+   "Chapters 16 and 18"
+  ]
+ },
+ {
+  "chapters": [
+   16
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt compile"
+   },
+   " creates the models without data.\""
+  ],
+  "id": "trap-031",
+  "n": 31,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "dbt compile"
+   },
+   " only renders SQL into ",
+   {
+    "t": "code",
+    "v": "target/compiled"
+   },
+   "; nothing is created in the warehouse. To create empty objects, use ",
+   {
+    "t": "code",
+    "v": "dbt run"
+   },
+   " or ",
+   {
+    "t": "code",
+    "v": "dbt build"
+   },
+   " with ",
+   {
+    "t": "code",
+    "v": "--empty"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 16"
+  ]
+ },
+ {
+  "chapters": [
+   16
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt show"
+   },
+   " saves the result as a table.\""
+  ],
+  "id": "trap-032",
+  "n": 32,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "dbt show"
+   },
+   " runs the query and prints a preview: 5 rows by default (change it with ",
+   {
+    "t": "code",
+    "v": "--limit"
+   },
+   "); ",
+   {
+    "t": "code",
+    "v": "--inline"
+   },
+   " previews any SQL. Nothing is saved."
+  ],
+  "where": [
+   "Chapter 16"
+  ]
+ },
+ {
+  "chapters": [
+   12
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt run"
+   },
+   " executes the files in ",
+   {
+    "t": "code",
+    "v": "analyses/"
+   },
+   ".\""
+  ],
+  "id": "trap-033",
+  "n": 33,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Analyses are only compiled (",
+   {
+    "t": "code",
+    "v": "dbt compile"
+   },
+   "), into ",
+   {
+    "t": "code",
+    "v": "target/compiled/…/analyses"
+   },
+   ". They are never materialized."
+  ],
+  "where": [
+   "Chapter 12"
+  ]
+ },
+ {
+  "chapters": [
+   11
+  ],
+  "confusion": [
+   "\"dbt installs packages automatically when I add them to ",
+   {
+    "t": "code",
+    "v": "packages.yml"
+   },
+   ".\""
+  ],
+  "id": "trap-034",
+  "n": 34,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "You must run ",
+   {
+    "t": "code",
+    "v": "dbt deps"
+   },
+   ". Otherwise dbt stops: \"dbt found 1 package(s) specified in packages.yml, but only 0 package(s) installed in dbt_packages\". ",
+   {
+    "t": "code",
+    "v": "dbt clean"
+   },
+   " deletes ",
+   {
+    "t": "code",
+    "v": "dbt_packages/"
+   },
+   ", so run ",
+   {
+    "t": "code",
+    "v": "dbt deps"
+   },
+   " again after it."
+  ],
+  "where": [
+   "Chapter 11"
+  ]
+ },
+ {
+  "chapters": [
+   11
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "packages.yml"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "dependencies.yml"
+   },
+   " are the same file with two names.\""
+  ],
+  "id": "trap-035",
+  "n": 35,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "dependencies.yml"
+   },
+   " can also list other dbt ",
+   {
+    "c": [
+     "projects"
+    ],
+    "t": "i"
+   },
+   " (cross-project refs, dbt Mesh) but does not render Jinja. ",
+   {
+    "t": "code",
+    "v": "packages.yml"
+   },
+   " renders Jinja, so use it when a package URL needs ",
+   {
+    "t": "code",
+    "v": "env_var()"
+   },
+   " (for example a private Git token)."
+  ],
+  "where": [
+   "Chapter 11"
+  ]
+ },
+ {
+  "chapters": [
+   20
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt docs generate"
+   },
+   " opens the documentation website.\""
+  ],
+  "id": "trap-036",
+  "n": 36,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "It writes the files (",
+   {
+    "t": "code",
+    "v": "catalog.json"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "manifest.json"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "index.html"
+   },
+   ") in ",
+   {
+    "t": "code",
+    "v": "target/"
+   },
+   ". ",
+   {
+    "t": "code",
+    "v": "dbt docs serve"
+   },
+   " starts a local web server to look at them."
+  ],
+  "where": [
+   "Chapter 20"
+  ]
+ },
+ {
+  "chapters": [
+   7
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "ref()"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "source()"
+   },
+   " are interchangeable.\""
+  ],
+  "id": "trap-037",
+  "n": 37,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "source()"
+   },
+   " points to a raw table declared in a sources YAML file; ",
+   {
+    "t": "code",
+    "v": "ref()"
+   },
+   " points to a model, seed or snapshot. Both create edges in the DAG; a hard-coded table name creates none."
+  ],
+  "where": [
+   "Chapter 7"
+  ]
+ },
+ {
+  "chapters": [
+   7
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "source('orders')"
+   },
+   " is enough.\""
+  ],
+  "id": "trap-038",
+  "n": 38,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "source()"
+   },
+   " needs two arguments: the source name and the table name, as in ",
+   {
+    "t": "code",
+    "v": "source('jaffle_shop', 'orders')"
+   },
+   ". ",
+   {
+    "t": "code",
+    "v": "ref()"
+   },
+   " usually takes one (the model), plus an optional project or package name first, and ",
+   {
+    "t": "code",
+    "v": "v="
+   },
+   " for versions."
+  ],
+  "where": [
+   "Chapter 7"
+  ]
+ },
+ {
+  "chapters": [
+   7
+  ],
+  "confusion": [
+   "\"Without ",
+   {
+    "t": "code",
+    "v": "schema:"
+   },
+   ", a source is read from my target schema.\""
+  ],
+  "id": "trap-039",
+  "n": 39,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "A source's schema defaults to the ",
+   {
+    "c": [
+     "source name"
+    ],
+    "t": "i"
+   },
+   ". Use ",
+   {
+    "t": "code",
+    "v": "schema:"
+   },
+   " when they differ, and ",
+   {
+    "t": "code",
+    "v": "identifier:"
+   },
+   " when the table name differs from the ",
+   {
+    "t": "code",
+    "v": "name"
+   },
+   " used in ",
+   {
+    "t": "code",
+    "v": "source()"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 7"
+  ]
+ },
+ {
+  "chapters": [
+   7,
+   9
+  ],
+  "confusion": [
+   "\"Selecting from a source inside a mart model is a dbt error.\""
+  ],
+  "id": "trap-040",
+  "n": 40,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "dbt allows it, but it breaks the recommended structure: only staging models select from sources (one staging model per source table); marts select from staging and intermediate models."
+  ],
+  "where": [
+   "Chapters 7 and 9"
+  ]
+ },
+ {
+  "chapters": [
+   7,
+   22
+  ],
+  "confusion": [
+   "\"Two models that reference each other simply run twice.\""
+  ],
+  "id": "trap-041",
+  "n": 41,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "The DAG must have no cycle. dbt refuses to run and prints \"Found a cycle\" with the two node names."
+  ],
+  "where": [
+   "Chapters 7 and 22"
+  ]
+ },
+ {
+  "chapters": [
+   8
+  ],
+  "confusion": [
+   "\"A model without configuration becomes a table.\""
+  ],
+  "id": "trap-042",
+  "n": 42,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "The default materialization is ",
+   {
+    "t": "code",
+    "v": "view"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 8"
+  ]
+ },
+ {
+  "chapters": [
+   8
+  ],
+  "confusion": [
+   "\"A BI tool can query an ephemeral model.\""
+  ],
+  "id": "trap-043",
+  "n": 43,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "An ephemeral model creates nothing in the warehouse. Its SQL is injected as a CTE named ",
+   {
+    "t": "code",
+    "v": "__dbt__cte__<name>"
+   },
+   " into the models that ",
+   {
+    "t": "code",
+    "v": "ref"
+   },
+   " it. ",
+   {
+    "t": "code",
+    "v": "dbt run -s"
+   },
+   " on an ephemeral model builds nothing (",
+   {
+    "t": "code",
+    "v": "dbt show"
+   },
+   " can still preview it)."
+  ],
+  "where": [
+   "Chapter 8"
+  ]
+ },
+ {
+  "chapters": [
+   8
+  ],
+  "confusion": [
+   "\"A view stores the data, so it is fast to query.\""
+  ],
+  "id": "trap-044",
+  "n": 44,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "A view stores only the query and recomputes it at every read: cheap to build, slower to query. A table stores the result and is rebuilt completely at each run."
+  ],
+  "where": [
+   "Chapter 8"
+  ]
+ },
+ {
+  "chapters": [
+   8
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "materialized_view"
+   },
+   " works the same way on every warehouse.\""
+  ],
+  "id": "trap-045",
+  "n": 45,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Materialized views exist only on platforms that support them, and their options are platform-specific."
+  ],
+  "where": [
+   "Chapter 8"
+  ]
+ },
+ {
+  "chapters": [
+   10
+  ],
+  "confusion": [
+   "\"A config in ",
+   {
+    "t": "code",
+    "v": "dbt_project.yml"
+   },
+   " always wins.\""
+  ],
+  "id": "trap-046",
+  "n": 46,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "The most specific place wins: ",
+   {
+    "t": "code",
+    "v": "config()"
+   },
+   " in the model file, then ",
+   {
+    "t": "code",
+    "v": "config:"
+   },
+   " in a properties YAML file, then ",
+   {
+    "t": "code",
+    "v": "dbt_project.yml"
+   },
+   " (where the deepest folder wins). We checked all three levels."
+  ],
+  "where": [
+   "Chapter 10"
+  ]
+ },
+ {
+  "chapters": [
+   10
+  ],
+  "confusion": [
+   "\"Tags set on a model replace the tags of its folder.\""
+  ],
+  "id": "trap-047",
+  "n": 47,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Tags are ",
+   {
+    "c": [
+     "added"
+    ],
+    "t": "i"
+   },
+   " together: folder tag ",
+   {
+    "t": "code",
+    "v": "nightly"
+   },
+   " + model tag ",
+   {
+    "t": "code",
+    "v": "finance"
+   },
+   " gives both. ",
+   {
+    "t": "code",
+    "v": "meta"
+   },
+   " dictionaries are merged key by key. Most other configs (",
+   {
+    "t": "code",
+    "v": "materialized"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "schema"
+   },
+   "…) are replaced."
+  ],
+  "where": [
+   "Chapter 10"
+  ]
+ },
+ {
+  "chapters": [
+   10
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "+schema: marts"
+   },
+   " builds the models in a schema called ",
+   {
+    "t": "code",
+    "v": "marts"
+   },
+   ".\""
+  ],
+  "id": "trap-048",
+  "n": 48,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "The default ",
+   {
+    "t": "code",
+    "v": "generate_schema_name"
+   },
+   " macro concatenates: ",
+   {
+    "t": "code",
+    "v": "<target schema>_marts"
+   },
+   ", for example ",
+   {
+    "t": "code",
+    "v": "dbt_adnane_marts"
+   },
+   " in dev and ",
+   {
+    "t": "code",
+    "v": "prod_marts"
+   },
+   " in prod. Override the macro to change this."
+  ],
+  "where": [
+   "Chapter 10"
+  ]
+ },
+ {
+  "chapters": [
+   10
+  ],
+  "confusion": [
+   "\"The ",
+   {
+    "t": "code",
+    "v": "+"
+   },
+   " in ",
+   {
+    "t": "code",
+    "v": "+materialized"
+   },
+   " means ",
+   {
+    "c": [
+     "add"
+    ],
+    "t": "i"
+   },
+   ".\""
+  ],
+  "id": "trap-049",
+  "n": 49,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "In ",
+   {
+    "t": "code",
+    "v": "dbt_project.yml"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "+"
+   },
+   " marks a key as a config rather than a folder name. Since dbt 1.10 a config written without ",
+   {
+    "t": "code",
+    "v": "+"
+   },
+   " is deprecated (the warning shows on adapters with schema checks such as Snowflake, BigQuery, Databricks and Redshift): always write it. Inside ",
+   {
+    "t": "code",
+    "v": "grants"
+   },
+   ", a ",
+   {
+    "t": "code",
+    "v": "+"
+   },
+   " before a privilege (",
+   {
+    "t": "code",
+    "v": "'+select'"
+   },
+   ") means \"add to the list\". Two different meanings."
+  ],
+  "where": [
+   "Chapter 10"
+  ]
+ },
+ {
+  "chapters": [
+   10
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "var('start_date')"
+   },
+   " works even if nobody defines it.\""
+  ],
+  "id": "trap-050",
+  "n": 50,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Without a value in ",
+   {
+    "t": "code",
+    "v": "dbt_project.yml"
+   },
+   " ",
+   {
+    "t": "code",
+    "v": "vars:"
+   },
+   " or in ",
+   {
+    "t": "code",
+    "v": "--vars"
+   },
+   ", and without a default, compilation fails: \"Required var 'start_date' not found in config\". Give a default: ",
+   {
+    "t": "code",
+    "v": "var('start_date', '2025-01-01')"
+   },
+   ". ",
+   {
+    "t": "code",
+    "v": "--vars"
+   },
+   " overrides the project value."
+  ],
+  "where": [
+   "Chapter 10"
+  ]
+ },
+ {
+  "chapters": [
+   10
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "env_var('X')"
+   },
+   " returns an empty string when X is not set.\""
+  ],
+  "id": "trap-051",
+  "n": 51,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Parsing fails: \"Env var required but not provided\". Give a default as second argument. Variables whose name starts with ",
+   {
+    "t": "code",
+    "v": "DBT_ENV_SECRET_"
+   },
+   " are allowed only in ",
+   {
+    "t": "code",
+    "v": "profiles.yml"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "packages.yml"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 10"
+  ]
+ },
+ {
+  "chapters": [
+   10
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "target.name"
+   },
+   " is the schema name.\""
+  ],
+  "id": "trap-052",
+  "n": 52,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "target.name"
+   },
+   " is the name of the target (",
+   {
+    "t": "code",
+    "v": "dev"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "prod"
+   },
+   "); ",
+   {
+    "t": "code",
+    "v": "target.schema"
+   },
+   " is the schema. Environment logic usually tests ",
+   {
+    "t": "code",
+    "v": "target.name"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 10"
+  ]
+ },
+ {
+  "chapters": [
+   10
+  ],
+  "confusion": [
+   "\"A ",
+   {
+    "t": "code",
+    "v": "pre-hook"
+   },
+   " runs once before the whole run.\""
+  ],
+  "id": "trap-053",
+  "n": 53,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "pre-hook"
+   },
+   " / ",
+   {
+    "t": "code",
+    "v": "post-hook"
+   },
+   " run before / after ",
+   {
+    "c": [
+     "each"
+    ],
+    "t": "i"
+   },
+   " model they are configured on. ",
+   {
+    "t": "code",
+    "v": "on-run-start"
+   },
+   " / ",
+   {
+    "t": "code",
+    "v": "on-run-end"
+   },
+   " (in ",
+   {
+    "t": "code",
+    "v": "dbt_project.yml"
+   },
+   ") run once at the start / end of the command."
+  ],
+  "where": [
+   "Chapter 10"
+  ]
+ },
+ {
+  "chapters": [
+   10
+  ],
+  "confusion": [
+   "\"Grants are applied before the model is built.\""
+  ],
+  "id": "trap-054",
+  "n": 54,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "dbt applies ",
+   {
+    "t": "code",
+    "v": "grants"
+   },
+   " ",
+   {
+    "c": [
+     "after"
+    ],
+    "t": "i"
+   },
+   " building the object. A more specific ",
+   {
+    "t": "code",
+    "v": "grants"
+   },
+   " config replaces the grantee list, unless the privilege is written with a ",
+   {
+    "t": "code",
+    "v": "+"
+   },
+   " prefix (",
+   {
+    "t": "code",
+    "v": "'+select'"
+   },
+   "), which adds to it."
+  ],
+  "where": [
+   "Chapter 10"
+  ]
+ },
+ {
+  "chapters": [
+   10
+  ],
+  "confusion": [
+   "\"Deleting the ",
+   {
+    "t": "code",
+    "v": "grants"
+   },
+   " config revokes all privileges.\""
+  ],
+  "id": "trap-055",
+  "n": 55,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Without a ",
+   {
+    "t": "code",
+    "v": "grants"
+   },
+   " config, dbt stops managing grants and changes nothing. To revoke everything, keep the privilege with an empty list: ",
+   {
+    "t": "code",
+    "v": "select: []"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 10"
+  ]
+ },
+ {
+  "chapters": [
+   9
+  ],
+  "confusion": [
+   "\"DRY means putting all the logic in one big model.\""
+  ],
+  "id": "trap-056",
+  "n": 56,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "DRY (Don't Repeat Yourself) means one place for each piece of logic: macros for repeated SQL, intermediate models for shared steps, packages for common utilities, staging models as the single entry point for each source."
+  ],
+  "where": [
+   "Chapter 9"
+  ]
+ },
+ {
+  "chapters": [
+   11
+  ],
+  "confusion": [
+   "\"Macros from a package are called by their name only.\""
+  ],
+  "id": "trap-057",
+  "n": 57,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Use the package namespace: ",
+   {
+    "t": "code",
+    "v": "{{ dbt_utils.generate_surrogate_key([…]) }}"
+   },
+   ", and ",
+   {
+    "t": "code",
+    "v": "dbt_utils.accepted_range"
+   },
+   " for its tests."
+  ],
+  "where": [
+   "Chapter 11"
+  ]
+ },
+ {
+  "chapters": [
+   12
+  ],
+  "confusion": [
+   "\"Seeds are a good way to load raw data into the warehouse.\""
+  ],
+  "id": "trap-058",
+  "n": 58,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Seeds are for small, static CSV files that belong in version control (lookup tables, mappings). Raw and large data is loaded by an ingestion tool and declared as a source."
+  ],
+  "where": [
+   "Chapter 12"
+  ]
+ },
+ {
+  "chapters": [
+   12
+  ],
+  "confusion": [
+   "\"If I add a column to a seed file, ",
+   {
+    "t": "code",
+    "v": "dbt seed"
+   },
+   " adapts the table.\""
+  ],
+  "id": "trap-059",
+  "n": 59,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "A normal ",
+   {
+    "t": "code",
+    "v": "dbt seed"
+   },
+   " fails when the columns change. ",
+   {
+    "t": "code",
+    "v": "dbt seed --full-refresh"
+   },
+   " drops and recreates the table."
+  ],
+  "where": [
+   "Chapter 12"
+  ]
+ },
+ {
+  "chapters": [
+   13
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt run"
+   },
+   " also updates my snapshots.\""
+  ],
+  "id": "trap-060",
+  "n": 60,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Snapshots run with ",
+   {
+    "t": "code",
+    "v": "dbt snapshot"
+   },
+   " or ",
+   {
+    "t": "code",
+    "v": "dbt build"
+   },
+   ", never with ",
+   {
+    "t": "code",
+    "v": "dbt run"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 13"
+  ]
+ },
+ {
+  "chapters": [
+   13
+  ],
+  "confusion": [
+   "\"The check and timestamp strategies need the same configs.\""
+  ],
+  "id": "trap-061",
+  "n": 61,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Both need ",
+   {
+    "t": "code",
+    "v": "unique_key"
+   },
+   ". ",
+   {
+    "t": "code",
+    "v": "timestamp"
+   },
+   " also needs ",
+   {
+    "t": "code",
+    "v": "updated_at"
+   },
+   " (a reliable last-modified column); ",
+   {
+    "t": "code",
+    "v": "check"
+   },
+   " needs ",
+   {
+    "t": "code",
+    "v": "check_cols"
+   },
+   " (a list or ",
+   {
+    "t": "code",
+    "v": "'all'"
+   },
+   "). A missing one stops parsing with a clear message."
+  ],
+  "where": [
+   "Chapter 13"
+  ]
+ },
+ {
+  "chapters": [
+   13
+  ],
+  "confusion": [
+   "\"Current rows of a snapshot have ",
+   {
+    "t": "code",
+    "v": "dbt_valid_to"
+   },
+   " equal to today.\""
+  ],
+  "id": "trap-062",
+  "n": 62,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "By default, current rows have ",
+   {
+    "t": "code",
+    "v": "dbt_valid_to"
+   },
+   " = NULL. The config ",
+   {
+    "t": "code",
+    "v": "dbt_valid_to_current"
+   },
+   " (1.9+) replaces NULL by a date you choose, such as ",
+   {
+    "t": "code",
+    "v": "9999-12-31"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 13"
+  ]
+ },
+ {
+  "chapters": [
+   13
+  ],
+  "confusion": [
+   "\"With the check strategy, ",
+   {
+    "t": "code",
+    "v": "dbt_valid_from"
+   },
+   " is the moment the source row changed.\""
+  ],
+  "id": "trap-063",
+  "n": 63,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "By default, ",
+   {
+    "t": "code",
+    "v": "check"
+   },
+   " does not know when the row changed, so it uses the time of the snapshot run. With ",
+   {
+    "t": "code",
+    "v": "timestamp"
+   },
+   ", dbt uses the value of ",
+   {
+    "t": "code",
+    "v": "updated_at"
+   },
+   ". (If you also set ",
+   {
+    "t": "code",
+    "v": "updated_at"
+   },
+   " on a ",
+   {
+    "t": "code",
+    "v": "check"
+   },
+   " snapshot, dbt uses that column instead of the run time.)"
+  ],
+  "where": [
+   "Chapter 13"
+  ]
+ },
+ {
+  "chapters": [
+   13
+  ],
+  "confusion": [
+   "\"When a row disappears from the source, the snapshot closes it automatically.\""
+  ],
+  "id": "trap-064",
+  "n": 64,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "The default ",
+   {
+    "t": "code",
+    "v": "hard_deletes: ignore"
+   },
+   " leaves it as a current row. ",
+   {
+    "t": "code",
+    "v": "invalidate"
+   },
+   " sets its ",
+   {
+    "t": "code",
+    "v": "dbt_valid_to"
+   },
+   "; ",
+   {
+    "t": "code",
+    "v": "new_record"
+   },
+   " adds a new row and a ",
+   {
+    "t": "code",
+    "v": "dbt_is_deleted"
+   },
+   " column. ",
+   {
+    "t": "code",
+    "v": "invalidate_hard_deletes"
+   },
+   " is the old config. Danger: under ",
+   {
+    "t": "code",
+    "v": "--empty"
+   },
+   " the source looks empty, so ",
+   {
+    "t": "code",
+    "v": "invalidate"
+   },
+   " closes ",
+   {
+    "c": [
+     "every"
+    ],
+    "t": "i"
+   },
+   " current row (",
+   {
+    "t": "code",
+    "v": "new_record"
+   },
+   " adds a \"deleted\" row for each); exclude snapshots from ",
+   {
+    "t": "code",
+    "v": "--empty"
+   },
+   " runs (",
+   {
+    "t": "code",
+    "v": "--exclude-resource-type snapshot"
+   },
+   ")."
+  ],
+  "where": [
+   "Chapter 13"
+  ]
+ },
+ {
+  "chapters": [
+   13
+  ],
+  "confusion": [
+   "\"In a YAML snapshot, ",
+   {
+    "t": "code",
+    "v": "schema: snapshots"
+   },
+   " writes into a schema named ",
+   {
+    "t": "code",
+    "v": "snapshots"
+   },
+   ".\""
+  ],
+  "id": "trap-065",
+  "n": 65,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Since 1.9 the snapshot ",
+   {
+    "t": "code",
+    "v": "schema"
+   },
+   " config goes through ",
+   {
+    "t": "code",
+    "v": "generate_schema_name"
+   },
+   " like models: with dbt's ",
+   {
+    "c": [
+     "default"
+    ],
+    "t": "i"
+   },
+   " macro, dev gives ",
+   {
+    "t": "code",
+    "v": "dbt_adnane_snapshots"
+   },
+   " (our practice project overrides the macro, so it gives ",
+   {
+    "t": "code",
+    "v": "dbt_adnane"
+   },
+   " in dev and ",
+   {
+    "t": "code",
+    "v": "snapshots"
+   },
+   " in prod). The legacy ",
+   {
+    "t": "code",
+    "v": "target_schema"
+   },
+   " set the exact schema."
+  ],
+  "where": [
+   "Chapter 13"
+  ]
+ },
+ {
+  "chapters": [
+   13
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt snapshot --full-refresh"
+   },
+   " rebuilds the history.\""
+  ],
+  "id": "trap-066",
+  "n": 66,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "dbt snapshot"
+   },
+   " has no ",
+   {
+    "t": "code",
+    "v": "--full-refresh"
+   },
+   " flag. A snapshot's history cannot be recreated from the source, which is the whole point of snapshots."
+  ],
+  "where": [
+   "Chapter 13"
+  ]
+ },
+ {
+  "chapters": [
+   13
+  ],
+  "confusion": [
+   "\"Snapshots should read my final mart models.\""
+  ],
+  "id": "trap-067",
+  "n": 67,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Best practice: snapshot the source data as early as possible (",
+   {
+    "t": "code",
+    "v": "relation: source(…)"
+   },
+   "), with almost no transformation, so the history does not depend on business logic that changes."
+  ],
+  "where": [
+   "Chapter 13"
+  ]
+ },
+ {
+  "chapters": [
+   14
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "is_incremental()"
+   },
+   " is true whenever the model is incremental.\""
+  ],
+  "id": "trap-068",
+  "n": 68,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "It is true only when ",
+   {
+    "c": [
+     "all"
+    ],
+    "t": "i"
+   },
+   " are true: the model is materialized as incremental, its table already exists in the database, and ",
+   {
+    "t": "code",
+    "v": "--full-refresh"
+   },
+   " is not passed. So on the first run the filter is skipped and the full table is built. A ",
+   {
+    "t": "code",
+    "v": "ref()"
+   },
+   " written only inside the ",
+   {
+    "t": "code",
+    "v": "is_incremental()"
+   },
+   " block is invisible at parse time (\"dbt was unable to infer all dependencies\"): add a ",
+   {
+    "t": "code",
+    "v": "-- depends_on: {{ ref('x') }}"
+   },
+   " comment at the top of the model."
+  ],
+  "where": [
+   "Chapter 14"
+  ]
+ },
+ {
+  "chapters": [
+   14
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "unique_key"
+   },
+   " prevents duplicates with the ",
+   {
+    "t": "code",
+    "v": "append"
+   },
+   " strategy.\""
+  ],
+  "id": "trap-069",
+  "n": 69,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "append"
+   },
+   " ignores ",
+   {
+    "t": "code",
+    "v": "unique_key"
+   },
+   " and inserts every selected row (we got 6 rows for 3 keys). Use ",
+   {
+    "t": "code",
+    "v": "merge"
+   },
+   " or ",
+   {
+    "t": "code",
+    "v": "delete+insert"
+   },
+   " to update rows by key."
+  ],
+  "where": [
+   "Chapter 14"
+  ]
+ },
+ {
+  "chapters": [
+   14
+  ],
+  "confusion": [
+   "\"By default, new columns are added to an incremental table.\""
+  ],
+  "id": "trap-070",
+  "n": 70,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "The default ",
+   {
+    "t": "code",
+    "v": "on_schema_change"
+   },
+   " is ",
+   {
+    "t": "code",
+    "v": "ignore"
+   },
+   ": the run succeeds and the new column is not added. ",
+   {
+    "t": "code",
+    "v": "append_new_columns"
+   },
+   " adds new columns; ",
+   {
+    "t": "code",
+    "v": "sync_all_columns"
+   },
+   " adds and removes; ",
+   {
+    "t": "code",
+    "v": "fail"
+   },
+   " stops the run."
+  ],
+  "where": [
+   "Chapter 14"
+  ]
+ },
+ {
+  "chapters": [
+   14
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "append_new_columns"
+   },
+   " fills the new column for the old rows.\""
+  ],
+  "id": "trap-071",
+  "n": 71,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "No ",
+   {
+    "t": "code",
+    "v": "on_schema_change"
+   },
+   " mode backfills: existing rows get NULL in the new column. Use ",
+   {
+    "t": "code",
+    "v": "--full-refresh"
+   },
+   " to recompute them."
+  ],
+  "where": [
+   "Chapter 14"
+  ]
+ },
+ {
+  "chapters": [
+   14
+  ],
+  "confusion": [
+   "\"The default incremental strategy is the same on every warehouse.\""
+  ],
+  "id": "trap-072",
+  "n": 72,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "It depends on the adapter. On Snowflake the default is ",
+   {
+    "t": "code",
+    "v": "merge"
+   },
+   "; with dbt-duckdb (this book's setup) a model with ",
+   {
+    "t": "code",
+    "v": "unique_key"
+   },
+   " used ",
+   {
+    "t": "code",
+    "v": "delete+insert"
+   },
+   ". Set ",
+   {
+    "t": "code",
+    "v": "incremental_strategy"
+   },
+   " explicitly when it matters."
+  ],
+  "where": [
+   "Chapter 14"
+  ]
+ },
+ {
+  "chapters": [
+   14
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "--full-refresh"
+   },
+   " adds the missing rows and keeps the table.\""
+  ],
+  "id": "trap-073",
+  "n": 73,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "It drops the incremental table and rebuilds it from all the data. The config ",
+   {
+    "t": "code",
+    "v": "full_refresh: false"
+   },
+   " makes dbt ignore the flag for that model (to protect a huge table)."
+  ],
+  "where": [
+   "Chapter 14"
+  ]
+ },
+ {
+  "chapters": [
+   14
+  ],
+  "confusion": [
+   "\"The ",
+   {
+    "t": "code",
+    "v": "unique_key"
+   },
+   " column may contain NULLs.\""
+  ],
+  "id": "trap-074",
+  "n": 74,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Rows with a NULL key cannot match, which creates duplicates or failures. Make the key not null, or build a surrogate key."
+  ],
+  "where": [
+   "Chapter 14"
+  ]
+ },
+ {
+  "chapters": [
+   14
+  ],
+  "confusion": [
+   "\"A microbatch model needs an ",
+   {
+    "t": "code",
+    "v": "is_incremental()"
+   },
+   " filter.\""
+  ],
+  "id": "trap-075",
+  "n": 75,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "No. You write the SQL for one batch; dbt adds the time filter on every ",
+   {
+    "t": "code",
+    "v": "ref"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "source"
+   },
+   " whose node has ",
+   {
+    "t": "code",
+    "v": "event_time"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 14"
+  ]
+ },
+ {
+  "chapters": [
+   14
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "event_time"
+   },
+   " on the microbatch model is enough.\""
+  ],
+  "id": "trap-076",
+  "n": 76,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Upstream models and sources also need ",
+   {
+    "t": "code",
+    "v": "event_time"
+   },
+   ": an input without it is read in full for every batch (no warning). Only when ",
+   {
+    "c": [
+     "no"
+    ],
+    "t": "i"
+   },
+   " input has ",
+   {
+    "t": "code",
+    "v": "event_time"
+   },
+   " does dbt warn that \"no filtering can be applied\"."
+  ],
+  "where": [
+   "Chapter 14"
+  ]
+ },
+ {
+  "chapters": [
+   14
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "batch_size"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "begin"
+   },
+   " are optional for microbatch.\""
+  ],
+  "id": "trap-077",
+  "n": 77,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "event_time"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "batch_size"
+   },
+   " (",
+   {
+    "t": "code",
+    "v": "hour"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "day"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "month"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "year"
+   },
+   ") and ",
+   {
+    "t": "code",
+    "v": "begin"
+   },
+   " are required; parsing fails without them. ",
+   {
+    "t": "code",
+    "v": "lookback"
+   },
+   " is optional and defaults to 1."
+  ],
+  "where": [
+   "Chapter 14"
+  ]
+ },
+ {
+  "chapters": [
+   14
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "--event-time-start"
+   },
+   " alone backfills from that date until now.\""
+  ],
+  "id": "trap-078",
+  "n": 78,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "--event-time-start"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "--event-time-end"
+   },
+   " must be given together (dbt raises an error otherwise). The end is exclusive: start 2025-12-30 and end 2026-01-01 ran the batches of 30 and 31 December."
+  ],
+  "where": [
+   "Chapter 14"
+  ]
+ },
+ {
+  "chapters": [
+   14,
+   24
+  ],
+  "confusion": [
+   "\"If one microbatch batch fails, the whole model must run again.\""
+  ],
+  "id": "trap-079",
+  "n": 79,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Batches are independent. ",
+   {
+    "t": "code",
+    "v": "dbt retry"
+   },
+   " reprocesses only the failed batches."
+  ],
+  "where": [
+   "Chapters 14 and 24"
+  ]
+ },
+ {
+  "chapters": [
+   15
+  ],
+  "confusion": [
+   "\"A Python model can be a view or ephemeral.\""
+  ],
+  "id": "trap-080",
+  "n": 80,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Python models can only be ",
+   {
+    "t": "code",
+    "v": "table"
+   },
+   " (the default) or ",
+   {
+    "t": "code",
+    "v": "incremental"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 15"
+  ]
+ },
+ {
+  "chapters": [
+   15
+  ],
+  "confusion": [
+   "\"I can write ",
+   {
+    "t": "code",
+    "v": "{{ ref('x') }}"
+   },
+   " in a ",
+   {
+    "t": "code",
+    "v": ".py"
+   },
+   " model.\""
+  ],
+  "id": "trap-081",
+  "n": 81,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Python models do not use Jinja. Inside ",
+   {
+    "t": "code",
+    "v": "def model(dbt, session):"
+   },
+   " use ",
+   {
+    "t": "code",
+    "v": "dbt.ref('x')"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "dbt.source('a', 'b')"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "dbt.config(…)"
+   },
+   ", and return one DataFrame."
+  ],
+  "where": [
+   "Chapter 15"
+  ]
+ },
+ {
+  "chapters": [
+   15
+  ],
+  "confusion": [
+   "\"A Python model can ",
+   {
+    "t": "code",
+    "v": "ref"
+   },
+   " an ephemeral model.\""
+  ],
+  "id": "trap-082",
+  "n": 82,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "It cannot: the parent must exist as a relation in the warehouse."
+  ],
+  "where": [
+   "Chapter 15"
+  ]
+ },
+ {
+  "chapters": [
+   16
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "--empty"
+   },
+   " only checks the syntax without using the warehouse.\""
+  ],
+  "id": "trap-083",
+  "n": 83,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "--empty"
+   },
+   " runs the real SQL, but every ",
+   {
+    "t": "code",
+    "v": "ref()"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "source()"
+   },
+   " is replaced by a subquery that returns zero rows (",
+   {
+    "t": "code",
+    "v": "where false limit 0"
+   },
+   "). Objects are created empty, and warehouse errors (bad column, wrong type) still appear."
+  ],
+  "where": [
+   "Chapter 16"
+  ]
+ },
+ {
+  "chapters": [
+   16
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "--empty"
+   },
+   " empties everything, including hard-coded tables and seeds.\""
+  ],
+  "id": "trap-084",
+  "n": 84,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Only ",
+   {
+    "t": "code",
+    "v": "ref()"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "source()"
+   },
+   " are limited. A hard-coded table name is read in full, and ",
+   {
+    "t": "code",
+    "v": "dbt build --empty"
+   },
+   " still loads seeds completely. The flag exists for ",
+   {
+    "t": "code",
+    "v": "run"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "build"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "compile"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "snapshot"
+   },
+   ", not for ",
+   {
+    "t": "code",
+    "v": "test"
+   },
+   " or ",
+   {
+    "t": "code",
+    "v": "seed"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 16"
+  ]
+ },
+ {
+  "chapters": [
+   14,
+   16
+  ],
+  "confusion": [
+   "\"After ",
+   {
+    "t": "code",
+    "v": "dbt run --empty"
+   },
+   ", the next normal run fills my incremental models.\""
+  ],
+  "id": "trap-085",
+  "n": 85,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "The empty table now exists, so the next run is incremental. A filter such as ",
+   {
+    "t": "code",
+    "v": "loaded_at > (select max(loaded_at) from {{ this }})"
+   },
+   " compares with NULL and inserts nothing (we got 0 rows in ",
+   {
+    "t": "code",
+    "v": "fct_orders"
+   },
+   "). After an empty run, rebuild incremental models with ",
+   {
+    "t": "code",
+    "v": "--full-refresh"
+   },
+   ", or wrap the ",
+   {
+    "t": "code",
+    "v": "max"
+   },
+   " in ",
+   {
+    "t": "code",
+    "v": "coalesce"
+   },
+   ". Microbatch models suffer too: the next normal run only rebuilds the latest batches (the lookback), so older periods stay empty until a backfill or a ",
+   {
+    "t": "code",
+    "v": "--full-refresh"
+   },
+   "."
+  ],
+  "where": [
+   "Chapters 14 and 16"
+  ]
+ },
+ {
+  "chapters": [
+   16
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "--sample"
+   },
+   " takes a random sample of every table.\""
+  ],
+  "id": "trap-086",
+  "n": 86,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "--sample"
+   },
+   " (on ",
+   {
+    "t": "code",
+    "v": "run"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "build"
+   },
+   ") filters by time, and only the inputs whose node has ",
+   {
+    "t": "code",
+    "v": "event_time"
+   },
+   "; other inputs are read in full. Syntax: ",
+   {
+    "t": "code",
+    "v": "--sample=\"3 days\""
+   },
+   " (relative to now) or a fixed window ",
+   {
+    "t": "code",
+    "v": "--sample=\"{'start': '2025-12-01', 'end': '2026-01-01'}\""
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 16"
+  ]
+ },
+ {
+  "chapters": [
+   16
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "+fct_orders"
+   },
+   " selects the children of ",
+   {
+    "t": "code",
+    "v": "fct_orders"
+   },
+   ".\""
+  ],
+  "id": "trap-087",
+  "n": 87,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "A ",
+   {
+    "t": "code",
+    "v": "+"
+   },
+   " ",
+   {
+    "c": [
+     "before"
+    ],
+    "t": "i"
+   },
+   " the name selects ancestors (parents, grandparents… up to the sources); a ",
+   {
+    "t": "code",
+    "v": "+"
+   },
+   " ",
+   {
+    "c": [
+     "after"
+    ],
+    "t": "i"
+   },
+   " selects descendants."
+  ],
+  "where": [
+   "Chapter 16"
+  ]
+ },
+ {
+  "chapters": [
+   16
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "1+dim_customers"
+   },
+   " means one model.\""
+  ],
+  "id": "trap-088",
+  "n": 88,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "The number limits the depth: ",
+   {
+    "t": "code",
+    "v": "1+dim_customers"
+   },
+   " = the model and its direct (first-degree) parents; ",
+   {
+    "t": "code",
+    "v": "dim_customers+1"
+   },
+   " = the model and its direct children; ",
+   {
+    "t": "code",
+    "v": "2+"
+   },
+   " goes up two levels."
+  ],
+  "where": [
+   "Chapter 16"
+  ]
+ },
+ {
+  "chapters": [
+   16
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "@model"
+   },
+   " is the same as ",
+   {
+    "t": "code",
+    "v": "model+"
+   },
+   ".\""
+  ],
+  "id": "trap-089",
+  "n": 89,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   {
+    "t": "code",
+    "v": "@model"
+   },
+   " = the model, all its descendants, ",
+   {
+    "c": [
+     "and all the ancestors of those descendants"
+    ],
+    "t": "i"
+   },
+   ". It is what you need to build every child of a change in an empty schema. ",
+   {
+    "t": "code",
+    "v": "@"
+   },
+   " is used only as a prefix."
+  ],
+  "where": [
+   "Chapter 16"
+  ]
+ },
+ {
+  "chapters": [
+   16
+  ],
+  "confusion": [
+   "\"A comma between two selectors means ",
+   {
+    "c": [
+     "or"
+    ],
+    "t": "i"
+   },
+   ".\""
+  ],
+  "id": "trap-090",
+  "n": 90,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "A space means union (or); a comma means intersection (and): ",
+   {
+    "t": "code",
+    "v": "tag:nightly,tag:finance"
+   },
+   " keeps only nodes with both tags. ",
+   {
+    "t": "code",
+    "v": "--exclude"
+   },
+   " removes nodes."
+  ],
+  "where": [
+   "Chapter 16"
+  ]
+ },
+ {
+  "chapters": [
+   16
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt test -s fct_orders"
+   },
+   " runs only the tests written under ",
+   {
+    "t": "code",
+    "v": "fct_orders"
+   },
+   ".\""
+  ],
+  "id": "trap-091",
+  "n": 91,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Indirect selection (default ",
+   {
+    "t": "code",
+    "v": "eager"
+   },
+   ") also takes tests that touch ",
+   {
+    "t": "code",
+    "v": "fct_orders"
+   },
+   " but are defined on other models (for example a ",
+   {
+    "t": "code",
+    "v": "relationships"
+   },
+   " test). ",
+   {
+    "t": "code",
+    "v": "buildable"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "cautious"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "empty"
+   },
+   " select fewer tests."
+  ],
+  "where": [
+   "Chapter 16"
+  ]
+ },
+ {
+  "chapters": [
+   16
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "path:models/staging"
+   },
+   " selects only models.\""
+  ],
+  "id": "trap-092",
+  "n": 92,
+  "topic": "Topic 1: Developing and optimizing dbt models",
+  "truth": [
+   "Methods select every resource type in the path, including the sources declared in YAML files there. Add ",
+   {
+    "t": "code",
+    "v": "--resource-type model"
+   },
+   " to keep only models."
+  ],
+  "where": [
+   "Chapter 16"
+  ]
+ },
+ {
+  "chapters": [
+   17
+  ],
+  "confusion": [
+   "\"A contract only needs the important columns.\""
+  ],
+  "id": "trap-093",
+  "n": 93,
+  "topic": "Topic 2: Managing dbt model governance",
+  "truth": [
+   "With ",
+   {
+    "t": "code",
+    "v": "contract: {enforced: true}"
+   },
+   ", every column needs a ",
+   {
+    "t": "code",
+    "v": "name"
+   },
+   " and a ",
+   {
+    "t": "code",
+    "v": "data_type"
+   },
+   ". A missing type gives \"Contracted models require data_type to be defined for each column\"; an extra column in the SQL fails with \"missing in contract\"."
+  ],
+  "where": [
+   "Chapter 17"
+  ]
+ },
+ {
+  "chapters": [
+   17
+  ],
+  "confusion": [
+   "\"The SQL must list the columns in the same order as the contract.\""
+  ],
+  "id": "trap-094",
+  "n": 94,
+  "topic": "Topic 2: Managing dbt model governance",
+  "truth": [
+   "The pre-flight check ignores the order. dbt then creates the table with the columns in the order of the YAML contract."
+  ],
+  "where": [
+   "Chapter 17"
+  ]
+ },
+ {
+  "chapters": [
+   17
+  ],
+  "confusion": [
+   "\"Contracts work on every model.\""
+  ],
+  "id": "trap-095",
+  "n": 95,
+  "topic": "Topic 2: Managing dbt model governance",
+  "truth": [
+   "Supported: ",
+   {
+    "t": "code",
+    "v": "table"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "view"
+   },
+   " (names and types only, no constraints) and ",
+   {
+    "t": "code",
+    "v": "incremental"
+   },
+   ". Not supported: ",
+   {
+    "t": "code",
+    "v": "ephemeral"
+   },
+   ", materialized views and Python models."
+  ],
+  "where": [
+   "Chapter 17"
+  ]
+ },
+ {
+  "chapters": [
+   14,
+   17
+  ],
+  "confusion": [
+   "\"A contracted incremental model can keep the default ",
+   {
+    "t": "code",
+    "v": "on_schema_change"
+   },
+   ".\""
+  ],
+  "id": "trap-096",
+  "n": 96,
+  "topic": "Topic 2: Managing dbt model governance",
+  "truth": [
+   "With a contract, ",
+   {
+    "t": "code",
+    "v": "on_schema_change"
+   },
+   " must be ",
+   {
+    "t": "code",
+    "v": "append_new_columns"
+   },
+   " or ",
+   {
+    "t": "code",
+    "v": "fail"
+   },
+   "; the default ",
+   {
+    "t": "code",
+    "v": "ignore"
+   },
+   " raises an error."
+  ],
+  "where": [
+   "Chapters 14 and 17"
+  ]
+ },
+ {
+  "chapters": [
+   17
+  ],
+  "confusion": [
+   "\"Constraints work without a contract.\""
+  ],
+  "id": "trap-097",
+  "n": 97,
+  "topic": "Topic 2: Managing dbt model governance",
+  "truth": [
+   "Constraints are applied only when the contract is enforced (without it, our ",
+   {
+    "t": "code",
+    "v": "not_null"
+   },
+   " was silently ignored). On views they are ignored with a warning."
+  ],
+  "where": [
+   "Chapter 17"
+  ]
+ },
+ {
+  "chapters": [
+   17
+  ],
+  "confusion": [
+   "\"dbt enforces the constraints.\""
+  ],
+  "id": "trap-098",
+  "n": 98,
+  "topic": "Topic 2: Managing dbt model governance",
+  "truth": [
+   "The ",
+   {
+    "c": [
+     "data platform"
+    ],
+    "t": "i"
+   },
+   " enforces them, and support varies: ",
+   {
+    "t": "code",
+    "v": "not_null"
+   },
+   " is enforced on Snowflake, BigQuery, Redshift, Postgres and Databricks, but ",
+   {
+    "t": "code",
+    "v": "primary_key"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "foreign_key"
+   },
+   " are only metadata (not enforced) on all of them except Postgres, and ",
+   {
+    "t": "code",
+    "v": "unique"
+   },
+   " is metadata on Snowflake and Redshift and not supported on BigQuery and Databricks. Keep your data tests."
+  ],
+  "where": [
+   "Chapter 17"
+  ]
+ },
+ {
+  "chapters": [
+   17,
+   18
+  ],
+  "confusion": [
+   "\"A not_null constraint and a not_null test are the same thing.\""
+  ],
+  "id": "trap-099",
+  "n": 99,
+  "topic": "Topic 2: Managing dbt model governance",
+  "truth": [
+   "An enforced constraint is checked by the platform ",
+   {
+    "c": [
+     "while"
+    ],
+    "t": "i"
+   },
+   " the table is written: bad data makes the build fail. A test checks the data ",
+   {
+    "c": [
+     "after"
+    ],
+    "t": "i"
+   },
+   " the build and reports failures; it works on every platform and every materialization (even ephemeral models)."
+  ],
+  "where": [
+   "Chapters 17 and 18"
+  ]
+ },
+ {
+  "chapters": [
+   17
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "ref('dim_customers')"
+   },
+   " always points to the highest version.\""
+  ],
+  "id": "trap-100",
+  "n": 100,
+  "topic": "Topic 2: Managing dbt model governance",
+  "truth": [
+   "It points to ",
+   {
+    "t": "code",
+    "v": "latest_version"
+   },
+   " when it is set (even if a higher version exists); only without ",
+   {
+    "t": "code",
+    "v": "latest_version"
+   },
+   " is the highest number used. Pin a version with ",
+   {
+    "t": "code",
+    "v": "ref('dim_customers', v=1)"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 17"
+  ]
+ },
+ {
+  "chapters": [
+   17
+  ],
+  "confusion": [
+   "\"Once the ",
+   {
+    "t": "code",
+    "v": "deprecation_date"
+   },
+   " has passed, the model stops building.\""
+  ],
+  "id": "trap-101",
+  "n": 101,
+  "topic": "Topic 2: Managing dbt model governance",
+  "truth": [
+   "dbt only prints warnings (the model \"has passed its deprecation date\", and each ",
+   {
+    "t": "code",
+    "v": "ref"
+   },
+   " to it is flagged). Removing the version is your job."
+  ],
+  "where": [
+   "Chapter 17"
+  ]
+ },
+ {
+  "chapters": [
+   17
+  ],
+  "confusion": [
+   "\"Every version must live in ",
+   {
+    "t": "code",
+    "v": "dim_customers.sql"
+   },
+   ".\""
+  ],
+  "id": "trap-102",
+  "n": 102,
+  "topic": "Topic 2: Managing dbt model governance",
+  "truth": [
+   "By default version N lives in ",
+   {
+    "t": "code",
+    "v": "dim_customers_vN.sql"
+   },
+   " and builds a relation named ",
+   {
+    "t": "code",
+    "v": "dim_customers_vN"
+   },
+   ". Use ",
+   {
+    "t": "code",
+    "v": "defined_in"
+   },
+   " to point to another file."
+  ],
+  "where": [
+   "Chapter 17"
+  ]
+ },
+ {
+  "chapters": [
+   17
+  ],
+  "confusion": [
+   "\"The default access of a model is ",
+   {
+    "t": "code",
+    "v": "public"
+   },
+   ".\""
+  ],
+  "id": "trap-103",
+  "n": 103,
+  "topic": "Topic 2: Managing dbt model governance",
+  "truth": [
+   "The default is ",
+   {
+    "t": "code",
+    "v": "protected"
+   },
+   ": any model in the same project can ",
+   {
+    "t": "code",
+    "v": "ref"
+   },
+   " it. ",
+   {
+    "t": "code",
+    "v": "private"
+   },
+   ": only models in the same group (a violation fails at parse time). ",
+   {
+    "t": "code",
+    "v": "public"
+   },
+   ": also other projects (dbt Mesh)."
+  ],
+  "where": [
+   "Chapter 17"
+  ]
+ },
+ {
+  "chapters": [
+   17
+  ],
+  "confusion": [
+   "\"A group is just a kind of tag.\""
+  ],
+  "id": "trap-104",
+  "n": 104,
+  "topic": "Topic 2: Managing dbt model governance",
+  "truth": [
+   "A group has a name and an owner (name or email) and is what ",
+   {
+    "t": "code",
+    "v": "private"
+   },
+   " access is checked against. Models join it with the ",
+   {
+    "t": "code",
+    "v": "group"
+   },
+   " config."
+  ],
+  "where": [
+   "Chapter 17"
+  ]
+ },
+ {
+  "chapters": [
+   22
+  ],
+  "confusion": [
+   "\"Every error comes from the warehouse.\""
+  ],
+  "id": "trap-105",
+  "n": 105,
+  "topic": "Topic 3: Debugging data modeling errors",
+  "truth": [
+   "A ",
+   {
+    "c": [
+     "Parsing Error"
+    ],
+    "t": "i"
+   },
+   " (invalid YAML, wrong properties) or a ",
+   {
+    "c": [
+     "Compilation Error"
+    ],
+    "t": "i"
+   },
+   " (Jinja, missing ref, missing var) comes from dbt, before any SQL is sent. A database error comes from the warehouse after the compiled SQL was sent (DuckDB labels it ",
+   {
+    "c": [
+     "Runtime Error"
+    ],
+    "t": "i"
+   },
+   "; other adapters say ",
+   {
+    "c": [
+     "Database Error"
+    ],
+    "t": "i"
+   },
+   ")."
+  ],
+  "where": [
+   "Chapter 22"
+  ]
+ },
+ {
+  "chapters": [
+   22
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "target/compiled"
+   },
+   " shows the exact statement dbt ran.\""
+  ],
+  "id": "trap-106",
+  "n": 106,
+  "topic": "Topic 3: Debugging data modeling errors",
+  "truth": [
+   {
+    "t": "code",
+    "v": "target/compiled"
+   },
+   " holds the rendered ",
+   {
+    "t": "code",
+    "v": "select"
+   },
+   ". ",
+   {
+    "t": "code",
+    "v": "target/run"
+   },
+   " holds the full statement that was executed (",
+   {
+    "t": "code",
+    "v": "create table … as"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "merge"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "insert"
+   },
+   "…)."
+  ],
+  "where": [
+   "Chapter 22"
+  ]
+ },
+ {
+  "chapters": [
+   22
+  ],
+  "confusion": [
+   "\"The console shows everything dbt did.\""
+  ],
+  "id": "trap-107",
+  "n": 107,
+  "topic": "Topic 3: Debugging data modeling errors",
+  "truth": [
+   {
+    "t": "code",
+    "v": "logs/dbt.log"
+   },
+   " keeps the debug-level details, including every SQL statement, even when the console shows only info lines. ",
+   {
+    "t": "code",
+    "v": "--debug"
+   },
+   " (or ",
+   {
+    "t": "code",
+    "v": "--log-level debug"
+   },
+   ") shows them in the console."
+  ],
+  "where": [
+   "Chapter 22"
+  ]
+ },
+ {
+  "chapters": [
+   22
+  ],
+  "confusion": [
+   "\"A bad YAML file only breaks the model it describes.\""
+  ],
+  "id": "trap-108",
+  "n": 108,
+  "topic": "Topic 3: Debugging data modeling errors",
+  "truth": [
+   "dbt parses the whole project first. One invalid YAML file stops every command with a ",
+   {
+    "c": [
+     "Parsing Error"
+    ],
+    "t": "i"
+   },
+   ", even for unrelated models."
+  ],
+  "where": [
+   "Chapter 22"
+  ]
+ },
+ {
+  "chapters": [
+   22
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "--warn-error-options"
+   },
+   " uses the keys ",
+   {
+    "t": "code",
+    "v": "include"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "exclude"
+   },
+   ".\""
+  ],
+  "id": "trap-109",
+  "n": 109,
+  "topic": "Topic 3: Debugging data modeling errors",
+  "truth": [
+   "In dbt 1.11 the keys are ",
+   {
+    "t": "code",
+    "v": "error"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "warn"
+   },
+   ": ",
+   {
+    "t": "code",
+    "v": "--warn-error-options '{\"error\": [\"NoNodesForSelectionCriteria\"]}'"
+   },
+   ". ",
+   {
+    "t": "code",
+    "v": "include"
+   },
+   "/",
+   {
+    "t": "code",
+    "v": "exclude"
+   },
+   " are the old names (deprecated). ",
+   {
+    "t": "code",
+    "v": "--warn-error"
+   },
+   " turns ",
+   {
+    "c": [
+     "every"
+    ],
+    "t": "i"
+   },
+   " warning into an error."
+  ],
+  "where": [
+   "Chapter 22"
+  ]
+ },
+ {
+  "chapters": [
+   22
+  ],
+  "confusion": [
+   "\"Flags can only be passed on the command line.\""
+  ],
+  "id": "trap-110",
+  "n": 110,
+  "topic": "Topic 3: Debugging data modeling errors",
+  "truth": [
+   "Also as environment variables (",
+   {
+    "t": "code",
+    "v": "DBT_…"
+   },
+   ") and under ",
+   {
+    "t": "code",
+    "v": "flags:"
+   },
+   " in ",
+   {
+    "t": "code",
+    "v": "dbt_project.yml"
+   },
+   ". Precedence: CLI, then environment variable, then ",
+   {
+    "t": "code",
+    "v": "dbt_project.yml"
+   },
+   ", then the default. Behaviour-change flags can only be set in ",
+   {
+    "t": "code",
+    "v": "dbt_project.yml"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 22"
+  ]
+ },
+ {
+  "chapters": [
+   22,
+   25
+  ],
+  "confusion": [
+   "\"The fastest fix is to edit production and commit afterwards.\""
+  ],
+  "id": "trap-111",
+  "n": 111,
+  "topic": "Topic 3: Debugging data modeling errors",
+  "truth": [
+   "Reproduce the problem in development, fix it on a feature branch, test it (for example ",
+   {
+    "t": "code",
+    "v": "dbt build -s my_model+"
+   },
+   "), open a pull request, let CI run, then merge."
+  ],
+  "where": [
+   "Chapters 22 and 25"
+  ]
+ },
+ {
+  "chapters": [
+   22,
+   23
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "--fail-fast"
+   },
+   " skips the failed model and continues.\""
+  ],
+  "id": "trap-112",
+  "n": 112,
+  "topic": "Topic 3: Debugging data modeling errors",
+  "truth": [
+   {
+    "t": "code",
+    "v": "--fail-fast"
+   },
+   " (",
+   {
+    "t": "code",
+    "v": "-x"
+   },
+   ") stops the whole command at the first failure."
+  ],
+  "where": [
+   "Chapters 22 and 23"
+  ]
+ },
+ {
+  "chapters": [
+   23
+  ],
+  "confusion": [
+   "\"When one model fails, dbt stops the whole run.\""
+  ],
+  "id": "trap-113",
+  "n": 113,
+  "topic": "Topic 4: Troubleshooting and optimizing dbt pipelines",
+  "truth": [
+   "By default, only the descendants of the failed node are skipped (",
+   {
+    "t": "code",
+    "v": "SKIP"
+   },
+   "); independent branches keep running. Use ",
+   {
+    "t": "code",
+    "v": "--fail-fast"
+   },
+   " to stop everything."
+  ],
+  "where": [
+   "Chapter 23"
+  ]
+ },
+ {
+  "chapters": [
+   23
+  ],
+  "confusion": [
+   "\"More threads change the order of the DAG.\""
+  ],
+  "id": "trap-114",
+  "n": 114,
+  "topic": "Topic 4: Troubleshooting and optimizing dbt pipelines",
+  "truth": [
+   "Threads set how many nodes run in parallel. Dependencies are always respected."
+  ],
+  "where": [
+   "Chapter 23"
+  ]
+ },
+ {
+  "chapters": [
+   23
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt clone"
+   },
+   " copies data the same way on every platform.\""
+  ],
+  "id": "trap-115",
+  "n": 115,
+  "topic": "Topic 4: Troubleshooting and optimizing dbt pipelines",
+  "truth": [
+   "It makes a zero-copy clone where the platform supports it (Snowflake, Databricks, BigQuery) for tables; otherwise it creates a view that selects from the source object. On DuckDB we got views."
+  ],
+  "where": [
+   "Chapter 23"
+  ]
+ },
+ {
+  "chapters": [
+   23
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt clone"
+   },
+   " works without any artifacts.\""
+  ],
+  "id": "trap-116",
+  "n": 116,
+  "topic": "Topic 4: Troubleshooting and optimizing dbt pipelines",
+  "truth": [
+   "It needs ",
+   {
+    "t": "code",
+    "v": "--state"
+   },
+   " (the production ",
+   {
+    "t": "code",
+    "v": "manifest.json"
+   },
+   "), otherwise: \"–state or –defer-state are required\". Existing relations are not recreated unless you add ",
+   {
+    "t": "code",
+    "v": "--full-refresh"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 23"
+  ]
+ },
+ {
+  "chapters": [
+   23,
+   24
+  ],
+  "confusion": [
+   "\"Clone and defer do the same thing.\""
+  ],
+  "id": "trap-117",
+  "n": 117,
+  "topic": "Topic 4: Troubleshooting and optimizing dbt pipelines",
+  "truth": [
+   {
+    "t": "code",
+    "v": "--defer"
+   },
+   " creates nothing: it only resolves the ",
+   {
+    "t": "code",
+    "v": "ref"
+   },
+   " of unselected, missing nodes to production. ",
+   {
+    "t": "code",
+    "v": "dbt clone"
+   },
+   " creates real objects in your schema, usable from a BI tool or as a starting point for incremental models in CI."
+  ],
+  "where": [
+   "Chapters 23 and 24"
+  ]
+ },
+ {
+  "chapters": [
+   18
+  ],
+  "confusion": [
+   "\"dbt has many built-in generic tests.\""
+  ],
+  "id": "trap-118",
+  "n": 118,
+  "topic": "Topic 5: Implementing dbt tests",
+  "truth": [
+   "Four: ",
+   {
+    "t": "code",
+    "v": "unique"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "not_null"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "accepted_values"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "relationships"
+   },
+   ". Others come from packages (such as dbt_utils) or from your own custom generic tests."
+  ],
+  "where": [
+   "Chapter 18"
+  ]
+ },
+ {
+  "chapters": [
+   18
+  ],
+  "confusion": [
+   "\"A test passes when its query returns true.\""
+  ],
+  "id": "trap-119",
+  "n": 119,
+  "topic": "Topic 5: Implementing dbt tests",
+  "truth": [
+   "A test is a ",
+   {
+    "t": "code",
+    "v": "select"
+   },
+   " that returns the ",
+   {
+    "c": [
+     "failing"
+    ],
+    "t": "i"
+   },
+   " rows: zero rows means pass. A singular test is such a query in a ",
+   {
+    "t": "code",
+    "v": ".sql"
+   },
+   " file under ",
+   {
+    "t": "code",
+    "v": "tests/"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 18"
+  ]
+ },
+ {
+  "chapters": [
+   18
+  ],
+  "confusion": [
+   "\"In 1.11, test arguments go directly under the test name.\""
+  ],
+  "id": "trap-120",
+  "n": 120,
+  "topic": "Topic 5: Implementing dbt tests",
+  "truth": [
+   "Since 1.10, put them under ",
+   {
+    "t": "code",
+    "v": "arguments:"
+   },
+   " (",
+   {
+    "t": "code",
+    "v": "values"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "to"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "field"
+   },
+   "…) and the test configs under ",
+   {
+    "t": "code",
+    "v": "config:"
+   },
+   ". The old style still runs but raises ",
+   {
+    "t": "code",
+    "v": "MissingArgumentsPropertyInGenericTestDeprecation"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 18"
+  ]
+ },
+ {
+  "chapters": [
+   18
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "warn_if: 10"
+   },
+   " means warn when there are more than 10 failures.\""
+  ],
+  "id": "trap-121",
+  "n": 121,
+  "topic": "Topic 5: Implementing dbt tests",
+  "truth": [
+   "The values are strings with a comparison: ",
+   {
+    "t": "code",
+    "v": "warn_if: \">10\""
+   },
+   ". Both default to ",
+   {
+    "t": "code",
+    "v": "\"!=0\""
+   },
+   ". With ",
+   {
+    "t": "code",
+    "v": "severity: error"
+   },
+   ", dbt checks ",
+   {
+    "t": "code",
+    "v": "error_if"
+   },
+   " first, then ",
+   {
+    "t": "code",
+    "v": "warn_if"
+   },
+   "; with ",
+   {
+    "t": "code",
+    "v": "severity: warn"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "error_if"
+   },
+   " is ignored."
+  ],
+  "where": [
+   "Chapter 18"
+  ]
+ },
+ {
+  "chapters": [
+   18
+  ],
+  "confusion": [
+   "\"The ",
+   {
+    "t": "code",
+    "v": "where"
+   },
+   " config filters the model before it is built.\""
+  ],
+  "id": "trap-122",
+  "n": 122,
+  "topic": "Topic 5: Implementing dbt tests",
+  "truth": [
+   {
+    "t": "code",
+    "v": "where"
+   },
+   " only filters the rows that the test checks; the model is not changed."
+  ],
+  "where": [
+   "Chapter 18"
+  ]
+ },
+ {
+  "chapters": [
+   18
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "store_failures"
+   },
+   " saves the failing rows next to my model.\""
+  ],
+  "id": "trap-123",
+  "n": 123,
+  "topic": "Topic 5: Implementing dbt tests",
+  "truth": [
+   "They go to a table named after the test, in a custom schema called ",
+   {
+    "t": "code",
+    "v": "dbt_test__audit"
+   },
+   ", which goes through ",
+   {
+    "t": "code",
+    "v": "generate_schema_name"
+   },
+   ": with the default macro you get ",
+   {
+    "t": "code",
+    "v": "dbt_adnane_dbt_test__audit"
+   },
+   " in dev (our practice project's own macro gives ",
+   {
+    "t": "code",
+    "v": "dbt_adnane"
+   },
+   " in dev and ",
+   {
+    "t": "code",
+    "v": "dbt_test__audit"
+   },
+   " in prod)."
+  ],
+  "where": [
+   "Chapter 18"
+  ]
+ },
+ {
+  "chapters": [
+   18
+  ],
+  "confusion": [
+   "\"A ",
+   {
+    "t": "code",
+    "v": "relationships"
+   },
+   " test is defined on the parent table.\""
+  ],
+  "id": "trap-124",
+  "n": 124,
+  "topic": "Topic 5: Implementing dbt tests",
+  "truth": [
+   "It is defined on the child column, with ",
+   {
+    "t": "code",
+    "v": "to: ref('parent')"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "field: <parent column>"
+   },
+   ". It fails on orphans, like order 159 of the practice data."
+  ],
+  "where": [
+   "Chapter 18"
+  ]
+ },
+ {
+  "chapters": [
+   18
+  ],
+  "confusion": [
+   "\"Custom generic tests live in ",
+   {
+    "t": "code",
+    "v": "models/"
+   },
+   ".\""
+  ],
+  "id": "trap-125",
+  "n": 125,
+  "topic": "Topic 5: Implementing dbt tests",
+  "truth": [
+   "They live in ",
+   {
+    "t": "code",
+    "v": "tests/generic/"
+   },
+   " (or ",
+   {
+    "t": "code",
+    "v": "macros/"
+   },
+   ") as ",
+   {
+    "t": "code",
+    "v": "{% test name(model, column_name) %} … {% endtest %}"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 18"
+  ]
+ },
+ {
+  "chapters": [
+   19
+  ],
+  "confusion": [
+   "\"Unit tests check the data stored in the warehouse.\""
+  ],
+  "id": "trap-126",
+  "n": 126,
+  "topic": "Topic 5: Implementing dbt tests",
+  "truth": [
+   "Unit tests check the ",
+   {
+    "c": [
+     "logic"
+    ],
+    "t": "i"
+   },
+   " of one SQL model with fake input rows (",
+   {
+    "t": "code",
+    "v": "given"
+   },
+   ") and expected rows (",
+   {
+    "t": "code",
+    "v": "expect"
+   },
+   "). Data tests check the real data. In ",
+   {
+    "t": "code",
+    "v": "dbt build"
+   },
+   ", a model's unit tests run ",
+   {
+    "c": [
+     "before"
+    ],
+    "t": "i"
+   },
+   " the model is built, its data tests after."
+  ],
+  "where": [
+   "Chapter 19"
+  ]
+ },
+ {
+  "chapters": [
+   19
+  ],
+  "confusion": [
+   "\"Unit tests do not need the parent models to exist.\""
+  ],
+  "id": "trap-127",
+  "n": 127,
+  "topic": "Topic 5: Implementing dbt tests",
+  "truth": [
+   "The direct parents must exist, because dbt reads their columns: \"Not able to get columns for unit test … because the relation doesn't exist\". The same is true for the incremental model itself when the test uses ",
+   {
+    "t": "code",
+    "v": "this"
+   },
+   ", so the very first ",
+   {
+    "t": "code",
+    "v": "dbt build"
+   },
+   " on an empty schema fails on such a test. Build them first (",
+   {
+    "t": "code",
+    "v": "--empty"
+   },
+   " is enough). An ephemeral input must use ",
+   {
+    "t": "code",
+    "v": "format: sql"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 19"
+  ]
+ },
+ {
+  "chapters": [
+   19
+  ],
+  "confusion": [
+   "\"Unit tests work for every model type.\""
+  ],
+  "id": "trap-128",
+  "n": 128,
+  "topic": "Topic 5: Implementing dbt tests",
+  "truth": [
+   "Only SQL models of the current project (not Python models, not materialized views)."
+  ],
+  "where": [
+   "Chapter 19"
+  ]
+ },
+ {
+  "chapters": [
+   19
+  ],
+  "confusion": [
+   "\"To unit test the incremental branch, run with ",
+   {
+    "t": "code",
+    "v": "--full-refresh"
+   },
+   ".\""
+  ],
+  "id": "trap-129",
+  "n": 129,
+  "topic": "Topic 5: Implementing dbt tests",
+  "truth": [
+   "Use ",
+   {
+    "t": "code",
+    "v": "overrides: macros: is_incremental: true"
+   },
+   " and give an input for ",
+   {
+    "t": "code",
+    "v": "this"
+   },
+   " (the rows already in the table)."
+  ],
+  "where": [
+   "Chapter 19"
+  ]
+ },
+ {
+  "chapters": [
+   19
+  ],
+  "confusion": [
+   "\"Unit tests should also run in every production job.\""
+  ],
+  "id": "trap-130",
+  "n": 130,
+  "topic": "Topic 5: Implementing dbt tests",
+  "truth": [
+   "dbt Labs recommends them in development and CI only. Exclude them with ",
+   {
+    "t": "code",
+    "v": "--exclude-resource-type unit_test"
+   },
+   ". Remember that ",
+   {
+    "t": "code",
+    "v": "dbt test"
+   },
+   " runs data ",
+   {
+    "c": [
+     "and"
+    ],
+    "t": "i"
+   },
+   " unit tests; ",
+   {
+    "t": "code",
+    "v": "-s test_type:unit"
+   },
+   " selects only unit tests."
+  ],
+  "where": [
+   "Chapter 19"
+  ]
+ },
+ {
+  "chapters": [
+   18
+  ],
+  "confusion": [
+   "\"It is enough to test the marts.\""
+  ],
+  "id": "trap-131",
+  "n": 131,
+  "topic": "Topic 5: Implementing dbt tests",
+  "truth": [
+   "Test assumptions where they enter: primary keys and accepted values on sources and staging models, business rules on marts. A problem caught at the source does not spread to every child."
+  ],
+  "where": [
+   "Chapter 18"
+  ]
+ },
+ {
+  "chapters": [
+   21
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt build"
+   },
+   " also checks source freshness.\""
+  ],
+  "id": "trap-132",
+  "n": 132,
+  "topic": "Topic 6: Implementing and maintaining external dependencies",
+  "truth": [
+   "It does not. Run ",
+   {
+    "t": "code",
+    "v": "dbt source freshness"
+   },
+   " as its own step; it writes ",
+   {
+    "t": "code",
+    "v": "target/sources.json"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 21"
+  ]
+ },
+ {
+  "chapters": [
+   21
+  ],
+  "confusion": [
+   "\"Freshness works as soon as I write ",
+   {
+    "t": "code",
+    "v": "warn_after"
+   },
+   ".\""
+  ],
+  "id": "trap-133",
+  "n": 133,
+  "topic": "Topic 6: Implementing and maintaining external dependencies",
+  "truth": [
+   "You also need ",
+   {
+    "t": "code",
+    "v": "loaded_at_field"
+   },
+   " (a timestamp column), unless the adapter can read the last-modified time from warehouse metadata. ",
+   {
+    "t": "code",
+    "v": "warn_after"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "error_after"
+   },
+   " take a ",
+   {
+    "t": "code",
+    "v": "count"
+   },
+   " and a ",
+   {
+    "t": "code",
+    "v": "period"
+   },
+   " (",
+   {
+    "t": "code",
+    "v": "minute"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "hour"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "day"
+   },
+   ")."
+  ],
+  "where": [
+   "Chapter 21"
+  ]
+ },
+ {
+  "chapters": [
+   21
+  ],
+  "confusion": [
+   "\"A table-level freshness block replaces the whole source-level block.\""
+  ],
+  "id": "trap-134",
+  "n": 134,
+  "topic": "Topic 6: Implementing and maintaining external dependencies",
+  "truth": [
+   "The keys are merged: a table's ",
+   {
+    "t": "code",
+    "v": "warn_after"
+   },
+   " overrides, but the source's ",
+   {
+    "t": "code",
+    "v": "error_after"
+   },
+   " is still inherited. ",
+   {
+    "t": "code",
+    "v": "freshness: null"
+   },
+   " switches the check off for one table."
+  ],
+  "where": [
+   "Chapter 21"
+  ]
+ },
+ {
+  "chapters": [
+   21
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "ERROR STALE"
+   },
+   " and ",
+   {
+    "t": "code",
+    "v": "ERROR"
+   },
+   " mean the same.\""
+  ],
+  "id": "trap-135",
+  "n": 135,
+  "topic": "Topic 6: Implementing and maintaining external dependencies",
+  "truth": [
+   {
+    "t": "code",
+    "v": "ERROR STALE"
+   },
+   ": the data is older than ",
+   {
+    "t": "code",
+    "v": "error_after"
+   },
+   ". ",
+   {
+    "t": "code",
+    "v": "ERROR"
+   },
+   ": the check itself failed, for example because the ",
+   {
+    "t": "code",
+    "v": "loaded_at_field"
+   },
+   " column does not exist in that table."
+  ],
+  "where": [
+   "Chapter 21"
+  ]
+ },
+ {
+  "chapters": [
+   21
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt source freshness"
+   },
+   " tells me how old my model tables are.\""
+  ],
+  "id": "trap-136",
+  "n": 136,
+  "topic": "Topic 6: Implementing and maintaining external dependencies",
+  "truth": [
+   "It checks ",
+   {
+    "c": [
+     "sources"
+    ],
+    "t": "i"
+   },
+   " only: the ",
+   {
+    "t": "code",
+    "v": "loaded_at_field"
+   },
+   " of raw tables that dbt does not control. Models stay fresh because your jobs run them, and data tests check their content."
+  ],
+  "where": [
+   "Chapter 21"
+  ]
+ },
+ {
+  "chapters": [
+   21
+  ],
+  "confusion": [
+   "\"An exposure can be run.\""
+  ],
+  "id": "trap-137",
+  "n": 137,
+  "topic": "Topic 6: Implementing and maintaining external dependencies",
+  "truth": [
+   "An exposure describes a downstream use (",
+   {
+    "t": "code",
+    "v": "dashboard"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "notebook"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "analysis"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "ml"
+   },
+   ", ",
+   {
+    "t": "code",
+    "v": "application"
+   },
+   "); nothing is built. ",
+   {
+    "t": "code",
+    "v": "dbt run -s exposure:x"
+   },
+   " says \"Nothing to do\" (in ",
+   {
+    "t": "code",
+    "v": "dbt build"
+   },
+   " it is listed as ",
+   {
+    "t": "code",
+    "v": "NO-OP"
+   },
+   "). Build what it needs with ",
+   {
+    "t": "code",
+    "v": "+exposure:x"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 21"
+  ]
+ },
+ {
+  "chapters": [
+   21
+  ],
+  "confusion": [
+   "\"The owner of an exposure is optional.\""
+  ],
+  "id": "trap-138",
+  "n": 138,
+  "topic": "Topic 6: Implementing and maintaining external dependencies",
+  "truth": [
+   {
+    "t": "code",
+    "v": "owner"
+   },
+   " is required, with a ",
+   {
+    "t": "code",
+    "v": "name"
+   },
+   " or an ",
+   {
+    "t": "code",
+    "v": "email"
+   },
+   ". ",
+   {
+    "t": "code",
+    "v": "type"
+   },
+   " must be one of the five values above (",
+   {
+    "t": "code",
+    "v": "report"
+   },
+   " is rejected)."
+  ],
+  "where": [
+   "Chapter 21"
+  ]
+ },
+ {
+  "chapters": [
+   24
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "state:modified"
+   },
+   " ignores new models.\""
+  ],
+  "id": "trap-139",
+  "n": 139,
+  "topic": "Topic 7: Leveraging dbt state",
+  "truth": [
+   {
+    "t": "code",
+    "v": "state:modified"
+   },
+   " selects new nodes ",
+   {
+    "c": [
+     "and"
+    ],
+    "t": "i"
+   },
+   " changed nodes. ",
+   {
+    "t": "code",
+    "v": "state:new"
+   },
+   " selects only the new ones."
+  ],
+  "where": [
+   "Chapter 24"
+  ]
+ },
+ {
+  "chapters": [
+   24
+  ],
+  "confusion": [
+   "\"State selection compares my project with Git.\""
+  ],
+  "id": "trap-140",
+  "n": 140,
+  "topic": "Topic 7: Leveraging dbt state",
+  "truth": [
+   "It compares the current project with a ",
+   {
+    "t": "code",
+    "v": "manifest.json"
+   },
+   " from an earlier run (usually production), given with ",
+   {
+    "t": "code",
+    "v": "--state <folder>"
+   },
+   "."
+  ],
+  "where": [
+   "Chapter 24"
+  ]
+ },
+ {
+  "chapters": [
+   24
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "--defer"
+   },
+   " builds the missing parents from production.\""
+  ],
+  "id": "trap-141",
+  "n": 141,
+  "topic": "Topic 7: Leveraging dbt state",
+  "truth": [
+   {
+    "t": "code",
+    "v": "--defer"
+   },
+   " builds nothing extra: a ",
+   {
+    "t": "code",
+    "v": "ref"
+   },
+   " to an unselected node that does not exist in your target is resolved to the production relation listed in the state manifest. ",
+   {
+    "t": "code",
+    "v": "--favor-state"
+   },
+   " uses production even when the node exists in dev."
+  ],
+  "where": [
+   "Chapter 24"
+  ]
+ },
+ {
+  "chapters": [
+   24
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt retry"
+   },
+   " reruns the whole previous command.\""
+  ],
+  "id": "trap-142",
+  "n": 142,
+  "topic": "Topic 7: Leveraging dbt state",
+  "truth": [
+   "It reads ",
+   {
+    "t": "code",
+    "v": "target/run_results.json"
+   },
+   " and reruns only the nodes that errored, failed (tests) or were skipped, with the same command and selection. Nothing failed: \"Nothing to do\". No previous run: \"Could not find previous run in 'target' target directory\". Do not run other commands in between: ",
+   {
+    "t": "code",
+    "v": "dbt compile"
+   },
+   " rewrites ",
+   {
+    "t": "code",
+    "v": "run_results.json"
+   },
+   " (retry then has nothing to do), and in our tests a ",
+   {
+    "t": "code",
+    "v": "dbt show"
+   },
+   " in between even made the retry crash."
+  ],
+  "where": [
+   "Chapter 24"
+  ]
+ },
+ {
+  "chapters": [
+   24
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "dbt retry"
+   },
+   " fixes the error for me.\""
+  ],
+  "id": "trap-143",
+  "n": 143,
+  "topic": "Topic 7: Leveraging dbt state",
+  "truth": [
+   "Retry runs the same code again. Fix the cause first (code, permissions, a missing table), then retry."
+  ],
+  "where": [
+   "Chapter 24"
+  ]
+ },
+ {
+  "chapters": [
+   24
+  ],
+  "confusion": [
+   "\"",
+   {
+    "t": "code",
+    "v": "result:error"
+   },
+   " works without anything else.\""
+  ],
+  "id": "trap-144",
+  "n": 144,
+  "topic": "Topic 7: Leveraging dbt state",
+  "truth": [
+   {
+    "t": "code",
+    "v": "result:"
+   },
+   " selectors read ",
+   {
+    "t": "code",
+    "v": "run_results.json"
+   },
+   " from the ",
+   {
+    "t": "code",
+    "v": "--state"
+   },
+   " folder (for example ",
+   {
+    "t": "code",
+    "v": "--state target"
+   },
+   "). ",
+   {
+    "t": "code",
+    "v": "source_status:fresher+"
+   },
+   " needs ",
+   {
+    "t": "code",
+    "v": "sources.json"
+   },
+   " from the previous and the current freshness runs."
+  ],
+  "where": [
+   "Chapter 24"
+  ]
+ },
+ {
+  "chapters": [
+   24,
+   25
+  ],
+  "confusion": [
+   "\"Slim CI means running the whole project in CI.\""
+  ],
+  "id": "trap-145",
+  "n": 145,
+  "topic": "Topic 7: Leveraging dbt state",
+  "truth": [
+   "Slim CI builds only what changed and its children: ",
+   {
+    "t": "code",
+    "v": "dbt build -s state:modified+ --defer --state <prod artifacts>"
+   },
+   "."
+  ],
+  "where": [
+   "Chapters 24 and 25"
+  ]
+ }
+]

@@ -1,0 +1,1818 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " It copies the site, compiles the project into ",
+     {
+      "t": "code",
+      "v": "manifest.json"
+     },
+     " and queries the warehouse into ",
+     {
+      "t": "code",
+      "v": "catalog.json"
+     },
+     ". A describes ",
+     {
+      "t": "code",
+      "v": "dbt docs serve"
+     },
+     " (trap T36). C: nothing is built; a missing table is simply missing from the catalog. D: the compile step and the catalog step both connect to the warehouse."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch20-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It starts a web server on port 8080 and opens your browser."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It writes ",
+     {
+      "t": "code",
+      "v": "index.html"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "manifest.json"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "catalog.json"
+     },
+     " into ",
+     {
+      "t": "code",
+      "v": "target/"
+     },
+     ", and builds no model."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It rebuilds every model first, so that the catalog is up to date."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It only reads the project files and never connects to the warehouse."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "You run ",
+     {
+      "t": "code",
+      "v": "dbt docs generate"
+     },
+     ". Which statement is true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The types are read from the warehouse. A: ",
+     {
+      "t": "code",
+      "v": "data_type"
+     },
+     " in YAML is used for contracts, not for the site's type column. C: compiled SQL is code, not types. D: descriptions are text you write."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch20-02",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "From the ",
+     {
+      "t": "code",
+      "v": "data_type"
+     },
+     " keys written in the properties YAML file."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "From ",
+     {
+      "t": "code",
+      "v": "catalog.json"
+     },
+     ", built by querying the warehouse metadata."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "From the compiled SQL stored in ",
+     {
+      "t": "code",
+      "v": "manifest.json"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "From the column descriptions."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "On the documentation site, where do the data types in the ",
+     {
+      "c": [
+       "Columns"
+      ],
+      "t": "i"
+     },
+     " section of a model come from?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "__overview__"
+       }
+      ],
+      "t": "b"
+     },
+     " (two underscores before and after). ",
+     {
+      "t": "code",
+      "v": "__<project_name>__"
+     },
+     " does the same for one package."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch20-03",
+  "key": {
+   "accepted": [
+    "__overview__"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{\\_\\_overview\\_\\_}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "To replace the default home page of the dbt docs site with your own text, you write a doc block named ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 10."
+      ],
+      "t": "b"
+     },
+     " The value starts with ",
+     {
+      "t": "code",
+      "v": "{"
+     },
+     ", so YAML reads an inline mapping and fails (\"found unhashable key\"). Write ",
+     {
+      "t": "code",
+      "v": "\"{{ doc('order_status') }}\""
+     },
+     ". Line 12 contains a colon followed by a space, but it is inside quotes, so it is fine."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch20-c60",
+   "lines": 12,
+   "numbering": "listing"
+  },
+  "id": "q-ch20-04",
+  "key": 10,
+  "keyRaw": "\\textbf{Line 10.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " fails on this file. Which line is the cause?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch20-c60",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "version: 2\n\nmodels:\n  - name: stg_jaffle_shop__orders\n    description: \"One row per order.\"\n    columns:\n      - name: order_id\n        description: Primary key of the order.\n      - name: status\n        description: {{ doc('order_status') }}\n      - name: loaded_at\n        description: \"When the row was loaded: UTC time.\""
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     " works for models, seeds and snapshots. B: it is not implemented for sources (dbt does not own raw tables). D and E: exposures and macros create no relation, so there is nothing to comment."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch20-05",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Models"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Sources"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Seeds"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Exposures"
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Macros"
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "For which two resource types can you configure ",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-a, 3-b, 4-d."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch20-06",
+  "key": {
+   "1": "c",
+   "2": "a",
+   "3": "b",
+   "4": "d"
+  },
+  "keyRaw": "\\textbf{1-c, 2-a, 3-b, 4-d.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--select"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--empty-catalog"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--static"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--no-compile"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "Writes an empty ",
+      {
+       "t": "code",
+       "v": "catalog.json"
+      },
+      " without running the metadata queries"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "Also writes one HTML file that contains the manifest and the catalog"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "Limits the catalog to the selected nodes; the manifest is not limited"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "Skips the compilation step"
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each flag of ",
+     {
+      "t": "code",
+      "v": "dbt docs generate"
+     },
+     " with its effect."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B, D, C, A, E."
+      ],
+      "t": "b"
+     },
+     " Write, build (so that the catalog sees every relation), generate, serve, look."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch20-07",
+  "key": [
+   "B",
+   "D",
+   "C",
+   "A",
+   "E"
+  ],
+  "keyRaw": "\\textbf{B, D, C, A, E.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Run ",
+     {
+      "t": "code",
+      "v": "dbt docs serve"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Write the descriptions and doc blocks."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Run ",
+     {
+      "t": "code",
+      "v": "dbt docs generate"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Run ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", so that every model exists in your target schema."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Open ",
+     {
+      "t": "code",
+      "v": "http://localhost:8080"
+     },
+     " in the browser."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "You changed descriptions and want to see the result on your laptop. Put the steps in order:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, NO, YES."
+      ],
+      "t": "b"
+     },
+     " Names cannot start with a digit. ",
+     {
+      "t": "code",
+      "v": "doc()"
+     },
+     " works only in ",
+     {
+      "t": "code",
+      "v": "description"
+     },
+     " fields of YAML files. Duplicate names are a compilation error in 1.11 (\"dbt found two docs with the name…\")."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch20-08",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": false,
+   "D": true
+  },
+  "keyRaw": "\\textbf{YES, NO, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A doc block must be written in a file with the ",
+     {
+      "t": "code",
+      "v": ".md"
+     },
+     " extension."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A doc block can be named ",
+     {
+      "t": "code",
+      "v": "2024_definitions"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "You can call ",
+     {
+      "t": "code",
+      "v": "doc()"
+     },
+     " inside a SQL model to insert the text as a SQL comment."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Two doc blocks with the same name in the same project cause a compilation error."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about doc blocks in dbt 1.11:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B (8080)."
+      ],
+      "t": "b"
+     },
+     " Change it with ",
+     {
+      "t": "code",
+      "v": "--port"
+     },
+     ". A and D are other common ports (5432 is PostgreSQL); C (8580) is the default of the new dbt Docs v2 of the Fusion engine, not of dbt Core 1.11."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch20-09",
+  "key": "B",
+  "keyRaw": "\\textbf{B (8080).}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "8000"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "8080"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "8580"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "5432"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "Without any flag, on which port does ",
+     {
+      "t": "code",
+      "v": "dbt docs serve"
+     },
+     " (dbt Core 1.11) start?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The YAML was read correctly (otherwise you would get a Parsing Error, as in A); then ",
+     {
+      "t": "code",
+      "v": "doc()"
+     },
+     " could not find the name. C: blocks are found in every resource folder, including ",
+     {
+      "t": "code",
+      "v": "models/"
+     },
+     ". D: ",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     " has nothing to do with resolving ",
+     {
+      "t": "code",
+      "v": "doc()"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch20-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The ",
+     {
+      "t": "code",
+      "v": "description"
+     },
+     " value is not between quotes."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "No doc block called ",
+     {
+      "t": "code",
+      "v": "order_statuses"
+     },
+     " exists in the ",
+     {
+      "t": "code",
+      "v": ".md"
+     },
+     " files that dbt reads."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The doc block is in ",
+     {
+      "t": "code",
+      "v": "models/docs.md"
+     },
+     " instead of a folder called ",
+     {
+      "t": "code",
+      "v": "docs/"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     " is not enabled for ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " prints:"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch20-c61",
+    "lang": "output",
+    "t": "code",
+    "text": "Compilation Error\n  Documentation for 'model.jaffle_dbt.fct_orders' depends on doc 'order_statuses'  which was not found"
+   },
+   {
+    "c": [
+     "What is the most likely cause?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "#"
+     },
+     " starts a YAML comment, so ",
+     {
+      "t": "code",
+      "v": "node_color"
+     },
+     " is ",
+     {
+      "t": "code",
+      "v": "null"
+     },
+     "; we observed exactly this, silently. A needs quotes (",
+     {
+      "t": "code",
+      "v": "\"#E65100\""
+     },
+     "). B: in block style the line is valid YAML. D: dbt does not guess colours."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch20-11",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The marts are orange in the lineage graph."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt docs generate"
+     },
+     " stops with a Parsing Error."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The value is read as ",
+     {
+      "t": "code",
+      "v": "null"
+     },
+     ": no error, and the marts keep the default colour."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt converts the code into the nearest colour name."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "A teammate writes this in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " and runs ",
+     {
+      "t": "code",
+      "v": "dbt docs generate"
+     },
+     ":"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch20-c62",
+    "lang": "yaml",
+    "t": "code",
+    "text": "    marts:\n      +docs:\n        node_color: #E65100"
+   },
+   {
+    "c": [
+     "What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Catalog reads metadata from jobs in the production or staging environment. A: CI jobs do not update Catalog. C: ",
+     {
+      "t": "code",
+      "v": "dbt docs serve"
+     },
+     " is not supported in the Studio IDE and has nothing to do with Catalog. D: descriptions are a main part of Catalog."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch20-12",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Right after the CI job, because it ran ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "After the next job run in the production (or staging) environment."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Only after someone runs ",
+     {
+      "t": "code",
+      "v": "dbt docs serve"
+     },
+     " in the Studio IDE."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Never: Catalog shows column types, not descriptions."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "Your company uses dbt Catalog. You merge a pull request that adds descriptions; the CI job of the pull request succeeded. When do the new descriptions appear in Catalog?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " With the checkbox, a docs failure does not fail the job. A: as a step, a failure fails the job (and skips later steps). C: ",
+     {
+      "t": "code",
+      "v": "serve"
+     },
+     " is a local development server. D: ",
+     {
+      "t": "code",
+      "v": "--empty-catalog"
+     },
+     " is a flag of ",
+     {
+      "t": "code",
+      "v": "dbt docs generate"
+     },
+     ", not of ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch20-13",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "dbt docs generate"
+     },
+     " as the last step of the job."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Tick ",
+     {
+      "c": [
+       "Generate docs on run"
+      ],
+      "t": "b"
+     },
+     " in the job's execution settings."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "dbt docs serve"
+     },
+     " as a step."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "--empty-catalog"
+     },
+     " to the ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " step."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "A production job runs ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ". The team wants documentation to be generated by the job, but a failure of the documentation step must not make the job fail. What do you do?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, YES, NO."
+      ],
+      "t": "b"
+     },
+     " With ",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     ", a description change makes the model modified (",
+     {
+      "t": "code",
+      "v": "state:modified.persisted_descriptions"
+     },
+     "), because the warehouse comment is now out of date; without it, nothing in the warehouse changes. Only a build rewrites the comment: ",
+     {
+      "t": "code",
+      "v": "dbt docs generate"
+     },
+     " never changes the warehouse."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch20-14",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": false
+  },
+  "keyRaw": "\\textbf{YES, NO, YES, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt ls --select state:modified --state <old>"
+     },
+     " lists ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The same command lists ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Until ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " is rebuilt, its table comment in the warehouse still shows the old description."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt docs generate"
+     },
+     " updates the table comment in the warehouse."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     " (relation and columns) is on for the marts only. You change ",
+     {
+      "c": [
+       "only"
+      ],
+      "t": "i"
+     },
+     " the descriptions of ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " (a mart) and of ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     " (staging), and compare with the manifest saved before the change."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "show"
+       }
+      ],
+      "t": "b"
+     },
+     " (default ",
+     {
+      "t": "code",
+      "v": "true"
+     },
+     "). The model is still built and still exists in the project."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch20-15",
+  "key": {
+   "accepted": [
+    "show"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{show}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "To hide a model from the navigation of the docs site, you set ",
+     {
+      "t": "code",
+      "v": "docs: {"
+     },
+     {
+      "t": "blank"
+     },
+     {
+      "t": "code",
+      "v": ": false}"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " The graph accepts the selection syntax and type filters. B, D, E: the docs site is read-only; it never runs or changes anything."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch20-16",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Type ",
+     {
+      "t": "code",
+      "v": "tag:finance"
+     },
+     " in the ",
+     {
+      "t": "code",
+      "v": "--select"
+     },
+     " box to show only the nodes with that tag."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Click a node to run that model in the warehouse."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Untick ",
+     {
+      "c": [
+       "Tests"
+      ],
+      "t": "b"
+     },
+     " in the ",
+     {
+      "c": [
+       "resources"
+      ],
+      "t": "b"
+     },
+     " filter to hide the test nodes."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Edit the SQL of a model and save it into the project."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Drag a node to change its materialization."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "In the full-screen lineage graph of the dbt docs site, which two actions are possible?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Sequential batches never change the table's catalog entry at the same time. A may hide the symptom (no description, no ",
+     {
+      "t": "code",
+      "v": "comment on table"
+     },
+     "), but it throws away documentation, and the conflict comes back as soon as someone adds a description or column descriptions; the cause, parallel batches, is still there. C: more threads means ",
+     {
+      "c": [
+       "more"
+      ],
+      "t": "i"
+     },
+     " parallel batches. D: more, smaller batches make conflicts more likely, not less."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch20-17",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Delete the model description, so that no comment is written."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Add ",
+     {
+      "t": "code",
+      "v": "concurrent_batches=False"
+     },
+     " to the model config."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Run with ",
+     {
+      "t": "code",
+      "v": "--threads 8"
+     },
+     ", so that each batch gets its own thread."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Change ",
+     {
+      "t": "code",
+      "v": "batch_size"
+     },
+     " from ",
+     {
+      "t": "code",
+      "v": "month"
+     },
+     " to ",
+     {
+      "t": "code",
+      "v": "day"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "On DuckDB, after you switch ",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     " on, a full refresh of a microbatch model ends with ",
+     {
+      "t": "code",
+      "v": "PARTIAL SUCCESS"
+     },
+     " and several ",
+     {
+      "t": "code",
+      "v": "Catalog write-write conflict"
+     },
+     " errors. What is the best permanent fix in the model?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Ephemeral models become CTEs inside other models; the warehouse has no relation to describe. A: undocumented models are still catalogued. C: access has no effect on the catalog. D: the catalog does not depend on ",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch20-18",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It has no description."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It is an ephemeral model, so no table or view exists in the warehouse."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It is private to the finance group, and the catalog skips private models."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt docs generate"
+     },
+     " only catalogs models with ",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "After ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "dbt docs generate"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "int_payments__successful"
+     },
+     " is in ",
+     {
+      "t": "code",
+      "v": "manifest.json"
+     },
+     " but not in ",
+     {
+      "t": "code",
+      "v": "catalog.json"
+     },
+     ". Why?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "meta"
+     },
+     " holds free keys and values, shown in the Details section. A: tags are a list of labels used for selection. C: ",
+     {
+      "t": "code",
+      "v": "docs"
+     },
+     " only has ",
+     {
+      "t": "code",
+      "v": "show"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "node_color"
+     },
+     ". D: ",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     " only has ",
+     {
+      "t": "code",
+      "v": "relation"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "columns"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch20-19",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "tags"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "meta"
+     },
+     " (under ",
+     {
+      "t": "code",
+      "v": "config:"
+     },
+     ")."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "docs"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 20,
+   "kind": "chapter",
+   "n": 19
+  },
+  "stem": [
+   {
+    "c": [
+     "Where do you put ",
+     {
+      "t": "code",
+      "v": "owner: finance-team"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "contains_pii: false"
+     },
+     " so that they appear in the ",
+     {
+      "c": [
+       "Details"
+      ],
+      "t": "i"
+     },
+     " section of a model page?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

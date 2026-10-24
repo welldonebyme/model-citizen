@@ -1,0 +1,6582 @@
+{
+ "id": "ch23",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "Understanding the failure points of a DAG: a missing or stale source, a model SQL error, a failing test, a failing hook, the warehouse (connection, lock, permissions, timeout), an upstream data change; what ",
+      {
+       "t": "code",
+       "v": "dbt run"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      " do next (",
+      {
+       "t": "code",
+       "v": "SKIP"
+      },
+      " downstream, independent branches continue), ",
+      {
+       "t": "code",
+       "v": "--fail-fast"
+      },
+      ", threads, node statuses and ",
+      {
+       "t": "code",
+       "v": "run_results.json"
+      },
+      "."
+     ],
+     "id": "4.1"
+    },
+    {
+     "c": [
+      "Using ",
+      {
+       "t": "code",
+       "v": "dbt clone"
+      },
+      ": what it creates (a zero-copy clone or a pointer view), ",
+      {
+       "t": "code",
+       "v": "--state"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "--full-refresh"
+      },
+      ", selection, use cases (CI with incremental models, blue/green deployment, development set-up), clone versus defer, costs."
+     ],
+     "id": "4.2"
+    },
+    {
+     "c": [
+      "Reading the logs of a failed pipeline: which node failed first, which were skipped, and why."
+     ],
+     "id": "3.1"
+    },
+    {
+     "c": [
+      "A production build with ",
+      {
+       "t": "code",
+       "v": "--target prod"
+      },
+      " and its artifacts (",
+      {
+       "t": "code",
+       "v": "manifest.json"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "run_results.json"
+      },
+      ")."
+     ],
+     "id": "1.4"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      {
+       "href": "/learn/ch22/",
+       "label": "ch:debugging",
+       "t": "ref",
+       "text": "Chapter 22"
+      },
+      " was about ",
+      {
+       "c": [
+        "one"
+       ],
+       "t": "i"
+      },
+      " error in ",
+      {
+       "c": [
+        "one"
+       ],
+       "t": "i"
+      },
+      " model. A real pipeline is a chain of dozens or hundreds of nodes that runs every night without you. When something breaks at 3 a.m., the questions are different: Which node failed first? What did dbt do with everything below it? Which dashboards show yesterday's numbers now? Can I re-run only what failed? Can I get production tables into my schema to investigate, without rebuilding everything?"
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "In this chapter you break the practice pipeline in the middle on purpose (a bad column, a failing test, a new status value in the raw data, a broken hook, a locked database) and watch exactly how dbt reacts. Then you build ",
+      {
+       "c": [
+        "production"
+       ],
+       "t": "i"
+      },
+      " for the first time with all its tests, keep its artifacts, and use ",
+      {
+       "t": "code",
+       "v": "dbt clone"
+      },
+      " to copy production objects into development. Along the way you will hit two real problems that the reference project hit, and fix one of them."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "For the exam, topic 4 (\"Troubleshooting and optimizing dbt pipelines\") has two objectives: failure points in the DAG and ",
+      {
+       "t": "code",
+       "v": "dbt clone"
+      },
+      ". The questions are concrete: \"model X fails, which nodes run?\", \"what does ",
+      {
+       "t": "code",
+       "v": "--fail-fast"
+      },
+      " change?\", \"what does ",
+      {
+       "t": "code",
+       "v": "dbt clone"
+      },
+      " create on Snowflake? on Postgres?\", \"clone or defer?\"."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "When a node fails, dbt marks it ",
+      {
+       "t": "code",
+       "v": "ERROR"
+      },
+      " (or ",
+      {
+       "t": "code",
+       "v": "FAIL"
+      },
+      " for a test), skips everything downstream of it, and keeps running every independent branch, unless you ask it to stop everything with ",
+      {
+       "t": "code",
+       "v": "--fail-fast"
+      },
+      ". The result of every node (",
+      {
+       "t": "code",
+       "v": "success"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "error"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "fail"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "warn"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "skipped"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "partial success"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "no-op"
+      },
+      "…) is written to ",
+      {
+       "t": "code",
+       "v": "target/run_results.json"
+      },
+      ", and the production run's artifacts are what later commands (clone, defer, retry, state) compare against. ",
+      {
+       "t": "code",
+       "v": "dbt clone"
+      },
+      " reads a state manifest and creates the selected models, seeds and snapshots in your target schema, as zero-copy clones of the production tables where the platform supports it (Snowflake, Databricks, BigQuery) or as views that point to the production objects elsewhere (DuckDB, Postgres)."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:pipelines-clone",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-pip-points"
+   ],
+   "checkpoints": [],
+   "id": "ch23-s1",
+   "label": "sec:pip-points",
+   "labs": [],
+   "minutes": 5,
+   "number": "23.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "blocks": [
+        {
+         "c": [
+          "Think of a car factory line. Parts arrive from suppliers (sources), stations assemble them step by step (models), and inspectors check the result at several points (tests). The line can stop because a supplier sends late or wrong parts, because one station is badly set up, because an inspector rejects a piece, because the electricity fails, or because the morning set-up routine (hooks) went wrong. A good factory knows which station stopped, and does not keep assembling cars on top of a broken piece."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "Here is our practice DAG (simplified) with the six kinds of ",
+        {
+         "en": [
+          "failure point"
+         ],
+         "fr": "point de défaillance",
+         "id": "term-failure-point",
+         "t": "term"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "The simplified practice DAG with six numbered failure points (red circles): 1 at source: orders (source missing or stale), 2 at int_…_pivoted (model SQL error), 3 at stg_…_orders (test failure), 4 at dim_customers (hook failure), 5 at fct_order_items (the warehouse) and 6 at source: orders again (upstream data change).",
+       "description": "Sources orders, payments and order_items feed stg_…_orders, stg_stripe__payments and stg_…_order_items. stg_…_orders and stg_stripe__payments feed int_orders__enriched; stg_stripe__payments also feeds int_…_pivoted. int_orders__enriched feeds fct_orders and fct_monthly_revenue; int_…_pivoted feeds fct_orders; stg_…_orders and stg_…_order_items feed fct_order_items; fct_orders feeds dim_customers. The meaning of the numbers is given in the table after the figure.",
+       "id": "ch23-fig1",
+       "src": "figures/ch23-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Failure point"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What you see"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Typical prevention / reaction"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "1"
+            ],
+            "t": "b"
+           },
+           " Source missing or stale"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "Catalog Error: Table … does not exist"
+           },
+           " in the first staging model; or ",
+           {
+            "t": "code",
+            "v": "ERROR STALE"
+           },
+           " in ",
+           {
+            "t": "code",
+            "v": "dbt source freshness"
+           }
+          ]
+         },
+         {
+          "c": [
+           "freshness checks before the build (",
+           {
+            "href": "/learn/ch21/",
+            "label": "ch:freshness-exposures",
+            "t": "ref",
+            "text": "Chapter 21"
+           },
+           "); source tests"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "2"
+            ],
+            "t": "b"
+           },
+           " Model SQL error"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ERROR"
+           },
+           " on the model, ",
+           {
+            "t": "code",
+            "v": "SKIP"
+           },
+           " on its descendants"
+          ]
+         },
+         {
+          "c": [
+           {
+            "href": "/learn/ch22/",
+            "label": "ch:debugging",
+            "t": "ref",
+            "text": "Chapter 22"
+           },
+           "; CI before merge"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "3"
+            ],
+            "t": "b"
+           },
+           " Test failure"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "FAIL"
+           },
+           " on the test; in ",
+           {
+            "t": "code",
+            "v": "dbt build"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "SKIP"
+           },
+           " below the tested node"
+          ]
+         },
+         {
+          "c": [
+           "fix the data or the logic; ",
+           {
+            "t": "code",
+            "v": "severity"
+           },
+           ", thresholds (",
+           {
+            "href": "/learn/ch18/",
+            "label": "ch:data-tests",
+            "t": "ref",
+            "text": "Chapter 18"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "4"
+            ],
+            "t": "b"
+           },
+           " Hook failure"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ERROR hook: jaffle_dbt.on-run-start.0"
+           },
+           " or a model error from its pre/post-hook"
+          ]
+         },
+         {
+          "c": [
+           "test hooks in development; ",
+           {
+            "t": "code",
+            "v": "skip_nodes_if_on_run_start_fails"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "5"
+            ],
+            "t": "b"
+           },
+           " The warehouse"
+          ]
+         },
+         {
+          "c": [
+           "connection error, lock, permission denied, timeout, out of memory or quota (exit code 2 or a database error)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt debug"
+           },
+           ", retries, bigger warehouse, fewer threads"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "6"
+            ],
+            "t": "b"
+           },
+           " Upstream data change"
+          ]
+         },
+         {
+          "c": [
+           "a new value, a renamed or removed column, duplicates in a key: tests fail or SQL errors appear without any code change"
+          ]
+         },
+         {
+          "c": [
+           "tests on sources and staging; contracts; talk to the source owners"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Points 2 to 6 are demonstrated in this chapter with real runs. Point 1 was covered with source freshness in ",
+        {
+         "href": "/learn/ch21/",
+         "label": "ch:freshness-exposures",
+         "t": "ref",
+         "text": "Chapter 21"
+        },
+        ". Remember the words ",
+        {
+         "en": [
+          "upstream"
+         ],
+         "fr": "en amont",
+         "id": "term-upstream",
+         "t": "term"
+        },
+        " (the parents, towards the sources) and ",
+        {
+         "en": [
+          "downstream"
+         ],
+         "fr": "en aval",
+         "id": "term-downstream",
+         "t": "term"
+        },
+        " (the children, towards the dashboards): a failure always hurts what is ",
+        {
+         "c": [
+          "downstream"
+         ],
+         "t": "i"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch23-s1-0",
+     "title": [
+      "Where a pipeline can break"
+     ],
+     "titleText": "Where a pipeline can break"
+    }
+   ],
+   "title": [
+    "Where a pipeline can break"
+   ],
+   "titleText": "Where a pipeline can break"
+  },
+  {
+   "anchors": [
+    "sec-pip-failures",
+    "sec-pip-model-fails",
+    "sec-pip-data-change",
+    "sec-pip-failfast",
+    "sec-pip-threads",
+    "sec-pip-hooks",
+    "sec-pip-warehouse",
+    "lab-pip-break",
+    "lab-pip-data-hooks"
+   ],
+   "checkpoints": [],
+   "id": "ch23-s2",
+   "label": "sec:pip-failures",
+   "labs": [
+    "ch23-lab1",
+    "ch23-lab2"
+   ],
+   "minutes": 45,
+   "number": "23.2",
+   "objectives": [
+    "3.1",
+    "3.5",
+    "4.1",
+    "5.2"
+   ],
+   "steps": [
+    {
+     "anchor": "sec-pip-model-fails",
+     "blocks": [
+      {
+       "c": [
+        "We broke ",
+        {
+         "t": "code",
+         "v": "int_orders__payment_methods_pivoted"
+        },
+        ", a model in the middle of the DAG:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c1",
+       "lang": "plain",
+       "t": "code",
+       "text": "--- a/models/intermediate/int_orders__payment_methods_pivoted.sql\n+++ b/models/intermediate/int_orders__payment_methods_pivoted.sql\n     select\n-        order_id,\n+        order_idd as order_id,",
+       "title": "git diff (demo, reverted afterwards)"
+      },
+      {
+       "c": [
+        "Its descendants are ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        ", then ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " (versions 1 and 2), then ",
+        {
+         "t": "code",
+         "v": "customer_segments"
+        },
+        ". The models ",
+        {
+         "t": "code",
+         "v": "fct_monthly_revenue"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "fct_order_items"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "fct_order_items_daily"
+        },
+        " do not depend on it."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c2",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:23:56  7 of 14 START sql view model dbt_adnane.int_orders__enriched ................... [RUN]\n22:23:56  8 of 14 START sql view model dbt_adnane.int_orders__payment_methods_pivoted .... [RUN]\n22:23:56  6 of 14 OK created sql table model dbt_adnane.fct_order_items .................. [OK in 0.11s]\n22:23:56  9 of 14 START sql microbatch model dbt_adnane.fct_order_items_daily ............ [RUN]\n22:23:56  7 of 14 OK created sql view model dbt_adnane.int_orders__enriched .............. [OK in 0.07s]\n22:23:56  8 of 14 ERROR creating sql view model dbt_adnane.int_orders__payment_methods_pivoted  [ERROR in 0.07s]\n22:23:56  10 of 14 START sql table model dbt_adnane.fct_monthly_revenue .................. [RUN]\n22:23:56  11 of 14 SKIP relation dbt_adnane.fct_orders ................................... [SKIP]\n22:23:56  12 of 14 SKIP relation dbt_adnane.dim_customers ................................ [SKIP]\n22:23:56  13 of 14 SKIP relation dbt_adnane.dim_customers ................................ [SKIP]\n22:23:56  14 of 14 SKIP relation dbt_adnane.customer_segments ............................ [SKIP]\n...\n22:23:56  10 of 14 OK created sql table model dbt_adnane.fct_monthly_revenue ............. [OK in 0.06s]\n22:23:56  9 of 14 OK created sql microbatch model dbt_adnane.fct_order_items_daily ....... [SUCCESS in 0.12s]\n...\n22:23:56    Runtime Error in model int_orders__payment_methods_pivoted (models/intermediate/int_orders__payment_methods_pivoted.sql)\n  Binder Error: Referenced column \"order_idd\" not found in FROM clause!\n  Candidate bindings: \"order_id\", \"payment_id\", \"created_at\", \"payment_method\"\n\n  LINE 42:         order_idd as order_id,\n...\n22:23:56  Done. PASS=9 WARN=0 ERROR=1 SKIP=4 NO-OP=0 TOTAL=14",
+       "title": "Result: dbt run (dev, extract)"
+      },
+      {
+       "c": [
+        "Read it as a story:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "The pivot model fails (",
+            {
+             "t": "code",
+             "v": "ERROR"
+            },
+            "). Its four descendants are immediately marked ",
+            {
+             "t": "code",
+             "v": "SKIP"
+            },
+            ": dbt does not even try them, because they would read a missing or outdated parent. (The two ",
+            {
+             "t": "code",
+             "v": "dim_customers"
+            },
+            " lines are the two versions, v1 and v2.)"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "fct_monthly_revenue"
+            },
+            " ",
+            {
+             "c": [
+              "starts after"
+             ],
+             "t": "i"
+            },
+            " the error and succeeds: it is on an independent branch. ",
+            {
+             "t": "code",
+             "v": "fct_order_items"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "fct_order_items_daily"
+            },
+            " also finish. dbt keeps working wherever it can. (With 4 threads the order of the lines changes from one run to the next; in our replay ",
+            {
+             "t": "code",
+             "v": "fct_monthly_revenue"
+            },
+            " started just before the error. The counters stay the same.)"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "Done. PASS=9 WARN=0 ERROR=1 SKIP=4"
+            },
+            ": 9 + 1 + 4 = 14 models. Exit code 1."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "LINE 42"
+            },
+            " while the model file has 25 lines: the compiled SQL starts with the CTE of the ephemeral model ",
+            {
+             "t": "code",
+             "v": "int_payments__successful"
+            },
+            " (",
+            {
+             "t": "code",
+             "v": "__dbt__cte__…"
+            },
+            ", ",
+            {
+             "href": "/learn/ch08/",
+             "label": "ch:materializations",
+             "t": "ref",
+             "text": "Chapter 8"
+            },
+            "). Another reason to read ",
+            {
+             "t": "code",
+             "v": "target/compiled"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "target/run"
+            },
+            ", not your file, when you follow a line number."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "What about the ",
+        {
+         "c": [
+          "old"
+         ],
+         "t": "i"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " table in the warehouse? It is still there, unchanged: a skipped model is not dropped. Dashboards keep showing the data of the last successful run. This is usually what you want (stale but correct numbers instead of no numbers), but it is also why a failed run can go unnoticed: always alert on failed jobs. In the same way, there is no big transaction around the whole command: each model is built and committed on its own, so the 9 models that succeeded stay built, and nothing is \"undone\" because another node failed."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "One failure does not stop the whole run"
+           ],
+           "t": "b"
+          },
+          " (trap T113). By default dbt skips only the ",
+          {
+           "c": [
+            "descendants"
+           ],
+           "t": "i"
+          },
+          " of the failed node; every independent branch continues. Exam options like \"dbt stops at the first error\" or \"dbt continues and builds ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " with the old pivot\" are both wrong. To stop everything at the first failure, use ",
+          {
+           "t": "code",
+           "v": "--fail-fast"
+          },
+          " (",
+          {
+           "href": "/learn/ch23/ch23-s2/#sec-pip-failfast",
+           "label": "sec:pip-failfast",
+           "t": "ref",
+           "text": "Section 23.2.4"
+          },
+          ")."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch23-s2-1",
+     "number": "23.2.1",
+     "title": [
+      "A model fails in the middle: dbt run"
+     ],
+     "titleText": "A model fails in the middle: dbt run"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " runs models ",
+        {
+         "c": [
+          "and"
+         ],
+         "t": "i"
+        },
+        " their tests, seeds, snapshots and unit tests, in DAG order. The same broken pivot model gives:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c3",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:24:04  41 of 64 ERROR creating sql view model dbt_adnane.int_orders__payment_methods_pivoted  [ERROR in 0.10s]\n...\n22:24:04  48 of 64 SKIP relation dbt_adnane.fct_orders ................................... [SKIP]\n22:24:04  50 of 64 SKIP test assert_paid_orders_match_items .............................. [SKIP]\n22:24:04  51 of 64 SKIP test assert_payments_match_order_totals .......................... [SKIP]\n...\n22:24:04  59 of 64 SKIP exposure monthly_revenue_dashboard ............................... [SKIP]\n...\n22:24:04  64 of 64 SKIP test unique_customer_segments_customer_id ........................ [SKIP]\n...\n22:24:04  Done. PASS=47 WARN=1 ERROR=1 SKIP=15 NO-OP=0 TOTAL=64",
+       "title": "Result: dbt build --exclude-resource-type unit_test (extract)"
+      },
+      {
+       "c": [
+        "Now 15 nodes are skipped: the 4 models, their 9 tests, and the two exposures (an exposure that depends on a skipped model is skipped too, instead of the usual ",
+        {
+         "t": "code",
+         "v": "NO-OP"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The big difference between ",
+        {
+         "t": "code",
+         "v": "run"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "build"
+        },
+        " appears when a ",
+        {
+         "c": [
+          "test"
+         ],
+         "t": "i"
+        },
+        " fails. We added a singular test on ",
+        {
+         "t": "code",
+         "v": "int_orders__enriched"
+        },
+        " that always fails (",
+        {
+         "t": "code",
+         "v": "select * from {{ ref('int_orders__enriched') }} where order_id = 1"
+        },
+        "). The first try did not even parse:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c4",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "Parsing Error\n  Node test.jaffle_dbt.demo_enriched_orders_fail attempted to reference node model.jaffle_dbt.int_orders__enriched, which is not allowed because the referenced node is private to the 'finance' group."
+      },
+      {
+       "c": [
+        "A singular test is a node too, and the access rules of ",
+        {
+         "href": "/learn/ch17/",
+         "label": "ch:governance",
+         "t": "ref",
+         "text": "Chapter 17"
+        },
+        " apply to it: ",
+        {
+         "t": "code",
+         "v": "int_orders__enriched"
+        },
+        " is ",
+        {
+         "t": "code",
+         "v": "private"
+        },
+        " to the ",
+        {
+         "t": "code",
+         "v": "finance"
+        },
+        " group. Fix: put the test in the group with ",
+        {
+         "t": "code",
+         "v": "{{ config(group='finance') }}"
+        },
+        " at the top of the file. Then:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt run"
+            },
+            " does not run tests, so it built all 14 models: ",
+            {
+             "t": "code",
+             "v": "Done. PASS=14 WARN=0 ERROR=0 SKIP=0"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            " ran the test right after ",
+            {
+             "t": "code",
+             "v": "int_orders__enriched"
+            },
+            ", and the failure stopped everything below:"
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "id": "ch23-c5",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:24:29  40 of 65 OK created sql view model dbt_adnane.int_orders__enriched ............. [OK in 0.06s]\n22:24:29  42 of 65 START test demo_enriched_orders_fail .................................. [RUN]\n22:24:29  42 of 65 FAIL 1 demo_enriched_orders_fail ...................................... [FAIL 1 in 0.04s]\n22:24:29  48 of 65 SKIP relation dbt_adnane.fct_monthly_revenue .......................... [SKIP]\n...\n22:24:30  61 of 65 OK created sql microbatch model dbt_adnane.fct_order_items_daily ...... [SUCCESS in 0.07s]\n...\n22:24:30  Failure in test demo_enriched_orders_fail (tests/demo_enriched_orders_fail.sql)\n22:24:30    Got 1 result, configured to fail if != 0\n...\n22:24:30  Done. PASS=46 WARN=1 ERROR=1 SKIP=17 NO-OP=0 TOTAL=65",
+       "title": "Result: dbt build --exclude-resource-type unit_test with the failing test (extract)"
+      },
+      {
+       "c": [
+        "The view ",
+        {
+         "t": "code",
+         "v": "int_orders__enriched"
+        },
+        " itself was built (",
+        {
+         "t": "code",
+         "v": "OK"
+        },
+        "): the test runs ",
+        {
+         "c": [
+          "after"
+         ],
+         "t": "i"
+        },
+        " its model. But ",
+        {
+         "t": "code",
+         "v": "fct_monthly_revenue"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " and everything below them were skipped (17 nodes), while ",
+        {
+         "t": "code",
+         "v": "fct_order_items_daily"
+        },
+        ", on another branch, was built. Notice also that the summary line counts a failed test in ",
+        {
+         "t": "code",
+         "v": "ERROR=1"
+        },
+        ": the counters do not have a separate ",
+        {
+         "t": "code",
+         "v": "FAIL"
+        },
+        " column."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Event"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "dbt run"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "dbt build"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "A model errors"
+          ]
+         },
+         {
+          "c": [
+           "descendants ",
+           {
+            "t": "code",
+            "v": "SKIP"
+           },
+           ", other branches run"
+          ]
+         },
+         {
+          "c": [
+           "the same (plus the tests of the skipped nodes)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "A test fails (severity ",
+           {
+            "t": "code",
+            "v": "error"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "tests are not run"
+          ]
+         },
+         {
+          "c": [
+           "descendants of the tested node ",
+           {
+            "t": "code",
+            "v": "SKIP"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "A test warns (severity ",
+           {
+            "t": "code",
+            "v": "warn"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "warn_if"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "tests are not run"
+          ]
+         },
+         {
+          "c": [
+           "nothing is skipped; exit code 0"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "A unit test fails"
+          ]
+         },
+         {
+          "c": [
+           "not run"
+          ]
+         },
+         {
+          "c": [
+           "the model it tests is ",
+           {
+            "t": "code",
+            "v": "SKIP"
+           },
+           ", and its descendants too"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "A test cannot run (its SQL is wrong)"
+          ]
+         },
+         {
+          "c": [
+           "not run"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ERROR"
+           },
+           ", whatever its ",
+           {
+            "t": "code",
+            "v": "severity"
+           },
+           "; descendants ",
+           {
+            "t": "code",
+            "v": "SKIP"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "A microbatch model ends with ",
+           {
+            "t": "code",
+            "v": "PARTIAL SUCCESS"
+           }
+          ]
+         },
+         {
+          "c": [
+           "descendants ",
+           {
+            "t": "code",
+            "v": "SKIP"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the same"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            " is stricter than ",
+            {
+             "t": "code",
+             "v": "dbt run"
+            },
+            " + ",
+            {
+             "t": "code",
+             "v": "dbt test"
+            }
+           ],
+           "t": "b"
+          },
+          " (trap T30). With ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          " then ",
+          {
+           "t": "code",
+           "v": "dbt test"
+          },
+          ", every model is built first, even on top of bad data, and the tests only report it afterwards. With ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          ", a failing test is a ",
+          {
+           "c": [
+            "gate"
+           ],
+           "t": "i"
+          },
+          ": the nodes downstream are not built, so bad data does not spread to the marts. A ",
+          {
+           "t": "code",
+           "v": "warn"
+          },
+          " never closes the gate. Remember the multi-parent rule of ",
+          {
+           "href": "/learn/ch18/",
+           "label": "ch:data-tests",
+           "t": "ref",
+           "text": "Chapter 18"
+          },
+          ": a test with two parents (like ",
+          {
+           "t": "code",
+           "v": "relationships"
+          },
+          ") only blocks the nodes that depend on ",
+          {
+           "c": [
+            "all"
+           ],
+           "t": "i"
+          },
+          " its parents."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch23-s2-2",
+     "number": "23.2.2",
+     "title": [
+      "The same failure in dbt build: tests are gates"
+     ],
+     "titleText": "The same failure in dbt build: tests are gates"
+    },
+    {
+     "anchor": "sec-pip-data-change",
+     "blocks": [
+      {
+       "c": [
+        "The most frequent production failure has nothing to do with your code. One morning the shop application starts to write a new order status, ",
+        {
+         "t": "code",
+         "v": "cancelled"
+        },
+        ". We simulated it with one row in the raw table (and deleted it afterwards):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c6",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ duckdb ../practice/practice.duckdb -c \"insert into jaffle_shop.orders values (999, 1, date '2026-10-20', 'cancelled', current_timestamp)\"\n$ dbt build -s stg_jaffle_shop__orders+"
+      },
+      {
+       "id": "ch23-c7",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:25:43  1 of 35 OK created sql view model dbt_adnane.stg_jaffle_shop__orders ........... [OK in 0.05s]\n22:25:43  2 of 35 FAIL 1 accepted_values_stg_jaffle_shop__orders_status__placed__shipped__completed__return_pending__returned  [FAIL 1 in 0.05s]\n22:25:43  5 of 35 WARN 1 relationships_stg_jaffle_shop__orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_  [WARN 1 in 0.05s]\n22:25:43  7 of 35 SKIP relation dbt_adnane.fct_order_items ............................... [SKIP]\n22:25:43  8 of 35 SKIP relation dbt_adnane.int_orders__enriched .......................... [SKIP]\n...\n22:25:43  Done. PASS=4 WARN=1 ERROR=1 SKIP=29 NO-OP=0 TOTAL=35",
+       "title": "Result (extract)"
+      },
+      {
+       "c": [
+        "The ",
+        {
+         "t": "code",
+         "v": "accepted_values"
+        },
+        " test on the staging model stopped 29 nodes, before any mart could count the new orders wrongly. To see ",
+        {
+         "c": [
+          "what"
+         ],
+         "t": "i"
+        },
+        " failed, ",
+        {
+         "t": "code",
+         "v": "dbt show"
+        },
+        " runs the query of the test and prints the failing rows:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c8",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt show -s accepted_values_stg_jaffle_shop__orders_status__\\\nplaced__shipped__completed__return_pending__returned"
+      },
+      {
+       "c": [
+        "(The backslash at the end of the first line continues the name on the next line; the shell joins the two parts.)"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c9",
+       "lang": "output",
+       "t": "code",
+       "text": "| value_field | n_records |\n| ----------- | --------- |\n| cancelled   |         1 |",
+       "title": "Result (end)"
+      },
+      {
+       "c": [
+        "Now it is a business decision, not a dbt one. If ",
+        {
+         "t": "code",
+         "v": "cancelled"
+        },
+        " is a real new status, add it to the list of accepted values (and check how the marts should treat it: is a cancelled order revenue?). If it is a bug in the application, ask the source team to fix it. In both cases, the test did its job: it caught the change at the entrance of the pipeline. After deleting the row, ",
+        {
+         "t": "code",
+         "v": "dbt build -s stg_jaffle_shop__orders+"
+        },
+        " passed again: ",
+        {
+         "t": "code",
+         "v": "Done. PASS=32 WARN=1 ERROR=0 SKIP=0 NO-OP=2 TOTAL=35"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Other upstream changes that break pipelines: a column renamed or removed in the source (the staging model gets a database error), a primary key that suddenly has duplicates (a ",
+          {
+           "t": "code",
+           "v": "unique"
+          },
+          " test fails, or worse, a join multiplies rows silently), a type change (a number arrives as text). Tests and constraints on sources and staging models catch most of them. Model contracts (",
+          {
+           "href": "/learn/ch17/",
+           "label": "ch:governance",
+           "t": "ref",
+           "text": "Chapter 17"
+          },
+          ") protect the ",
+          {
+           "c": [
+            "other"
+           ],
+           "t": "i"
+          },
+          " direction: what your marts promise to their consumers."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch23-s2-3",
+     "number": "23.2.3",
+     "title": [
+      "The data changes, the code does not"
+     ],
+     "titleText": "The data changes, the code does not"
+    },
+    {
+     "anchor": "sec-pip-failfast",
+     "blocks": [
+      {
+       "c": [
+        {
+         "en": [
+          "Fail fast"
+         ],
+         "fr": "arrêt au premier échec",
+         "id": "term-fail-fast",
+         "t": "term"
+        },
+        " means: as soon as one node fails, stop the whole command. Use it when continuing makes no sense (a CI check where one failure already means \"red\") or costs too much (a huge warehouse bill for models that will be rebuilt anyway). The same broken pivot model, with ",
+        {
+         "t": "code",
+         "v": "-x"
+        },
+        " / ",
+        {
+         "t": "code",
+         "v": "--fail-fast"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c10",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:23:59  8 of 14 ERROR creating sql view model dbt_adnane.int_orders__payment_methods_pivoted  [ERROR in 0.07s]\n22:23:59  CANCEL query model.jaffle_dbt.fct_order_items_daily ............................ [CANCEL]\n22:23:59  CANCEL query model.jaffle_dbt.fct_order_items .................................. [CANCEL]\n22:23:59  CANCEL query model.jaffle_dbt.int_orders__enriched ............................. [CANCEL]\n22:23:59  CANCEL query model.jaffle_dbt.int_orders__payment_methods_pivoted .............. [CANCEL]\n22:23:59  Batch 1 of 2 OK created batch 2026-09 of dbt_adnane.fct_order_items_daily ............ [OK in 0.07s]\n22:23:59  9 of 14 PARTIALLY created sql microbatch model dbt_adnane.fct_order_items_daily  [PARTIAL SUCCESS (1/2) in 0.08s]\n...\n22:23:59  Done. PASS=7 WARN=0 ERROR=1 SKIP=7 NO-OP=0 TOTAL=15",
+       "title": "Result: dbt run --fail-fast (extract)"
+      },
+      {
+       "c": [
+        "With 4 threads, other nodes were running when the pivot failed. dbt sends a ",
+        {
+         "t": "code",
+         "v": "CANCEL"
+        },
+        " for the open queries and starts nothing new: ",
+        {
+         "t": "code",
+         "v": "fct_monthly_revenue"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " and the rest never start and count as ",
+        {
+         "t": "code",
+         "v": "SKIP"
+        },
+        " (7 instead of 4). The microbatch model was in the middle of its batches: one batch finished, the other was cancelled, hence ",
+        {
+         "t": "code",
+         "v": "PARTIAL SUCCESS (1/2)"
+        },
+        ". Compare with the run without the flag: there, ",
+        {
+         "t": "code",
+         "v": "fct_monthly_revenue"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "fct_order_items_daily"
+        },
+        " were complete. (With ",
+        {
+         "t": "code",
+         "v": "--fail-fast"
+        },
+        " the summary lines above ",
+        {
+         "t": "code",
+         "v": "Done"
+        },
+        " can look strange, for example ",
+        {
+         "t": "code",
+         "v": "Completed with 8 errors"
+        },
+        ", because cancelled queries are reported too; trust the ",
+        {
+         "t": "code",
+         "v": "Done"
+        },
+        " line and ",
+        {
+         "t": "code",
+         "v": "run_results.json"
+        },
+        ". And ",
+        {
+         "t": "code",
+         "v": "TOTAL=15"
+        },
+        " for 14 models: after a ",
+        {
+         "t": "code",
+         "v": "--fail-fast"
+        },
+        " stop, ",
+        {
+         "t": "code",
+         "v": "run_results.json"
+        },
+        " also lists the ephemeral ",
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        " as ",
+        {
+         "t": "code",
+         "v": "skipped"
+        },
+        ", with the message ",
+        {
+         "t": "code",
+         "v": "Skipping due to fail_fast"
+        },
+        ".)"
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "--fail-fast"
+            },
+            " does not \"skip the failed model and continue\""
+           ],
+           "t": "b"
+          },
+          " (trap T112): it stops the whole invocation. It also does not change the DAG order or the threads; it only stops starting new nodes and cancels the running ones. Set it per command (",
+          {
+           "t": "code",
+           "v": "-x"
+          },
+          "), per environment (",
+          {
+           "t": "code",
+           "v": "DBT_FAIL_FAST=true"
+          },
+          ") or for the whole project (",
+          {
+           "t": "code",
+           "v": "fail_fast: true"
+          },
+          " under ",
+          {
+           "t": "code",
+           "v": "flags:"
+          },
+          ", ",
+          {
+           "href": "/learn/ch22/",
+           "label": "ch:debugging",
+           "t": "ref",
+           "text": "Chapter 22"
+          },
+          ")."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch23-s2-4",
+     "number": "23.2.4",
+     "title": [
+      "--fail-fast: stop everything at the first failure"
+     ],
+     "titleText": "--fail-fast: stop everything at the first failure"
+    },
+    {
+     "anchor": "sec-pip-threads",
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "c": [
+          "thread"
+         ],
+         "t": "b"
+        },
+        " is one worker that builds one node at a time. With ",
+        {
+         "t": "code",
+         "v": "threads: 4"
+        },
+        " in the profile (or ",
+        {
+         "t": "code",
+         "v": "--threads 4"
+        },
+        "), dbt builds up to 4 nodes in parallel, ",
+        {
+         "c": [
+          "but only nodes whose parents are finished"
+         ],
+         "t": "i"
+        },
+        ". More threads never change the order of a chain:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c11",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt run -s +fct_orders --threads 1"
+      },
+      {
+       "id": "ch23-c12",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:26:08  Concurrency: 1 threads (target='dev')\n22:26:08  1 of 6 START sql view model dbt_adnane.stg_jaffle_shop__customers .............. [RUN]\n22:26:08  2 of 6 START sql view model dbt_adnane.stg_jaffle_shop__orders ................. [RUN]\n22:26:08  3 of 6 START sql view model dbt_adnane.stg_stripe__payments .................... [RUN]\n22:26:08  4 of 6 START sql view model dbt_adnane.int_orders__enriched .................... [RUN]\n22:26:08  5 of 6 START sql view model dbt_adnane.int_orders__payment_methods_pivoted ..... [RUN]\n22:26:09  6 of 6 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]",
+       "title": "Result (START lines)"
+      },
+      {
+       "c": [
+        "With one thread the nodes run one after the other, still parents first. With 4 threads the three staging views start together, and ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " still waits for both intermediate models. Threads change ",
+        {
+         "c": [
+          "speed"
+         ],
+         "t": "i"
+        },
+        " (and the load on the warehouse), not ",
+        {
+         "c": [
+          "results"
+         ],
+         "t": "i"
+        },
+        ". Too many threads can hurt: a small warehouse queues the queries, and some platforms limit concurrent queries. On DuckDB all threads share one file and one process; in Chapter 20 the parallel batches of the microbatch model even fought over the same table, which is why ",
+        {
+         "t": "code",
+         "v": "concurrent_batches=False"
+        },
+        " is in the project."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "More threads do not change the DAG"
+           ],
+           "t": "b"
+          },
+          " (trap T114). The number of threads is a parallelism limit, set in ",
+          {
+           "t": "code",
+           "v": "profiles.yml"
+          },
+          " (per target) or with ",
+          {
+           "t": "code",
+           "v": "--threads"
+          },
+          "; in the dbt platform it is a setting of the job or of your development credentials. Dependencies are always respected, whatever the number of threads."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch23-s2-5",
+     "number": "23.2.5",
+     "title": [
+      "Threads and order"
+     ],
+     "titleText": "Threads and order"
+    },
+    {
+     "anchor": "sec-pip-hooks",
+     "blocks": [
+      {
+       "c": [
+        "Hooks are SQL that dbt runs around the models (",
+        {
+         "href": "/learn/ch10/",
+         "label": "ch:configuration",
+         "t": "ref",
+         "text": "Chapter 10"
+        },
+        "): ",
+        {
+         "t": "code",
+         "v": "pre-hook"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "post-hook"
+        },
+        " for each model, ",
+        {
+         "t": "code",
+         "v": "on-run-start"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "on-run-end"
+        },
+        " once per command. They can fail like any SQL. We added a broken ",
+        {
+         "t": "code",
+         "v": "on-run-start"
+        },
+        " to ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        " for a moment:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c13",
+       "lang": "yaml",
+       "t": "code",
+       "text": "on-run-start:\n  - \"select * from table_that_does_not_exist\"",
+       "title": "dbt_project.yml (demo, removed afterwards)"
+      },
+      {
+       "c": [
+        "Our project has ",
+        {
+         "t": "code",
+         "v": "skip_nodes_if_on_run_start_fails: true"
+        },
+        " (",
+        {
+         "href": "/learn/ch22/",
+         "label": "ch:debugging",
+         "t": "ref",
+         "text": "Chapter 22"
+        },
+        "), so:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c14",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:24:41  1 of 1 START hook: jaffle_dbt.on-run-start.0 ................................... [RUN]\n22:24:41  1 of 1 ERROR hook: jaffle_dbt.on-run-start.0 ................................... [ERROR in 0.01s]\n22:24:41\n22:24:41  1 of 2 SKIP relation dbt_adnane.stg_jaffle_shop__orders ........................ [SKIP]\n22:24:41  2 of 2 SKIP relation dbt_adnane.stg_jaffle_shop__customers ..................... [SKIP]\n...\n22:24:41  Failure in operation jaffle_dbt-on-run-start-0 (./dbt_project.yml)\n22:24:41    jaffle_dbt.on-run-start.0 failed, error:\n Catalog Error: Table with name table_that_does_not_exist does not exist!\n...\n22:24:41  Done. PASS=0 WARN=0 ERROR=1 SKIP=2 NO-OP=0 TOTAL=3",
+       "title": "Result: dbt run -s stg_jaffle_shop__orders stg_jaffle_shop__customers (flag true)"
+      },
+      {
+       "c": [
+        "With the flag set to ",
+        {
+         "t": "code",
+         "v": "false"
+        },
+        " (the default of dbt 1.11), the same command reported the hook error and ",
+        {
+         "c": [
+          "built both models anyway"
+         ],
+         "t": "i"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "Done. PASS=2 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=3"
+        },
+        ", exit code 1 in both cases. If your ",
+        {
+         "t": "code",
+         "v": "on-run-start"
+        },
+        " prepares something the models need (a schema, a function, a permission), ",
+        {
+         "t": "code",
+         "v": "true"
+        },
+        " is the safe choice; that is why it becomes the default in 1.12."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "A broken ",
+        {
+         "t": "code",
+         "v": "on-run-end"
+        },
+        " runs after the models: they were built, the hook failed, and the command still ends with exit code 1 (",
+        {
+         "t": "code",
+         "v": "Done. PASS=1 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=2"
+        },
+        "). For a scheduler, the job failed, even though the data is fine. The other way round, ",
+        {
+         "t": "code",
+         "v": "on-run-end"
+        },
+        " hooks run at the end of the command ",
+        {
+         "c": [
+          "even when nodes failed"
+         ],
+         "t": "i"
+        },
+        ": with a broken test (status ",
+        {
+         "t": "code",
+         "v": "error"
+        },
+        ") in the same ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        ", our valid ",
+        {
+         "t": "code",
+         "v": "on-run-end"
+        },
+        " hook still printed ",
+        {
+         "t": "code",
+         "v": "OK hook: jaffle_dbt.on-run-end.0"
+        },
+        ". A failing ",
+        {
+         "t": "code",
+         "v": "post-hook"
+        },
+        " of a model is an error ",
+        {
+         "c": [
+          "of that model"
+         ],
+         "t": "i"
+        },
+        ": the model gets ",
+        {
+         "t": "code",
+         "v": "ERROR"
+        },
+        ", its transaction is rolled back, and its children are skipped. You will meet exactly this case with ",
+        {
+         "t": "code",
+         "v": "dbt clone"
+        },
+        " in ",
+        {
+         "href": "/learn/ch23/ch23-s5/",
+         "label": "sec:pip-clone",
+         "t": "ref",
+         "text": "Section 23.5"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch23-s2-6",
+     "number": "23.2.6",
+     "title": [
+      "Hooks that fail"
+     ],
+     "titleText": "Hooks that fail"
+    },
+    {
+     "anchor": "sec-pip-warehouse",
+     "blocks": [
+      {
+       "c": [
+        "Some failures are outside your project: the network, the credentials, the warehouse. On DuckDB the classic one is the file lock (",
+        {
+         "href": "/learn/ch06/",
+         "label": "ch:first-project",
+         "t": "ref",
+         "text": "Chapter 6"
+        },
+        "). We held the database open in another process and ran a model:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c15",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:25:09  Concurrency: 4 threads (target='dev')\n22:25:09\n22:25:09\n22:25:09  Finished running  in 0 hours 0 minutes and 0.10 seconds (0.10s).\n22:25:09  Encountered an error:\nIO Error: Could not set lock on file \"/Users/you/dbt-course/practice/practice.duckdb\": Conflicting lock is held in <program path> (PID 16838) by user <user>. See also https://duckdb.org/docs/stable/connect/concurrency\n22:25:09  Traceback (most recent call last):\n  ...",
+       "textBook": "22:25:09  Concurrency: 4 threads (target='dev')\n22:25:09\n22:25:09\n22:25:09  Finished running  in 0 hours 0 minutes and 0.10 seconds (0.10s).\n22:25:09  Encountered an error:\nIO Error: Could not set lock on file \"/Users/mac/dbt-course/practice/practice.duckdb\": Conflicting lock is held in <program path> (PID 16838) by user <user>. See also https://duckdb.org/docs/stable/connect/concurrency\n22:25:09  Traceback (most recent call last):\n  ...",
+       "title": "Result: dbt run -s stg_jaffle_shop__orders while another process holds practice.duckdb (traceback removed)"
+      },
+      {
+       "c": [
+        "No node ran, no ",
+        {
+         "t": "code",
+         "v": "Done"
+        },
+        " line, exit code 2: dbt could not even list the schemas. On cloud warehouses the equivalents are an expired password or token, a role without ",
+        {
+         "t": "code",
+         "v": "usage"
+        },
+        " on a database, a warehouse that is suspended, a network interruption, a query ",
+        {
+         "en": [
+          "timeout"
+         ],
+         "fr": "délai d'expiration",
+         "id": "term-timeout",
+         "t": "term"
+        },
+        " or a quota (BigQuery bytes, Snowflake credits). Your reaction:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Connection or credentials"
+             ],
+             "t": "b"
+            },
+            " (every node fails, or dbt stops at once): ",
+            {
+             "t": "code",
+             "v": "dbt debug"
+            },
+            ", then check the profile or the environment's credentials."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Permissions"
+             ],
+             "t": "b"
+            },
+            " (one model fails with \"insufficient privileges\" or \"access denied\", a ",
+            {
+             "t": "code",
+             "v": "Database Error"
+            },
+            "): the role used by that environment cannot read a source or create objects in a schema. Fix the grants, not the SQL."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Timeouts and resources"
+             ],
+             "t": "b"
+            },
+            " (a big model fails after a long time): make the model incremental, filter earlier, use a bigger warehouse for that job, or lower the number of threads so queries do not fight for resources."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Temporary problems"
+             ],
+             "t": "b"
+            },
+            " (a network blip): re-run only what failed, with ",
+            {
+             "t": "code",
+             "v": "dbt retry"
+            },
+            " (Chapter 24) or ",
+            {
+             "c": [
+              "Rerun from failure"
+             ],
+             "t": "b"
+            },
+            " in a dbt platform job."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "anchor": "lab-pip-break",
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " watch ",
+          {
+           "t": "code",
+           "v": "ERROR"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "SKIP"
+          },
+          ", independent branches and ",
+          {
+           "t": "code",
+           "v": "--fail-fast"
+          },
+          " on your own project, then repair it."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Start clean (the end of ",
+          {
+           "href": "/learn/ch22/",
+           "label": "ch:debugging",
+           "t": "ref",
+           "text": "Chapter 22"
+          },
+          ", tag ",
+          {
+           "t": "code",
+           "v": "ch22"
+          },
+          "):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c16",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ git status --short          # nothing printed = clean"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Break ",
+          {
+           "t": "code",
+           "v": "models/intermediate/int_orders__payment_methods_pivoted.sql"
+          },
+          ": in the ",
+          {
+           "t": "code",
+           "v": "pivoted"
+          },
+          " CTE, replace the line ",
+          {
+           "t": "code",
+           "v": "order_id,"
+          },
+          " by ",
+          {
+           "t": "code",
+           "v": "order_idd as order_id,"
+          },
+          " and save. Check:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c17",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git diff --stat"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "models/intermediate/int_orders__payment_methods_pivoted.sql | 2 +-"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Run all models:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c18",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt run; echo \"exit code: $?\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the output of ",
+          {
+           "href": "/learn/ch23/ch23-s2/#sec-pip-model-fails",
+           "label": "sec:pip-model-fails",
+           "t": "ref",
+           "text": "Section 23.2.1"
+          },
+          ": ",
+          {
+           "t": "code",
+           "v": "ERROR"
+          },
+          " on the pivot, ",
+          {
+           "t": "code",
+           "v": "SKIP"
+          },
+          " on ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          ", the two ",
+          {
+           "t": "code",
+           "v": "dim_customers"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "customer_segments"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "OK"
+          },
+          " on ",
+          {
+           "t": "code",
+           "v": "fct_monthly_revenue"
+          },
+          ", and ",
+          {
+           "t": "code",
+           "v": "Done. PASS=9 WARN=0 ERROR=1 SKIP=4 NO-OP=0 TOTAL=14"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "exit code: 1"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Ask ",
+          {
+           "t": "code",
+           "v": "run_results.json"
+          },
+          " which nodes did not succeed:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c19",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ python -c \"import json; r=json.load(open('target/run_results.json')); [print(x['status'], x['unique_id']) for x in r['results'] if x['status'] != 'success']\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c20",
+         "lang": "output",
+         "t": "code",
+         "text": "error model.jaffle_dbt.int_orders__payment_methods_pivoted\nskipped model.jaffle_dbt.fct_orders\nskipped model.jaffle_dbt.dim_customers.v1\nskipped model.jaffle_dbt.dim_customers.v2\nskipped model.jaffle_dbt.customer_segments"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " The same with ",
+          {
+           "t": "code",
+           "v": "--fail-fast"
+          },
+          ", then with ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c21",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt run --fail-fast\n$ dbt build --exclude-resource-type unit_test"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " with ",
+          {
+           "t": "code",
+           "v": "--fail-fast"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "CANCEL"
+          },
+          " lines and more ",
+          {
+           "t": "code",
+           "v": "SKIP"
+          },
+          " (we got ",
+          {
+           "t": "code",
+           "v": "PASS=7 WARN=0 ERROR=1 SKIP=7 NO-OP=0 TOTAL=15"
+          },
+          "; your numbers can differ a little, because they depend on which nodes were running at the moment of the error). With ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " (unit tests excluded only to keep the output shorter): ",
+          {
+           "t": "code",
+           "v": "Done. PASS=47 WARN=1 ERROR=1 SKIP=15 NO-OP=0 TOTAL=64"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6."
+           ],
+           "t": "b"
+          },
+          " Repair and rebuild:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c22",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git restore models/intermediate/int_orders__payment_methods_pivoted.sql\n$ dbt build -q; echo \"exit code: $?\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "exit code: 0"
+          },
+          "; ",
+          {
+           "t": "code",
+           "v": "git status --short"
+          },
+          " prints nothing."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 7 (optional)."
+           ],
+           "t": "b"
+          },
+          " Reproduce the failing singular test of this section: create ",
+          {
+           "t": "code",
+           "v": "tests/demo_enriched_orders_fail.sql"
+          },
+          " with ",
+          {
+           "t": "code",
+           "v": "select * from {{ ref('int_orders__enriched') }} where order_id = 1"
+          },
+          ", run ",
+          {
+           "t": "code",
+           "v": "dbt build --exclude-resource-type unit_test"
+          },
+          " (Parsing Error: the model is private), add ",
+          {
+           "t": "code",
+           "v": "{{ config(group='finance') }}"
+          },
+          " as the first line, run ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          " (",
+          {
+           "t": "code",
+           "v": "PASS=14"
+          },
+          ") and ",
+          {
+           "t": "code",
+           "v": "dbt build --exclude-resource-type unit_test"
+          },
+          " (",
+          {
+           "t": "code",
+           "v": "PASS=46 WARN=1 ERROR=1 SKIP=17"
+          },
+          "). Delete the file at the end."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch23-lab1",
+       "objectives": [
+        "4.1",
+        "3.1"
+       ],
+       "t": "lab",
+       "title": [
+        "Break the pipeline in the middle"
+       ]
+      },
+      {
+       "anchor": "lab-pip-data-hooks",
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " see a test stop the pipeline after a change in the raw data, and see the effect of ",
+          {
+           "t": "code",
+           "v": "skip_nodes_if_on_run_start_fails"
+          },
+          ". Close any DuckDB CLI that is open on ",
+          {
+           "t": "code",
+           "v": "practice.duckdb"
+          },
+          " first (file lock)."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Insert one order with a new status, build what depends on the orders, and look at the failing rows:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c23",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ duckdb ../practice/practice.duckdb -c \"insert into jaffle_shop.orders values (999, 1, date '2026-10-20', 'cancelled', current_timestamp)\"\n$ dbt build -s stg_jaffle_shop__orders+\n$ dbt show -s accepted_values_stg_jaffle_shop__orders_status__\\\nplaced__shipped__completed__return_pending__returned"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "FAIL 1 accepted_values_…"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "Done. PASS=4 WARN=1 ERROR=1 SKIP=29 NO-OP=0 TOTAL=35"
+          },
+          ", and the preview ",
+          {
+           "t": "code",
+           "v": "cancelled | 1"
+          },
+          ". Do ",
+          {
+           "c": [
+            "not"
+           ],
+           "t": "i"
+          },
+          " run a full ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " now: the orders snapshot would record order 999 for ever."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Remove the row and check that the pipeline is green again:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c24",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ duckdb ../practice/practice.duckdb -c \"delete from jaffle_shop.orders where id = 999\"\n$ dbt build -s stg_jaffle_shop__orders+"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Done. PASS=32 WARN=1 ERROR=0 SKIP=0 NO-OP=2 TOTAL=35"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " A broken ",
+          {
+           "t": "code",
+           "v": "on-run-start"
+          },
+          ". Add these lines at the very end of ",
+          {
+           "t": "code",
+           "v": "dbt_project.yml"
+          },
+          " (top level, no indentation for ",
+          {
+           "t": "code",
+           "v": "on-run-start:"
+          },
+          "):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c25",
+         "lang": "yaml",
+         "t": "code",
+         "text": "on-run-start:\n  - \"select * from table_that_does_not_exist\""
+        },
+        {
+         "id": "ch23-c26",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt run -s stg_jaffle_shop__orders stg_jaffle_shop__customers"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "ERROR hook: jaffle_dbt.on-run-start.0"
+          },
+          ", two ",
+          {
+           "t": "code",
+           "v": "SKIP"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "Done. PASS=0 WARN=0 ERROR=1 SKIP=2 NO-OP=0 TOTAL=3"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " In the ",
+          {
+           "t": "code",
+           "v": "flags:"
+          },
+          " block, change ",
+          {
+           "t": "code",
+           "v": "skip_nodes_if_on_run_start_fails: true"
+          },
+          " to ",
+          {
+           "t": "code",
+           "v": "false"
+          },
+          " and run the same command. ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the hook still fails, but both views are built: ",
+          {
+           "t": "code",
+           "v": "Done. PASS=2 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=3"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Undo both changes:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c27",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git restore dbt_project.yml\n$ git status --short"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " nothing printed."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch23-lab2",
+       "objectives": [
+        "4.1",
+        "5.2",
+        "3.5"
+       ],
+       "t": "lab",
+       "title": [
+        "When the data and the hooks fail"
+       ]
+      }
+     ],
+     "id": "ch23-s2-7",
+     "number": "23.2.7",
+     "title": [
+      "When the warehouse itself fails"
+     ],
+     "titleText": "When the warehouse itself fails"
+    }
+   ],
+   "title": [
+    "What dbt does when a node fails"
+   ],
+   "titleText": "What dbt does when a node fails"
+  },
+  {
+   "anchors": [
+    "sec-pip-results"
+   ],
+   "checkpoints": [],
+   "id": "ch23-s3",
+   "label": "sec:pip-results",
+   "labs": [],
+   "minutes": 5,
+   "number": "23.3",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Every node of a command ends with a ",
+        {
+         "en": [
+          "node status"
+         ],
+         "fr": "statut de nœud",
+         "id": "term-node-statu",
+         "t": "term"
+        },
+        ". The console prints a word for it; ",
+        {
+         "t": "code",
+         "v": "target/run_results.json"
+        },
+        " stores the official value. These are the values of dbt-core 1.11 (we read them in its source code):"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Status"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Console"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Nodes"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "success"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "OK"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "SUCCESS"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "INSERT 6"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "OK snapshotted"
+           }
+          ]
+         },
+         {
+          "c": [
+           "models, seeds, snapshots, hooks"
+          ]
+         },
+         {
+          "c": [
+           "built without error"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "error"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ERROR"
+           }
+          ]
+         },
+         {
+          "c": [
+           "any node"
+          ]
+         },
+         {
+          "c": [
+           "the node could not be built or run (SQL error, compilation error, a test whose query fails, whatever its ",
+           {
+            "t": "code",
+            "v": "severity"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "skipped"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "SKIP"
+           }
+          ]
+         },
+         {
+          "c": [
+           "any node"
+          ]
+         },
+         {
+          "c": [
+           "not run, because an upstream node failed (or an ",
+           {
+            "t": "code",
+            "v": "on-run-start"
+           },
+           " hook, with the flag)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "partial success"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "PARTIAL SUCCESS (x/y)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "microbatch models"
+          ]
+         },
+         {
+          "c": [
+           "some batches succeeded, others failed (exit code 1, children skipped)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "no-op"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "NO-OP"
+           }
+          ]
+         },
+         {
+          "c": [
+           "exposures (and other nodes with nothing to execute)"
+          ]
+         },
+         {
+          "c": [
+           "nothing to do"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "pass"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "PASS"
+           }
+          ]
+         },
+         {
+          "c": [
+           "data tests, unit tests"
+          ]
+         },
+         {
+          "c": [
+           "zero failing rows (or under the thresholds)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "fail"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "FAIL n"
+           }
+          ]
+         },
+         {
+          "c": [
+           "data tests, unit tests"
+          ]
+         },
+         {
+          "c": [
+           "failing rows above ",
+           {
+            "t": "code",
+            "v": "error_if"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "warn"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "WARN n"
+           }
+          ]
+         },
+         {
+          "c": [
+           "data tests"
+          ]
+         },
+         {
+          "c": [
+           "failing rows above ",
+           {
+            "t": "code",
+            "v": "warn_if"
+           },
+           " only, or severity ",
+           {
+            "t": "code",
+            "v": "warn"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "runtime error"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ERROR"
+           }
+          ]
+         },
+         {
+          "c": [
+           "source freshness"
+          ]
+         },
+         {
+          "c": [
+           "the freshness query itself failed"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "(",
+        {
+         "t": "code",
+         "v": "CANCEL"
+        },
+        " in the console is not a status: it is dbt cancelling running queries after ",
+        {
+         "t": "code",
+         "v": "--fail-fast"
+        },
+        " or ",
+        {
+         "t": "key",
+         "v": "Ctrl+C"
+        },
+        ".) Two details the exam likes: a failed test has the status ",
+        {
+         "t": "code",
+         "v": "fail"
+        },
+        ", not ",
+        {
+         "t": "code",
+         "v": "error"
+        },
+        "; and the summary line ",
+        {
+         "t": "code",
+         "v": "Done. PASS= WARN= ERROR= SKIP= NO-OP="
+        },
+        " counts tests with ",
+        {
+         "t": "code",
+         "v": "FAIL"
+        },
+        " inside ",
+        {
+         "t": "code",
+         "v": "ERROR"
+        },
+        " (",
+        {
+         "href": "/learn/ch23/ch23-s2/",
+         "label": "sec:pip-failures",
+         "t": "ref",
+         "text": "Section 23.2"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch23-s3-1",
+     "number": "23.3.1",
+     "title": [
+      "Node statuses"
+     ],
+     "titleText": "Node statuses"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "After ",
+        {
+         "t": "code",
+         "v": "run"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "build"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "test"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "seed"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "snapshot"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "compile"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "show"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "clone"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "retry"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "run-operation"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "docs generate"
+        },
+        ", dbt writes ",
+        {
+         "t": "code",
+         "v": "target/run_results.json"
+        },
+        ". It has four top-level keys: ",
+        {
+         "t": "code",
+         "v": "metadata"
+        },
+        " (dbt version, invocation id, time), ",
+        {
+         "t": "code",
+         "v": "args"
+        },
+        " (the command and its flags), ",
+        {
+         "t": "code",
+         "v": "elapsed_time"
+        },
+        ", and ",
+        {
+         "t": "code",
+         "v": "results"
+        },
+        ", one entry per executed node. Here is the entry of a skipped model after Step 3 of ",
+        {
+         "href": "/learn/ch23/ch23-s2/#lab-pip-break",
+         "label": "lab:pip-break",
+         "t": "ref",
+         "text": "Lab 23.1"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c28",
+       "lang": "output",
+       "t": "code",
+       "text": "{\n  \"unique_id\": \"model.jaffle_dbt.fct_orders\",\n  \"status\": \"skipped\",\n  \"message\": null,\n  \"execution_time\": 0,\n  \"thread_id\": \"Thread-1 (worker)\"\n}",
+       "title": "One element of results[] (selected keys)"
+      },
+      {
+       "c": [
+        "Other keys give the ",
+        {
+         "t": "code",
+         "v": "timing"
+        },
+        " (compile and execute), the ",
+        {
+         "t": "code",
+         "v": "adapter_response"
+        },
+        " (rows affected, for example), the ",
+        {
+         "t": "code",
+         "v": "compiled_code"
+        },
+        ", the ",
+        {
+         "t": "code",
+         "v": "relation_name"
+        },
+        " and, for tests, ",
+        {
+         "t": "code",
+         "v": "failures"
+        },
+        " (the number of failing rows). Counting the statuses of the failed ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " of ",
+        {
+         "href": "/learn/ch23/ch23-s2/#lab-pip-break",
+         "label": "lab:pip-break",
+         "t": "ref",
+         "text": "Lab 23.1"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c29",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ python -c \"import json, collections; r=json.load(open('target/run_results.json')); print(collections.Counter(x['status'] for x in r['results']))\""
+      },
+      {
+       "id": "ch23-c30",
+       "lang": "output",
+       "t": "code",
+       "text": "Counter({'success': 9, 'skipped': 4, 'error': 1})\nCounter({'pass': 35, 'skipped': 15, 'success': 12, 'warn': 1, 'error': 1})"
+      },
+      {
+       "c": [
+        "(The first line is after ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        ", the second after ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        ": tests appear as ",
+        {
+         "t": "code",
+         "v": "pass"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "warn"
+        },
+        ".)"
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "This file is what tools read after a run: ",
+        {
+         "t": "code",
+         "v": "dbt retry"
+        },
+        " uses it to know what to run again, the ",
+        {
+         "t": "code",
+         "v": "result:"
+        },
+        " selectors use it (",
+        {
+         "t": "code",
+         "v": "dbt build -s result:error+ --state target"
+        },
+        "), and in the dbt platform it feeds the run history and the model timing charts. Chapter 24 uses it in detail. Two warnings:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Each of the commands listed above ",
+            {
+             "c": [
+              "overwrites"
+             ],
+             "t": "i"
+            },
+            " it, even ",
+            {
+             "t": "code",
+             "v": "dbt compile"
+            },
+            " or ",
+            {
+             "t": "code",
+             "v": "dbt show"
+            },
+            " (we checked: ",
+            {
+             "t": "code",
+             "v": "dbt parse"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "dbt ls"
+            },
+            " do not). Read it, or copy it, right after the run you care about."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "It describes only the nodes of the last command. A ",
+            {
+             "t": "code",
+             "v": "dbt run -s one_model"
+            },
+            " replaces the results of last night's full build."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch23-s3-2",
+     "number": "23.3.2",
+     "title": [
+      "run_results.json"
+     ],
+     "titleText": "run_results.json"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A microbatch model (",
+        {
+         "href": "/learn/ch14/",
+         "label": "ch:incremental-microbatch",
+         "t": "ref",
+         "text": "Chapter 14"
+        },
+        ") is built in several batches. If some batches fail and others succeed, the model is neither ",
+        {
+         "t": "code",
+         "v": "success"
+        },
+        " nor ",
+        {
+         "t": "code",
+         "v": "error"
+        },
+        ": it is ",
+        {
+         "t": "code",
+         "v": "partial success"
+        },
+        ". The reference project met it for real during its first production build, before the fix of Chapter 20 (",
+        {
+         "t": "code",
+         "v": "concurrent_batches=False"
+        },
+        ") was in place: 22 monthly batches ran in parallel, and the ",
+        {
+         "t": "code",
+         "v": "comment on table"
+        },
+        " statements of ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        " collided."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c31",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "21:35:02  Unhandled error while executing\nException on worker thread. Runtime Error\n  TransactionContext Error: Catalog write-write conflict on alter with \"fct_order_items_daily\"\n21:35:02  Batch 3 of 22 ERROR creating batch 2025-03 of marts.fct_order_items_daily ............ [ERROR in 0.08s]\n...\n21:35:02  50 of 69 PARTIALLY created sql microbatch model marts.fct_order_items_daily .... [PARTIAL SUCCESS (10/22) in 0.71s]\n...\n21:35:03  Completed with 1 partial success and 1 warning\n...\n21:35:03  Done. PASS=65 WARN=1 ERROR=1 SKIP=0 NO-OP=2 TOTAL=69",
+       "title": "Result: dbt build --target prod, without concurrent_batches=False (reference build log, extract)"
+      },
+      {
+       "c": [
+        "Notice: the exit code was 1 and the summary counts the partial success as an error. Nothing was skipped here only because ",
+        {
+         "t": "code",
+         "v": "fct_order_items_daily"
+        },
+        " has no children. For the DAG, dbt 1.11 treats a partial success like an error: its descendants are ",
+        {
+         "t": "code",
+         "v": "SKIP"
+        },
+        ". We checked it with a throwaway child model (",
+        {
+         "t": "code",
+         "v": "select * from {{ ref('fct_order_items_daily') }}"
+        },
+        ") and one batch forced to fail: ",
+        {
+         "t": "code",
+         "v": "PARTIAL SUCCESS (1/2)"
+        },
+        " on the microbatch model, then ",
+        {
+         "t": "code",
+         "v": "SKIP relation dbt_adnane.zz_child"
+        },
+        ", in ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " and in ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        ". The failed batches can be re-run with ",
+        {
+         "t": "code",
+         "v": "dbt retry"
+        },
+        ", which only re-processes the failed batches (after the fix, our retry ran ",
+        {
+         "t": "code",
+         "v": "Batch 1 of 1"
+        },
+        " for the failed month only, then the skipped child), or with ",
+        {
+         "t": "code",
+         "v": "--event-time-start"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "--event-time-end"
+        },
+        " (",
+        {
+         "href": "/learn/ch14/",
+         "label": "ch:incremental-microbatch",
+         "t": "ref",
+         "text": "Chapter 14"
+        },
+        "). You saw a smaller partial success above, when ",
+        {
+         "t": "code",
+         "v": "--fail-fast"
+        },
+        " cancelled the second batch of the dev model."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch23-s3-3",
+     "number": "23.3.3",
+     "title": [
+      "Partial success: the microbatch case"
+     ],
+     "titleText": "Partial success: the microbatch case"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "After you fix the cause, you rarely want to rebuild everything. Three options, all explained in Chapter 24:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt retry"
+            },
+            ": re-runs the previous command, but only for the nodes that errored, failed or were skipped (it reads ",
+            {
+             "t": "code",
+             "v": "target/run_results.json"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "State selection with results: ",
+            {
+             "t": "code",
+             "v": "dbt build -s result:error+ result:skipped+ --state <folder with run_results.json>"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "In the dbt platform: ",
+            {
+             "c": [
+              "Rerun"
+             ],
+             "t": "b"
+            },
+            " → ",
+            {
+             "c": [
+              "Rerun from failure"
+             ],
+             "t": "b"
+            },
+            " on a failed job run (it reruns the failed step and the steps after it, from the point of failure)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Failures in dbt platform jobs."
+           ],
+           "t": "b"
+          },
+          " A job is a list of commands (steps). If one step fails, the following steps are not executed and the job ends with the status ",
+          {
+           "c": [
+            "Error"
+           ],
+           "t": "b"
+          },
+          "; a step can fail because a node failed (exit code 1) or because dbt could not run (exit code 2). Inside one ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " step, the node rules of this chapter apply. Notifications (email, Slack) can be sent on failure, and the run page shows the steps, their logs, the ",
+          {
+           "c": [
+            "Model timing"
+           ],
+           "t": "b"
+          },
+          " tab (which nodes are slow, which ran in parallel) and the ",
+          {
+           "c": [
+            "Artifacts"
+           ],
+           "t": "b"
+          },
+          " tab."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      }
+     ],
+     "id": "ch23-s3-4",
+     "number": "23.3.4",
+     "title": [
+      "Re-running only what failed"
+     ],
+     "titleText": "Re-running only what failed"
+    }
+   ],
+   "title": [
+    "Reading the results: statuses and run_results.json"
+   ],
+   "titleText": "Reading the results: statuses and run_results.json"
+  },
+  {
+   "anchors": [
+    "sec-pip-prod",
+    "lab-pip-prod"
+   ],
+   "checkpoints": [],
+   "id": "ch23-s4",
+   "label": "sec:pip-prod",
+   "labs": [
+    "ch23-lab3"
+   ],
+   "minutes": 15,
+   "number": "23.4",
+   "objectives": [
+    "1.4",
+    "4.1",
+    "7.1"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Until now you built everything in your development schema ",
+        {
+         "t": "code",
+         "v": "dbt_adnane"
+        },
+        ". Your profile has a second output, ",
+        {
+         "t": "code",
+         "v": "prod"
+        },
+        " (",
+        {
+         "href": "/learn/ch06/",
+         "label": "ch:first-project",
+         "t": "ref",
+         "text": "Chapter 6"
+        },
+        "), and your ",
+        {
+         "t": "code",
+         "v": "generate_schema_name"
+        },
+        " macro (",
+        {
+         "href": "/learn/ch10/",
+         "label": "ch:configuration",
+         "t": "ref",
+         "text": "Chapter 10"
+        },
+        ") sends the production models to the schemas ",
+        {
+         "t": "code",
+         "v": "prod"
+        },
+        " (staging and intermediate), ",
+        {
+         "t": "code",
+         "v": "marts"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "snapshots"
+        },
+        ". A ",
+        {
+         "en": [
+          "production build"
+         ],
+         "fr": "build de production",
+         "id": "term-production-build",
+         "t": "term"
+        },
+        " is the same project, built with ",
+        {
+         "t": "code",
+         "v": "--target prod"
+        },
+        ". Unit tests check logic, not data, so they are excluded in production (",
+        {
+         "href": "/learn/ch19/",
+         "label": "ch:unit-tests",
+         "t": "ref",
+         "text": "Chapter 19"
+        },
+        "):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c32",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt build --target prod --exclude-resource-type unit_test"
+      },
+      {
+       "id": "ch23-c33",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:26:26  Unable to do partial parsing because config vars, config profile, or config target have changed\n22:26:26  Unable to do partial parsing because profile has changed\n22:26:28  Found 15 models, 2 analyses, 45 data tests, 1 seed, 2 snapshots, 5 sources, 2 exposures, 670 macros, 2 groups, 5 unit tests\n22:26:28\n22:26:28  Concurrency: 4 threads (target='prod')\n22:26:28\n22:26:28  1 of 64 START seed file prod.country_regions ................................... [RUN]\n...\n22:26:28  15 of 64 OK snapshotted snapshots.customers_snapshot ........................... [OK in 0.11s]\n...\n22:26:28  39 of 64 START sql table model marts.fct_order_items ........................... [RUN]\n22:26:28  DuckDB adapter: Grants for relations are not supported by DuckDB\n22:26:29  39 of 64 OK created sql table model marts.fct_order_items ...................... [OK in 0.10s]\n...\n22:26:29  Batch 1 of 22 START batch 2025-01 of marts.fct_order_items_daily ..................... [RUN]\n...\n22:26:30  Completed with 1 warning:\n...\n22:26:30  Done. PASS=61 WARN=1 ERROR=0 SKIP=0 NO-OP=2 TOTAL=64",
+       "title": "Result (extract)"
+      },
+      {
+       "c": [
+        "What to notice:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "Unable to do partial parsing"
+            },
+            ": a new target changes the context (for example ",
+            {
+             "t": "code",
+             "v": "target.name"
+            },
+            " in your configs), so dbt re-parses everything once."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The relation names show the production schemas: ",
+            {
+             "t": "code",
+             "v": "prod.country_regions"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "snapshots.customers_snapshot"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "marts.fct_order_items"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The grants message of ",
+            {
+             "href": "/learn/ch10/",
+             "label": "ch:configuration",
+             "t": "ref",
+             "text": "Chapter 10"
+            },
+            " appears only in production, because the ",
+            {
+             "t": "code",
+             "v": "grants"
+            },
+            " config is empty in dev."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The microbatch model builds all 22 monthly batches: production had no table yet, so this is its first (full) build."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "64 nodes: 14 models (the ephemeral model is not a node that runs), 1 seed, 2 snapshots, 45 tests and 2 exposures."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "The database now contains both worlds:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c34",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select table_schema, count(*) filter (where table_type = 'BASE TABLE') as tables, count(*) filter (where table_type = 'VIEW') as views from information_schema.tables where table_schema not in ('jaffle_shop', 'stripe') group by 1 order by 1\""
+      },
+      {
+       "id": "ch23-c35",
+       "lang": "output",
+       "t": "code",
+       "text": "+--------------+--------+-------+\n| table_schema | tables | views |\n+--------------+--------+-------+\n| dbt_adnane   |     10 |     7 |\n| marts        |      7 |     0 |\n| prod         |      1 |     7 |\n| snapshots    |      2 |     0 |\n+--------------+--------+-------+"
+      }
+     ],
+     "id": "ch23-s4-0",
+     "title": [
+      "The production build and its artifacts"
+     ],
+     "titleText": "The production build and its artifacts"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "After the build, ",
+        {
+         "t": "code",
+         "v": "target/"
+        },
+        " contains the artifacts of the ",
+        {
+         "c": [
+          "production"
+         ],
+         "t": "i"
+        },
+        " run: ",
+        {
+         "t": "code",
+         "v": "manifest.json"
+        },
+        " (every node, its config, its compiled code and its relation name in production) and ",
+        {
+         "t": "code",
+         "v": "run_results.json"
+        },
+        " (the result of every node). They are the memory of production. The next development or CI command will overwrite ",
+        {
+         "t": "code",
+         "v": "target/"
+        },
+        ", so we copy them to a separate folder:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c36",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ mkdir -p prod-artifacts && cp target/manifest.json target/run_results.json prod-artifacts/\n$ python -c \"import json, collections; r=json.load(open('prod-artifacts/run_results.json')); print(r['args']['target'], collections.Counter(x['status'] for x in r['results']))\""
+      },
+      {
+       "id": "ch23-c37",
+       "lang": "output",
+       "t": "code",
+       "text": "prod Counter({'pass': 44, 'success': 17, 'no-op': 2, 'warn': 1})"
+      },
+      {
+       "c": [
+        "17 ",
+        {
+         "t": "code",
+         "v": "success"
+        },
+        " (14 models, 1 seed, 2 snapshots), 44 + 1 tests, 2 exposures. These two files are used again and again: ",
+        {
+         "t": "code",
+         "v": "dbt clone"
+        },
+        " (this chapter) and ",
+        {
+         "t": "code",
+         "v": "--defer"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "state:modified"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt retry"
+        },
+        " (Chapter 24) all need to know what production looks like, and they learn it from these files given with ",
+        {
+         "t": "code",
+         "v": "--state prod-artifacts"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "prod-artifacts/"
+        },
+        " is a build output, not source code, so it must not be committed. Add it to ",
+        {
+         "t": "code",
+         "v": ".gitignore"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c38",
+       "lang": "plain",
+       "t": "code",
+       "text": "\ntarget/\ndbt_packages/\nlogs/\nprod-artifacts/",
+       "title": ".gitignore (tag ch23)"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "In real life"
+           ],
+           "t": "b"
+          },
+          " you do not build production from your laptop. A ",
+          {
+           "c": [
+            "production job"
+           ],
+           "t": "i"
+          },
+          " does it on a schedule, with the credentials of the production environment. The dbt platform stores the artifacts of every job run for you: the ",
+          {
+           "c": [
+            "Artifacts"
+           ],
+           "t": "b"
+          },
+          " tab of a run shows them, and features such as ",
+          {
+           "c": [
+            "defer to production"
+           ],
+           "t": "i"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "dbt clone"
+          },
+          " in the Studio IDE, and CI jobs automatically use the artifacts of the latest successful production run. With dbt Core you organise it yourself: the production job uploads ",
+          {
+           "t": "code",
+           "v": "manifest.json"
+          },
+          " to shared storage (a bucket, a CI artifact), and development or CI downloads it into a folder such as ",
+          {
+           "t": "code",
+           "v": "prod-artifacts/"
+          },
+          " (Chapter 25)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      },
+      {
+       "anchor": "lab-pip-prod",
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " build every model of production with its tests, and save the artifacts that the next chapters need."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Add the line ",
+          {
+           "t": "code",
+           "v": "prod-artifacts/"
+          },
+          " at the end of ",
+          {
+           "t": "code",
+           "v": ".gitignore"
+          },
+          ", then check:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c39",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cat .gitignore"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the four lines ",
+          {
+           "t": "code",
+           "v": "target/"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "dbt_packages/"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "logs/"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "prod-artifacts/"
+          },
+          " (after the empty first line written by ",
+          {
+           "t": "code",
+           "v": "dbt init"
+          },
+          ")."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Build production:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c40",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --target prod --exclude-resource-type unit_test"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Done. PASS=61 WARN=1 ERROR=0 SKIP=0 NO-OP=2 TOTAL=64"
+          },
+          " (the known warning is the orphan order 159). If you built part of production in ",
+          {
+           "href": "/learn/ch19/",
+           "label": "ch:unit-tests",
+           "t": "ref",
+           "text": "Chapter 19"
+          },
+          ", these objects are simply replaced or updated."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Save the artifacts and look at the statuses:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c41",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ mkdir -p prod-artifacts && cp target/manifest.json target/run_results.json prod-artifacts/\n$ ls prod-artifacts\n$ python -c \"import json, collections; r=json.load(open('prod-artifacts/run_results.json')); print(r['args']['target'], collections.Counter(x['status'] for x in r['results']))\"\n$ git status --short"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "manifest.json run_results.json"
+          },
+          "; ",
+          {
+           "t": "code",
+           "v": "prod Counter({'pass': 44, 'success': 17, 'no-op': 2, 'warn': 1})"
+          },
+          "; and only ",
+          {
+           "t": "code",
+           "v": " M .gitignore"
+          },
+          ": the new folder is ignored."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Look at the schemas with the DuckDB CLI query of this section. ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the rows ",
+          {
+           "t": "code",
+           "v": "marts 7 0"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "prod 1 7"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "snapshots 2 0"
+          },
+          ". (Your ",
+          {
+           "t": "code",
+           "v": "dbt_adnane"
+          },
+          " line can be a little different if you kept objects from earlier experiments.) Do not commit yet: you will commit at the end of the chapter."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch23-lab3",
+       "objectives": [
+        "1.4",
+        "4.1",
+        "7.1"
+       ],
+       "t": "lab",
+       "title": [
+        "Build production and keep its artifacts"
+       ]
+      }
+     ],
+     "id": "ch23-s4-1",
+     "number": "23.4.1",
+     "title": [
+      "Keep the artifacts of production"
+     ],
+     "titleText": "Keep the artifacts of production"
+    }
+   ],
+   "title": [
+    "The production build and its artifacts"
+   ],
+   "titleText": "The production build and its artifacts"
+  },
+  {
+   "anchors": [
+    "sec-pip-clone",
+    "lab-pip-clone"
+   ],
+   "checkpoints": [],
+   "id": "ch23-s5",
+   "label": "sec:pip-clone",
+   "labs": [
+    "ch23-lab4"
+   ],
+   "minutes": 30,
+   "number": "23.5",
+   "objectives": [
+    "1.6",
+    "3.1",
+    "4.2"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "You need production objects in your own schema: to investigate a bug on real data, to let a BI tool test your changes, to start a CI run with the big incremental tables already in place. Rebuilding them costs time and money. ",
+        {
+         "t": "code",
+         "v": "dbt clone"
+        },
+        " creates them in your target schema from the production objects, without running your models' SQL."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A library has a rare, heavy book. You want it on your desk. Option 1, a ",
+          {
+           "c": [
+            "zero-copy clone"
+           ],
+           "t": "i"
+          },
+          ": the library gives you a new catalogue card that points to the same pages; nothing is photocopied, and if you write in your copy, only the pages you change are copied for you. Option 2, a ",
+          {
+           "c": [
+            "pointer view"
+           ],
+           "t": "i"
+          },
+          ": you get a note that says \"the book is on shelf 12 of the main room\"; every time you read it, you walk to the original. Option 3, rebuilding the model: you write the book again from the sources. ",
+          {
+           "t": "code",
+           "v": "dbt clone"
+          },
+          " uses the first option when the warehouse can, otherwise the second one. It never does the third one."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "alt": "Two kinds of clone. On Snowflake, Databricks and BigQuery, a zero-copy clone: marts.fct_orders and dbt_adnane.fct_orders point to the same shared storage blocks (no copy); the clone is a real table. On DuckDB, Postgres and others, a pointer view: dbt_adnane.fct_orders is a view (select * from marts.fct_orders, the table), so every query reads production.",
+       "id": "ch23-fig2",
+       "src": "figures/ch23-fig2.svg",
+       "t": "figure"
+      }
+     ],
+     "id": "ch23-s5-1",
+     "number": "23.5.1",
+     "title": [
+      "The idea"
+     ],
+     "titleText": "The idea"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt clone"
+        },
+        " reads the ",
+        {
+         "c": [
+          "state"
+         ],
+         "t": "i"
+        },
+        " manifest (",
+        {
+         "t": "code",
+         "v": "--state <folder>"
+        },
+        ", the production artifacts) and, for each selected model, seed and snapshot (not ephemeral models, not tests), runs the ",
+        {
+         "t": "code",
+         "v": "clone"
+        },
+        " materialization:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "If the node has no relation in the state manifest (a brand-new model), there is nothing to clone: the log says ",
+            {
+             "t": "code",
+             "v": "No relation found in state manifest for …"
+            },
+            " and dbt moves on."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "If a relation with that name ",
+            {
+             "c": [
+              "already exists"
+             ],
+             "t": "b"
+            },
+            " in your target and you did not pass ",
+            {
+             "t": "code",
+             "v": "--full-refresh"
+            },
+            ", dbt does nothing and prints ",
+            {
+             "t": "code",
+             "v": "Relation … already exists"
+            },
+            ". The node still counts as a success."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "If the platform supports ",
+            {
+             "en": [
+              "zero-copy clone"
+             ],
+             "fr": "clone sans copie",
+             "id": "term-zero-copy-clone",
+             "t": "term"
+            },
+            " (Snowflake, Databricks, BigQuery) and the production object is a table, dbt runs a ",
+            {
+             "t": "code",
+             "v": "create or replace … clone …"
+            },
+            " statement: a new table that shares the storage of the original."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Otherwise (other platforms, such as Postgres or DuckDB, or a production object that is a view), dbt creates a ",
+            {
+             "en": [
+              "pointer view"
+             ],
+             "fr": "vue pointeur",
+             "id": "term-pointer-view",
+             "t": "term"
+            },
+            ": ",
+            {
+             "t": "code",
+             "v": "create view <your schema>.<model> as (select * from <production relation>)"
+            },
+            ". For this it reuses the ",
+            {
+             "c": [
+              "view materialization"
+             ],
+             "t": "i"
+            },
+            ", so the model's hooks and ",
+            {
+             "t": "code",
+             "v": "persist_docs"
+            },
+            " run as well."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "c": [
+        "(We read the ",
+        {
+         "t": "code",
+         "v": "clone"
+        },
+        " materialization in the dbt-core 1.11.16 source: in case 3, the zero-copy clone, dbt applies the ",
+        {
+         "t": "code",
+         "v": "grants"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        " of the model but does ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " run its pre- and post-hooks; in case 4 everything that a view materialization does is done, hooks included.)"
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The nodes are independent (no DAG order is needed to copy a table), so more threads make a big clone faster (",
+        {
+         "t": "code",
+         "v": "--threads 16"
+        },
+        "). ",
+        {
+         "t": "code",
+         "v": "--state"
+        },
+        " is mandatory; without it:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c42",
+       "lang": "output",
+       "t": "code",
+       "text": "22:26:55  Encountered an error:\nRuntime Error\n  --state or --defer-state are required for deferral, but neither was provided",
+       "title": "Result: dbt clone (no --state)"
+      }
+     ],
+     "id": "ch23-s5-2",
+     "number": "23.5.2",
+     "title": [
+      "What dbt clone does, node by node"
+     ],
+     "titleText": "What dbt clone does, node by node"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch23-c43",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt clone --state prod-artifacts"
+      },
+      {
+       "id": "ch23-c44",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:26:58  Concurrency: 4 threads (target='dev')\n22:26:58\n22:26:58  Relation \"practice\".\"dbt_adnane\".\"customer_segments\" already exists\n22:26:58  Relation \"practice\".\"dbt_adnane\".\"dim_customers_v1\" already exists\n22:26:58  Relation \"practice\".\"dbt_adnane\".\"dim_customers_v2\" already exists\n22:26:58  Relation \"practice\".\"dbt_adnane\".\"fct_monthly_revenue\" already exists\n...\n22:26:58  Relation \"practice\".\"dbt_adnane\".\"stg_stripe__payments\" already exists\n22:26:58  Relation \"practice\".\"dbt_adnane\".\"country_regions\" already exists\n22:26:58  Relation \"practice\".\"dbt_adnane\".\"customers_snapshot\" already exists\n22:26:58  Relation \"practice\".\"dbt_adnane\".\"orders_snapshot\" already exists\n22:26:58\n22:26:58  Completed successfully\n22:26:58\n22:26:58  Done. PASS=17 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=17",
+       "title": "Result"
+      },
+      {
+       "c": [
+        "17 nodes: the 14 models that are not ephemeral, the seed and the two snapshots. Your development schema already had all of them, so ",
+        {
+         "t": "code",
+         "v": "dbt clone"
+        },
+        " changed nothing, and still reported ",
+        {
+         "t": "code",
+         "v": "PASS=17"
+        },
+        ". This is the most surprising behaviour of the command: ",
+        {
+         "c": [
+          "it never replaces an existing relation unless you add ",
+          {
+           "t": "code",
+           "v": "--full-refresh"
+          }
+         ],
+         "t": "b"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch23-s5-3",
+     "number": "23.5.3",
+     "title": [
+      "First try: everything already exists"
+     ],
+     "titleText": "First try: everything already exists"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "We dropped one development table and cloned only that model:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c45",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.fct_monthly_revenue\"\n$ dbt clone -s fct_monthly_revenue --state prod-artifacts"
+      },
+      {
+       "id": "ch23-c46",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:27:20  Concurrency: 4 threads (target='dev')\n22:27:20\n22:27:20\n22:27:20  Completed with 1 error, 0 partial successes, and 0 warnings:\n22:27:20\n22:27:20  Failure in model fct_monthly_revenue (models/marts/fct_monthly_revenue.sql)\n22:27:20    Runtime Error in model fct_monthly_revenue (models/marts/fct_monthly_revenue.sql)\n  Binder Error: Can only vacuum or analyze base tables\n22:27:20\n22:27:20  Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1",
+       "title": "Result"
+      },
+      {
+       "c": [
+        "And ",
+        {
+         "t": "code",
+         "v": "fct_monthly_revenue"
+        },
+        " still did not exist in ",
+        {
+         "t": "code",
+         "v": "dbt_adnane"
+        },
+        " afterwards. Use the method of ",
+        {
+         "href": "/learn/ch22/",
+         "label": "ch:debugging",
+         "t": "ref",
+         "text": "Chapter 22"
+        },
+        ": the message talks about ",
+        {
+         "t": "code",
+         "v": "analyze"
+        },
+        ", which is not in the model. The debug log tells the whole story:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c47",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "  create view \"practice\".\"dbt_adnane\".\"fct_monthly_revenue__dbt_tmp\" as (\n    select * from \"practice\".\"marts\".\"fct_monthly_revenue\"\n  );\n22:27:20.151734 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds\nalter view \"practice\".\"dbt_adnane\".\"fct_monthly_revenue__dbt_tmp\" rename to \"fct_monthly_revenue\"\n22:27:20.155782 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds\n  comment on view \"practice\".\"dbt_adnane\".\"fct_monthly_revenue\" is $dbt_comment_literal_block$Orders and revenue per order month and customer country (returned orders excluded).$dbt_comment_literal_block$;\n22:27:20.164970 [debug] [Thread-1 (]: SQL status: OK in 0.000 seconds\n        analyze \"practice\".\"dbt_adnane\".\"fct_monthly_revenue\"\n22:27:20.166724 [debug] [Thread-1 (]: DuckDB adapter: duckdb error: Binder Error: Can only vacuum or analyze base tables\n22:27:20.167275 [debug] [Thread-1 (]: On model.jaffle_dbt.fct_monthly_revenue: ROLLBACK",
+       "title": "Result: logs/dbt.log (extract, query comments removed)"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "DuckDB has no zero-copy clone, so dbt created a ",
+            {
+             "c": [
+              "view"
+             ],
+             "t": "i"
+            },
+            " that selects from the production table ",
+            {
+             "t": "code",
+             "v": "marts.fct_monthly_revenue"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The view materialization then applied ",
+            {
+             "t": "code",
+             "v": "persist_docs"
+            },
+            " (the ",
+            {
+             "t": "code",
+             "v": "comment on view"
+            },
+            ") and the model's ",
+            {
+             "t": "code",
+             "v": "post-hook"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The marts have the post-hook ",
+            {
+             "t": "code",
+             "v": "analyze {{ this }}"
+            },
+            " since ",
+            {
+             "href": "/learn/ch10/",
+             "label": "ch:configuration",
+             "t": "ref",
+             "text": "Chapter 10"
+            },
+            " (it refreshes DuckDB's statistics after a table is built). DuckDB refuses ",
+            {
+             "t": "code",
+             "v": "ANALYZE"
+            },
+            " on a view."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The hook failed, so the whole transaction was rolled back: no view."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "c": [
+        "The hook is useful for tables and wrong for clones. The fix is to skip it when the running command is ",
+        {
+         "t": "code",
+         "v": "clone"
+        },
+        ". The Jinja variable ",
+        {
+         "t": "code",
+         "v": "flags.WHICH"
+        },
+        " contains the name of the current command (",
+        {
+         "href": "/learn/ch11/",
+         "label": "ch:jinja-macros-packages",
+         "t": "ref",
+         "text": "Chapter 11"
+        },
+        "): ",
+        {
+         "t": "code",
+         "v": "run"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "build"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "clone"
+        },
+        "…"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c48",
+       "lang": "plain",
+       "t": "code",
+       "text": "       # after each mart is built, refresh the optimizer statistics of the new table\n-      +post-hook: \"analyze {{ this }}\"\n+      # (not during dbt clone: on DuckDB a clone is a view, and ANALYZE only accepts tables)\n+      +post-hook: \"{% if flags.WHICH != 'clone' %}analyze {{ this }}{% endif %}\"",
+       "title": "git diff dbt_project.yml (the fix, kept in the project)"
+      },
+      {
+       "c": [
+        "During a clone the hook now renders to an empty string, and dbt skips empty hooks. Same command again:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c49",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:27:36  Concurrency: 4 threads (target='dev')\n22:27:36\n22:27:36\n22:27:36  Completed successfully\n22:27:36\n22:27:36  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1",
+       "title": "Result: dbt clone -s fct_monthly_revenue --state prod-artifacts (after the fix)"
+      },
+      {
+       "id": "ch23-c50",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select sql from duckdb_views() where schema_name = 'dbt_adnane' and view_name = 'fct_monthly_revenue'\"\n$ cat target/run/jaffle_dbt/models/marts/fct_monthly_revenue.sql"
+      },
+      {
+       "id": "ch23-c51",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "+-------------------------------------------------------------------------------------------------+\n| sql                                                                                             |\n+-------------------------------------------------------------------------------------------------+\n| CREATE VIEW dbt_adnane.fct_monthly_revenue AS SELECT * FROM practice.marts.fct_monthly_revenue; |\n+-------------------------------------------------------------------------------------------------+\n\n  create view \"practice\".\"dbt_adnane\".\"fct_monthly_revenue__dbt_tmp\" as (\n    select * from \"practice\".\"marts\".\"fct_monthly_revenue\"\n  );"
+      },
+      {
+       "c": [
+        "The development \"model\" is now a pointer to production: ",
+        {
+         "t": "code",
+         "v": "select count(*) from dbt_adnane.fct_monthly_revenue"
+        },
+        " returns 73, the rows of ",
+        {
+         "t": "code",
+         "v": "marts.fct_monthly_revenue"
+        },
+        ". Two remarks:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "We did ",
+            {
+             "c": [
+              "not"
+             ],
+             "t": "i"
+            },
+            " need new production artifacts for the fix to work. The state manifest only tells ",
+            {
+             "t": "code",
+             "v": "dbt clone"
+            },
+            " ",
+            {
+             "c": [
+              "where"
+             ],
+             "t": "i"
+            },
+            " the production object is; the configs and hooks come from your current project."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "t": "code",
+             "v": "flags.WHICH"
+            },
+            " pattern is general. dbt Labs suggests the same trick to keep project hooks out of ",
+            {
+             "t": "code",
+             "v": "dbt source freshness"
+            },
+            " (",
+            {
+             "t": "code",
+             "v": "flags.WHICH != 'freshness'"
+            },
+            "), since hooks run there too in dbt 1.10 and later."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt clone"
+            },
+            " is not always a pure copy."
+           ],
+           "t": "b"
+          },
+          " On warehouses without zero-copy cloning, it goes through the view materialization, so model hooks, ",
+          {
+           "t": "code",
+           "v": "persist_docs"
+          },
+          " and grants are applied. A hook written for tables (",
+          {
+           "t": "code",
+           "v": "analyze"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "vacuum"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "alter table"
+          },
+          "…) can fail there. And whatever the warehouse, a clone that fails is an ",
+          {
+           "t": "code",
+           "v": "ERROR"
+          },
+          " like any other node."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch23-s5-4",
+     "number": "23.5.4",
+     "title": [
+      "Second try: a missing table, and a real problem"
+     ],
+     "titleText": "Second try: a missing table, and a real problem"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch23-c52",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt clone -s fct_orders --state prod-artifacts --full-refresh\n$ duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' and table_name in ('fct_orders', 'fct_monthly_revenue') order by 1\""
+      },
+      {
+       "id": "ch23-c53",
+       "lang": "output",
+       "t": "code",
+       "text": "+---------------------+------------+\n| table_name          | table_type |\n+---------------------+------------+\n| fct_monthly_revenue | VIEW       |\n| fct_orders          | VIEW       |\n+---------------------+------------+"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "--full-refresh"
+        },
+        " made dbt replace the existing development ",
+        {
+         "c": [
+          "table"
+         ],
+         "t": "i"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " by a view on production. The project itself did not change: ",
+        {
+         "t": "code",
+         "v": "dbt ls -s fct_orders --resource-type model --output json --output-keys name config.materialized"
+        },
+        " still prints ",
+        {
+         "t": "code",
+         "v": "{\"name\": \"fct_orders\", \"config.materialized\": \"incremental\"}"
+        },
+        ". Only the object in your schema is different."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "What happens at the next ",
+        {
+         "t": "code",
+         "v": "dbt run -s fct_orders"
+        },
+        "? On DuckDB, the incremental materialization finds a ",
+        {
+         "c": [
+          "view"
+         ],
+         "t": "i"
+        },
+        " where it expects a table, so it builds a complete new table and replaces the view (log, shortened):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c54",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "    create  table\n      \"practice\".\"dbt_adnane\".\"fct_orders__dbt_tmp\"\n...\nalter view \"practice\".\"dbt_adnane\".\"fct_orders\" rename to \"fct_orders__dbt_backup\"\nalter table \"practice\".\"dbt_adnane\".\"fct_orders__dbt_tmp\" rename to \"fct_orders\"\n...\n      drop view if exists \"practice\".\"dbt_adnane\".\"fct_orders__dbt_backup\" cascade"
+      },
+      {
+       "c": [
+        "On Snowflake, Databricks or BigQuery the clone is a real ",
+        {
+         "c": [
+          "table"
+         ],
+         "t": "i"
+        },
+        " (a zero-copy clone of the production table), so the next run is truly incremental: only the new rows are processed, on top of a complete copy of production. That is the main reason why ",
+        {
+         "t": "code",
+         "v": "dbt clone"
+        },
+        " exists."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch23-s5-5",
+     "number": "23.5.5",
+     "title": [
+      "--full-refresh: replace what already exists"
+     ],
+     "titleText": "--full-refresh: replace what already exists"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt clone"
+        },
+        " accepts the usual selection flags: ",
+        {
+         "t": "code",
+         "v": "-s"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "--exclude"
+        },
+        ", graph operators, selectors, ",
+        {
+         "t": "code",
+         "v": "--resource-type"
+        },
+        ". The CI recipe from the dbt documentation clones only the incremental models that a pull request touches and that already exist in production:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c55",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt clone --select \"state:modified+,config.materialized:incremental,state:old\" --state prod-artifacts"
+      },
+      {
+       "c": [
+        "(",
+        {
+         "t": "code",
+         "v": "state:old"
+        },
+        " = the node exists in the state manifest; a brand-new model has nothing to clone.) We changed ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__orders"
+        },
+        " for a moment: ",
+        {
+         "t": "code",
+         "v": "dbt ls"
+        },
+        " with the same selection and ",
+        {
+         "t": "code",
+         "v": "--resource-type model"
+        },
+        " listed ",
+        {
+         "t": "code",
+         "v": "fct_order_items_daily"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        ", the two incremental models downstream, and the clone printed ",
+        {
+         "t": "code",
+         "v": "Relation … already exists"
+        },
+        " for both (our dev schema had them; a fresh CI schema would not)."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "To see a clone into an ",
+        {
+         "c": [
+          "empty"
+         ],
+         "t": "i"
+        },
+        " schema (the \"new team member\" case), we copied the database into another folder, dropped the ",
+        {
+         "t": "code",
+         "v": "dbt_adnane"
+        },
+        " schema there, and ran ",
+        {
+         "t": "code",
+         "v": "DBT_DUCKDB_PATH=<copy> dbt clone --state prod-artifacts"
+        },
+        ". Sixteen views appeared at once (staging, intermediate, marts, seed and snapshots), and one node failed:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch23-c56",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:28:08  Failure in model customer_segments (models/marts/customer_segments.py)\n22:28:08    Runtime Error in model customer_segments (models/marts/customer_segments.py)\n  Parser Error: syntax error at or near \"None\"\n\n  LINE 5:     None\n              ^\n22:28:08\n22:28:08  Done. PASS=16 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=17"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "customer_segments"
+        },
+        " is a Python model. For the view fallback dbt fills the SQL of the view with ",
+        {
+         "t": "code",
+         "v": "select * from <production relation>"
+        },
+        ", but in dbt-core 1.11.16 this SQL is only provided to ",
+        {
+         "c": [
+          "SQL"
+         ],
+         "t": "i"
+        },
+        " models (we read it in dbt's source code); a Python model gets nothing, which is printed as ",
+        {
+         "t": "code",
+         "v": "None"
+        },
+        ". On warehouses with zero-copy clone, the production ",
+        {
+         "c": [
+          "table"
+         ],
+         "t": "i"
+        },
+        " of a Python model is cloned like any table, so the problem is specific to the view fallback. On DuckDB, build Python models with ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " instead."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch23-s5-6",
+     "number": "23.5.6",
+     "title": [
+      "Selection, and a limit we found"
+     ],
+     "titleText": "Selection, and a limit we found"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "CI with incremental models"
+             ],
+             "t": "b"
+            },
+            " (zero-copy platforms). Clone the modified incremental models from production into the CI schema, then ",
+            {
+             "t": "code",
+             "v": "dbt build -s state:modified+"
+            },
+            ". The models run in incremental mode, as they will after the merge: fast, cheap, and they test the incremental logic (including schema changes with ",
+            {
+             "t": "code",
+             "v": "on_schema_change"
+            },
+            "). Without the clone, they would be built in full."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              {
+               "en": [
+                "Blue/green deployment"
+               ],
+               "fr": "déploiement bleu/vert",
+               "id": "term-blue-green-deployment",
+               "t": "term"
+              },
+              "."
+             ],
+             "t": "b"
+            },
+            " Build and test the new version in a separate schema (green) while users read the current one (blue); when everything passes, publish green to the schema that users read with a zero-copy clone (or a swap), in seconds. Users never see a half-built state."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Development set-up."
+             ],
+             "t": "b"
+            },
+            " A new team member, or you after a long break, gets the whole production state in a personal schema in seconds, then builds only the models being changed."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Testing in a BI tool."
+             ],
+             "t": "b"
+            },
+            " Point a dashboard at your schema: cloned (or pointer) objects for everything you did not change, and your real models for what you changed."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch23-s5-7",
+     "number": "23.5.7",
+     "title": [
+      "Use cases"
+     ],
+     "titleText": "Use cases"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "--defer"
+        },
+        " (Chapter 24) solves a similar problem in another way: when you build a few models, a ",
+        {
+         "t": "code",
+         "v": "ref"
+        },
+        " to a model that is not selected and does not exist in your schema is replaced by the production relation. Nothing is created."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "dbt clone"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "--defer"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Needs production artifacts (",
+           {
+            "t": "code",
+            "v": "--state"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Creates objects in your schema"
+          ]
+         },
+         {
+          "c": [
+           "yes: clones or pointer views"
+          ]
+         },
+         {
+          "c": [
+           "no, only resolves ",
+           {
+            "t": "code",
+            "v": "ref()"
+           },
+           " at compile time"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Visible outside dbt (BI tool, SQL editor)"
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         },
+         {
+          "c": [
+           "no"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Cost"
+          ]
+         },
+         {
+          "c": [
+           "a few cheap statements (metadata clones or views)"
+          ]
+         },
+         {
+          "c": [
+           "none"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Incremental models start from production data"
+          ]
+         },
+         {
+          "c": [
+           "yes, with zero-copy clones"
+          ]
+         },
+         {
+          "c": [
+           "no: a selected incremental model that is not in your schema is built in full"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Typical use"
+          ]
+         },
+         {
+          "c": [
+           "CI with big incremental models, blue/green, dev set-up, BI testing"
+          ]
+         },
+         {
+          "c": [
+           "everyday development and slim CI"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "In many cases defer is the cheaper and simpler choice. Choose ",
+        {
+         "t": "code",
+         "v": "dbt clone"
+        },
+        " when you need real objects in your schema."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Three clone traps"
+           ],
+           "t": "b"
+          },
+          " (traps T115–T117). (1) \"",
+          {
+           "t": "code",
+           "v": "dbt clone"
+          },
+          " copies the data the same way everywhere\": no, zero-copy clones of tables on Snowflake, Databricks and BigQuery; pointer views elsewhere (we got views on DuckDB). (2) \"It works without artifacts\": no, ",
+          {
+           "t": "code",
+           "v": "--state"
+          },
+          " is required (",
+          {
+           "t": "code",
+           "v": "--state or --defer-state are required for deferral"
+          },
+          "). Existing relations are kept unless you add ",
+          {
+           "t": "code",
+           "v": "--full-refresh"
+          },
+          ". (3) \"Clone and defer are the same\": no, clone ",
+          {
+           "c": [
+            "creates"
+           ],
+           "t": "i"
+          },
+          " objects, defer only redirects references. A question that says \"without creating any object\" points to defer."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch23-s5-8",
+     "number": "23.5.8",
+     "title": [
+      "Clone or defer?"
+     ],
+     "titleText": "Clone or defer?"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Zero-copy clones"
+             ],
+             "t": "b"
+            },
+            " are metadata operations: no data is copied and no warehouse compute is needed to copy rows. Storage is shared; you start paying for storage only for the data that changes in the clone afterwards. They are independent of the original: if production is rebuilt, your clone keeps its old data."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Pointer views"
+             ],
+             "t": "b"
+            },
+            " cost nothing to create and store nothing, but every query on them reads the production table (compute at query time), they show production's ",
+            {
+             "c": [
+              "current"
+             ],
+             "t": "i"
+            },
+            " data (they change when production is rebuilt), they break if the production object is dropped or renamed, and your development role needs read access to production."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "The clone command itself"
+             ],
+             "t": "b"
+            },
+            " runs one statement per node: cheap, but not free on a big project (and it needs a warehouse running)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Defer"
+             ],
+             "t": "b"
+            },
+            " creates nothing and costs nothing, but only helps dbt, not other tools."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "In the dbt platform."
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "dbt clone"
+          },
+          " also works in the Studio IDE and in the platform CLI. There you usually do not pass ",
+          {
+           "t": "code",
+           "v": "--state"
+          },
+          ": the platform uses the artifacts of the environment you defer to (by default the production environment, or a staging environment if you have one), which must have at least one successful run. In the platform CLI, ",
+          {
+           "t": "code",
+           "v": "dbt clone"
+          },
+          " automatically includes ",
+          {
+           "t": "code",
+           "v": "--defer"
+          },
+          ". In a CI job, the clone command is typically the first step, before ",
+          {
+           "t": "code",
+           "v": "dbt build --select state:modified+"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      },
+      {
+       "anchor": "lab-pip-clone",
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " use ",
+          {
+           "t": "code",
+           "v": "dbt clone"
+          },
+          " with your production artifacts, meet the post-hook problem, fix it, and finish the chapter's commit."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Clone everything:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c57",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt clone --state prod-artifacts"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " 17 lines ",
+          {
+           "t": "code",
+           "v": "Relation \"practice\".\"dbt_adnane\".… already exists"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "Done. PASS=17"
+          },
+          ". Nothing changed."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Drop one development table and clone it:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c58",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.fct_monthly_revenue\"\n$ dbt clone -s fct_monthly_revenue --state prod-artifacts"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Binder Error: Can only vacuum or analyze base tables"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "Done. PASS=0 WARN=0 ERROR=1"
+          },
+          ". Find the ",
+          {
+           "t": "code",
+           "v": "analyze"
+          },
+          " statement and the ",
+          {
+           "t": "code",
+           "v": "ROLLBACK"
+          },
+          " in the log:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c59",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ grep -n 'analyze \"practice\"\\|ROLLBACK' logs/dbt.log | tail -3"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " two lines ",
+          {
+           "t": "code",
+           "v": "analyze \"practice\".\"dbt_adnane\".\"fct_monthly_revenue\""
+          },
+          " (the statement, and the same statement repeated in the error report), then ",
+          {
+           "t": "code",
+           "v": "On model.jaffle_dbt.fct_monthly_revenue: ROLLBACK"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "dbt_project.yml"
+          },
+          ", under ",
+          {
+           "t": "code",
+           "v": "models: jaffle_dbt: marts:"
+          },
+          ", replace the post-hook line by these two lines:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c60",
+         "lang": "yaml",
+         "t": "code",
+         "text": "      # (not during dbt clone: on DuckDB a clone is a view, and ANALYZE only accepts tables)\n      +post-hook: \"{% if flags.WHICH != 'clone' %}analyze {{ this }}{% endif %}\""
+        },
+        {
+         "c": [
+          "Run the clone of Step 2 again. ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Completed successfully"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "Done. PASS=1"
+          },
+          ". Check the object:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c61",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select sql from duckdb_views() where schema_name = 'dbt_adnane' and view_name = 'fct_monthly_revenue'\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "CREATE VIEW dbt_adnane.fct_monthly_revenue AS SELECT * FROM practice.marts.fct_monthly_revenue;"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Replace an existing table, then look at the types:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c62",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt clone -s fct_orders --state prod-artifacts --full-refresh\n$ duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' and table_name in ('fct_orders', 'fct_monthly_revenue') order by 1\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Done. PASS=1"
+          },
+          ", then both objects with type ",
+          {
+           "t": "code",
+           "v": "VIEW"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Put real development tables back and check that the whole project is green:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c63",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt run -s fct_orders fct_monthly_revenue\n$ dbt build -q; echo \"exit code: $?\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Done. PASS=2"
+          },
+          " (both are tables again: check with the query of Step 4, ",
+          {
+           "t": "code",
+           "v": "BASE TABLE"
+          },
+          "), then ",
+          {
+           "t": "code",
+           "v": "exit code: 0"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6."
+           ],
+           "t": "b"
+          },
+          " The project changed, so \"deploy\" it: rebuild production and refresh the artifacts, as a production job would after the merge:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c64",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --target prod --exclude-resource-type unit_test -q; echo \"exit code: $?\"\n$ cp target/manifest.json target/run_results.json prod-artifacts/"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "exit code: 0"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 7."
+           ],
+           "t": "b"
+          },
+          " Commit and compare with the reference:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch23-c65",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git status --short\n$ git add .gitignore dbt_project.yml\n$ git commit -m \"Pipelines: prod-artifacts ignored, post-hook skipped during clone\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch23 --stat"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "git status"
+          },
+          " shows ",
+          {
+           "t": "code",
+           "v": " M .gitignore"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": " M dbt_project.yml"
+          },
+          " (nothing from ",
+          {
+           "t": "code",
+           "v": "prod-artifacts/"
+          },
+          "); ",
+          {
+           "t": "code",
+           "v": "git diff ref-ch23 --stat"
+          },
+          " prints nothing. Push if you use GitHub."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch23-lab4",
+       "objectives": [
+        "4.2",
+        "3.1",
+        "1.6"
+       ],
+       "t": "lab",
+       "title": [
+        "Clone production into development, and fix a hook"
+       ]
+      }
+     ],
+     "id": "ch23-s5-9",
+     "number": "23.5.9",
+     "title": [
+      "Costs and risks"
+     ],
+     "titleText": "Costs and risks"
+    }
+   ],
+   "title": [
+    "dbt clone"
+   ],
+   "titleText": "dbt clone"
+  }
+ ],
+ "minutes": 125,
+ "number": 23,
+ "objectives": [
+  "1.4",
+  "3.1",
+  "4.1",
+  "4.2"
+ ],
+ "part": 6,
+ "partLabel": "Part VI",
+ "partTitle": "Debugging and Pipelines",
+ "printed": "23",
+ "quiz": [
+  "q-ch23-01",
+  "q-ch23-02",
+  "q-ch23-03",
+  "q-ch23-04",
+  "q-ch23-05",
+  "q-ch23-06",
+  "q-ch23-07",
+  "q-ch23-08",
+  "q-ch23-09",
+  "q-ch23-10",
+  "q-ch23-11",
+  "q-ch23-12",
+  "q-ch23-13",
+  "q-ch23-14",
+  "q-ch23-15",
+  "q-ch23-16",
+  "q-ch23-17",
+  "q-ch23-18"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-pip-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch23-01",
+      "q-ch23-02",
+      "q-ch23-03",
+      "q-ch23-04",
+      "q-ch23-05",
+      "q-ch23-06",
+      "q-ch23-07",
+      "q-ch23-08",
+      "q-ch23-09",
+      "q-ch23-10",
+      "q-ch23-11",
+      "q-ch23-12",
+      "q-ch23-13",
+      "q-ch23-14",
+      "q-ch23-15",
+      "q-ch23-16",
+      "q-ch23-17",
+      "q-ch23-18"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch23-01",
+    "q-ch23-02",
+    "q-ch23-03",
+    "q-ch23-04",
+    "q-ch23-05",
+    "q-ch23-06",
+    "q-ch23-07",
+    "q-ch23-08",
+    "q-ch23-09",
+    "q-ch23-10",
+    "q-ch23-11",
+    "q-ch23-12",
+    "q-ch23-13",
+    "q-ch23-14",
+    "q-ch23-15",
+    "q-ch23-16",
+    "q-ch23-17",
+    "q-ch23-18"
+   ],
+   "label": "sec:pip-quiz",
+   "number": "23.6",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Failure points: sources (missing, stale), model SQL, tests, hooks, the warehouse (connection, lock, permissions, timeout), upstream data changes. Tests on sources and staging catch data changes at the entrance."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A failing node gets ",
+        {
+         "t": "code",
+         "v": "ERROR"
+        },
+        " (tests: ",
+        {
+         "t": "code",
+         "v": "FAIL"
+        },
+        "); its descendants get ",
+        {
+         "t": "code",
+         "v": "SKIP"
+        },
+        "; independent branches continue; exit code 1. Skipped models keep their previous data in the warehouse."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "In ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        ", tests are gates: a ",
+        {
+         "t": "code",
+         "v": "FAIL"
+        },
+        " skips the nodes downstream, a ",
+        {
+         "t": "code",
+         "v": "WARN"
+        },
+        " does not. ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " never runs tests."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "--fail-fast"
+        },
+        " / ",
+        {
+         "t": "code",
+         "v": "-x"
+        },
+        " stops everything at the first failure (cancels running queries). Threads change parallelism, never the DAG order."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Hooks: a failing ",
+        {
+         "t": "code",
+         "v": "on-run-start"
+        },
+        " skips the models only if ",
+        {
+         "t": "code",
+         "v": "skip_nodes_if_on_run_start_fails: true"
+        },
+        " (default ",
+        {
+         "t": "code",
+         "v": "false"
+        },
+        " in 1.11); a failing ",
+        {
+         "t": "code",
+         "v": "on-run-end"
+        },
+        " still fails the command; a failing model hook is an error of that model."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Statuses: ",
+        {
+         "t": "code",
+         "v": "success"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "error"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "skipped"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "partial success"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "no-op"
+        },
+        " (nodes); ",
+        {
+         "t": "code",
+         "v": "pass"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "fail"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "warn"
+        },
+        " (tests); ",
+        {
+         "t": "code",
+         "v": "runtime error"
+        },
+        " (freshness). They are in ",
+        {
+         "t": "code",
+         "v": "target/run_results.json"
+        },
+        ", rewritten by most commands but not by ",
+        {
+         "t": "code",
+         "v": "dbt ls"
+        },
+        ". A partial success counts like an error: exit code 1, descendants skipped, ",
+        {
+         "t": "code",
+         "v": "dbt retry"
+        },
+        " re-runs only the failed batches."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A production build (",
+        {
+         "t": "code",
+         "v": "--target prod"
+        },
+        ", unit tests excluded) produces the artifacts that clone, defer, state selection and retry need; keep them out of Git (",
+        {
+         "t": "code",
+         "v": "prod-artifacts/"
+        },
+        " in ",
+        {
+         "t": "code",
+         "v": ".gitignore"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt clone --state <artifacts>"
+        },
+        " creates the selected models, seeds and snapshots in your schema: zero-copy clones of tables on Snowflake, Databricks and BigQuery, pointer views elsewhere (DuckDB, Postgres). Existing relations are kept unless ",
+        {
+         "t": "code",
+         "v": "--full-refresh"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "On the view fallback, model hooks and ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        " run: our ",
+        {
+         "t": "code",
+         "v": "analyze"
+        },
+        " post-hook broke the clone, fixed with ",
+        {
+         "t": "code",
+         "v": "{% if flags.WHICH != 'clone' %}"
+        },
+        ". Python models cannot be cloned as views."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Clone creates objects (useful outside dbt, for incremental CI, blue/green); defer creates nothing and only redirects ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        ". Prefer defer when no object is needed."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "Pipelines, Failures and dbt clone"
+}

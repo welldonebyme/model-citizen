@@ -1,0 +1,4892 @@
+{
+ "id": "ch19",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "Unit tests: the ",
+      {
+       "t": "code",
+       "v": "unit_tests:"
+      },
+      " YAML (",
+      {
+       "t": "code",
+       "v": "model"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "given"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "expect"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "overrides"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "versions"
+      },
+      "), the input formats ",
+      {
+       "t": "code",
+       "v": "dict"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "csv"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "sql"
+      },
+      ", fixture files, and the difference with data tests."
+     ],
+     "id": "5.1"
+    },
+    {
+     "c": [
+      "Unit testing an incremental model: ",
+      {
+       "t": "code",
+       "v": "overrides: macros: is_incremental"
+      },
+      ", and the input ",
+      {
+       "t": "code",
+       "v": "this"
+      },
+      "."
+     ],
+     "id": "5.1"
+    },
+    {
+     "c": [
+      "Where unit tests run: ",
+      {
+       "t": "code",
+       "v": "dbt test"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      " (before the model), development and CI, and how to exclude them from production (",
+      {
+       "t": "code",
+       "v": "--exclude-resource-type unit_test"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "DBT_ENGINE_EXCLUDE_RESOURCE_TYPES"
+      },
+      ")."
+     ],
+     "id": "5.3"
+    },
+    {
+     "c": [
+      "What a failing unit test does in ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      ", and the \"brand-new schema\" failure of a test that mocks ",
+      {
+       "t": "code",
+       "v": "this"
+      },
+      "."
+     ],
+     "id": "4.1"
+    },
+    {
+     "c": [
+      "Building empty parents with ",
+      {
+       "t": "code",
+       "v": "--empty"
+      },
+      " so that unit tests can run."
+     ],
+     "id": "1.12"
+    },
+    {
+     "c": [
+      "Unit tests on a versioned model (one test per version, ",
+      {
+       "t": "code",
+       "v": "versions: include/exclude"
+      },
+      ")."
+     ],
+     "id": "2.2"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "Your data tests from ",
+      {
+       "href": "/learn/ch18/",
+       "label": "ch:data-tests",
+       "t": "ref",
+       "text": "Chapter 18"
+      },
+      " all pass. Does that mean your models are correct? Not really. A data test looks at the data you have ",
+      {
+       "c": [
+        "today"
+       ],
+       "t": "i"
+      },
+      ". If today there is no refunded order, no customer without orders, no payment of 1 cent, your logic for these cases is never checked. One day such a row arrives, and the bug goes straight to the dashboard."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "A ",
+      {
+       "c": [
+        "unit test"
+       ],
+       "t": "i"
+      },
+      " checks the logic itself. You invent a few input rows (including the strange cases), you write the rows the model should produce, and dbt compares. It is like a test kitchen: before you change the recipe for 300 customers, you cook one small portion with known ingredients and taste it."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "Unit tests arrived in dbt 1.8 and they are part of exam objective 5.1. Expect questions on the YAML keys, the three input formats, the incremental case (",
+      {
+       "t": "code",
+       "v": "is_incremental"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "this"
+      },
+      "), the order of execution in ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      ", and the rule \"in development and CI, not in production\". In this chapter you write five unit tests for the practice project and you meet every error message a beginner meets."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "A unit test checks the SQL logic of one model: you give fake rows for each ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "source()"
+      },
+      " it reads (",
+      {
+       "t": "code",
+       "v": "given"
+      },
+      "), you write the rows you expect (",
+      {
+       "t": "code",
+       "v": "expect"
+      },
+      "), and dbt compares the model's output with them. dbt runs unit tests with ",
+      {
+       "t": "code",
+       "v": "dbt test"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      " (just before the model they test), but it still needs the direct parents to exist in the warehouse, because it reads their column types there. Unit test complex logic and edge cases, run the tests in development and CI, and exclude them from production runs with ",
+      {
+       "t": "code",
+       "v": "--exclude-resource-type unit_test"
+      },
+      "."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:unit-tests",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-ut-why"
+   ],
+   "checkpoints": [],
+   "id": "ch19-s1",
+   "label": "sec:ut-why",
+   "labs": [],
+   "minutes": 5,
+   "number": "19.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "blocks": [
+        {
+         "c": [
+          "A car factory checks its cars in two ways. On the test bench, an engineer puts ",
+          {
+           "c": [
+            "one"
+           ],
+           "t": "i"
+          },
+          " engine on a stand, sends it a precise amount of fuel and air, and measures the power: this checks the design (a unit test). At the end of the production line, an inspector checks ",
+          {
+           "c": [
+            "every real car"
+           ],
+           "t": "i"
+          },
+          " that leaves the factory: this checks the production (a data test). You need both. A perfect design built with bad parts gives a bad car; perfect parts assembled with a wrong design give a bad car too."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "unit test"
+         ],
+         "fr": "test unitaire",
+         "id": "term-unit-test",
+         "t": "term"
+        },
+        " tests the logic of one model in isolation. The fake input rows are called ",
+        {
+         "en": [
+          "fixtures"
+         ],
+         "fr": "jeux de données de test (fixtures)",
+         "id": "term-fixture",
+         "t": "term"
+        },
+        ": they replace (",
+        {
+         "c": [
+          "mock"
+         ],
+         "t": "i"
+        },
+        ") the real tables that the model reads."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Data test"
+            ],
+            "t": "b"
+           },
+           " (",
+           {
+            "href": "/learn/ch18/",
+            "label": "ch:data-tests",
+            "t": "ref",
+            "text": "Chapter 18"
+           },
+           ")"
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Unit test"
+            ],
+            "t": "b"
+           },
+           " (this chapter)"
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Checks"
+          ]
+         },
+         {
+          "c": [
+           "the real data in the warehouse"
+          ]
+         },
+         {
+          "c": [
+           "the SQL logic of one model"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Input"
+          ]
+         },
+         {
+          "c": [
+           "the real tables"
+          ]
+         },
+         {
+          "c": [
+           "small fake rows that you write (",
+           {
+            "t": "code",
+            "v": "given"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Pass when"
+          ]
+         },
+         {
+          "c": [
+           "the query returns 0 failing rows"
+          ]
+         },
+         {
+          "c": [
+           "the model output equals the expected rows (",
+           {
+            "t": "code",
+            "v": "expect"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Defined in"
+          ]
+         },
+         {
+          "c": [
+           "YAML (",
+           {
+            "t": "code",
+            "v": "data_tests:"
+           },
+           ") or ",
+           {
+            "t": "code",
+            "v": "tests/*.sql"
+           }
+          ]
+         },
+         {
+          "c": [
+           "YAML, under the top-level key ",
+           {
+            "t": "code",
+            "v": "unit_tests:"
+           },
+           ", in ",
+           {
+            "t": "code",
+            "v": "models/"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "In ",
+           {
+            "t": "code",
+            "v": "dbt build"
+           }
+          ]
+         },
+         {
+          "c": [
+           "runs ",
+           {
+            "c": [
+             "after"
+            ],
+            "t": "i"
+           },
+           " the model"
+          ]
+         },
+         {
+          "c": [
+           "runs ",
+           {
+            "c": [
+             "before"
+            ],
+            "t": "i"
+           },
+           " the model"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Result can change"
+          ]
+         },
+         {
+          "c": [
+           "every day, when the data changes"
+          ]
+         },
+         {
+          "c": [
+           "only when the code (or the test) changes"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Where to run"
+          ]
+         },
+         {
+          "c": [
+           "development, CI, production"
+          ]
+         },
+         {
+          "c": [
+           "development and CI only"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "The last two rows are linked. A unit test has fixed inputs, so its result in production would always be the same as in CI. Running it again in every production job only costs money. A data test, on the contrary, must run in production, because the data changes every day."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Unit tests do not look at your data"
+           ],
+           "t": "b"
+          },
+          " (trap T126). They never read the real rows of the input tables, and they cannot find order 159 or a duplicated id in the warehouse. Their job is to prove that the ",
+          {
+           "c": [
+            "transformation"
+           ],
+           "t": "i"
+          },
+          " is right for the cases you thought of. An exam answer like \"add a unit test to detect duplicates in the raw orders table\" is wrong: that is a data test."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch19-s1-0",
+     "title": [
+      "Data tests and unit tests"
+     ],
+     "titleText": "Data tests and unit tests"
+    }
+   ],
+   "title": [
+    "Data tests and unit tests"
+   ],
+   "titleText": "Data tests and unit tests"
+  },
+  {
+   "anchors": [
+    "sec-ut-anatomy"
+   ],
+   "checkpoints": [],
+   "id": "ch19-s2",
+   "label": "sec:ut-anatomy",
+   "labs": [
+    "ch19-lab1"
+   ],
+   "minutes": 20,
+   "number": "19.2",
+   "objectives": [
+    "5.1",
+    "5.3"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Unit tests live in a YAML file inside ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        " (any name; we use ",
+        {
+         "t": "code",
+         "v": "_<folder>__unit_tests.yml"
+        },
+        "), under the top-level key ",
+        {
+         "t": "code",
+         "v": "unit_tests:"
+        },
+        ". Not in ",
+        {
+         "t": "code",
+         "v": "tests/"
+        },
+        ": that folder is for data tests. Here is the complete list of keys:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c1",
+       "lang": "yaml",
+       "t": "code",
+       "text": "unit_tests:\n  - name: <unique name of the test>\n    description: <optional text>\n    model: <the model to test>\n    versions:                    # optional, for versioned models\n      include: [<versions>]      # or exclude: [<versions>]\n    config:                      # optional\n      tags: <string or list>\n      meta: {...}\n      enabled: true | false      # default true\n    given:                       # one entry per ref() / source() of the model\n      - input: ref('<model or seed>') | source('<source>', '<table>') | this\n        format: dict | csv | sql # default dict\n        rows: <the rows>         # or fixture: <file name in tests/fixtures/>\n    expect:\n      format: dict | csv | sql   # default dict\n      rows: <the expected rows>  # or fixture: <file name>\n    overrides:                   # optional\n      macros: {is_incremental: true, ...}\n      vars: {...}\n      env_vars: {...}",
+       "title": "the unit_tests specification (all keys)"
+      },
+      {
+       "c": [
+        "The core is short: ",
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "model"
+          }
+         ],
+         "t": "b"
+        },
+        ", ",
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "given"
+          }
+         ],
+         "t": "b"
+        },
+        " (the inputs) and ",
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "expect"
+          }
+         ],
+         "t": "b"
+        },
+        " (the output). Let us write the first unit test of the project."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch19-s2-0",
+     "title": [
+      "Anatomy of a unit test"
+     ],
+     "titleText": "Anatomy of a unit test"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Stripe sends amounts in cents. ",
+        {
+         "t": "code",
+         "v": "stg_stripe__payments"
+        },
+        " converts them with the macro ",
+        {
+         "t": "code",
+         "v": "cents_to_dollars"
+        },
+        " of ",
+        {
+         "href": "/learn/ch11/",
+         "label": "ch:jinja-macros-packages",
+         "t": "ref",
+         "text": "Chapter 11"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "cast(amount / 100 as decimal(16, 2))"
+        },
+        ". Integer division, rounding, decimals… this is exactly the kind of small logic that breaks silently. The test gives three raw payments, including an amount of 1 cent:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c2",
+       "lang": "yaml",
+       "t": "code",
+       "text": "unit_tests:\n  - name: test_stg_stripe__payments_cents_to_dollars\n    description: Amounts arrive in cents and must leave staging in dollars, as exact decimals.\n    model: stg_stripe__payments\n    given:\n      - input: source('stripe', 'payments')\n        rows:\n          - {id: 1, orderid: 10, paymentmethod: credit_card, status: success, amount: 1250}\n          - {id: 2, orderid: 10, paymentmethod: coupon, status: success, amount: 1}\n          - {id: 3, orderid: 11, paymentmethod: credit_card, status: fail, amount: 1999}\n    expect:\n      rows:\n        - {payment_id: 1, payment_method: credit_card, amount: 12.50}\n        - {payment_id: 2, payment_method: coupon, amount: 0.01}\n        - {payment_id: 3, payment_method: credit_card, amount: 19.99}",
+       "title": "models/staging/stripe/_stripe__unit_tests.yml"
+      },
+      {
+       "c": [
+        "Read it carefully:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "input: source('stripe', 'payments')"
+            },
+            " is written exactly like in the model. Every ",
+            {
+             "t": "code",
+             "v": "ref()"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "source()"
+            },
+            " of the model needs an input (this model has only one)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The input rows use the ",
+            {
+             "c": [
+              "raw"
+             ],
+             "t": "b"
+            },
+            " column names (",
+            {
+             "t": "code",
+             "v": "orderid"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "paymentmethod"
+            },
+            "), because they replace the raw table. The source also has ",
+            {
+             "t": "code",
+             "v": "created"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "_loaded_at"
+            },
+            ": we did not give them, so dbt fills them with NULL."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The expected rows use the ",
+            {
+             "c": [
+              "output"
+             ],
+             "t": "b"
+            },
+            " names of the model. We listed only three columns: dbt compares ",
+            {
+             "c": [
+              "only the columns you list"
+             ],
+             "t": "i"
+            },
+            " in ",
+            {
+             "t": "code",
+             "v": "expect"
+            },
+            ". The order of the rows does not matter (we swapped them: the test still passed)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch19-s2-1",
+     "number": "19.2.1",
+     "title": [
+      "A first unit test: cents to dollars"
+     ],
+     "titleText": "A first unit test: cents to dollars"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt compiles the model, but replaces each input by a CTE built from your rows. Here is the beginning of the compiled SQL (in ",
+        {
+         "t": "code",
+         "v": "target/compiled/"
+        },
+        ", blank lines removed):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c3",
+       "lang": "sql",
+       "t": "code",
+       "text": "with\n __dbt__cte__stripe__payments as (\n-- Fixture for payments\nselect\n    cast(1 as INTEGER)\n as \"id\",\n    cast(10 as INTEGER)\n as \"orderid\",\n    cast('credit_card' as character varying)\n as \"paymentmethod\",\n    cast('success' as character varying)\n as \"status\",\n    cast(1250 as INTEGER)\n as \"amount\", cast(null as DATE) as \"created\", cast(null as TIMESTAMP) as \"_loaded_at\"\nunion all\nselect\n...\n), source as (\n\n    select * from __dbt__cte__stripe__payments\n\n),",
+       "title": "target/compiled/.../test_stg_stripe__payments_cents_to_dollars.sql (extract)"
+      },
+      {
+       "c": [
+        "Two things to notice. First, ",
+        {
+         "t": "code",
+         "v": "source('stripe', 'payments')"
+        },
+        " became ",
+        {
+         "t": "code",
+         "v": "__dbt__cte__stripe__payments"
+        },
+        ": the real table is not read. Second, every value is ",
+        {
+         "c": [
+          "cast to the type of the real column"
+         ],
+         "t": "b"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "INTEGER"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "DATE"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "TIMESTAMP"
+        },
+        "…), and the missing columns are ",
+        {
+         "t": "code",
+         "v": "cast(null as ...)"
+        },
+        ". To know these types, dbt asks the warehouse for the columns of the real input relation. Remember this: it is the reason for most unit test errors (",
+        {
+         "href": "/learn/ch19/ch19-s7/",
+         "label": "sec:ut-parents",
+         "t": "ref",
+         "text": "Section 19.7"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "dbt then runs the compiled model, runs your expected rows, and compares the two sets. If they are equal, the test passes."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch19-s2-2",
+     "number": "19.2.2",
+     "title": [
+      "What dbt does with it"
+     ],
+     "titleText": "What dbt does with it"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "To see a failure, we introduced a bug in the macro: ",
+        {
+         "t": "code",
+         "v": "/ 10"
+        },
+        " instead of ",
+        {
+         "t": "code",
+         "v": "/ 100"
+        },
+        ". The unit test caught it:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c4",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:17:21  1 of 1 START unit_test stg_stripe__payments::test_stg_stripe__payments_cents_to_dollars  [RUN]\n22:17:21  1 of 1 FAIL 1 stg_stripe__payments::test_stg_stripe__payments_cents_to_dollars . [FAIL 1 in 0.13s]\n...\n22:17:21  Failure in unit_test test_stg_stripe__payments_cents_to_dollars (models/staging/stripe/_stripe__unit_tests.yml)\n22:17:21\n\nactual differs from expected:\n\n@@,payment_id,payment_method,amount\n-> ,1         ,credit_card   ,12.50->125.00\n-> ,2         ,coupon        ,0.01->0.10\n-> ,3         ,credit_card   ,19.99->199.90",
+       "title": "dbt test --select test_stg_stripe__payments_cents_to_dollars (the arrow of dbt is written -> here)"
+      },
+      {
+       "c": [
+        "How to read the diff:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "The first line lists the compared columns (the columns of ",
+            {
+             "t": "code",
+             "v": "expect"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A line starting with an arrow is a row where some values differ. In a cell, ",
+            {
+             "t": "code",
+             "v": "expected->actual"
+            },
+            ": we expected ",
+            {
+             "t": "code",
+             "v": "12.50"
+            },
+            ", the model returned ",
+            {
+             "t": "code",
+             "v": "125.00"
+            },
+            ". (dbt prints a real arrow character; we write ",
+            {
+             "t": "code",
+             "v": "->"
+            },
+            " in this book.)"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The count ",
+            {
+             "t": "code",
+             "v": "FAIL 1"
+            },
+            " is always 1 for a unit test: a unit test passes or fails as a whole, it does not count rows."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "When whole rows are missing or extra, the diff marks them differently. We changed the third expected row into a payment 4 that does not exist:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c5",
+       "lang": "output",
+       "t": "code",
+       "text": "actual differs from expected:\n\n@@ ,payment_id,payment_method,amount\n...,...       ,...           ,...\n   ,2         ,coupon        ,0.01\n+++,3         ,credit_card   ,Decimal('19.99')\n---,4         ,gift_card     ,Decimal('5.00')"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "+++"
+        },
+        " is a row the model returned but you did not expect; ",
+        {
+         "t": "code",
+         "v": "---"
+        },
+        " is a row you expected but the model did not return. The ",
+        {
+         "t": "code",
+         "v": "..."
+        },
+        " line means \"unchanged rows not shown\"."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Open your project at the end of ",
+          {
+           "href": "/learn/ch18/",
+           "label": "ch:data-tests",
+           "t": "ref",
+           "text": "Chapter 18"
+          },
+          " (",
+          {
+           "t": "code",
+           "v": "git status"
+          },
+          " clean, venv active). Create the file ",
+          {
+           "t": "code",
+           "v": "models/staging/stripe/_stripe__unit_tests.yml"
+          },
+          " with the content shown in ",
+          {
+           "href": "/learn/ch19/ch19-s2/",
+           "label": "sec:ut-anatomy",
+           "t": "ref",
+           "text": "Section 19.2"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Run only the unit tests of the project:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch19-c6",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt test --select test_type:unit"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch19-c7",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "22:17:09  Found 15 models, 2 analyses, 45 data tests, 1 seed, 2 snapshots, 5 sources, 670 macros, 2 groups, 1 unit test\n22:17:09\n22:17:09  Concurrency: 4 threads (target='dev')\n22:17:09\n22:17:10  1 of 1 START unit_test stg_stripe__payments::test_stg_stripe__payments_cents_to_dollars  [RUN]\n22:17:10  1 of 1 PASS stg_stripe__payments::test_stg_stripe__payments_cents_to_dollars ... [PASS in 0.08s]\n22:17:10\n22:17:10  Finished running 1 unit test in 0 hours 0 minutes and 0.14 seconds (0.14s).\n22:17:10\n22:17:10  Completed successfully\n22:17:10\n22:17:10  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1"
+        },
+        {
+         "c": [
+          "The ",
+          {
+           "t": "code",
+           "v": "Found"
+          },
+          " line now ends with ",
+          {
+           "t": "code",
+           "v": "1 unit test"
+          },
+          ". The log shows the test as ",
+          {
+           "t": "code",
+           "v": "model::test_name"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Find the compiled SQL of the test and look for ",
+          {
+           "t": "code",
+           "v": "__dbt__cte__stripe__payments"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch19-c8",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ find target/compiled -path '*unit_tests*' -name '*.sql'"
+        },
+        {
+         "c": [
+          "Two files are listed: ",
+          {
+           "t": "code",
+           "v": "payments.sql"
+          },
+          " (the fixture alone) and ",
+          {
+           "t": "code",
+           "v": "test_stg_stripe__payments_cents_to_dollars.sql"
+          },
+          " (the whole test). Open the second one."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Break the macro on purpose: in ",
+          {
+           "t": "code",
+           "v": "macros/cents_to_dollars.sql"
+          },
+          ", in the code line ",
+          {
+           "t": "code",
+           "v": "cast({{ column_name }} / 100 …)"
+          },
+          " (not in the comment above it), replace ",
+          {
+           "t": "code",
+           "v": "/ 100"
+          },
+          " by ",
+          {
+           "t": "code",
+           "v": "/ 10"
+          },
+          ". Run ",
+          {
+           "t": "code",
+           "v": "dbt test --select test_stg_stripe__payments_cents_to_dollars"
+          },
+          ". ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "FAIL 1"
+          },
+          " and the diff shown above (",
+          {
+           "t": "code",
+           "v": "12.50->125.00"
+          },
+          "…)."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Undo the bug (",
+          {
+           "t": "code",
+           "v": "git restore macros/cents_to_dollars.sql"
+          },
+          ") and run the test again. ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch19-lab1",
+       "objectives": [
+        "5.1",
+        "5.3"
+       ],
+       "t": "lab",
+       "title": [
+        "Your first unit test"
+       ]
+      }
+     ],
+     "id": "ch19-s2-3",
+     "number": "19.2.3",
+     "title": [
+      "Reading a failing unit test"
+     ],
+     "titleText": "Reading a failing unit test"
+    }
+   ],
+   "title": [
+    "Anatomy of a unit test"
+   ],
+   "titleText": "Anatomy of a unit test"
+  },
+  {
+   "anchors": [
+    "sec-ut-formats"
+   ],
+   "checkpoints": [],
+   "id": "ch19-s3",
+   "label": "sec:ut-formats",
+   "labs": [
+    "ch19-lab2"
+   ],
+   "minutes": 20,
+   "number": "19.3",
+   "objectives": [
+    "2.2",
+    "5.1"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The rows of ",
+        {
+         "t": "code",
+         "v": "given"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "expect"
+        },
+        " can be written in three formats. Choose one per input with ",
+        {
+         "t": "code",
+         "v": "format:"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Format"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "How you write the rows"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Rules"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dict"
+           },
+           " (default)"
+          ]
+         },
+         {
+          "c": [
+           "a YAML list of dictionaries: ",
+           {
+            "t": "code",
+            "v": "- {id: 1, status: success}"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Give only the columns you need; the others are NULL."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "csv"
+           }
+          ]
+         },
+         {
+          "c": [
+           "CSV text after ",
+           {
+            "t": "code",
+            "v": "rows: |"
+           },
+           " (header line first), or a CSV file"
+          ]
+         },
+         {
+          "c": [
+           "Same: only the columns you need."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "sql"
+           }
+          ]
+         },
+         {
+          "c": [
+           "a ",
+           {
+            "t": "code",
+            "v": "select"
+           },
+           " after ",
+           {
+            "t": "code",
+            "v": "rows: |"
+           },
+           ", or a SQL file"
+          ]
+         },
+         {
+          "c": [
+           "You must give ",
+           {
+            "c": [
+             "all"
+            ],
+            "t": "b"
+           },
+           " the columns. No Jinja. Required for ephemeral inputs."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "The unit test of ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " uses the three formats, one per input, so you can compare them:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c9",
+       "lang": "yaml",
+       "t": "code",
+       "text": "unit_tests:\n  - name: test_dim_customers_lifetime_value\n    description: >\n      number_of_orders and lifetime_value come from fct_orders; a customer without\n      orders keeps 0 orders, 0 value and NULL dates.\n    model: dim_customers\n    given:\n      # format dict (the default): one YAML dictionary per row; missing columns are NULL\n      - input: ref('stg_jaffle_shop__customers')\n        rows:\n          - {customer_id: 1, first_name: Ana, last_name: Lopez, country: France}\n          - {customer_id: 2, first_name: Omar, last_name: Alami, country: Morocco}\n      # format csv: the rows as CSV text\n      - input: ref('fct_orders')\n        format: csv\n        rows: |\n          order_id,customer_id,order_date,status,amount\n          10,1,2025-03-01,completed,12.50\n          11,1,2025-04-15,returned,7.50\n          12,1,2025-05-01,placed,0\n      # format sql: a SELECT that returns ALL the columns of the input\n      - input: ref('country_regions')\n        format: sql\n        rows: |\n          select 'France' as country, 'Europe' as region, 'EUR' as currency\n          union all\n          select 'Morocco', 'Africa', 'MAD'\n    expect:\n      rows:\n        - {customer_id: 1, region: Europe, first_order_date: 2025-03-01, most_recent_order_date: 2025-05-01, number_of_orders: 3, lifetime_value: 20.00}\n        - {customer_id: 2, region: Africa, first_order_date: null, most_recent_order_date: null, number_of_orders: 0, lifetime_value: 0}",
+       "title": "models/marts/_marts__unit_tests.yml (first test)"
+      },
+      {
+       "c": [
+        "The test is built around ",
+        {
+         "en": [
+          "edge cases"
+         ],
+         "fr": "cas limites",
+         "id": "term-edge-case",
+         "t": "term"
+        },
+        ": customer 1 has three orders of three different statuses, including a placed order of 0 dollars; customer 2 has no order at all. The expected row of customer 2 is the interesting one: ",
+        {
+         "t": "code",
+         "v": "number_of_orders"
+        },
+        " must be 0 (not NULL), ",
+        {
+         "t": "code",
+         "v": "lifetime_value"
+        },
+        " 0, and the dates NULL. This is the ",
+        {
+         "t": "code",
+         "v": "coalesce()"
+        },
+        " logic of the model; if someone removes a ",
+        {
+         "t": "code",
+         "v": "coalesce"
+        },
+        " one day, this test fails."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch19-s3-0",
+     "title": [
+      "Input formats and fixtures"
+     ],
+     "titleText": "Input formats and fixtures"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "What if you forget an input? We removed the ",
+        {
+         "t": "code",
+         "v": "country_regions"
+        },
+        " input:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c10",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:18:27  Failure in unit_test test_dim_customers_lifetime_value (models/marts/_marts__unit_tests.yml)\n22:18:27    Compilation Error in unit_test test_dim_customers_lifetime_value_v2 (models/marts/_marts__unit_tests.yml)\n  Unit_Test 'unit_test.jaffle_dbt.dim_customers.test_dim_customers_lifetime_value_v2' (models/marts/_marts__unit_tests.yml) depends on a node named 'country_regions' which was not found"
+      },
+      {
+       "c": [
+        "The message is confusing (\"node … not found\" although the seed exists): it means \"this ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " has no input in the test\". Every ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " of the model needs an entry in ",
+        {
+         "t": "code",
+         "v": "given"
+        },
+        ". A forgotten ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " input gives the same kind of message; we removed the input of the payments test and got ",
+        {
+         "t": "code",
+         "v": "depends on a source named 'stripe.payments' which was not found"
+        },
+        ". The source is declared correctly: the message only means \"no input was given for it\". dbt never falls back to the real table."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Seeds are a special case."
+         ],
+         "t": "b"
+        },
+        " For a seed you may write the input ",
+        {
+         "c": [
+          "without rows"
+         ],
+         "t": "i"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "- input: ref('country_regions')"
+        },
+        ". dbt then uses the content of the CSV file of the seed as fixture. We tried it: the test passed, and the compiled SQL contained the six countries of ",
+        {
+         "t": "code",
+         "v": "seeds/country_regions.csv"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch19-s3-1",
+     "number": "19.3.1",
+     "title": [
+      "Every input is required, except seeds"
+     ],
+     "titleText": "Every input is required, except seeds"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Long inputs make the YAML hard to read. With ",
+        {
+         "t": "code",
+         "v": "fixture:"
+        },
+        " instead of ",
+        {
+         "t": "code",
+         "v": "rows:"
+        },
+        ", dbt reads the rows from a file in ",
+        {
+         "t": "code",
+         "v": "tests/fixtures/"
+        },
+        " (in your test paths). We tried it with two CSV files:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c11",
+       "lang": "plain",
+       "t": "code",
+       "text": "id,orderid,paymentmethod,status,amount\n1,10,credit_card,success,1250\n2,10,coupon,success,1",
+       "title": "tests/fixtures/raw_payments_fixture.csv (experiment, not kept)"
+      },
+      {
+       "id": "ch19-c12",
+       "lang": "plain",
+       "t": "code",
+       "text": "payment_id,amount\n1,12.50\n2,0.01",
+       "title": "tests/fixtures/expected_payments_fixture.csv (experiment, not kept)"
+      },
+      {
+       "id": "ch19-c13",
+       "lang": "yaml",
+       "t": "code",
+       "text": "  - name: test_payments_from_fixture_files\n    model: stg_stripe__payments\n    given:\n      - input: source('stripe', 'payments')\n        format: csv\n        fixture: raw_payments_fixture\n    expect:\n      format: csv\n      fixture: expected_payments_fixture",
+       "title": "the unit test (experiment, not kept)"
+      },
+      {
+       "c": [
+        "The test passed. You write the file name without its extension, and ",
+        {
+         "t": "code",
+         "v": "format"
+        },
+        " must match the file (",
+        {
+         "t": "code",
+         "v": "csv"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "sql"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch19-s3-2",
+     "number": "19.3.2",
+     "title": [
+      "Fixture files"
+     ],
+     "titleText": "Fixture files"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "For ",
+        {
+         "t": "code",
+         "v": "dict"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "csv"
+        },
+        " rows, dbt reads the column types from the input relation in the warehouse. An ",
+        {
+         "c": [
+          "ephemeral"
+         ],
+         "t": "b"
+        },
+        " model has no relation, so this is impossible. We tried a unit test on ",
+        {
+         "t": "code",
+         "v": "int_orders__payment_methods_pivoted"
+        },
+        ", whose input ",
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        " is ephemeral (",
+        {
+         "href": "/learn/ch08/",
+         "label": "ch:materializations",
+         "t": "ref",
+         "text": "Chapter 8"
+        },
+        "), with dict rows:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c14",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:19:28  1 of 1 ERROR int_orders__payment_methods_pivoted::test_pivot_one_column_per_method  [ERROR in 0.03s]\n...\n22:19:28    Compilation Error in model int_payments__successful (models/intermediate/_tmp_unit_tests.yml)\n  Not able to get columns for unit test 'int_payments__successful' from relation \"practice\".\"dbt_adnane\".\"int_payments__successful\" because the relation doesn't exist"
+      },
+      {
+       "c": [
+        "With ",
+        {
+         "t": "code",
+         "v": "format: sql"
+        },
+        " and a ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        " that gives ",
+        {
+         "c": [
+          "every"
+         ],
+         "t": "i"
+        },
+        " column of the ephemeral model, the same test passed:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c15",
+       "lang": "yaml",
+       "t": "code",
+       "text": "unit_tests:\n  - name: test_pivot_one_column_per_method\n    model: int_orders__payment_methods_pivoted\n    given:\n      # int_payments__successful is EPHEMERAL: no relation exists, so use format sql (all columns)\n      - input: ref('int_payments__successful')\n        format: sql\n        rows: |\n          select 1 as payment_id, 10 as order_id, 'coupon' as payment_method,\n                 5.00 as amount, null::timestamp as created_at\n          union all\n          select 2, 10, 'credit_card', 20.00, null\n    expect:\n      rows:\n        - {order_id: 10, bank_transfer_amount: 0, coupon_amount: 5.00, credit_card_amount: 20.00, gift_card_amount: 0}",
+       "title": "models/intermediate/_tmp_unit_tests.yml (experiment, not kept)"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Which format when?"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "dict"
+          },
+          " is the default and the most readable. ",
+          {
+           "t": "code",
+           "v": "csv"
+          },
+          " is compact for many rows and works with fixture files. ",
+          {
+           "t": "code",
+           "v": "sql"
+          },
+          " is the only choice for an ephemeral input, and it is also useful for types that are hard to write in YAML (dates with time zones, arrays, structs). But with ",
+          {
+           "t": "code",
+           "v": "sql"
+          },
+          " you must list ",
+          {
+           "c": [
+            "all"
+           ],
+           "t": "b"
+          },
+          " the columns of the input, and you cannot use Jinja inside. A ",
+          {
+           "t": "code",
+           "v": "csv"
+          },
+          " fixture does ",
+          {
+           "c": [
+            "not"
+           ],
+           "t": "i"
+          },
+          " solve the ephemeral problem: like ",
+          {
+           "t": "code",
+           "v": "dict"
+          },
+          ", it needs the column types of a real relation (we tried: same error)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch19-s3-3",
+     "number": "19.3.3",
+     "title": [
+      "Ephemeral inputs need format sql"
+     ],
+     "titleText": "Ephemeral inputs need format sql"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " has two versions (",
+        {
+         "href": "/learn/ch17/",
+         "label": "ch:governance",
+         "t": "ref",
+         "text": "Chapter 17"
+        },
+        "). By default, a unit test runs on ",
+        {
+         "c": [
+          "every"
+         ],
+         "t": "b"
+        },
+        " version of its model, so our one test became two tests:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c16",
+       "lang": "output",
+       "t": "code",
+       "text": "unit_test:jaffle_dbt.test_dim_customers_lifetime_value_v1\nunit_test:jaffle_dbt.test_dim_customers_lifetime_value_v2\nunit_test:jaffle_dbt.test_stg_stripe__payments_cents_to_dollars",
+       "title": "dbt ls --resource-type unit_test (after the lab below)"
+      },
+      {
+       "c": [
+        "To limit a test to some versions, add ",
+        {
+         "t": "code",
+         "v": "versions:"
+        },
+        " with ",
+        {
+         "t": "code",
+         "v": "include"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "exclude"
+        },
+        ". With ",
+        {
+         "t": "code",
+         "v": "include: [2]"
+        },
+        " under the test, only ",
+        {
+         "t": "code",
+         "v": "test_dim_customers_lifetime_value_v2"
+        },
+        " remained in the list. Our test only reads columns that both versions have, so we keep it on both."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Create ",
+          {
+           "t": "code",
+           "v": "models/marts/_marts__unit_tests.yml"
+          },
+          " with the test ",
+          {
+           "t": "code",
+           "v": "test_dim_customers_lifetime_value"
+          },
+          " shown in ",
+          {
+           "href": "/learn/ch19/ch19-s3/",
+           "label": "sec:ut-formats",
+           "t": "ref",
+           "text": "Section 19.3"
+          },
+          ". Check the expected values by hand: customer 1 has 3 orders, the first on 2025-03-01, the last on 2025-05-01, and a value of 12.50 + 7.50 + 0 = 20.00."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Run it:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch19-c17",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt test --select test_dim_customers_lifetime_value"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch19-c18",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "22:18:07  Found 15 models, 1 seed, 2 snapshots, 45 data tests, 2 analyses, 5 sources, 670 macros, 2 groups, 3 unit tests\n...\n22:18:07  1 of 2 START unit_test dim_customers::test_dim_customers_lifetime_value_v1 ..... [RUN]\n22:18:07  2 of 2 START unit_test dim_customers::test_dim_customers_lifetime_value_v2 ..... [RUN]\n22:18:07  2 of 2 PASS dim_customers::test_dim_customers_lifetime_value_v2 ................ [PASS in 0.18s]\n22:18:07  1 of 2 PASS dim_customers::test_dim_customers_lifetime_value_v1 ................ [PASS in 0.18s]\n...\n22:18:07  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=2"
+        },
+        {
+         "c": [
+          "You selected one test by its name and dbt ran two: one per version of ",
+          {
+           "t": "code",
+           "v": "dim_customers"
+          },
+          ". The project has 3 unit tests."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Delete the seven lines of the ",
+          {
+           "t": "code",
+           "v": "country_regions"
+          },
+          " input (from the comment ",
+          {
+           "t": "code",
+           "v": "# format sql"
+          },
+          " to the second ",
+          {
+           "t": "code",
+           "v": "select"
+          },
+          ") and run the test again. ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " two ",
+          {
+           "t": "code",
+           "v": "ERROR"
+          },
+          " lines and the message ",
+          {
+           "t": "code",
+           "v": "depends on a node named 'country_regions' which was not found"
+          },
+          ". Put the lines back (",
+          {
+           "t": "code",
+           "v": "git restore"
+          },
+          " does not work yet: the file is new; use your editor's undo) and check that the test passes again."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4 (optional)."
+           ],
+           "t": "b"
+          },
+          " Add ",
+          {
+           "t": "code",
+           "v": "versions:"
+          },
+          " / ",
+          {
+           "t": "code",
+           "v": "include: [2]"
+          },
+          " under ",
+          {
+           "t": "code",
+           "v": "model: dim_customers"
+          },
+          " and run ",
+          {
+           "t": "code",
+           "v": "dbt ls --resource-type unit_test"
+          },
+          ": only the ",
+          {
+           "t": "code",
+           "v": "_v2"
+          },
+          " test is listed. Remove the two lines again."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch19-lab2",
+       "objectives": [
+        "5.1",
+        "2.2"
+       ],
+       "t": "lab",
+       "title": [
+        "A unit test with three input formats"
+       ]
+      }
+     ],
+     "id": "ch19-s3-4",
+     "number": "19.3.4",
+     "title": [
+      "Versioned models"
+     ],
+     "titleText": "Versioned models"
+    }
+   ],
+   "title": [
+    "Input formats and fixtures"
+   ],
+   "titleText": "Input formats and fixtures"
+  },
+  {
+   "anchors": [
+    "sec-ut-overrides"
+   ],
+   "checkpoints": [],
+   "id": "ch19-s4",
+   "label": "sec:ut-overrides",
+   "labs": [],
+   "minutes": 5,
+   "number": "19.4",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Some models do not depend only on their inputs: they read a variable, an environment variable, or the result of a macro such as ",
+        {
+         "t": "code",
+         "v": "is_incremental()"
+        },
+        ". A unit test must fix these values too, otherwise the result would depend on the moment and the place where you run it. This is the job of ",
+        {
+         "t": "code",
+         "v": "overrides"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c19",
+       "lang": "yaml",
+       "t": "code",
+       "text": "    overrides:\n      macros:\n        is_incremental: true                  # the result of the macro, for this test\n      vars:\n        dev_start_date: '2025-06-01'          # replaces var('dev_start_date')\n      env_vars:\n        DBT_MY_SETTING: some_value            # replaces env_var('DBT_MY_SETTING')",
+       "title": "overrides (syntax)"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "A var override, tested."
+         ],
+         "t": "b"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__orders"
+        },
+        " keeps, in the ",
+        {
+         "t": "code",
+         "v": "dev"
+        },
+        " target only, the orders after ",
+        {
+         "t": "code",
+         "v": "var('dev_start_date')"
+        },
+        " (",
+        {
+         "href": "/learn/ch10/",
+         "label": "ch:configuration",
+         "t": "ref",
+         "text": "Chapter 10"
+        },
+        "). We wrote this unit test (not kept in the project):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c20",
+       "lang": "yaml",
+       "t": "code",
+       "text": "  - name: test_orders_dev_start_date\n    description: In dev, orders before var('dev_start_date') are filtered out.\n    model: stg_jaffle_shop__orders\n    overrides:\n      vars:\n        dev_start_date: '2025-06-01'\n    given:\n      - input: source('jaffle_shop', 'orders')\n        rows:\n          - {id: 1, user_id: 1, order_date: 2025-05-31, status: completed}\n          - {id: 2, user_id: 1, order_date: 2025-06-01, status: shipped}\n    expect:\n      rows:\n        - {order_id: 2, order_date: 2025-06-01}",
+       "title": "experiment, not kept"
+      },
+      {
+       "c": [
+        "It passed with the ",
+        {
+         "t": "code",
+         "v": "dev"
+        },
+        " target. With ",
+        {
+         "t": "code",
+         "v": "--target prod"
+        },
+        " the same test ",
+        {
+         "c": [
+          "failed"
+         ],
+         "t": "i"
+        },
+        ": in prod the ",
+        {
+         "t": "code",
+         "v": "if target.name == 'dev'"
+        },
+        " block is not rendered, so both orders came out. Overrides fix vars, env vars and macros, but ",
+        {
+         "c": [
+          "the target is the real one"
+         ],
+         "t": "b"
+        },
+        ": a model whose logic depends on ",
+        {
+         "t": "code",
+         "v": "target.name"
+        },
+        " gives different unit test results in dev and in CI if the targets have different names."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Two more rules from the documentation:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Overrides apply only to macros, vars and env vars that the model references ",
+            {
+             "c": [
+              "directly"
+             ],
+             "t": "i"
+            },
+            ". A variable read inside a macro that the model calls is not replaced."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A model that uses ",
+            {
+             "t": "code",
+             "v": "dbt_utils.star()"
+            },
+            " needs an override for it, for example ",
+            {
+             "t": "code",
+             "v": "dbt_utils.star: col_a,col_b"
+            },
+            ", because ",
+            {
+             "t": "code",
+             "v": "star"
+            },
+            " needs a real relation, and in a unit test the inputs are CTEs."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch19-s4-0",
+     "title": [
+      "Overrides: macros, variables and environment variables"
+     ],
+     "titleText": "Overrides: macros, variables and environment variables"
+    }
+   ],
+   "title": [
+    "Overrides: macros, variables and environment variables"
+   ],
+   "titleText": "Overrides: macros, variables and environment variables"
+  },
+  {
+   "anchors": [
+    "sec-ut-incremental"
+   ],
+   "checkpoints": [],
+   "id": "ch19-s5",
+   "label": "sec:ut-incremental",
+   "labs": [
+    "ch19-lab3"
+   ],
+   "minutes": 20,
+   "number": "19.5",
+   "objectives": [
+    "1.11",
+    "5.1",
+    "5.3"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " is incremental (",
+        {
+         "href": "/learn/ch14/",
+         "label": "ch:incremental-microbatch",
+         "t": "ref",
+         "text": "Chapter 14"
+        },
+        "). Its SQL has two behaviours:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c21",
+       "lang": "dbt",
+       "t": "code",
+       "text": "orders as (\n\n    select * from {{ ref('int_orders__enriched') }}\n\n    {% if is_incremental() %}\n    -- only the orders loaded after the newest row already in this table\n    -- (coalesce: if the table is empty, for example after --empty, max() is NULL -> take every row)\n    where loaded_at > (select coalesce(max(loaded_at), '1900-01-01') from {{ this }})\n    {% endif %}\n\n),",
+       "title": "models/marts/fct_orders.sql (extract)"
+      },
+      {
+       "c": [
+        "The filter is the most dangerous part of an incremental model: a wrong comparison (",
+        {
+         "t": "code",
+         "v": ">="
+        },
+        " instead of ",
+        {
+         "t": "code",
+         "v": ">"
+        },
+        ", the wrong column) loses or duplicates rows silently. It deserves a unit test. To test it, you need two things:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "force the branch: ",
+            {
+             "t": "code",
+             "v": "overrides: macros: is_incremental: true"
+            },
+            " (or ",
+            {
+             "t": "code",
+             "v": "false"
+            },
+            " for the full-refresh branch);"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "give the content of the existing table: an input named ",
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "this"
+              }
+             ],
+             "t": "b"
+            },
+            " (no ",
+            {
+             "t": "code",
+             "v": "ref()"
+            },
+            ", no quotes)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "id": "ch19-c22",
+       "lang": "yaml",
+       "t": "code",
+       "text": "  - name: test_fct_orders_incremental_keeps_only_new_rows\n    description: In an incremental run, only orders loaded after the newest loaded_at already in the table are processed.\n    model: fct_orders\n    overrides:\n      macros:\n        is_incremental: true\n    given:\n      - input: ref('int_orders__enriched')\n        rows:\n          - {order_id: 1, customer_id: 1, order_date: 2025-12-30, status: shipped, loaded_at: \"2025-12-30 10:00:00\", paid_amount: 10.00}\n          - {order_id: 2, customer_id: 2, order_date: 2025-12-31, status: placed, loaded_at: \"2026-01-02 07:00:00\", paid_amount: 25.00}\n          - {order_id: 3, customer_id: 1, order_date: 2026-01-01, status: completed, loaded_at: \"2026-01-01 08:00:00\", paid_amount: 6.00}\n      - input: ref('int_orders__payment_methods_pivoted')\n        rows:\n          - {order_id: 2, bank_transfer_amount: 0, coupon_amount: 5.00, credit_card_amount: 20.00, gift_card_amount: 0}\n          - {order_id: 3, bank_transfer_amount: 0, coupon_amount: 0, credit_card_amount: 6.00, gift_card_amount: 0}\n      # 'this' = the current content of the incremental table\n      - input: this\n        rows:\n          - {order_id: 1, loaded_at: \"2025-12-31 00:00:00\"}\n    expect:\n      rows:\n        - {order_id: 2, status: placed, coupon_amount: 5.00, credit_card_amount: 20.00, amount: 25.00}\n        - {order_id: 3, status: completed, coupon_amount: 0, credit_card_amount: 6.00, amount: 6.00}\n\n  - name: test_fct_orders_full_refresh_keeps_all_rows\n    description: In a full refresh (is_incremental false), every order is processed.\n    model: fct_orders\n    overrides:\n      macros:\n        is_incremental: false\n    given:\n      - input: ref('int_orders__enriched')\n        rows:\n          - {order_id: 1, loaded_at: \"2025-12-30 10:00:00\", paid_amount: 10.00}\n          - {order_id: 2, loaded_at: \"2026-01-02 07:00:00\", paid_amount: 25.00}\n      - input: ref('int_orders__payment_methods_pivoted')\n        rows: []\n    expect:\n      rows:\n        - {order_id: 1, amount: 10.00, credit_card_amount: 0}\n        - {order_id: 2, amount: 25.00, credit_card_amount: 0}",
+       "title": "models/marts/_marts__unit_tests.yml (second and third tests)"
+      },
+      {
+       "c": [
+        "Follow the first test: the existing table (",
+        {
+         "t": "code",
+         "v": "this"
+        },
+        ") has a newest ",
+        {
+         "t": "code",
+         "v": "loaded_at"
+        },
+        " of 2025-12-31 00:00. Order 1 was loaded before (2025-12-30), so the incremental filter must drop it; orders 2 and 3 were loaded after, so they come out. In the compiled SQL, ",
+        {
+         "t": "code",
+         "v": "{{ this }}"
+        },
+        " became a CTE built from your ",
+        {
+         "t": "code",
+         "v": "this"
+        },
+        " rows:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c23",
+       "lang": "sql",
+       "t": "code",
+       "text": "    where loaded_at > (select coalesce(max(loaded_at), '1900-01-01') from __dbt__cte__fct_orders)",
+       "title": "target/compiled/.../test_fct_orders_incremental_keeps_only_new_rows.sql (one line)"
+      },
+      {
+       "c": [
+        "The second test checks the other branch: without the filter, every order comes out, and ",
+        {
+         "t": "code",
+         "v": "rows: []"
+        },
+        " gives an ",
+        {
+         "c": [
+          "empty"
+         ],
+         "t": "i"
+        },
+        " input (no payment at all, so every payment-method amount is 0 thanks to the ",
+        {
+         "t": "code",
+         "v": "coalesce"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "The expected rows of an incremental unit test are what the model's ",
+            {
+             "t": "code",
+             "v": "select"
+            },
+            " returns"
+           ],
+           "t": "b"
+          },
+          ", that is, the rows that dbt will insert or merge, not the final content of the table. Order 1 is not in ",
+          {
+           "t": "code",
+           "v": "expect"
+          },
+          ", although it stays in the real table. A unit test cannot check the ",
+          {
+           "t": "code",
+           "v": "merge"
+          },
+          " itself (trap T129: to test the incremental branch, override ",
+          {
+           "t": "code",
+           "v": "is_incremental"
+          },
+          "; ",
+          {
+           "t": "code",
+           "v": "--full-refresh"
+          },
+          " only tests the other branch)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch19-s5-0",
+     "title": [
+      "Unit testing an incremental model"
+     ],
+     "titleText": "Unit testing an incremental model"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt 1.11 is strict with incremental models. We removed the ",
+        {
+         "t": "code",
+         "v": "overrides"
+        },
+        " block of the first test:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c24",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:18:53  Encountered an error:\nParsing Error\n  Boolean override for 'is_incremental' must be provided for unit test 'test_fct_orders_incremental_keeps_only_new_rows' in model 'fct_orders'"
+      },
+      {
+       "c": [
+        "Then we put it back but removed the ",
+        {
+         "t": "code",
+         "v": "this"
+        },
+        " input:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c25",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:19:02  Encountered an error:\nParsing Error\n  Unit test 'test_fct_orders_incremental_keeps_only_new_rows' for incremental model 'fct_orders' must have a 'this' input"
+      },
+      {
+       "c": [
+        "These are ",
+        {
+         "c": [
+          "parsing"
+         ],
+         "t": "i"
+        },
+        " errors: the whole command stops before running anything, not only this test. So for a unit test of a model that uses ",
+        {
+         "t": "code",
+         "v": "is_incremental()"
+        },
+        ": the override is ",
+        {
+         "c": [
+          "required"
+         ],
+         "t": "b"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "true"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "false"
+        },
+        "), and with ",
+        {
+         "t": "code",
+         "v": "true"
+        },
+        " an ",
+        {
+         "t": "code",
+         "v": "input: this"
+        },
+        " is ",
+        {
+         "c": [
+          "required"
+         ],
+         "t": "b"
+        },
+        " too."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Add the two ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " tests shown above at the end of ",
+          {
+           "t": "code",
+           "v": "models/marts/_marts__unit_tests.yml"
+          },
+          " (same indentation as the first test)."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Remove the three ",
+          {
+           "t": "code",
+           "v": "overrides"
+          },
+          " lines of the first one and run ",
+          {
+           "t": "code",
+           "v": "dbt test --select test_type:unit"
+          },
+          ". ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Parsing Error"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Boolean override for 'is_incremental' must be provided …"
+          },
+          ". Put the lines back."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Remove the four lines of the ",
+          {
+           "t": "code",
+           "v": "this"
+          },
+          " input (comment included) and run again. ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Parsing Error"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "… must have a 'this' input"
+          },
+          ". Put the lines back."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Run all the unit tests and list them:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch19-c26",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt test --select test_type:unit\n$ dbt ls --resource-type unit_test"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch19-c27",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "22:19:10  1 of 5 START unit_test dim_customers::test_dim_customers_lifetime_value_v1 ..... [RUN]\n22:19:10  2 of 5 START unit_test dim_customers::test_dim_customers_lifetime_value_v2 ..... [RUN]\n22:19:10  3 of 5 START unit_test fct_orders::test_fct_orders_full_refresh_keeps_all_rows . [RUN]\n22:19:10  4 of 5 START unit_test fct_orders::test_fct_orders_incremental_keeps_only_new_rows  [RUN]\n22:19:10  3 of 5 PASS fct_orders::test_fct_orders_full_refresh_keeps_all_rows ............ [PASS in 0.18s]\n22:19:10  5 of 5 START unit_test stg_stripe__payments::test_stg_stripe__payments_cents_to_dollars  [RUN]\n22:19:10  1 of 5 PASS dim_customers::test_dim_customers_lifetime_value_v1 ................ [PASS in 0.21s]\n22:19:10  4 of 5 PASS fct_orders::test_fct_orders_incremental_keeps_only_new_rows ........ [PASS in 0.19s]\n22:19:10  2 of 5 PASS dim_customers::test_dim_customers_lifetime_value_v2 ................ [PASS in 0.21s]\n22:19:10  5 of 5 PASS stg_stripe__payments::test_stg_stripe__payments_cents_to_dollars ... [PASS in 0.04s]\n...\n22:19:10  Done. PASS=5 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=5\n...\nunit_test:jaffle_dbt.test_dim_customers_lifetime_value_v1\nunit_test:jaffle_dbt.test_dim_customers_lifetime_value_v2\nunit_test:jaffle_dbt.test_fct_orders_full_refresh_keeps_all_rows\nunit_test:jaffle_dbt.test_fct_orders_incremental_keeps_only_new_rows\nunit_test:jaffle_dbt.test_stg_stripe__payments_cents_to_dollars"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " See where the unit tests run inside ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " (we exclude the data tests only to keep the log short):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch19-c28",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --select +dim_customers --exclude-resource-type test"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (the START lines removed):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch19-c29",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "22:20:40  3 of 14 OK loaded seed file dbt_adnane.country_regions ......................... [INSERT 6 in 0.16s]\n22:20:40  2 of 14 OK created sql view model dbt_adnane.stg_jaffle_shop__orders ........... [OK in 0.17s]\n22:20:40  1 of 14 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ........ [OK in 0.17s]\n22:20:40  4 of 14 PASS stg_stripe__payments::test_stg_stripe__payments_cents_to_dollars .. [PASS in 0.17s]\n22:20:40  5 of 14 OK created sql view model dbt_adnane.stg_stripe__payments .............. [OK in 0.02s]\n22:20:40  7 of 14 OK created sql view model dbt_adnane.int_orders__payment_methods_pivoted  [OK in 0.04s]\n22:20:40  6 of 14 OK created sql view model dbt_adnane.int_orders__enriched .............. [OK in 0.04s]\n22:20:40  8 of 14 PASS fct_orders::test_fct_orders_full_refresh_keeps_all_rows ........... [PASS in 0.04s]\n22:20:40  9 of 14 PASS fct_orders::test_fct_orders_incremental_keeps_only_new_rows ....... [PASS in 0.05s]\n22:20:40  10 of 14 OK created sql incremental model dbt_adnane.fct_orders ................ [OK in 0.10s]\n22:20:40  11 of 14 PASS dim_customers::test_dim_customers_lifetime_value_v1 .............. [PASS in 0.08s]\n22:20:40  12 of 14 PASS dim_customers::test_dim_customers_lifetime_value_v2 .............. [PASS in 0.10s]\n22:20:41  13 of 14 OK created sql table model dbt_adnane.dim_customers_v1 ................ [OK in 0.15s]\n22:20:41  14 of 14 OK created sql table model dbt_adnane.dim_customers_v2 ................ [OK in 0.12s]\n...\n22:20:41  Done. PASS=14 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=14"
+        },
+        {
+         "c": [
+          "Each unit test passes ",
+          {
+           "c": [
+            "just before"
+           ],
+           "t": "i"
+          },
+          " its model is built: the payments test (4) before ",
+          {
+           "t": "code",
+           "v": "stg_stripe__payments"
+          },
+          " (5), the two ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " tests (8, 9) before ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " (10), the two ",
+          {
+           "t": "code",
+           "v": "dim_customers"
+          },
+          " tests (11, 12) before the two versions (13, 14). Do not commit yet; the last lab does it."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch19-lab3",
+       "objectives": [
+        "5.1",
+        "5.3",
+        "1.11"
+       ],
+       "t": "lab",
+       "title": [
+        "Unit test the incremental logic, and watch the build order"
+       ]
+      }
+     ],
+     "id": "ch19-s5-1",
+     "number": "19.5.1",
+     "title": [
+      "Two parsing errors you will meet"
+     ],
+     "titleText": "Two parsing errors you will meet"
+    }
+   ],
+   "title": [
+    "Unit testing an incremental model"
+   ],
+   "titleText": "Unit testing an incremental model"
+  },
+  {
+   "anchors": [
+    "sec-ut-running"
+   ],
+   "checkpoints": [],
+   "id": "ch19-s6",
+   "label": "sec:ut-running",
+   "labs": [],
+   "minutes": 5,
+   "number": "19.6",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Unit tests are nodes of type ",
+        {
+         "t": "code",
+         "v": "unit_test"
+        },
+        ". They run with:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Command"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What runs"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt test"
+           }
+          ]
+         },
+         {
+          "c": [
+           "all data tests ",
+           {
+            "c": [
+             "and"
+            ],
+            "t": "i"
+           },
+           " all unit tests"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt test --select test_type:unit"
+           }
+          ]
+         },
+         {
+          "c": [
+           "only the unit tests"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt test --select test_type:data"
+           }
+          ]
+         },
+         {
+          "c": [
+           "only the data tests"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt test --select dim_customers"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the data tests and the unit tests of ",
+           {
+            "t": "code",
+            "v": "dim_customers"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt test --select \"fct_orders,test_type:unit\""
+           }
+          ]
+         },
+         {
+          "c": [
+           "only the unit tests of ",
+           {
+            "t": "code",
+            "v": "fct_orders"
+           },
+           " (intersection)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt test --select fct_orders --resource-type unit_test"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the same, with a resource-type filter"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt test --select <unit test name>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "one unit test, by the name written in YAML (for a versioned model: the tests of all versions)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt test --select \"dim_customers.v1,test_type:unit\""
+           }
+          ]
+         },
+         {
+          "c": [
+           "the unit test of one version only"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt build"
+           }
+          ]
+         },
+         {
+          "c": [
+           "unit tests, each one just before its model"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt ls --resource-type unit_test"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the list of unit tests"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt run"
+           }
+          ]
+         },
+         {
+          "c": [
+           "no test at all"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "id": "ch19-c30",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:20:49  1 of 4 START test dbt_utils_accepted_range_dim_customers_v1_lifetime_value__0 .. [RUN]\n22:20:49  2 of 4 START test dbt_utils_accepted_range_dim_customers_v2_lifetime_value__0 .. [RUN]\n22:20:49  3 of 4 START unit_test dim_customers::test_dim_customers_lifetime_value_v1 ..... [RUN]\n22:20:49  4 of 4 START unit_test dim_customers::test_dim_customers_lifetime_value_v2 ..... [RUN]\n...\n22:20:50  Finished running 2 data tests, 2 unit tests in 0 hours 0 minutes and 0.44 seconds (0.44s).",
+       "title": "dbt test --select dim_customers: data tests and unit tests together"
+      }
+     ],
+     "id": "ch19-s6-0",
+     "title": [
+      "Running unit tests"
+     ],
+     "titleText": "Running unit tests"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "In ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        ", a unit test is a gate ",
+        {
+         "c": [
+          "in front of"
+         ],
+         "t": "i"
+        },
+        " its model. If it fails, dbt does not build the model, and everything that depends on the model is skipped, data tests included. We broke the macro again and ran ",
+        {
+         "t": "code",
+         "v": "dbt build --select stg_stripe__payments"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c31",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:20:59  1 of 9 START unit_test stg_stripe__payments::test_stg_stripe__payments_cents_to_dollars  [RUN]\n22:21:00  1 of 9 FAIL 1 stg_stripe__payments::test_stg_stripe__payments_cents_to_dollars . [FAIL 1 in 0.13s]\n22:21:00  2 of 9 SKIP relation dbt_adnane.stg_stripe__payments ........................... [SKIP]\n22:21:00  3 of 9 SKIP test accepted_values_stg_stripe__payments_payment_method__credit_card__coupon__bank_transfer__gift_card  [SKIP]\n22:21:00  4 of 9 SKIP test accepted_values_stg_stripe__payments_status__success__fail .... [SKIP]\n22:21:00  5 of 9 SKIP test is_positive_stg_stripe__payments_amount ....................... [SKIP]\n22:21:00  6 of 9 SKIP test not_null_stg_stripe__payments_payment_id ...................... [SKIP]\n22:21:00  7 of 9 SKIP test unique_stg_stripe__payments_payment_id ........................ [SKIP]\n22:21:00  8 of 9 SKIP test assert_payments_match_order_totals ............................ [SKIP]\n...\n22:21:00  Done. PASS=0 WARN=0 ERROR=1 SKIP=7 NO-OP=0 TOTAL=8"
+      },
+      {
+       "c": [
+        "(The lines say \"of 9\" but the summary counts 8 nodes. We saw this small counting difference of dbt 1.11 in some selections that contain a unit test, even when everything passes: trust the ",
+        {
+         "t": "code",
+         "v": "Done."
+        },
+        " line.)"
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "This is the main benefit of unit tests in ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        ": wrong logic is caught ",
+        {
+         "c": [
+          "before"
+         ],
+         "t": "i"
+        },
+        " it writes wrong data, and before the warehouse spends money building it. The existing ",
+        {
+         "t": "code",
+         "v": "stg_stripe__payments"
+        },
+        " view was not touched; it still has yesterday's correct definition."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "--empty"
+          },
+          " does not skip unit tests. ",
+          {
+           "t": "code",
+           "v": "dbt build --empty"
+          },
+          " builds every model with zero rows and still runs the unit tests with their fixtures (we saw them PASS and FAIL in such runs). It is a cheap way to run all the unit tests of a CI job: see the next section."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch19-s6-1",
+     "number": "19.6.1",
+     "title": [
+      "A failing unit test in dbt build"
+     ],
+     "titleText": "A failing unit test in dbt build"
+    }
+   ],
+   "title": [
+    "Running unit tests"
+   ],
+   "titleText": "Running unit tests"
+  },
+  {
+   "anchors": [
+    "sec-ut-parents"
+   ],
+   "checkpoints": [],
+   "id": "ch19-s7",
+   "label": "sec:ut-parents",
+   "labs": [
+    "ch19-lab4"
+   ],
+   "minutes": 20,
+   "number": "19.7",
+   "objectives": [
+    "1.12",
+    "4.1",
+    "5.3"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Remember the compiled SQL: every fixture value is cast to the type of the real column. dbt gets these types by asking the warehouse for the columns of each input relation. So ",
+        {
+         "c": [
+          "the direct parents of the tested model must exist"
+         ],
+         "t": "b"
+        },
+        " in your target schema, even though their data is never read (trap T127). On a new database, this is what you get:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c32",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:22:13  1 of 5 ERROR dim_customers::test_dim_customers_lifetime_value_v1 ............... [ERROR in 0.10s]\n22:22:13  3 of 5 ERROR fct_orders::test_fct_orders_full_refresh_keeps_all_rows ........... [ERROR in 0.10s]\n22:22:13  2 of 5 ERROR dim_customers::test_dim_customers_lifetime_value_v2 ............... [ERROR in 0.10s]\n22:22:13  4 of 5 ERROR fct_orders::test_fct_orders_incremental_keeps_only_new_rows ....... [ERROR in 0.10s]\n22:22:13  5 of 5 START unit_test stg_stripe__payments::test_stg_stripe__payments_cents_to_dollars  [RUN]\n22:22:13  5 of 5 PASS stg_stripe__payments::test_stg_stripe__payments_cents_to_dollars ... [PASS in 0.08s]\n...\n22:22:13  Failure in unit_test test_dim_customers_lifetime_value (models/marts/_marts__unit_tests.yml)\n22:22:13    Compilation Error in model stg_jaffle_shop__customers (models/marts/_marts__unit_tests.yml)\n  Not able to get columns for unit test 'stg_jaffle_shop__customers' from relation \"practice\".\"dbt_adnane\".\"stg_jaffle_shop__customers\" because the relation doesn't exist\n\n  > in macro get_fixture_sql (macros/unit_test_sql/get_fixture_sql.sql)\n  > called by model stg_jaffle_shop__customers (models/marts/_marts__unit_tests.yml)\n...\n22:22:13  Done. PASS=1 WARN=0 ERROR=4 SKIP=0 NO-OP=0 TOTAL=5",
+       "title": "dbt test --select test_type:unit on a database where no model was built"
+      },
+      {
+       "c": [
+        "Only the payments test passed: its input is a ",
+        {
+         "c": [
+          "source"
+         ],
+         "t": "i"
+        },
+        ", and the raw table exists. The four others read models that were never built. The fix is to create the parents first. They do not need data, so the cheapest way is ",
+        {
+         "t": "code",
+         "v": "--empty"
+        },
+        " (",
+        {
+         "href": "/learn/ch16/",
+         "label": "ch:commands-selection",
+         "t": "ref",
+         "text": "Chapter 16"
+        },
+        "): the builder of the reference project ran this on a new database (the seed first, because ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " does not load seeds):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c33",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "21:18:37  1 of 5 START unit_test dim_customers::test_dim_customers_lifetime_value_v1 ..... [RUN]\n...\n21:18:37  Done. PASS=5 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=5",
+       "title": "dbt seed -q, then dbt run --empty -q, then dbt test --select test_type:unit"
+      },
+      {
+       "c": [
+        "Other solutions: in a CI job that defers to production (",
+        {
+         "t": "code",
+         "v": "--defer --state"
+        },
+        ", ",
+        {
+         "href": "/learn/ch24/",
+         "label": "ch:state-defer-retry",
+         "t": "ref",
+         "text": "Chapter 24"
+        },
+        "), dbt can read the column types from the production relations (we tried it with a target whose schema was still empty: ",
+        {
+         "t": "code",
+         "v": "dbt test --select test_type:unit"
+        },
+        " gave ",
+        {
+         "t": "code",
+         "v": "ERROR=4"
+        },
+        ", and with ",
+        {
+         "t": "code",
+         "v": "--defer --state"
+        },
+        " pointing to production artifacts all five tests passed); or build the parents normally with ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        ", which is what happens in your daily development."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch19-s7-0",
+     "title": [
+      "Unit tests need their parents in the warehouse"
+     ],
+     "titleText": "Unit tests need their parents in the warehouse"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " runs the unit tests of a model after its parents are built, so the parents exist… except one: the incremental test mocks ",
+        {
+         "t": "code",
+         "v": "this"
+        },
+        ", which is the model ",
+        {
+         "c": [
+          "itself"
+         ],
+         "t": "i"
+        },
+        ". And in ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " the unit test runs ",
+        {
+         "c": [
+          "before"
+         ],
+         "t": "i"
+        },
+        " the model. On a brand-new schema, ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " does not exist yet when its unit test asks for its columns:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c34",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:22:24  29 of 67 WARN 1 relationships_stg_jaffle_shop__orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_  [WARN 1 in 0.04s]\n22:22:24  52 of 67 ERROR fct_orders::test_fct_orders_incremental_keeps_only_new_rows ..... [ERROR in 0.06s]\n22:22:24  53 of 67 SKIP relation dbt_adnane.fct_orders ................................... [SKIP]\n22:22:25  54 of 67 SKIP test assert_paid_orders_match_items .............................. [SKIP]\n...\n22:22:25  61 of 67 SKIP relation dbt_adnane.dim_customers ................................ [SKIP]\n22:22:25  62 of 67 SKIP relation dbt_adnane.dim_customers ................................ [SKIP]\n...\n22:22:25  67 of 67 SKIP test unique_customer_segments_customer_id ........................ [SKIP]\n...\n22:22:25  Failure in unit_test test_fct_orders_incremental_keeps_only_new_rows (models/marts/_marts__unit_tests.yml)\n22:22:25    Compilation Error in model fct_orders (models/marts/_marts__unit_tests.yml)\n  Not able to get columns for unit test 'fct_orders' from relation \"practice\".\"dbt_adnane\".\"fct_orders\" because the relation doesn't exist\n...\n22:22:25  Done. PASS=50 WARN=1 ERROR=1 SKIP=15 NO-OP=0 TOTAL=67",
+       "title": "first dbt build on a new database (PASS and START lines removed)"
+      },
+      {
+       "c": [
+        "The unit test errors, so ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " is skipped, and so are ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "customer_segments"
+        },
+        ", 9 data tests and the 2 unit tests of ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " (15 SKIP). Now the important part: ",
+        {
+         "c": [
+          "running ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " again does not help"
+         ],
+         "t": "b"
+        },
+        ". ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " was skipped, so it still does not exist, and the second run failed on the same unit test with the same error. A plain ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " on a new schema fails ",
+        {
+         "c": [
+          "every time"
+         ],
+         "t": "i"
+        },
+        ". (The summary is not always identical: ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " has two unit tests, and when the incremental one happens to run first, dbt skips the other one, since the model cannot be built anyway. We saw both ",
+        {
+         "t": "code",
+         "v": "PASS=50 … SKIP=15"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "PASS=49 … SKIP=16"
+        },
+        ".)"
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The fix: run the very first build without unit tests, so that every relation is created, then build normally."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c35",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:22:43  Done. PASS=61 WARN=1 ERROR=0 SKIP=0 NO-OP=0 TOTAL=62\n\n22:22:53  49 of 67 PASS fct_orders::test_fct_orders_incremental_keeps_only_new_rows ...... [PASS in 0.14s]\n22:22:53  52 of 67 PASS fct_orders::test_fct_orders_full_refresh_keeps_all_rows .......... [PASS in 0.06s]\n22:22:54  53 of 67 OK created sql incremental model dbt_adnane.fct_orders ................ [OK in 0.08s]\n...\n22:22:55  Done. PASS=66 WARN=1 ERROR=0 SKIP=0 NO-OP=0 TOTAL=67",
+       "title": "dbt build --exclude-resource-type unit_test (end), then dbt build (filtered)"
+      },
+      {
+       "c": [
+        "Another fix is to create all the relations empty first (",
+        {
+         "t": "code",
+         "v": "dbt run --empty"
+        },
+        "); thanks to the ",
+        {
+         "t": "code",
+         "v": "coalesce"
+        },
+        " in the filter (",
+        {
+         "href": "/learn/ch14/",
+         "label": "ch:incremental-microbatch",
+         "t": "ref",
+         "text": "Chapter 14"
+        },
+        "), the next normal build loads every row into ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "A unit test with ",
+            {
+             "t": "code",
+             "v": "input: this"
+            },
+            " needs the model's own table."
+           ],
+           "t": "b"
+          },
+          " On a new schema (a new developer, a new CI schema, a new environment), ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " fails on it and skips the model, ",
+          {
+           "c": [
+            "at every run"
+           ],
+           "t": "i"
+          },
+          ", because the model is never created. Build once with ",
+          {
+           "t": "code",
+           "v": "--exclude-resource-type unit_test"
+          },
+          " (or ",
+          {
+           "t": "code",
+           "v": "dbt run --empty"
+          },
+          "), then use ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " normally. More generally: unit tests need all their direct parents to exist (trap T127), and ",
+          {
+           "t": "code",
+           "v": "--empty"
+          },
+          " is the cheap way to create them."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " see with your own eyes why a new schema needs a first build without unit tests. You use a second database file, so your normal dev database is not touched."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Build a new raw database in its own folder. Its file name must stay ",
+          {
+           "t": "code",
+           "v": "practice.duckdb"
+          },
+          ", because the database name ",
+          {
+           "t": "code",
+           "v": "practice"
+          },
+          " is written in the compiled SQL:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch19-c36",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cd ~/dbt-course/practice\n$ mkdir fresh\n$ duckdb fresh/practice.duckdb < setup.sql\n$ cd ~/dbt-course/jaffle_dbt\n$ export DBT_DUCKDB_PATH=../practice/fresh/practice.duckdb"
+        },
+        {
+         "c": [
+          "The variable ",
+          {
+           "t": "code",
+           "v": "DBT_DUCKDB_PATH"
+          },
+          " is read by your profile (",
+          {
+           "href": "/learn/ch10/",
+           "label": "ch:configuration",
+           "t": "ref",
+           "text": "Chapter 10"
+          },
+          "): until you close the terminal or run ",
+          {
+           "t": "code",
+           "v": "unset DBT_DUCKDB_PATH"
+          },
+          ", dbt works on the new file."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Run the unit tests: ",
+          {
+           "t": "code",
+           "v": "dbt test --select test_type:unit"
+          },
+          ". ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "PASS=1 ERROR=4"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "Not able to get columns for unit test … because the relation doesn't exist"
+          },
+          " (the output of ",
+          {
+           "href": "/learn/ch19/ch19-s7/",
+           "label": "sec:ut-parents",
+           "t": "ref",
+           "text": "Section 19.7"
+          },
+          "). The first lines also say ",
+          {
+           "t": "code",
+           "v": "Unable to do partial parsing because profile has changed"
+          },
+          ": normal, the path changed."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Run ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          ". ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Done. PASS=50 WARN=1 ERROR=1 SKIP=15 NO-OP=0 TOTAL=67"
+          },
+          " (or ",
+          {
+           "t": "code",
+           "v": "PASS=49"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "SKIP=16"
+          },
+          ", see above), with the error on ",
+          {
+           "t": "code",
+           "v": "test_fct_orders_incremental_keeps_only_new_rows"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Run ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " a second time. ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the same error on the same unit test, and ",
+          {
+           "t": "code",
+           "v": "SKIP relation dbt_adnane.fct_orders"
+          },
+          " again. Nothing improved."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Run ",
+          {
+           "t": "code",
+           "v": "dbt build --exclude-resource-type unit_test"
+          },
+          ", then ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          ". ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Done. PASS=61 WARN=1 ERROR=0 SKIP=0 NO-OP=0 TOTAL=62"
+          },
+          ", then ",
+          {
+           "t": "code",
+           "v": "Done. PASS=66 WARN=1 ERROR=0 SKIP=0 NO-OP=0 TOTAL=67"
+          },
+          ". The only warning is the known orphan order of ",
+          {
+           "href": "/learn/ch18/",
+           "label": "ch:data-tests",
+           "t": "ref",
+           "text": "Chapter 18"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6."
+           ],
+           "t": "b"
+          },
+          " Go back to your normal database and remove the test folder:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch19-c37",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ unset DBT_DUCKDB_PATH\n$ rm -r ../practice/fresh"
+        }
+       ],
+       "id": "ch19-lab4",
+       "objectives": [
+        "5.3",
+        "4.1",
+        "1.12"
+       ],
+       "t": "lab",
+       "title": [
+        "Unit tests on a brand-new database"
+       ]
+      }
+     ],
+     "id": "ch19-s7-1",
+     "number": "19.7.1",
+     "title": [
+      "The brand-new schema trap: ",
+      {
+       "t": "code",
+       "v": "input: this"
+      }
+     ],
+     "titleText": "The brand-new schema trap: input: this"
+    }
+   ],
+   "title": [
+    "Unit tests need their parents in the warehouse"
+   ],
+   "titleText": "Unit tests need their parents in the warehouse"
+  },
+  {
+   "anchors": [
+    "sec-ut-workflow"
+   ],
+   "checkpoints": [],
+   "id": "ch19-s8",
+   "label": "sec:ut-workflow",
+   "labs": [
+    "ch19-lab5"
+   ],
+   "minutes": 15,
+   "number": "19.8",
+   "objectives": [
+    "3.4",
+    "5.3"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Development."
+             ],
+             "t": "b"
+            },
+            " Write the unit test ",
+            {
+             "c": [
+              "with"
+             ],
+             "t": "i"
+            },
+            " the logic (or even before it), run ",
+            {
+             "t": "code",
+             "v": "dbt build --select my_model+"
+            },
+            ": the unit tests run first. When you fix a bug, first write a unit test that reproduces it: it protects you from the same ",
+            {
+             "en": [
+              "regression"
+             ],
+             "fr": "régression",
+             "id": "term-regression",
+             "t": "term"
+            },
+            " later."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "CI."
+             ],
+             "t": "b"
+            },
+            " Every pull request runs the unit tests of the modified models (",
+            {
+             "t": "code",
+             "v": "dbt build --select state:modified+"
+            },
+            ", ",
+            {
+             "href": "/learn/ch25/",
+             "label": "ch:environments-ci",
+             "t": "ref",
+             "text": "Chapter 25"
+            },
+            "). A failing unit test blocks the merge. Remember the parents: build them with ",
+            {
+             "t": "code",
+             "v": "--empty"
+            },
+            " or defer to production."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Production."
+             ],
+             "t": "b"
+            },
+            " Do ",
+            {
+             "c": [
+              "not"
+             ],
+             "t": "b"
+            },
+            " run unit tests. Their inputs are fixed, so the result cannot change between CI and production; running them again only costs money (trap T130)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "There are two ways to exclude them from a production command. The flag:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c38",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt build --exclude-resource-type unit_test"
+      },
+      {
+       "c": [
+        "or an environment variable, set once in the production environment so that nobody forgets the flag. dbt 1.11 documents ",
+        {
+         "t": "code",
+         "v": "DBT_ENGINE_EXCLUDE_RESOURCE_TYPES"
+        },
+        "; the older name ",
+        {
+         "t": "code",
+         "v": "DBT_EXCLUDE_RESOURCE_TYPES"
+        },
+        " also worked in our tests (dbt 1.11.16), with the same result:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch19-c39",
+       "lang": "bash",
+       "small": true,
+       "t": "code",
+       "text": "$ dbt -q ls --select +fct_orders --resource-type unit_test model      # without the variable (10 lines)\n...\nunit_test:jaffle_dbt.test_fct_orders_full_refresh_keeps_all_rows\nunit_test:jaffle_dbt.test_fct_orders_incremental_keeps_only_new_rows\nunit_test:jaffle_dbt.test_stg_stripe__payments_cents_to_dollars\n$ DBT_ENGINE_EXCLUDE_RESOURCE_TYPES=unit_test dbt -q ls --select +fct_orders --resource-type unit_test model\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "In the dbt platform"
+           ],
+           "t": "b"
+          },
+          ", the production ",
+          {
+           "c": [
+            "deploy job"
+           ],
+           "t": "i"
+          },
+          " usually runs ",
+          {
+           "t": "code",
+           "v": "dbt build --exclude-resource-type unit_test"
+          },
+          " (or the environment of the job sets ",
+          {
+           "t": "code",
+           "v": "DBT_ENGINE_EXCLUDE_RESOURCE_TYPES"
+          },
+          "), while the ",
+          {
+           "c": [
+            "CI job"
+           ],
+           "t": "i"
+          },
+          " triggered by pull requests runs everything, unit tests included. In the Studio IDE you run unit tests like any test (",
+          {
+           "t": "code",
+           "v": "dbt test --select test_type:unit"
+          },
+          "), and the results panel shows the diff of a failing test."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Build ",
+          {
+           "t": "code",
+           "v": "dim_customers"
+          },
+          " and its parents in production, without unit tests. Here we also exclude the data tests, only to keep the log short; a real production job keeps them."
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch19-c40",
+         "lang": "bash",
+         "small": true,
+         "t": "code",
+         "text": "$ dbt build --select +dim_customers --exclude-resource-type unit_test --exclude-resource-type test --target prod"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (filtered):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch19-c41",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "22:21:40  Concurrency: 4 threads (target='prod')\n...\n22:21:40  1 of 9 OK created sql view model prod.stg_jaffle_shop__customers ............... [OK in 0.09s]\n22:21:40  4 of 9 OK loaded seed file prod.country_regions ................................ [INSERT 6 in 0.09s]\n...\n22:21:40  DuckDB adapter: Grants for relations are not supported by DuckDB\n22:21:40  7 of 9 OK created sql incremental model marts.fct_orders ....................... [OK in 0.05s]\n...\n22:21:40  Finished running 1 incremental model, 1 seed, 2 table models, 5 view models in 0 hours 0 minutes and 0.38 seconds (0.38s).\n...\n22:21:40  Done. PASS=9 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=9"
+        },
+        {
+         "c": [
+          "No ",
+          {
+           "t": "code",
+           "v": "unit_test"
+          },
+          " line at all. (The grants message comes from the prod-only grants of ",
+          {
+           "href": "/learn/ch10/",
+           "label": "ch:configuration",
+           "t": "ref",
+           "text": "Chapter 10"
+          },
+          "; DuckDB ignores them.)"
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Check the environment variable: run the two ",
+          {
+           "t": "code",
+           "v": "dbt -q ls"
+          },
+          " commands of this section. ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " 10 lines without the variable, 7 lines (no ",
+          {
+           "t": "code",
+           "v": "unit_test:"
+          },
+          ") with it."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Commit and compare with the reference:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch19-c42",
+         "lang": "bash",
+         "small": true,
+         "t": "code",
+         "text": "$ git add .\n$ git commit -m \"Unit tests: cents to dollars, dim_customers lifetime value, incremental fct_orders\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch19 --stat"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "git diff ref-ch19 --stat"
+          },
+          " prints nothing. The chapter added exactly two files: ",
+          {
+           "t": "code",
+           "v": "models/staging/stripe/_stripe__unit_tests.yml"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "models/marts/_marts__unit_tests.yml"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch19-lab5",
+       "objectives": [
+        "5.3",
+        "3.4"
+       ],
+       "t": "lab",
+       "title": [
+        "A production build without unit tests, then commit"
+       ]
+      }
+     ],
+     "id": "ch19-s8-0",
+     "title": [
+      "Unit tests in the workflow"
+     ],
+     "titleText": "Unit tests in the workflow"
+    }
+   ],
+   "title": [
+    "Unit tests in the workflow"
+   ],
+   "titleText": "Unit tests in the workflow"
+  },
+  {
+   "anchors": [
+    "sec-ut-what"
+   ],
+   "checkpoints": [],
+   "id": "ch19-s9",
+   "label": "sec:ut-what",
+   "labs": [],
+   "minutes": 5,
+   "number": "19.9",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Unit tests cost time to write and to maintain. Write them where a bug is likely and expensive:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Complex logic"
+             ],
+             "t": "b"
+            },
+            ": regular expressions, date calculations, window functions, long ",
+            {
+             "t": "code",
+             "v": "case when"
+            },
+            ", conversions (our cents to dollars)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Edge cases"
+             ],
+             "t": "b"
+            },
+            " that are not in the data yet: NULL values, zero, empty inputs, a customer without orders, a refund, a new currency."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Incremental logic"
+             ],
+             "t": "b"
+            },
+            ": the ",
+            {
+             "t": "code",
+             "v": "is_incremental()"
+            },
+            " filter, in both modes."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Bugs you already had"
+             ],
+             "t": "b"
+            },
+            ": a test that reproduces the bug, so it never comes back."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Before a refactoring"
+             ],
+             "t": "b"
+            },
+            ": the test proves that the new SQL gives the same result as the old one."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Critical models"
+             ],
+             "t": "b"
+            },
+            ": public or contracted models, and models just before an exposure (a dashboard)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "Do ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "b"
+        },
+        " unit test a simple ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        " with renamed columns, or a built-in function of the warehouse (",
+        {
+         "t": "code",
+         "v": "min"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "upper"
+        },
+        "): you would only test the warehouse."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch19-s9-0",
+     "title": [
+      "What to unit test, and what not"
+     ],
+     "titleText": "What to unit test, and what not"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Rule"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Detail"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "SQL models only"
+          ]
+         },
+         {
+          "c": [
+           "Not Python models. We tried: dbt pasted the Python code into SQL and failed with ",
+           {
+            "t": "code",
+            "v": "Parser Error: syntax error at or near \"as\""
+           },
+           " on ",
+           {
+            "t": "code",
+            "v": "import pandas as pd"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Models of the current project only"
+          ]
+         },
+         {
+          "c": [
+           "Not the models of an installed package."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Not supported"
+          ]
+         },
+         {
+          "c": [
+           "models materialized as ",
+           {
+            "t": "code",
+            "v": "materialized_view"
+           },
+           ", recursive SQL, introspective queries (queries that read the warehouse during compilation)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Parents must exist"
+          ]
+         },
+         {
+          "c": [
+           "Direct parents (and the model itself for ",
+           {
+            "t": "code",
+            "v": "input: this"
+           },
+           ") must exist in the target; ephemeral inputs need ",
+           {
+            "t": "code",
+            "v": "format: sql"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Every ref/source needs an input"
+          ]
+         },
+         {
+          "c": [
+           "Except seeds, whose CSV can be used as fixture."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Joins"
+          ]
+         },
+         {
+          "c": [
+           "Give the tables an alias in the model's SQL, so that dbt can replace them."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Defined in"
+          ]
+         },
+         {
+          "c": [
+           "YAML files under ",
+           {
+            "t": "code",
+            "v": "models/"
+           },
+           ", never in ",
+           {
+            "t": "code",
+            "v": "tests/"
+           },
+           "."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"Unit tests work for every model\""
+           ],
+           "t": "b"
+          },
+          " (trap T128). Only SQL models of the current project. And remember the \"where\" of each test type: data tests can be YAML properties or SQL files in ",
+          {
+           "t": "code",
+           "v": "tests/"
+          },
+          "; unit tests are YAML only, under ",
+          {
+           "t": "code",
+           "v": "unit_tests:"
+          },
+          " in ",
+          {
+           "t": "code",
+           "v": "models/"
+          },
+          "; fixture ",
+          {
+           "c": [
+            "files"
+           ],
+           "t": "i"
+          },
+          " for unit tests go in ",
+          {
+           "t": "code",
+           "v": "tests/fixtures/"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch19-s9-1",
+     "number": "19.9.1",
+     "title": [
+      "Limitations to remember"
+     ],
+     "titleText": "Limitations to remember"
+    }
+   ],
+   "title": [
+    "What to unit test, and what not"
+   ],
+   "titleText": "What to unit test, and what not"
+  }
+ ],
+ "minutes": 140,
+ "number": 19,
+ "objectives": [
+  "1.12",
+  "2.2",
+  "4.1",
+  "5.1",
+  "5.3"
+ ],
+ "part": 4,
+ "partLabel": "Part IV",
+ "partTitle": "Testing",
+ "printed": "19",
+ "quiz": [
+  "q-ch19-01",
+  "q-ch19-02",
+  "q-ch19-03",
+  "q-ch19-04",
+  "q-ch19-05",
+  "q-ch19-06",
+  "q-ch19-07",
+  "q-ch19-08",
+  "q-ch19-09",
+  "q-ch19-10",
+  "q-ch19-11",
+  "q-ch19-12",
+  "q-ch19-13",
+  "q-ch19-14",
+  "q-ch19-15",
+  "q-ch19-16",
+  "q-ch19-17",
+  "q-ch19-18"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-ut-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch19-01",
+      "q-ch19-02",
+      "q-ch19-03",
+      "q-ch19-04",
+      "q-ch19-05",
+      "q-ch19-06",
+      "q-ch19-07",
+      "q-ch19-08",
+      "q-ch19-09",
+      "q-ch19-10",
+      "q-ch19-11",
+      "q-ch19-12",
+      "q-ch19-13",
+      "q-ch19-14",
+      "q-ch19-15",
+      "q-ch19-16",
+      "q-ch19-17",
+      "q-ch19-18"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch19-01",
+    "q-ch19-02",
+    "q-ch19-03",
+    "q-ch19-04",
+    "q-ch19-05",
+    "q-ch19-06",
+    "q-ch19-07",
+    "q-ch19-08",
+    "q-ch19-09",
+    "q-ch19-10",
+    "q-ch19-11",
+    "q-ch19-12",
+    "q-ch19-13",
+    "q-ch19-14",
+    "q-ch19-15",
+    "q-ch19-16",
+    "q-ch19-17",
+    "q-ch19-18"
+   ],
+   "label": "sec:ut-quiz",
+   "number": "19.10",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A unit test checks the ",
+        {
+         "c": [
+          "logic"
+         ],
+         "t": "b"
+        },
+        " of one SQL model with fake inputs (",
+        {
+         "t": "code",
+         "v": "given"
+        },
+        ") and expected rows (",
+        {
+         "t": "code",
+         "v": "expect"
+        },
+        "); a data test checks the real data. Unit tests are defined in YAML under ",
+        {
+         "t": "code",
+         "v": "unit_tests:"
+        },
+        " in ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Every ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " needs an input (a seed may omit its rows: its CSV is used). Formats: ",
+        {
+         "t": "code",
+         "v": "dict"
+        },
+        " (default), ",
+        {
+         "t": "code",
+         "v": "csv"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "sql"
+        },
+        " (all columns, no Jinja, required for ephemeral inputs); fixture files go in ",
+        {
+         "t": "code",
+         "v": "tests/fixtures/"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Missing input columns are NULL; only the ",
+        {
+         "t": "code",
+         "v": "expect"
+        },
+        " columns are compared; row order does not matter. In a diff, ",
+        {
+         "t": "code",
+         "v": "expected->actual"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "+++"
+        },
+        " = unexpected row, ",
+        {
+         "t": "code",
+         "v": "---"
+        },
+        " = missing row."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "overrides"
+        },
+        " fixes ",
+        {
+         "t": "code",
+         "v": "macros"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "vars"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "env_vars"
+        },
+        " referenced directly by the model. For a model using ",
+        {
+         "t": "code",
+         "v": "is_incremental()"
+        },
+        ", the override is required, and ",
+        {
+         "t": "code",
+         "v": "true"
+        },
+        " also requires ",
+        {
+         "t": "code",
+         "v": "input: this"
+        },
+        "; ",
+        {
+         "t": "code",
+         "v": "expect"
+        },
+        " is what will be inserted or merged."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A versioned model gets one unit test per version (",
+        {
+         "t": "code",
+         "v": "_v1"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "_v2"
+        },
+        "); limit with ",
+        {
+         "t": "code",
+         "v": "versions: include/exclude"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt test"
+        },
+        " runs data and unit tests; ",
+        {
+         "t": "code",
+         "v": "--select test_type:unit"
+        },
+        " only unit tests. In ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        ", a model's unit tests run ",
+        {
+         "c": [
+          "before"
+         ],
+         "t": "i"
+        },
+        " it; a failure skips the model and everything downstream."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt reads the column types of the inputs from the warehouse: direct parents must exist (",
+        {
+         "t": "code",
+         "v": "--empty"
+        },
+        " creates them cheaply). A test with ",
+        {
+         "t": "code",
+         "v": "input: this"
+        },
+        " makes a plain ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " fail on a brand-new schema ",
+        {
+         "c": [
+          "every time"
+         ],
+         "t": "i"
+        },
+        ": build once with ",
+        {
+         "t": "code",
+         "v": "--exclude-resource-type unit_test"
+        },
+        ", then normally."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Run unit tests in development and CI; exclude them in production with ",
+        {
+         "t": "code",
+         "v": "--exclude-resource-type unit_test"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "DBT_ENGINE_EXCLUDE_RESOURCE_TYPES=unit_test"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Unit test complex logic, edge cases, incremental filters and past bugs; not simple renames. Not supported: Python models, other projects' models, materialized views, recursive SQL, introspective queries."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "Unit Tests"
+}

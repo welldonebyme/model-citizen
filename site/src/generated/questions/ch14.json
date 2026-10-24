@@ -1,0 +1,1964 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " All the conditions are met: existing table, incremental materialization, no full refresh. A: on the first run the table does not exist. B: ",
+     {
+      "t": "code",
+      "v": "--full-refresh"
+     },
+     " makes it ",
+     {
+      "t": "code",
+      "v": "False"
+     },
+     ". D: the existing object is a view, not a table; dbt builds the table from all rows."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch14-01",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The model is configured as incremental and runs for the first time in a new schema."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The model's table exists, and you run ",
+     {
+      "t": "code",
+      "v": "dbt run --full-refresh"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The model's table exists, the model is materialized as incremental, and no full refresh is requested."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "An object with the model's name exists as a view, and the model has just been changed to incremental."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "In which situation does ",
+     {
+      "t": "code",
+      "v": "is_incremental()"
+     },
+     " return ",
+     {
+      "t": "code",
+      "v": "True"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Rows never change, so nothing needs to be matched: ",
+     {
+      "t": "code",
+      "v": "append"
+     },
+     " is one cheap insert. A and C work but scan the target to match keys, which costs more for no benefit. D rebuilds two billion rows every hour: the opposite of cheap."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch14-02",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "merge"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "unique_key='event_id'"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "append"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "delete+insert"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "unique_key='event_id'"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "No incremental model: a ",
+     {
+      "t": "code",
+      "v": "table"
+     },
+     " rebuilt every hour"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "A table receives two billion click events per month. An event is never modified after it is written. The team wants the cheapest incremental strategy. Which one?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Changing rows with a reliable key: an upsert, and ",
+     {
+      "t": "code",
+      "v": "merge"
+     },
+     " is the Snowflake default for it. A creates one row per version (duplicates). C on Snowflake replaces the ",
+     {
+      "c": [
+       "whole"
+      ],
+      "t": "i"
+     },
+     " table, not partitions. D: microbatch is not a key-based upsert (and ",
+     {
+      "t": "code",
+      "v": "order_date"
+     },
+     " never changes, so a changed old order would not be in a recent batch)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch14-03",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "incremental_strategy='append'"
+     },
+     ", filter on ",
+     {
+      "t": "code",
+      "v": "updated_at"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "incremental_strategy='merge'"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "unique_key='order_id'"
+     },
+     ", filter on ",
+     {
+      "t": "code",
+      "v": "updated_at"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "incremental_strategy='insert_overwrite'"
+     },
+     ", filter on ",
+     {
+      "t": "code",
+      "v": "order_date"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "incremental_strategy='microbatch'"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "event_time='order_date'"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "unique_key='order_id'"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "On Snowflake, an ",
+     {
+      "t": "code",
+      "v": "orders"
+     },
+     " model must reflect status changes (placed → shipped → completed). Each order has a unique, never-null ",
+     {
+      "t": "code",
+      "v": "order_id"
+     },
+     ", and a changed order gets a new ",
+     {
+      "t": "code",
+      "v": "updated_at"
+     },
+     ". Which configuration fits best?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "begin"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "batch_size"
+     },
+     " are required (parsing fails without them). B is optional (default 1). D is not used by microbatch (dbt-duckdb even rejects it; only dbt-postgres needs it). E is optional (dbt decides)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch14-04",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "begin"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "lookback"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "batch_size"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "unique_key"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "concurrent_batches"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "Besides ",
+     {
+      "t": "code",
+      "v": "materialized='incremental'"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "incremental_strategy='microbatch'"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "event_time"
+     },
+     ", which ",
+     {
+      "c": [
+       "two"
+      ],
+      "t": "b"
+     },
+     " configs are required for a microbatch model?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "ignore"
+       }
+      ],
+      "t": "b"
+     },
+     ". A new column is not added and the run succeeds; a removed column makes the run fail."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch14-05",
+  "key": {
+   "accepted": [
+    "ignore"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{ignore}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "If you do not set ",
+     {
+      "t": "code",
+      "v": "on_schema_change"
+     },
+     " on an incremental model, its value is ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "--full-refresh"
+       }
+      ],
+      "t": "b"
+     },
+     " (or its short form ",
+     {
+      "t": "code",
+      "v": "-f"
+     },
+     "). The table is dropped and rebuilt from the full query."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch14-06",
+  "key": {
+   "accepted": [
+    "--full-refresh"
+   ]
+  },
+  "keyNote": "alternative answers mentioned after the key: '(or its short form -f)'",
+  "keyRaw": "\\textbf{\\code{--full-refresh}}",
+  "keyStatus": "todo",
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "To drop and rebuild ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " from all the data, you run ",
+     {
+      "t": "code",
+      "v": "dbt run --select fct_orders"
+     },
+     " ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-d, 2-c, 3-b, 4-a."
+      ],
+      "t": "b"
+     },
+     " Remember that only ",
+     {
+      "t": "code",
+      "v": "sync_all_columns"
+     },
+     " removes columns, and that no mode fills the old rows."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch14-07",
+  "key": {
+   "1": "d",
+   "2": "c",
+   "3": "b",
+   "4": "a"
+  },
+  "keyRaw": "\\textbf{1-d, 2-c, 3-b, 4-a.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "ignore"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "fail"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "append_new_columns"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "sync_all_columns"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "Adds the new column and drops the missing one."
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "Adds the new column, keeps the old one."
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "Stops with an \"out of sync\" error, writes nothing."
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "Does not add the new column; the removed column makes the run fail."
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each ",
+     {
+      "t": "code",
+      "v": "on_schema_change"
+     },
+     " value with its behaviour when the model gains one column and loses another."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-e, 3-b, 4-a, 5-d."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "delete+insert"
+     },
+     " uses two statements; ",
+     {
+      "t": "code",
+      "v": "merge"
+     },
+     " one; ",
+     {
+      "t": "code",
+      "v": "insert_overwrite"
+     },
+     " works by partition and ignores ",
+     {
+      "t": "code",
+      "v": "unique_key"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch14-08",
+  "key": {
+   "1": "c",
+   "2": "e",
+   "3": "b",
+   "4": "a",
+   "5": "d"
+  },
+  "keyRaw": "\\textbf{1-c, 2-e, 3-b, 4-a, 5-d.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "append"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "merge"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "delete+insert"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "insert_overwrite"
+      }
+     ],
+     "id": "4"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "microbatch"
+      }
+     ],
+     "id": "5"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "Replaces whole partitions found in the new data."
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "Deletes target rows whose key is in the new data, then inserts all new rows."
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "Inserts the new rows, never updates."
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "Rebuilds independent time slices defined by ",
+      {
+       "t": "code",
+       "v": "event_time"
+      },
+      "."
+     ],
+     "id": "d"
+    },
+    {
+     "c": [
+      "Updates rows that match the key, inserts the others, in one statement."
+     ],
+     "id": "e"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each strategy with what an incremental run does."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B, D, E, C, A."
+      ],
+      "t": "b"
+     },
+     " The relation lookup happens when ",
+     {
+      "t": "code",
+      "v": "is_incremental()"
+     },
+     " is evaluated during rendering; then the filtered rows go to a temporary table, the columns are compared, and the strategy SQL moves the rows."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch14-09",
+  "key": [
+   "B",
+   "D",
+   "E",
+   "C",
+   "A"
+  ],
+  "keyRaw": "\\textbf{B, D, E, C, A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt runs the ",
+     {
+      "t": "code",
+      "v": "MERGE"
+     },
+     " statement from the temporary table into the target table."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt looks up the model's relation in the target schema and finds a table."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt compares the columns of the temporary table with the target (",
+     {
+      "t": "code",
+      "v": "on_schema_change"
+     },
+     ")."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt renders the SQL with the ",
+     {
+      "t": "code",
+      "v": "is_incremental()"
+     },
+     " branch."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "dbt creates a temporary table with the filtered rows."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "Put these steps of a ",
+     {
+      "c": [
+       "later"
+      ],
+      "t": "i"
+     },
+     " (incremental) run of a ",
+     {
+      "t": "code",
+      "v": "merge"
+     },
+     " model in order:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B, D, C, A."
+      ],
+      "t": "b"
+     },
+     " Read the error, fix, retry, ",
+     {
+      "c": [
+       "then"
+      ],
+      "t": "i"
+     },
+     " check. If you run ",
+     {
+      "t": "code",
+      "v": "dbt show"
+     },
+     " (or ",
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     ") before ",
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     ", it rewrites ",
+     {
+      "t": "code",
+      "v": "run_results.json"
+     },
+     " and the retry no longer knows what failed."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch14-10",
+  "key": [
+   "B",
+   "D",
+   "C",
+   "A"
+  ],
+  "keyRaw": "\\textbf{B, D, C, A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Check the result with ",
+     {
+      "t": "code",
+      "v": "dbt show"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Read the error of the failed batch in the output or in ",
+     {
+      "t": "code",
+      "v": "logs/dbt.log"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Run ",
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Fix the SQL of the model."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "A microbatch model ended with ",
+     {
+      "t": "code",
+      "v": "PARTIAL SUCCESS (21/22)"
+     },
+     ". Put the recovery steps in order:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 7."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "batch_size"
+     },
+     " must be ",
+     {
+      "t": "code",
+      "v": "hour"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "day"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "month"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "year"
+     },
+     "; ",
+     {
+      "t": "code",
+      "v": "week"
+     },
+     " gives a parsing error. Line 8 is fine (",
+     {
+      "t": "code",
+      "v": "lookback"
+     },
+     " is optional and can be 2); line 6 is a valid ",
+     {
+      "t": "code",
+      "v": "begin"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch14-c85",
+   "lines": 11,
+   "numbering": "listing"
+  },
+  "id": "q-ch14-11",
+  "key": 7,
+  "keyRaw": "\\textbf{Line 7.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "Which line makes the whole project fail to parse?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch14-c85",
+    "lang": "dbt",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "{{\n    config(\n        materialized='incremental',\n        incremental_strategy='microbatch',\n        event_time='event_at',\n        begin='2024-01-01',\n        batch_size='week',\n        lookback=2\n    )\n}}\nselect * from {{ ref('stg_events') }}"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 7."
+      ],
+      "t": "b"
+     },
+     " After ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     " the table exists but is empty, so ",
+     {
+      "t": "code",
+      "v": "max(loaded_at)"
+     },
+     " is ",
+     {
+      "t": "code",
+      "v": "NULL"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "loaded_at > NULL"
+     },
+     " is never true. Fix: ",
+     {
+      "t": "code",
+      "v": "coalesce(max(loaded_at), '1900-01-01')"
+     },
+     ", or a full refresh after the empty run. Line 6 is correct: the branch must run, since the table exists."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch14-c86",
+   "lines": 8,
+   "numbering": "listing"
+  },
+  "id": "q-ch14-12",
+  "key": 7,
+  "keyRaw": "\\textbf{Line 7.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "A CI job ran ",
+     {
+      "t": "code",
+      "v": "dbt build --empty"
+     },
+     ". Since then, every normal run of this model is green but inserts 0 rows. Which line causes it?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch14-c86",
+    "lang": "dbt",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "{{ config(materialized='incremental', unique_key='event_id') }}\n\nselect *\nfrom {{ ref('stg_events') }}\n\n{% if is_incremental() %}\nwhere loaded_at > (select max(loaded_at) from {{ this }})\n{% endif %}"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, YES, NO, YES."
+      ],
+      "t": "b"
+     },
+     " The batches of a normal run come from the current time and ",
+     {
+      "t": "code",
+      "v": "lookback"
+     },
+     ", not from the data. The end of a backfill is exclusive."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch14-13",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": false,
+   "E": true
+  },
+  "keyRaw": "\\textbf{YES, NO, YES, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt adds the batch filter to every ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "source"
+     },
+     " whose node has an ",
+     {
+      "t": "code",
+      "v": "event_time"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A normal run chooses its batches from the newest ",
+     {
+      "t": "code",
+      "v": "event_time"
+     },
+     " already in the table."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     " re-runs only the batches that failed."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "--event-time-end"
+     },
+     " is inclusive."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "An input without ",
+     {
+      "t": "code",
+      "v": "event_time"
+     },
+     " is read completely for every batch."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about microbatch models:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, YES, NO."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "append"
+     },
+     " ignores the key. A key can be a list (",
+     {
+      "t": "code",
+      "v": "['order_id', 'product_id']"
+     },
+     "). ",
+     {
+      "t": "code",
+      "v": "NULL = NULL"
+     },
+     " is not true in SQL, so a ",
+     {
+      "t": "code",
+      "v": "NULL"
+     },
+     " key never matches: one more copy at each run."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch14-14",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": true,
+   "D": false
+  },
+  "keyRaw": "\\textbf{NO, YES, YES, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "With ",
+     {
+      "t": "code",
+      "v": "incremental_strategy='append'"
+     },
+     ", a ",
+     {
+      "t": "code",
+      "v": "unique_key"
+     },
+     " prevents duplicates."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "merge"
+     },
+     " without any ",
+     {
+      "t": "code",
+      "v": "unique_key"
+     },
+     " behaves like ",
+     {
+      "t": "code",
+      "v": "append"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "unique_key"
+     },
+     " can be a list of columns."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Rows with a ",
+     {
+      "t": "code",
+      "v": "NULL"
+     },
+     " key are matched correctly by ",
+     {
+      "t": "code",
+      "v": "merge"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "unique_key"
+     },
+     ":"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " The config overrides the flag; ",
+     {
+      "t": "code",
+      "v": "false"
+     },
+     " means \"never full refresh\". A is the behaviour without the config. B: there is no error, and that is the danger (the run looks normal). D: the model runs."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch14-15",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The table is dropped and rebuilt, because the flag wins over the config."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt raises an error because the config and the flag disagree."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The run is a normal incremental run; the table is not rebuilt."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The model is skipped."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "A model has ",
+     {
+      "t": "code",
+      "v": "full_refresh=false"
+     },
+     " in its config. Someone runs ",
+     {
+      "t": "code",
+      "v": "dbt run --select big_events --full-refresh"
+     },
+     ". What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The predicate restricts the ",
+     {
+      "c": [
+       "old"
+      ],
+      "t": "i"
+     },
+     " rows that the ",
+     {
+      "t": "code",
+      "v": "MERGE"
+     },
+     " may match; the corrected row finds no match in the 7-day window and is inserted. We reproduced it: order 255 (November) was duplicated by a December predicate. A ignores the predicate. C: dbt does not check the data against predicates. D: predicates act on the target, not on the new data."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch14-16",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The old row is updated, as usual."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The corrected row does not match any old row and is inserted: the key is now duplicated."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The run fails because the row is outside the predicate."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The predicate filters the new data, so the corrected row is ignored."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "merge"
+     },
+     " model on a huge table adds ",
+     {
+      "t": "code",
+      "v": "incremental_predicates=[\"DBT_INTERNAL_DEST.event_date >= current_date - 7\"]"
+     },
+     ". A row from 20 days ago is corrected in the source and arrives in the new data. What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " Whole-partition replacement on a partitioned BigQuery table is exactly ",
+     {
+      "t": "code",
+      "v": "insert_overwrite"
+     },
+     ". A needs a reliable key. B would duplicate the recomputed days. D is not supported by dbt-bigquery."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch14-17",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "merge"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "append"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "insert_overwrite"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "delete+insert"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "On BigQuery, a table is partitioned by ",
+     {
+      "t": "code",
+      "v": "event_date"
+     },
+     ". Each run recomputes the last three days completely; there is no reliable row key. Which strategy fits?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and B."
+      ],
+      "t": "b"
+     },
+     " The column is appended, and only the rows processed by this run get a value. C: no mode backfills old rows; you need ",
+     {
+      "t": "code",
+      "v": "--full-refresh"
+     },
+     ". D would be ",
+     {
+      "t": "code",
+      "v": "fail"
+     },
+     " (or ",
+     {
+      "t": "code",
+      "v": "ignore"
+     },
+     " with a removed column). E never happens automatically."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch14-18",
+  "key": [
+   "A",
+   "B"
+  ],
+  "keyRaw": "\\textbf{A and B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The column ",
+     {
+      "t": "code",
+      "v": "discount"
+     },
+     " is added to the table."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The rows that existed before the run have ",
+     {
+      "t": "code",
+      "v": "NULL"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "discount"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt computes ",
+     {
+      "t": "code",
+      "v": "discount"
+     },
+     " for the old rows too."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The run fails because the schema changed."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "dbt automatically does a full refresh."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "An incremental model has ",
+     {
+      "t": "code",
+      "v": "on_schema_change='append_new_columns'"
+     },
+     ". You add a column ",
+     {
+      "t": "code",
+      "v": "discount"
+     },
+     " to its SQL and run ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " without flags. Which ",
+     {
+      "c": [
+       "two"
+      ],
+      "t": "b"
+     },
+     " statements are true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Both flags, start inclusive, end exclusive: 2026-01-01 to 2026-02-01 is exactly the January batch. A: the end is missing, dbt stops with an error. C: a normal run only covers 2026-09 and 2026-10. D works too (the end is rounded up to the end of its batch), but it is not \"the only way\", and the clean boundary is clearer."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch14-19",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run -s m --event-time-start 2026-01-01"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run -s m --event-time-start 2026-01-01 --event-time-end 2026-02-01"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run -s m"
+     },
+     ", because the lookback catches late data"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run -s m --event-time-start 2026-01-01 --event-time-end 2026-01-31"
+     },
+     ", which is the only way to include 31 January"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 19
+  },
+  "stem": [
+   {
+    "c": [
+     "A microbatch model has ",
+     {
+      "t": "code",
+      "v": "batch_size='month'"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "lookback=1"
+     },
+     ". On 21 October 2026, late rows arrive for January 2026. Which command loads them?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "merge"
+       }
+      ],
+      "t": "b"
+     },
+     ". The default is adapter-specific: Postgres and Redshift use ",
+     {
+      "t": "code",
+      "v": "append"
+     },
+     ", or ",
+     {
+      "t": "code",
+      "v": "delete+insert"
+     },
+     " with a ",
+     {
+      "t": "code",
+      "v": "unique_key"
+     },
+     "; dbt-duckdb uses ",
+     {
+      "t": "code",
+      "v": "delete+insert"
+     },
+     "; Spark uses ",
+     {
+      "t": "code",
+      "v": "append"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch14-20",
+  "key": {
+   "accepted": [
+    "merge"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{merge}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 14,
+   "kind": "chapter",
+   "n": 20
+  },
+  "stem": [
+   {
+    "c": [
+     "On Snowflake, BigQuery and Databricks, an incremental model without ",
+     {
+      "t": "code",
+      "v": "incremental_strategy"
+     },
+     " uses the strategy ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

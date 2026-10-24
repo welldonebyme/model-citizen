@@ -1,0 +1,3053 @@
+{
+ "acceptance": [
+  {
+   "check": "ch00 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch01 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch02 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch03 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch04 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch05 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch06 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch07 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch08 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch09 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch10 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch11 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch12 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch13 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch14 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch15 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch16 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch17 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch18 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch19 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch20 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch21 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch22 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch23 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch24 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch25 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch26 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch27 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch28 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch29 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch30 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch31 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch32 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "ch33 counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "appA counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "appB counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "appC counts",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "total chapter_questions",
+   "detail": "487 (expected 487)",
+   "ok": true
+  },
+  {
+   "check": "total mock_questions",
+   "detail": "195 (expected 195)",
+   "ok": true
+  },
+  {
+   "check": "total traps",
+   "detail": "145 (expected 145)",
+   "ok": true
+  },
+  {
+   "check": "total terms",
+   "detail": "305 (expected 305)",
+   "ok": true
+  },
+  {
+   "check": "total labs",
+   "detail": "118 (expected 118)",
+   "ok": true
+  },
+  {
+   "check": "total figures",
+   "detail": "64 (expected 64)",
+   "ok": true
+  },
+  {
+   "check": "inventory summary agrees",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "traps numbered 1..145",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "every key validates (except flagged)",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "flagged keys (keys-todo.yaml)",
+   "detail": "11 flagged: q-ch05-04, q-ch06-12, q-ch10-20, q-ch12-03, q-ch14-06, q-ch17-03, q-ch17-12, q-ch22-13, q-ch26-03, q-ch26-16, m2-q30",
+   "ok": true
+  },
+  {
+   "check": "mock 1 blueprint",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "mock 2 blueprint",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "mock 3 blueprint",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "coverage: every objective has a lesson, a lab and 3 mock questions",
+   "detail": "[]",
+   "ok": true
+  },
+  {
+   "check": "every ref resolves",
+   "detail": "922 refs; ",
+   "ok": true
+  },
+  {
+   "check": "no \\command left in rendered prose",
+   "detail": "",
+   "ok": true
+  },
+  {
+   "check": "braces / $ / backslash all come from escapes",
+   "detail": "",
+   "ok": true
+  }
+ ],
+ "bookConsistency": [],
+ "figures": [
+  {
+   "chapter": 0,
+   "endLine": 92,
+   "file": "parts/part0/ch00-start-here.tex",
+   "id": "ch00-fig1",
+   "k": 1,
+   "line": 75,
+   "sha1": "dda0c7df4b20796d3a8aa8408bc9e5408c7dcd71"
+  },
+  {
+   "chapter": 0,
+   "endLine": 203,
+   "file": "parts/part0/ch00-start-here.tex",
+   "id": "ch00-fig2",
+   "k": 2,
+   "line": 195,
+   "sha1": "1ed3bc004896a0137e5df084bf050bf2159d0813"
+  },
+  {
+   "chapter": 0,
+   "endLine": 509,
+   "file": "parts/part0/ch00-start-here.tex",
+   "id": "ch00-fig3",
+   "k": 3,
+   "line": 503,
+   "sha1": "3a702aaea5e8e3a16e3415048af9a025a0c7fe03"
+  },
+  {
+   "chapter": 1,
+   "endLine": 140,
+   "file": "parts/part1/ch01-data-world.tex",
+   "id": "ch01-fig1",
+   "k": 1,
+   "line": 118,
+   "sha1": "7244af03b07cb3854d14bdb1a0a202bd8340697a"
+  },
+  {
+   "chapter": 1,
+   "endLine": 202,
+   "file": "parts/part1/ch01-data-world.tex",
+   "id": "ch01-fig2",
+   "k": 2,
+   "line": 189,
+   "sha1": "149fb48083cf360ce654ccdb787e30e878d330df"
+  },
+  {
+   "chapter": 1,
+   "endLine": 370,
+   "file": "parts/part1/ch01-data-world.tex",
+   "id": "ch01-fig3",
+   "k": 3,
+   "line": 358,
+   "sha1": "49465028a4b4619bbdad038610f0aa15e15a9fba"
+  },
+  {
+   "chapter": 1,
+   "endLine": 531,
+   "file": "parts/part1/ch01-data-world.tex",
+   "id": "ch01-fig4",
+   "k": 4,
+   "line": 510,
+   "sha1": "0eee17cf6a5487aff3dd325ed3d21b5fda4d5564"
+  },
+  {
+   "chapter": 2,
+   "endLine": 110,
+   "file": "parts/part1/ch02-command-line.tex",
+   "id": "ch02-fig1",
+   "k": 1,
+   "line": 84,
+   "sha1": "c68b3fe16f7d18d62e73cdb7180e9724cbdd6036"
+  },
+  {
+   "chapter": 3,
+   "endLine": 104,
+   "file": "parts/part1/ch03-git.tex",
+   "id": "ch03-fig1",
+   "k": 1,
+   "line": 91,
+   "sha1": "091ea86ef67e8dcc8d3063303661399f9f7a7ac4"
+  },
+  {
+   "chapter": 3,
+   "endLine": 569,
+   "file": "parts/part1/ch03-git.tex",
+   "id": "ch03-fig2",
+   "k": 2,
+   "line": 557,
+   "sha1": "6a9213b39fcf5c7f1a849f5604834b3c737dd39e"
+  },
+  {
+   "chapter": 3,
+   "endLine": 639,
+   "file": "parts/part1/ch03-git.tex",
+   "id": "ch03-fig3",
+   "k": 3,
+   "line": 629,
+   "sha1": "94b3e7c2978319d7e8fa8b0ba1c22b7614cca2d2"
+  },
+  {
+   "chapter": 3,
+   "endLine": 1024,
+   "file": "parts/part1/ch03-git.tex",
+   "id": "ch03-fig4",
+   "k": 4,
+   "line": 1009,
+   "sha1": "59af5164d1f882f3177e617b6ddd8217b5a6f4da"
+  },
+  {
+   "chapter": 3,
+   "endLine": 1130,
+   "file": "parts/part1/ch03-git.tex",
+   "id": "ch03-fig5",
+   "k": 5,
+   "line": 1121,
+   "sha1": "3f1e1956e414746bb1dcac9319fba8d935f416f3"
+  },
+  {
+   "chapter": 3,
+   "endLine": 1144,
+   "file": "parts/part1/ch03-git.tex",
+   "id": "ch03-fig6",
+   "k": 6,
+   "line": 1133,
+   "sha1": "3b41218b39157988f17e63f60966033a641ebdea"
+  },
+  {
+   "chapter": 4,
+   "endLine": 1141,
+   "file": "parts/part1/ch04-sql-a.tex",
+   "id": "ch04-fig1",
+   "k": 1,
+   "line": 1126,
+   "sha1": "48dbf735281770507c9699e4c6677fde44e2ad38"
+  },
+  {
+   "chapter": 4,
+   "endLine": 1311,
+   "file": "parts/part1/ch04-sql-a.tex",
+   "id": "ch04-fig2",
+   "k": 2,
+   "line": 1272,
+   "sha1": "12170d2d2a234755bdc40dfad05579fb1bf294cf"
+  },
+  {
+   "chapter": 4,
+   "endLine": 1524,
+   "file": "parts/part1/ch04-sql-a.tex",
+   "id": "ch04-fig3",
+   "k": 3,
+   "line": 1510,
+   "sha1": "c1e18c654994e3c2be77af9cf97fabf4f1f18397"
+  },
+  {
+   "chapter": 4,
+   "endLine": 515,
+   "file": "parts/part1/ch04-sql-b.tex",
+   "id": "ch04-fig4",
+   "k": 4,
+   "line": 478,
+   "sha1": "0a4d7df49fad8c449c2849dd729acb5fe6f0680b"
+  },
+  {
+   "chapter": 4,
+   "endLine": 970,
+   "file": "parts/part1/ch04-sql-b.tex",
+   "id": "ch04-fig5",
+   "k": 5,
+   "line": 956,
+   "sha1": "99fff5b2b21782aeb9335a99c7ecbdff39c1f90e"
+  },
+  {
+   "chapter": 4,
+   "endLine": 1349,
+   "file": "parts/part1/ch04-sql-b.tex",
+   "id": "ch04-fig6",
+   "k": 6,
+   "line": 1336,
+   "sha1": "b49696bc32c2246c929893327844406974b0228d"
+  },
+  {
+   "chapter": 5,
+   "endLine": 57,
+   "file": "parts/part1/ch05-yaml-jinja-python.tex",
+   "id": "ch05-fig1",
+   "k": 1,
+   "line": 43,
+   "sha1": "5236eb2d46abdcec22a94f34dcc7890f337e3a5d"
+  },
+  {
+   "chapter": 5,
+   "endLine": 980,
+   "file": "parts/part1/ch05-yaml-jinja-python.tex",
+   "id": "ch05-fig2",
+   "k": 2,
+   "line": 967,
+   "sha1": "85e0b5b5c4ed630d575aecdf7477e9a9f72ad072"
+  },
+  {
+   "chapter": 6,
+   "endLine": 73,
+   "file": "parts/part2/ch06-first-project.tex",
+   "id": "ch06-fig1",
+   "k": 1,
+   "line": 56,
+   "sha1": "095bef42b0fdbb002792fa5c0f651929af765036"
+  },
+  {
+   "chapter": 6,
+   "endLine": 601,
+   "file": "parts/part2/ch06-first-project.tex",
+   "id": "ch06-fig2",
+   "k": 2,
+   "line": 583,
+   "sha1": "2cce0a92e4be1ea925d3fb64726e62dfe20c002d"
+  },
+  {
+   "chapter": 7,
+   "endLine": 50,
+   "file": "parts/part2/ch07-models-sources-dag.tex",
+   "id": "ch07-fig1",
+   "k": 1,
+   "line": 44,
+   "sha1": "772f061447367239835751266dc95784391d3a3f"
+  },
+  {
+   "chapter": 7,
+   "endLine": 138,
+   "file": "parts/part2/ch07-models-sources-dag.tex",
+   "id": "ch07-fig2",
+   "k": 2,
+   "line": 129,
+   "sha1": "651cb6447812d48f9fbcb44778afdd9982a45d52"
+  },
+  {
+   "chapter": 7,
+   "endLine": 374,
+   "file": "parts/part2/ch07-models-sources-dag.tex",
+   "id": "ch07-fig3",
+   "k": 3,
+   "line": 369,
+   "sha1": "b6f5739716c1b0f108ca8b76a00f43122f8f3db2"
+  },
+  {
+   "chapter": 7,
+   "endLine": 757,
+   "file": "parts/part2/ch07-models-sources-dag.tex",
+   "id": "ch07-fig4",
+   "k": 4,
+   "line": 733,
+   "sha1": "5b5fb48a8f976fefcd7a50123ad1774e8a8b9bc4"
+  },
+  {
+   "chapter": 8,
+   "endLine": 291,
+   "file": "parts/part2/ch08-materializations.tex",
+   "id": "ch08-fig1",
+   "k": 1,
+   "line": 280,
+   "sha1": "8cf2d83336f350dee71ced152dd6705a00ffd3c3"
+  },
+  {
+   "chapter": 8,
+   "endLine": 473,
+   "file": "parts/part2/ch08-materializations.tex",
+   "id": "ch08-fig2",
+   "k": 2,
+   "line": 460,
+   "sha1": "78da24317e55ca91c3c96ebed55aebd7d4343b84"
+  },
+  {
+   "chapter": 8,
+   "endLine": 970,
+   "file": "parts/part2/ch08-materializations.tex",
+   "id": "ch08-fig3",
+   "k": 3,
+   "line": 961,
+   "sha1": "9e0f8467189e6f6da35f1a74a1407152cf937e7a"
+  },
+  {
+   "chapter": 9,
+   "endLine": 141,
+   "file": "parts/part2/ch09-modularity-refactoring.tex",
+   "id": "ch09-fig1",
+   "k": 1,
+   "line": 97,
+   "sha1": "aa8110b1153a3cea7d36a0519f4c906168ebacde"
+  },
+  {
+   "chapter": 9,
+   "endLine": 336,
+   "file": "parts/part2/ch09-modularity-refactoring.tex",
+   "id": "ch09-fig2",
+   "k": 2,
+   "line": 297,
+   "sha1": "862c68edf050bd8ff1df9eeadff20acd083c4115"
+  },
+  {
+   "chapter": 10,
+   "endLine": 802,
+   "file": "parts/part2/ch10-configuration.tex",
+   "id": "ch10-fig1",
+   "k": 1,
+   "line": 793,
+   "sha1": "6702244bee258d74a1426009b0a4b03ccd653943"
+  },
+  {
+   "chapter": 10,
+   "endLine": 1262,
+   "file": "parts/part2/ch10-configuration.tex",
+   "id": "ch10-fig2",
+   "k": 2,
+   "line": 1248,
+   "sha1": "efd88dcef31899582742699ada27ff8b314ad99d"
+  },
+  {
+   "chapter": 11,
+   "endLine": 155,
+   "file": "parts/part2/ch11-jinja-macros-packages.tex",
+   "id": "ch11-fig1",
+   "k": 1,
+   "line": 144,
+   "sha1": "ea3b0c02e26ca27128a7d4dd05449e473bdbf305"
+  },
+  {
+   "chapter": 12,
+   "endLine": 68,
+   "file": "parts/part2/ch12-seeds-analyses.tex",
+   "id": "ch12-fig1",
+   "k": 1,
+   "line": 57,
+   "sha1": "5459e40c6b9532bea366b9642f03df2811b22cda"
+  },
+  {
+   "chapter": 13,
+   "endLine": 100,
+   "file": "parts/part2/ch13-snapshots.tex",
+   "id": "ch13-fig1",
+   "k": 1,
+   "line": 82,
+   "sha1": "0adc828e7e2f5fd7b6f4ba1d0d5c5698ea1cb8f3"
+  },
+  {
+   "chapter": 14,
+   "endLine": 153,
+   "file": "parts/part2/ch14-incremental-microbatch.tex",
+   "id": "ch14-fig1",
+   "k": 1,
+   "line": 134,
+   "sha1": "a6bb771eea063105d95e08e295c41c15552c6e0a"
+  },
+  {
+   "chapter": 14,
+   "endLine": 1522,
+   "file": "parts/part2/ch14-incremental-microbatch.tex",
+   "id": "ch14-fig2",
+   "k": 2,
+   "line": 1498,
+   "sha1": "dc1d9368581f2076119de51d44e35f8d89847623"
+  },
+  {
+   "chapter": 15,
+   "endLine": 173,
+   "file": "parts/part2/ch15-python-models.tex",
+   "id": "ch15-fig1",
+   "k": 1,
+   "line": 163,
+   "sha1": "d62cec22307f97fc6885d9bce6c6917002ada380"
+  },
+  {
+   "chapter": 16,
+   "endLine": 433,
+   "file": "parts/part2/ch16-commands-selection.tex",
+   "id": "ch16-fig1",
+   "k": 1,
+   "line": 387,
+   "sha1": "5734f854edc0214f505075d75abb292817d24fab"
+  },
+  {
+   "chapter": 17,
+   "endLine": 111,
+   "file": "parts/part3/ch17-governance.tex",
+   "id": "ch17-fig1",
+   "k": 1,
+   "line": 85,
+   "sha1": "ccfe73ba425d0009c318ea26c0f935a611720905"
+  },
+  {
+   "chapter": 17,
+   "endLine": 436,
+   "file": "parts/part3/ch17-governance.tex",
+   "id": "ch17-fig2",
+   "k": 2,
+   "line": 428,
+   "sha1": "4f872628d25fe274ad3f5e05394e478da60b920d"
+  },
+  {
+   "chapter": 18,
+   "endLine": 149,
+   "file": "parts/part4/ch18-data-tests.tex",
+   "id": "ch18-fig1",
+   "k": 1,
+   "line": 133,
+   "sha1": "419de40acc2dca5d83f21093a3e6640e6d831b4a"
+  },
+  {
+   "chapter": 18,
+   "endLine": 1542,
+   "file": "parts/part4/ch18-data-tests.tex",
+   "id": "ch18-fig2",
+   "k": 2,
+   "line": 1523,
+   "sha1": "f0ca58064278f9e330e9d95d8036fff990a8973e"
+  },
+  {
+   "chapter": 18,
+   "endLine": 1709,
+   "file": "parts/part4/ch18-data-tests.tex",
+   "id": "ch18-fig3",
+   "k": 3,
+   "line": 1697,
+   "sha1": "68ec379bdef0ea69a1dc9ed665ef951a5ad94e48"
+  },
+  {
+   "chapter": 20,
+   "endLine": 96,
+   "file": "parts/part5/ch20-documentation.tex",
+   "id": "ch20-fig1",
+   "k": 1,
+   "line": 79,
+   "sha1": "13bf753783e806890c7ccd45550e7301dd968f1a"
+  },
+  {
+   "chapter": 20,
+   "endLine": 667,
+   "file": "parts/part5/ch20-documentation.tex",
+   "id": "ch20-fig2",
+   "k": 2,
+   "line": 642,
+   "sha1": "e889e00b30cba24206de8cedbe4e2dbcaf4478d0"
+  },
+  {
+   "chapter": 21,
+   "endLine": 61,
+   "file": "parts/part5/ch21-freshness-exposures.tex",
+   "id": "ch21-fig1",
+   "k": 1,
+   "line": 48,
+   "sha1": "3dab69f38e7498ef2c242863b6d5a4fc1925b315"
+  },
+  {
+   "chapter": 21,
+   "endLine": 100,
+   "file": "parts/part5/ch21-freshness-exposures.tex",
+   "id": "ch21-fig2",
+   "k": 2,
+   "line": 89,
+   "sha1": "9e871f6b4ca9374b8a2446e6bf8dd20ed6cae9ce"
+  },
+  {
+   "chapter": 22,
+   "endLine": 96,
+   "file": "parts/part6/ch22-debugging.tex",
+   "id": "ch22-fig1",
+   "k": 1,
+   "line": 78,
+   "sha1": "d20ccbd07318f192510ddae11bfd35417cfd8b8b"
+  },
+  {
+   "chapter": 22,
+   "endLine": 888,
+   "file": "parts/part6/ch22-debugging.tex",
+   "id": "ch22-fig2",
+   "k": 2,
+   "line": 874,
+   "sha1": "b60cbd8dda6f6da9c40447a92fc87166e0a397c0"
+  },
+  {
+   "chapter": 22,
+   "endLine": 1008,
+   "file": "parts/part6/ch22-debugging.tex",
+   "id": "ch22-fig3",
+   "k": 3,
+   "line": 992,
+   "sha1": "4d5e879e719c23cc29a52ac6057abd88dac1a05a"
+  },
+  {
+   "chapter": 23,
+   "endLine": 84,
+   "file": "parts/part6/ch23-pipelines-clone.tex",
+   "id": "ch23-fig1",
+   "k": 1,
+   "line": 56,
+   "sha1": "fce43db9ed79f13673623ad926cb671840dedd04"
+  },
+  {
+   "chapter": 23,
+   "endLine": 815,
+   "file": "parts/part6/ch23-pipelines-clone.tex",
+   "id": "ch23-fig2",
+   "k": 2,
+   "line": 795,
+   "sha1": "e7c8762d1a6d2c884c88a42cc967bb1892ab685a"
+  },
+  {
+   "chapter": 24,
+   "endLine": 173,
+   "file": "parts/part7/ch24-state-defer-retry.tex",
+   "id": "ch24-fig1",
+   "k": 1,
+   "line": 164,
+   "sha1": "8feafc509303252d5695295daac12a16b90fb351"
+  },
+  {
+   "chapter": 24,
+   "endLine": 826,
+   "file": "parts/part7/ch24-state-defer-retry.tex",
+   "id": "ch24-fig2",
+   "k": 2,
+   "line": 810,
+   "sha1": "94768d8f1805a2b27a8dd72ab7abdb09feda85a7"
+  },
+  {
+   "chapter": 24,
+   "endLine": 1050,
+   "file": "parts/part7/ch24-state-defer-retry.tex",
+   "id": "ch24-fig3",
+   "k": 3,
+   "line": 1040,
+   "sha1": "4030bf7f09d0dba36fdbe8cdc4267554f7704bc4"
+  },
+  {
+   "chapter": 25,
+   "endLine": 155,
+   "file": "parts/part7/ch25-environments-ci.tex",
+   "id": "ch25-fig1",
+   "k": 1,
+   "line": 135,
+   "sha1": "01aa98ad0f7bf64dd7de704d478e0cdf09920fe7"
+  },
+  {
+   "chapter": 26,
+   "endLine": 211,
+   "file": "parts/part8/ch26-capstone.tex",
+   "id": "ch26-fig1",
+   "k": 1,
+   "line": 133,
+   "sha1": "7a14b271b3eeb6f667c50710fbad287373624c9c"
+  },
+  {
+   "chapter": 27,
+   "endLine": 68,
+   "file": "parts/part9/ch27-exam-strategy.tex",
+   "id": "ch27-fig1",
+   "k": 1,
+   "line": 51,
+   "sha1": "7b54679bac9f543ce1319fef1b740c0ee193dc83"
+  },
+  {
+   "chapter": 27,
+   "endLine": 385,
+   "file": "parts/part9/ch27-exam-strategy.tex",
+   "id": "ch27-fig2",
+   "k": 2,
+   "line": 370,
+   "sha1": "ec9a151204f0cc17434ed9aacc37edc6663f65a6"
+  },
+  {
+   "chapter": 27,
+   "endLine": 470,
+   "file": "parts/part9/ch27-exam-strategy.tex",
+   "id": "ch27-fig3",
+   "k": 3,
+   "line": 449,
+   "sha1": "dfec63860c18665a98e40d17f2b3c8fd16f45ed1"
+  }
+ ],
+ "flaggedKeys": [
+  {
+   "format": "fill",
+   "id": "q-ch05-04",
+   "reason": "alternative answers mentioned after the key: '(single or double)'",
+   "where": "parts/part1/ch05-yaml-jinja-python.tex:1302"
+  },
+  {
+   "format": "fill",
+   "id": "q-ch06-12",
+   "reason": "alternative answers mentioned after the key: '(short form -s)'",
+   "where": "parts/part2/ch06-first-project.tex:1594"
+  },
+  {
+   "format": "fill",
+   "id": "q-ch10-20",
+   "reason": "alternative answers mentioned after the key: '(the docs write it DBT_ENV_SECRET; both answers mean the same prefix)'",
+   "where": "parts/part2/ch10-configuration.tex:1868"
+  },
+  {
+   "format": "fill",
+   "id": "q-ch12-03",
+   "reason": "alternative answers mentioned after the key: '(short form -f)'",
+   "where": "parts/part2/ch12-seeds-analyses.tex:1010"
+  },
+  {
+   "format": "fill",
+   "id": "q-ch14-06",
+   "reason": "alternative answers mentioned after the key: '(or its short form -f)'",
+   "where": "parts/part2/ch14-incremental-microbatch.tex:1971"
+  },
+  {
+   "format": "fill",
+   "id": "q-ch17-03",
+   "reason": "the key lists alternatives: 'append_new_columns or fail.'",
+   "where": "parts/part3/ch17-governance.tex:1740"
+  },
+  {
+   "format": "fill",
+   "id": "q-ch17-12",
+   "reason": "alternative answers mentioned after the key: '(version works too)'",
+   "where": "parts/part3/ch17-governance.tex:1834"
+  },
+  {
+   "format": "fill",
+   "id": "q-ch22-13",
+   "reason": "alternative answers mentioned after the key: '(or --log-level debug)'",
+   "where": "parts/part6/ch22-debugging.tex:1670"
+  },
+  {
+   "format": "fill",
+   "id": "q-ch26-03",
+   "reason": "fill-in answer does not start with a bold value",
+   "where": "parts/part8/ch26-capstone.tex:2009"
+  },
+  {
+   "format": "hotspot",
+   "id": "q-ch26-16",
+   "reason": "hotspot without line numbers (listing or embedded)",
+   "where": "parts/part8/ch26-capstone.tex:2109"
+  },
+  {
+   "format": "fill",
+   "id": "m2-q30",
+   "reason": "1 value for 2 blanks in the stem",
+   "where": "parts/part9/ch30-mock2.tex:703"
+  }
+ ],
+ "overridesApplied": [],
+ "pathRewrites": {
+  "applied": [
+   {
+    "before": "~/Documents/Adnane/dbt-bible/labs/data/",
+    "field": "inline code",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch01.json"
+   },
+   {
+    "before": "A folder tree from the root folder / to the course folders. /Users/mac/ is the home folder (~). It contains Documents/Adnane/dbt-bible/ (this book, with labs/), dbt-course/ (your workspace, Chapter 2 lab) and .dbt/ (hidden: dbt connection settings).",
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch02.json"
+   },
+   {
+    "before": "/Users/mac/dbt-course/practice",
+    "field": "inline code",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch02.json"
+   },
+   {
+    "before": "/Users/mac/dbt-course",
+    "field": "inline code",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch02.json"
+   },
+   {
+    "before": "/Users/mac/dbt-course/practice/setup.sql",
+    "field": "inline code",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch02.json"
+   },
+   {
+    "before": "/Users/mac",
+    "field": "inline code",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch02.json"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch02.json#ch02-c2"
+   },
+   {
+    "before": "~/Documents/Adnane/dbt-bible/labs",
+    "field": "inline code",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch02.json"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch02.json#ch02-c9"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch02.json#ch02-c16"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch02.json#ch02-c23"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch03.json#ch03-c3"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json#ch06-c3"
+   },
+   {
+    "before": "/Users/mac",
+    "field": "inline code",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json"
+   },
+   {
+    "before": "Creating dbt configuration folder at /Users/mac/.dbt",
+    "field": "inline code",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json#ch06-c9"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json#ch06-c15"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json#ch06-c21"
+   },
+   {
+    "field": "title",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json#ch06-c21"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json#ch06-c26"
+   },
+   {
+    "before": "project path </Users/mac/dbt-course/dbt_project.yml> not found",
+    "field": "inline code",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json"
+   },
+   {
+    "before": "IO Error: Cannot open file \"/Users/mac/practice/practice.duckdb\": No such file or directory",
+    "field": "inline code",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json#ch06-c27"
+   },
+   {
+    "before": "open /Users/mac/.dbt",
+    "field": "inline code",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json#ch06-c41"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json#ch06-c42"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json#ch06-c43"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch06.json#ch06-c51"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home",
+     "kit-absolute"
+    ],
+    "where": "chapters/ch06.json#ch06-c56"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch07.json#ch07-c43"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch10.json#ch10-c7"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch10.json#ch10-c110"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch10.json#ch10-c112"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch11.json#ch11-c54"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch11.json#ch11-c57"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch11.json#ch11-c61"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch11.json#ch11-c102"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch12.json#ch12-c24"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch13.json#ch13-c27"
+   },
+   {
+    "before": "git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt",
+    "field": "inline code",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch13.json"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch15.json#ch15-c12"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch16.json#ch16-c78"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch16.json#ch16-c79"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch16.json#ch16-c80"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch16.json#ch16-c85"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch17.json#ch17-c38"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch17.json#ch17-c71"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch17.json#ch17-c72"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch17.json#ch17-c74"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch18.json#ch18-c19"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch20.json#ch20-c19"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch20.json#ch20-c29"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch20.json#ch20-c36"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch20.json#ch20-c48"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch20.json#ch20-c50"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch20.json#ch20-c54"
+   },
+   {
+    "before": "git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt",
+    "field": "inline code",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch20.json"
+   },
+   {
+    "before": "cp -r ~/Documents/Adnane/dbt-bible/labs/updates ~/dbt-course/practice/",
+    "field": "inline code",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch21.json"
+   },
+   {
+    "before": "~/Documents/Adnane/dbt-bible",
+    "field": "inline code",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch22.json"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch22.json#ch22-c8"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch22.json#ch22-c16"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch22.json#ch22-c18"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch22.json#ch22-c19"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch22.json#ch22-c33"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch22.json#ch22-c36"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch22.json#ch22-c41"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch22.json#ch22-c61"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch23.json#ch23-c15"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch25.json#ch25-c11"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch25.json#ch25-c14"
+   },
+   {
+    "before": "raw data loaded into /Users/mac/dbt-course/ci_run/workspace/ci_db/practice.duckdb",
+    "field": "inline code",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "chapters/ch25.json"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-home"
+    ],
+    "where": "chapters/ch26.json#ch26-c2"
+   },
+   {
+    "field": "text",
+    "rules": [
+     "kit-absolute"
+    ],
+    "where": "chapters/ch26.json#ch26-c3"
+   },
+   {
+    "before": "/Users/mac/dbt-course",
+    "field": "inline code",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "questions/ch02.json"
+   },
+   {
+    "before": "/Users/mac/dbt-course/practice",
+    "field": "inline code",
+    "rules": [
+     "home-absolute"
+    ],
+    "where": "questions/ch02.json"
+   }
+  ],
+  "appliedByRule": {
+   "home-absolute": 50,
+   "kit-absolute": 2,
+   "kit-home": 24
+  },
+  "bookOccurrences": [
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "\\item Open the five CSV files in \\code{\\textasciitilde/Documents/Adnane/dbt-bible/labs/data/} with any text",
+    "where": "parts/part1/ch01-data-world.tex:457"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "\\item An \\textbf{absolute path} starts from the root \\code{/}: \\code{/Users/mac/dbt-course/practice}.",
+    "where": "parts/part1/ch02-command-line.tex:116"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "\\item A \\textbf{relative path} starts from where you are now: if you are in \\code{/Users/mac/dbt-course},",
+    "where": "parts/part1/ch02-command-line.tex:118"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "then \\code{practice/setup.sql} means \\code{/Users/mac/dbt-course/practice/setup.sql}.",
+    "where": "parts/part1/ch02-command-line.tex:119"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "\\item Special names: \\code{\\textasciitilde} = your home folder (\\code{/Users/mac}), \\code{.} = the current folder,",
+    "where": "parts/part1/ch02-command-line.tex:120"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "/Users/mac",
+    "where": "parts/part1/ch02-command-line.tex:127"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "/Users/mac/dbt-course",
+    "where": "parts/part1/ch02-command-line.tex:130"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "(Section~\\ref{sec:cli-mainlab}), or directly in \\code{\\textasciitilde/Documents/Adnane/dbt-bible/labs}.",
+    "where": "parts/part1/ch02-command-line.tex:296"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "/Users/mac",
+    "where": "parts/part1/ch02-command-line.tex:346"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "/Users/mac/dbt-course/.venv/bin/python",
+    "where": "parts/part1/ch02-command-line.tex:478"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "(.venv) $ cp -R ~/Documents/Adnane/dbt-bible/labs/data ~/dbt-course/practice/",
+    "where": "parts/part1/ch02-command-line.tex:609"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "(.venv) $ cp ~/Documents/Adnane/dbt-bible/labs/setup.sql ~/dbt-course/practice/",
+    "where": "parts/part1/ch02-command-line.tex:610"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "\\item {[Multiple choice]} You are in \\code{/Users/mac/dbt-course}. Which command moves you to",
+    "where": "parts/part1/ch02-command-line.tex:682"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "\\code{/Users/mac/dbt-course/practice}?",
+    "where": "parts/part1/ch02-command-line.tex:683"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "Initialized empty Git repository in /Users/mac/dbt-course/practice/.git/",
+    "where": "parts/part1/ch03-git.tex:165"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:05:35  Creating dbt configuration folder at /Users/mac/.dbt",
+    "where": "parts/part2/ch06-first-project.tex:179"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:05:35  Profile demo_project written to /Users/mac/.dbt/profiles.yml using target's sample configuration. Once updated, you'll be able to start developing with dbt.",
+    "where": "parts/part2/ch06-first-project.tex:192"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "{\\small\\color{muted} The paths in these outputs use the home folder \\code{/Users/mac}; on your Mac you see your own home folder.}",
+    "where": "parts/part2/ch06-first-project.tex:194"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "\\code{Creating dbt configuration folder at /Users/mac/.dbt}, right after \\code{Running with dbt=1.11.16}",
+    "where": "parts/part2/ch06-first-project.tex:255"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "/Users/mac/dbt-course/jaffle_dbt",
+    "where": "parts/part2/ch06-first-project.tex:287"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "Error encountered in /Users/mac/dbt-course/jaffle_dbt/dbt_project.yml",
+    "where": "parts/part2/ch06-first-project.tex:468"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "\\begin{outputcode}[title={Result: DBT\\_PROFILES\\_DIR=/Users/mac/altprofiles dbt debug (extract)},listing options={language={},basicstyle=\\ttfamily\\scriptsize}]",
+    "where": "parts/part2/ch06-first-project.tex:690"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:07:35  Using profiles dir at /Users/mac/altprofiles",
+    "where": "parts/part2/ch06-first-project.tex:691"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:07:35  Using profiles.yml file at /Users/mac/altprofiles/profiles.yml",
+    "where": "parts/part2/ch06-first-project.tex:692"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "20:35:32  python path: /Users/mac/dbt-course/.venv/bin/python",
+    "where": "parts/part2/ch06-first-project.tex:773"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "20:35:32  Using profiles dir at /Users/mac/.dbt",
+    "where": "parts/part2/ch06-first-project.tex:775"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "20:35:32  Using profiles.yml file at /Users/mac/.dbt/profiles.yml",
+    "where": "parts/part2/ch06-first-project.tex:776"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "20:35:32  Using dbt_project.yml file at /Users/mac/dbt-course/jaffle_dbt/dbt_project.yml",
+    "where": "parts/part2/ch06-first-project.tex:777"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "Run from \\code{\\textasciitilde/dbt-course} (not inside the project) & \\code{dbt\\_project.yml file [ERROR not found]}, then \\code{project path </Users/mac/dbt-course/dbt\\_project.yml> not found}, and t",
+    "where": "parts/part2/ch06-first-project.tex:818"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "No dbt_project.yml found at expected path /Users/mac/dbt-course/dbt_project.yml",
+    "where": "parts/part2/ch06-first-project.tex:833"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "\\code{open /Users/mac/.dbt}, and stops.",
+    "where": "parts/part2/ch06-first-project.tex:850"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:09:30  Checking /Users/mac/dbt-course/jaffle_dbt/target/*",
+    "where": "parts/part2/ch06-first-project.tex:1152"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:09:30  Cleaned /Users/mac/dbt-course/jaffle_dbt/target/*",
+    "where": "parts/part2/ch06-first-project.tex:1153"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:09:30  Checking /Users/mac/dbt-course/jaffle_dbt/dbt_packages/*",
+    "where": "parts/part2/ch06-first-project.tex:1154"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:09:30  Cleaned /Users/mac/dbt-course/jaffle_dbt/dbt_packages/*",
+    "where": "parts/part2/ch06-first-project.tex:1155"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "IO Error: Could not set lock on file \"/Users/mac/dbt-course/practice/practice.duckdb\": Conflicting lock is held in <program path> (PID 34108) by user <user>. See also https://duckdb.org/docs/stable/co",
+    "where": "parts/part2/ch06-first-project.tex:1200"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "IO Error: Could not set lock on file \"/Users/mac/dbt-course/practice/practice.duckdb\": Conflicting lock is held in <program path> (PID 34205) by user <user>. However, you would be able to open this da",
+    "where": "parts/part2/ch06-first-project.tex:1214"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "Initialized empty Git repository in /Users/mac/dbt-course/jaffle_dbt/.git/",
+    "where": "parts/part2/ch06-first-project.tex:1340"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "(.venv) $ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt",
+    "where": "parts/part2/ch06-first-project.tex:1395"
+   },
+   {
+    "rules": [
+     "kit-absolute"
+    ],
+    "text": "From /Users/mac/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt",
+    "where": "parts/part2/ch06-first-project.tex:1397"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "20:39:21  Catalog written to /Users/mac/dbt-course/jaffle_dbt/target/catalog.json",
+    "where": "parts/part2/ch07-models-sources-dag.tex:1137"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "Error encountered in /Users/mac/dbt-course/jaffle_dbt/dbt_project.yml",
+    "where": "parts/part2/ch10-configuration.tex:244"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "20:49:07  Catalog written to /Users/mac/dbt-course/jaffle_dbt/target/catalog.json",
+    "where": "parts/part2/ch10-configuration.tex:1660"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # skip if done in Ch. 6",
+    "where": "parts/part2/ch10-configuration.tex:1675"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "20:50:02  Updating lock file in file path: /Users/mac/dbt-course/jaffle_dbt/package-lock.yml",
+    "where": "parts/part2/ch11-jinja-macros-packages.tex:875"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:10:19  Added new package dbt-labs/codegen@0.13.1 to /Users/mac/dbt-course/jaffle_dbt/packages.yml",
+    "where": "parts/part2/ch11-jinja-macros-packages.tex:946"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:10:20  Updating lock file in file path: /Users/mac/dbt-course/jaffle_dbt/package-lock.yml",
+    "where": "parts/part2/ch11-jinja-macros-packages.tex:947"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:12:11  Checking /Users/mac/dbt-course/jaffle_dbt/target/*",
+    "where": "parts/part2/ch11-jinja-macros-packages.tex:983"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:12:11  Cleaned /Users/mac/dbt-course/jaffle_dbt/target/*",
+    "where": "parts/part2/ch11-jinja-macros-packages.tex:984"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:12:11  Checking /Users/mac/dbt-course/jaffle_dbt/dbt_packages/*",
+    "where": "parts/part2/ch11-jinja-macros-packages.tex:985"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:12:11  Cleaned /Users/mac/dbt-course/jaffle_dbt/dbt_packages/*",
+    "where": "parts/part2/ch11-jinja-macros-packages.tex:986"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # skip if done in Ch. 6",
+    "where": "parts/part2/ch11-jinja-macros-packages.tex:1667"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "Invalid Input Error: Error when sniffing file \"/Users/mac/dbt-course/jaffle_dbt/seeds/country_regions.csv\".",
+    "where": "parts/part2/ch12-seeds-analyses.tex:472"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ cp -r ~/Documents/Adnane/dbt-bible/labs/updates ~/dbt-course/practice/",
+    "where": "parts/part2/ch13-snapshots.tex:734"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "\\code{git remote add reference \\textasciitilde/Documents/Adnane/dbt-bible/labs/practice-project/jaffle\\_dbt}, then",
+    "where": "parts/part2/ch13-snapshots.tex:1414"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "File \"/Users/mac/dbt-course/.venv/lib/python3.12/site-packages/dbt/adapters/duckdb/environments/__init__.py\", line 278, in run_python_job",
+    "where": "parts/part2/ch15-python-models.tex:350"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:22:06  Performance info: /Users/mac/dbt-course/jaffle_dbt/target/perf_info.json",
+    "where": "parts/part2/ch16-commands-selection.tex:2084"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:22:10  Checking /Users/mac/dbt-course/jaffle_dbt/target/*",
+    "where": "parts/part2/ch16-commands-selection.tex:2096"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:22:10  Cleaned /Users/mac/dbt-course/jaffle_dbt/target/*",
+    "where": "parts/part2/ch16-commands-selection.tex:2097"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:22:10  Checking /Users/mac/dbt-course/jaffle_dbt/dbt_packages/*",
+    "where": "parts/part2/ch16-commands-selection.tex:2098"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:22:10  Cleaned /Users/mac/dbt-course/jaffle_dbt/dbt_packages/*",
+    "where": "parts/part2/ch16-commands-selection.tex:2099"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:16:57  Using profiles.yml file at /Users/mac/.dbt/profiles.yml",
+    "where": "parts/part2/ch16-commands-selection.tex:2131"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:16:57  Using dbt_project.yml file at /Users/mac/dbt-course/jaffle_dbt/dbt_project.yml",
+    "where": "parts/part2/ch16-commands-selection.tex:2132"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # skip if done in Ch. 6",
+    "where": "parts/part2/ch16-commands-selection.tex:2190"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select constraint_type, constraint_text from duckdb_constraints() where schema_name = 'dbt_adnane' and table",
+    "where": "parts/part3/ch17-governance.tex:967"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.demo_uses_v1\"",
+    "where": "parts/part3/ch17-governance.tex:1485"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select table_name from information_schema.tables where table_schema = 'dbt_adnane' and table_name like 'dim_",
+    "where": "parts/part3/ch17-governance.tex:1491"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"drop table dbt_adnane.dim_customers\"",
+    "where": "parts/part3/ch17-governance.tex:1492"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt   # once only",
+    "where": "parts/part3/ch17-governance.tex:1511"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:09:27  Performance info: /Users/mac/dbt-course/jaffle_dbt/target/perf_info.json",
+    "where": "parts/part4/ch18-data-tests.tex:433"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "21:19:59  Catalog written to /Users/mac/dbt-course/jaffle_dbt/target/catalog.json",
+    "where": "parts/part5/ch20-documentation.tex:438"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:19:23  Catalog written to /Users/mac/dbt-course/jaffle_dbt/target/catalog.json",
+    "where": "parts/part5/ch20-documentation.tex:541"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "21:20:03  Catalog written to /Users/mac/dbt-course/jaffle_dbt/target/catalog.json",
+    "where": "parts/part5/ch20-documentation.tex:735"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\"",
+    "where": "parts/part5/ch20-documentation.tex:974"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\"",
+    "where": "parts/part5/ch20-documentation.tex:993"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select table_name, left(comment, 60) as comment from duckdb_tables() where schema_name = 'dbt_adnane' and ta",
+    "where": "parts/part5/ch20-documentation.tex:1031"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select column_name, left(comment, 60) as comment from duckdb_columns() where schema_name = 'dbt_adnane' and ",
+    "where": "parts/part5/ch20-documentation.tex:1032"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select view_name, comment from duckdb_views() where schema_name = 'dbt_adnane' and not internal order by 1\"",
+    "where": "parts/part5/ch20-documentation.tex:1033"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "\\code{git remote add reference \\textasciitilde/Documents/Adnane/dbt-bible/labs/practice-project/jaffle\\_dbt}. Your commit adds",
+    "where": "parts/part5/ch20-documentation.tex:1089"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "\\code{cp -r \\textasciitilde/Documents/Adnane/dbt-bible/labs/updates \\textasciitilde/dbt-course/practice/}.",
+    "where": "parts/part5/ch21-freshness-exposures.tex:492"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "(\\code{\\textasciitilde/Documents/Adnane/dbt-bible}).",
+    "where": "parts/part6/ch22-debugging.tex:231"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:17:48  Performance info: /Users/mac/dbt-course/jaffle_dbt/target/perf_info.json",
+    "where": "parts/part6/ch22-debugging.tex:399"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "22:18:57  Performance info: /Users/mac/dbt-course/jaffle_dbt/target/perf_info.json",
+    "where": "parts/part6/ch22-debugging.tex:520"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "21:30:47  Performance info: /Users/mac/dbt-course/jaffle_dbt/target/perf_info.json",
+    "where": "parts/part6/ch22-debugging.tex:540"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs",
+    "where": "parts/part6/ch22-debugging.tex:593"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": ">IO Error: Cannot open file \"/Users/mac/dbt-course/practise/practice.duckdb\": No such file or directory",
+    "where": "parts/part6/ch22-debugging.tex:843"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs",
+    "where": "parts/part6/ch22-debugging.tex:937"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ B=~/Documents/Adnane/dbt-bible/labs/practice-project/bugs",
+    "where": "parts/part6/ch22-debugging.tex:1073"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "21:31:58  running dbt with arguments {'use_experimental_parser': 'False', 'debug': 'True', 'fail_fast': 'False', ... 'warn_error': 'None', ... 'log_format': 'default', 'profiles_dir': '/Users/mac/.dbt",
+    "where": "parts/part6/ch22-debugging.tex:1382"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "IO Error: Could not set lock on file \"/Users/mac/dbt-course/practice/practice.duckdb\": Conflicting lock is held in <program path> (PID 16838) by user <user>. See also https://duckdb.org/docs/stable/co",
+    "where": "parts/part6/ch23-pipelines-clone.tex:409"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ cp ~/Documents/Adnane/dbt-bible/labs/setup.sql ci/raw/",
+    "where": "parts/part7/ch25-environments-ci.tex:560"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ cp ~/Documents/Adnane/dbt-bible/labs/data/*.csv ci/raw/data/",
+    "where": "parts/part7/ch25-environments-ci.tex:561"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "21:43:38  Performance info: /Users/mac/dbt-course/jaffle_dbt/target/perf_info.json",
+    "where": "parts/part7/ch25-environments-ci.tex:601"
+   },
+   {
+    "rules": [
+     "home-absolute"
+    ],
+    "text": "and \\code{remotes/origin/main}. The loader prints \\code{raw data loaded into /Users/mac/dbt-course/ci\\_run/workspace/ci\\_db/practice.duckdb}.",
+    "where": "parts/part7/ch25-environments-ci.tex:660"
+   },
+   {
+    "rules": [
+     "kit-home"
+    ],
+    "text": "$ git remote add --no-tags solution ~/Documents/Adnane/dbt-bible/labs/capstone/shopflow_dbt",
+    "where": "parts/part8/ch26-capstone.tex:260"
+   },
+   {
+    "rules": [
+     "kit-absolute"
+    ],
+    "text": "From /Users/mac/Documents/Adnane/dbt-bible/labs/capstone/shopflow_dbt",
+    "where": "parts/part8/ch26-capstone.tex:264"
+   }
+  ],
+  "rules": "converter/rules/paths.yaml"
+ },
+ "stats": {
+  "appA": {
+   "box:tipbox": 1,
+   "code:bashcode": 2,
+   "code:dbtcode": 4,
+   "code:jinjacode": 5,
+   "code:plaincode": 1,
+   "code:pycode": 1,
+   "code:sqlcode": 2,
+   "code:yamlcode": 14,
+   "env:center": 11,
+   "env:longtable": 10,
+   "env:tabularx": 11
+  },
+  "appB": {
+   "env:center": 1,
+   "env:longtable": 1
+  },
+  "appC": {
+   "env:center": 1,
+   "env:longtable": 1
+  },
+  "ch00": {
+   "box:analogybox": 1,
+   "box:answerbox": 2,
+   "box:dbtbox": 1,
+   "box:deepbox": 2,
+   "box:exambox": 2,
+   "box:ideabox": 2,
+   "box:labbox": 1,
+   "box:quizbox": 7,
+   "box:summarybox": 1,
+   "box:tipbox": 3,
+   "box:trapbox": 3,
+   "box:whybox": 2,
+   "code:bashcode": 1,
+   "code:plaincode": 1,
+   "code:yamlcode": 1,
+   "env:answers": 1,
+   "env:center": 15,
+   "env:choices": 6,
+   "env:enumerate": 4,
+   "env:itemize": 9,
+   "env:longtable": 3,
+   "env:questions": 1,
+   "env:tabularx": 9,
+   "labs": 1,
+   "labtags": 0,
+   "tikz": 3
+  },
+  "ch01": {
+   "box:analogybox": 2,
+   "box:answerbox": 1,
+   "box:dbtbox": 4,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 2,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 2,
+   "box:trapbox": 4,
+   "box:whybox": 1,
+   "code:outputcode": 2,
+   "env:answers": 1,
+   "env:center": 11,
+   "env:choices": 10,
+   "env:enumerate": 6,
+   "env:itemize": 8,
+   "env:longtable": 1,
+   "env:multicols": 1,
+   "env:questions": 1,
+   "env:tabularx": 6,
+   "labs": 2,
+   "labtags": 3,
+   "tikz": 4
+  },
+  "ch02": {
+   "box:analogybox": 1,
+   "box:answerbox": 1,
+   "box:dbtbox": 4,
+   "box:deepbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 2,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 5,
+   "box:trapbox": 5,
+   "box:whybox": 1,
+   "code:bashcode": 26,
+   "code:outputcode": 1,
+   "code:plaincode": 1,
+   "env:answers": 1,
+   "env:center": 6,
+   "env:choices": 9,
+   "env:enumerate": 2,
+   "env:itemize": 6,
+   "env:questions": 1,
+   "env:tabularx": 4,
+   "labs": 2,
+   "labtags": 2,
+   "tikz": 1
+  },
+  "ch03": {
+   "box:analogybox": 2,
+   "box:answerbox": 1,
+   "box:dbtbox": 3,
+   "box:deepbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 4,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 3,
+   "box:trapbox": 5,
+   "box:whybox": 1,
+   "code:bashcode": 32,
+   "code:plaincode": 5,
+   "code:sqlcode": 4,
+   "env:answers": 1,
+   "env:center": 12,
+   "env:choices": 10,
+   "env:enumerate": 9,
+   "env:itemize": 12,
+   "env:multicols": 1,
+   "env:questions": 1,
+   "env:tabularx": 7,
+   "labs": 4,
+   "labtags": 5,
+   "tikz": 6
+  },
+  "ch04": {
+   "box:analogybox": 5,
+   "box:answerbox": 2,
+   "box:dbtbox": 13,
+   "box:deepbox": 2,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 10,
+   "box:quizbox": 2,
+   "box:summarybox": 1,
+   "box:tipbox": 6,
+   "box:trapbox": 18,
+   "box:whybox": 1,
+   "code:bashcode": 1,
+   "code:dbtcode": 1,
+   "code:outputcode": 71,
+   "code:sqlcode": 91,
+   "env:answers": 2,
+   "env:center": 20,
+   "env:choices": 19,
+   "env:enumerate": 14,
+   "env:itemize": 19,
+   "env:questions": 2,
+   "env:tabular": 2,
+   "env:tabularx": 12,
+   "labs": 10,
+   "labtags": 14,
+   "tikz": 6
+  },
+  "ch05": {
+   "box:analogybox": 2,
+   "box:answerbox": 1,
+   "box:dbtbox": 6,
+   "box:deepbox": 2,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 3,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 6,
+   "box:trapbox": 7,
+   "box:whybox": 1,
+   "code:bashcode": 11,
+   "code:dbtcode": 2,
+   "code:jinjacode": 9,
+   "code:outputcode": 15,
+   "code:plaincode": 2,
+   "code:pycode": 4,
+   "code:yamlcode": 17,
+   "env:answers": 1,
+   "env:center": 10,
+   "env:choices": 12,
+   "env:enumerate": 1,
+   "env:itemize": 9,
+   "env:questions": 1,
+   "env:tabular": 1,
+   "env:tabularx": 7,
+   "labs": 3,
+   "labtags": 5,
+   "tikz": 2
+  },
+  "ch06": {
+   "box:analogybox": 1,
+   "box:answerbox": 1,
+   "box:dbtbox": 2,
+   "box:deepbox": 3,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 4,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 3,
+   "box:trapbox": 11,
+   "box:whybox": 1,
+   "code:bashcode": 15,
+   "code:dbtcode": 2,
+   "code:outputcode": 29,
+   "code:plaincode": 2,
+   "code:sqlcode": 3,
+   "code:tabs-expanded": 8,
+   "code:yamlcode": 8,
+   "env:answers": 1,
+   "env:center": 10,
+   "env:choices": 13,
+   "env:enumerate": 6,
+   "env:itemize": 14,
+   "env:questions": 1,
+   "env:tabular": 1,
+   "env:tabularx": 7,
+   "labs": 4,
+   "labtags": 8,
+   "tikz": 2
+  },
+  "ch07": {
+   "box:analogybox": 1,
+   "box:answerbox": 1,
+   "box:dbtbox": 2,
+   "box:deepbox": 2,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 4,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 1,
+   "box:trapbox": 4,
+   "box:whybox": 1,
+   "code:bashcode": 14,
+   "code:dbtcode": 9,
+   "code:outputcode": 27,
+   "code:plaincode": 1,
+   "code:sqlcode": 3,
+   "code:yamlcode": 6,
+   "env:answers": 1,
+   "env:center": 10,
+   "env:choices": 13,
+   "env:enumerate": 5,
+   "env:itemize": 15,
+   "env:questions": 1,
+   "env:tabularx": 6,
+   "labs": 4,
+   "labtags": 11,
+   "tikz": 4
+  },
+  "ch08": {
+   "box:analogybox": 1,
+   "box:answerbox": 1,
+   "box:deepbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 2,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 2,
+   "box:trapbox": 7,
+   "box:whybox": 1,
+   "code:bashcode": 17,
+   "code:dbtcode": 4,
+   "code:outputcode": 23,
+   "code:plaincode": 1,
+   "code:sqlcode": 3,
+   "code:yamlcode": 5,
+   "env:answers": 1,
+   "env:center": 12,
+   "env:choices": 14,
+   "env:itemize": 7,
+   "env:questions": 1,
+   "env:tabularx": 9,
+   "labs": 2,
+   "labtags": 6,
+   "tikz": 3
+  },
+  "ch09": {
+   "box:answerbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 2,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:trapbox": 6,
+   "box:whybox": 1,
+   "code:bashcode": 22,
+   "code:dbtcode": 7,
+   "code:outputcode": 18,
+   "code:plaincode": 1,
+   "code:sqlcode": 1,
+   "env:answers": 1,
+   "env:center": 9,
+   "env:choices": 15,
+   "env:enumerate": 1,
+   "env:itemize": 7,
+   "env:questions": 1,
+   "env:tabularx": 7,
+   "labs": 2,
+   "labtags": 9,
+   "tikz": 2
+  },
+  "ch10": {
+   "box:analogybox": 1,
+   "box:answerbox": 1,
+   "box:dbtbox": 1,
+   "box:deepbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 7,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 5,
+   "box:trapbox": 11,
+   "box:whybox": 1,
+   "code:bashcode": 41,
+   "code:dbtcode": 8,
+   "code:outputcode": 42,
+   "code:yamlcode": 22,
+   "env:answers": 1,
+   "env:center": 11,
+   "env:choices": 15,
+   "env:description": 1,
+   "env:enumerate": 8,
+   "env:itemize": 10,
+   "env:questions": 1,
+   "env:tabularx": 9,
+   "labs": 7,
+   "labtags": 9,
+   "tikz": 2
+  },
+  "ch11": {
+   "box:analogybox": 2,
+   "box:answerbox": 1,
+   "box:dbtbox": 2,
+   "box:deepbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 4,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 1,
+   "box:trapbox": 10,
+   "box:whybox": 1,
+   "code:bashcode": 40,
+   "code:dbtcode": 18,
+   "code:outputcode": 40,
+   "code:yamlcode": 8,
+   "env:answers": 1,
+   "env:center": 12,
+   "env:choices": 14,
+   "env:enumerate": 1,
+   "env:itemize": 12,
+   "env:questions": 1,
+   "env:tabularx": 11,
+   "labs": 4,
+   "labtags": 11,
+   "tikz": 1
+  },
+  "ch12": {
+   "box:analogybox": 2,
+   "box:answerbox": 1,
+   "box:dbtbox": 1,
+   "box:deepbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 3,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:trapbox": 5,
+   "box:whybox": 1,
+   "code:bashcode": 23,
+   "code:dbtcode": 1,
+   "code:outputcode": 26,
+   "code:plaincode": 5,
+   "code:yamlcode": 5,
+   "env:answers": 1,
+   "env:center": 7,
+   "env:choices": 12,
+   "env:enumerate": 1,
+   "env:itemize": 11,
+   "env:questions": 1,
+   "env:tabularx": 6,
+   "labs": 3,
+   "labtags": 7,
+   "tikz": 1
+  },
+  "ch13": {
+   "box:analogybox": 1,
+   "box:answerbox": 1,
+   "box:deepbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 4,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 4,
+   "box:trapbox": 14,
+   "box:whybox": 1,
+   "code:bashcode": 15,
+   "code:dbtcode": 2,
+   "code:outputcode": 28,
+   "code:plaincode": 5,
+   "code:sqlcode": 13,
+   "code:yamlcode": 5,
+   "env:answers": 1,
+   "env:center": 12,
+   "env:choices": 14,
+   "env:enumerate": 2,
+   "env:itemize": 13,
+   "env:questions": 1,
+   "env:tabularx": 11,
+   "labs": 4,
+   "labtags": 7,
+   "tikz": 1
+  },
+  "ch14": {
+   "box:analogybox": 2,
+   "box:answerbox": 1,
+   "box:deepbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 6,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 4,
+   "box:trapbox": 14,
+   "box:whybox": 1,
+   "code:bashcode": 31,
+   "code:dbtcode": 14,
+   "code:jinjacode": 1,
+   "code:outputcode": 28,
+   "code:plaincode": 3,
+   "code:sqlcode": 1,
+   "code:yamlcode": 8,
+   "env:answers": 1,
+   "env:center": 14,
+   "env:choices": 13,
+   "env:enumerate": 6,
+   "env:figure": 2,
+   "env:itemize": 15,
+   "env:questions": 1,
+   "env:tabularx": 14,
+   "labs": 6,
+   "labtags": 12,
+   "tikz": 2
+  },
+  "ch15": {
+   "box:analogybox": 1,
+   "box:answerbox": 1,
+   "box:deepbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 3,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 1,
+   "box:trapbox": 3,
+   "box:whybox": 1,
+   "code:bashcode": 10,
+   "code:outputcode": 15,
+   "code:pycode": 9,
+   "code:sqlcode": 2,
+   "code:yamlcode": 2,
+   "env:answers": 1,
+   "env:center": 5,
+   "env:choices": 13,
+   "env:enumerate": 1,
+   "env:itemize": 10,
+   "env:questions": 1,
+   "env:tabularx": 4,
+   "labs": 3,
+   "labtags": 7,
+   "tikz": 1
+  },
+  "ch16": {
+   "box:analogybox": 1,
+   "box:answerbox": 1,
+   "box:deepbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 5,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 4,
+   "box:trapbox": 17,
+   "box:whybox": 1,
+   "code:bashcode": 68,
+   "code:dbtcode": 3,
+   "code:outputcode": 13,
+   "code:plaincode": 1,
+   "code:pycode": 1,
+   "code:yamlcode": 3,
+   "env:answers": 1,
+   "env:center": 18,
+   "env:choices": 15,
+   "env:enumerate": 3,
+   "env:itemize": 16,
+   "env:longtable": 2,
+   "env:questions": 1,
+   "env:tabular": 2,
+   "env:tabularx": 15,
+   "labs": 5,
+   "labtags": 8,
+   "tikz": 1
+  },
+  "ch17": {
+   "box:analogybox": 3,
+   "box:answerbox": 1,
+   "box:dbtbox": 1,
+   "box:deepbox": 2,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 5,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 1,
+   "box:trapbox": 12,
+   "box:whybox": 1,
+   "code:bashcode": 24,
+   "code:dbtcode": 3,
+   "code:outputcode": 42,
+   "code:plaincode": 1,
+   "code:yamlcode": 17,
+   "env:answers": 1,
+   "env:center": 20,
+   "env:choices": 13,
+   "env:description": 1,
+   "env:enumerate": 3,
+   "env:itemize": 13,
+   "env:questions": 1,
+   "env:tabular": 2,
+   "env:tabularx": 16,
+   "labs": 5,
+   "labtags": 14,
+   "tikz": 2
+  },
+  "ch18": {
+   "box:analogybox": 1,
+   "box:answerbox": 1,
+   "box:dbtbox": 1,
+   "box:deepbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 5,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 3,
+   "box:trapbox": 11,
+   "box:whybox": 1,
+   "code:bashcode": 17,
+   "code:dbtcode": 4,
+   "code:outputcode": 32,
+   "code:plaincode": 1,
+   "code:sqlcode": 6,
+   "code:yamlcode": 31,
+   "env:answers": 1,
+   "env:center": 14,
+   "env:choices": 16,
+   "env:enumerate": 2,
+   "env:itemize": 13,
+   "env:minipage": 2,
+   "env:questions": 1,
+   "env:tabularx": 10,
+   "labs": 5,
+   "labtags": 14,
+   "tikz": 3
+  },
+  "ch19": {
+   "box:analogybox": 1,
+   "box:answerbox": 1,
+   "box:dbtbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 5,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 1,
+   "box:trapbox": 5,
+   "box:whybox": 1,
+   "code:bashcode": 11,
+   "code:dbtcode": 1,
+   "code:outputcode": 18,
+   "code:plaincode": 3,
+   "code:sqlcode": 2,
+   "code:yamlcode": 9,
+   "env:answers": 1,
+   "env:center": 5,
+   "env:choices": 14,
+   "env:enumerate": 1,
+   "env:itemize": 7,
+   "env:questions": 1,
+   "env:tabularx": 5,
+   "labs": 5,
+   "labtags": 12
+  },
+  "ch20": {
+   "box:analogybox": 1,
+   "box:answerbox": 1,
+   "box:deepbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 3,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 4,
+   "box:trapbox": 7,
+   "box:whybox": 1,
+   "code:bashcode": 21,
+   "code:dbtcode": 1,
+   "code:outputcode": 24,
+   "code:plaincode": 3,
+   "code:yamlcode": 13,
+   "env:answers": 1,
+   "env:center": 7,
+   "env:choices": 15,
+   "env:enumerate": 4,
+   "env:itemize": 12,
+   "env:questions": 1,
+   "env:tabularx": 5,
+   "labs": 3,
+   "labtags": 7,
+   "tikz": 2
+  },
+  "ch21": {
+   "box:analogybox": 1,
+   "box:answerbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 3,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 2,
+   "box:trapbox": 6,
+   "box:whybox": 1,
+   "code:bashcode": 23,
+   "code:outputcode": 29,
+   "code:yamlcode": 9,
+   "env:answers": 1,
+   "env:center": 8,
+   "env:choices": 15,
+   "env:enumerate": 1,
+   "env:itemize": 8,
+   "env:questions": 1,
+   "env:tabularx": 6,
+   "labs": 3,
+   "labtags": 9,
+   "tikz": 2
+  },
+  "ch22": {
+   "box:analogybox": 3,
+   "box:answerbox": 1,
+   "box:dbtbox": 3,
+   "box:deepbox": 2,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 4,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 2,
+   "box:trapbox": 12,
+   "box:whybox": 1,
+   "code:bashcode": 27,
+   "code:dbtcode": 2,
+   "code:outputcode": 38,
+   "code:plaincode": 1,
+   "code:yamlcode": 3,
+   "env:answers": 1,
+   "env:center": 18,
+   "env:choices": 14,
+   "env:enumerate": 3,
+   "env:itemize": 11,
+   "env:questions": 1,
+   "env:tabularx": 14,
+   "labs": 4,
+   "labtags": 11,
+   "tikz": 3
+  },
+  "ch23": {
+   "box:analogybox": 2,
+   "box:answerbox": 1,
+   "box:dbtbox": 3,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 4,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 1,
+   "box:trapbox": 6,
+   "box:whybox": 1,
+   "code:bashcode": 33,
+   "code:outputcode": 26,
+   "code:plaincode": 3,
+   "code:yamlcode": 4,
+   "env:answers": 1,
+   "env:center": 7,
+   "env:choices": 14,
+   "env:enumerate": 2,
+   "env:itemize": 11,
+   "env:questions": 1,
+   "env:tabularx": 5,
+   "labs": 4,
+   "labtags": 11,
+   "tikz": 2
+  },
+  "ch24": {
+   "box:analogybox": 2,
+   "box:answerbox": 1,
+   "box:dbtbox": 3,
+   "box:deepbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 5,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 4,
+   "box:trapbox": 8,
+   "box:whybox": 1,
+   "code:bashcode": 27,
+   "code:dbtcode": 2,
+   "code:outputcode": 38,
+   "code:plaincode": 1,
+   "code:yamlcode": 1,
+   "env:answers": 1,
+   "env:center": 11,
+   "env:choices": 14,
+   "env:enumerate": 1,
+   "env:itemize": 8,
+   "env:questions": 1,
+   "env:tabularx": 8,
+   "labs": 5,
+   "labtags": 8,
+   "tikz": 3
+  },
+  "ch25": {
+   "box:analogybox": 1,
+   "box:answerbox": 1,
+   "box:dbtbox": 1,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 3,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 1,
+   "box:trapbox": 5,
+   "box:whybox": 1,
+   "code:bashcode": 10,
+   "code:dbtcode": 1,
+   "code:outputcode": 9,
+   "code:plaincode": 1,
+   "code:pycode": 1,
+   "code:yamlcode": 5,
+   "env:answers": 1,
+   "env:center": 11,
+   "env:choices": 13,
+   "env:enumerate": 1,
+   "env:itemize": 6,
+   "env:questions": 1,
+   "env:tabularx": 10,
+   "labs": 3,
+   "labtags": 9,
+   "tikz": 1
+  },
+  "ch26": {
+   "box:analogybox": 1,
+   "box:answerbox": 1,
+   "box:dbtbox": 10,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:labbox": 15,
+   "box:quizbox": 1,
+   "box:summarybox": 1,
+   "box:tipbox": 3,
+   "box:trapbox": 18,
+   "box:whybox": 1,
+   "code:bashcode": 12,
+   "code:dbtcode": 1,
+   "code:outputcode": 75,
+   "code:plaincode": 1,
+   "code:yamlcode": 2,
+   "env:answers": 1,
+   "env:center": 4,
+   "env:choices": 11,
+   "env:enumerate": 1,
+   "env:figure": 1,
+   "env:itemize": 36,
+   "env:longtable": 1,
+   "env:questions": 1,
+   "env:table": 1,
+   "env:tabularx": 5,
+   "labs": 15,
+   "labtags": 71,
+   "table:continuation-head-rows-dropped": 1,
+   "tikz": 1
+  },
+  "ch27": {
+   "box:analogybox": 1,
+   "box:answerbox": 5,
+   "box:exambox": 1,
+   "box:ideabox": 1,
+   "box:quizbox": 5,
+   "box:summarybox": 1,
+   "box:tipbox": 4,
+   "box:trapbox": 3,
+   "box:whybox": 1,
+   "code:outputcode": 1,
+   "env:center": 9,
+   "env:choices": 5,
+   "env:enumerate": 23,
+   "env:itemize": 11,
+   "env:longtable": 3,
+   "env:tabularx": 3,
+   "tikz": 3,
+   "traps": 145
+  },
+  "ch28": {
+   "box:tipbox": 1,
+   "code:bashcode": 6,
+   "code:dbtcode": 11,
+   "code:outputcode": 10,
+   "code:plaincode": 1,
+   "code:pycode": 1,
+   "code:yamlcode": 10,
+   "env:choices": 54,
+   "env:enumerate": 5,
+   "env:itemize": 1,
+   "env:questions": 1,
+   "env:tabularx": 1
+  },
+  "ch29": {
+   "env:itemize": 52,
+   "env:tabularx": 1,
+   "mockkeys": 65
+  },
+  "ch30": {
+   "box:tipbox": 1,
+   "code:bashcode": 5,
+   "code:dbtcode": 11,
+   "code:outputcode": 26,
+   "code:plaincode": 1,
+   "code:pycode": 1,
+   "code:sqlcode": 4,
+   "code:yamlcode": 18,
+   "env:center": 2,
+   "env:choices": 49,
+   "env:enumerate": 10,
+   "env:itemize": 1,
+   "env:questions": 1,
+   "env:tabularx": 7
+  },
+  "ch31": {
+   "box:tipbox": 1,
+   "code:outputcode": 6,
+   "code:yamlcode": 2,
+   "env:center": 1,
+   "env:itemize": 50,
+   "env:tabularx": 1,
+   "mockkeys": 65
+  },
+  "ch32": {
+   "box:tipbox": 1,
+   "code:bashcode": 1,
+   "code:dbtcode": 6,
+   "code:jinjacode": 3,
+   "code:outputcode": 3,
+   "code:pycode": 1,
+   "code:sqlcode": 2,
+   "code:yamlcode": 20,
+   "env:center": 6,
+   "env:choices": 49,
+   "env:itemize": 2,
+   "env:questions": 1,
+   "env:tabularx": 6
+  },
+  "ch33": {
+   "box:tipbox": 1,
+   "env:center": 3,
+   "env:itemize": 54,
+   "env:tabularx": 3,
+   "mockkeys": 65
+  }
+ },
+ "summary": {
+  "acceptancePassed": true,
+  "chapterQuestions": 487,
+  "chapters": 37,
+  "figures": 64,
+  "glossaryTerms": 305,
+  "keysFlagged": 11,
+  "keysOverridden": 0,
+  "keysParsed": 671,
+  "labs": 118,
+  "lessons": 311,
+  "mockQuestions": 195,
+  "traps": 145
+ },
+ "warnings": []
+}

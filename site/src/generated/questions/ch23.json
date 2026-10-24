@@ -1,0 +1,1701 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Only the descendants of the failed node are skipped; independent branches continue; the exit code is 1. A is ",
+     {
+      "t": "code",
+      "v": "--fail-fast"
+     },
+     " behaviour. C: dbt never builds on top of a failed parent. D: ",
+     {
+      "t": "code",
+      "v": "D"
+     },
+     " does not depend on ",
+     {
+      "t": "code",
+      "v": "B"
+     },
+     "; order in the log is not dependency."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch23-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt stops immediately; ",
+     {
+      "t": "code",
+      "v": "C"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "D"
+     },
+     " are not built."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "C"
+     },
+     " is skipped, ",
+     {
+      "t": "code",
+      "v": "D"
+     },
+     " is built, and the command ends with exit code 1."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "C"
+     },
+     " is built from the previous version of ",
+     {
+      "t": "code",
+      "v": "B"
+     },
+     "; ",
+     {
+      "t": "code",
+      "v": "D"
+     },
+     " is built."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "C"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "D"
+     },
+     " are skipped, because they are both after ",
+     {
+      "t": "code",
+      "v": "B"
+     },
+     " in the run order."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "The DAG is ",
+     {
+      "t": "code",
+      "v": "A → B → C"
+     },
+     ", and ",
+     {
+      "t": "code",
+      "v": "D"
+     },
+     " depends only on ",
+     {
+      "t": "code",
+      "v": "A"
+     },
+     ". During ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " (no special flag), ",
+     {
+      "t": "code",
+      "v": "B"
+     },
+     " fails with a database error. What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "--fail-fast"
+     },
+     " (",
+     {
+      "t": "code",
+      "v": "-x"
+     },
+     ") ends the invocation at the first failure, cancels running queries and starts nothing new. A: it applies to every node. B: there is no \"skip and continue\" mode. D: dbt does not retry automatically (use ",
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     " after a fix)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch23-02",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Nothing: it only applies to tests."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt skips ",
+     {
+      "t": "code",
+      "v": "B"
+     },
+     " and continues with ",
+     {
+      "t": "code",
+      "v": "C"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt stops the whole command at the failure of ",
+     {
+      "t": "code",
+      "v": "B"
+     },
+     ": running queries are cancelled and no new node starts."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt retries ",
+     {
+      "t": "code",
+      "v": "B"
+     },
+     " once before stopping."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "What does ",
+     {
+      "t": "code",
+      "v": "--fail-fast"
+     },
+     " change in the situation of the previous question?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " A model error and a test failure with the default severity ",
+     {
+      "t": "code",
+      "v": "error"
+     },
+     " close the gate. B and E are warnings (",
+     {
+      "t": "code",
+      "v": "severity: warn"
+     },
+     "; or 5 rows between ",
+     {
+      "t": "code",
+      "v": "warn_if"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "error_if"
+     },
+     "), which skip nothing. D: ",
+     {
+      "t": "code",
+      "v": "NO-OP"
+     },
+     " is not a failure."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch23-03",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A model ends with ",
+     {
+      "t": "code",
+      "v": "ERROR"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A data test with ",
+     {
+      "t": "code",
+      "v": "severity: warn"
+     },
+     " returns 12 rows."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A data test with the default severity returns 1 row."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "An exposure is reported as ",
+     {
+      "t": "code",
+      "v": "NO-OP"
+     },
+     "."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "A test returns 5 rows with ",
+     {
+      "t": "code",
+      "v": "warn_if: \">0\""
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "error_if: \">10\""
+     },
+     "."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", which two results make dbt skip the nodes downstream?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "fail"
+       }
+      ],
+      "t": "b"
+     },
+     ". ",
+     {
+      "t": "code",
+      "v": "error"
+     },
+     " is for a test whose query could not run; ",
+     {
+      "t": "code",
+      "v": "warn"
+     },
+     " for rows above the warning threshold only."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch23-04",
+  "key": {
+   "accepted": [
+    "fail"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{fail}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "run_results.json"
+     },
+     ", a data test that returns failing rows above its error threshold has the status ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-a, 3-b, 4-e, 5-d."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch23-05",
+  "key": {
+   "1": "c",
+   "2": "a",
+   "3": "b",
+   "4": "e",
+   "5": "d"
+  },
+  "keyRaw": "\\textbf{1-c, 2-a, 3-b, 4-e, 5-d.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "SKIP"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "PARTIAL SUCCESS (10/22)"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "NO-OP"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "WARN 1"
+      }
+     ],
+     "id": "4"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "CANCEL"
+      }
+     ],
+     "id": "5"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "some batches of a microbatch model failed, others succeeded"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "nothing to execute (for example an exposure in ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      ")"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "not run because an upstream node failed"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "a running query stopped by ",
+      {
+       "t": "code",
+       "v": "--fail-fast"
+      },
+      " or ",
+      {
+       "t": "key",
+       "v": "Ctrl+C"
+      }
+     ],
+     "id": "d"
+    },
+    {
+     "c": [
+      "a test found rows, but only above its warning threshold"
+     ],
+     "id": "e"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each console word with its meaning."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C, B, D, A."
+      ],
+      "t": "b"
+     },
+     " Get the code, get the production state, clone the modified incremental models that exist in production, then build the modified nodes and their children, deferring unbuilt parents to production."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch23-06",
+  "key": [
+   "C",
+   "B",
+   "D",
+   "A"
+  ],
+  "keyRaw": "\\textbf{C, B, D, A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build --select state:modified+ --defer --state prod-artifacts"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Download the production ",
+     {
+      "t": "code",
+      "v": "manifest.json"
+     },
+     " into ",
+     {
+      "t": "code",
+      "v": "prod-artifacts/"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Check out the pull request branch and install dbt and the packages (",
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     ")."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt clone --select \"state:modified+,config.materialized:incremental,state:old\" --state prod-artifacts"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Put the steps of a CI job for a project with big incremental models on Snowflake in order."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, YES, YES."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "--state"
+     },
+     " is required on the command line (in the platform the deferral environment provides the state). Existing relations are kept unless ",
+     {
+      "t": "code",
+      "v": "--full-refresh"
+     },
+     ". Zero-copy clones on Snowflake, Databricks, BigQuery; pointer views elsewhere."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch23-07",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": true
+  },
+  "keyRaw": "\\textbf{YES, NO, YES, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It needs a state manifest given with ",
+     {
+      "t": "code",
+      "v": "--state"
+     },
+     " (or the deferral settings of the dbt platform)."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "By default it replaces the relations that already exist in the target schema."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "On Snowflake, a production table is cloned with a zero-copy clone."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "On Postgres or DuckDB, it creates views that select from the production relations."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "dbt clone"
+     },
+     ":"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "--full-refresh"
+     },
+     " makes the clone materialization replace existing relations. A and C are deferral options for ",
+     {
+      "t": "code",
+      "v": "run"
+     },
+     "/",
+     {
+      "t": "code",
+      "v": "build"
+     },
+     ". D builds empty models; it is not a clone option."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch23-08",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "--defer"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "--full-refresh"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "--favor-state"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "--empty"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "A colleague runs ",
+     {
+      "t": "code",
+      "v": "dbt clone --state prod-artifacts"
+     },
+     " in a schema where all models already exist. Every line says ",
+     {
+      "t": "code",
+      "v": "Relation … already exists"
+     },
+     " and the result is ",
+     {
+      "t": "code",
+      "v": "PASS=17"
+     },
+     ". She wanted fresh copies of production. What should she add?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "--defer"
+     },
+     " resolves the refs to production without creating anything. A creates views or clones (extra objects). C rebuilds the parents in your schema. D writes into production: never for a development change."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch23-09",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt clone --state prod-artifacts"
+     },
+     ", then ",
+     {
+      "t": "code",
+      "v": "dbt run -s my_mart"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run -s my_mart --defer --state prod-artifacts"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run -s +my_mart"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run -s my_mart --target prod"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "You change one mart and want to build it in development; its parents exist only in production. You must not create any extra object in the warehouse. Which option fits?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 8."
+      ],
+      "t": "b"
+     },
+     " The post-hook runs during the clone (view materialization), and DuckDB cannot ",
+     {
+      "t": "code",
+      "v": "ANALYZE"
+     },
+     " a view. Line 6–7 (",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     ") worked: the ",
+     {
+      "t": "code",
+      "v": "comment on view"
+     },
+     " succeeded. Line 9 is empty in dev. Fix: ",
+     {
+      "t": "code",
+      "v": "{% if flags.WHICH != 'clone' %}…"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch23-c66",
+   "lines": 11,
+   "numbering": "listing"
+  },
+  "id": "q-ch23-10",
+  "key": 8,
+  "keyRaw": "\\textbf{Line 8.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "On DuckDB, ",
+     {
+      "t": "code",
+      "v": "dbt clone -s fct_monthly_revenue --state prod-artifacts"
+     },
+     " fails with ",
+     {
+      "t": "code",
+      "v": "Binder Error: Can only vacuum or analyze base tables"
+     },
+     ". Which line of ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " causes it?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch23-c66",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "models:\n  jaffle_dbt:\n    marts:\n      +materialized: table\n      +schema: marts\n      +persist_docs:\n        relation: true\n      +post-hook: \"analyze {{ this }}\"\n      +grants: \"{{ {'select': ['reporter']} if target.name == 'prod' else {} }}\"\nflags:\n  skip_nodes_if_on_run_start_fails: true"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "WHICH"
+       }
+      ],
+      "t": "b"
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "flags.WHICH"
+     },
+     " is ",
+     {
+      "t": "code",
+      "v": "'clone'"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "'run'"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "'build'"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "'freshness'"
+     },
+     "…"
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch23-11",
+  "key": {
+   "accepted": [
+    "WHICH"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{WHICH}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "The Jinja expression ",
+     {
+      "t": "code",
+      "v": "{{ flags."
+     },
+     {
+      "t": "blank"
+     },
+     {
+      "t": "code",
+      "v": " }}"
+     },
+     " returns the name of the running command, for example ",
+     {
+      "t": "code",
+      "v": "clone"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "build"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " With the flag ",
+     {
+      "t": "code",
+      "v": "true"
+     },
+     ", a failed ",
+     {
+      "t": "code",
+      "v": "on-run-start"
+     },
+     " skips the selected nodes; the hook is an error, so exit code 1. A is wrong twice: a failed hook is an error, and with ",
+     {
+      "t": "code",
+      "v": "false"
+     },
+     " (the 1.11 default) the models would run, but still with an error. C and D: no."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch23-12",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The models run; only a warning is printed."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The selected models are skipped and the command ends with exit code 1."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt ignores the hook and exits with code 0."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The hook is retried after the models."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "Your project sets ",
+     {
+      "t": "code",
+      "v": "skip_nodes_if_on_run_start_fails: true"
+     },
+     ". The only ",
+     {
+      "t": "code",
+      "v": "on-run-start"
+     },
+     " hook fails during ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     ". What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " Threads limit parallelism. A: dependencies are always respected. B: results do not depend on threads. D: selection decides the tests."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch23-13",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The order in which a model and its parents are built."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The rows produced by incremental models."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "How many independent nodes run at the same time, and so the duration and the load on the warehouse."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Which tests are executed."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "You change ",
+     {
+      "t": "code",
+      "v": "threads"
+     },
+     " from 4 to 16 for a production job. What can change?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The test runs after the view is built; the gate stops what is downstream, and the old mart tables stay as they were. A: the model was built before its test. C: dbt never edits data on its own. D: skipped models are not dropped."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch23-14",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The view ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     " was not rebuilt."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The view was rebuilt, and the nodes downstream of it were skipped; the marts keep their previous data."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt removes the rows with the new status automatically."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "All the marts are dropped until the test passes."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "The shop starts sending a new order status. In ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", the ",
+     {
+      "t": "code",
+      "v": "accepted_values"
+     },
+     " test on ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders.status"
+     },
+     " fails. What is true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, YES, YES."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt ls"
+     },
+     " (and ",
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     ") do not touch it; ",
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "dbt show"
+     },
+     " and the build commands do."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch23-15",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": true,
+   "D": true
+  },
+  "keyRaw": "\\textbf{NO, YES, YES, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt ls"
+     },
+     " rewrites it."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It has one entry per node executed by the last command."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A node skipped because of an upstream error has the status ",
+     {
+      "t": "code",
+      "v": "skipped"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     " rewrites it."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "target/run_results.json"
+     },
+     ":"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " dbt could not start the run at all (unhandled error, ",
+     {
+      "t": "code",
+      "v": "Encountered an error: IO Error … Could not set lock"
+     },
+     "): exit code 2. Exit code 1 is for handled node errors; there is no exit code 3."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch23-16",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "0"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "1"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "2"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "3"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " cannot open ",
+     {
+      "t": "code",
+      "v": "practice.duckdb"
+     },
+     " because another program holds a lock on it. Which exit code do you get?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " Both are in the documentation of ",
+     {
+      "t": "code",
+      "v": "dbt clone"
+     },
+     " (with development set-up and BI testing). B: clone never runs model SQL. D: that is ",
+     {
+      "t": "code",
+      "v": "dbt seed"
+     },
+     ". E: every dbt command that runs SQL needs the warehouse."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch23-17",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Running incremental models in CI on top of zero-copy clones of production tables."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Rebuilding a model with new SQL without running it."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Blue/green deployment on a warehouse that supports zero-copy cloning."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Loading CSV files into the warehouse."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Running data tests without a warehouse connection."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two are documented use cases of ",
+     {
+      "t": "code",
+      "v": "dbt clone"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A partial success means some batches failed; the command exits with 1 and counts it in ",
+     {
+      "t": "code",
+      "v": "ERROR"
+     },
+     ". ",
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     " re-runs only the failed batches. A: it is not a success. C: for the DAG, a partial success counts like an error, so its descendants are ",
+     {
+      "c": [
+       "skipped"
+      ],
+      "t": "i"
+     },
+     ", not built. D: the successful batches stay."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch23-18",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The model is complete; the message is informational and the exit code is 0."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Some batches failed; the command exit code is 1, and the failed batches can be re-processed (for example with ",
+     {
+      "t": "code",
+      "v": "dbt retry"
+     },
+     ")."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The models downstream of it were built on top of the incomplete table."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The whole table was rolled back to its previous state."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 23,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "The production job's ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " ended with ",
+     {
+      "t": "code",
+      "v": "PARTIAL SUCCESS (10/22)"
+     },
+     " on a microbatch model and no other error. What is true?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

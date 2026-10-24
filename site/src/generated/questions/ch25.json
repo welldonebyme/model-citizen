@@ -1,0 +1,1581 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " CI jobs build into ",
+     {
+      "t": "code",
+      "v": "dbt_cloud_pr_<job_id>_<pr_id>"
+     },
+     ". A is the schema of our own GitHub Actions workflow. B: CI never uses a developer's schema. D: production is never touched by CI."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch25-01",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_ci"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The developer's schema, for example ",
+     {
+      "t": "code",
+      "v": "dbt_adnane"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_cloud_pr_1862_1704"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The production schema, with a ",
+     {
+      "t": "code",
+      "v": "_pr"
+     },
+     " suffix on each table."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "A dbt platform CI job runs for pull request 1704; the job ID is 1862. In which schema does it build?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The checkbox runs freshness first and its failure does not stop the next steps. A describes ",
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     " added as the first ",
+     {
+      "c": [
+       "command"
+      ],
+      "t": "i"
+     },
+     ". C: the checkbox step is always first. D: ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " does not check freshness (trap T132)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch25-02",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The job stops before ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", with status Error."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Freshness runs as the first step, fails, and ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " still runs; the job can end successfully."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Freshness runs after ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " checks freshness itself, so the checkbox has no effect."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "In a deploy job, the ",
+     {
+      "c": [
+       "Run source freshness"
+      ],
+      "t": "b"
+     },
+     " checkbox is ticked and one source is older than its ",
+     {
+      "t": "code",
+      "v": "error_after"
+     },
+     ". The command list is ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ". What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B and C."
+      ],
+      "t": "b"
+     },
+     " Data tests protect the daily data; freshness checks today's raw load. A: unit tests belong to development and CI. D: a dry run is a CI tool. E: linting is a CI option."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch25-03",
+  "key": [
+   "B",
+   "C"
+  ],
+  "keyRaw": "\\textbf{B and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Unit tests on every model."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Data tests (generic and singular)."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt source freshness"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "dbt run --empty"
+     },
+     " of every model."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "The SQL linting of changed files."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two checks belong in the scheduled production job?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "empty"
+      ],
+      "t": "b"
+     },
+     " (",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     ")."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch25-04",
+  "key": {
+   "accepted": [
+    "empty"
+   ]
+  },
+  "keyRaw": "\\textbf{empty}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "The flag that builds every selected model with zero rows by replacing each ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     " with an empty subquery is ",
+     {
+      "t": "code",
+      "v": "--"
+     },
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-b, 2-c, 3-a."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch25-05",
+  "key": {
+   "1": "b",
+   "2": "c",
+   "3": "a"
+  },
+  "keyRaw": "\\textbf{1-b, 2-c, 3-a.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      "Deploy job"
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      "CI job"
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      "Merge job"
+     ],
+     "id": "3"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "A pull request is merged into the environment's branch"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "A schedule, another job finishing, the API, or a click"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "A pull request is opened, or a commit is pushed to it"
+     ],
+     "id": "c"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each dbt platform job type with what triggers it by default."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B, D, C, A, E."
+      ],
+      "t": "b"
+     },
+     " Branch, fix and test in development, open the pull request (CI runs), merge after review and a green check, then check that the deployment job built the fix. The fix is tested twice (dev and CI) ",
+     {
+      "c": [
+       "before"
+      ],
+      "t": "i"
+     },
+     " the merge; production only receives merged code."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch25-06",
+  "key": [
+   "B",
+   "D",
+   "C",
+   "A",
+   "E"
+  ],
+  "keyRaw": "\\textbf{B, D, C, A, E.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Merge the pull request after review and a green CI check."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Create a feature branch from ",
+     {
+      "t": "code",
+      "v": "main"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Push the branch and open a pull request."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Fix the model and run ",
+     {
+      "t": "code",
+      "v": "dbt build --select my_model+"
+     },
+     " in development."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Check that the deployment job built the fix in production."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Put the steps of a safe fix of a production bug in order:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 6."
+      ],
+      "t": "b"
+     },
+     " It has ",
+     {
+      "t": "code",
+      "v": "state:modified+"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "--state"
+     },
+     " but no ",
+     {
+      "t": "code",
+      "v": "--defer"
+     },
+     ", so the unbuilt parent ",
+     {
+      "t": "code",
+      "v": "int_orders__enriched"
+     },
+     " is looked for in the empty CI schema. Lines 1–4 are fine."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch25-c27",
+   "lines": 6,
+   "numbering": "listing"
+  },
+  "id": "q-ch25-07",
+  "key": 6,
+  "keyRaw": "\\textbf{Line 6.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "This GitHub Actions step must build the changed models in an empty CI schema. It fails with \"Table with name int_orders__enriched does not exist\". Which line is the problem?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch25-c27",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "      - name: Get the production manifest\n        run: cp /artifacts/manifest.json prod-artifacts/\n      - name: Install packages\n        run: dbt deps\n      - name: Build the changes\n        run: dbt build --select state:modified+ --state prod-artifacts --target ci"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, YES, NO, YES."
+      ],
+      "t": "b"
+     },
+     " One Production environment at most per project. Schedules are in UTC."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch25-08",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": false,
+   "E": true
+  },
+  "keyRaw": "\\textbf{YES, NO, YES, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A project can have only one development environment."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A project can have several Production deployment environments."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "CI runs do not consume run slots."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Job schedules use the time zone of the person who created the job."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt deps"
+     },
+     " runs automatically at the start of every job."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about the dbt platform:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " The job override has the highest priority, then the environment, then the project default, then the default in the code."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch25-09",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "_dev"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "_prod"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "_nightly"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The default written in ",
+     {
+      "t": "code",
+      "v": "env_var()"
+     },
+     " in the code."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "DBT_SCHEMA_SUFFIX"
+     },
+     " has a project default ",
+     {
+      "t": "code",
+      "v": "_dev"
+     },
+     ", the Production environment sets ",
+     {
+      "t": "code",
+      "v": "_prod"
+     },
+     ", and the nightly job (in Production) overrides it with ",
+     {
+      "t": "code",
+      "v": "_nightly"
+     },
+     ". Which value does the nightly job see?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "--defer"
+     },
+     " covers models that production has; a new model has nothing to defer to. A: seeds are not involved. C: ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " uses ",
+     {
+      "t": "code",
+      "v": "--defer"
+     },
+     " (it is the next step). D: ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     " creates, it deletes nothing."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch25-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "To load the seeds faster."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Because a new incremental model whose unit test mocks ",
+     {
+      "t": "code",
+      "v": "this"
+     },
+     " has no relation to defer to, and unit tests read columns from the database."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Because ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " cannot use ",
+     {
+      "t": "code",
+      "v": "--defer"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "To delete the CI schema before the build."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "Why does our workflow run ",
+     {
+      "t": "code",
+      "v": "dbt run ... --empty"
+     },
+     " before the real ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " B: ",
+     {
+      "t": "code",
+      "v": "seed"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "test"
+     },
+     " have no ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     " option (\"No such option\"). D: only ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     " are replaced. E: the warehouse runs every statement; that is the point of the dry run."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch25-11",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The SQL is sent to the warehouse, so a wrong column name still fails."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It is available for ",
+     {
+      "t": "code",
+      "v": "dbt seed"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "dbt test"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Tables and views are created with zero rows."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A hard-coded table name (no ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     "/",
+     {
+      "t": "code",
+      "v": "source"
+     },
+     ") is emptied too."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "It skips the warehouse completely."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two statements about ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     " are true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "DBT_ENV_SECRET_"
+       }
+      ],
+      "t": "b"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch25-12",
+  "key": {
+   "accepted": [
+    "DBT_ENV_SECRET_"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{DBT\\_ENV\\_SECRET\\_}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "In the dbt platform, an environment variable whose value must be hidden from logs and from the interface must start with the prefix ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Continuous deployment and a fresh state for CI. A is the CI job. C: Git merges are done by people (or the provider). D: the platform drops CI schemas when the pull request closes, not through a merge job."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch25-13",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "To check a pull request before it is merged."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "To build the merged changes in production right away and keep the production state fresh for CI."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "To merge branches in Git automatically."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "To drop the CI schemas."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "What is the main purpose of a merge job?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, YES, YES, NO."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "uses:"
+     },
+     " runs a ready-made action (",
+     {
+      "t": "code",
+      "v": "run:"
+     },
+     " runs shell commands). Passwords go into encrypted secrets and are read with ",
+     {
+      "t": "code",
+      "v": "env_var()"
+     },
+     "; a private repository is still not a vault."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch25-14",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": true,
+   "E": false
+  },
+  "keyRaw": "\\textbf{YES, NO, YES, YES, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "on: pull_request: branches: [main]"
+     },
+     " starts it for pull requests whose base branch is ",
+     {
+      "t": "code",
+      "v": "main"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A step with ",
+     {
+      "t": "code",
+      "v": "uses:"
+     },
+     " runs shell commands written in the file."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "fetch-depth: 0"
+     },
+     " is needed so that ",
+     {
+      "t": "code",
+      "v": "origin/main"
+     },
+     " exists for ",
+     {
+      "t": "code",
+      "v": "git worktree"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The CI profile in ",
+     {
+      "t": "code",
+      "v": "ci/profiles.yml"
+     },
+     " replaces ",
+     {
+      "t": "code",
+      "v": "~/.dbt/profiles.yml"
+     },
+     " because of ",
+     {
+      "t": "code",
+      "v": "DBT_PROFILES_DIR"
+     },
+     "."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Putting a warehouse password directly in ",
+     {
+      "t": "code",
+      "v": "ci/profiles.yml"
+     },
+     " is acceptable because the repository is private."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about our ",
+     {
+      "t": "code",
+      "v": ".github/workflows/ci.yml"
+     },
+     ":"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " With deferral to itself and no code change, nothing is modified, so nothing is selected, and the job succeeds. B: the job's previous run is the state. A and D would need a normal selection."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch25-15",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Every model was rebuilt with the new data."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The job failed with \"No comparison manifest\"."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The job succeeded and built nothing, because state selection detects code changes, not new data."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Only the sources were rebuilt."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "A deploy job runs every night with ",
+     {
+      "t": "code",
+      "v": "dbt build --select state:modified+"
+     },
+     " and defers to ",
+     {
+      "c": [
+       "this job"
+      ],
+      "t": "i"
+     },
+     ". Last night no pull request was merged. What happened?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-a, 3-b, 4-d."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch25-16",
+  "key": {
+   "1": "c",
+   "2": "a",
+   "3": "b",
+   "4": "d"
+  },
+  "keyRaw": "\\textbf{1-c, 2-a, 3-b, 4-d.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      "Unit tests"
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      "Data tests"
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      "Source freshness"
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "--empty"
+      },
+      " dry run"
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "Development, CI and production"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "Production (first or last step of the job)"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "Development and CI only"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "CI (optional in development)"
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each check with the environments where it should run."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Build and test a second copy, then switch in one step. A: unit tests stay out of production. C: tests are still needed. D: it is about safety, not speed."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch25-17",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It runs unit tests in production."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Users switch to the new version only after everything was built and tested, so they never see a half-built production."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It avoids writing data tests."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It builds production twice as fast."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "What is the main benefit of a blue/green deployment?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A."
+      ],
+      "t": "b"
+     },
+     " The job's ",
+     {
+      "c": [
+       "Target name"
+      ],
+      "t": "b"
+     },
+     " sets ",
+     {
+      "t": "code",
+      "v": "target.name"
+     },
+     ". B: ",
+     {
+      "t": "code",
+      "v": "target:"
+     },
+     " belongs to ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " in dbt Core, not to ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ". C: the schema is ",
+     {
+      "t": "code",
+      "v": "target.schema"
+     },
+     ". D: the environment name and the target name are different settings."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch25-18",
+  "key": "A",
+  "keyRaw": "\\textbf{A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "In the ",
+     {
+      "c": [
+       "Target name"
+      ],
+      "t": "b"
+     },
+     " field of the job's advanced settings."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ", with ",
+     {
+      "t": "code",
+      "v": "target: prod"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "In the schema of the deployment connection."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Nowhere: ",
+     {
+      "t": "code",
+      "v": "target.name"
+     },
+     " always equals the environment name."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 25,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "Your project contains ",
+     {
+      "t": "code",
+      "v": "{% if target.name == 'prod' %}"
+     },
+     " logic. In the dbt platform, where do you make sure the production job uses the name ",
+     {
+      "t": "code",
+      "v": "prod"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

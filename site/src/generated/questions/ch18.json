@@ -1,0 +1,2150 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A test returns failing rows; 3 rows and the default ",
+     {
+      "t": "code",
+      "v": "error_if"
+     },
+     " (",
+     {
+      "t": "code",
+      "v": "!=0"
+     },
+     ") give ",
+     {
+      "t": "code",
+      "v": "FAIL 3"
+     },
+     ". A: running without error is not passing. C: a warning needs ",
+     {
+      "t": "code",
+      "v": "severity: warn"
+     },
+     " or a threshold. D: ",
+     {
+      "t": "code",
+      "v": "ERROR"
+     },
+     " means the query could not run."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch18-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "PASS"
+     },
+     ", because the query ran without error."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "FAIL 3"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "WARN 3"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ERROR"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "A singular test returns 3 rows when dbt runs it. All configs have their default values. What does the log show?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " The four built-in tests are ",
+     {
+      "t": "code",
+      "v": "unique"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "accepted_values"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "relationships"
+     },
+     ". B does not exist (",
+     {
+      "t": "code",
+      "v": "not_empty_string"
+     },
+     " is a dbt_utils test). D is a dbt_utils test (",
+     {
+      "t": "code",
+      "v": "dbt_utils.expression_is_true"
+     },
+     "). E is the custom test of our project."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch18-02",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "accepted_values"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "not_empty"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "relationships"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "expression_is_true"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "is_positive"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two are built-in generic tests of dbt?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "arguments"
+       }
+      ],
+      "t": "b"
+     },
+     " and ",
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "config"
+       }
+      ],
+      "t": "b"
+     },
+     ". Inputs of the test go under ",
+     {
+      "t": "code",
+      "v": "arguments:"
+     },
+     "; behaviour (",
+     {
+      "t": "code",
+      "v": "severity"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "where"
+     },
+     ", thresholds) under ",
+     {
+      "t": "code",
+      "v": "config:"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch18-03",
+  "key": {
+   "blanks": [
+    [
+     "arguments"
+    ],
+    [
+     "config"
+    ]
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{arguments}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "In dbt 1.10 and later, the list of values of an ",
+     {
+      "t": "code",
+      "v": "accepted_values"
+     },
+     " test is written under the key ",
+     {
+      "t": "blank"
+     },
+     ", and its ",
+     {
+      "t": "code",
+      "v": "severity"
+     },
+     " under the key ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 11."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "values"
+     },
+     " is an argument written directly under the test name (old style). Lines 12–13 are fine: ",
+     {
+      "t": "code",
+      "v": "config:"
+     },
+     " is the right place for ",
+     {
+      "t": "code",
+      "v": "severity"
+     },
+     ". Line 7 is a test without arguments."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch18-c91",
+   "lines": 13,
+   "numbering": "listing"
+  },
+  "id": "q-ch18-04",
+  "key": 11,
+  "keyRaw": "\\textbf{Line 11.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "Which line makes dbt 1.11 print ",
+     {
+      "t": "code",
+      "v": "MissingArgumentsPropertyInGenericTestDeprecation"
+     },
+     "?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch18-c91",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "version: 2\nmodels:\n  - name: stg_stripe__payments\n    columns:\n      - name: payment_id\n        data_tests:\n          - unique\n      - name: status\n        data_tests:\n          - accepted_values:\n              values: ['success', 'fail']\n              config:\n                severity: warn"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-c, 2-a, 3-e, 4-d, 5-b."
+      ],
+      "t": "b"
+     },
+     " Note that ",
+     {
+      "t": "code",
+      "v": "limit"
+     },
+     " changes the count (it is not a threshold), and ",
+     {
+      "t": "code",
+      "v": "where"
+     },
+     " filters only the rows the test reads, not the model."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch18-05",
+  "key": {
+   "1": "c",
+   "2": "a",
+   "3": "e",
+   "4": "d",
+   "5": "b"
+  },
+  "keyRaw": "\\textbf{1-c, 2-a, 3-e, 4-d, 5-b.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "where"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "limit"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "fail_calc"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "store_failures"
+      }
+     ],
+     "id": "4"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "severity: warn"
+      }
+     ],
+     "id": "5"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "Returns at most N failing rows, and the count is computed on them"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "The worst possible result becomes WARN"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "Filters the tested model before the test logic"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "Saves the failing rows in a table"
+     ],
+     "id": "d"
+    },
+    {
+     "c": [
+      "The expression that turns the failing rows into the failure count"
+     ],
+     "id": "e"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each configuration with its effect."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B, C, D, A, E."
+      ],
+      "t": "b"
+     },
+     " Read the log, look at the rows, understand the cause, then decide, then check. Configuring the test before you know the cause (A first) hides problems."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch18-06",
+  "key": [
+   "B",
+   "C",
+   "D",
+   "A",
+   "E"
+  ],
+  "keyRaw": "\\textbf{B, C, D, A, E.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Choose the reaction: fix the cause upstream, or configure the test (with a comment and a ticket)."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Read the summary line ",
+     {
+      "t": "code",
+      "v": "Got 1 result, configured to fail if != 0"
+     },
+     " and the path of the compiled code."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Run the test again with ",
+     {
+      "t": "code",
+      "v": "--store-failures"
+     },
+     " and query the table."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Find the cause of the orphan rows in the raw data."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Run ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " again and check that nothing is skipped."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "relationships"
+     },
+     " test fails in production. Put the steps of a good reaction in order:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, NO, NO."
+      ],
+      "t": "b"
+     },
+     " With severity ",
+     {
+      "t": "code",
+      "v": "error"
+     },
+     ", dbt checks ",
+     {
+      "t": "code",
+      "v": "error_if"
+     },
+     " first (7 > 10 is false), then ",
+     {
+      "t": "code",
+      "v": "warn_if"
+     },
+     " (7 > 0 is true): ",
+     {
+      "t": "code",
+      "v": "WARN 7"
+     },
+     ". A warning exits with code 0 and skips nothing. D: without ",
+     {
+      "t": "code",
+      "v": "error_if"
+     },
+     ", its default ",
+     {
+      "t": "code",
+      "v": "!=0"
+     },
+     " is true for 7 rows, so the result would be ",
+     {
+      "t": "code",
+      "v": "FAIL 7"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch18-07",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": false,
+   "D": false
+  },
+  "keyRaw": "\\textbf{YES, NO, NO, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The result is ",
+     {
+      "t": "code",
+      "v": "WARN 7"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt test"
+     },
+     " exits with code 1."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", the children of the tested model are skipped."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Writing only ",
+     {
+      "t": "code",
+      "v": "warn_if: \">0\""
+     },
+     " (no ",
+     {
+      "t": "code",
+      "v": "error_if"
+     },
+     ") would give the same result."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "A test has ",
+     {
+      "t": "code",
+      "v": "warn_if: \">0\""
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "error_if: \">10\""
+     },
+     " with the default severity. It returns 7 rows."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The test returns one row per distinct wrong value: ",
+     {
+      "t": "code",
+      "v": "return_pending"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "returned"
+     },
+     ". A counts rows of the model (that would need ",
+     {
+      "t": "code",
+      "v": "fail_calc: \"sum(n_records)\""
+     },
+     "). C and D: there are two wrong values and the default severity is ",
+     {
+      "t": "code",
+      "v": "error"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch18-08",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "FAIL 30"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "FAIL 2"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "FAIL 1"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "WARN 2"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "accepted_values"
+     },
+     " on ",
+     {
+      "t": "code",
+      "v": "status"
+     },
+     " lists ",
+     {
+      "t": "code",
+      "v": "['placed', 'shipped', 'completed']"
+     },
+     ". The model has 12 rows with ",
+     {
+      "t": "code",
+      "v": "return_pending"
+     },
+     " and 18 with ",
+     {
+      "t": "code",
+      "v": "returned"
+     },
+     ". What does the log show?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The test goes on the child column that points to the parent. A tests the opposite rule (every order has a payment), which fails for unpaid orders. C is impossible to maintain. D checks uniqueness, not existence (and payments can share an order)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch18-09",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "On ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders.order_id"
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "relationships"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "to: ref('stg_stripe__payments')"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "field: order_id"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "On ",
+     {
+      "t": "code",
+      "v": "stg_stripe__payments.order_id"
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "relationships"
+     },
+     " with ",
+     {
+      "t": "code",
+      "v": "to: ref('stg_jaffle_shop__orders')"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "field: order_id"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "On ",
+     {
+      "t": "code",
+      "v": "stg_stripe__payments.order_id"
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "accepted_values"
+     },
+     " with the list of all order ids."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "On both models: ",
+     {
+      "t": "code",
+      "v": "unique"
+     },
+     " on ",
+     {
+      "t": "code",
+      "v": "order_id"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "You want to check that every payment points to an existing order. What do you write?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A failing test with severity ",
+     {
+      "t": "code",
+      "v": "error"
+     },
+     " skips the children of the tested model in ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ". A is true only for ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " (no tests) or for warnings. C does not exist. D is the behaviour of ",
+     {
+      "t": "code",
+      "v": "--fail-fast"
+     },
+     " only. (For a test with two parents, only the nodes that depend on both parents wait, as we saw with the relationships test.)"
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch18-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It is built normally: tests never stop models."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It is skipped (",
+     {
+      "t": "code",
+      "v": "SKIP"
+     },
+     ")."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It is built, then dropped at the end of the run."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The whole run stops immediately, including independent branches."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "During ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "not_null_stg_jaffle_shop__orders_order_id"
+     },
+     " fails (default severity). What happens to ",
+     {
+      "t": "code",
+      "v": "fct_order_items"
+     },
+     ", which reads ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__orders"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Default: schema ",
+     {
+      "t": "code",
+      "v": "<target schema>_dbt_test__audit"
+     },
+     ", one table per test, named after the test. A: dbt never changes the tested model. C: there is no shared table. D: ",
+     {
+      "t": "code",
+      "v": "run_results.json"
+     },
+     " keeps the count, not the rows."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch18-11",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "In a new column of ",
+     {
+      "t": "code",
+      "v": "dbt_sara.stg_orders"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "In the table ",
+     {
+      "t": "code",
+      "v": "dbt_sara_dbt_test__audit.unique_stg_orders_order_id"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "In the table ",
+     {
+      "t": "code",
+      "v": "dbt_test__audit.failures"
+     },
+     ", shared by all tests."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Nowhere in the warehouse: only in ",
+     {
+      "t": "code",
+      "v": "target/run_results.json"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "A project uses the default ",
+     {
+      "t": "code",
+      "v": "generate_schema_name"
+     },
+     ", and the dev target schema is ",
+     {
+      "t": "code",
+      "v": "dbt_sara"
+     },
+     ". Where does ",
+     {
+      "t": "code",
+      "v": "dbt test --store-failures"
+     },
+     " save the failing rows of ",
+     {
+      "t": "code",
+      "v": "unique_stg_orders_order_id"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "not_negative"
+       },
+       "."
+      ],
+      "t": "b"
+     },
+     " The name of the block. ",
+     {
+      "t": "code",
+      "v": "test_not_negative"
+     },
+     " would make dbt look for ",
+     {
+      "t": "code",
+      "v": "test_test_not_negative"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch18-12",
+  "key": {
+   "accepted": [
+    "not_negative"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{not\\_negative}.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "A custom generic test is defined with ",
+     {
+      "t": "code",
+      "v": "{% test not_negative(model, column_name) %}"
+     },
+     " in the file ",
+     {
+      "t": "code",
+      "v": "tests/generic/test_not_negative.sql"
+     },
+     ". In YAML you attach it with the line ",
+     {
+      "t": "code",
+      "v": "- "
+     },
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "tests/generic/"
+     },
+     " (in the test paths) and ",
+     {
+      "t": "code",
+      "v": "macros/"
+     },
+     " both work; we tested both. A, C and D are not searched for test blocks."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch18-13",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "models/generic/"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "tests/generic/"
+     },
+     " or in ",
+     {
+      "t": "code",
+      "v": "macros/"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Only in ",
+     {
+      "t": "code",
+      "v": "analyses/"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "seeds/"
+     },
+     ", next to the data it tests."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "Where can you put a ",
+     {
+      "t": "code",
+      "v": "{% test %}"
+     },
+     " block so that dbt finds it?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and B."
+      ],
+      "t": "b"
+     },
+     " Tests are configured under the top-level key ",
+     {
+      "t": "code",
+      "v": "data_tests:"
+     },
+     " of ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ", and the most specific config (the test's own YAML) wins. C: ",
+     {
+      "t": "code",
+      "v": "models:"
+     },
+     " configures models, not tests. D: there is no ",
+     {
+      "t": "code",
+      "v": "--severity"
+     },
+     " flag. E is the reverse of the precedence rule."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch18-14",
+  "key": [
+   "A",
+   "B"
+  ],
+  "keyRaw": "\\textbf{A and B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Add to ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "data_tests:"
+     },
+     " / ",
+     {
+      "t": "code",
+      "v": "jaffle_dbt:"
+     },
+     " / ",
+     {
+      "t": "code",
+      "v": "staging:"
+     },
+     " / ",
+     {
+      "t": "code",
+      "v": "+severity: warn"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A test with ",
+     {
+      "t": "code",
+      "v": "config: severity: error"
+     },
+     " in its own YAML keeps the severity ",
+     {
+      "t": "code",
+      "v": "error"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The block must be written under the ",
+     {
+      "t": "code",
+      "v": "models:"
+     },
+     " key of ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The command flag ",
+     {
+      "t": "code",
+      "v": "--severity warn"
+     },
+     " does the same for one run."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "The project block wins over the YAML config of each test."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "You want every test defined in the ",
+     {
+      "t": "code",
+      "v": "staging"
+     },
+     " folder to be a warning, except tests that set their own severity. Which two statements are true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The count is computed on the at most 2 rows returned, and the default ",
+     {
+      "t": "code",
+      "v": "error_if"
+     },
+     " is ",
+     {
+      "t": "code",
+      "v": "!=0"
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "FAIL 2"
+     },
+     ". A ignores ",
+     {
+      "t": "code",
+      "v": "limit"
+     },
+     ". C confuses ",
+     {
+      "t": "code",
+      "v": "limit"
+     },
+     " with a threshold. D: nothing sets a warning severity."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch18-15",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "FAIL 4"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "FAIL 2"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "PASS"
+     },
+     ", because ",
+     {
+      "t": "code",
+      "v": "limit"
+     },
+     " allows up to 2 failures."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "WARN 2"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "not_null"
+     },
+     " test finds 4 rows. Its only config is ",
+     {
+      "t": "code",
+      "v": "limit: 2"
+     },
+     ". What is the result?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, NO, YES, YES."
+      ],
+      "t": "b"
+     },
+     " Singular tests are found automatically in ",
+     {
+      "t": "code",
+      "v": "tests/"
+     },
+     ". Writing the name under a model's ",
+     {
+      "t": "code",
+      "v": "data_tests:"
+     },
+     " is even an error: dbt looks for a ",
+     {
+      "c": [
+       "generic"
+      ],
+      "t": "i"
+     },
+     " test of that name (we got ",
+     {
+      "t": "code",
+      "v": "'test_assert_…' is undefined"
+     },
+     "). A semicolon breaks the subquery dbt builds around the query (we got a ",
+     {
+      "t": "code",
+      "v": "Parser Error"
+     },
+     "). ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     "/",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     " create the DAG edges, and ",
+     {
+      "t": "code",
+      "v": "{{ config(severity='warn') }}"
+     },
+     " works at the top of the file."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch18-16",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": false,
+   "D": true,
+   "E": true
+  },
+  "keyRaw": "\\textbf{YES, NO, NO, YES, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It is a ",
+     {
+      "t": "code",
+      "v": ".sql"
+     },
+     " file in ",
+     {
+      "t": "code",
+      "v": "tests/"
+     },
+     ", and the file name is the test name."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It must be declared under ",
+     {
+      "t": "code",
+      "v": "data_tests:"
+     },
+     " in the YAML of the model it tests."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Its query may end with a semicolon."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It can use ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "source()"
+     },
+     "."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "It can set its severity with a ",
+     {
+      "t": "code",
+      "v": "config()"
+     },
+     " block."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "About singular tests:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Test an assumption once, where it can break, and as early as possible. A creates noise and slow runs. C catches the problem too late, after it spread. D: contracts check column names and types (and constraints), not lists of values."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch18-17",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "On every model that has a ",
+     {
+      "t": "code",
+      "v": "status"
+     },
+     " column, to be safe."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Once, where the column is cleaned (the staging model), plus the source if the raw codes matter."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Only in the marts, because that is what people read."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Nowhere: a model contract checks values."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "Where should the test \"",
+     {
+      "t": "code",
+      "v": "status"
+     },
+     " has only five known values\" go in a project with sources, staging models and marts?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " With ",
+     {
+      "t": "code",
+      "v": "eager"
+     },
+     ", a test is selected when any of its parents is selected; ",
+     {
+      "t": "code",
+      "v": "assert_payments_match_order_totals"
+     },
+     " reads ",
+     {
+      "t": "code",
+      "v": "stg_stripe__payments"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     ". A: ",
+     {
+      "t": "code",
+      "v": "test_type:unit"
+     },
+     " tests of other models are not selected. C: source tests are selected only with ",
+     {
+      "t": "code",
+      "v": "source:"
+     },
+     " selectors. D is not a thing."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch18-18",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt also ran a unit test of another model."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Indirect selection (",
+     {
+      "t": "code",
+      "v": "eager"
+     },
+     ") also selected a singular test that reads ",
+     {
+      "t": "code",
+      "v": "stg_stripe__payments"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt also ran the tests of the ",
+     {
+      "t": "code",
+      "v": "stripe"
+     },
+     " source."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The ",
+     {
+      "t": "code",
+      "v": "--select"
+     },
+     " flag always adds one random test."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt test --select stg_stripe__payments"
+     },
+     " runs 6 tests, but only 5 tests are written under that model. Why?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The grain is a combination of two columns. A checks a row-level rule (",
+     {
+      "t": "code",
+      "v": "line_amount = quantity * unit_price"
+     },
+     "). C checks a range of one column. D checks existence in another model."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch18-19",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_utils.expression_is_true"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_utils.unique_combination_of_columns"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_utils.accepted_range"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "relationships"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 19
+  },
+  "stem": [
+   {
+    "c": [
+     "Which test protects the grain of ",
+     {
+      "t": "code",
+      "v": "fct_order_items"
+     },
+     " (one row per order and product)?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " With ",
+     {
+      "t": "code",
+      "v": "severity: warn"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "error_if"
+     },
+     " is ignored and ",
+     {
+      "t": "code",
+      "v": "warn_if"
+     },
+     " (default ",
+     {
+      "t": "code",
+      "v": "!=0"
+     },
+     ") is true. A would need severity ",
+     {
+      "t": "code",
+      "v": "error"
+     },
+     ". C: there are failing rows. D: the test ran correctly."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch18-20",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "FAIL 50"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "WARN 50"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "PASS"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ERROR"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 18,
+   "kind": "chapter",
+   "n": 20
+  },
+  "stem": [
+   {
+    "c": [
+     "A test has ",
+     {
+      "t": "code",
+      "v": "severity: warn"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "error_if: \">10\""
+     },
+     ". It returns 50 rows. What is the result?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

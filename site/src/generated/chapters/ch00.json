@@ -1,0 +1,6437 @@
+{
+ "id": "ch00",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "What the dbt Analytics Engineering Certification Exam looks like: format, scoring, rules and question types."
+     ],
+     "id": "EXAM"
+    },
+    {
+     "c": [
+      "The 7 official topics and their 31 sub-objectives, and where each one is taught in this bible."
+     ],
+     "id": "EXAM"
+    },
+    {
+     "c": [
+      "A 14-week study plan, a daily routine and a progress tracker you will fill in yourself."
+     ],
+     "id": "PLAN"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "Many people fail certification exams not because the topics are too hard, but because they study the wrong things, in the wrong order, without practice. This chapter gives you the map before the journey: what the exam really tests, how the questions look, and a plan that takes you from zero to ready. Read it once now, and come back to it every week to check your progress."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "This bible follows the official exam outline for dbt Core 1.11, one objective at a time, starting from the basics (data, command line, Git, SQL, YAML, Jinja). Every chapter mixes explanation, hands-on labs and exam-style questions, because the exam rewards people who have ",
+      {
+       "c": [
+        "used"
+       ],
+       "t": "i"
+      },
+      " dbt, not people who memorised it. If you finish every lab, the capstone project and the three mock exams, you will be ready to pass with a strong score."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "start",
+ "label": "ch:start",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-start-welcome"
+   ],
+   "checkpoints": [],
+   "id": "ch00-s1",
+   "label": "sec:start-welcome",
+   "labs": [],
+   "minutes": 5,
+   "number": "0.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "This book has one purpose: to take you from zero to the ",
+        {
+         "c": [
+          "dbt Analytics Engineering Certification"
+         ],
+         "t": "b"
+        },
+        ", with a score you can be proud of. Along the way you will also become a real analytics engineer, because the exam is designed for people who build, test and maintain dbt projects every day."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch00-s1-0",
+     "title": [
+      "Welcome, Adnane"
+     ],
+     "titleText": "Welcome, Adnane"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Complete."
+             ],
+             "t": "b"
+            },
+            " It covers every sub-objective of the official study guide for ",
+            {
+             "c": [
+              "dbt Core 1.11"
+             ],
+             "t": "b"
+            },
+            " (2026 edition), plus the prerequisites the guide expects: SQL, Git, the command line, YAML and Jinja."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Progressive."
+             ],
+             "t": "b"
+            },
+            " Each chapter starts with the simple ",
+            {
+             "c": [
+              "why"
+             ],
+             "t": "i"
+            },
+            ", then the ",
+            {
+             "c": [
+              "how"
+             ],
+             "t": "i"
+            },
+            ", then the details the exam likes to test."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Practical."
+             ],
+             "t": "b"
+            },
+            " You will type every command yourself on a free local setup (dbt Core + DuckDB on your Mac), then build a full capstone project from scratch."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Exam-focused."
+             ],
+             "t": "b"
+            },
+            " Each chapter has exam traps, exam-style questions in the real formats, and at the end you get three full mock exams of 65 questions."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Aligned with the official path."
+             ],
+             "t": "b"
+            },
+            " The study plan in ",
+            {
+             "href": "/learn/ch00/ch00-s7/",
+             "label": "sec:start-plan",
+             "t": "ref",
+             "text": "Section 0.7"
+            },
+            " tells you which course of the ",
+            {
+             "c": [
+              "dbt Certified Developer Path"
+             ],
+             "t": "i"
+            },
+            " (on ",
+            {
+             "t": "code",
+             "v": "learn.getdbt.com"
+            },
+            ") to take in parallel with each chapter."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch00-s1-1",
+     "title": [
+      "What this bible is"
+     ],
+     "titleText": "What this bible is"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "It is not a copy of the official courses or of real exam questions. All explanations, examples and questions are original. The official courses are free: take them too, as the plan suggests."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "It is not a book to ",
+            {
+             "c": [
+              "read"
+             ],
+             "t": "i"
+            },
+            " only. If you skip the labs, you will forget most of it in two weeks."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch00-s1-2",
+     "title": [
+      "What this bible is not"
+     ],
+     "titleText": "What this bible is not"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Item"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Details"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "A computer"
+          ]
+         },
+         {
+          "c": [
+           "Your Mac. Everything in the labs runs locally and for free."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Time"
+          ]
+         },
+         {
+          "c": [
+           "About 2 hours per day for about 14 weeks (other rhythms in ",
+           {
+            "href": "/learn/ch00/ch00-s7/",
+            "label": "sec:start-plan",
+            "t": "ref",
+            "text": "Section 0.7"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Free accounts"
+          ]
+         },
+         {
+          "c": [
+           "GitHub (Week 2), dbt Learn (you already have it), a free dbt platform account (Week 4)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Money"
+          ]
+         },
+         {
+          "c": [
+           "Only the exam itself: $200 per attempt."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "A notebook"
+          ]
+         },
+         {
+          "c": [
+           "Paper or digital, for your ",
+           {
+            "c": [
+             "error notebook"
+            ],
+            "t": "i"
+           },
+           " (",
+           {
+            "href": "/learn/ch00/ch00-s4/",
+            "label": "sec:start-howto",
+            "t": "ref",
+            "text": "Section 0.4"
+           },
+           ")."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch00-s1-3",
+     "title": [
+      "What you need"
+     ],
+     "titleText": "What you need"
+    }
+   ],
+   "title": [
+    "Welcome, Adnane"
+   ],
+   "titleText": "Welcome, Adnane"
+  },
+  {
+   "anchors": [
+    "sec-start-map"
+   ],
+   "checkpoints": [],
+   "id": "ch00-s2",
+   "label": "sec:start-map",
+   "labs": [],
+   "minutes": 5,
+   "number": "0.2",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The bible has ten parts. Parts 0 to VII teach; Part VIII makes you build; Part IX makes you pass."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "Road map of the book: ten parts in order, from Part 0 (week 1) to Part IX (week 14). The last two parts, the capstone project and the mock exams, are highlighted.",
+       "description": "Ten boxes in two rows, linked by arrows: left to right on the top row, then right to left on the bottom row. Part 0 Start Here, week 1. Part I Foundations, weeks 1–3. Part II Building with dbt, weeks 4–8. Part III Governance, week 9. Part IV Testing, weeks 9–10. Part V Docs and external dependencies, week 10. Part VI Debugging and pipelines, week 11. Part VII State, CI and deploy, week 12. Part VIII Capstone project, week 13. Part IX Mocks and exam, week 14.",
+       "id": "ch00-fig1",
+       "src": "figures/ch00-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Part"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Chapters"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What you will be able to do"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "0 Start Here"
+          ]
+         },
+         {
+          "c": [
+           "0"
+          ]
+         },
+         {
+          "c": [
+           "Understand the exam and follow a plan."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "I Foundations"
+          ]
+         },
+         {
+          "c": [
+           "1–5"
+          ]
+         },
+         {
+          "c": [
+           "Speak the language of data; use the terminal, Git, SQL, YAML, Jinja and a little Python."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "II Building with dbt"
+          ]
+         },
+         {
+          "c": [
+           "6–16"
+          ]
+         },
+         {
+          "c": [
+           "Build a dbt project: models, sources, materializations, configs, macros, packages, seeds, snapshots, incremental and Python models, commands and selection."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "III Governance"
+          ]
+         },
+         {
+          "c": [
+           "17"
+          ]
+         },
+         {
+          "c": [
+           "Protect models with contracts, constraints, versions and access."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "IV Testing"
+          ]
+         },
+         {
+          "c": [
+           "18–19"
+          ]
+         },
+         {
+          "c": [
+           "Write data tests and unit tests, and place them well in the workflow."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "V Docs & external dependencies"
+          ]
+         },
+         {
+          "c": [
+           "20–21"
+          ]
+         },
+         {
+          "c": [
+           "Document a project; add source freshness and exposures."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "VI Debugging & pipelines"
+          ]
+         },
+         {
+          "c": [
+           "22–23"
+          ]
+         },
+         {
+          "c": [
+           "Read errors, fix them safely, manage failures in the DAG, use ",
+           {
+            "t": "code",
+            "v": "dbt clone"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "VII State, CI & deployment"
+          ]
+         },
+         {
+          "c": [
+           "24–25"
+          ]
+         },
+         {
+          "c": [
+           "Use artifacts, state selection, defer and ",
+           {
+            "t": "code",
+            "v": "dbt retry"
+           },
+           "; set up environments, jobs and CI."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "VIII Capstone"
+          ]
+         },
+         {
+          "c": [
+           "–"
+          ]
+         },
+         {
+          "c": [
+           "Build a complete project alone, step by step, then compare with the solution."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "IX Exam mastery"
+          ]
+         },
+         {
+          "c": [
+           "27–33"
+          ]
+         },
+         {
+          "c": [
+           "Exam strategy and 145 traps, three full mock exams with explained answers."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Appendices"
+          ]
+         },
+         {
+          "c": [
+           "A–C"
+          ]
+         },
+         {
+          "c": [
+           "Cheat sheets, coverage matrix (objective → chapters, labs, mock questions), English–French glossary."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch00-s2-0",
+     "title": [
+      "The journey map"
+     ],
+     "titleText": "The journey map"
+    }
+   ],
+   "title": [
+    "The journey map"
+   ],
+   "titleText": "The journey map"
+  },
+  {
+   "anchors": [
+    "sec-start-anatomy"
+   ],
+   "checkpoints": [],
+   "id": "ch00-s3",
+   "label": "sec:start-anatomy",
+   "labs": [
+    "ch00-lab1"
+   ],
+   "minutes": 10,
+   "number": "0.3",
+   "objectives": [
+    "1.11"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Every chapter follows the same structure, so you always know where you are. Here are the building blocks you will meet, each with a tiny example."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The dark tag is the number of an official sub-objective (see ",
+          {
+           "href": "/learn/ch00/ch00-s6/",
+           "label": "sec:start-topics",
+           "t": "ref",
+           "text": "Section 0.6"
+          },
+          "; the official guide lists the sub-objectives in this order but does not number them, so the numbers are ours). Tags starting with ",
+          {
+           "t": "code",
+           "v": "CP0"
+          },
+          " are the prerequisites (SQL, Git…)."
+         ],
+         "t": "p"
+        }
+       ],
+       "items": [
+        {
+         "c": [
+          "Selecting the optimal incremental strategy based on a dataset's characteristics."
+         ],
+         "id": "1.11"
+        }
+       ],
+       "t": "objectives",
+       "title": [
+        {
+         "name": "certificate",
+         "t": "icon"
+        },
+        " Exam objectives covered in this chapter (example)"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The opening story: why the topic matters in real work and on the exam."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "why",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The whole chapter in three sentences. If you can explain these three sentences to a friend, you understood the chapter."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "idea",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A comparison with everyday life. For example: a dbt ",
+          {
+           "c": [
+            "model"
+           ],
+           "t": "i"
+          },
+          " is like a recipe card; the warehouse is the kitchen that cooks it."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Numbered steps you type yourself, followed by an ",
+          {
+           "c": [
+            "expected result"
+           ],
+           "t": "i"
+          },
+          " so you can check your work."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch00-lab1",
+       "objectives": [],
+       "t": "lab",
+       "title": [
+        "example"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "In Part I (foundations) these boxes link what you are learning to the place where dbt uses it."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "dbt",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A mistake that the exam likes to test, or a detail that is easy to confuse."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A shortcut or good habit."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Extra detail for curious readers. You can skip it on a first reading; it is rarely tested."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "deep",
+       "t": "callout"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Code and terminal conventions."
+         ],
+         "t": "b"
+        }
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Grey boxes are files. Their title is the file path, for example ",
+            {
+             "t": "code",
+             "v": "models/staging/stg_orders.sql"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Dark boxes are the terminal. A line starting with ",
+            {
+             "t": "code",
+             "v": "$"
+            },
+            " is a command you type (do not type the ",
+            {
+             "t": "code",
+             "v": "$"
+            },
+            "). Lines without ",
+            {
+             "t": "code",
+             "v": "$"
+            },
+            " are what the computer prints. Text after a ",
+            {
+             "t": "code",
+             "v": "#"
+            },
+            " sign is a comment for you: do not type it either (",
+            {
+             "href": "/learn/ch02/",
+             "label": "ch:cli",
+             "t": "ref",
+             "text": "Chapter 2"
+            },
+            " explains why)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Cream boxes titled ",
+            {
+             "c": [
+              "Result"
+             ],
+             "t": "i"
+            },
+            " are real outputs, produced by actually running the code on the practice data."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "id": "ch00-c1",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt --version        # you type this (without the \"$\")\nCore:\n  - installed: 1.11.16  # the computer prints this"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Terms in French."
+         ],
+         "t": "b"
+        },
+        " The first time an important word appears, it is printed in bold with its French translation, like this: ",
+        {
+         "en": [
+          "data pipeline"
+         ],
+         "fr": "pipeline de données",
+         "id": "term-data-pipeline",
+         "t": "term"
+        },
+        ". All these terms are collected in the English–French glossary at the end of the book (",
+        {
+         "href": "/learn/appC/",
+         "label": "app:glossary",
+         "t": "ref",
+         "text": "Appendix C"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "End of chapter."
+         ],
+         "t": "b"
+        },
+        " Each chapter ends with ",
+        {
+         "c": [
+          "Check yourself"
+         ],
+         "t": "i"
+        },
+        " (exam-style questions), then ",
+        {
+         "c": [
+          "Answers and explanations"
+         ],
+         "t": "i"
+        },
+        " (why the right answer is right ",
+        {
+         "c": [
+          "and"
+         ],
+         "t": "i"
+        },
+        " why the others are wrong), then a ",
+        {
+         "c": [
+          "Chapter summary"
+         ],
+         "t": "i"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch00-s3-0",
+     "title": [
+      "Anatomy of a chapter"
+     ],
+     "titleText": "Anatomy of a chapter"
+    }
+   ],
+   "title": [
+    "Anatomy of a chapter"
+   ],
+   "titleText": "Anatomy of a chapter"
+  },
+  {
+   "anchors": [
+    "sec-start-howto"
+   ],
+   "checkpoints": [],
+   "id": "ch00-s4",
+   "label": "sec:start-howto",
+   "labs": [],
+   "minutes": 5,
+   "number": "0.4",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The official guide recommends six months of real dbt experience before the exam. You do not have six months of job experience yet, so we will build that experience on purpose. The secret is a simple loop that you repeat for every chapter:"
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "The study loop for every chapter, a cycle of four steps: 1. Read (why + idea), 2. Do (every lab), 3. Test (quiz, book closed), 4. Review (error notebook), then back to 1. Read.",
+       "id": "ch00-fig2",
+       "src": "figures/ch00-fig2.svg",
+       "t": "figure"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Read"
+             ],
+             "t": "b"
+            },
+            " the chapter once, calmly. Do not try to memorise."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Do"
+             ],
+             "t": "b"
+            },
+            " every lab on your own computer. Typing, breaking and fixing things is how real experience is built. When something fails, read the error message slowly: debugging is an exam topic."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Test"
+             ],
+             "t": "b"
+            },
+            " yourself with ",
+            {
+             "c": [
+              "Check yourself"
+             ],
+             "t": "i"
+            },
+            ", with the book closed. Write your answers down before looking at the solutions. Count your score."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Review"
+             ],
+             "t": "b"
+            },
+            " every mistake in your ",
+            {
+             "c": [
+              "error notebook"
+             ],
+             "t": "i"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      }
+     ],
+     "id": "ch00-s4-0",
+     "title": [
+      "How to study so it sticks"
+     ],
+     "titleText": "How to study so it sticks"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "For every question you got wrong (or right by luck), write one entry. This notebook becomes your most valuable revision tool in the last week."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch00-c2",
+       "lang": "plain",
+       "t": "code",
+       "text": "Date: 2026-11-03     Chapter: 4 (SQL)     Question: Q7\nWhat I answered: B (count(email) counts all rows)\nCorrect answer:  C\nThe rule in my own words:\n  count(*) counts rows. count(column) skips NULL values in that column.\nHow I will remember it: \"count(column) ignores the empty boxes\"",
+       "title": "error-notebook.md (one entry)"
+      }
+     ],
+     "id": "ch00-s4-1",
+     "title": [
+      "The error notebook"
+     ],
+     "titleText": "The error notebook"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Memory fades fast unless you revisit things at growing intervals. After you finish a chapter, review it (summary box + your error notebook entries + redo the wrong questions):"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "When"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What to do (10–15 minutes)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Day 1"
+          ]
+         },
+         {
+          "c": [
+           "Finish the chapter and its quiz."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Day 3"
+          ]
+         },
+         {
+          "c": [
+           "Re-read the summary box; redo the questions you missed."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Day 7"
+          ]
+         },
+         {
+          "c": [
+           "Explain the three-sentence idea out loud, without notes."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Day 21"
+          ]
+         },
+         {
+          "c": [
+           "Redo the full quiz. Aim for 90% or more."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Explain it to a friend."
+           ],
+           "t": "b"
+          },
+          " After each chapter, try to explain the main idea in simple words, in French or in English, as if to a friend who does not work with data. If you get stuck, you found exactly what to review. This is called the Feynman technique."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Do not learn answers to questions by heart. The real exam uses different wording, and some questions (the DOMC format below) show the options one by one, so recognising an answer will not help you. Learn ",
+          {
+           "c": [
+            "why"
+           ],
+           "t": "i"
+          },
+          " each answer is right."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch00-s4-2",
+     "title": [
+      "Spaced review"
+     ],
+     "titleText": "Spaced review"
+    }
+   ],
+   "title": [
+    "How to study so it sticks"
+   ],
+   "titleText": "How to study so it sticks"
+  },
+  {
+   "anchors": [
+    "sec-start-exam",
+    "sec-start-formats"
+   ],
+   "checkpoints": [],
+   "id": "ch00-s5",
+   "label": "sec:start-exam",
+   "labs": [],
+   "minutes": 5,
+   "number": "0.5",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Item"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Details (official information, 2026)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Name"
+          ]
+         },
+         {
+          "c": [
+           "dbt Analytics Engineering Certification Exam. On dbt Learn the path is called the ",
+           {
+            "c": [
+             "dbt Certified Developer Path"
+            ],
+            "t": "i"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Goal"
+          ]
+         },
+         {
+          "c": [
+           "Prove that you can create, test and look after dbt models that other people rely on, using good engineering habits (version control, testing, modular code)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Version tested"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "dbt Core 1.11"
+            ],
+            "t": "b"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Length"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "65 questions"
+            ],
+            "t": "b"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Duration"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "2 hours"
+            ],
+            "t": "b"
+           },
+           " (120 minutes)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Passing score"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "65%"
+            ],
+            "t": "b"
+           },
+           " or higher."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Price"
+          ]
+         },
+         {
+          "c": [
+           "$200 per attempt (each retake is paid again)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Delivery"
+          ]
+         },
+         {
+          "c": [
+           "Online, with a remote proctor (a person who watches through your webcam), scheduled through Talview."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Open book?"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "No."
+            ],
+            "t": "b"
+           },
+           " No notes, no documentation, no second screen."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Language"
+          ]
+         },
+         {
+          "c": [
+           "English and Japanese (study guide and FAQ). The exam page may show more languages: check when you register."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Browser"
+          ]
+         },
+         {
+          "c": [
+           "A supported web browser: the study guide links to the list of browsers supported by Caveon, the exam platform. Check it, and the system requirements, before exam day."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Results"
+          ]
+         },
+         {
+          "c": [
+           "Immediately at the end: pass or fail, and your percentage of scored questions answered correctly. You do not see which questions you missed."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Validity"
+          ]
+         },
+         {
+          "c": [
+           "2 years. A shorter renewal exam exists only for people who earned the credential with the full exam."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Cancel / reschedule"
+          ]
+         },
+         {
+          "c": [
+           "Free on Talview up to 24 hours before your appointment. Later changes can cost you the fee, and there is no refund if you do not show up."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Recommended level"
+          ]
+         },
+         {
+          "c": [
+           "SQL proficiency and about 6 months of dbt experience. The labs and capstone of this bible are designed to give you that experience."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch00-s5-1",
+     "number": "0.5.1",
+     "title": [
+      "Logistics"
+     ],
+     "titleText": "Logistics"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Each question gives ",
+            {
+             "c": [
+              "1 point"
+             ],
+             "t": "b"
+            },
+            " if correct and ",
+            {
+             "c": [
+              "0 points"
+             ],
+             "t": "b"
+            },
+            " if wrong. All questions have the same weight."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "There is ",
+            {
+             "c": [
+              "no penalty for a wrong answer"
+             ],
+             "t": "b"
+            },
+            ". Never leave a question empty: an intelligent guess can only help."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Some questions are ",
+            {
+             "c": [
+              "unscored"
+             ],
+             "t": "b"
+            },
+            ": they are being tested for future exams. They look exactly like the others, so treat every question as if it counts."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Because of the unscored questions, you cannot compute exactly how many correct answers you need. Think of it as \"about two out of every three\". Our target in this bible is much higher: ",
+            {
+             "c": [
+              "80% or more on the mock exams"
+             ],
+             "t": "b"
+            },
+            " before you book the real one."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch00-s5-2",
+     "number": "0.5.2",
+     "title": [
+      "How scoring works"
+     ],
+     "titleText": "How scoring works"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "120 minutes for 65 questions gives you about ",
+        {
+         "c": [
+          "1 minute 50 seconds per question"
+         ],
+         "t": "b"
+        },
+        ". Some questions take 20 seconds, others (long code, logs) take 4 minutes. Use three passes:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "First pass (about 75 minutes):"
+             ],
+             "t": "b"
+            },
+            " answer everything you are sure about. For a hard question, choose your best guess, ",
+            {
+             "c": [
+              "mark it for review"
+             ],
+             "t": "i"
+            },
+            " if the interface allows it, and move on."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Second pass (about 30 minutes):"
+             ],
+             "t": "b"
+            },
+            " return to marked questions with fresh eyes."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Final check (about 10 minutes):"
+             ],
+             "t": "b"
+            },
+            " make sure no question is left empty."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "c": [
+        "In Part IX you will practise this pacing with three timed mock exams."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch00-s5-3",
+     "number": "0.5.3",
+     "title": [
+      "Time management"
+     ],
+     "titleText": "Time management"
+    },
+    {
+     "anchor": "sec-start-formats",
+     "blocks": [
+      {
+       "c": [
+        "The exam mixes six formats. Below is an original example of each one (answers right after). Every quiz in this bible labels its questions with these formats, so they will feel familiar on exam day."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "1. Multiple choice."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "c": [
+        "One correct answer among several options. Some versions ask you to choose two or more answers: the question normally tells you how many."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Which command runs your models ",
+          {
+           "c": [
+            "and"
+           ],
+           "t": "i"
+          },
+          " their tests, following the order of the DAG?"
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "dbt run"
+              }
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "dbt test"
+              }
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "dbt build"
+              }
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "dbt compile"
+              }
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "marker": "A.",
+         "t": "list"
+        }
+       ],
+       "kind": "quiz",
+       "t": "callout",
+       "title": [
+        {
+         "name": "question-circle",
+         "t": "icon"
+        },
+        " Example: multiple choice"
+       ]
+      },
+      {
+       "c": [
+        "2. Fill in the blank."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "c": [
+        "You type a word or a short expression. Spelling matters, so learn exact names of commands, functions and configuration keys."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "To select from another model called ",
+          {
+           "t": "code",
+           "v": "stg_orders"
+          },
+          " inside a dbt model, you write ",
+          {
+           "t": "code",
+           "v": "select * from {{ ______('stg_orders') }}"
+          },
+          ". What is the missing function name?"
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "quiz",
+       "t": "callout",
+       "title": [
+        {
+         "name": "question-circle",
+         "t": "icon"
+        },
+        " Example: fill in the blank"
+       ]
+      },
+      {
+       "c": [
+        "3. Matching."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "c": [
+        "You connect each item on the left with one item on the right."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Match each materialization with its description."
+         ],
+         "t": "p"
+        },
+        {
+         "rows": [
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "view"
+             }
+            ]
+           },
+           {
+            "c": [
+             "(a) Not built in the warehouse; its SQL is inserted into the models that use it."
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "table"
+             }
+            ]
+           },
+           {
+            "c": [
+             "(b) Built fully the first time, then only new or changed rows are added on later runs."
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "ephemeral"
+             }
+            ]
+           },
+           {
+            "c": [
+             "(c) A saved query; it is computed again every time someone reads it."
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "incremental"
+             }
+            ]
+           },
+           {
+            "c": [
+             "(d) The result is stored physically and rebuilt completely at each run."
+            ]
+           }
+          ]
+         ],
+         "t": "table"
+        }
+       ],
+       "kind": "quiz",
+       "t": "callout",
+       "title": [
+        {
+         "name": "question-circle",
+         "t": "icon"
+        },
+        " Example: matching"
+       ]
+      },
+      {
+       "c": [
+        "4. Hotspot."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "c": [
+        "You click on a part of an image: for example the line of code that causes an error."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "id": "ch00-c3",
+         "lang": "yaml",
+         "t": "code",
+         "text": "version: 2\nmodels:\n  - name: stg_customers\n    description: Cleaned customers\n    columns:\n      - name: customer_id\n        data_tests: [unique, not_null]\n      - name: email\n         description: Lower-case email",
+         "title": "models/schema.yml"
+        },
+        {
+         "c": [
+          "Counting from 1 at ",
+          {
+           "t": "code",
+           "v": "version: 2"
+          },
+          ", which line makes this YAML file invalid?"
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "quiz",
+       "t": "callout",
+       "title": [
+        {
+         "name": "question-circle",
+         "t": "icon"
+        },
+        " Example: hotspot (click the line that breaks the file)"
+       ]
+      },
+      {
+       "c": [
+        "5. Build list."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "c": [
+        "You put steps in the correct order, usually by dragging them."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Put these steps of a normal change in the correct order: (a) open a pull request; (b) create a feature branch from ",
+          {
+           "t": "code",
+           "v": "main"
+          },
+          "; (c) commit your changes; (d) edit and test the model locally; (e) merge after review and successful CI checks."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "quiz",
+       "t": "callout",
+       "title": [
+        {
+         "name": "question-circle",
+         "t": "icon"
+        },
+        " Example: build list"
+       ]
+      },
+      {
+       "c": [
+        "6. DOMC (Discrete Option Multiple Choice)."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "c": [
+        "This format surprises many candidates, so practise it."
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "The question (the ",
+            {
+             "c": [
+              "stem"
+             ],
+             "t": "i"
+            },
+            ") is shown with ",
+            {
+             "c": [
+              "one option at a time"
+             ],
+             "t": "b"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "For each option you answer ",
+            {
+             "c": [
+              "YES"
+             ],
+             "t": "b"
+            },
+            " (this option is correct) or ",
+            {
+             "c": [
+              "NO"
+             ],
+             "t": "b"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Once you answer an option, you ",
+            {
+             "c": [
+              "cannot go back"
+             ],
+             "t": "b"
+            },
+            " to it."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The question can ",
+            {
+             "c": [
+              "end early"
+             ],
+             "t": "b"
+            },
+            ": as soon as your answers decide the result (for example, you said YES to a wrong option, or NO to a correct one). You may therefore see fewer options than exist. Sometimes one more option is shown even after the result is decided, so the number of options you see tells you nothing."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "More than one option can be correct."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Stem: ",
+          {
+           "c": [
+            "Which of these is one of the four generic data tests built into dbt?"
+           ],
+           "t": "i"
+          },
+          {
+           "t": "br"
+          },
+          " Option shown: ",
+          {
+           "t": "code",
+           "v": "not_empty"
+          },
+          " → YES or NO?",
+          {
+           "t": "br"
+          },
+          "Option shown: ",
+          {
+           "t": "code",
+           "v": "is_positive"
+          },
+          " → YES or NO?",
+          {
+           "t": "br"
+          },
+          "Option shown: ",
+          {
+           "t": "code",
+           "v": "accepted_values"
+          },
+          " → YES or NO?"
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "quiz",
+       "t": "callout",
+       "title": [
+        {
+         "name": "question-circle",
+         "t": "icon"
+        },
+        " Example: DOMC (judge each option alone)"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "DOMC strategy."
+           ],
+           "t": "b"
+          },
+          " Judge each option ",
+          {
+           "c": [
+            "on its own"
+           ],
+           "t": "i"
+          },
+          ", as a true/false statement. Do not wait for a \"better\" option to appear, and do not try to compare options: you will never see them side by side. Read the stem twice before answering the first option, because you cannot go back."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "C."
+               ],
+               "t": "b"
+              },
+              " ",
+              {
+               "t": "code",
+               "v": "dbt build"
+              },
+              " runs models, tests, seeds and snapshots in DAG order. ",
+              {
+               "t": "code",
+               "v": "dbt run"
+              },
+              " does not run tests, ",
+              {
+               "t": "code",
+               "v": "dbt test"
+              },
+              " does not build models, and ",
+              {
+               "t": "code",
+               "v": "dbt compile"
+              },
+              " only writes SQL files without running them (Chapter 16)."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "ref"
+               ],
+               "t": "b"
+              },
+              ". ",
+              {
+               "t": "code",
+               "v": "ref()"
+              },
+              " points to another model and creates the dependency in the DAG (Chapter 7)."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "view–(c), table–(d), ephemeral–(a), incremental–(b) (Chapters 8 and 14)."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "Line 9."
+               ],
+               "t": "b"
+              },
+              " ",
+              {
+               "t": "code",
+               "v": "description"
+              },
+              " is indented one space more than ",
+              {
+               "t": "code",
+               "v": "name"
+              },
+              " on line 8, so YAML does not know where it belongs (Chapter 5)."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "c": [
+                "b, d, c, a, e."
+               ],
+               "t": "b"
+              },
+              " Branch, change and test, commit, pull request, merge (Chapter 3)."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "not_empty"
+              },
+              ": NO. ",
+              {
+               "t": "code",
+               "v": "is_positive"
+              },
+              ": NO. ",
+              {
+               "t": "code",
+               "v": "accepted_values"
+              },
+              ": YES. The four built-in generic tests are ",
+              {
+               "t": "code",
+               "v": "unique"
+              },
+              ", ",
+              {
+               "t": "code",
+               "v": "not_null"
+              },
+              ", ",
+              {
+               "t": "code",
+               "v": "accepted_values"
+              },
+              " and ",
+              {
+               "t": "code",
+               "v": "relationships"
+              },
+              " (Chapter 18). Notice the DOMC mechanics: if you had answered YES to ",
+              {
+               "t": "code",
+               "v": "not_empty"
+              },
+              ", the question would have ended immediately with 0 points, and you would never have seen ",
+              {
+               "t": "code",
+               "v": "accepted_values"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        }
+       ],
+       "kind": "answer",
+       "t": "callout",
+       "title": [
+        {
+         "name": "check-circle",
+         "t": "icon"
+        },
+        " Answers to the format examples"
+       ]
+      }
+     ],
+     "id": "ch00-s5-4",
+     "number": "0.5.4",
+     "title": [
+      "The six question formats"
+     ],
+     "titleText": "The six question formats"
+    }
+   ],
+   "title": [
+    "The exam decoded"
+   ],
+   "titleText": "The exam decoded"
+  },
+  {
+   "anchors": [
+    "sec-start-topics",
+    "sec-start-old"
+   ],
+   "checkpoints": [],
+   "id": "ch00-s6",
+   "label": "sec:start-topics",
+   "labs": [],
+   "minutes": 5,
+   "number": "0.6",
+   "objectives": [
+    "1.11"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The official study guide lists ",
+        {
+         "c": [
+          "7 topics"
+         ],
+         "t": "b"
+        },
+        " with ",
+        {
+         "c": [
+          "31 sub-objectives"
+         ],
+         "t": "b"
+        },
+        ". This is the most important table of the book. The official guide lists the sub-objectives without numbers; this bible gives each one a number (used in dark tags such as ",
+        {
+         "id": "1.11",
+         "t": "obj"
+        },
+        "), and the right column tells you which chapter teaches it. ",
+        {
+         "href": "/learn/appB/",
+         "label": "app:coverage",
+         "t": "ref",
+         "text": "Appendix B"
+        },
+        " contains a detailed coverage matrix that also points to labs and mock-exam questions."
+       ],
+       "t": "p"
+      },
+      {
+       "groupRows": [
+        0,
+        3,
+        18,
+        22,
+        28,
+        31,
+        35,
+        38
+       ],
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "ID"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Official sub-objective (summarised)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Bible chapter"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Prerequisites (Checkpoint 0)"
+            ],
+            "t": "b"
+           }
+          ],
+          "colspan": 3
+         }
+        ],
+        [
+         {
+          "c": [
+           "CP0-SQL"
+          ]
+         },
+         {
+          "c": [
+           "SQL: joins, aggregations, CTEs, window functions"
+          ]
+         },
+         {
+          "c": [
+           "4"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "CP0-GIT"
+          ]
+         },
+         {
+          "c": [
+           "Git: branching strategies, basic commands, pull requests"
+          ]
+         },
+         {
+          "c": [
+           "3"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Topic 1 – Developing and optimizing dbt models"
+            ],
+            "t": "b"
+           }
+          ],
+          "colspan": 3
+         }
+        ],
+        [
+         {
+          "c": [
+           "1.1"
+          ]
+         },
+         {
+          "c": [
+           "Identifying and verifying raw object dependencies (sources)"
+          ]
+         },
+         {
+          "c": [
+           "7, 21"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "1.2"
+          ]
+         },
+         {
+          "c": [
+           "Understanding core materializations (view, table, ephemeral, incremental…)"
+          ]
+         },
+         {
+          "c": [
+           "8"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "1.3"
+          ]
+         },
+         {
+          "c": [
+           "Modularity and DRY principles"
+          ]
+         },
+         {
+          "c": [
+           "9, 11"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "1.4"
+          ]
+         },
+         {
+          "c": [
+           "Using commands: build, run, test, docs, show, snapshot, seed"
+          ]
+         },
+         {
+          "c": [
+           "16 (and 6, 12, 13, 20)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "1.5"
+          ]
+         },
+         {
+          "c": [
+           "A logical flow of models and clean DAGs"
+          ]
+         },
+         {
+          "c": [
+           "7, 9"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "1.6"
+          ]
+         },
+         {
+          "c": [
+           "Configurations in ",
+           {
+            "t": "code",
+            "v": "dbt_project.yml"
+           }
+          ]
+         },
+         {
+          "c": [
+           "10"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "1.7"
+          ]
+         },
+         {
+          "c": [
+           "Using dbt packages"
+          ]
+         },
+         {
+          "c": [
+           "11"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "1.8"
+          ]
+         },
+         {
+          "c": [
+           "Creating Python models"
+          ]
+         },
+         {
+          "c": [
+           "15"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "1.9"
+          ]
+         },
+         {
+          "c": [
+           "Giving users access to models with the ",
+           {
+            "t": "code",
+            "v": "grants"
+           },
+           " config"
+          ]
+         },
+         {
+          "c": [
+           "10"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "1.10"
+          ]
+         },
+         {
+          "c": [
+           "Creating snapshots in YAML"
+          ]
+         },
+         {
+          "c": [
+           "13"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "1.11"
+          ]
+         },
+         {
+          "c": [
+           "Choosing the best incremental strategy for a dataset"
+          ]
+         },
+         {
+          "c": [
+           "14"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "1.12"
+          ]
+         },
+         {
+          "c": [
+           "Dry runs with the ",
+           {
+            "t": "code",
+            "v": "--empty"
+           },
+           " flag"
+          ]
+         },
+         {
+          "c": [
+           "16, 25"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "1.13"
+          ]
+         },
+         {
+          "c": [
+           "Running models in sample mode with ",
+           {
+            "t": "code",
+            "v": "--sample"
+           }
+          ]
+         },
+         {
+          "c": [
+           "16"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "1.14"
+          ]
+         },
+         {
+          "c": [
+           "Advanced materializations such as microbatch"
+          ]
+         },
+         {
+          "c": [
+           "14"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Topic 2 – Managing dbt model governance"
+            ],
+            "t": "b"
+           }
+          ],
+          "colspan": 3
+         }
+        ],
+        [
+         {
+          "c": [
+           "2.1"
+          ]
+         },
+         {
+          "c": [
+           "Model contracts (guaranteeing the shape of a model)"
+          ]
+         },
+         {
+          "c": [
+           "17"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "2.2"
+          ]
+         },
+         {
+          "c": [
+           "Model versions and deprecating old versions"
+          ]
+         },
+         {
+          "c": [
+           "17"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "2.3"
+          ]
+         },
+         {
+          "c": [
+           "Constraints in YAML enforced by the data platform"
+          ]
+         },
+         {
+          "c": [
+           "17"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Topic 3 – Debugging data modeling errors"
+            ],
+            "t": "b"
+           }
+          ],
+          "colspan": 3
+         }
+        ],
+        [
+         {
+          "c": [
+           "3.1"
+          ]
+         },
+         {
+          "c": [
+           "Understanding logged error messages"
+          ]
+         },
+         {
+          "c": [
+           "22"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "3.2"
+          ]
+         },
+         {
+          "c": [
+           "Troubleshooting with compiled code"
+          ]
+         },
+         {
+          "c": [
+           "22"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "3.3"
+          ]
+         },
+         {
+          "c": [
+           "Troubleshooting ",
+           {
+            "t": "code",
+            "v": ".yml"
+           },
+           " compilation errors"
+          ]
+         },
+         {
+          "c": [
+           "22 (and 5)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "3.4"
+          ]
+         },
+         {
+          "c": [
+           "Developing a fix and testing it before merging"
+          ]
+         },
+         {
+          "c": [
+           "22, 25 (and 3)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "3.5"
+          ]
+         },
+         {
+          "c": [
+           "Managing dbt behaviour with flags"
+          ]
+         },
+         {
+          "c": [
+           "22"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Topic 4 – Troubleshooting and optimizing dbt pipelines"
+            ],
+            "t": "b"
+           }
+          ],
+          "colspan": 3
+         }
+        ],
+        [
+         {
+          "c": [
+           "4.1"
+          ]
+         },
+         {
+          "c": [
+           "Troubleshooting and managing failure points in the DAG"
+          ]
+         },
+         {
+          "c": [
+           "23"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "4.2"
+          ]
+         },
+         {
+          "c": [
+           "Using ",
+           {
+            "t": "code",
+            "v": "dbt clone"
+           }
+          ]
+         },
+         {
+          "c": [
+           "23"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Topic 5 – Implementing dbt tests"
+            ],
+            "t": "b"
+           }
+          ],
+          "colspan": 3
+         }
+        ],
+        [
+         {
+          "c": [
+           "5.1"
+          ]
+         },
+         {
+          "c": [
+           "Generic, singular, custom, custom generic and unit tests on models and sources"
+          ]
+         },
+         {
+          "c": [
+           "18, 19"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "5.2"
+          ]
+         },
+         {
+          "c": [
+           "Testing assumptions about models and sources"
+          ]
+         },
+         {
+          "c": [
+           "18"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "5.3"
+          ]
+         },
+         {
+          "c": [
+           "Placing testing steps in the workflow"
+          ]
+         },
+         {
+          "c": [
+           "18, 25"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Topic 6 – Implementing and maintaining external dependencies"
+            ],
+            "t": "b"
+           }
+          ],
+          "colspan": 3
+         }
+        ],
+        [
+         {
+          "c": [
+           "6.1"
+          ]
+         },
+         {
+          "c": [
+           "Exposures"
+          ]
+         },
+         {
+          "c": [
+           "21"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "6.2"
+          ]
+         },
+         {
+          "c": [
+           "Source freshness"
+          ]
+         },
+         {
+          "c": [
+           "21"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Topic 7 – Leveraging dbt state"
+            ],
+            "t": "b"
+           }
+          ],
+          "colspan": 3
+         }
+        ],
+        [
+         {
+          "c": [
+           "7.1"
+          ]
+         },
+         {
+          "c": [
+           "Understanding state and state selection"
+          ]
+         },
+         {
+          "c": [
+           "24"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "7.2"
+          ]
+         },
+         {
+          "c": [
+           "Using ",
+           {
+            "t": "code",
+            "v": "dbt retry"
+           }
+          ]
+         },
+         {
+          "c": [
+           "24"
+          ]
+         }
+        ]
+       ],
+       "rules": [
+        3,
+        18,
+        22,
+        28,
+        31,
+        35,
+        38
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch00-s6-0",
+     "title": [
+      "The official topics, and where to learn them"
+     ],
+     "titleText": "The official topics, and where to learn them"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The official guide does ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "b"
+        },
+        " publish topic weights. To plan your effort and to build the mock exams, we use the estimate below, based on how many sub-objectives each topic has and on the official sample questions. Treat it as a planning tool, not as an official fact."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Topic"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "c": [
+             "Estimated share"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "c": [
+             "≈ questions out of 65"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "1. Developing and optimizing models"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "40%"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "26"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "2. Model governance"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "11%"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "7"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "3. Debugging data modeling errors"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "12%"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "8"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "4. Troubleshooting pipelines"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "8%"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "5"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "5. Tests"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "14%"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "9"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "6. External dependencies"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "6%"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "4"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "7. dbt state"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "9%"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           "6"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "alt": "Bar chart of the estimated number of exam questions per topic, out of 65: Topic 1: 26, Topic 2: 7, Topic 3: 8, Topic 4: 5, Topic 5: 9, Topic 6: 4, Topic 7: 6. Topic 1 is by far the largest.",
+       "id": "ch00-fig3",
+       "src": "figures/ch00-fig3.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "Topic 1 is by far the largest. It is also the foundation of all the others, which is why Part II is the longest part of this bible."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch00-s6-1",
+     "number": "0.6.1",
+     "title": [
+      "How much is each topic worth?"
+     ],
+     "titleText": "How much is each topic worth?"
+    },
+    {
+     "anchor": "sec-start-old",
+     "blocks": [
+      {
+       "c": [
+        "The exam was updated from dbt 1.7 (2024) to ",
+        {
+         "c": [
+          "dbt Core 1.11"
+         ],
+         "t": "b"
+        },
+        " (2026). Many practice tests and blog posts on the internet still follow the old outline. Compared with the old version, the current outline:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "adds"
+             ],
+             "t": "b"
+            },
+            " snapshots defined in YAML, choosing an incremental strategy, microbatch, the ",
+            {
+             "t": "code",
+             "v": "--empty"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "--sample"
+            },
+            " flags, constraints in YAML, flags that control dbt behaviour, unit tests, and the ",
+            {
+             "t": "code",
+             "v": "show"
+            },
+            " command;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "no longer lists"
+             ],
+             "t": "b"
+            },
+            " documentation as a separate topic (but ",
+            {
+             "t": "code",
+             "v": "dbt docs"
+            },
+            " is still in the commands list), model access, Git and source configuration as separate sub-objectives. Do not skip them: the official sample questions still include Git and sources, and access is part of the official dbt Mesh course;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "uses newer syntax. For example, data tests are now configured under the key ",
+            {
+             "t": "code",
+             "v": "data_tests:"
+            },
+            " (the old key ",
+            {
+             "t": "code",
+             "v": "tests:"
+            },
+            " still works but is outdated)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "If a practice question online contradicts this bible, check the date of that material and the official documentation (",
+          {
+           "t": "code",
+           "v": "docs.getdbt.com"
+          },
+          "). Old material is the main source of wrong \"facts\"."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "dbt Labs has two other exams that are ",
+          {
+           "c": [
+            "not"
+           ],
+           "t": "i"
+          },
+          " our target: the ",
+          {
+           "c": [
+            "dbt Architect"
+           ],
+           "t": "b"
+          },
+          " exam (configuring environments, connections, permissions and the dbt platform), and a shorter ",
+          {
+           "c": [
+            "renewal"
+           ],
+           "t": "b"
+          },
+          " exam that only renews an Analytics Engineering credential earned with the full exam (check its eligibility rules when your 2 years come to an end). Some of our Part VII topics overlap with the Architect exam, which is a good next step after this one."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "deep",
+       "t": "callout"
+      }
+     ],
+     "id": "ch00-s6-2",
+     "number": "0.6.2",
+     "title": [
+      "Beware of old study material"
+     ],
+     "titleText": "Beware of old study material"
+    }
+   ],
+   "title": [
+    "The official topics, and where to learn them"
+   ],
+   "titleText": "The official topics, and where to learn them"
+  },
+  {
+   "anchors": [
+    "sec-start-plan"
+   ],
+   "checkpoints": [],
+   "id": "ch00-s7",
+   "label": "sec:start-plan",
+   "labs": [],
+   "minutes": 5,
+   "number": "0.7",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The plan assumes about ",
+        {
+         "c": [
+          "2 hours per day, 6 days per week"
+         ],
+         "t": "b"
+        },
+        ". The book is long (Part II alone is more than 400 pages) because every lab output is printed for you: you read faster than the page count suggests, but do every lab. The middle column lists the items of the official ",
+        {
+         "c": [
+          "dbt Certified Developer Path"
+         ],
+         "t": "i"
+        },
+        " on ",
+        {
+         "t": "code",
+         "v": "learn.getdbt.com"
+        },
+        " to take in the same week. When a course exists in two versions (dbt Studio or VS Code), choose the ",
+        {
+         "c": [
+          "dbt Studio"
+         ],
+         "t": "b"
+        },
+        " version: the exam still asks questions about the browser IDE of the dbt platform, while this bible's labs already give you the command-line experience."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Week"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Bible"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Official path (dbt Learn)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Checkpoint"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "1"
+          ]
+         },
+         {
+          "c": [
+           "Part 0; Ch. 1 Data world; Ch. 2 Command line"
+          ]
+         },
+         {
+          "c": [
+           "Learning Path Overview video; ",
+           {
+            "c": [
+             "Introduction to SQL"
+            ],
+            "t": "i"
+           },
+           " (optional)"
+          ]
+         },
+         {
+          "c": [
+           "Workspace ready, ",
+           {
+            "t": "code",
+            "v": "dbt --version"
+           },
+           " works"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "2"
+          ]
+         },
+         {
+          "c": [
+           "Ch. 3 Git; Ch. 4 SQL (first half)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Git Fundamentals"
+            ],
+            "t": "i"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Practice repo on GitHub, first PR merged"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "3"
+          ]
+         },
+         {
+          "c": [
+           "Ch. 4 SQL (second half); Ch. 5 YAML, Jinja, Python"
+          ]
+         },
+         {
+          "c": [
+           "–"
+          ]
+         },
+         {
+          "c": [
+           "Customer orders report query works"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "4"
+          ]
+         },
+         {
+          "c": [
+           "Ch. 6 First project; Ch. 7 Models, sources, DAG"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "dbt Fundamentals"
+            ],
+            "t": "i"
+           }
+          ]
+         },
+         {
+          "c": [
+           "First dbt project builds"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "5"
+          ]
+         },
+         {
+          "c": [
+           "Ch. 8 Materializations; Ch. 9 Modularity"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Materialization Fundamentals"
+            ],
+            "t": "i"
+           },
+           "; ",
+           {
+            "c": [
+             "Refactoring SQL for Modularity"
+            ],
+            "t": "i"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Legacy SQL refactored"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "6"
+          ]
+         },
+         {
+          "c": [
+           "Ch. 10 Configuration; Ch. 11 Jinja, macros, packages"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Jinja, Macros, and Packages"
+            ],
+            "t": "i"
+           },
+           "; ",
+           {
+            "c": [
+             "Grants"
+            ],
+            "t": "i"
+           },
+           " video"
+          ]
+         },
+         {
+          "c": [
+           "Packages + macros in the project"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "7"
+          ]
+         },
+         {
+          "c": [
+           "Ch. 12 Seeds and analyses; Ch. 13 Snapshots"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Analyses and Seeds"
+            ],
+            "t": "i"
+           },
+           "; ",
+           {
+            "c": [
+             "Snapshots"
+            ],
+            "t": "i"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Snapshot history after day 2"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "8"
+          ]
+         },
+         {
+          "c": [
+           "Ch. 14 Incremental and microbatch; Ch. 15 Python; Ch. 16 Commands and selection"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Incremental Models"
+            ],
+            "t": "i"
+           },
+           "; ",
+           {
+            "c": [
+             "Python Models"
+            ],
+            "t": "i"
+           },
+           " video"
+          ]
+         },
+         {
+          "c": [
+           "Part II quiz average ≥ 80%"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "9"
+          ]
+         },
+         {
+          "c": [
+           "Ch. 17 Governance; Ch. 18 Data tests"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "dbt Mesh Introduction"
+            ],
+            "t": "i"
+           },
+           " video; ",
+           {
+            "c": [
+             "dbt Mesh"
+            ],
+            "t": "i"
+           },
+           "; ",
+           {
+            "c": [
+             "Advanced Testing"
+            ],
+            "t": "i"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Contracts + tests in the project"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "10"
+          ]
+         },
+         {
+          "c": [
+           "Ch. 19 Unit tests; Ch. 20 Documentation; Ch. 21 Freshness and exposures"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Unit Testing"
+            ],
+            "t": "i"
+           },
+           "; ",
+           {
+            "c": [
+             "Exposures"
+            ],
+            "t": "i"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Unit tests pass; freshness green"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "11"
+          ]
+         },
+         {
+          "c": [
+           "Ch. 22 Debugging; Ch. 23 Pipelines and clone"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Debug Errors"
+            ],
+            "t": "i"
+           },
+           ", ",
+           {
+            "c": [
+             "dbt Clone"
+            ],
+            "t": "i"
+           },
+           " videos"
+          ]
+         },
+         {
+          "c": [
+           "Nine bugs fixed; prod build + clone"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "12"
+          ]
+         },
+         {
+          "c": [
+           "Ch. 24 State, defer, retry; Ch. 25 Environments and CI"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Understanding state"
+            ],
+            "t": "i"
+           },
+           ", ",
+           {
+            "c": [
+             "dbt retry"
+            ],
+            "t": "i"
+           },
+           " videos"
+          ]
+         },
+         {
+          "c": [
+           "Slim CI command runs"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "13"
+          ]
+         },
+         {
+          "c": [
+           "Part VIII Capstone project"
+          ]
+         },
+         {
+          "c": [
+           "–"
+          ]
+         },
+         {
+          "c": [
+           "Capstone complete"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "14"
+          ]
+         },
+         {
+          "c": [
+           "Ch. 27 Strategy and traps; Mock exams 1–3; error notebook; cheat sheets"
+          ]
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Pro Tips for dbt Certifications"
+            ],
+            "t": "i"
+           },
+           " video; study guide v1.11; registration"
+          ]
+         },
+         {
+          "c": [
+           "Two mocks ≥ 80% ⇒ book the exam"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch00-s7-0",
+     "title": [
+      "Your 14-week study plan"
+     ],
+     "titleText": "Your 14-week study plan"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Rhythm"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "How to adapt the plan"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Intensive (3–4 h/day)"
+          ]
+         },
+         {
+          "c": [
+           "About 8 weeks: do two plan weeks per week for weeks 1–12, then keep a full week each for the capstone and the mocks."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Standard (about 2 h/day)"
+          ]
+         },
+         {
+          "c": [
+           "The 14-week table above."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Relaxed (about 1 h/day)"
+          ]
+         },
+         {
+          "c": [
+           "About 24–26 weeks: give each plan week of Parts II to VII two weeks."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch00-s7-1",
+     "number": "0.7.1",
+     "title": [
+      "Other rhythms"
+     ],
+     "titleText": "Other rhythms"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Minutes"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Activity"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "0–10"
+          ]
+         },
+         {
+          "c": [
+           "Spaced review: error notebook entries and one old summary box."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "10–50"
+          ]
+         },
+         {
+          "c": [
+           "Read the next sections of the chapter."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "50–100"
+          ]
+         },
+         {
+          "c": [
+           "Do the labs. When something fails, read the error before searching."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "100–120"
+          ]
+         },
+         {
+          "c": [
+           "Quiz with the book closed, correct it, write error notebook entries."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch00-s7-2",
+     "number": "0.7.2",
+     "title": [
+      "A typical 2-hour study session"
+     ],
+     "titleText": "A typical 2-hour study session"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Book the exam when ",
+        {
+         "c": [
+          "all four"
+         ],
+         "t": "b"
+        },
+        " conditions are true:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Every chapter quiz is at 80% or more (after review)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The capstone project is finished and builds without errors."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "You scored ",
+            {
+             "c": [
+              "80% or more on two full mock exams"
+             ],
+             "t": "b"
+            },
+            " under real time conditions (65 questions, 2 hours, no notes)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "You have re-read your whole error notebook."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "c": [
+        "Book a date about one week later, and use that week for light review only. The last-week plan and the exam-day checklist are in ",
+        {
+         "href": "/learn/ch27/",
+         "label": "ch:exam-strategy",
+         "t": "ref",
+         "text": "Chapter 27"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch00-s7-3",
+     "number": "0.7.3",
+     "title": [
+      "When are you ready to book the exam?"
+     ],
+     "titleText": "When are you ready to book the exam?"
+    }
+   ],
+   "title": [
+    "Your 14-week study plan"
+   ],
+   "titleText": "Your 14-week study plan"
+  },
+  {
+   "anchors": [
+    "sec-start-tracker"
+   ],
+   "checkpoints": [],
+   "id": "ch00-s8",
+   "label": "sec:start-tracker",
+   "labs": [],
+   "minutes": 5,
+   "number": "0.8",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Print these pages or copy them into a spreadsheet. Tick a box when a step is done, and write your quiz score."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Chapter"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Read"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Labs"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Quiz %"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Day 7"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Day 21"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "0 Start Here"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "–"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "1 The data world in simple words"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "2 The command line from zero"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "3 Git and GitHub from zero"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "4 SQL from zero to exam level"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "5 YAML, Jinja and just enough Python"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "6 Installing dbt and your first project"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "7 Models, ref, sources and the DAG"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "8 Materializations"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "9 Modularity, DRY and refactoring"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "10 Configuration"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "11 Jinja, macros and packages"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "12 Seeds and analyses"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "13 Snapshots"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "14 Incremental models and microbatch"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "15 Python models"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "16 Commands and node selection"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "17 Governance: contracts, constraints, versions, access"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "18 Data tests"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "19 Unit tests"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "20 Documentation"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "21 Source freshness and exposures"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "22 Debugging"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "23 Pipelines, failures and dbt clone"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "24 State, defer and dbt retry"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "25 Environments, jobs and CI/CD"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Capstone project (all milestones)"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "–"
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           "–"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "–"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "27 Exam strategy and the top traps"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "–"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "–"
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Appendix A Cheat sheets (read twice in week 14)"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "–"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "–"
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "name": "checkbox",
+            "t": "icon"
+           }
+          ]
+         }
+        ]
+       ],
+       "rules": [
+        26
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch00-s8-0",
+     "title": [
+      "Your progress tracker"
+     ],
+     "titleText": "Your progress tracker"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Mock"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Date"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Score / time used"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Weakest topics (write the topic numbers)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Mock 1"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         }
+        ],
+        [
+         {
+          "c": [
+           "Mock 2"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         }
+        ],
+        [
+         {
+          "c": [
+           "Mock 3"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         }
+        ],
+        [
+         {
+          "c": [
+           "Real exam"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "blank"
+           }
+          ]
+         },
+         {
+          "c": []
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch00-s8-1",
+     "title": [
+      "Mock exam log"
+     ],
+     "titleText": "Mock exam log"
+    }
+   ],
+   "title": [
+    "Your progress tracker"
+   ],
+   "titleText": "Your progress tracker"
+  }
+ ],
+ "minutes": 55,
+ "number": 0,
+ "objectives": [
+  "1.11",
+  "EXAM",
+  "PLAN"
+ ],
+ "part": 0,
+ "partLabel": "Part 0",
+ "partTitle": "Start Here",
+ "printed": "0",
+ "quiz": [
+  "q-ch00-01",
+  "q-ch00-02",
+  "q-ch00-03",
+  "q-ch00-04",
+  "q-ch00-05",
+  "q-ch00-06",
+  "q-ch00-07"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-start-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch00-01",
+      "q-ch00-02",
+      "q-ch00-03",
+      "q-ch00-04",
+      "q-ch00-05",
+      "q-ch00-06",
+      "q-ch00-07"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch00-01",
+    "q-ch00-02",
+    "q-ch00-03",
+    "q-ch00-04",
+    "q-ch00-05",
+    "q-ch00-06",
+    "q-ch00-07"
+   ],
+   "label": "sec:start-quiz",
+   "number": "0.9",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The exam: 65 questions, 2 hours, 65% to pass, $200, online and proctored, not open book, dbt Core 1.11."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "One point per question, no negative marking, some unscored questions: always answer everything."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Six formats: multiple choice, fill in the blank, matching, hotspot, build list and DOMC (one option at a time, no going back)."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "7 topics, 31 sub-objectives. Topic 1 (developing models) is the biggest, roughly 40% of the questions."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Old (dbt 1.7) material misses many current topics: YAML snapshots, microbatch, ",
+        {
+         "t": "code",
+         "v": "--empty"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "--sample"
+        },
+        ", constraints, flags, unit tests."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Study loop: Read, Do, Test, Review. Keep an error notebook and review at day 3, 7 and 21."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Follow the 14-week plan and take the matching official dbt Learn courses each week."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Book the exam only after two timed mocks at 80% or more and a finished capstone."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "Start Here"
+}

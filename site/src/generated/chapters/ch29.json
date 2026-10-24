@@ -1,0 +1,589 @@
+{
+ "id": "ch29",
+ "intro": [
+  {
+   "c": [
+    "This chapter gives the answer key of ",
+    {
+     "href": "/learn/ch28/",
+     "label": "ch:mock1",
+     "t": "ref",
+     "text": "Chapter 28"
+    },
+    ". For every question you find the correct answer, ",
+    {
+     "c": [
+      "why"
+     ],
+     "t": "i"
+    },
+    " it is correct, and why each other option is wrong. Read all the explanations, also for the questions you answered correctly: a lucky guess on the exam is not the same as knowledge."
+   ],
+   "t": "p"
+  }
+ ],
+ "kind": "mock-answers",
+ "label": "ch:mock1-answers",
+ "lessons": [
+  {
+   "anchors": [],
+   "checkpoints": [],
+   "id": "ch29-s1",
+   "labs": [],
+   "minutes": 5,
+   "number": "",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Each question is worth 1 point. There are no half points."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Multiple select:"
+             ],
+             "t": "b"
+            },
+            " 1 point only if you chose exactly the correct options."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Matching"
+             ],
+             "t": "b"
+            },
+            " and ",
+            {
+             "c": [
+              "Build list:"
+             ],
+             "t": "b"
+            },
+            " 1 point only if every pair (or the whole order) is correct."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "DOMC:"
+             ],
+             "t": "b"
+            },
+            " 1 point only if ",
+            {
+             "c": [
+              "every"
+             ],
+             "t": "i"
+            },
+            " YES/NO judgment is correct. This is strict on purpose: on the real exam, one wrong judgment can end the question."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Fill in the blank:"
+             ],
+             "t": "b"
+            },
+            " 1 point if your answer means exactly the expected value (same key name, same model name)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Topic (number of questions)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Questions"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "c": [
+             "Your score"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "1. Developing dbt models (26)"
+          ]
+         },
+         {
+          "c": [
+           "1, 3, 6, 8, 11, 12, 15, 17, 19, 21, 23, 25, 27, 30, 32, 35, 38, 40, 42, 45, 49, 51, 52, 55, 57, 60"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 26"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "2. Model governance (7)"
+          ]
+         },
+         {
+          "c": [
+           "7, 18, 31, 37, 48, 56, 64"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 7"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "3. Debugging errors (8)"
+          ]
+         },
+         {
+          "c": [
+           "5, 14, 26, 34, 41, 47, 53, 63"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 8"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "4. Managing pipelines (5)"
+          ]
+         },
+         {
+          "c": [
+           "9, 22, 33, 43, 58"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 5"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "5. Implementing tests (9)"
+          ]
+         },
+         {
+          "c": [
+           "2, 13, 20, 29, 36, 46, 54, 62, 65"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 9"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "6. Exposures and source freshness (4)"
+          ]
+         },
+         {
+          "c": [
+           "10, 24, 44, 59"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 4"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "7. State and retry (6)"
+          ]
+         },
+         {
+          "c": [
+           "4, 16, 28, 39, 50, 61"
+          ]
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 6"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Total"
+            ],
+            "t": "b"
+           }
+          ]
+         },
+         {
+          "c": []
+         },
+         {
+          "align": "r",
+          "c": [
+           {
+            "t": "blank"
+           },
+           " / 65"
+          ]
+         }
+        ]
+       ],
+       "rules": [
+        7
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "What your score means"
+         ],
+         "t": "b"
+        }
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "52 or more (80 % or more):"
+             ],
+             "t": "b"
+            },
+            " you are ready. Take Mock Exam 2 to confirm."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "43 to 51 (65–79 %):"
+             ],
+             "t": "b"
+            },
+            " close. Find your weakest topics in the table above, re-read the chapters given under \"Review\" for every wrong answer, then take Mock Exam 2."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "42 or less (under 65 %):"
+             ],
+             "t": "b"
+            },
+            " not ready yet. Redo the labs of the parts where you lost the most points, then take this mock exam again after a few days."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch29-s1-0",
+     "title": [
+      "How to score"
+     ],
+     "titleText": "How to score"
+    }
+   ],
+   "title": [
+    "How to score"
+   ],
+   "titleText": "How to score"
+  }
+ ],
+ "minutes": 5,
+ "mock": 1,
+ "number": 29,
+ "objectives": [],
+ "part": 9,
+ "partLabel": "Part IX",
+ "partTitle": "Exam Mastery",
+ "printed": "29",
+ "quiz": [],
+ "quizSections": [
+  {
+   "blocks": [
+    {
+     "ids": [
+      "m1-q01",
+      "m1-q02",
+      "m1-q03",
+      "m1-q04",
+      "m1-q05",
+      "m1-q06",
+      "m1-q07",
+      "m1-q08",
+      "m1-q09",
+      "m1-q10",
+      "m1-q11",
+      "m1-q12",
+      "m1-q13",
+      "m1-q14",
+      "m1-q15",
+      "m1-q16",
+      "m1-q17",
+      "m1-q18",
+      "m1-q19",
+      "m1-q20",
+      "m1-q21",
+      "m1-q22",
+      "m1-q23",
+      "m1-q24",
+      "m1-q25",
+      "m1-q26",
+      "m1-q27",
+      "m1-q28",
+      "m1-q29",
+      "m1-q30",
+      "m1-q31",
+      "m1-q32",
+      "m1-q33",
+      "m1-q34",
+      "m1-q35",
+      "m1-q36",
+      "m1-q37",
+      "m1-q38",
+      "m1-q39",
+      "m1-q40",
+      "m1-q41",
+      "m1-q42",
+      "m1-q43",
+      "m1-q44",
+      "m1-q45",
+      "m1-q46",
+      "m1-q47",
+      "m1-q48",
+      "m1-q49",
+      "m1-q50",
+      "m1-q51",
+      "m1-q52",
+      "m1-q53",
+      "m1-q54",
+      "m1-q55",
+      "m1-q56",
+      "m1-q57",
+      "m1-q58",
+      "m1-q59",
+      "m1-q60",
+      "m1-q61",
+      "m1-q62",
+      "m1-q63",
+      "m1-q64",
+      "m1-q65"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "m1-q01",
+    "m1-q02",
+    "m1-q03",
+    "m1-q04",
+    "m1-q05",
+    "m1-q06",
+    "m1-q07",
+    "m1-q08",
+    "m1-q09",
+    "m1-q10",
+    "m1-q11",
+    "m1-q12",
+    "m1-q13",
+    "m1-q14",
+    "m1-q15",
+    "m1-q16",
+    "m1-q17",
+    "m1-q18",
+    "m1-q19",
+    "m1-q20",
+    "m1-q21",
+    "m1-q22",
+    "m1-q23",
+    "m1-q24",
+    "m1-q25",
+    "m1-q26",
+    "m1-q27",
+    "m1-q28",
+    "m1-q29",
+    "m1-q30",
+    "m1-q31",
+    "m1-q32",
+    "m1-q33",
+    "m1-q34",
+    "m1-q35",
+    "m1-q36",
+    "m1-q37",
+    "m1-q38",
+    "m1-q39",
+    "m1-q40",
+    "m1-q41",
+    "m1-q42",
+    "m1-q43",
+    "m1-q44",
+    "m1-q45",
+    "m1-q46",
+    "m1-q47",
+    "m1-q48",
+    "m1-q49",
+    "m1-q50",
+    "m1-q51",
+    "m1-q52",
+    "m1-q53",
+    "m1-q54",
+    "m1-q55",
+    "m1-q56",
+    "m1-q57",
+    "m1-q58",
+    "m1-q59",
+    "m1-q60",
+    "m1-q61",
+    "m1-q62",
+    "m1-q63",
+    "m1-q64",
+    "m1-q65"
+   ],
+   "kind": "mock-answers",
+   "number": "",
+   "title": [
+    "Answers"
+   ],
+   "titleText": "Answers"
+  }
+ ],
+ "summary": [],
+ "title": "Mock Exam 1: Answers and Explanations"
+}

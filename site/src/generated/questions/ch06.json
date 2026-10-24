@@ -1,0 +1,1774 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "~/.dbt/"
+     },
+     " is the last place in the lookup order (flag, ",
+     {
+      "t": "code",
+      "v": "DBT_PROFILES_DIR"
+     },
+     ", current folder, ",
+     {
+      "t": "code",
+      "v": "~/.dbt"
+     },
+     "). A: ",
+     {
+      "t": "code",
+      "v": "profile:"
+     },
+     " only holds the ",
+     {
+      "c": [
+       "name"
+      ],
+      "t": "i"
+     },
+     " of the profile. C: ",
+     {
+      "t": "code",
+      "v": "target/"
+     },
+     " contains generated files, never the profile. D: ",
+     {
+      "t": "code",
+      "v": "dbt init"
+     },
+     " is only run when you create a project."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch06-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ", under ",
+     {
+      "t": "code",
+      "v": "profile:"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "~/.dbt/profiles.yml"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "target/profiles.yml"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It asks the questions of ",
+     {
+      "t": "code",
+      "v": "dbt init"
+     },
+     " again."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "You run ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " without any flag. ",
+     {
+      "t": "code",
+      "v": "DBT_PROFILES_DIR"
+     },
+     " is not set and there is no ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " in the current folder. Where does dbt Core read the connection settings?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B, D, E, C, A."
+      ],
+      "t": "b"
+     },
+     " Load project and profile, parse into the manifest, render Jinja (compile), wrap in DDL and execute, write the results. ",
+     {
+      "t": "code",
+      "v": "dbt compile"
+     },
+     " would stop after E; ",
+     {
+      "t": "code",
+      "v": "dbt parse"
+     },
+     " after D."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch06-02",
+  "key": [
+   "B",
+   "D",
+   "E",
+   "C",
+   "A"
+  ],
+  "keyRaw": "\\textbf{B, D, E, C, A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Write the results to ",
+     {
+      "t": "code",
+      "v": "run_results.json"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Read ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " and the profile."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Wrap the ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     " in DDL and send it to the warehouse."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Parse all project files into the manifest."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Render the Jinja of the model into SQL."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Put the steps of ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " for one model in the right order."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "profile"
+       },
+       "."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "name"
+     },
+     " is the project name; the two names are often equal but they are different keys."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch06-03",
+  "key": {
+   "accepted": [
+    "profile"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{profile}.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ", the key ",
+     {
+      "t": "blank"
+     },
+     " gives the name of the entry of ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " that dbt must use."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 1."
+      ],
+      "t": "b"
+     },
+     " A hyphen does not match the pattern ",
+     {
+      "t": "code",
+      "v": "^[^\\d\\W]\\w*$"
+     },
+     "; use ",
+     {
+      "t": "code",
+      "v": "jaffle_shop"
+     },
+     ". Line 2 is fine (any project version), line 3 is fine as long as ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " has a ",
+     {
+      "t": "code",
+      "v": "jaffle_shop"
+     },
+     " profile."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch06-c57",
+   "lines": 6,
+   "numbering": "listing"
+  },
+  "id": "q-ch06-04",
+  "key": 1,
+  "keyRaw": "\\textbf{Line 1.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "Which line makes dbt refuse to load this project?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch06-c57",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "name: 'jaffle-shop'\nversion: '2.1.0'\nprofile: 'jaffle_shop'\nmodel-paths: [\"models\"]\nclean-targets:\n  - \"target\""
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-d, 2-a, 3-b, 4-c, 5-e."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "run/"
+     },
+     " = executed statements; ",
+     {
+      "t": "code",
+      "v": "compiled/"
+     },
+     " = rendered ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     " only."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch06-05",
+  "key": {
+   "1": "d",
+   "2": "a",
+   "3": "b",
+   "4": "c",
+   "5": "e"
+  },
+  "keyRaw": "\\textbf{1-d, 2-a, 3-b, 4-c, 5-e.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "target/run/"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "logs/"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt_packages/"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "analyses/"
+      }
+     ],
+     "id": "4"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "target/compiled/"
+      }
+     ],
+     "id": "5"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "The detailed debug log of every command"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "Code of the packages installed by ",
+      {
+       "t": "code",
+       "v": "dbt deps"
+      }
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "SQL compiled with Jinja but never built"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "The statements dbt executed, DDL included"
+     ],
+     "id": "d"
+    },
+    {
+     "c": [
+      "The rendered ",
+      {
+       "t": "code",
+       "v": "select"
+      },
+      " of each node"
+     ],
+     "id": "e"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each folder with its content."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and D."
+      ],
+      "t": "b"
+     },
+     " Both are generated at every command (",
+     {
+      "t": "code",
+      "v": "dbt_packages/"
+     },
+     " also belongs in ",
+     {
+      "t": "code",
+      "v": ".gitignore"
+     },
+     ", but it is not an option). B, C and E are your code: they must be committed."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch06-06",
+  "key": [
+   "A",
+   "D"
+  ],
+  "keyRaw": "\\textbf{A and D.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "macros/"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "logs/"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "models/"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two paths must be in the ",
+     {
+      "t": "code",
+      "v": ".gitignore"
+     },
+     " of a dbt project?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, NO, YES, NO."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "dbt debug"
+     },
+     " checks files and connection and prints the paths it used. It does not parse models (we tested a broken ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     ": ",
+     {
+      "t": "code",
+      "v": "All checks passed!"
+     },
+     ") and it builds nothing."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch06-07",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": false
+  },
+  "keyRaw": "\\textbf{YES, NO, YES, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It tests the connection to the warehouse of the active target."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It reports a ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " to a model that does not exist."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "It shows the path of the ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " file it used."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It creates the development schema and the models."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "dbt debug"
+     },
+     ":"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "--target"
+     },
+     " chooses the output for one command. A: the file only gives the default. C: dbt never edits ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     ". D: ",
+     {
+      "t": "code",
+      "v": "--target"
+     },
+     " is a dbt Core flag."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch06-08",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt builds in ",
+     {
+      "t": "code",
+      "v": "dbt_adnane"
+     },
+     ", because ",
+     {
+      "t": "code",
+      "v": "target: dev"
+     },
+     " in the file always wins."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt builds in ",
+     {
+      "t": "code",
+      "v": "prod"
+     },
+     ", using the settings of the ",
+     {
+      "t": "code",
+      "v": "prod"
+     },
+     " output, for this command only."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt changes ",
+     {
+      "t": "code",
+      "v": "target: dev"
+     },
+     " to ",
+     {
+      "t": "code",
+      "v": "target: prod"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt fails: ",
+     {
+      "t": "code",
+      "v": "--target"
+     },
+     " only works in the dbt platform."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " has ",
+     {
+      "t": "code",
+      "v": "target: dev"
+     },
+     " and two outputs, ",
+     {
+      "t": "code",
+      "v": "dev"
+     },
+     " (schema ",
+     {
+      "t": "code",
+      "v": "dbt_adnane"
+     },
+     ") and ",
+     {
+      "t": "code",
+      "v": "prod"
+     },
+     " (schema ",
+     {
+      "t": "code",
+      "v": "prod"
+     },
+     "). You type ",
+     {
+      "t": "code",
+      "v": "dbt run --target prod"
+     },
+     ". What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The DDL and the ",
+     {
+      "t": "code",
+      "v": "__dbt_tmp"
+     },
+     " suffix are only in ",
+     {
+      "t": "code",
+      "v": "target/run/"
+     },
+     ". A has the bare ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     ". C: the manifest stores the compiled code of nodes but not this executed statement as a file. D: models contain only your ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch06-09",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/compiled/"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/run/"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target/manifest.json"
+     },
+     " only"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "models/"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "A file starts with the statement below. Where did you find it?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch06-c58",
+    "lang": "sql",
+    "t": "code",
+    "text": "create table \"analytics\".\"dbt_lina\".\"orders__dbt_tmp\" as (\n    select ..."
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " DuckDB lets only one process write a file, and a read-only session also blocks a writer. A: threads are inside dbt's own process. B: read-only sessions can only share the file with other readers, and dbt needs to write. D: partial parsing has nothing to do with the lock."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch06-10",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Run ",
+     {
+      "t": "code",
+      "v": "dbt run --threads 1"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Open a second CLI session, also in read-only mode, so that dbt can join the readers."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Quit the CLI session, then run dbt again."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Delete ",
+     {
+      "t": "code",
+      "v": "target/partial_parse.msgpack"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "Your DuckDB CLI is open with ",
+     {
+      "t": "code",
+      "v": "duckdb -readonly practice.duckdb"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " fails with ",
+     {
+      "t": "code",
+      "v": "Could not set lock on file"
+     },
+     ". What is the fix?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " dbt does not track objects of deleted models. A and B: dbt never drops or renames relations of models that are not in the run. D: there is no such error."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch06-11",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt drops it, because the model no longer exists."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt renames it to ",
+     {
+      "t": "code",
+      "v": "old_report__dbt_backup"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Nothing: it stays in the warehouse until someone drops it."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt fails with an error about an orphan relation."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "You delete ",
+     {
+      "t": "code",
+      "v": "models/marts/old_report.sql"
+     },
+     ", which was built as a table yesterday, and run ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     ". What happens to the table ",
+     {
+      "t": "code",
+      "v": "old_report"
+     },
+     " in your schema?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "--skip-profile-setup"
+       }
+      ],
+      "t": "b"
+     },
+     " (short form ",
+     {
+      "t": "code",
+      "v": "-s"
+     },
+     ")."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch06-12",
+  "key": {
+   "accepted": [
+    "--skip-profile-setup"
+   ]
+  },
+  "keyNote": "alternative answers mentioned after the key: '(short form -s)'",
+  "keyRaw": "\\textbf{\\code{-{}-skip-profile-setup}}",
+  "keyStatus": "todo",
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "The ",
+     {
+      "t": "code",
+      "v": "dbt init"
+     },
+     " flag that creates the project files without asking the profile questions is ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "D."
+      ],
+      "t": "b"
+     },
+     " The flag wins over the environment variable, which wins over the current folder, which wins over ",
+     {
+      "t": "code",
+      "v": "~/.dbt"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch06-13",
+  "key": "D",
+  "keyRaw": "\\textbf{D.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "~/.dbt/profiles.yml"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The one in the current folder."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "/ci/profiles/profiles.yml"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "/tmp/test/profiles.yml"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "DBT_PROFILES_DIR"
+     },
+     " points to ",
+     {
+      "t": "code",
+      "v": "/ci/profiles"
+     },
+     ", there is a ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " in the current folder, and you run ",
+     {
+      "t": "code",
+      "v": "dbt build --profiles-dir /tmp/test"
+     },
+     ". Which file does dbt use?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " In the platform, the development schema is part of the personal development credentials. A: the Studio IDE does not read a ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     ". C: ",
+     {
+      "t": "code",
+      "v": "profile:"
+     },
+     " is ignored by the platform and does not hold a schema. D: the branch does not decide the schema."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch06-14",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The ",
+     {
+      "t": "code",
+      "v": "schema:"
+     },
+     " line of ",
+     {
+      "t": "code",
+      "v": "~/.dbt/profiles.yml"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The schema in their development credentials in the dbt platform."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The ",
+     {
+      "t": "code",
+      "v": "profile:"
+     },
+     " line of ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The name of their Git branch."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "A developer works only in the dbt Studio IDE and wants their development models in the schema ",
+     {
+      "t": "code",
+      "v": "dbt_lina_dev"
+     },
+     " instead of ",
+     {
+      "t": "code",
+      "v": "dbt_lina"
+     },
+     ". What should they change?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, YES, YES."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "version"
+     },
+     " is the project's own version; ",
+     {
+      "t": "code",
+      "v": "require-dbt-version"
+     },
+     " is the key that checks dbt's version. The other three are true (the name pattern, the default ",
+     {
+      "t": "code",
+      "v": "model-paths"
+     },
+     ", and ",
+     {
+      "t": "code",
+      "v": "config()"
+     },
+     " being more specific than the project file)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch06-15",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": true,
+   "D": true
+  },
+  "keyRaw": "\\textbf{NO, YES, YES, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "version: '1.0.0'"
+     },
+     " makes dbt refuse to run with dbt 1.11."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "name"
+     },
+     " may contain only letters, digits and underscores, and must not start with a digit."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Deleting ",
+     {
+      "t": "code",
+      "v": "model-paths: [\"models\"]"
+     },
+     " changes nothing, because ",
+     {
+      "t": "code",
+      "v": "models"
+     },
+     " is the default."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A config written in a model's ",
+     {
+      "t": "code",
+      "v": "config()"
+     },
+     " block wins over the same config in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ":"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 2."
+      ],
+      "t": "b"
+     },
+     " The default target must be the name of an output; ",
+     {
+      "t": "code",
+      "v": "develop"
+     },
+     " does not exist (the output is ",
+     {
+      "t": "code",
+      "v": "dev"
+     },
+     "). dbt says ",
+     {
+      "t": "code",
+      "v": "does not have a target named 'develop'"
+     },
+     " and lists the valid names."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch06-c59",
+   "lines": 8,
+   "numbering": "listing"
+  },
+  "id": "q-ch06-16",
+  "key": 2,
+  "keyRaw": "\\textbf{Line 2.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt debug"
+     },
+     " fails with ",
+     {
+      "t": "code",
+      "v": "Profile loading failed"
+     },
+     ". Which line of this ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " is the cause?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch06-c59",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "jaffle_dbt:\n  target: develop\n  outputs:\n    dev:\n      type: duckdb\n      path: ../practice/practice.duckdb\n      schema: dbt_adnane\n      threads: 4"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The path ",
+     {
+      "t": "code",
+      "v": "models.jaffle_dbt.example"
+     },
+     " matches no resource, so its configs apply to nothing. A: deleted files are not parsed. C: invalid YAML gives a syntax error with a line number. D: outputs are in ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " and unrelated to folders."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch06-17",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The example models are still in the manifest and will be built."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A block of ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " configures a folder that contains no model any more."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " is invalid YAML."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The profile has no output called ",
+     {
+      "t": "code",
+      "v": "example"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "After you deleted ",
+     {
+      "t": "code",
+      "v": "models/example/"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     " prints ",
+     {
+      "t": "code",
+      "v": "Configuration paths exist in your dbt_project.yml file which do not apply to any resources. - models.jaffle_dbt.example"
+     },
+     ". What does it mean?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " B: there is no ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " in the platform. D: the main branch is protected; Studio asks you to commit on a new branch. E: GitHub, GitLab, Azure DevOps and other Git URLs are supported; the managed repository is only one option."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch06-18",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The ",
+     {
+      "c": [
+       "Initialize dbt project"
+      ],
+      "t": "b"
+     },
+     " button creates ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ", the folders and example models in an empty repository."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "You must upload your ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " before the Studio IDE can connect."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Each developer stores personal development credentials (including a development schema) in the platform."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The Studio IDE lets you commit directly on the protected main branch."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "The platform only works with a managed repository."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 6,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two statements about starting a project in the dbt platform are true?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

@@ -1,0 +1,5032 @@
+{
+ "id": "ch09",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "Modularity and DRY: splitting logic into reusable models, keeping each rule in one place, and refactoring legacy SQL into modular dbt models."
+     ],
+     "id": "1.3"
+    },
+    {
+     "c": [
+      "A logical flow of models and a clean DAG: the staging, intermediate and marts layers, naming conventions, folder structure, the DAG rules, and reading the lineage to find problems."
+     ],
+     "id": "1.5"
+    },
+    {
+     "c": [
+      "Replacing hard-coded table names by ",
+      {
+       "t": "code",
+       "v": "source()"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      ", so that dbt knows every dependency."
+     ],
+     "id": "1.1"
+    },
+    {
+     "c": [
+      "Proving that a refactoring changed nothing, with row counts and ",
+      {
+       "t": "code",
+       "v": "EXCEPT"
+      },
+      " in both directions."
+     ],
+     "id": "CP0-SQL"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "Monday morning, the monthly business review. Finance shows revenue of 4 496.90 dollars for 2025. Marketing shows 4 717.10. The CEO asks: \"which one is right?\" Nobody knows. Each team has its own query, written two years ago, copied and changed many times. One team excludes returned orders, the other forgets the ",
+      {
+       "t": "code",
+       "v": "return_pending"
+      },
+      " ones. Each query is 200 lines of nested subqueries that nobody dares to touch."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "This is the problem that modular, DRY code solves: ",
+      {
+       "c": [
+        "one"
+       ],
+       "t": "i"
+      },
+      " definition of \"a paid, non-returned order\", written once, tested once, and reused by every report. Getting there from messy legacy SQL is called refactoring, and dbt Labs has a whole course on it. On the exam, objectives 1.3 and 1.5 come as scenarios: \"where should this logic live?\", \"what is wrong with this DAG?\", \"which step comes next in this refactoring?\". In this chapter you will refactor a real legacy query of your project, step by step, and prove with SQL that the numbers did not change."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "A modular project is built from small models that each do one job and pass their result to the next one, from sources to staging, intermediate and mart models. DRY (Don't Repeat Yourself) means that each piece of logic lives in exactly one place and every model that needs it uses ",
+      {
+       "t": "code",
+       "v": "ref()"
+      },
+      " (or a macro), so a change is made once. To refactor legacy SQL, you migrate it as it is, replace hard-coded tables by ",
+      {
+       "t": "code",
+       "v": "source()"
+      },
+      ", reorganise it into CTEs, move the logic into staging, intermediate and mart models, and audit the result in both directions before deleting the old model."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:modularity-refactoring",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-mod-dry"
+   ],
+   "checkpoints": [],
+   "id": "ch09-s1",
+   "label": "sec:mod-dry",
+   "labs": [],
+   "minutes": 5,
+   "number": "9.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A model is ",
+        {
+         "c": [
+          "modular"
+         ],
+         "t": "i"
+        },
+        " when it does ",
+        {
+         "c": [
+          "one clear job"
+         ],
+         "t": "b"
+        },
+        " and other models can build on it. Think of a restaurant kitchen. Before service, the cooks prepare the ",
+        {
+         "c": [
+          "mise en place"
+         ],
+         "t": "i"
+        },
+        ": onions cut, sauces ready, vegetables washed. Each dish is then assembled from these prepared pieces. Nobody cuts onions again for every plate, and if the tomato sauce is too salty, you fix one pot, not fifty plates."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "In dbt the prepared pieces are models, and ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " is the way a model takes a piece prepared by another one. You already did this: ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        " does not recompute orders, it ",
+        {
+         "t": "code",
+         "v": "ref"
+        },
+        "s ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        ". Modularity gives you:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Reuse"
+             ],
+             "t": "b"
+            },
+            ": a model built once serves many children."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Readability"
+             ],
+             "t": "b"
+            },
+            ": a model of 40 lines with a clear name is easier to understand than one query of 400 lines."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Testing"
+             ],
+             "t": "b"
+            },
+            ": each step can have its own tests, so an error is found where it is born (Chapter 18)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Lineage"
+             ],
+             "t": "b"
+            },
+            ": the DAG shows where every number comes from."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Speed"
+             ],
+             "t": "b"
+            },
+            ": dbt runs independent models in parallel (threads), and a failure stops only the models below it."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch09-s1-1",
+     "number": "9.1.1",
+     "title": [
+      "Modularity"
+     ],
+     "titleText": "Modularity"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "DRY means: ",
+        {
+         "c": [
+          "every piece of logic has one home"
+         ],
+         "t": "b"
+        },
+        ". When the definition of \"a successful payment\" lives in one model, it is the ",
+        {
+         "en": [
+          "single source of truth"
+         ],
+         "fr": "source unique de vérité",
+         "id": "term-single-source-of-truth",
+         "t": "term"
+        },
+        " for that rule. Every report that needs it ",
+        {
+         "t": "code",
+         "v": "ref"
+        },
+        "s that model, so the definition cannot drift, and a change is made once."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "dbt gives you several tools for DRY code. You will use all of them in this book:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "What is repeated"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "DRY tool"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "A transformation step (a filter, a join, a sum per order)"
+          ]
+         },
+         {
+          "c": [
+           "A model that others ",
+           {
+            "t": "code",
+            "v": "ref"
+           },
+           " (staging or intermediate)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "A piece of SQL syntax (cents to dollars, a ",
+           {
+            "t": "code",
+            "v": "case when"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "A macro (Chapter 11)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Common utilities written by others"
+          ]
+         },
+         {
+          "c": [
+           "A package such as ",
+           {
+            "t": "code",
+            "v": "dbt_utils"
+           },
+           " (Chapter 11)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "The same config on many models"
+          ]
+         },
+         {
+          "c": [
+           "A folder config in ",
+           {
+            "t": "code",
+            "v": "dbt_project.yml"
+           },
+           " (Chapter 8)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "The same value in many models (a start date, a rate)"
+          ]
+         },
+         {
+          "c": [
+           "A project variable, read with ",
+           {
+            "t": "code",
+            "v": "var()"
+           },
+           " (Chapter 10)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "The same column description in many YAML files"
+          ]
+         },
+         {
+          "c": [
+           "A doc block (Chapter 20)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"DRY means putting all the logic in one big model\""
+           ],
+           "t": "b"
+          },
+          " is false (trap T56 in Chapter 27). One big model is the opposite of modular: nothing can be reused or tested alone. DRY means ",
+          {
+           "c": [
+            "one place per rule"
+           ],
+           "t": "i"
+          },
+          ", not ",
+          {
+           "c": [
+            "one place for everything"
+           ],
+           "t": "i"
+          },
+          ". The other extreme is also a trap: a project with hundreds of tiny models of three lines each is hard to read. Split when a step is reused, complex, or worth testing on its own."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "c": [
+        "You already applied DRY in ",
+        {
+         "href": "/learn/ch08/",
+         "label": "ch:materializations",
+         "t": "ref",
+         "text": "Chapter 8"
+        },
+        ": the filter ",
+        {
+         "t": "code",
+         "v": "where status = 'success'"
+        },
+        " moved from ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " into the ephemeral model ",
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        ". In this chapter you will do the same with \"the paid amount of each order\", which a new revenue report also needs."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch09-s1-2",
+     "number": "9.1.2",
+     "title": [
+      "DRY: Don't Repeat Yourself"
+     ],
+     "titleText": "DRY: Don't Repeat Yourself"
+    }
+   ],
+   "title": [
+    "Modularity and DRY, in plain words"
+   ],
+   "titleText": "Modularity and DRY, in plain words"
+  },
+  {
+   "anchors": [
+    "sec-mod-layers"
+   ],
+   "checkpoints": [],
+   "id": "ch09-s2",
+   "label": "sec:mod-layers",
+   "labs": [],
+   "minutes": 5,
+   "number": "9.2",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt Labs recommends a structure in three layers, and most projects (and the exam) follow it. Data flows from left to right:"
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "The layers of the practice project, from left to right: sources, staging (views), intermediate and marts (tables).",
+       "description": "Each source feeds one staging model: jaffle_shop.customers → stg_jaffle_shop__customers, jaffle_shop.orders → stg_jaffle_shop__orders, jaffle_shop.order_items → stg_jaffle_shop__order_items, jaffle_shop.products → stg_jaffle_shop__products, stripe.payments → stg_stripe__payments. stg_stripe__payments feeds int_payments__successful (ephemeral). int_payments__successful, stg_jaffle_shop__orders and stg_jaffle_shop__customers feed int_orders__enriched (a view). int_orders__enriched feeds fct_orders and fct_monthly_revenue. fct_orders and stg_jaffle_shop__customers feed dim_customers.",
+       "id": "ch09-fig1",
+       "src": "figures/ch09-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "This is your project at the end of this chapter. ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__order_items"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__products"
+        },
+        " have no children yet; Chapter 11 uses them. To the right of the marts come the consumers (dashboards, notebooks). In Chapter 21 you will declare them as ",
+        {
+         "c": [
+          "exposures"
+         ],
+         "t": "i"
+        },
+        ": an exposure depends on marts, and nothing can depend on an exposure, so it is always the last node of the DAG."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Staging"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Intermediate"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Marts"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Job"
+          ]
+         },
+         {
+          "c": [
+           "Clean ",
+           {
+            "c": [
+             "one"
+            ],
+            "t": "i"
+           },
+           " source table: the entry point of raw data."
+          ]
+         },
+         {
+          "c": [
+           "Purpose-built steps between staging and marts."
+          ]
+         },
+         {
+          "c": [
+           "Business entities for people and tools."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Allowed"
+          ]
+         },
+         {
+          "c": [
+           "Rename, cast types, simple calculations (cents to dollars), categorize with ",
+           {
+            "t": "code",
+            "v": "case when"
+           },
+           "."
+          ]
+         },
+         {
+          "c": [
+           "Joins, aggregations to a new grain, pivots, complex logic isolated."
+          ]
+         },
+         {
+          "c": [
+           "Joins of staging/intermediate models, wide tables, business metrics."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Avoid"
+          ]
+         },
+         {
+          "c": [
+           "Joins, aggregations (they change the grain and lose detail)."
+          ]
+         },
+         {
+          "c": [
+           "Exposing them to end users."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "source()"
+           },
+           "; one version of the same entity per team."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Reads"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "source()"
+           },
+           " only (one model per source table)."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ref()"
+           },
+           " to staging or other intermediate models."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ref()"
+           },
+           " to staging, intermediate, sometimes other marts."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Usual materialization"
+          ]
+         },
+         {
+          "c": [
+           "view"
+          ]
+         },
+         {
+          "c": [
+           "ephemeral or view"
+          ]
+         },
+         {
+          "c": [
+           "table, then incremental"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Naming (our project)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "stg_<source>__"
+           },
+           {
+            "t": "code",
+            "v": "<entity>s"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "int_<entity>s__"
+           },
+           {
+            "t": "code",
+            "v": "<verb>s"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "fct_<event>s"
+           },
+           ",",
+           {
+            "t": "br"
+           },
+           {
+            "t": "code",
+            "v": "dim_<entity>s"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Folders"
+          ]
+         },
+         {
+          "c": [
+           "by source system"
+          ]
+         },
+         {
+          "c": [
+           "by business area"
+          ]
+         },
+         {
+          "c": [
+           "by business area"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch09-s2-0",
+     "title": [
+      "The three layers"
+     ],
+     "titleText": "The three layers"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "t": "code",
+         "v": "staging"
+        },
+        " model is the ",
+        {
+         "c": [
+          "only"
+         ],
+         "t": "i"
+        },
+        " door through which raw data enters the project. It has a 1-to-1 relationship with a source table: ",
+        {
+         "t": "code",
+         "v": "source('stripe', 'payments')"
+        },
+        " is read by ",
+        {
+         "t": "code",
+         "v": "stg_stripe__payments"
+        },
+        " and by no other model. Look at what ours does: it renames ",
+        {
+         "t": "code",
+         "v": "orderid"
+        },
+        " to ",
+        {
+         "t": "code",
+         "v": "order_id"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "paymentmethod"
+        },
+        " to ",
+        {
+         "t": "code",
+         "v": "payment_method"
+        },
+        ", converts cents to dollars, and renames ",
+        {
+         "t": "code",
+         "v": "created"
+        },
+        " to ",
+        {
+         "t": "code",
+         "v": "created_at"
+        },
+        ". Nothing else. Every later model gets clean names and dollars, without repeating the conversion (DRY again)."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Joins and aggregations do not belong here: a join can multiply or lose rows, and an aggregation removes the detail that a later model may need. When a source is so messy that it needs a join before it is usable (for example a table of deleted IDs), dbt Labs suggests ",
+        {
+         "t": "code",
+         "v": "base_"
+        },
+        " models inside the staging folder: each base model cleans one table, and the staging model joins them."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch09-s2-1",
+     "number": "9.2.1",
+     "title": [
+      "Staging: one model per source table"
+     ],
+     "titleText": "Staging: one model per source table"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "An ",
+        {
+         "t": "code",
+         "v": "intermediate"
+        },
+        " model prepares staging models for the marts: it joins them, changes the grain (one row per order instead of one row per payment), pivots, or isolates a hard piece of logic so it can be tested alone. Its name says what it does, with a ",
+        {
+         "c": [
+          "verb"
+         ],
+         "t": "i"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        " (filtered), ",
+        {
+         "t": "code",
+         "v": "int_orders__enriched"
+        },
+        " (enriched with the paid amount and the country)."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Intermediate models are ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " for end users. Keep them ephemeral, or build them as views in a separate schema with limited access. A model with many inputs is normal here. A model with many ",
+        {
+         "c": [
+          "outputs"
+         ],
+         "t": "i"
+        },
+        " deserves a second look: the dbt guide calls it a warning sign, because a shared intermediate model can become a hidden dependency for half of the project. Our ",
+        {
+         "t": "code",
+         "v": "int_orders__enriched"
+        },
+        " feeds two marts on purpose: both need exactly the same \"one row per order with its paid amount\", and DRY wins here. It is a judgement call, not a rule."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch09-s2-2",
+     "number": "9.2.2",
+     "title": [
+      "Intermediate: steps with a purpose"
+     ],
+     "titleText": "Intermediate: steps with a purpose"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "t": "code",
+         "v": "mart"
+        },
+        " model describes one business entity or event at a clear grain: one row per order, per customer, per month and country. Marts are wide (many columns, already joined), materialized as tables, and read by BI tools."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Two naming styles exist. Our project uses the prefixes of dimensional modeling (",
+        {
+         "href": "/learn/ch01/",
+         "label": "ch:data-world",
+         "t": "ref",
+         "text": "Chapter 1"
+        },
+        "): ",
+        {
+         "t": "code",
+         "v": "fct_"
+        },
+        " for facts (events or transactions, usually many rows: ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        ") and ",
+        {
+         "t": "code",
+         "v": "dim_"
+        },
+        " for dimensions (the people, places and things that describe facts: ",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        "). The current dbt Labs guide simply uses plain names (",
+        {
+         "t": "code",
+         "v": "orders"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "customers"
+        },
+        "). Both are fine; be consistent inside one project. One thing to avoid: ",
+        {
+         "t": "code",
+         "v": "finance_orders"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "marketing_orders"
+        },
+        ", two versions of the same entity, which is exactly how two teams end up with two revenue numbers."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch09-s2-3",
+     "number": "9.2.3",
+     "title": [
+      "Marts: business entities"
+     ],
+     "titleText": "Marts: business entities"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "naming convention"
+         ],
+         "fr": "convention de nommage",
+         "id": "term-naming-convention",
+         "t": "term"
+        },
+        " lets anyone guess what a model does and where it lives from its name only."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Pattern"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Meaning and example"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "stg_<source>__<entity>s"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Staging. The ",
+           {
+            "c": [
+             "double underscore"
+            ],
+            "t": "b"
+           },
+           " separates the source system from the entity, because both can contain single underscores: ",
+           {
+            "t": "code",
+            "v": "stg_jaffle_shop__order_items"
+           },
+           " = source ",
+           {
+            "t": "code",
+            "v": "jaffle_shop"
+           },
+           ", entity ",
+           {
+            "t": "code",
+            "v": "order_items"
+           },
+           ". Entities are plural."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "base_<source>__<entity>s"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Optional cleaning step before a staging model that needs a join."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "int_<entity>s__<verb>s"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Intermediate in ",
+           {
+            "c": [
+             "our project"
+            ],
+            "t": "b"
+           },
+           ", named with a verb: ",
+           {
+            "t": "code",
+            "v": "int_orders__enriched"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "int_payments__successful"
+           },
+           ". The dbt Labs guide writes a ",
+           {
+            "c": [
+             "single"
+            ],
+            "t": "b"
+           },
+           " underscore here (see the trap below)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "fct_<...>"
+           },
+           {
+            "t": "br"
+           },
+           {
+            "t": "code",
+            "v": "dim_<...>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Marts in the dimensional style (or plain entity names)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "_<source>__sources.yml"
+           },
+           {
+            "t": "br"
+           },
+           {
+            "t": "code",
+            "v": "_<source>__models.yml"
+           }
+          ]
+         },
+         {
+          "c": [
+           "YAML files of a folder. The leading underscore keeps them at the top of the folder listing."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Intermediate names: the guide and our project differ, on purpose."
+           ],
+           "t": "b"
+          },
+          " In staging, the double underscore is the rule everywhere: ",
+          {
+           "t": "code",
+           "v": "stg_<source>__<entity>s"
+          },
+          ". In the intermediate layer, the dbt Labs guide ",
+          {
+           "c": [
+            "drops"
+           ],
+           "t": "i"
+          },
+          " it and writes ",
+          {
+           "t": "code",
+           "v": "int_<entity>s_<verb>s"
+          },
+          ", with a single underscore: ",
+          {
+           "t": "code",
+           "v": "int_order_items_summed_to_orders"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "int_orders_summed_to_customer"
+          },
+          ". The reason: intermediate models are organised by business area, not by source system. The guide keeps a double underscore only for an intermediate model that still works at the level of one source system (",
+          {
+           "t": "code",
+           "v": "int_shopify__orders_summed"
+          },
+          "), and says that using it between entity and verb is a matter of team preference. This book's project uses the double underscore (",
+          {
+           "t": "code",
+           "v": "int_orders__enriched"
+          },
+          ") to look like the staging names. Both are valid dbt: ",
+          {
+           "c": [
+            "dbt itself never checks names"
+           ],
+           "t": "i"
+          },
+          ". On the exam, if a question asks for the convention of the dbt Labs guide, answer with the single underscore in the intermediate layer, and the double underscore in staging."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch09-s2-4",
+     "number": "9.2.4",
+     "title": [
+      "Naming conventions"
+     ],
+     "titleText": "Naming conventions"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Here is the ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        " folder at the end of this chapter (the reference tag ",
+        {
+         "t": "code",
+         "v": "ch09"
+        },
+        "):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c1",
+       "lang": "plain",
+       "t": "code",
+       "text": "models/\n|-- intermediate/\n|   |-- int_orders__enriched.sql\n|   `-- int_payments__successful.sql\n|-- marts/\n|   |-- dim_customers.sql\n|   |-- fct_monthly_revenue.sql\n|   `-- fct_orders.sql\n`-- staging/\n    |-- jaffle_shop/\n    |   |-- _jaffle_shop__models.yml\n    |   |-- _jaffle_shop__sources.yml\n    |   |-- stg_jaffle_shop__customers.sql\n    |   |-- stg_jaffle_shop__order_items.sql\n    |   |-- stg_jaffle_shop__orders.sql\n    |   `-- stg_jaffle_shop__products.sql\n    `-- stripe/\n        |-- _stripe__models.yml\n        |-- _stripe__sources.yml\n        `-- stg_stripe__payments.sql",
+       "title": "models/ at the end of Chapter 9"
+      },
+      {
+       "c": [
+        "Why folders matter in dbt, beyond tidiness:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Configs by folder"
+             ],
+             "t": "b"
+            },
+            " (",
+            {
+             "href": "/learn/ch08/",
+             "label": "ch:materializations",
+             "t": "ref",
+             "text": "Chapter 8"
+            },
+            "): one line in ",
+            {
+             "t": "code",
+             "v": "dbt_project.yml"
+            },
+            " makes all staging models views."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Selection by folder"
+             ],
+             "t": "b"
+            },
+            " (Chapter 16): ",
+            {
+             "t": "code",
+             "v": "dbt build --select staging.stripe"
+            },
+            " or ",
+            {
+             "t": "code",
+             "v": "path:models/marts"
+            },
+            " builds one area."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Staging by source system"
+             ],
+             "t": "b"
+            },
+            ": everything that touches Stripe is in one place; when Stripe changes a column, you know where to look."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Intermediate and marts by business area"
+             ],
+             "t": "b"
+            },
+            " (",
+            {
+             "t": "code",
+             "v": "finance/"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "marketing/"
+            },
+            ") once you have many models. With fewer than about ten marts, like us, subfolders are not needed yet."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "Folder names do not change model names: a model's name is its file name, and it must be unique in the whole project (Chapter 22 shows the error when two files have the same name in different folders)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch09-s2-5",
+     "number": "9.2.5",
+     "title": [
+      "Folder structure, and why"
+     ],
+     "titleText": "Folder structure, and why"
+    }
+   ],
+   "title": [
+    "The three layers"
+   ],
+   "titleText": "The three layers"
+  },
+  {
+   "anchors": [
+    "sec-mod-dag-rules"
+   ],
+   "checkpoints": [],
+   "id": "ch09-s3",
+   "label": "sec:mod-dag-rules",
+   "labs": [],
+   "minutes": 5,
+   "number": "9.3",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt only enforces one rule: no cycles. Everything else is good practice, and the exam tests it with diagrams and scenarios. Here are the rules, with the reason behind each one. The names in ",
+        {
+         "c": [
+          "italics"
+         ],
+         "t": "i"
+        },
+        " are the names used by ",
+        {
+         "t": "code",
+         "v": "dbt_project_evaluator"
+        },
+        ", a package from dbt Labs that checks a project against these rules automatically."
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Only staging models call ",
+              {
+               "t": "code",
+               "v": "source()"
+              }
+             ],
+             "t": "b"
+            },
+            ", one staging model per source table. ",
+            {
+             "c": [
+              "Why:"
+             ],
+             "t": "i"
+            },
+            " raw data has one entry point, cleaned once. ",
+            {
+             "c": [
+              "Smells:"
+             ],
+             "t": "i"
+            },
+            " a mart that selects from a source (",
+            {
+             "c": [
+              "downstream models dependent on source"
+             ],
+             "t": "i"
+            },
+            "), a model that joins a source with a model (",
+            {
+             "c": [
+              "direct join to source"
+             ],
+             "t": "i"
+            },
+            "), one source table read by several models (",
+            {
+             "c": [
+              "source fanout"
+             ],
+             "t": "i"
+            },
+            "), one model that joins several sources (",
+            {
+             "c": [
+              "multiple sources joined"
+             ],
+             "t": "i"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Arrows go one way: sources → staging → intermediate → marts."
+             ],
+             "t": "b"
+            },
+            " A staging model never ",
+            {
+             "t": "code",
+             "v": "ref"
+            },
+            "s an intermediate or mart model (",
+            {
+             "c": [
+              "staging models dependent on downstream models"
+             ],
+             "t": "i"
+            },
+            "), and normally not another staging model either. ",
+            {
+             "c": [
+              "Why:"
+             ],
+             "t": "i"
+            },
+            " upstream layers must not depend on business logic that is built later."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "No cycles."
+             ],
+             "t": "b"
+            },
+            " If A needs B and B needs A, there is no order to build them. This is the only rule dbt enforces: it refuses to run."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "No duplicated logic."
+             ],
+             "t": "b"
+            },
+            " If two models compute the same thing (the paid amount per order), move it upstream into one model that both ",
+            {
+             "t": "code",
+             "v": "ref"
+            },
+            ". ",
+            {
+             "c": [
+              "Why:"
+             ],
+             "t": "i"
+            },
+            " two copies will drift apart."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "No rejoining of upstream concepts."
+             ],
+             "t": "b"
+            },
+            " If A feeds B, B feeds only C, and C also reads A directly, then B is an unnecessary detour: merge B into C, or let C get A's columns through B (",
+            {
+             "c": [
+              "rejoining of upstream concepts"
+             ],
+             "t": "i"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "No long chains of views."
+             ],
+             "t": "b"
+            },
+            " Views and ephemeral models stacked more than five deep make every read slow (",
+            {
+             "c": [
+              "chained view dependencies"
+             ],
+             "t": "i"
+            },
+            ", default threshold 5). Materialize one model in the middle as a table."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "No hard-coded table names."
+             ],
+             "t": "b"
+            },
+            " ",
+            {
+             "t": "code",
+             "v": "from practice.jaffle_shop.orders"
+            },
+            " is invisible to dbt: no edge in the DAG, no build order, no environment switch, no ",
+            {
+             "t": "code",
+             "v": "--empty"
+            },
+            " (",
+            {
+             "c": [
+              "hard coded references"
+             ],
+             "t": "i"
+            },
+            "). Such a model often appears as a ",
+            {
+             "c": [
+              "root model"
+             ],
+             "t": "i"
+            },
+            ": a model with no parents at all."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Not too many joins in one model."
+             ],
+             "t": "b"
+            },
+            " When a mart joins more than four or five concepts, add intermediate models (",
+            {
+             "c": [
+              "models with too many joins"
+             ],
+             "t": "i"
+            },
+            ", default threshold 7 direct parents)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "alt": "Five common DAG problems; the red arrows are the problems. 1. source() in a mart: fct_orders reads raw.payments directly. 2. Staging reads a mart: stg_orders depends on dim_customers. 3. The same logic twice: fct_orders and fct_revenue each sum payments per order from stg_payments. 4. Rejoining upstream concepts: A feeds B (whose only child is C), and A also feeds C directly. 5. Hard-coded names make a root model: legacy_report reads raw tables invisibly, so it has no parents in the DAG and dbt cannot order it.",
+       "id": "ch09-fig2",
+       "src": "figures/ch09-fig2.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "Red arrows are the problems. The fixes: (1) read ",
+        {
+         "t": "code",
+         "v": "stg_payments"
+        },
+        " instead of the source; (2) never let staging depend on a mart; (3) compute the sum once in an intermediate model and ",
+        {
+         "t": "code",
+         "v": "ref"
+        },
+        " it twice; (4) fold B into C, or take A's columns through B; (5) replace the names by ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch09-s3-0",
+     "title": [
+      "The rules of a clean DAG"
+     ],
+     "titleText": "The rules of a clean DAG"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Only the cycle stops dbt. We added this line to ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__customers"
+        },
+        " for a test (a ",
+        {
+         "t": "code",
+         "v": "ref"
+        },
+        " counts even inside a SQL comment, because Jinja runs before SQL):"
+       ],
+       "t": "p"
+      },
+      {
+       "expected": "ch09-c3",
+       "id": "ch09-c2",
+       "lang": "dbt",
+       "t": "code",
+       "text": "-- BAD: a staging model that reads a mart\n-- depends_on: {{ ref('dim_customers') }}"
+      },
+      {
+       "id": "ch09-c3",
+       "lang": "output",
+       "t": "code",
+       "text": "22:14:26  Running with dbt=1.11.16\n22:14:26  Registered adapter: duckdb=1.11.0\n22:14:27  Encountered an error:\nFound a cycle: model.jaffle_dbt.stg_jaffle_shop__customers --> model.jaffle_dbt.dim_customers"
+      },
+      {
+       "c": [
+        "Nothing ran. (A long Python traceback follows the message; Chapter 22 shows how to read it.) We removed the line."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The other rules are ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " checked by dbt. In the refactoring below you will build a mart that reads three sources directly (step 2) and a model with hard-coded names (step 1): both run with ",
+        {
+         "t": "code",
+         "v": "OK"
+        },
+        ". The DAG is your responsibility."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "\"Selecting from a source in a mart is a dbt error\""
+           ],
+           "t": "b"
+          },
+          " is false (trap T40): dbt runs it. It is a structure problem, not an error. Likewise ",
+          {
+           "c": [
+            "\"two models that reference each other run twice\""
+           ],
+           "t": "b"
+          },
+          " is false (trap T41): a cycle is the one thing dbt refuses, with \"Found a cycle\" and the names of the nodes. And remember trap T37: ",
+          {
+           "t": "code",
+           "v": "source()"
+          },
+          " points to raw tables declared in YAML, ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          " to models, seeds and snapshots; both create edges, a hard-coded name creates none."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch09-s3-1",
+     "number": "9.3.1",
+     "title": [
+      "What dbt does when you break the rules"
+     ],
+     "titleText": "What dbt does when you break the rules"
+    }
+   ],
+   "title": [
+    "The rules of a clean DAG"
+   ],
+   "titleText": "The rules of a clean DAG"
+  },
+  {
+   "anchors": [
+    "sec-mod-lineage"
+   ],
+   "checkpoints": [],
+   "id": "ch09-s4",
+   "label": "sec:mod-lineage",
+   "labs": [],
+   "minutes": 5,
+   "number": "9.4",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The ",
+        {
+         "c": [
+          "lineage"
+         ],
+         "t": "b"
+        },
+        " of a model (",
+        {
+         "href": "/learn/ch07/",
+         "label": "ch:models-sources-dag",
+         "t": "ref",
+         "text": "Chapter 7"
+        },
+        ") is the chain of nodes it comes from and the nodes that use it. You can read it in several places:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "dbt ls"
+              },
+              " with graph operators"
+             ],
+             "t": "b"
+            },
+            " (Chapter 16): ",
+            {
+             "t": "code",
+             "v": "+model"
+            },
+            " lists the ancestors, ",
+            {
+             "t": "code",
+             "v": "model+"
+            },
+            " the descendants."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "The documentation site"
+             ],
+             "t": "b"
+            },
+            " (",
+            {
+             "t": "code",
+             "v": "dbt docs generate"
+            },
+            " then ",
+            {
+             "t": "code",
+             "v": "dbt docs serve"
+            },
+            ", Chapter 20): the lineage graph of the whole project."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Studio IDE"
+             ],
+             "t": "b"
+            },
+            ": the ",
+            {
+             "c": [
+              "Lineage"
+             ],
+             "t": "i"
+            },
+            " tab under the editor shows the open model with two levels up and down (",
+            {
+             "t": "code",
+             "v": "2+model+2"
+            },
+            "); you can type ",
+            {
+             "t": "code",
+             "v": "+model+"
+            },
+            " to see everything, and double-click a node to open its file."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Catalog"
+             ],
+             "t": "b"
+            },
+            ": the project-wide lineage, with lenses (for example the materialization of each node)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "What to look for when you read a lineage graph:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "You see…"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "It may mean…"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "A model with no parents"
+          ]
+         },
+         {
+          "c": [
+           "Hard-coded table names (or a model that only selects constants)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "An arrow from a source to a mart or intermediate model"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "source()"
+           },
+           " outside staging."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "An arrow from a mart back to a staging model"
+          ]
+         },
+         {
+          "c": [
+           "A backward dependency (and maybe a future cycle)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Two branches with the same kind of logic"
+          ]
+         },
+         {
+          "c": [
+           "Duplicated logic: move it upstream."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "A model with seven or more parents"
+          ]
+         },
+         {
+          "c": [
+           "Too many joins: add intermediate models."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "A long line of views"
+          ]
+         },
+         {
+          "c": [
+           "Slow reads: materialize one of them."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Here is the first red flag of this chapter. The legacy model you will add in the next section reads three raw tables, but dbt sees no parent and no child:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c4",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt ls --select +legacy_monthly_revenue+"
+      },
+      {
+       "id": "ch09-c5",
+       "lang": "output",
+       "t": "code",
+       "text": "20:42:07  Found 9 models, 10 data tests, 5 sources, 500 macros\njaffle_dbt.legacy.legacy_monthly_revenue"
+      },
+      {
+       "c": [
+        "And here is the lineage of the refactored mart at the end of the chapter: every ancestor is visible, up to the three source tables."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c6",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt ls --select +fct_monthly_revenue --resource-type model --resource-type source"
+      },
+      {
+       "id": "ch09-c7",
+       "lang": "output",
+       "t": "code",
+       "text": "jaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments\nsource:jaffle_dbt.jaffle_shop.customers\nsource:jaffle_dbt.jaffle_shop.orders\nsource:jaffle_dbt.stripe.payments"
+      },
+      {
+       "c": [
+        "(Without the two ",
+        {
+         "t": "code",
+         "v": "--resource-type"
+        },
+        " options, the list also contains the six data tests of these staging models: dbt selects the tests of the selected models too.)"
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch09-s4-0",
+     "title": [
+      "Reading the lineage to spot problems"
+     ],
+     "titleText": "Reading the lineage to spot problems"
+    }
+   ],
+   "title": [
+    "Reading the lineage to spot problems"
+   ],
+   "titleText": "Reading the lineage to spot problems"
+  },
+  {
+   "anchors": [
+    "sec-mod-method"
+   ],
+   "checkpoints": [],
+   "id": "ch09-s5",
+   "label": "sec:mod-method",
+   "labs": [],
+   "minutes": 5,
+   "number": "9.5",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "You practised refactoring in plain SQL in ",
+        {
+         "href": "/learn/ch04/",
+         "label": "ch:sql",
+         "t": "ref",
+         "text": "Chapter 4"
+        },
+        " (",
+        {
+         "href": "/learn/ch04/ch04-s17/",
+         "label": "sec:sql-refactoring",
+         "t": "ref",
+         "text": "Section 4.17"
+        },
+        "). Inside dbt, the method has six steps. dbt Labs teaches them in its free course ",
+        {
+         "c": [
+          "Refactoring SQL for Modularity"
+         ],
+         "t": "i"
+        },
+        " and in the guide \"Refactoring legacy SQL to dbt\". The table maps each step to what you will do on your project."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Course step"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it means"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "In this chapter"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "1. Migrate the legacy code"
+          ]
+         },
+         {
+          "c": [
+           "Copy the query into a model ",
+           {
+            "c": [
+             "as it is"
+            ],
+            "t": "i"
+           },
+           ", and make it run."
+          ]
+         },
+         {
+          "c": [
+           {
+            "href": "/learn/ch09/ch09-s6/",
+            "label": "sec:mod-step1",
+            "t": "ref",
+            "text": "Section 9.6"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "2. Implement sources"
+          ]
+         },
+         {
+          "c": [
+           "Replace each hard-coded table name by ",
+           {
+            "t": "code",
+            "v": "source()"
+           },
+           " (or ",
+           {
+            "t": "code",
+            "v": "ref()"
+           },
+           ")."
+          ]
+         },
+         {
+          "c": [
+           {
+            "href": "/learn/ch09/ch09-s7/",
+            "label": "sec:mod-step2",
+            "t": "ref",
+            "text": "Section 9.7"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "3. Choose a strategy"
+          ]
+         },
+         {
+          "c": [
+           "Refactor ",
+           {
+            "c": [
+             "in place"
+            ],
+            "t": "i"
+           },
+           " (edit the legacy model) or ",
+           {
+            "c": [
+             "alongside"
+            ],
+            "t": "i"
+           },
+           " (build a new model next to it)."
+          ]
+         },
+         {
+          "c": [
+           "alongside"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "4. CTE groupings and cosmetic clean-up"
+          ]
+         },
+         {
+          "c": [
+           "Import CTEs, logical CTEs, a final CTE, ",
+           {
+            "t": "code",
+            "v": "select * from final"
+           },
+           "; style."
+          ]
+         },
+         {
+          "c": [
+           {
+            "href": "/learn/ch09/ch09-s8/",
+            "label": "sec:mod-step3",
+            "t": "ref",
+            "text": "Section 9.8"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "5. Centralize logic, split models"
+          ]
+         },
+         {
+          "c": [
+           "Move cleaning into staging, shared steps into intermediate models, keep a thin final model."
+          ]
+         },
+         {
+          "c": [
+           {
+            "href": "/learn/ch09/ch09-s9/",
+            "label": "sec:mod-step4",
+            "t": "ref",
+            "text": "Section 9.9"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "6. Audit"
+          ]
+         },
+         {
+          "c": [
+           "Prove that the new result equals the old one."
+          ]
+         },
+         {
+          "c": [
+           {
+            "href": "/learn/ch09/ch09-s10/",
+            "label": "sec:mod-step5",
+            "t": "ref",
+            "text": "Section 9.10"
+           },
+           " (",
+           {
+            "t": "code",
+            "v": "audit_helper"
+           },
+           ": Chapter 11)"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "In place or alongside?"
+         ],
+         "t": "b"
+        },
+        " ",
+        {
+         "c": [
+          "In place"
+         ],
+         "t": "i"
+        },
+        " means you edit ",
+        {
+         "t": "code",
+         "v": "legacy_monthly_revenue.sql"
+        },
+        " itself, step after step. It is simple, but the old result disappears, so you cannot compare against it. ",
+        {
+         "c": [
+          "Alongside"
+         ],
+         "t": "i"
+        },
+        " means the legacy model stays untouched while you build the new models next to it, so you can compare the two results at every step; you delete the legacy model at the end. dbt Labs recommends alongside, and so do we. Because we chose it from the start, we do the ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " replacement (course step 2) in the new copy, not in the legacy file."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch09-s5-0",
+     "title": [
+      "The refactoring method"
+     ],
+     "titleText": "The refactoring method"
+    }
+   ],
+   "title": [
+    "The refactoring method"
+   ],
+   "titleText": "The refactoring method"
+  },
+  {
+   "anchors": [
+    "sec-mod-step1"
+   ],
+   "checkpoints": [],
+   "id": "ch09-s6",
+   "label": "sec:mod-step1",
+   "labs": [],
+   "minutes": 5,
+   "number": "9.6",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The finance team gives you the query below. It comes from an old reporting tool. It counts the orders and the revenue (successful payments) per order month and customer country, without the returned orders. You must not \"improve\" it yet: the first goal is to have it running in dbt, unchanged, to get a ",
+        {
+         "en": [
+          "baseline"
+         ],
+         "fr": "référence de comparaison",
+         "id": "term-baseline",
+         "t": "term"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c8",
+       "lang": "sql",
+       "t": "code",
+       "text": "-- copied as-is from the old reporting tool: monthly orders and revenue per country\nSELECT DATE_TRUNC('month', X.ORDER_DATE) AS ORDER_MONTH, C.COUNTRY,\nCOUNT(*) AS NUMBER_OF_ORDERS, SUM(X.PAID_CENTS) / 100 AS REVENUE\nFROM (SELECT O.ID, O.USER_ID, O.ORDER_DATE,\n        COALESCE((SELECT SUM(P.AMOUNT) FROM PRACTICE.STRIPE.PAYMENTS P\n                  WHERE P.ORDERID = O.ID AND P.STATUS = 'success'), 0) AS PAID_CENTS\n      FROM PRACTICE.JAFFLE_SHOP.ORDERS O\n      WHERE O.STATUS NOT IN ('returned', 'return_pending')) X\nLEFT JOIN (SELECT ID, COUNTRY FROM PRACTICE.JAFFLE_SHOP.CUSTOMERS) C ON C.ID = X.USER_ID\nGROUP BY 1, 2",
+       "title": "models/legacy/legacy_monthly_revenue.sql"
+      },
+      {
+       "c": [
+        "Read it like a detective (",
+        {
+         "href": "/learn/ch04/",
+         "label": "ch:sql",
+         "t": "ref",
+         "text": "Chapter 4"
+        },
+        "): upper case and one-letter aliases, a ",
+        {
+         "c": [
+          "correlated subquery"
+         ],
+         "t": "i"
+        },
+        " (the inner ",
+        {
+         "t": "code",
+         "v": "SELECT SUM(P.AMOUNT)"
+        },
+        " runs once per order), a derived table ",
+        {
+         "t": "code",
+         "v": "X"
+        },
+        ", a subquery ",
+        {
+         "t": "code",
+         "v": "C"
+        },
+        " that only selects two columns, money in cents divided at the end, and three hard-coded ",
+        {
+         "t": "code",
+         "v": "database.schema.table"
+        },
+        " names. It is ",
+        {
+         "en": [
+          "legacy code"
+         ],
+         "fr": "code hérité",
+         "id": "term-legacy-code",
+         "t": "term"
+        },
+        ": code that works, that people depend on, and that nobody wants to touch."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The model runs. The folder ",
+        {
+         "t": "code",
+         "v": "legacy"
+        },
+        " has no config in ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        ", so it gets the default, a view:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c9",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "20:42:04  1 of 1 START sql view model dbt_adnane.legacy_monthly_revenue .................. [RUN]\n20:42:04  1 of 1 OK created sql view model dbt_adnane.legacy_monthly_revenue ............. [OK in 0.04s]"
+      },
+      {
+       "c": [
+        "But as you saw in ",
+        {
+         "href": "/learn/ch09/ch09-s4/",
+         "label": "sec:mod-lineage",
+         "t": "ref",
+         "text": "Section 9.4"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt ls --select +legacy_monthly_revenue+"
+        },
+        " lists only the model itself: for dbt it is a root model, with no link to the sources. Write down its result. These numbers are the target of the whole refactoring:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c10",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt show --inline \"select count(*) as n_rows, sum(number_of_orders) as n_orders, sum(revenue) as revenue from {{ ref('legacy_monthly_revenue') }}\""
+      },
+      {
+       "id": "ch09-c11",
+       "lang": "output",
+       "t": "code",
+       "text": "| n_rows | n_orders | revenue |\n| ------ | -------- | ------- |\n|     65 |      270 | 4,496.9 |"
+      },
+      {
+       "c": [
+        "65 rows (month and country pairs), 270 orders (300 minus 30 returned or return pending), 4 496.90 dollars."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Hard-coded names hurt more than the DAG."
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "PRACTICE.JAFFLE_SHOP.ORDERS"
+          },
+          " always reads that exact database and schema. If the raw data moves (another database in CI, a renamed schema), the model silently reads the wrong place or fails. ",
+          {
+           "t": "code",
+           "v": "--empty"
+          },
+          " cannot limit it either: only ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "source()"
+          },
+          " are replaced by empty subqueries (trap T84). With ",
+          {
+           "t": "code",
+           "v": "source()"
+          },
+          ", one YAML file says where the raw table is, for every model."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch09-s6-0",
+     "title": [
+      "Step 1: migrate the legacy query as it is"
+     ],
+     "titleText": "Step 1: migrate the legacy query as it is"
+    }
+   ],
+   "title": [
+    "Step 1: migrate the legacy query as it is"
+   ],
+   "titleText": "Step 1: migrate the legacy query as it is"
+  },
+  {
+   "anchors": [
+    "sec-mod-step2"
+   ],
+   "checkpoints": [],
+   "id": "ch09-s7",
+   "label": "sec:mod-step2",
+   "labs": [],
+   "minutes": 5,
+   "number": "9.7",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The sources ",
+        {
+         "t": "code",
+         "v": "jaffle_shop"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "stripe"
+        },
+        " already exist in your YAML files (",
+        {
+         "href": "/learn/ch07/",
+         "label": "ch:models-sources-dag",
+         "t": "ref",
+         "text": "Chapter 7"
+        },
+        "). Create the new mart ",
+        {
+         "t": "code",
+         "v": "fct_monthly_revenue"
+        },
+        " as a copy of the legacy query, and replace the three names, nothing else:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c12",
+       "lang": "dbt",
+       "t": "code",
+       "text": "-- step 2: same query, hard-coded tables replaced by source()\nSELECT DATE_TRUNC('month', X.ORDER_DATE) AS ORDER_MONTH, C.COUNTRY,\nCOUNT(*) AS NUMBER_OF_ORDERS, SUM(X.PAID_CENTS) / 100 AS REVENUE\nFROM (SELECT O.ID, O.USER_ID, O.ORDER_DATE,\n        COALESCE((SELECT SUM(P.AMOUNT) FROM {{ source('stripe', 'payments') }} P\n                  WHERE P.ORDERID = O.ID AND P.STATUS = 'success'), 0) AS PAID_CENTS\n      FROM {{ source('jaffle_shop', 'orders') }} O\n      WHERE O.STATUS NOT IN ('returned', 'return_pending')) X\nLEFT JOIN (SELECT ID, COUNTRY FROM {{ source('jaffle_shop', 'customers') }}) C ON C.ID = X.USER_ID\nGROUP BY 1, 2",
+       "title": "models/marts/fct_monthly_revenue.sql (step 2, temporary)"
+      },
+      {
+       "c": [
+        "It is in ",
+        {
+         "t": "code",
+         "v": "marts/"
+        },
+        ", so it becomes a table. Run it and look at its parents: now dbt sees them."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c13",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt run --select fct_monthly_revenue\n$ dbt ls --select +fct_monthly_revenue"
+      },
+      {
+       "id": "ch09-c14",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:10:58  1 of 1 OK created sql table model dbt_adnane.fct_monthly_revenue ............... [OK in 0.06s]\n...\njaffle_dbt.marts.fct_monthly_revenue\nsource:jaffle_dbt.jaffle_shop.customers\nsource:jaffle_dbt.jaffle_shop.orders\nsource:jaffle_dbt.stripe.payments"
+      },
+      {
+       "c": [
+        "This version breaks rule 1 (a mart reading sources), and dbt does not complain. That is fine ",
+        {
+         "c": [
+          "for a few minutes"
+         ],
+         "t": "i"
+        },
+        ": it is a step, not a destination. Now the first audit. ",
+        {
+         "t": "code",
+         "v": "EXCEPT"
+        },
+        " returns the rows of the first query that are not in the second (",
+        {
+         "href": "/learn/ch04/",
+         "label": "ch:sql",
+         "t": "ref",
+         "text": "Chapter 4"
+        },
+        "). Run it in both directions with ",
+        {
+         "t": "code",
+         "v": "dbt show --inline"
+        },
+        ", which accepts ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c15",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt show --inline \"select * from {{ ref('legacy_monthly_revenue') }} except select * from {{ ref('fct_monthly_revenue') }}\"\n$ dbt show --inline \"select * from {{ ref('fct_monthly_revenue') }} except select * from {{ ref('legacy_monthly_revenue') }}\""
+      },
+      {
+       "id": "ch09-c16",
+       "lang": "output",
+       "t": "code",
+       "text": "Previewing inline node:\n| ORDER_MONTH | country | NUMBER_OF_ORDERS | REVENUE |\n| ----------- | ------- | ---------------- | ------- |\n\nPreviewing inline node:\n| ORDER_MONTH | country | NUMBER_OF_ORDERS | REVENUE |\n| ----------- | ------- | ---------------- | ------- |"
+      },
+      {
+       "c": [
+        "Only headers, no rows: in both directions, nothing differs."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch09-s7-0",
+     "title": [
+      "Step 2: replace the hard-coded tables by sources"
+     ],
+     "titleText": "Step 2: replace the hard-coded tables by sources"
+    }
+   ],
+   "title": [
+    "Step 2: replace the hard-coded tables by sources"
+   ],
+   "titleText": "Step 2: replace the hard-coded tables by sources"
+  },
+  {
+   "anchors": [
+    "sec-mod-step3"
+   ],
+   "checkpoints": [],
+   "id": "ch09-s8",
+   "label": "sec:mod-step3",
+   "labs": [
+    "ch09-lab1"
+   ],
+   "minutes": 20,
+   "number": "9.8",
+   "objectives": [
+    "CP0-SQL",
+    "1.1",
+    "1.3",
+    "1.5"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Now rewrite ",
+        {
+         "t": "code",
+         "v": "fct_monthly_revenue"
+        },
+        " with the dbt CTE pattern of ",
+        {
+         "href": "/learn/ch04/",
+         "label": "ch:sql",
+         "t": "ref",
+         "text": "Chapter 4"
+        },
+        " (",
+        {
+         "href": "/learn/ch04/ch04-s11/#sec-sql-cte-pattern",
+         "label": "sec:sql-cte-pattern",
+         "t": "ref",
+         "text": "Section 4.11.1"
+        },
+        "):"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "import CTEs"
+             ],
+             "t": "b"
+            },
+            ", one per input, each a simple ",
+            {
+             "t": "code",
+             "v": "select *"
+            },
+            ", ",
+            {
+             "c": [
+              "all together at the top"
+             ],
+             "t": "i"
+            },
+            " of the file, so that every dependency of the model is visible at once;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "logical CTEs"
+             ],
+             "t": "b"
+            },
+            ", one step each, with a clear name (the correlated subquery becomes an aggregated CTE plus a ",
+            {
+             "t": "code",
+             "v": "left join"
+            },
+            ");"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "a ",
+            {
+             "c": [
+              "final CTE"
+             ],
+             "t": "b"
+            },
+            ", and the model ends with ",
+            {
+             "t": "code",
+             "v": "select * from final"
+            },
+            "; to debug, replace ",
+            {
+             "t": "code",
+             "v": "final"
+            },
+            " in this last line by the name of any CTE and preview that step alone;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "cosmetic clean-up: lower case, explicit names instead of ",
+            {
+             "t": "code",
+             "v": "X"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "C"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "O"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "id": "ch09-c17",
+       "lang": "dbt",
+       "t": "code",
+       "text": "-- step 3: CTE groupings (import, logical, final) - still reads the sources\nwith\n\n-- import CTEs: one per source table\norders as (\n\n    select * from {{ source('jaffle_shop', 'orders') }}\n\n),\n\ncustomers as (\n\n    select * from {{ source('jaffle_shop', 'customers') }}\n\n),\n\npayments as (\n\n    select * from {{ source('stripe', 'payments') }}\n\n),\n\n-- logical CTEs: one step each\norder_payments as (\n\n    select\n        orderid as order_id,\n        sum(amount) as paid_cents\n\n    from payments\n    where status = 'success'\n    group by orderid\n\n),\n\nvalid_orders as (\n\n    select\n        orders.id as order_id,\n        orders.user_id as customer_id,\n        orders.order_date,\n        coalesce(order_payments.paid_cents, 0) as paid_cents\n\n    from orders\n    left join order_payments\n        on orders.id = order_payments.order_id\n    where orders.status not in ('returned', 'return_pending')\n\n),\n\n-- final CTE\nfinal as (\n\n    select\n        date_trunc('month', valid_orders.order_date) as order_month,\n        customers.country,\n        count(*) as number_of_orders,\n        sum(valid_orders.paid_cents) / 100 as revenue\n\n    from valid_orders\n    left join customers\n        on valid_orders.customer_id = customers.id\n    group by 1, 2\n\n)\n\nselect * from final",
+       "title": "models/marts/fct_monthly_revenue.sql (step 3, temporary)"
+      },
+      {
+       "c": [
+        "Run it and audit again: the two ",
+        {
+         "t": "code",
+         "v": "EXCEPT"
+        },
+        " queries return only headers, and the row counts are equal."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c18",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt run --select fct_monthly_revenue\n$ dbt show --inline \"select (select count(*) from {{ ref('legacy_monthly_revenue') }}) as legacy_rows, (select count(*) from {{ ref('fct_monthly_revenue') }}) as refactored_rows\""
+      },
+      {
+       "id": "ch09-c19",
+       "lang": "output",
+       "t": "code",
+       "text": "| legacy_rows | refactored_rows |\n| ----------- | --------------- |\n|          65 |              65 |"
+      },
+      {
+       "c": [
+        "Look at the import CTEs: ",
+        {
+         "t": "code",
+         "v": "orders"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "customers"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "payments"
+        },
+        ", each with renames (",
+        {
+         "t": "code",
+         "v": "orderid as order_id"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "user_id as customer_id"
+        },
+        ") and a cents division further down. You wrote all of that already, once, in your staging models. That is the signal for step 4."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " the legacy model runs unchanged; a new ",
+          {
+           "t": "code",
+           "v": "fct_monthly_revenue"
+          },
+          " gives exactly the same result with sources and CTEs."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Start from the end of ",
+          {
+           "href": "/learn/ch08/",
+           "label": "ch:materializations",
+           "t": "ref",
+           "text": "Chapter 8"
+          },
+          " (clean ",
+          {
+           "t": "code",
+           "v": "git status"
+          },
+          "). Create the folder and the file:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch09-c20",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cd ~/dbt-course/jaffle_dbt\n$ source ../.venv/bin/activate\n$ mkdir models/legacy\n$ code models/legacy/legacy_monthly_revenue.sql"
+        },
+        {
+         "c": [
+          "Paste the legacy query of ",
+          {
+           "href": "/learn/ch09/ch09-s6/",
+           "label": "sec:mod-step1",
+           "t": "ref",
+           "text": "Section 9.6"
+          },
+          " exactly (comment line included). Save."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Run it, list its lineage and record the totals:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch09-c21",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt run --select legacy_monthly_revenue\n$ dbt ls --select +legacy_monthly_revenue+\n$ dbt show --inline \"select count(*) as n_rows, sum(number_of_orders) as n_orders, sum(revenue) as revenue from {{ ref('legacy_monthly_revenue') }}\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "OK created sql view model dbt_adnane.legacy_monthly_revenue"
+          },
+          "; the ",
+          {
+           "t": "code",
+           "v": "ls"
+          },
+          " shows only ",
+          {
+           "t": "code",
+           "v": "jaffle_dbt.legacy.legacy_monthly_revenue"
+          },
+          "; the totals are 65 rows, 270 orders, 4,496.9."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Commit the legacy model alone, so the history shows the starting point:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch09-c22",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git add models/legacy\n$ git commit -m \"Add legacy monthly revenue model (copied from the old tool)\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Create ",
+          {
+           "t": "code",
+           "v": "models/marts/fct_monthly_revenue.sql"
+          },
+          " with the step-2 version (three ",
+          {
+           "t": "code",
+           "v": "source()"
+          },
+          " calls). Run it, then ",
+          {
+           "t": "code",
+           "v": "dbt ls --select +fct_monthly_revenue"
+          },
+          ". ",
+          {
+           "c": [
+            "Expected:"
+           ],
+           "t": "b"
+          },
+          " the model and the three sources. Run the two ",
+          {
+           "t": "code",
+           "v": "EXCEPT"
+          },
+          " queries of ",
+          {
+           "href": "/learn/ch09/ch09-s7/",
+           "label": "sec:mod-step2",
+           "t": "ref",
+           "text": "Section 9.7"
+          },
+          ". ",
+          {
+           "c": [
+            "Expected:"
+           ],
+           "t": "b"
+          },
+          " headers only, twice."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Replace the content of ",
+          {
+           "t": "code",
+           "v": "fct_monthly_revenue.sql"
+          },
+          " by the step-3 version. Run it, run the two ",
+          {
+           "t": "code",
+           "v": "EXCEPT"
+          },
+          " queries and the row-count query. ",
+          {
+           "c": [
+            "Expected:"
+           ],
+           "t": "b"
+          },
+          " headers only, twice; ",
+          {
+           "t": "code",
+           "v": "65 | 65"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result of the lab:"
+           ],
+           "t": "b"
+          },
+          " two models with the same 65 rows. Do not commit ",
+          {
+           "t": "code",
+           "v": "fct_monthly_revenue"
+          },
+          " yet: the next lab gives it its final form."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch09-lab1",
+       "objectives": [
+        "1.1",
+        "1.3",
+        "1.5",
+        "CP0-SQL"
+       ],
+       "t": "lab",
+       "title": [
+        "Migrate the legacy query and audit the first two steps"
+       ]
+      }
+     ],
+     "id": "ch09-s8-0",
+     "title": [
+      "Step 3: CTE groupings and cosmetic clean-up"
+     ],
+     "titleText": "Step 3: CTE groupings and cosmetic clean-up"
+    }
+   ],
+   "title": [
+    "Step 3: CTE groupings and cosmetic clean-up"
+   ],
+   "titleText": "Step 3: CTE groupings and cosmetic clean-up"
+  },
+  {
+   "anchors": [
+    "sec-mod-step4"
+   ],
+   "checkpoints": [],
+   "id": "ch09-s9",
+   "label": "sec:mod-step4",
+   "labs": [],
+   "minutes": 10,
+   "number": "9.9",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Now the real modularization. Take each CTE of the step-3 version and ask: \"where does this logic belong?\""
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "CTE of step 3"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "New home"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "orders"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "customers"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "payments"
+           },
+           " (imports + renames + cents)"
+          ]
+         },
+         {
+          "c": [
+           "The existing staging models: ",
+           {
+            "t": "code",
+            "v": "stg_jaffle_shop__orders"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "stg_jaffle_shop__customers"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "stg_stripe__payments"
+           },
+           " (already in dollars)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "where status = 'success'"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Already in ",
+           {
+            "t": "code",
+            "v": "int_payments__successful"
+           },
+           " (",
+           {
+            "href": "/learn/ch08/",
+            "label": "ch:materializations",
+            "t": "ref",
+            "text": "Chapter 8"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "order_payments"
+           },
+           " + the join of orders with payments and customers"
+          ]
+         },
+         {
+          "c": [
+           "A new intermediate model, ",
+           {
+            "t": "code",
+            "v": "int_orders__enriched"
+           },
+           ": one row per order, with its paid amount and the customer's country. Reusable by any model that needs \"orders with money\"."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "The returned-orders filter + the monthly aggregation"
+          ]
+         },
+         {
+          "c": [
+           "What stays in ",
+           {
+            "t": "code",
+            "v": "fct_monthly_revenue"
+           },
+           ": the business rule of ",
+           {
+            "c": [
+             "this"
+            ],
+            "t": "i"
+           },
+           " report."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "id": "ch09-c23",
+       "lang": "dbt",
+       "t": "code",
+       "text": "with\n\norders as (\n\n    select * from {{ ref('stg_jaffle_shop__orders') }}\n\n),\n\ncustomers as (\n\n    select * from {{ ref('stg_jaffle_shop__customers') }}\n\n),\n\npayments as (\n\n    select * from {{ ref('int_payments__successful') }}\n\n),\n\norder_payments as (\n\n    select\n        order_id,\n        sum(amount) as paid_amount\n\n    from payments\n    group by order_id\n\n),\n\nfinal as (\n\n    select\n        orders.order_id,\n        orders.customer_id,\n        orders.order_date,\n        orders.status,\n        orders.loaded_at,\n        customers.country,\n        coalesce(order_payments.paid_amount, 0) as paid_amount\n\n    from orders\n    left join customers\n        on orders.customer_id = customers.customer_id\n    left join order_payments\n        on orders.order_id = order_payments.order_id\n\n)\n\nselect * from final",
+       "title": "models/intermediate/int_orders__enriched.sql"
+      },
+      {
+       "c": [
+        "Notice what this model does ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " do: it does not filter the returned orders. That rule belongs to the revenue report; another report may want all orders. Keeping the intermediate model general is what makes it reusable."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c24",
+       "lang": "dbt",
+       "t": "code",
+       "text": "with\n\norders as (\n\n    select * from {{ ref('int_orders__enriched') }}\n\n),\n\nvalid_orders as (\n\n    select * from orders\n    where status not in ('returned', 'return_pending')\n\n),\n\nfinal as (\n\n    select\n        cast(date_trunc('month', order_date) as date) as order_month,\n        country,\n        count(*) as number_of_orders,\n        sum(paid_amount) as revenue\n\n    from valid_orders\n    group by 1, 2\n\n)\n\nselect * from final",
+       "title": "models/marts/fct_monthly_revenue.sql (final version)"
+      },
+      {
+       "c": [
+        "The mart went from about 70 lines to about 30, and reads like a sentence: \"take the enriched orders, keep the valid ones, group by month and country\". The ",
+        {
+         "t": "code",
+         "v": "cast(… as date)"
+        },
+        " makes ",
+        {
+         "t": "code",
+         "v": "order_month"
+        },
+        " a date (DuckDB's ",
+        {
+         "t": "code",
+         "v": "date_trunc"
+        },
+        " on a date returns a timestamp). The column is called ",
+        {
+         "t": "code",
+         "v": "order_month"
+        },
+        ", not ",
+        {
+         "t": "code",
+         "v": "month"
+        },
+        ", because ",
+        {
+         "t": "code",
+         "v": "month"
+        },
+        " is the name of a function in many SQL dialects."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Build the new model and everything above it, with the tests of the staging models:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c25",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt build --select +fct_monthly_revenue"
+      },
+      {
+       "id": "ch09-c26",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "20:42:42  1 of 11 START sql view model dbt_adnane.stg_jaffle_shop__customers ............. [RUN]\n...\n20:42:42  10 of 11 START sql view model dbt_adnane.int_orders__enriched .................. [RUN]\n20:42:42  10 of 11 OK created sql view model dbt_adnane.int_orders__enriched ............. [OK in 0.02s]\n20:42:42  11 of 11 START sql table model dbt_adnane.fct_monthly_revenue .................. [RUN]\n20:42:42  11 of 11 OK created sql table model dbt_adnane.fct_monthly_revenue ............. [OK in 0.04s]\n20:42:42\n20:42:42  Finished running 1 table model, 6 data tests, 4 view models in 0 hours 0 minutes and 0.31 seconds (0.31s).\n20:42:42\n20:42:42  Completed successfully\n20:42:42\n20:42:42  Done. PASS=11 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=11"
+      },
+      {
+       "c": [
+        "Count the nodes: 3 staging views, 6 tests, ",
+        {
+         "t": "code",
+         "v": "int_orders__enriched"
+        },
+        " (a view: the folder default) and the table. The ephemeral ",
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        " is an ancestor too, but it is injected as a CTE, not built."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch09-s9-0",
+     "title": [
+      "Step 4: move the logic into staging and intermediate models"
+     ],
+     "titleText": "Step 4: move the logic into staging and intermediate models"
+    }
+   ],
+   "title": [
+    "Step 4: move the logic into staging and intermediate models"
+   ],
+   "titleText": "Step 4: move the logic into staging and intermediate models"
+  },
+  {
+   "anchors": [
+    "sec-mod-step5"
+   ],
+   "checkpoints": [],
+   "id": "ch09-s10",
+   "label": "sec:mod-step5",
+   "labs": [],
+   "minutes": 5,
+   "number": "9.10",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The same three queries as before, now against the modular version:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c27",
+       "lang": "output",
+       "t": "code",
+       "text": "| legacy_rows | refactored_rows |\n| ----------- | --------------- |\n|          65 |              65 |\n\nPreviewing inline node:\n| ORDER_MONTH | country | NUMBER_OF_ORDERS | REVENUE |\n| ----------- | ------- | ---------------- | ------- |\n\nPreviewing inline node:\n| order_month | country | number_of_orders | revenue |\n| ----------- | ------- | ---------------- | ------- |"
+      },
+      {
+       "c": [
+        "Same count, nothing only in the legacy result, nothing only in the refactored result. The legacy revenue was ",
+        {
+         "t": "code",
+         "v": "cents / 100"
+        },
+        " (a ",
+        {
+         "t": "code",
+         "v": "DOUBLE"
+        },
+        " in DuckDB) and the new one is a sum of ",
+        {
+         "t": "code",
+         "v": "DECIMAL(16,2)"
+        },
+        " dollars; the legacy ",
+        {
+         "t": "code",
+         "v": "ORDER_MONTH"
+        },
+        " is a timestamp and the new ",
+        {
+         "t": "code",
+         "v": "order_month"
+        },
+        " a date. DuckDB converts each pair to a common type before comparing, so equal values match. (On another warehouse, cast both sides to the same types if ",
+        {
+         "t": "code",
+         "v": "EXCEPT"
+        },
+        " complains.)"
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch09-s10-1",
+     "number": "9.10.1",
+     "title": [
+      "Counts and EXCEPT in both directions"
+     ],
+     "titleText": "Counts and EXCEPT in both directions"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "A except B"
+        },
+        " only finds rows of A that are missing in B. If the new model returned ",
+        {
+         "c": [
+          "extra"
+         ],
+         "t": "i"
+        },
+        " rows, ",
+        {
+         "t": "code",
+         "v": "A except B"
+        },
+        " would still be empty. So you need ",
+        {
+         "t": "code",
+         "v": "B except A"
+        },
+        " too. And ",
+        {
+         "t": "code",
+         "v": "EXCEPT"
+        },
+        " is a ",
+        {
+         "c": [
+          "set"
+         ],
+         "t": "i"
+        },
+        " operation: it removes duplicate rows. If the new model returned some rows twice, both ",
+        {
+         "t": "code",
+         "v": "EXCEPT"
+        },
+        " queries could be empty. Comparing the row counts catches that case (or use ",
+        {
+         "t": "code",
+         "v": "EXCEPT ALL"
+        },
+        ", which keeps duplicates, where the warehouse supports it)."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "One more detail: one row has an empty ",
+        {
+         "t": "code",
+         "v": "country"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c28",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt show --inline \"select * from {{ ref('fct_monthly_revenue') }} where country is null order by order_month\""
+      },
+      {
+       "id": "ch09-c29",
+       "lang": "output",
+       "t": "code",
+       "text": "| order_month | country | number_of_orders | revenue |\n| ----------- | ------- | ---------------- | ------- |\n|  2025-08-01 |         |                1 |      16 |"
+      },
+      {
+       "c": [
+        "It is order 159, whose customer 101 does not exist (",
+        {
+         "href": "/learn/ch04/",
+         "label": "ch:sql",
+         "t": "ref",
+         "text": "Chapter 4"
+        },
+        "): the ",
+        {
+         "t": "code",
+         "v": "left join"
+        },
+        " keeps it with a NULL country, in both versions. ",
+        {
+         "t": "code",
+         "v": "EXCEPT"
+        },
+        " treats two NULLs as equal (unlike ",
+        {
+         "t": "code",
+         "v": "="
+        },
+        "), so this row does not appear as a difference. A refactoring keeps the behaviour, even the strange parts; fixing the orphan order is a separate decision (Chapter 18 tests it)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch09-s10-2",
+     "number": "9.10.2",
+     "title": [
+      "Why both directions, and why the counts"
+     ],
+     "titleText": "Why both directions, and why the counts"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Let us check. We changed one line of the final model on purpose, forgetting ",
+        {
+         "t": "code",
+         "v": "'return_pending'"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "where status not in ('returned')"
+        },
+        ". Then:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c30",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt show --inline \"select (select count(*) from (select * from {{ ref('legacy_monthly_revenue') }} except select * from {{ ref('fct_monthly_revenue') }})) as only_in_legacy, (select count(*) from (select * from {{ ref('fct_monthly_revenue') }} except select * from {{ ref('legacy_monthly_revenue') }})) as only_in_refactored\""
+      },
+      {
+       "id": "ch09-c31",
+       "lang": "output",
+       "t": "code",
+       "text": "| only_in_legacy | only_in_refactored |\n| -------------- | ------------------ |\n|             11 |                 12 |"
+      },
+      {
+       "c": [
+        "11 month–country rows changed their numbers, and one new row appeared (66 rows instead of 65). The first differing rows of the legacy side:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c32",
+       "lang": "output",
+       "t": "code",
+       "text": "|         ORDER_MONTH | country       | NUMBER_OF_ORDERS | REVENUE |\n| ------------------- | ------------- | ---------------- | ------- |\n| 2025-04-01 00:00:00 | Morocco       |               10 |   206.5 |\n| 2025-07-01 00:00:00 | Morocco       |                9 |   110.4 |\n| 2025-01-01 00:00:00 | Spain         |                1 |     8.3 |\n| 2025-05-01 00:00:00 | United States |                3 |    35.3 |\n| 2025-08-01 00:00:00 | Spain         |                7 |    86.2 |"
+      },
+      {
+       "c": [
+        "(",
+        {
+         "t": "code",
+         "v": "dbt show"
+        },
+        " prints 5 rows by default, in no fixed order: your five rows may be different ones.) We put the line back, rebuilt, and the counts returned to ",
+        {
+         "t": "code",
+         "v": "0 | 0"
+        },
+        ". An empty audit is evidence only if you know the audit can fail."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "One-way ",
+            {
+             "t": "code",
+             "v": "EXCEPT"
+            },
+            " is not an audit."
+           ],
+           "t": "b"
+          },
+          " \"",
+          {
+           "t": "code",
+           "v": "legacy except new"
+          },
+          " returns 0 rows, so the models are identical\" is false: the new model may have extra or duplicated rows. Exam answers that prove equality use ",
+          {
+           "c": [
+            "both"
+           ],
+           "t": "i"
+          },
+          " directions and the row counts (or the ",
+          {
+           "t": "code",
+           "v": "audit_helper"
+          },
+          " package, which automates this comparison: you will use it in Chapter 11). Also, the two queries must return the same columns in the same order: ",
+          {
+           "t": "code",
+           "v": "EXCEPT"
+          },
+          " compares by position, not by name."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch09-s10-3",
+     "number": "9.10.3",
+     "title": [
+      "Does the audit really catch mistakes?"
+     ],
+     "titleText": "Does the audit really catch mistakes?"
+    }
+   ],
+   "title": [
+    "Step 5: audit the result"
+   ],
+   "titleText": "Step 5: audit the result"
+  },
+  {
+   "anchors": [
+    "sec-mod-step6"
+   ],
+   "checkpoints": [],
+   "id": "ch09-s11",
+   "label": "sec:mod-step6",
+   "labs": [],
+   "minutes": 5,
+   "number": "9.11",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Look at ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        ": it sums the successful payments per order and joins them to the orders. That is exactly what ",
+        {
+         "t": "code",
+         "v": "int_orders__enriched"
+        },
+        " now does. Two models computing the same thing is rule 4 of a clean DAG. So ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " becomes a thin model on top of the intermediate one:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c33",
+       "lang": "dbt",
+       "t": "code",
+       "text": "with\n\norders as (\n\n    select * from {{ ref('int_orders__enriched') }}\n\n),\n\nfinal as (\n\n    select\n        order_id,\n        customer_id,\n        order_date,\n        status,\n        paid_amount as amount\n\n    from orders\n\n)\n\nselect * from final",
+       "title": "models/marts/fct_orders.sql (new version)"
+      },
+      {
+       "c": [
+        "Before rebuilding it, compare the ",
+        {
+         "c": [
+          "old table"
+         ],
+         "t": "i"
+        },
+        " (still in the warehouse) with the new logic, which is exactly what ",
+        {
+         "t": "code",
+         "v": "int_orders__enriched"
+        },
+        " returns. Here the old table is named directly (",
+        {
+         "t": "code",
+         "v": "dbt_adnane.fct_orders"
+        },
+        "), to make it obvious that we read the stored table. ",
+        {
+         "t": "code",
+         "v": "{{ ref('fct_orders') }}"
+        },
+        " would read the same old table: ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        " always compiles to the name of the relation (",
+        {
+         "t": "code",
+         "v": "\"practice\".\"dbt_adnane\".\"fct_orders\""
+        },
+        "), never to the code of the file. Editing the file changes nothing in the warehouse until you run the model. Hard-coding a name is fine in an ad-hoc audit query; it is never fine in a model."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c34",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt show --inline \"select order_id, customer_id, order_date, status, amount from dbt_adnane.fct_orders except select order_id, customer_id, order_date, status, paid_amount from {{ ref('int_orders__enriched') }}\"\n$ dbt show --inline \"select order_id, customer_id, order_date, status, paid_amount from {{ ref('int_orders__enriched') }} except select order_id, customer_id, order_date, status, amount from dbt_adnane.fct_orders\""
+      },
+      {
+       "id": "ch09-c35",
+       "lang": "output",
+       "t": "code",
+       "text": "Previewing inline node:\n| order_id | customer_id | order_date | status | amount |\n| -------- | ----------- | ---------- | ------ | ------ |\n\nPreviewing inline node:\n| order_id | customer_id | order_date | status | paid_amount |\n| -------- | ----------- | ---------- | ------ | ----------- |"
+      },
+      {
+       "c": [
+        "Empty in both directions. Rebuild ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " and its child, then look at its new parents:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c36",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt build --select fct_orders+\n$ dbt ls --select +fct_orders --resource-type model"
+      },
+      {
+       "id": "ch09-c37",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "20:43:10  1 of 2 OK created sql table model dbt_adnane.fct_orders ........................ [OK in 0.06s]\n20:43:10  2 of 2 OK created sql table model dbt_adnane.dim_customers ..................... [OK in 0.02s]\n...\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " now has ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__customers"
+        },
+        " as an ancestor (through ",
+        {
+         "t": "code",
+         "v": "int_orders__enriched"
+        },
+        "). That is the price of reuse: a change in the customers staging model now rebuilds ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " too. It is cheap here and the gain (one definition of the paid amount) is worth it."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch09-s11-0",
+     "title": [
+      "Step 6: DRY again, ",
+      {
+       "t": "code",
+       "v": "fct_orders"
+      },
+      " reuses the new model"
+     ],
+     "titleText": "Step 6: DRY again, fct_orders reuses the new model"
+    }
+   ],
+   "title": [
+    "Step 6: DRY again, ",
+    {
+     "t": "code",
+     "v": "fct_orders"
+    },
+    " reuses the new model"
+   ],
+   "titleText": "Step 6: DRY again, fct_orders reuses the new model"
+  },
+  {
+   "anchors": [
+    "sec-mod-step7"
+   ],
+   "checkpoints": [],
+   "id": "ch09-s12",
+   "label": "sec:mod-step7",
+   "labs": [
+    "ch09-lab2"
+   ],
+   "minutes": 20,
+   "number": "9.12",
+   "objectives": [
+    "CP0-GIT",
+    "CP0-SQL",
+    "1.2",
+    "1.3",
+    "1.5"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The audit is green, so the legacy model can go. Delete the file with Git:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c38",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ git rm -r -q models/legacy\n$ dbt build"
+      },
+      {
+       "id": "ch09-c39",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "20:43:23  Finished running 3 table models, 10 data tests, 6 view models in 0 hours 0 minutes and 0.43 seconds (0.43s).\n20:43:23\n20:43:23  Completed successfully\n20:43:23\n20:43:23  Done. PASS=19 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=19"
+      },
+      {
+       "c": [
+        "Green. But look at the warehouse:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c40",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' order by 1\""
+      },
+      {
+       "id": "ch09-c41",
+       "lang": "output",
+       "t": "code",
+       "text": "+------------------------------+------------+\n| table_name                   | table_type |\n+------------------------------+------------+\n| dim_customers                | BASE TABLE |\n| fct_monthly_revenue          | BASE TABLE |\n| fct_orders                   | BASE TABLE |\n| int_orders__enriched         | VIEW       |\n| legacy_monthly_revenue       | VIEW       |\n| stg_jaffle_shop__customers   | VIEW       |\n| stg_jaffle_shop__order_items | VIEW       |\n| stg_jaffle_shop__orders      | VIEW       |\n| stg_jaffle_shop__products    | VIEW       |\n| stg_stripe__payments         | VIEW       |\n+------------------------------+------------+"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "legacy_monthly_revenue"
+        },
+        " is still there. dbt never drops a relation whose model you deleted (",
+        {
+         "href": "/learn/ch08/",
+         "label": "ch:materializations",
+         "t": "ref",
+         "text": "Chapter 8"
+        },
+        ", ",
+        {
+         "href": "/learn/ch08/ch08-s6/",
+         "label": "sec:mat-change",
+         "t": "ref",
+         "text": "Section 8.6"
+        },
+        "). If you leave it, a colleague may keep reading the old numbers for months. Drop it yourself, with dbt not running (the DuckDB lock):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch09-c42",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ duckdb ../practice/practice.duckdb\nD drop view if exists dbt_adnane.legacy_monthly_revenue;\nD .quit"
+      },
+      {
+       "c": [
+        "In production, coordinate first: someone may use the old object. Tell the users, give them the new model's name, then drop it."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Deleting a model file does not delete its table or view."
+           ],
+           "t": "b"
+          },
+          " The run is green and the orphan stays in the warehouse. Exam scenarios like \"a report still shows old numbers after the model was removed\" point to this. The fix is a manual (or scripted) drop."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " reach the reference state ",
+          {
+           "t": "code",
+           "v": "ch09"
+          },
+          ": ",
+          {
+           "t": "code",
+           "v": "int_orders__enriched"
+          },
+          ", a thin ",
+          {
+           "t": "code",
+           "v": "fct_monthly_revenue"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " reusing the intermediate model, and no legacy model."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Create ",
+          {
+           "t": "code",
+           "v": "models/intermediate/int_orders__enriched.sql"
+          },
+          " and replace ",
+          {
+           "t": "code",
+           "v": "models/marts/fct_monthly_revenue.sql"
+          },
+          " by the final version (both in ",
+          {
+           "href": "/learn/ch09/ch09-s9/",
+           "label": "sec:mod-step4",
+           "t": "ref",
+           "text": "Section 9.9"
+          },
+          "). Then:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch09-c43",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --select +fct_monthly_revenue"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Done. PASS=11 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=11"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Audit: the row-count query (",
+          {
+           "c": [
+            "expected"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "65 | 65"
+          },
+          ") and the two ",
+          {
+           "t": "code",
+           "v": "EXCEPT"
+          },
+          " queries (",
+          {
+           "c": [
+            "expected"
+           ],
+           "t": "b"
+          },
+          " headers only). Then look at the row with a NULL country (",
+          {
+           "c": [
+            "expected"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "2025-08-01"
+          },
+          ", 1 order, 16)."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3 (optional but instructive)."
+           ],
+           "t": "b"
+          },
+          " Break the audit on purpose: in ",
+          {
+           "t": "code",
+           "v": "fct_monthly_revenue.sql"
+          },
+          ", write ",
+          {
+           "t": "code",
+           "v": "where status not in ('returned')"
+          },
+          ", run ",
+          {
+           "t": "code",
+           "v": "dbt run -s fct_monthly_revenue"
+          },
+          ", and run the counting query of ",
+          {
+           "href": "/learn/ch09/ch09-s10/",
+           "label": "sec:mod-step5",
+           "t": "ref",
+           "text": "Section 9.10"
+          },
+          ". ",
+          {
+           "c": [
+            "Expected:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "11 | 12"
+          },
+          ". Put the line back, run again, check ",
+          {
+           "t": "code",
+           "v": "0 | 0"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Replace ",
+          {
+           "t": "code",
+           "v": "models/marts/fct_orders.sql"
+          },
+          " by the new version (",
+          {
+           "href": "/learn/ch09/ch09-s11/",
+           "label": "sec:mod-step6",
+           "t": "ref",
+           "text": "Section 9.11"
+          },
+          "). ",
+          {
+           "c": [
+            "Before"
+           ],
+           "t": "i"
+          },
+          " building it, run the two ",
+          {
+           "t": "code",
+           "v": "EXCEPT"
+          },
+          " queries against ",
+          {
+           "t": "code",
+           "v": "dbt_adnane.fct_orders"
+          },
+          ". ",
+          {
+           "c": [
+            "Expected:"
+           ],
+           "t": "b"
+          },
+          " headers only. Then:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch09-c44",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --select fct_orders+"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "PASS=2"
+          },
+          " (",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "dim_customers"
+          },
+          ")."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Delete the legacy model and build everything:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch09-c45",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git rm -r -q models/legacy\n$ dbt build"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Done. PASS=19 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=19"
+          },
+          ". Check the information schema (",
+          {
+           "c": [
+            "expected:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "legacy_monthly_revenue"
+          },
+          " still listed), drop the view in the DuckDB CLI, and check again (",
+          {
+           "c": [
+            "expected:"
+           ],
+           "t": "b"
+          },
+          " 9 relations)."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6."
+           ],
+           "t": "b"
+          },
+          " Final checks:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch09-c46",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt ls --resource-type model\n$ dbt show --select fct_monthly_revenue --limit 3"
+        },
+        {
+         "id": "ch09-c47",
+         "lang": "output",
+         "t": "code",
+         "text": "jaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__order_items\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__products\njaffle_dbt.staging.stripe.stg_stripe__payments\n\nPreviewing node 'fct_monthly_revenue':\n| order_month | country | number_of_orders | revenue |\n| ----------- | ------- | ---------------- | ------- |\n|  2025-01-01 | Germany |                1 |    39.8 |\n|  2025-03-01 | France  |                3 |    99.6 |\n|  2025-05-01 | Morocco |                7 |   133.5 |"
+        },
+        {
+         "c": [
+          "(",
+          {
+           "t": "code",
+           "v": "dbt show --select"
+          },
+          " does not read the stored table: it runs the model's compiled ",
+          {
+           "t": "code",
+           "v": "select"
+          },
+          " again and prints the first rows. That query has no ",
+          {
+           "t": "code",
+           "v": "order by"
+          },
+          ", so the row order is not fixed: your three rows may be different ones.)"
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 7."
+           ],
+           "t": "b"
+          },
+          " Commit and compare:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch09-c48",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git status --short\nD  models/legacy/legacy_monthly_revenue.sql\n M models/marts/fct_orders.sql\n?? models/intermediate/int_orders__enriched.sql\n?? models/marts/fct_monthly_revenue.sql\n$ git add .\n$ git commit -m \"Refactor legacy revenue into int_orders__enriched and fct_monthly_revenue; fct_orders reuses int_orders__enriched\"\n$ git log --oneline -3\n4cc728f Refactor legacy revenue into int_orders__enriched and fct_monthly_revenue; fct_orders reuses int_orders__enriched\n452cde6 Add legacy monthly revenue model (copied from the old tool)\n186aac9 Configure materializations; add ephemeral int_payments__successful\n$ git diff ref-ch09 --stat\n dbt_project.yml | 8 ++++----\n 1 file changed, 4 insertions(+), 4 deletions(-)"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected:"
+           ],
+           "t": "b"
+          },
+          " your hashes differ; ",
+          {
+           "t": "code",
+           "v": "git diff ref-ch09 --stat"
+          },
+          " lists only ",
+          {
+           "t": "code",
+           "v": "dbt_project.yml"
+          },
+          ", for the same harmless comments as in ",
+          {
+           "href": "/learn/ch08/",
+           "label": "ch:materializations",
+           "t": "ref",
+           "text": "Chapter 8"
+          },
+          " (nothing at all if you did not type them). No model file is listed: your models are identical to the reference. The reference history has the same two commits: ",
+          {
+           "t": "code",
+           "v": "git log --oneline ref-ch08..ref-ch09"
+          },
+          " lists them, and ",
+          {
+           "t": "code",
+           "v": "git show ref-ch09~1 --stat"
+          },
+          " shows the legacy file."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch09-lab2",
+       "objectives": [
+        "1.3",
+        "1.5",
+        "1.2",
+        "CP0-SQL",
+        "CP0-GIT"
+       ],
+       "t": "lab",
+       "title": [
+        "Split into intermediate and mart models, audit, and delete the legacy model"
+       ]
+      }
+     ],
+     "id": "ch09-s12-0",
+     "title": [
+      "Step 7: delete the legacy model"
+     ],
+     "titleText": "Step 7: delete the legacy model"
+    }
+   ],
+   "title": [
+    "Step 7: delete the legacy model"
+   ],
+   "titleText": "Step 7: delete the legacy model"
+  },
+  {
+   "anchors": [
+    "sec-mod-platform"
+   ],
+   "checkpoints": [],
+   "id": "ch09-s13",
+   "label": "sec:mod-platform",
+   "labs": [],
+   "minutes": 5,
+   "number": "9.13",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The method is the same in the dbt platform; a few tools make it more comfortable."
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Studio IDE."
+             ],
+             "t": "b"
+            },
+            " Open ",
+            {
+             "t": "code",
+             "v": "fct_monthly_revenue.sql"
+            },
+            " and look at the ",
+            {
+             "c": [
+              "Lineage"
+             ],
+             "t": "i"
+            },
+            " tab: the model with two levels of parents and children. A model with no arrow coming in is your hard-coded legacy model. The ",
+            {
+             "c": [
+              "Build"
+             ],
+             "t": "b"
+            },
+            " button can build the model ",
+            {
+             "c": [
+              "with its upstream models"
+             ],
+             "t": "i"
+            },
+            ", which is ",
+            {
+             "t": "code",
+             "v": "dbt build --select +fct_monthly_revenue"
+            },
+            ". The ",
+            {
+             "c": [
+              "Preview"
+             ],
+             "t": "b"
+            },
+            " button runs the SQL of the active editor tab, saved or not, so you can type an ",
+            {
+             "t": "code",
+             "v": "EXCEPT"
+            },
+            " audit query with ",
+            {
+             "t": "code",
+             "v": "ref()"
+            },
+            " and preview it, like ",
+            {
+             "t": "code",
+             "v": "dbt show --inline"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Catalog."
+             ],
+             "t": "b"
+            },
+            " The project lineage shows which marts depend on an intermediate model before you change it, and its lenses (materialization, for example) help you spot long chains of views."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Pull requests and CI."
+             ],
+             "t": "b"
+            },
+            " A refactoring is a perfect candidate for a pull request: the reviewer reads the diff, and a CI job (Chapter 25) builds the changed models and their children. Many teams add the audit query to the pull request description."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch09-s13-0",
+     "title": [
+      "In the dbt platform"
+     ],
+     "titleText": "In the dbt platform"
+    }
+   ],
+   "title": [
+    "In the dbt platform"
+   ],
+   "titleText": "In the dbt platform"
+  }
+ ],
+ "minutes": 130,
+ "number": 9,
+ "objectives": [
+  "CP0-SQL",
+  "1.1",
+  "1.3",
+  "1.5"
+ ],
+ "part": 2,
+ "partLabel": "Part II",
+ "partTitle": "Building with dbt",
+ "printed": "9",
+ "quiz": [
+  "q-ch09-01",
+  "q-ch09-02",
+  "q-ch09-03",
+  "q-ch09-04",
+  "q-ch09-05",
+  "q-ch09-06",
+  "q-ch09-07",
+  "q-ch09-08",
+  "q-ch09-09",
+  "q-ch09-10",
+  "q-ch09-11",
+  "q-ch09-12",
+  "q-ch09-13",
+  "q-ch09-14",
+  "q-ch09-15",
+  "q-ch09-16",
+  "q-ch09-17",
+  "q-ch09-18",
+  "q-ch09-19"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-mod-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch09-01",
+      "q-ch09-02",
+      "q-ch09-03",
+      "q-ch09-04",
+      "q-ch09-05",
+      "q-ch09-06",
+      "q-ch09-07",
+      "q-ch09-08",
+      "q-ch09-09",
+      "q-ch09-10",
+      "q-ch09-11",
+      "q-ch09-12",
+      "q-ch09-13",
+      "q-ch09-14",
+      "q-ch09-15",
+      "q-ch09-16",
+      "q-ch09-17",
+      "q-ch09-18",
+      "q-ch09-19"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch09-01",
+    "q-ch09-02",
+    "q-ch09-03",
+    "q-ch09-04",
+    "q-ch09-05",
+    "q-ch09-06",
+    "q-ch09-07",
+    "q-ch09-08",
+    "q-ch09-09",
+    "q-ch09-10",
+    "q-ch09-11",
+    "q-ch09-12",
+    "q-ch09-13",
+    "q-ch09-14",
+    "q-ch09-15",
+    "q-ch09-16",
+    "q-ch09-17",
+    "q-ch09-18",
+    "q-ch09-19"
+   ],
+   "label": "sec:mod-quiz",
+   "number": "9.14",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "c": [
+          "Modularity"
+         ],
+         "t": "b"
+        },
+        ": small models with one job each, linked with ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        ". ",
+        {
+         "c": [
+          "DRY"
+         ],
+         "t": "b"
+        },
+        ": one home per rule (models, macros, packages, folder configs, doc blocks), not one giant model."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Three layers: ",
+        {
+         "c": [
+          "staging"
+         ],
+         "t": "b"
+        },
+        " (one model per source table, only place for ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        ", renames/casts, views), ",
+        {
+         "c": [
+          "intermediate"
+         ],
+         "t": "b"
+        },
+        " (purpose-built steps named with a verb, not for end users, ephemeral or views), ",
+        {
+         "c": [
+          "marts"
+         ],
+         "t": "b"
+        },
+        " (business entities, wide, tables)."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Names: ",
+        {
+         "t": "code",
+         "v": "stg_<source>__<entity>s"
+        },
+        " (double underscore), ",
+        {
+         "t": "code",
+         "v": "int_<entity>s__<verb>s"
+        },
+        " in our project (the dbt Labs guide: ",
+        {
+         "t": "code",
+         "v": "int_<entity>s_<verb>s"
+        },
+        ", single underscore), ",
+        {
+         "t": "code",
+         "v": "fct_"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "dim_"
+        },
+        " or plain entity names. Staging folders by source system; intermediate and marts by business area."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Clean DAG: arrows go one way; no ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " outside staging; no cycles (the only rule dbt enforces: \"Found a cycle\"); no duplicated logic; no rejoining; no long view chains; no hard-coded names; not too many joins."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Hard-coded tables are invisible: the model becomes a root model, ",
+        {
+         "t": "code",
+         "v": "dbt ls -s +model+"
+        },
+        " shows nothing around it."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Refactoring method: migrate 1:1 → ",
+        {
+         "t": "code",
+         "v": "source()"
+        },
+        " → (alongside) → CTE groupings → split into staging / intermediate / final → audit."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Audit with row counts and ",
+        {
+         "t": "code",
+         "v": "EXCEPT"
+        },
+        " in ",
+        {
+         "c": [
+          "both"
+         ],
+         "t": "i"
+        },
+        " directions; ",
+        {
+         "t": "code",
+         "v": "EXCEPT"
+        },
+        " hides duplicates and compares by position. Prove that your audit can fail. ",
+        {
+         "t": "code",
+         "v": "audit_helper"
+        },
+        " automates it (Chapter 11)."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Deleting a model leaves its relation in the warehouse: drop it yourself, after telling its users."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Read lineage with ",
+        {
+         "t": "code",
+         "v": "dbt ls"
+        },
+        " graph operators, the docs site, the Studio IDE Lineage tab and Catalog."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "Modularity, DRY and Refactoring"
+}

@@ -1,0 +1,1655 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A unit test checks logic with fixed inputs. A is a data test. C is source freshness (",
+     {
+      "href": "/learn/ch21/",
+      "label": "ch:freshness-exposures",
+      "t": "ref",
+      "text": "Chapter 21"
+     },
+     "). D is a model contract (",
+     {
+      "href": "/learn/ch17/",
+      "label": "ch:governance",
+      "t": "ref",
+      "text": "Chapter 17"
+     },
+     ")."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch19-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "That the rows stored in the warehouse respect a rule, every day."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "That the SQL logic of one model turns given input rows into the expected output rows."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "That a source was loaded recently."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "That the columns of a model match its contract."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "What does a unit test check?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 3,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "unit_tests"
+       }
+      ],
+      "t": "b"
+     },
+     ", ",
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "given"
+       }
+      ],
+      "t": "b"
+     },
+     ", ",
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "expect"
+       }
+      ],
+      "t": "b"
+     },
+     ". Each entry of ",
+     {
+      "t": "code",
+      "v": "given"
+     },
+     " has an ",
+     {
+      "t": "code",
+      "v": "input"
+     },
+     " and its ",
+     {
+      "t": "code",
+      "v": "rows"
+     },
+     " (or a ",
+     {
+      "t": "code",
+      "v": "fixture"
+     },
+     ")."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch19-02",
+  "key": {
+   "blanks": [
+    [
+     "unit_tests"
+    ],
+    [
+     "given"
+    ],
+    [
+     "expect"
+    ]
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{unit\\_tests}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "In YAML, unit tests are listed under the top-level key ",
+     {
+      "t": "blank"
+     },
+     ". The fake input rows go under ",
+     {
+      "t": "blank"
+     },
+     " and the expected rows under ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 6."
+      ],
+      "t": "b"
+     },
+     " With ",
+     {
+      "t": "code",
+      "v": "format: dict"
+     },
+     ", dbt must read the column types of the input relation, and an ephemeral model has none. Change it to ",
+     {
+      "t": "code",
+      "v": "format: sql"
+     },
+     ", then rewrite the rows (lines 7–8) as a ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     " that returns all the columns (",
+     {
+      "t": "code",
+      "v": "payment_id"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "order_id"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "payment_method"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "amount"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "created_at"
+     },
+     "). Line 5 is correct: the input is written like the ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " in the model. Lines 10–11 are fine: ",
+     {
+      "t": "code",
+      "v": "expect"
+     },
+     " may list only some columns."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch19-c43",
+   "lines": 11,
+   "numbering": "listing"
+  },
+  "id": "q-ch19-03",
+  "key": 6,
+  "keyRaw": "\\textbf{Line 6.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "This unit test fails with ",
+     {
+      "t": "code",
+      "v": "Not able to get columns for unit test 'int_payments__successful' … because the relation doesn't exist"
+     },
+     ". ",
+     {
+      "t": "code",
+      "v": "int_payments__successful"
+     },
+     " is an ephemeral model. Which line is the cause of the error?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch19-c43",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "unit_tests:\n  - name: test_pivot\n    model: int_orders__payment_methods_pivoted\n    given:\n      - input: ref('int_payments__successful')\n        format: dict\n        rows:\n          - {payment_id: 1, order_id: 10, payment_method: coupon, amount: 5.00}\n    expect:\n      rows:\n        - {order_id: 10, coupon_amount: 5.00}"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-b, 2-d, 3-a, 4-c."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch19-04",
+  "key": {
+   "1": "b",
+   "2": "d",
+   "3": "a",
+   "4": "c"
+  },
+  "keyRaw": "\\textbf{1-b, 2-d, 3-a, 4-c.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "format: dict"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "format: csv"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "format: sql"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "fixture:"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "A ",
+      {
+       "t": "code",
+       "v": "select"
+      },
+      " that must return every column of the input"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "The default: one YAML dictionary per row"
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "Rows read from a file in ",
+      {
+       "t": "code",
+       "v": "tests/fixtures/"
+      }
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "A header line and comma-separated values after ",
+      {
+       "t": "code",
+       "v": "rows: |"
+      }
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each way of giving rows with its description."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C, E, B, D, A."
+      ],
+      "t": "b"
+     },
+     " A model runs after its parents and their tests; a unit test runs just ",
+     {
+      "c": [
+       "before"
+      ],
+      "t": "i"
+     },
+     " its model; data tests run ",
+     {
+      "c": [
+       "after"
+      ],
+      "t": "i"
+     },
+     " the model."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch19-05",
+  "key": [
+   "C",
+   "E",
+   "B",
+   "D",
+   "A"
+  ],
+  "keyRaw": "\\textbf{C, E, B, D, A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "the data tests of ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "the unit test of ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "the model ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "the model ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "the data tests of ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build --select +dim_customers"
+     },
+     " runs these nodes. Put them in the order dbt runs them:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, YES, NO, YES."
+      ],
+      "t": "b"
+     },
+     " Only SQL models. ",
+     {
+      "t": "code",
+      "v": "dbt test"
+     },
+     " runs data and unit tests. dbt reads the column types of the parents in the warehouse. Unit tests are defined in YAML under ",
+     {
+      "t": "code",
+      "v": "models/"
+     },
+     " (",
+     {
+      "t": "code",
+      "v": "tests/"
+     },
+     " is for data tests and fixture files). A failing unit test skips its model and everything downstream."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch19-06",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": true,
+   "D": false,
+   "E": true
+  },
+  "keyRaw": "\\textbf{NO, YES, YES, NO, YES.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "They can test a Python model."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt test"
+     },
+     " runs them, together with the data tests."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The direct parents of the tested model must exist in the warehouse."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "They must be defined in a YAML file in the ",
+     {
+      "t": "code",
+      "v": "tests/"
+     },
+     " folder."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "In ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", a failing unit test prevents its model from being built."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "About unit tests in dbt 1.11:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " In a cell, the left value is the expected one and the right value is what the model returned. A reads the arrow backwards. C: a missing row is shown with ",
+     {
+      "t": "code",
+      "v": "---"
+     },
+     ". D: input problems give errors, not diffs."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch19-07",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The model returned 12.50, but the test expected 125.00."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The test expected 12.50, but the model returned 125.00."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Payment 1 is missing from the output."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The input row of payment 1 is invalid."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "A unit test fails with this diff. What does it mean?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch19-c44",
+    "lang": "plain",
+    "t": "code",
+    "text": "@@,payment_id,amount\n-> ,1         ,12.50->125.00"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " For a model that uses ",
+     {
+      "t": "code",
+      "v": "is_incremental()"
+     },
+     ", the override is required in dbt 1.11. A changes nothing (unit tests do not build tables). C is a run flag, not a unit test setting. D is required only when the override is ",
+     {
+      "t": "code",
+      "v": "true"
+     },
+     ", and it does not replace the override."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch19-08",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "config: materialized: table"
+     },
+     " in the unit test."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "overrides: macros: is_incremental: true"
+     },
+     " (or ",
+     {
+      "t": "code",
+      "v": "false"
+     },
+     ") in the unit test."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "--full-refresh"
+     },
+     " to the command."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "input: this"
+     },
+     " with no rows."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "dbt stops with ",
+     {
+      "t": "code",
+      "v": "Parsing Error: Boolean override for 'is_incremental' must be provided for unit test …"
+     },
+     ". What do you add?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "this"
+     },
+     " mocks the existing table, read by the incremental filter (",
+     {
+      "t": "code",
+      "v": "max(loaded_at)"
+     },
+     " here). A, C and D are other parts of the test or the model."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch19-09",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The model's source table."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The rows that are already in the incremental table before the run."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The rows the test expects as output."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The compiled SQL of the model."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "A unit test sets ",
+     {
+      "t": "code",
+      "v": "is_incremental: true"
+     },
+     " and dbt says it \"must have a 'this' input\". What is ",
+     {
+      "t": "code",
+      "v": "this"
+     },
+     " here?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The expected rows are the output of the model's SQL. A: unit tests cannot check the merge itself. C and D: the existing rows are an input, and ignored rows simply do not appear in the output."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch19-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The final content of the table after the merge."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The rows returned by the model's ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     ", that is, the rows dbt will insert or merge."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Only the rows of ",
+     {
+      "t": "code",
+      "v": "this"
+     },
+     " that were updated."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The rows of the source that were ignored."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "In a unit test of an incremental model (",
+     {
+      "t": "code",
+      "v": "is_incremental: true"
+     },
+     "), what do the ",
+     {
+      "t": "code",
+      "v": "expect"
+     },
+     " rows describe?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " Both remove unit tests and keep everything else. B does the opposite (only unit tests). D builds with empty inputs but still runs unit tests. E: ",
+     {
+      "t": "code",
+      "v": "severity"
+     },
+     " is a data test config; it does not stop unit tests from running."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch19-11",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build --exclude-resource-type unit_test"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build --resource-type unit_test"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Setting ",
+     {
+      "t": "code",
+      "v": "DBT_ENGINE_EXCLUDE_RESOURCE_TYPES=unit_test"
+     },
+     " in the production environment"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt build --empty"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Adding ",
+     {
+      "t": "code",
+      "v": "severity: warn"
+     },
+     " to every unit test"
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two ways exclude unit tests from a production run of ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The model was skipped, so the table still does not exist and every new ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " fails the same way. Create the relations first (build without unit tests, or ",
+     {
+      "t": "code",
+      "v": "--empty"
+     },
+     "). C is too drastic. D: ",
+     {
+      "t": "code",
+      "v": "--fail-fast"
+     },
+     " only stops earlier."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch19-12",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The second run passes, because the first run created the table."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The second run fails the same way; build once with ",
+     {
+      "t": "code",
+      "v": "--exclude-resource-type unit_test"
+     },
+     " (or ",
+     {
+      "t": "code",
+      "v": "dbt run --empty"
+     },
+     "), then ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The second run fails; the only fix is to delete the unit test."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The second run passes if you add ",
+     {
+      "t": "code",
+      "v": "--fail-fast"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "On a brand-new schema, ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " errors on the unit test of ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " that uses ",
+     {
+      "t": "code",
+      "v": "input: this"
+     },
+     ", and ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " is skipped. What happens if you simply run ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " again, and what is a fix?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A."
+      ],
+      "t": "b"
+     },
+     " The parents only need to exist; empty is enough. B would work only if you rewrote every input with all columns, and it is not needed for normal models. C is slow and expensive. D: every ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     " needs an input."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch19-13",
+  "key": "A",
+  "keyRaw": "\\textbf{A.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Run ",
+     {
+      "t": "code",
+      "v": "dbt run --select +dim_customers --empty"
+     },
+     " (after ",
+     {
+      "t": "code",
+      "v": "dbt seed"
+     },
+     ") before the unit tests."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Change the test to ",
+     {
+      "t": "code",
+      "v": "format: sql"
+     },
+     " for every input."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Load the full production data into the CI schema."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Remove ",
+     {
+      "t": "code",
+      "v": "stg_jaffle_shop__customers"
+     },
+     " from ",
+     {
+      "t": "code",
+      "v": "given"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "In CI, a unit test of ",
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     " errors: ",
+     {
+      "t": "code",
+      "v": "Not able to get columns for unit test 'stg_jaffle_shop__customers' … because the relation doesn't exist"
+     },
+     ". What is the cheapest fix?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "sql"
+       }
+      ],
+      "t": "b"
+     },
+     ". Ephemeral models have no relation, so ",
+     {
+      "t": "code",
+      "v": "dict"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "csv"
+     },
+     " cannot get their column types."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch19-14",
+  "key": {
+   "accepted": [
+    "sql"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{sql}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "A model reads an ephemeral model. In its unit test, the input for the ephemeral model must use ",
+     {
+      "t": "code",
+      "v": "format: "
+     },
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " By default a unit test runs on all versions; use ",
+     {
+      "t": "code",
+      "v": "versions: include: [2]"
+     },
+     " (or ",
+     {
+      "t": "code",
+      "v": "exclude"
+     },
+     ") to limit it. A, C and D are not dbt's behaviour."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch19-15",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "It runs only on the latest version."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "It runs on every version: dbt creates one unit test per version (",
+     {
+      "t": "code",
+      "v": "_v1"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "_v2"
+     },
+     ")."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt raises an error: the version is required."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "It runs only on version 1."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dim_customers"
+     },
+     " has versions 1 and 2. A unit test on ",
+     {
+      "t": "code",
+      "v": "model: dim_customers"
+     },
+     " has no ",
+     {
+      "t": "code",
+      "v": "versions:"
+     },
+     " key. What happens?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "YES, YES, NO, NO."
+      ],
+      "t": "b"
+     },
+     " Missing dict/csv columns are NULL; only the ",
+     {
+      "t": "code",
+      "v": "expect"
+     },
+     " columns are compared; the order of rows does not matter (we swapped them and the test passed); ",
+     {
+      "t": "code",
+      "v": "format: sql"
+     },
+     " needs all the columns."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch19-16",
+  "key": {
+   "A": true,
+   "B": true,
+   "C": false,
+   "D": false
+  },
+  "keyRaw": "\\textbf{YES, YES, NO, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "With ",
+     {
+      "t": "code",
+      "v": "format: dict"
+     },
+     ", input columns you do not give are NULL."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt compares only the columns listed in ",
+     {
+      "t": "code",
+      "v": "expect"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The order of the expected rows must match the order of the output."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "With ",
+     {
+      "t": "code",
+      "v": "format: sql"
+     },
+     ", you may give only the columns you need."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "About the rows of a unit test:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Regular expressions and NULL/upper-case edge cases are typical unit test material. A, C and D are trivial or test only a built-in function of the warehouse."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch19-17",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A staging model that only renames five columns."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A model that extracts the domain of an email with a regular expression and handles NULL and upper-case values."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A view that does ",
+     {
+      "t": "code",
+      "v": "select * from"
+     },
+     " a seed."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A model that computes ",
+     {
+      "t": "code",
+      "v": "min(order_date)"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "Which model of a project most deserves a unit test?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " dbt Labs recommends development and CI. In production the inputs are the same fixed rows, so the result cannot change. A wastes compute. C misses bugs before they are merged. D loses the safety net of CI."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch19-18",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Everywhere, especially in production, where the data is real."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "In development and CI only."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Only in production."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Nowhere automatically; only by hand."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 19,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "Your team runs ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     " in development, in CI and in production. Where should unit tests run?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

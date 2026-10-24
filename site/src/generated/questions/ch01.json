@@ -1,0 +1,917 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " ELT = Extract, Load, then Transform ",
+     {
+      "c": [
+       "inside"
+      ],
+      "t": "i"
+     },
+     " the warehouse. A and B describe ETL-style or source-side processing; D is analysis, not transformation of the data layer."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch01-01",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "In the source application, before extraction."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "In the loading tool, while data is copied."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Inside the data warehouse, after the raw data is loaded."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "In the BI tool, when the dashboard opens."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 1,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     "In an ELT architecture, where does the transformation happen?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and D."
+      ],
+      "t": "b"
+     },
+     " dbt compiles and runs SQL in the warehouse and builds in DAG order. B is the job of a loading tool (Fivetran, Airbyte). C is false: dbt stores no data."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch01-02",
+  "key": [
+   "A",
+   "D"
+  ],
+  "keyRaw": "\\textbf{A and D.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt compiles SQL and Jinja and runs the SQL inside the data warehouse."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt extracts data from SaaS applications into the warehouse."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "dbt stores a copy of your data on its own servers to speed up queries."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt uses the dependencies between models to build them in the right order."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 1,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Which statements about dbt are true?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Grain."
+      ],
+      "t": "b"
+     },
+     " Always state the grain of every model you build."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch01-03",
+  "key": {
+   "accepted": [
+    "Grain"
+   ]
+  },
+  "keyRaw": "\\textbf{Grain.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 1,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "The answer to the question \"What does one row of this table represent?\" is called the ",
+     {
+      "t": "blank"
+     },
+     " of the table."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Fan-out: an order with two payments appears twice after the join. A is wrong because a join does not filter by payment status. C is wrong: joins can multiply rows. D is wrong: SQL does not refuse to join different grains; it just gives you more rows than you expect."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch01-04",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The count is too low because joins remove failed payments."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The count is too high because orders with several payments appear several times."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "There is no problem: joins never change the number of rows."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The query fails because the two tables have different grains."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 1,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "A table has one row per payment attempt, including failed attempts. You join it to the orders table (one row per order) and count rows per day. What is the most likely problem?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-b, 2-a, 3-b, 4-a."
+      ],
+      "t": "b"
+     },
+     " Customers and products describe things (dimensions); payments and order items record events (facts)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch01-05",
+  "key": {
+   "1": "b",
+   "2": "a",
+   "3": "b",
+   "4": "a"
+  },
+  "keyRaw": "\\textbf{1-b, 2-a, 3-b, 4-a.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "jaffle_shop.customers"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "stripe.payments"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "jaffle_shop.products"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "jaffle_shop.order_items"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "reuse": true,
+   "right": [
+    {
+     "c": [
+      "fact table"
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "dimension table"
+     ],
+     "id": "b"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 1,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each table of the practice data with its type."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " dbt Core 1.11. Studio is the IDE of the platform; the platform is the paid web service; Fusion is a new engine outside the exam scope."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch01-06",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "dbt Studio"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt Core"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The dbt platform"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The Fusion engine"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 1,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "Which product is the free, open-source command-line version of dbt that the certification exam is based on?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A: YES, B: NO, C: YES, D: YES, E: NO."
+      ],
+      "t": "b"
+     },
+     " Copying data between systems is extract/load; drawing charts is the BI tool's job."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch01-07",
+  "key": {
+   "A": true,
+   "B": false,
+   "C": true,
+   "D": true,
+   "E": false
+  },
+  "keyRaw": "\\textbf{A: YES, B: NO, C: YES, D: YES, E: NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Building a view from a ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     " statement."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Copying rows from the shop's PostgreSQL database into Snowflake."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Running tests that check a column has no NULL values."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Generating documentation with the lineage of models."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     "Drawing the charts of a sales dashboard."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 1,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "Is this a job that dbt does?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " A foreign key that points to a missing primary key is an orphan. A duplicate is a repeated key; C and D are unrelated concepts."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch01-08",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A duplicate"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "An orphan (broken foreign key)"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A surrogate key"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A slowly changing dimension"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 1,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "Order 159 has ",
+     {
+      "t": "code",
+      "v": "user_id"
+     },
+     " = 101, but there is no customer 101. What do we call this row?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "c, b, d, a."
+      ],
+      "t": "b"
+     },
+     " Data is created in the source, loaded raw, transformed by dbt, then consumed."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch01-09",
+  "key": [
+   "C",
+   "B",
+   "D",
+   "A"
+  ],
+  "keyRaw": "\\textbf{c, b, d, a.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "analysts read a dashboard"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "a loading tool copies raw data into the warehouse"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "the shop application records an order"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt builds clean models from raw tables"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 1,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "Put these pipeline steps in the order data flows through them:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Type 2 keeps history with validity dates (dbt snapshots). Type 1 (A) loses history; C breaks the customer's identity; D moves last year's sales to Morocco, the opposite of what the business wants."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch01-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "SCD Type 1: overwrite the country."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "SCD Type 2: keep both versions with validity dates."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Delete the customer and create a new one."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Update the country of all the customer's past orders to Morocco."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 1,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     "A customer moves from France to Morocco. The business wants last year's sales to stay under France and new sales to appear under Morocco. Which approach is needed?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " Columnar storage reads only needed columns, with good compression. A, C and D are false."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch01-11",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "They keep every row in memory at all times."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "They only read the columns the query needs, and those columns compress well."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "They automatically create one index per column."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "They store data in CSV files."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 1,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "Why are columnar warehouses fast for analytics queries like \"sum of amount per month\"?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " B is a cycle, which is impossible in a DAG. D hides the dependency from dbt and breaks as soon as the schema changes (for example in production)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch01-12",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Models read raw tables through declared sources, and other models through ",
+     {
+      "t": "code",
+      "v": "ref()"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "Model A selects from model B and model B selects from model A."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Staging models clean one source table each; marts combine staging models."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Final models hard-code the full table name of other models, like ",
+     {
+      "t": "code",
+      "v": "dev_adnane.stg_orders"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 1,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "Which are signs of a clean DAG?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "schema."
+      ],
+      "t": "b"
+     }
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch01-13",
+  "key": {
+   "accepted": [
+    "schema"
+   ]
+  },
+  "keyRaw": "\\textbf{schema.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 1,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "The three-part name of a table is ",
+     {
+      "t": "code",
+      "v": "database"
+     },
+     ".",
+     {
+      "t": "blank"
+     },
+     ".",
+     {
+      "t": "code",
+      "v": "table"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " DRY = Don't Repeat Yourself. A is automated build/test/deploy; C is a human reading a change; D is a modeling choice."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch01-14",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "CI/CD"
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "DRY"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "Code review"
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Denormalisation"
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 1,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     "Which habit is described by \"write the logic once and reference it everywhere\"?"
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

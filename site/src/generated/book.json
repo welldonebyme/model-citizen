@@ -1,0 +1,3592 @@
+{
+ "appendices": [
+  {
+   "id": "appA",
+   "kind": "appendix",
+   "label": "app:cheatsheets",
+   "labs": 0,
+   "lessons": [
+    {
+     "id": "appA-s1",
+     "label": "sec:cheat-commands",
+     "labs": 0,
+     "minutes": 5,
+     "number": "A.1",
+     "steps": 1,
+     "title": "Commands and key flags"
+    },
+    {
+     "id": "appA-s2",
+     "label": "sec:cheat-selection",
+     "labs": 0,
+     "minutes": 5,
+     "number": "A.2",
+     "steps": 1,
+     "title": "Node selection"
+    },
+    {
+     "id": "appA-s3",
+     "label": "sec:cheat-project",
+     "labs": 0,
+     "minutes": 5,
+     "number": "A.3",
+     "steps": 1,
+     "title": "dbt_project.yml and configuration"
+    },
+    {
+     "id": "appA-s4",
+     "label": "sec:cheat-properties",
+     "labs": 0,
+     "minutes": 20,
+     "number": "A.4",
+     "steps": 1,
+     "title": "Property files"
+    },
+    {
+     "id": "appA-s5",
+     "label": "sec:cheat-materializations",
+     "labs": 0,
+     "minutes": 5,
+     "number": "A.5",
+     "steps": 1,
+     "title": "Materializations"
+    },
+    {
+     "id": "appA-s6",
+     "label": "sec:cheat-incremental",
+     "labs": 0,
+     "minutes": 5,
+     "number": "A.6",
+     "steps": 1,
+     "title": "Incremental models and microbatch"
+    },
+    {
+     "id": "appA-s7",
+     "label": "sec:cheat-snapshots",
+     "labs": 0,
+     "minutes": 5,
+     "number": "A.7",
+     "steps": 1,
+     "title": "Snapshots"
+    },
+    {
+     "id": "appA-s8",
+     "label": "sec:cheat-tests",
+     "labs": 0,
+     "minutes": 5,
+     "number": "A.8",
+     "steps": 1,
+     "title": "Data tests and unit tests"
+    },
+    {
+     "id": "appA-s9",
+     "label": "sec:cheat-governance",
+     "labs": 0,
+     "minutes": 5,
+     "number": "A.9",
+     "steps": 1,
+     "title": "Governance: contracts, constraints, versions, access"
+    },
+    {
+     "id": "appA-s10",
+     "label": "sec:cheat-jinja",
+     "labs": 0,
+     "minutes": 5,
+     "number": "A.10",
+     "steps": 1,
+     "title": "Jinja: functions and context variables"
+    },
+    {
+     "id": "appA-s11",
+     "label": "sec:cheat-artifacts",
+     "labs": 0,
+     "minutes": 5,
+     "number": "A.11",
+     "steps": 1,
+     "title": "Artifacts"
+    },
+    {
+     "id": "appA-s12",
+     "label": "sec:cheat-state",
+     "labs": 0,
+     "minutes": 5,
+     "number": "A.12",
+     "steps": 1,
+     "title": "State, defer, clone and retry"
+    },
+    {
+     "id": "appA-s13",
+     "label": "sec:cheat-freshness",
+     "labs": 0,
+     "minutes": 5,
+     "number": "A.13",
+     "steps": 1,
+     "title": "Source freshness"
+    },
+    {
+     "id": "appA-s14",
+     "label": "sec:cheat-git",
+     "labs": 0,
+     "minutes": 5,
+     "number": "A.14",
+     "steps": 1,
+     "title": "Git"
+    },
+    {
+     "id": "appA-s15",
+     "label": "sec:cheat-sql",
+     "labs": 0,
+     "minutes": 5,
+     "number": "A.15",
+     "steps": 1,
+     "title": "SQL window functions"
+    }
+   ],
+   "minutes": 90,
+   "number": 34,
+   "objectives": [],
+   "printed": "A",
+   "quizQuestions": 0,
+   "title": "Cheat Sheets"
+  },
+  {
+   "id": "appB",
+   "kind": "appendix",
+   "label": "app:coverage",
+   "labs": 0,
+   "lessons": [],
+   "minutes": 0,
+   "number": 35,
+   "objectives": [],
+   "printed": "B",
+   "quizQuestions": 0,
+   "title": "Coverage Matrix"
+  },
+  {
+   "id": "appC",
+   "kind": "appendix",
+   "label": "app:glossary",
+   "labs": 0,
+   "lessons": [],
+   "minutes": 0,
+   "number": 36,
+   "objectives": [],
+   "printed": "C",
+   "quizQuestions": 0,
+   "title": "English–French Glossary"
+  }
+ ],
+ "parts": [
+  {
+   "chapters": [
+    {
+     "id": "ch00",
+     "kind": "start",
+     "label": "ch:start",
+     "labs": 1,
+     "lessons": [
+      {
+       "id": "ch00-s1",
+       "label": "sec:start-welcome",
+       "labs": 0,
+       "minutes": 5,
+       "number": "0.1",
+       "steps": 4,
+       "title": "Welcome, Adnane"
+      },
+      {
+       "id": "ch00-s2",
+       "label": "sec:start-map",
+       "labs": 0,
+       "minutes": 5,
+       "number": "0.2",
+       "steps": 1,
+       "title": "The journey map"
+      },
+      {
+       "id": "ch00-s3",
+       "label": "sec:start-anatomy",
+       "labs": 1,
+       "minutes": 10,
+       "number": "0.3",
+       "steps": 1,
+       "title": "Anatomy of a chapter"
+      },
+      {
+       "id": "ch00-s4",
+       "label": "sec:start-howto",
+       "labs": 0,
+       "minutes": 5,
+       "number": "0.4",
+       "steps": 3,
+       "title": "How to study so it sticks"
+      },
+      {
+       "id": "ch00-s5",
+       "label": "sec:start-exam",
+       "labs": 0,
+       "minutes": 5,
+       "number": "0.5",
+       "steps": 4,
+       "title": "The exam decoded"
+      },
+      {
+       "id": "ch00-s6",
+       "label": "sec:start-topics",
+       "labs": 0,
+       "minutes": 5,
+       "number": "0.6",
+       "steps": 3,
+       "title": "The official topics, and where to learn them"
+      },
+      {
+       "id": "ch00-s7",
+       "label": "sec:start-plan",
+       "labs": 0,
+       "minutes": 5,
+       "number": "0.7",
+       "steps": 4,
+       "title": "Your 14-week study plan"
+      },
+      {
+       "id": "ch00-s8",
+       "label": "sec:start-tracker",
+       "labs": 0,
+       "minutes": 5,
+       "number": "0.8",
+       "steps": 2,
+       "title": "Your progress tracker"
+      }
+     ],
+     "minutes": 55,
+     "number": 0,
+     "objectives": [
+      "1.11",
+      "EXAM",
+      "PLAN"
+     ],
+     "printed": "0",
+     "quizQuestions": 7,
+     "title": "Start Here"
+    }
+   ],
+   "label": "Part 0",
+   "number": 0,
+   "title": "Start Here"
+  },
+  {
+   "chapters": [
+    {
+     "id": "ch01",
+     "kind": "chapter",
+     "label": "ch:data-world",
+     "labs": 2,
+     "lessons": [
+      {
+       "id": "ch01-s1",
+       "label": "sec:dw-tables",
+       "labs": 0,
+       "minutes": 5,
+       "number": "1.1",
+       "steps": 3,
+       "title": "Data, tables, rows and columns"
+      },
+      {
+       "id": "ch01-s2",
+       "label": "sec:dw-oltp-olap",
+       "labs": 0,
+       "minutes": 5,
+       "number": "1.2",
+       "steps": 5,
+       "title": "Two kinds of databases: OLTP and OLAP"
+      },
+      {
+       "id": "ch01-s3",
+       "label": "sec:dw-pipeline",
+       "labs": 0,
+       "minutes": 5,
+       "number": "1.3",
+       "steps": 2,
+       "title": "The data pipeline: from apps to dashboards"
+      },
+      {
+       "id": "ch01-s4",
+       "label": "sec:dw-roles",
+       "labs": 0,
+       "minutes": 5,
+       "number": "1.4",
+       "steps": 1,
+       "title": "Who does what: the data roles"
+      },
+      {
+       "id": "ch01-s5",
+       "label": "sec:dw-dbt",
+       "labs": 0,
+       "minutes": 5,
+       "number": "1.5",
+       "steps": 3,
+       "title": "What dbt is (and what it is not)"
+      },
+      {
+       "id": "ch01-s6",
+       "label": "sec:dw-modeling",
+       "labs": 1,
+       "minutes": 15,
+       "number": "1.6",
+       "steps": 7,
+       "title": "Thinking in models: facts, dimensions and grain"
+      },
+      {
+       "id": "ch01-s7",
+       "label": "sec:dw-viewpoint",
+       "labs": 0,
+       "minutes": 5,
+       "number": "1.7",
+       "steps": 2,
+       "title": "Engineering habits for analytics: the dbt viewpoint"
+      },
+      {
+       "id": "ch01-s8",
+       "label": "sec:dw-vocabulary",
+       "labs": 1,
+       "minutes": 15,
+       "number": "1.8",
+       "steps": 1,
+       "title": "Your dbt vocabulary map"
+      }
+     ],
+     "minutes": 80,
+     "number": 1,
+     "objectives": [
+      "CP0-DATA",
+      "1.1",
+      "1.3",
+      "1.5",
+      "1.10"
+     ],
+     "printed": "1",
+     "quizQuestions": 14,
+     "title": "The Data World in Simple Words"
+    },
+    {
+     "id": "ch02",
+     "kind": "chapter",
+     "label": "ch:cli",
+     "labs": 2,
+     "lessons": [
+      {
+       "id": "ch02-s1",
+       "label": "sec:cli-basics",
+       "labs": 0,
+       "minutes": 5,
+       "number": "2.1",
+       "steps": 1,
+       "title": "Terminal, shell and prompt"
+      },
+      {
+       "id": "ch02-s2",
+       "label": "sec:cli-paths",
+       "labs": 0,
+       "minutes": 5,
+       "number": "2.2",
+       "steps": 2,
+       "title": "Where am I? Folders and paths"
+      },
+      {
+       "id": "ch02-s3",
+       "label": "sec:cli-files",
+       "labs": 0,
+       "minutes": 5,
+       "number": "2.3",
+       "steps": 1,
+       "title": "Creating, copying, moving and deleting"
+      },
+      {
+       "id": "ch02-s4",
+       "label": "sec:cli-pipes",
+       "labs": 1,
+       "minutes": 15,
+       "number": "2.4",
+       "steps": 4,
+       "title": "Searching and combining commands"
+      },
+      {
+       "id": "ch02-s5",
+       "label": "sec:cli-hidden",
+       "labs": 0,
+       "minutes": 5,
+       "number": "2.5",
+       "steps": 1,
+       "title": "Hidden files and folders"
+      },
+      {
+       "id": "ch02-s6",
+       "label": "sec:cli-env",
+       "labs": 0,
+       "minutes": 5,
+       "number": "2.6",
+       "steps": 3,
+       "title": "Environment variables"
+      },
+      {
+       "id": "ch02-s7",
+       "label": "sec:cli-help",
+       "labs": 0,
+       "minutes": 5,
+       "number": "2.7",
+       "steps": 2,
+       "title": "Getting help and reading exit codes"
+      },
+      {
+       "id": "ch02-s8",
+       "label": "sec:cli-python",
+       "labs": 0,
+       "minutes": 5,
+       "number": "2.8",
+       "steps": 5,
+       "title": "Installing tools: Homebrew, Python environments and dbt"
+      },
+      {
+       "id": "ch02-s9",
+       "label": "sec:cli-mainlab",
+       "labs": 1,
+       "minutes": 15,
+       "number": "2.9",
+       "steps": 2,
+       "title": "Main lab: build your study workspace"
+      }
+     ],
+     "minutes": 85,
+     "number": 2,
+     "objectives": [
+      "CP0-CLI",
+      "1.4",
+      "1.6",
+      "3.1"
+     ],
+     "printed": "2",
+     "quizQuestions": 14,
+     "title": "The Command Line from Zero"
+    },
+    {
+     "id": "ch03",
+     "kind": "chapter",
+     "label": "ch:git",
+     "labs": 4,
+     "lessons": [
+      {
+       "id": "ch03-s1",
+       "label": "sec:git-vocabulary",
+       "labs": 0,
+       "minutes": 5,
+       "number": "3.1",
+       "steps": 3,
+       "title": "Git, GitHub and the vocabulary you need"
+      },
+      {
+       "id": "ch03-s2",
+       "label": "sec:git-config",
+       "labs": 0,
+       "minutes": 5,
+       "number": "3.2",
+       "steps": 1,
+       "title": "Install and configure Git"
+      },
+      {
+       "id": "ch03-s3",
+       "label": "sec:git-first-repo",
+       "labs": 1,
+       "minutes": 20,
+       "number": "3.3",
+       "steps": 5,
+       "title": "Your first repository"
+      },
+      {
+       "id": "ch03-s4",
+       "label": "sec:git-cycle",
+       "labs": 0,
+       "minutes": 5,
+       "number": "3.4",
+       "steps": 3,
+       "title": "The everyday cycle: change, review, stage, commit"
+      },
+      {
+       "id": "ch03-s5",
+       "label": "sec:git-branches",
+       "labs": 1,
+       "minutes": 20,
+       "number": "3.5",
+       "steps": 3,
+       "title": "Branches"
+      },
+      {
+       "id": "ch03-s6",
+       "label": "sec:git-conflicts",
+       "labs": 1,
+       "minutes": 20,
+       "number": "3.6",
+       "steps": 4,
+       "title": "Merge conflicts"
+      },
+      {
+       "id": "ch03-s7",
+       "label": "sec:git-remote",
+       "labs": 0,
+       "minutes": 10,
+       "number": "3.7",
+       "steps": 4,
+       "title": "Remotes and GitHub"
+      },
+      {
+       "id": "ch03-s8",
+       "label": "sec:git-pr",
+       "labs": 1,
+       "minutes": 15,
+       "number": "3.8",
+       "steps": 3,
+       "title": "Pull requests"
+      },
+      {
+       "id": "ch03-s9",
+       "label": "sec:git-strategies",
+       "labs": 0,
+       "minutes": 5,
+       "number": "3.9",
+       "steps": 4,
+       "title": "Branching strategies"
+      },
+      {
+       "id": "ch03-s10",
+       "label": "sec:git-studio",
+       "labs": 0,
+       "minutes": 5,
+       "number": "3.10",
+       "steps": 1,
+       "title": "Git inside dbt Studio"
+      },
+      {
+       "id": "ch03-s11",
+       "label": "sec:git-undo",
+       "labs": 0,
+       "minutes": 5,
+       "number": "3.11",
+       "steps": 4,
+       "title": "Undoing things safely"
+      },
+      {
+       "id": "ch03-s12",
+       "label": "sec:git-cheatsheet",
+       "labs": 0,
+       "minutes": 5,
+       "number": "3.12",
+       "steps": 1,
+       "title": "Git cheat sheet"
+      }
+     ],
+     "minutes": 145,
+     "number": 3,
+     "objectives": [
+      "CP0-GIT",
+      "3.4",
+      "7.1"
+     ],
+     "printed": "3",
+     "quizQuestions": 15,
+     "title": "Git and GitHub from Zero"
+    },
+    {
+     "id": "ch04",
+     "kind": "chapter",
+     "label": "ch:sql",
+     "labs": 10,
+     "lessons": [
+      {
+       "id": "ch04-s1",
+       "label": "sec:sql-duckdb",
+       "labs": 0,
+       "minutes": 5,
+       "number": "4.1",
+       "steps": 4,
+       "title": "Meet your practice database"
+      },
+      {
+       "id": "ch04-s2",
+       "label": "sec:sql-select",
+       "labs": 0,
+       "minutes": 5,
+       "number": "4.2",
+       "steps": 4,
+       "title": "SELECT and FROM: asking for columns"
+      },
+      {
+       "id": "ch04-s3",
+       "label": "sec:sql-where",
+       "labs": 1,
+       "minutes": 15,
+       "number": "4.3",
+       "steps": 6,
+       "title": "WHERE: keeping only some rows"
+      },
+      {
+       "id": "ch04-s4",
+       "label": "sec:sql-null",
+       "labs": 0,
+       "minutes": 5,
+       "number": "4.4",
+       "steps": 6,
+       "title": "NULL: the value that is not a value"
+      },
+      {
+       "id": "ch04-s5",
+       "label": "sec:sql-order",
+       "labs": 0,
+       "minutes": 5,
+       "number": "4.5",
+       "steps": 3,
+       "title": "ORDER BY, LIMIT and DISTINCT"
+      },
+      {
+       "id": "ch04-s6",
+       "label": "sec:sql-functions",
+       "labs": 1,
+       "minutes": 25,
+       "number": "4.6",
+       "steps": 5,
+       "title": "Functions: text, dates, CASE and CAST"
+      },
+      {
+       "id": "ch04-s7",
+       "label": "sec:sql-aggregation",
+       "labs": 1,
+       "minutes": 20,
+       "number": "4.7",
+       "steps": 5,
+       "title": "Aggregation: GROUP BY and HAVING"
+      },
+      {
+       "id": "ch04-s8",
+       "label": "sec:sql-joins",
+       "labs": 1,
+       "minutes": 30,
+       "number": "4.8",
+       "steps": 6,
+       "title": "Joins: combining tables"
+      },
+      {
+       "id": "ch04-s10",
+       "label": "sec:sql-subqueries",
+       "labs": 0,
+       "minutes": 15,
+       "number": "4.10",
+       "steps": 6,
+       "title": "Subqueries: a query inside a query"
+      },
+      {
+       "id": "ch04-s11",
+       "label": "sec:sql-ctes",
+       "labs": 1,
+       "minutes": 20,
+       "number": "4.11",
+       "steps": 2,
+       "title": "CTEs: give a name to each step"
+      },
+      {
+       "id": "ch04-s12",
+       "label": "sec:sql-windows",
+       "labs": 1,
+       "minutes": 35,
+       "number": "4.12",
+       "steps": 7,
+       "title": "Window functions"
+      },
+      {
+       "id": "ch04-s13",
+       "label": "sec:sql-setops",
+       "labs": 0,
+       "minutes": 5,
+       "number": "4.13",
+       "steps": 1,
+       "title": "Set operations: UNION, INTERSECT, EXCEPT"
+      },
+      {
+       "id": "ch04-s14",
+       "label": "sec:sql-ddl",
+       "labs": 1,
+       "minutes": 20,
+       "number": "4.14",
+       "steps": 5,
+       "title": "DDL and DML: the statements dbt writes for you"
+      },
+      {
+       "id": "ch04-s15",
+       "label": "sec:sql-views-tables",
+       "labs": 1,
+       "minutes": 15,
+       "number": "4.15",
+       "steps": 2,
+       "title": "Views, tables and temporary tables"
+      },
+      {
+       "id": "ch04-s16",
+       "label": "sec:sql-style",
+       "labs": 0,
+       "minutes": 5,
+       "number": "4.16",
+       "steps": 2,
+       "title": "Writing readable and performant SQL"
+      },
+      {
+       "id": "ch04-s17",
+       "label": "sec:sql-refactoring",
+       "labs": 1,
+       "minutes": 20,
+       "number": "4.17",
+       "steps": 4,
+       "title": "Refactoring legacy SQL"
+      },
+      {
+       "id": "ch04-s18",
+       "label": "sec:sql-final-lab",
+       "labs": 1,
+       "minutes": 25,
+       "number": "4.18",
+       "steps": 2,
+       "title": "Final lab: the customer orders report"
+      }
+     ],
+     "minutes": 315,
+     "number": 4,
+     "objectives": [
+      "CP0-SQL",
+      "1.2",
+      "1.3",
+      "1.5"
+     ],
+     "printed": "4",
+     "quizQuestions": 30,
+     "title": "SQL from Zero to Exam Level"
+    },
+    {
+     "id": "ch05",
+     "kind": "chapter",
+     "label": "ch:yaml-jinja-python",
+     "labs": 3,
+     "lessons": [
+      {
+       "id": "ch05-s1",
+       "label": "sec:yjp-overview",
+       "labs": 0,
+       "minutes": 5,
+       "number": "5.1",
+       "steps": 1,
+       "title": "Three small languages around SQL"
+      },
+      {
+       "id": "ch05-s2",
+       "label": "sec:yjp-yaml",
+       "labs": 1,
+       "minutes": 40,
+       "number": "5.2",
+       "steps": 12,
+       "title": "YAML: configuration you can read"
+      },
+      {
+       "id": "ch05-s3",
+       "label": "sec:yjp-jinja",
+       "labs": 2,
+       "minutes": 45,
+       "number": "5.3",
+       "steps": 11,
+       "title": "Jinja: SQL that writes SQL"
+      },
+      {
+       "id": "ch05-s4",
+       "label": "sec:yjp-python",
+       "labs": 0,
+       "minutes": 10,
+       "number": "5.4",
+       "steps": 4,
+       "title": "Just enough Python"
+      }
+     ],
+     "minutes": 125,
+     "number": 5,
+     "objectives": [
+      "CP0-JINJA",
+      "CP0-PY",
+      "CP0-YAML",
+      "1.3",
+      "1.6",
+      "1.8",
+      "3.2",
+      "3.3"
+     ],
+     "printed": "5",
+     "quizQuestions": 16,
+     "title": "YAML, Jinja and Just Enough Python"
+    }
+   ],
+   "label": "Part I",
+   "number": 1,
+   "title": "Foundations Refresh"
+  },
+  {
+   "chapters": [
+    {
+     "id": "ch06",
+     "kind": "chapter",
+     "label": "ch:first-project",
+     "labs": 4,
+     "lessons": [
+      {
+       "id": "ch06-s1",
+       "label": "sec:fp-what-dbt-does",
+       "labs": 0,
+       "minutes": 5,
+       "number": "6.1",
+       "steps": 2,
+       "title": "What dbt does when you type a command"
+      },
+      {
+       "id": "ch06-s2",
+       "label": "sec:fp-workspace",
+       "labs": 0,
+       "minutes": 5,
+       "number": "6.2",
+       "steps": 1,
+       "title": "Before you start: check your workspace"
+      },
+      {
+       "id": "ch06-s3",
+       "label": "sec:fp-init",
+       "labs": 1,
+       "minutes": 15,
+       "number": "6.3",
+       "steps": 3,
+       "title": "Creating a project with dbt init"
+      },
+      {
+       "id": "ch06-s4",
+       "label": "sec:fp-anatomy",
+       "labs": 0,
+       "minutes": 5,
+       "number": "6.4",
+       "steps": 2,
+       "title": "Anatomy of a dbt project"
+      },
+      {
+       "id": "ch06-s5",
+       "label": "sec:fp-project-yml",
+       "labs": 0,
+       "minutes": 10,
+       "number": "6.5",
+       "steps": 6,
+       "title": "dbt_project.yml, line by line"
+      },
+      {
+       "id": "ch06-s6",
+       "label": "sec:fp-profiles",
+       "labs": 0,
+       "minutes": 10,
+       "number": "6.6",
+       "steps": 6,
+       "title": "profiles.yml: how dbt connects to the warehouse"
+      },
+      {
+       "id": "ch06-s7",
+       "label": "sec:fp-debug",
+       "labs": 1,
+       "minutes": 15,
+       "number": "6.7",
+       "steps": 2,
+       "title": "dbt debug: is everything connected?"
+      },
+      {
+       "id": "ch06-s8",
+       "label": "sec:fp-first-run",
+       "labs": 0,
+       "minutes": 5,
+       "number": "6.8",
+       "steps": 4,
+       "title": "Your first dbt run"
+      },
+      {
+       "id": "ch06-s9",
+       "label": "sec:fp-target",
+       "labs": 1,
+       "minutes": 20,
+       "number": "6.9",
+       "steps": 5,
+       "title": "Inside target/ and logs/"
+      },
+      {
+       "id": "ch06-s10",
+       "label": "sec:fp-duckdb-lock",
+       "labs": 0,
+       "minutes": 5,
+       "number": "6.10",
+       "steps": 1,
+       "title": "The DuckDB file lock"
+      },
+      {
+       "id": "ch06-s11",
+       "label": "sec:fp-clean-examples",
+       "labs": 0,
+       "minutes": 5,
+       "number": "6.11",
+       "steps": 2,
+       "title": "Removing the example models"
+      },
+      {
+       "id": "ch06-s12",
+       "label": "sec:fp-git",
+       "labs": 1,
+       "minutes": 20,
+       "number": "6.12",
+       "steps": 1,
+       "title": "Put the project under Git"
+      },
+      {
+       "id": "ch06-s13",
+       "label": "sec:fp-platform",
+       "labs": 0,
+       "minutes": 5,
+       "number": "6.13",
+       "steps": 4,
+       "title": "The dbt platform path"
+      }
+     ],
+     "minutes": 150,
+     "number": 6,
+     "objectives": [
+      "CP0-CLI",
+      "CP0-GIT",
+      "1.4",
+      "1.6",
+      "3.1",
+      "3.2"
+     ],
+     "printed": "6",
+     "quizQuestions": 18,
+     "title": "Installing dbt and Your First Project"
+    },
+    {
+     "id": "ch07",
+     "kind": "chapter",
+     "label": "ch:models-sources-dag",
+     "labs": 4,
+     "lessons": [
+      {
+       "id": "ch07-s1",
+       "label": "sec:msd-model",
+       "labs": 0,
+       "minutes": 5,
+       "number": "7.1",
+       "steps": 1,
+       "title": "What a model is"
+      },
+      {
+       "id": "ch07-s2",
+       "label": "sec:msd-sources",
+       "labs": 1,
+       "minutes": 20,
+       "number": "7.2",
+       "steps": 5,
+       "title": "Sources: declaring the raw data"
+      },
+      {
+       "id": "ch07-s3",
+       "label": "sec:msd-verify",
+       "labs": 0,
+       "minutes": 5,
+       "number": "7.3",
+       "steps": 4,
+       "title": "Verifying raw object dependencies"
+      },
+      {
+       "id": "ch07-s4",
+       "label": "sec:msd-staging",
+       "labs": 1,
+       "minutes": 35,
+       "number": "7.4",
+       "steps": 4,
+       "title": "Staging models: one clean copy per raw table"
+      },
+      {
+       "id": "ch07-s5",
+       "label": "sec:msd-dag",
+       "labs": 0,
+       "minutes": 10,
+       "number": "7.5",
+       "steps": 4,
+       "title": "ref() and the DAG"
+      },
+      {
+       "id": "ch07-s6",
+       "label": "sec:msd-marts",
+       "labs": 1,
+       "minutes": 25,
+       "number": "7.6",
+       "steps": 1,
+       "title": "The marts: fct_orders and dim_customers"
+      },
+      {
+       "id": "ch07-s7",
+       "label": "sec:msd-commands",
+       "labs": 0,
+       "minutes": 5,
+       "number": "7.7",
+       "steps": 4,
+       "title": "The commands of this chapter"
+      },
+      {
+       "id": "ch07-s8",
+       "label": "sec:msd-lineage",
+       "labs": 0,
+       "minutes": 5,
+       "number": "7.8",
+       "steps": 1,
+       "title": "Seeing the lineage: dbt docs and Catalog"
+      },
+      {
+       "id": "ch07-s9",
+       "label": "sec:msd-hardcoded",
+       "labs": 0,
+       "minutes": 5,
+       "number": "7.9",
+       "steps": 1,
+       "title": "The classic scenario: a hard-coded table name"
+      },
+      {
+       "id": "ch07-s10",
+       "label": "sec:msd-errors",
+       "labs": 1,
+       "minutes": 15,
+       "number": "7.10",
+       "steps": 5,
+       "title": "Common errors and how to read them"
+      },
+      {
+       "id": "ch07-s11",
+       "label": "sec:msd-platform",
+       "labs": 0,
+       "minutes": 5,
+       "number": "7.11",
+       "steps": 1,
+       "title": "The same work in the dbt platform"
+      }
+     ],
+     "minutes": 160,
+     "number": 7,
+     "objectives": [
+      "1.1",
+      "1.4",
+      "1.5",
+      "3.1",
+      "5.1"
+     ],
+     "printed": "7",
+     "quizQuestions": 18,
+     "title": "Models, ref, Sources and the DAG"
+    },
+    {
+     "id": "ch08",
+     "kind": "chapter",
+     "label": "ch:materializations",
+     "labs": 2,
+     "lessons": [
+      {
+       "id": "ch08-s1",
+       "label": "sec:mat-what",
+       "labs": 0,
+       "minutes": 5,
+       "number": "8.1",
+       "steps": 1,
+       "title": "What a materialization is"
+      },
+      {
+       "id": "ch08-s2",
+       "label": "sec:mat-where",
+       "labs": 1,
+       "minutes": 20,
+       "number": "8.2",
+       "steps": 1,
+       "title": "Where you configure a materialization"
+      },
+      {
+       "id": "ch08-s3",
+       "label": "sec:mat-view-table",
+       "labs": 0,
+       "minutes": 5,
+       "number": "8.3",
+       "steps": 3,
+       "title": "View and table: the SQL behind them"
+      },
+      {
+       "id": "ch08-s4",
+       "label": "sec:mat-ephemeral",
+       "labs": 1,
+       "minutes": 30,
+       "number": "8.4",
+       "steps": 4,
+       "title": "Ephemeral models"
+      },
+      {
+       "id": "ch08-s5",
+       "label": "sec:mat-precedence",
+       "labs": 0,
+       "minutes": 5,
+       "number": "8.5",
+       "steps": 1,
+       "title": "Which config wins? A first look at precedence"
+      },
+      {
+       "id": "ch08-s6",
+       "label": "sec:mat-change",
+       "labs": 0,
+       "minutes": 5,
+       "number": "8.6",
+       "steps": 1,
+       "title": "Changing the materialization of an existing model"
+      },
+      {
+       "id": "ch08-s7",
+       "label": "sec:mat-incremental",
+       "labs": 0,
+       "minutes": 5,
+       "number": "8.7",
+       "steps": 1,
+       "title": "Incremental models: a preview"
+      },
+      {
+       "id": "ch08-s8",
+       "label": "sec:mat-mv",
+       "labs": 0,
+       "minutes": 5,
+       "number": "8.8",
+       "steps": 1,
+       "title": "Materialized views and dynamic tables"
+      },
+      {
+       "id": "ch08-s9",
+       "label": "sec:mat-full-refresh",
+       "labs": 0,
+       "minutes": 5,
+       "number": "8.9",
+       "steps": 1,
+       "title": "What --full-refresh does to each materialization"
+      },
+      {
+       "id": "ch08-s10",
+       "label": "sec:mat-choose",
+       "labs": 0,
+       "minutes": 5,
+       "number": "8.10",
+       "steps": 2,
+       "title": "Choosing a materialization"
+      },
+      {
+       "id": "ch08-s11",
+       "label": "sec:mat-python-custom",
+       "labs": 0,
+       "minutes": 5,
+       "number": "8.11",
+       "steps": 2,
+       "title": "Python models and custom materializations"
+      },
+      {
+       "id": "ch08-s12",
+       "label": "sec:mat-platform",
+       "labs": 0,
+       "minutes": 5,
+       "number": "8.12",
+       "steps": 1,
+       "title": "In the dbt platform"
+      }
+     ],
+     "minutes": 125,
+     "number": 8,
+     "objectives": [
+      "1.2",
+      "1.6",
+      "1.8",
+      "1.11",
+      "1.14",
+      "3.2"
+     ],
+     "printed": "8",
+     "quizQuestions": 18,
+     "title": "Materializations"
+    },
+    {
+     "id": "ch09",
+     "kind": "chapter",
+     "label": "ch:modularity-refactoring",
+     "labs": 2,
+     "lessons": [
+      {
+       "id": "ch09-s1",
+       "label": "sec:mod-dry",
+       "labs": 0,
+       "minutes": 5,
+       "number": "9.1",
+       "steps": 2,
+       "title": "Modularity and DRY, in plain words"
+      },
+      {
+       "id": "ch09-s2",
+       "label": "sec:mod-layers",
+       "labs": 0,
+       "minutes": 5,
+       "number": "9.2",
+       "steps": 6,
+       "title": "The three layers"
+      },
+      {
+       "id": "ch09-s3",
+       "label": "sec:mod-dag-rules",
+       "labs": 0,
+       "minutes": 5,
+       "number": "9.3",
+       "steps": 2,
+       "title": "The rules of a clean DAG"
+      },
+      {
+       "id": "ch09-s4",
+       "label": "sec:mod-lineage",
+       "labs": 0,
+       "minutes": 5,
+       "number": "9.4",
+       "steps": 1,
+       "title": "Reading the lineage to spot problems"
+      },
+      {
+       "id": "ch09-s5",
+       "label": "sec:mod-method",
+       "labs": 0,
+       "minutes": 5,
+       "number": "9.5",
+       "steps": 1,
+       "title": "The refactoring method"
+      },
+      {
+       "id": "ch09-s6",
+       "label": "sec:mod-step1",
+       "labs": 0,
+       "minutes": 5,
+       "number": "9.6",
+       "steps": 1,
+       "title": "Step 1: migrate the legacy query as it is"
+      },
+      {
+       "id": "ch09-s7",
+       "label": "sec:mod-step2",
+       "labs": 0,
+       "minutes": 5,
+       "number": "9.7",
+       "steps": 1,
+       "title": "Step 2: replace the hard-coded tables by sources"
+      },
+      {
+       "id": "ch09-s8",
+       "label": "sec:mod-step3",
+       "labs": 1,
+       "minutes": 20,
+       "number": "9.8",
+       "steps": 1,
+       "title": "Step 3: CTE groupings and cosmetic clean-up"
+      },
+      {
+       "id": "ch09-s9",
+       "label": "sec:mod-step4",
+       "labs": 0,
+       "minutes": 10,
+       "number": "9.9",
+       "steps": 1,
+       "title": "Step 4: move the logic into staging and intermediate models"
+      },
+      {
+       "id": "ch09-s10",
+       "label": "sec:mod-step5",
+       "labs": 0,
+       "minutes": 5,
+       "number": "9.10",
+       "steps": 3,
+       "title": "Step 5: audit the result"
+      },
+      {
+       "id": "ch09-s11",
+       "label": "sec:mod-step6",
+       "labs": 0,
+       "minutes": 5,
+       "number": "9.11",
+       "steps": 1,
+       "title": "Step 6: DRY again, fct_orders reuses the new model"
+      },
+      {
+       "id": "ch09-s12",
+       "label": "sec:mod-step7",
+       "labs": 1,
+       "minutes": 20,
+       "number": "9.12",
+       "steps": 1,
+       "title": "Step 7: delete the legacy model"
+      },
+      {
+       "id": "ch09-s13",
+       "label": "sec:mod-platform",
+       "labs": 0,
+       "minutes": 5,
+       "number": "9.13",
+       "steps": 1,
+       "title": "In the dbt platform"
+      }
+     ],
+     "minutes": 130,
+     "number": 9,
+     "objectives": [
+      "CP0-SQL",
+      "1.1",
+      "1.3",
+      "1.5"
+     ],
+     "printed": "9",
+     "quizQuestions": 19,
+     "title": "Modularity, DRY and Refactoring"
+    },
+    {
+     "id": "ch10",
+     "kind": "chapter",
+     "label": "ch:configuration",
+     "labs": 7,
+     "lessons": [
+      {
+       "id": "ch10-s1",
+       "label": "sec:config-vs-properties",
+       "labs": 0,
+       "minutes": 5,
+       "number": "10.1",
+       "steps": 1,
+       "title": "Configs and properties: two kinds of settings"
+      },
+      {
+       "id": "ch10-s2",
+       "label": "sec:config-project-file",
+       "labs": 0,
+       "minutes": 15,
+       "number": "10.2",
+       "steps": 3,
+       "title": "A tour of dbt_project.yml"
+      },
+      {
+       "id": "ch10-s3",
+       "label": "sec:config-plus",
+       "labs": 0,
+       "minutes": 5,
+       "number": "10.3",
+       "steps": 1,
+       "title": "The + prefix"
+      },
+      {
+       "id": "ch10-s4",
+       "label": "sec:config-schemas",
+       "labs": 1,
+       "minutes": 25,
+       "number": "10.4",
+       "steps": 4,
+       "title": "Custom schemas, databases and aliases"
+      },
+      {
+       "id": "ch10-s5",
+       "label": "sec:config-tags-meta",
+       "labs": 1,
+       "minutes": 20,
+       "number": "10.5",
+       "steps": 1,
+       "title": "Tags, meta, docs and enabled"
+      },
+      {
+       "id": "ch10-s6",
+       "label": "sec:config-precedence",
+       "labs": 1,
+       "minutes": 15,
+       "number": "10.6",
+       "steps": 2,
+       "title": "Precedence: which value wins?"
+      },
+      {
+       "id": "ch10-s7",
+       "label": "sec:config-target-vars",
+       "labs": 1,
+       "minutes": 25,
+       "number": "10.7",
+       "steps": 4,
+       "title": "Environment-aware code: target, vars and env_var"
+      },
+      {
+       "id": "ch10-s8",
+       "label": "sec:config-hooks",
+       "labs": 1,
+       "minutes": 20,
+       "number": "10.8",
+       "steps": 3,
+       "title": "Hooks"
+      },
+      {
+       "id": "ch10-s9",
+       "label": "sec:config-grants",
+       "labs": 1,
+       "minutes": 15,
+       "number": "10.9",
+       "steps": 4,
+       "title": "Grants: who may read your models"
+      },
+      {
+       "id": "ch10-s10",
+       "label": "sec:config-other",
+       "labs": 0,
+       "minutes": 5,
+       "number": "10.10",
+       "steps": 1,
+       "title": "Quoting, persist_docs and other configs"
+      },
+      {
+       "id": "ch10-s11",
+       "label": "sec:config-platform",
+       "labs": 0,
+       "minutes": 5,
+       "number": "10.11",
+       "steps": 1,
+       "title": "Configuration on the dbt platform"
+      },
+      {
+       "id": "ch10-s12",
+       "label": "sec:config-finish",
+       "labs": 1,
+       "minutes": 10,
+       "number": "10.12",
+       "steps": 1,
+       "title": "Finish the chapter: build, commit, compare"
+      }
+     ],
+     "minutes": 195,
+     "number": 10,
+     "objectives": [
+      "CP0-YAML",
+      "1.6",
+      "1.9"
+     ],
+     "printed": "10",
+     "quizQuestions": 20,
+     "title": "Configuration"
+    },
+    {
+     "id": "ch11",
+     "kind": "chapter",
+     "label": "ch:jinja-macros-packages",
+     "labs": 4,
+     "lessons": [
+      {
+       "id": "ch11-s1",
+       "label": "sec:jmp-context",
+       "labs": 0,
+       "minutes": 10,
+       "number": "11.1",
+       "steps": 4,
+       "title": "Jinja inside dbt: the rendering context"
+      },
+      {
+       "id": "ch11-s2",
+       "label": "sec:jmp-macros",
+       "labs": 1,
+       "minutes": 20,
+       "number": "11.2",
+       "steps": 5,
+       "title": "Macros: write once, call everywhere"
+      },
+      {
+       "id": "ch11-s3",
+       "label": "sec:jmp-runquery",
+       "labs": 0,
+       "minutes": 10,
+       "number": "11.3",
+       "steps": 4,
+       "title": "Talking to the database during compilation"
+      },
+      {
+       "id": "ch11-s4",
+       "label": "sec:jmp-runop",
+       "labs": 0,
+       "minutes": 5,
+       "number": "11.4",
+       "steps": 1,
+       "title": "Running a macro on its own: dbt run-operation"
+      },
+      {
+       "id": "ch11-s5",
+       "label": "sec:jmp-packages",
+       "labs": 1,
+       "minutes": 25,
+       "number": "11.5",
+       "steps": 7,
+       "title": "Packages: other people's macros"
+      },
+      {
+       "id": "ch11-s6",
+       "label": "sec:jmp-utils",
+       "labs": 1,
+       "minutes": 30,
+       "number": "11.6",
+       "steps": 4,
+       "title": "Using package macros"
+      },
+      {
+       "id": "ch11-s7",
+       "label": "sec:jmp-audit",
+       "labs": 0,
+       "minutes": 5,
+       "number": "11.7",
+       "steps": 2,
+       "title": "Comparing and generating code: audit_helper and codegen"
+      },
+      {
+       "id": "ch11-s8",
+       "label": "sec:jmp-dispatch",
+       "labs": 1,
+       "minutes": 20,
+       "number": "11.8",
+       "steps": 3,
+       "title": "Dispatch: one macro, many warehouses"
+      }
+     ],
+     "minutes": 155,
+     "number": 11,
+     "objectives": [
+      "CP0-JINJA",
+      "1.3",
+      "1.4",
+      "1.7",
+      "3.2"
+     ],
+     "printed": "11",
+     "quizQuestions": 19,
+     "title": "Jinja, Macros and Packages"
+    },
+    {
+     "id": "ch12",
+     "kind": "chapter",
+     "label": "ch:seeds-analyses",
+     "labs": 3,
+     "lessons": [
+      {
+       "id": "ch12-s1",
+       "label": "sec:sa-seeds-what",
+       "labs": 0,
+       "minutes": 5,
+       "number": "12.1",
+       "steps": 1,
+       "title": "Seeds: what they are for"
+      },
+      {
+       "id": "ch12-s2",
+       "label": "sec:sa-csv",
+       "labs": 0,
+       "minutes": 5,
+       "number": "12.2",
+       "steps": 1,
+       "title": "Writing the CSV file"
+      },
+      {
+       "id": "ch12-s3",
+       "label": "sec:sa-dbt-seed",
+       "labs": 1,
+       "minutes": 20,
+       "number": "12.3",
+       "steps": 4,
+       "title": "Loading a seed: dbt seed"
+      },
+      {
+       "id": "ch12-s4",
+       "label": "sec:sa-configs",
+       "labs": 0,
+       "minutes": 5,
+       "number": "12.4",
+       "steps": 2,
+       "title": "Seed configurations"
+      },
+      {
+       "id": "ch12-s5",
+       "label": "sec:sa-full-refresh",
+       "labs": 0,
+       "minutes": 5,
+       "number": "12.5",
+       "steps": 1,
+       "title": "Full refresh: when the columns change"
+      },
+      {
+       "id": "ch12-s6",
+       "label": "sec:sa-properties",
+       "labs": 0,
+       "minutes": 5,
+       "number": "12.6",
+       "steps": 1,
+       "title": "Properties, tests and documentation"
+      },
+      {
+       "id": "ch12-s7",
+       "label": "sec:sa-dag",
+       "labs": 1,
+       "minutes": 20,
+       "number": "12.7",
+       "steps": 3,
+       "title": "Seeds in the DAG"
+      },
+      {
+       "id": "ch12-s8",
+       "label": "sec:sa-analyses",
+       "labs": 0,
+       "minutes": 10,
+       "number": "12.8",
+       "steps": 5,
+       "title": "Analyses: SQL that dbt compiles but never runs"
+      },
+      {
+       "id": "ch12-s9",
+       "label": "sec:sa-compare",
+       "labs": 1,
+       "minutes": 15,
+       "number": "12.9",
+       "steps": 1,
+       "title": "Analyses, singular tests, models and seeds compared"
+      }
+     ],
+     "minutes": 115,
+     "number": 12,
+     "objectives": [
+      "1.4",
+      "1.5",
+      "1.6",
+      "3.2"
+     ],
+     "printed": "12",
+     "quizQuestions": 17,
+     "title": "Seeds and Analyses"
+    },
+    {
+     "id": "ch13",
+     "kind": "chapter",
+     "label": "ch:snapshots",
+     "labs": 4,
+     "lessons": [
+      {
+       "id": "ch13-s1",
+       "label": "sec:snap-why",
+       "labs": 0,
+       "minutes": 5,
+       "number": "13.1",
+       "steps": 2,
+       "title": "Why keep history?"
+      },
+      {
+       "id": "ch13-s2",
+       "label": "sec:snap-what",
+       "labs": 0,
+       "minutes": 5,
+       "number": "13.2",
+       "steps": 3,
+       "title": "Snapshots in dbt: the big picture"
+      },
+      {
+       "id": "ch13-s3",
+       "label": "sec:snap-yaml",
+       "labs": 0,
+       "minutes": 10,
+       "number": "13.3",
+       "steps": 6,
+       "title": "Defining a snapshot in YAML"
+      },
+      {
+       "id": "ch13-s4",
+       "label": "sec:snap-strategies",
+       "labs": 0,
+       "minutes": 5,
+       "number": "13.4",
+       "steps": 3,
+       "title": "The two strategies: timestamp and check"
+      },
+      {
+       "id": "ch13-s5",
+       "label": "sec:snap-first-run",
+       "labs": 1,
+       "minutes": 20,
+       "number": "13.5",
+       "steps": 2,
+       "title": "Your first snapshots"
+      },
+      {
+       "id": "ch13-s6",
+       "label": "sec:snap-day2",
+       "labs": 1,
+       "minutes": 25,
+       "number": "13.6",
+       "steps": 2,
+       "title": "The next loading day"
+      },
+      {
+       "id": "ch13-s7",
+       "label": "sec:snap-query",
+       "labs": 0,
+       "minutes": 5,
+       "number": "13.7",
+       "steps": 3,
+       "title": "Querying a snapshot"
+      },
+      {
+       "id": "ch13-s8",
+       "label": "sec:snap-hard-deletes",
+       "labs": 1,
+       "minutes": 15,
+       "number": "13.8",
+       "steps": 1,
+       "title": "Hard deletes"
+      },
+      {
+       "id": "ch13-s9",
+       "label": "sec:snap-more-configs",
+       "labs": 0,
+       "minutes": 5,
+       "number": "13.9",
+       "steps": 3,
+       "title": "More configs from dbt 1.9"
+      },
+      {
+       "id": "ch13-s10",
+       "label": "sec:snap-commands",
+       "labs": 0,
+       "minutes": 5,
+       "number": "13.10",
+       "steps": 6,
+       "title": "Snapshots in the DAG and in commands"
+      },
+      {
+       "id": "ch13-s11",
+       "label": "sec:snap-best-practices",
+       "labs": 0,
+       "minutes": 5,
+       "number": "13.11",
+       "steps": 1,
+       "title": "Best practices"
+      },
+      {
+       "id": "ch13-s12",
+       "label": "sec:snap-legacy",
+       "labs": 0,
+       "minutes": 5,
+       "number": "13.12",
+       "steps": 1,
+       "title": "Recognising the legacy SQL syntax"
+      },
+      {
+       "id": "ch13-s13",
+       "label": "sec:snap-commit",
+       "labs": 1,
+       "minutes": 10,
+       "number": "13.13",
+       "steps": 1,
+       "title": "Commit and compare"
+      }
+     ],
+     "minutes": 145,
+     "number": 13,
+     "objectives": [
+      "1.4",
+      "1.6",
+      "1.10",
+      "1.12"
+     ],
+     "printed": "13",
+     "quizQuestions": 18,
+     "title": "Snapshots"
+    },
+    {
+     "id": "ch14",
+     "kind": "chapter",
+     "label": "ch:incremental-microbatch",
+     "labs": 6,
+     "lessons": [
+      {
+       "id": "ch14-s1",
+       "label": "sec:inc-why",
+       "labs": 0,
+       "minutes": 5,
+       "number": "14.1",
+       "steps": 3,
+       "title": "Why incremental models (and when not to use them)"
+      },
+      {
+       "id": "ch14-s2",
+       "label": "sec:inc-runs",
+       "labs": 0,
+       "minutes": 5,
+       "number": "14.2",
+       "steps": 3,
+       "title": "First run and later runs: is_incremental() and this"
+      },
+      {
+       "id": "ch14-s3",
+       "label": "sec:inc-filter",
+       "labs": 1,
+       "minutes": 30,
+       "number": "14.3",
+       "steps": 3,
+       "title": "Writing a safe incremental filter"
+      },
+      {
+       "id": "ch14-s4",
+       "label": "sec:inc-unique-key",
+       "labs": 1,
+       "minutes": 20,
+       "number": "14.4",
+       "steps": 1,
+       "title": "The unique_key"
+      },
+      {
+       "id": "ch14-s5",
+       "label": "sec:inc-strategies",
+       "labs": 0,
+       "minutes": 10,
+       "number": "14.5",
+       "steps": 5,
+       "title": "The incremental strategies"
+      },
+      {
+       "id": "ch14-s6",
+       "label": "sec:inc-choose",
+       "labs": 0,
+       "minutes": 5,
+       "number": "14.6",
+       "steps": 1,
+       "title": "Choosing the strategy (objective 1.11)"
+      },
+      {
+       "id": "ch14-s7",
+       "label": "sec:inc-schema-change",
+       "labs": 0,
+       "minutes": 5,
+       "number": "14.7",
+       "steps": 2,
+       "title": "When the columns change: on_schema_change"
+      },
+      {
+       "id": "ch14-s8",
+       "label": "sec:inc-full-refresh",
+       "labs": 0,
+       "minutes": 5,
+       "number": "14.8",
+       "steps": 2,
+       "title": "Rebuilding: --full-refresh and the full_refresh config"
+      },
+      {
+       "id": "ch14-s9",
+       "label": "sec:inc-microbatch",
+       "labs": 1,
+       "minutes": 30,
+       "number": "14.9",
+       "steps": 5,
+       "title": "Microbatch: incremental by time slices (objective 1.14)"
+      },
+      {
+       "id": "ch14-s10",
+       "label": "sec:inc-backfill",
+       "labs": 1,
+       "minutes": 20,
+       "number": "14.10",
+       "steps": 3,
+       "title": "Which batches run? Lookback, late data and backfills"
+      },
+      {
+       "id": "ch14-s11",
+       "label": "sec:inc-retry",
+       "labs": 1,
+       "minutes": 15,
+       "number": "14.11",
+       "steps": 1,
+       "title": "Failed batches, partial success and dbt retry"
+      },
+      {
+       "id": "ch14-s12",
+       "label": "sec:inc-platform",
+       "labs": 1,
+       "minutes": 15,
+       "number": "14.12",
+       "steps": 1,
+       "title": "In the dbt platform, and finishing the chapter"
+      }
+     ],
+     "minutes": 195,
+     "number": 14,
+     "objectives": [
+      "1.2",
+      "1.11",
+      "1.12",
+      "1.13",
+      "1.14",
+      "7.2"
+     ],
+     "printed": "14",
+     "quizQuestions": 20,
+     "title": "Incremental Models and Microbatch"
+    },
+    {
+     "id": "ch15",
+     "kind": "chapter",
+     "label": "ch:python-models",
+     "labs": 3,
+     "lessons": [
+      {
+       "id": "ch15-s1",
+       "label": "sec:py-why",
+       "labs": 0,
+       "minutes": 5,
+       "number": "15.1",
+       "steps": 1,
+       "title": "Why (and when) Python models"
+      },
+      {
+       "id": "ch15-s2",
+       "label": "sec:py-anatomy",
+       "labs": 0,
+       "minutes": 5,
+       "number": "15.2",
+       "steps": 3,
+       "title": "Anatomy of a Python model"
+      },
+      {
+       "id": "ch15-s3",
+       "label": "sec:py-platforms",
+       "labs": 0,
+       "minutes": 5,
+       "number": "15.3",
+       "steps": 2,
+       "title": "Where does the Python code run?"
+      },
+      {
+       "id": "ch15-s4",
+       "label": "sec:py-lab",
+       "labs": 1,
+       "minutes": 25,
+       "number": "15.4",
+       "steps": 2,
+       "title": "Your first Python model: customer_segments"
+      },
+      {
+       "id": "ch15-s5",
+       "label": "sec:py-config",
+       "labs": 0,
+       "minutes": 5,
+       "number": "15.5",
+       "steps": 2,
+       "title": "Configuring a Python model"
+      },
+      {
+       "id": "ch15-s6",
+       "label": "sec:py-materializations",
+       "labs": 0,
+       "minutes": 5,
+       "number": "15.6",
+       "steps": 3,
+       "title": "Materializations: table and incremental only"
+      },
+      {
+       "id": "ch15-s7",
+       "label": "sec:py-limits",
+       "labs": 0,
+       "minutes": 5,
+       "number": "15.7",
+       "steps": 5,
+       "title": "Testing, contracts and other limits"
+      },
+      {
+       "id": "ch15-s8",
+       "label": "sec:py-types",
+       "labs": 1,
+       "minutes": 15,
+       "number": "15.8",
+       "steps": 1,
+       "title": "Types change when data goes through pandas"
+      },
+      {
+       "id": "ch15-s9",
+       "label": "sec:py-platform-view",
+       "labs": 0,
+       "minutes": 5,
+       "number": "15.9",
+       "steps": 1,
+       "title": "Python models on the dbt platform, and a look ahead"
+      },
+      {
+       "id": "ch15-s10",
+       "label": "sec:py-commit",
+       "labs": 1,
+       "minutes": 10,
+       "number": "15.10",
+       "steps": 1,
+       "title": "Commit and compare"
+      }
+     ],
+     "minutes": 110,
+     "number": 15,
+     "objectives": [
+      "1.2",
+      "1.8",
+      "2.1",
+      "3.1",
+      "5.1"
+     ],
+     "printed": "15",
+     "quizQuestions": 17,
+     "title": "Python Models"
+    },
+    {
+     "id": "ch16",
+     "kind": "chapter",
+     "label": "ch:commands-selection",
+     "labs": 5,
+     "lessons": [
+      {
+       "id": "ch16-s1",
+       "label": "sec:cmd-map",
+       "labs": 0,
+       "minutes": 5,
+       "number": "16.1",
+       "steps": 5,
+       "title": "The map of dbt commands"
+      },
+      {
+       "id": "ch16-s2",
+       "label": "sec:cmd-build",
+       "labs": 0,
+       "minutes": 5,
+       "number": "16.2",
+       "steps": 3,
+       "title": "dbt build in depth"
+      },
+      {
+       "id": "ch16-s3",
+       "label": "sec:cmd-select",
+       "labs": 0,
+       "minutes": 5,
+       "number": "16.3",
+       "steps": 3,
+       "title": "Node selection: the basics"
+      },
+      {
+       "id": "ch16-s4",
+       "label": "sec:cmd-graph",
+       "labs": 0,
+       "minutes": 10,
+       "number": "16.4",
+       "steps": 5,
+       "title": "Graph operators"
+      },
+      {
+       "id": "ch16-s5",
+       "label": "sec:cmd-sets",
+       "labs": 0,
+       "minutes": 5,
+       "number": "16.5",
+       "steps": 1,
+       "title": "Set operators: union, intersection, exclusion"
+      },
+      {
+       "id": "ch16-s6",
+       "label": "sec:cmd-methods",
+       "labs": 0,
+       "minutes": 15,
+       "number": "16.6",
+       "steps": 7,
+       "title": "Selection methods"
+      },
+      {
+       "id": "ch16-s7",
+       "label": "sec:cmd-resource-type",
+       "labs": 1,
+       "minutes": 15,
+       "number": "16.7",
+       "steps": 1,
+       "title": "Filtering by resource type"
+      },
+      {
+       "id": "ch16-s8",
+       "label": "sec:cmd-yaml-selectors",
+       "labs": 1,
+       "minutes": 20,
+       "number": "16.8",
+       "steps": 4,
+       "title": "YAML selectors"
+      },
+      {
+       "id": "ch16-s9",
+       "label": "sec:cmd-indirect",
+       "labs": 0,
+       "minutes": 5,
+       "number": "16.9",
+       "steps": 4,
+       "title": "Indirect selection: which tests come along?"
+      },
+      {
+       "id": "ch16-s10",
+       "label": "sec:cmd-ls",
+       "labs": 0,
+       "minutes": 5,
+       "number": "16.10",
+       "steps": 1,
+       "title": "dbt ls in depth"
+      },
+      {
+       "id": "ch16-s11",
+       "label": "sec:cmd-show",
+       "labs": 0,
+       "minutes": 5,
+       "number": "16.11",
+       "steps": 2,
+       "title": "dbt show: preview without building"
+      },
+      {
+       "id": "ch16-s12",
+       "label": "sec:cmd-empty",
+       "labs": 1,
+       "minutes": 25,
+       "number": "16.12",
+       "steps": 4,
+       "title": "Dry runs with --empty"
+      },
+      {
+       "id": "ch16-s13",
+       "label": "sec:cmd-sample",
+       "labs": 1,
+       "minutes": 20,
+       "number": "16.13",
+       "steps": 4,
+       "title": "Smaller runs with --sample"
+      },
+      {
+       "id": "ch16-s14",
+       "label": "sec:cmd-flags",
+       "labs": 0,
+       "minutes": 10,
+       "number": "16.14",
+       "steps": 6,
+       "title": "Flags that change how a command runs"
+      },
+      {
+       "id": "ch16-s15",
+       "label": "sec:cmd-housekeeping",
+       "labs": 1,
+       "minutes": 15,
+       "number": "16.15",
+       "steps": 1,
+       "title": "Housekeeping: parse, clean, deps, debug"
+      },
+      {
+       "id": "ch16-s16",
+       "label": "sec:cmd-state",
+       "labs": 0,
+       "minutes": 5,
+       "number": "16.16",
+       "steps": 1,
+       "title": "Preview: selecting by state and by result"
+      },
+      {
+       "id": "ch16-s17",
+       "label": "sec:cmd-platform",
+       "labs": 0,
+       "minutes": 5,
+       "number": "16.17",
+       "steps": 4,
+       "title": "The same commands in the dbt platform"
+      }
+     ],
+     "minutes": 205,
+     "number": 16,
+     "objectives": [
+      "1.4",
+      "1.12",
+      "1.13",
+      "3.5",
+      "4.1",
+      "5.3",
+      "7.1"
+     ],
+     "printed": "16",
+     "quizQuestions": 20,
+     "title": "Commands and Node Selection"
+    }
+   ],
+   "label": "Part II",
+   "number": 2,
+   "title": "Building with dbt"
+  },
+  {
+   "chapters": [
+    {
+     "id": "ch17",
+     "kind": "chapter",
+     "label": "ch:governance",
+     "labs": 5,
+     "lessons": [
+      {
+       "id": "ch17-s1",
+       "label": "sec:gov-why",
+       "labs": 0,
+       "minutes": 5,
+       "number": "17.1",
+       "steps": 2,
+       "title": "Why governance: models as data products"
+      },
+      {
+       "id": "ch17-s2",
+       "label": "sec:gov-access",
+       "labs": 1,
+       "minutes": 20,
+       "number": "17.2",
+       "steps": 5,
+       "title": "Groups and model access"
+      },
+      {
+       "id": "ch17-s3",
+       "label": "sec:gov-contracts",
+       "labs": 0,
+       "minutes": 15,
+       "number": "17.3",
+       "steps": 5,
+       "title": "Model contracts"
+      },
+      {
+       "id": "ch17-s4",
+       "label": "sec:gov-constraints",
+       "labs": 2,
+       "minutes": 45,
+       "number": "17.4",
+       "steps": 6,
+       "title": "Constraints"
+      },
+      {
+       "id": "ch17-s5",
+       "label": "sec:gov-versions",
+       "labs": 1,
+       "minutes": 30,
+       "number": "17.5",
+       "steps": 7,
+       "title": "Model versions"
+      },
+      {
+       "id": "ch17-s6",
+       "label": "sec:gov-breaking",
+       "labs": 1,
+       "minutes": 15,
+       "number": "17.6",
+       "steps": 1,
+       "title": "Breaking changes and state comparison"
+      },
+      {
+       "id": "ch17-s7",
+       "label": "sec:gov-mesh",
+       "labs": 0,
+       "minutes": 5,
+       "number": "17.7",
+       "steps": 3,
+       "title": "dbt Mesh: references across projects"
+      },
+      {
+       "id": "ch17-s8",
+       "label": "sec:gov-platform",
+       "labs": 0,
+       "minutes": 5,
+       "number": "17.8",
+       "steps": 1,
+       "title": "Governance on the dbt platform"
+      }
+     ],
+     "minutes": 170,
+     "number": 17,
+     "objectives": [
+      "2.1",
+      "2.2",
+      "2.3",
+      "3.1",
+      "7.1"
+     ],
+     "printed": "17",
+     "quizQuestions": 19,
+     "title": "Governance: Contracts, Constraints, Versions and Access"
+    }
+   ],
+   "label": "Part III",
+   "number": 3,
+   "title": "Governance"
+  },
+  {
+   "chapters": [
+    {
+     "id": "ch18",
+     "kind": "chapter",
+     "label": "ch:data-tests",
+     "labs": 5,
+     "lessons": [
+      {
+       "id": "ch18-s1",
+       "label": "sec:dt-what",
+       "labs": 0,
+       "minutes": 5,
+       "number": "18.1",
+       "steps": 3,
+       "title": "What a data test is"
+      },
+      {
+       "id": "ch18-s2",
+       "label": "sec:dt-generic",
+       "labs": 1,
+       "minutes": 30,
+       "number": "18.2",
+       "steps": 5,
+       "title": "The four built-in generic tests"
+      },
+      {
+       "id": "ch18-s3",
+       "label": "sec:dt-failure",
+       "labs": 1,
+       "minutes": 20,
+       "number": "18.3",
+       "steps": 5,
+       "title": "Reading a failure and handling a known problem"
+      },
+      {
+       "id": "ch18-s4",
+       "label": "sec:dt-sources",
+       "labs": 0,
+       "minutes": 5,
+       "number": "18.4",
+       "steps": 4,
+       "title": "Testing sources, seeds and snapshots"
+      },
+      {
+       "id": "ch18-s5",
+       "label": "sec:dt-singular",
+       "labs": 1,
+       "minutes": 20,
+       "number": "18.5",
+       "steps": 2,
+       "title": "Singular tests"
+      },
+      {
+       "id": "ch18-s6",
+       "label": "sec:dt-custom",
+       "labs": 0,
+       "minutes": 5,
+       "number": "18.6",
+       "steps": 1,
+       "title": "Custom generic tests"
+      },
+      {
+       "id": "ch18-s7",
+       "label": "sec:dt-packages",
+       "labs": 1,
+       "minutes": 20,
+       "number": "18.7",
+       "steps": 2,
+       "title": "Tests from packages"
+      },
+      {
+       "id": "ch18-s8",
+       "label": "sec:dt-configs",
+       "labs": 1,
+       "minutes": 20,
+       "number": "18.8",
+       "steps": 6,
+       "title": "Test configurations"
+      },
+      {
+       "id": "ch18-s9",
+       "label": "sec:dt-build",
+       "labs": 0,
+       "minutes": 5,
+       "number": "18.9",
+       "steps": 2,
+       "title": "Tests inside dbt build"
+      },
+      {
+       "id": "ch18-s10",
+       "label": "sec:dt-select",
+       "labs": 0,
+       "minutes": 5,
+       "number": "18.10",
+       "steps": 2,
+       "title": "Selecting tests"
+      },
+      {
+       "id": "ch18-s11",
+       "label": "sec:dt-strategy",
+       "labs": 0,
+       "minutes": 5,
+       "number": "18.11",
+       "steps": 4,
+       "title": "A testing strategy"
+      }
+     ],
+     "minutes": 170,
+     "number": 18,
+     "objectives": [
+      "1.7",
+      "3.3",
+      "4.1",
+      "5.1",
+      "5.2",
+      "5.3"
+     ],
+     "printed": "18",
+     "quizQuestions": 20,
+     "title": "Data Tests"
+    },
+    {
+     "id": "ch19",
+     "kind": "chapter",
+     "label": "ch:unit-tests",
+     "labs": 5,
+     "lessons": [
+      {
+       "id": "ch19-s1",
+       "label": "sec:ut-why",
+       "labs": 0,
+       "minutes": 5,
+       "number": "19.1",
+       "steps": 1,
+       "title": "Data tests and unit tests"
+      },
+      {
+       "id": "ch19-s2",
+       "label": "sec:ut-anatomy",
+       "labs": 1,
+       "minutes": 20,
+       "number": "19.2",
+       "steps": 4,
+       "title": "Anatomy of a unit test"
+      },
+      {
+       "id": "ch19-s3",
+       "label": "sec:ut-formats",
+       "labs": 1,
+       "minutes": 20,
+       "number": "19.3",
+       "steps": 5,
+       "title": "Input formats and fixtures"
+      },
+      {
+       "id": "ch19-s4",
+       "label": "sec:ut-overrides",
+       "labs": 0,
+       "minutes": 5,
+       "number": "19.4",
+       "steps": 1,
+       "title": "Overrides: macros, variables and environment variables"
+      },
+      {
+       "id": "ch19-s5",
+       "label": "sec:ut-incremental",
+       "labs": 1,
+       "minutes": 20,
+       "number": "19.5",
+       "steps": 2,
+       "title": "Unit testing an incremental model"
+      },
+      {
+       "id": "ch19-s6",
+       "label": "sec:ut-running",
+       "labs": 0,
+       "minutes": 5,
+       "number": "19.6",
+       "steps": 2,
+       "title": "Running unit tests"
+      },
+      {
+       "id": "ch19-s7",
+       "label": "sec:ut-parents",
+       "labs": 1,
+       "minutes": 20,
+       "number": "19.7",
+       "steps": 2,
+       "title": "Unit tests need their parents in the warehouse"
+      },
+      {
+       "id": "ch19-s8",
+       "label": "sec:ut-workflow",
+       "labs": 1,
+       "minutes": 15,
+       "number": "19.8",
+       "steps": 1,
+       "title": "Unit tests in the workflow"
+      },
+      {
+       "id": "ch19-s9",
+       "label": "sec:ut-what",
+       "labs": 0,
+       "minutes": 5,
+       "number": "19.9",
+       "steps": 2,
+       "title": "What to unit test, and what not"
+      }
+     ],
+     "minutes": 140,
+     "number": 19,
+     "objectives": [
+      "1.12",
+      "2.2",
+      "4.1",
+      "5.1",
+      "5.3"
+     ],
+     "printed": "19",
+     "quizQuestions": 18,
+     "title": "Unit Tests"
+    }
+   ],
+   "label": "Part IV",
+   "number": 4,
+   "title": "Testing"
+  },
+  {
+   "chapters": [
+    {
+     "id": "ch20",
+     "kind": "chapter",
+     "label": "ch:documentation",
+     "labs": 3,
+     "lessons": [
+      {
+       "id": "ch20-s1",
+       "label": "sec:doc-why",
+       "labs": 0,
+       "minutes": 5,
+       "number": "20.1",
+       "steps": 2,
+       "title": "Why document a dbt project"
+      },
+      {
+       "id": "ch20-s2",
+       "label": "sec:doc-descriptions",
+       "labs": 0,
+       "minutes": 5,
+       "number": "20.2",
+       "steps": 4,
+       "title": "Descriptions: what you can document"
+      },
+      {
+       "id": "ch20-s3",
+       "label": "sec:doc-blocks",
+       "labs": 1,
+       "minutes": 20,
+       "number": "20.3",
+       "steps": 3,
+       "title": "Doc blocks: long texts you write once"
+      },
+      {
+       "id": "ch20-s4",
+       "label": "sec:doc-generate",
+       "labs": 0,
+       "minutes": 10,
+       "number": "20.4",
+       "steps": 4,
+       "title": "Generating the documentation: dbt docs generate"
+      },
+      {
+       "id": "ch20-s5",
+       "label": "sec:doc-serve",
+       "labs": 1,
+       "minutes": 20,
+       "number": "20.5",
+       "steps": 2,
+       "title": "Serving and exploring the site"
+      },
+      {
+       "id": "ch20-s6",
+       "label": "sec:doc-meta",
+       "labs": 0,
+       "minutes": 5,
+       "number": "20.6",
+       "steps": 2,
+       "title": "meta, docs.show and docs.node_color"
+      },
+      {
+       "id": "ch20-s7",
+       "label": "sec:doc-persist",
+       "labs": 1,
+       "minutes": 30,
+       "number": "20.7",
+       "steps": 5,
+       "title": "persist_docs: descriptions inside the warehouse"
+      },
+      {
+       "id": "ch20-s8",
+       "label": "sec:doc-platform",
+       "labs": 0,
+       "minutes": 5,
+       "number": "20.8",
+       "steps": 2,
+       "title": "Documentation on the dbt platform: dbt Catalog"
+      },
+      {
+       "id": "ch20-s9",
+       "label": "sec:doc-habits",
+       "labs": 0,
+       "minutes": 5,
+       "number": "20.9",
+       "steps": 3,
+       "title": "Good documentation habits"
+      }
+     ],
+     "minutes": 135,
+     "number": 20,
+     "objectives": [
+      "1.4",
+      "1.6",
+      "1.14",
+      "3.3",
+      "6.1",
+      "7.1"
+     ],
+     "printed": "20",
+     "quizQuestions": 19,
+     "title": "Documentation"
+    },
+    {
+     "id": "ch21",
+     "kind": "chapter",
+     "label": "ch:freshness-exposures",
+     "labs": 3,
+     "lessons": [
+      {
+       "id": "ch21-s1",
+       "label": "sec:fx-external",
+       "labs": 0,
+       "minutes": 5,
+       "number": "21.1",
+       "steps": 1,
+       "title": "External dependencies: what comes in, what goes out"
+      },
+      {
+       "id": "ch21-s2",
+       "label": "sec:fx-freshness-idea",
+       "labs": 0,
+       "minutes": 5,
+       "number": "21.2",
+       "steps": 1,
+       "title": "Source freshness: the idea"
+      },
+      {
+       "id": "ch21-s3",
+       "label": "sec:fx-freshness-config",
+       "labs": 1,
+       "minutes": 25,
+       "number": "21.3",
+       "steps": 6,
+       "title": "Configuring freshness"
+      },
+      {
+       "id": "ch21-s4",
+       "label": "sec:fx-freshness-run",
+       "labs": 0,
+       "minutes": 5,
+       "number": "21.4",
+       "steps": 4,
+       "title": "Running the check and reading the results"
+      },
+      {
+       "id": "ch21-s5",
+       "label": "sec:fx-fresher",
+       "labs": 1,
+       "minutes": 20,
+       "number": "21.5",
+       "steps": 1,
+       "title": "Building only what has new data: source_status:fresher+"
+      },
+      {
+       "id": "ch21-s6",
+       "label": "sec:fx-platform-freshness",
+       "labs": 0,
+       "minutes": 5,
+       "number": "21.6",
+       "steps": 1,
+       "title": "Freshness on the dbt platform"
+      },
+      {
+       "id": "ch21-s7",
+       "label": "sec:fx-limits",
+       "labs": 0,
+       "minutes": 5,
+       "number": "21.7",
+       "steps": 1,
+       "title": "What freshness cannot tell you"
+      },
+      {
+       "id": "ch21-s8",
+       "label": "sec:fx-exposures",
+       "labs": 0,
+       "minutes": 5,
+       "number": "21.8",
+       "steps": 3,
+       "title": "Exposures: who uses your models"
+      },
+      {
+       "id": "ch21-s9",
+       "label": "sec:fx-exposures-use",
+       "labs": 1,
+       "minutes": 20,
+       "number": "21.9",
+       "steps": 5,
+       "title": "Using exposures: selection, docs, impact analysis, CI"
+      }
+     ],
+     "minutes": 125,
+     "number": 21,
+     "objectives": [
+      "1.1",
+      "1.4",
+      "6.1",
+      "6.2",
+      "7.1"
+     ],
+     "printed": "21",
+     "quizQuestions": 20,
+     "title": "Source Freshness and Exposures"
+    }
+   ],
+   "label": "Part V",
+   "number": 5,
+   "title": "Documentation and External Dependencies"
+  },
+  {
+   "chapters": [
+    {
+     "id": "ch22",
+     "kind": "chapter",
+     "label": "ch:debugging",
+     "labs": 4,
+     "lessons": [
+      {
+       "id": "ch22-s1",
+       "label": "sec:dbg-method",
+       "labs": 0,
+       "minutes": 10,
+       "number": "22.1",
+       "steps": 5,
+       "title": "A method for every error"
+      },
+      {
+       "id": "ch22-s2",
+       "label": "sec:dbg-families",
+       "labs": 1,
+       "minutes": 30,
+       "number": "22.2",
+       "steps": 7,
+       "title": "The error families, with real messages"
+      },
+      {
+       "id": "ch22-s3",
+       "label": "sec:dbg-where",
+       "labs": 1,
+       "minutes": 30,
+       "number": "22.3",
+       "steps": 6,
+       "title": "Where to look"
+      },
+      {
+       "id": "ch22-s4",
+       "label": "sec:dbg-fix",
+       "labs": 1,
+       "minutes": 20,
+       "number": "22.4",
+       "steps": 2,
+       "title": "Fixing safely: from branch to merge"
+      },
+      {
+       "id": "ch22-s5",
+       "label": "sec:dbg-flags",
+       "labs": 1,
+       "minutes": 30,
+       "number": "22.5",
+       "steps": 7,
+       "title": "Flags: changing how dbt runs"
+      }
+     ],
+     "minutes": 150,
+     "number": 22,
+     "objectives": [
+      "CP0-GIT",
+      "3.1",
+      "3.2",
+      "3.3",
+      "3.4",
+      "3.5"
+     ],
+     "printed": "22",
+     "quizQuestions": 19,
+     "title": "Debugging"
+    },
+    {
+     "id": "ch23",
+     "kind": "chapter",
+     "label": "ch:pipelines-clone",
+     "labs": 4,
+     "lessons": [
+      {
+       "id": "ch23-s1",
+       "label": "sec:pip-points",
+       "labs": 0,
+       "minutes": 5,
+       "number": "23.1",
+       "steps": 1,
+       "title": "Where a pipeline can break"
+      },
+      {
+       "id": "ch23-s2",
+       "label": "sec:pip-failures",
+       "labs": 2,
+       "minutes": 45,
+       "number": "23.2",
+       "steps": 7,
+       "title": "What dbt does when a node fails"
+      },
+      {
+       "id": "ch23-s3",
+       "label": "sec:pip-results",
+       "labs": 0,
+       "minutes": 5,
+       "number": "23.3",
+       "steps": 4,
+       "title": "Reading the results: statuses and run_results.json"
+      },
+      {
+       "id": "ch23-s4",
+       "label": "sec:pip-prod",
+       "labs": 1,
+       "minutes": 15,
+       "number": "23.4",
+       "steps": 2,
+       "title": "The production build and its artifacts"
+      },
+      {
+       "id": "ch23-s5",
+       "label": "sec:pip-clone",
+       "labs": 1,
+       "minutes": 30,
+       "number": "23.5",
+       "steps": 9,
+       "title": "dbt clone"
+      }
+     ],
+     "minutes": 125,
+     "number": 23,
+     "objectives": [
+      "1.4",
+      "3.1",
+      "4.1",
+      "4.2"
+     ],
+     "printed": "23",
+     "quizQuestions": 18,
+     "title": "Pipelines, Failures and dbt clone"
+    }
+   ],
+   "label": "Part VI",
+   "number": 6,
+   "title": "Debugging and Pipelines"
+  },
+  {
+   "chapters": [
+    {
+     "id": "ch24",
+     "kind": "chapter",
+     "label": "ch:state-defer-retry",
+     "labs": 5,
+     "lessons": [
+      {
+       "id": "ch24-s1",
+       "label": "sec:sdr-artifacts",
+       "labs": 0,
+       "minutes": 5,
+       "number": "24.1",
+       "steps": 3,
+       "title": "Artifacts: what dbt writes after each command"
+      },
+      {
+       "id": "ch24-s2",
+       "label": "sec:sdr-state",
+       "labs": 1,
+       "minutes": 20,
+       "number": "24.2",
+       "steps": 1,
+       "title": "What \"state\" means"
+      },
+      {
+       "id": "ch24-s3",
+       "label": "sec:sdr-methods",
+       "labs": 1,
+       "minutes": 25,
+       "number": "24.3",
+       "steps": 4,
+       "title": "The state selection method"
+      },
+      {
+       "id": "ch24-s4",
+       "label": "sec:sdr-plus",
+       "labs": 0,
+       "minutes": 5,
+       "number": "24.4",
+       "steps": 1,
+       "title": "Why state:modified+ and not just state:modified"
+      },
+      {
+       "id": "ch24-s5",
+       "label": "sec:sdr-result",
+       "labs": 0,
+       "minutes": 10,
+       "number": "24.5",
+       "steps": 3,
+       "title": "Result selectors: re-running what failed"
+      },
+      {
+       "id": "ch24-s6",
+       "label": "sec:sdr-defer",
+       "labs": 1,
+       "minutes": 20,
+       "number": "24.6",
+       "steps": 4,
+       "title": "Defer: borrow the parents from production"
+      },
+      {
+       "id": "ch24-s7",
+       "label": "sec:sdr-slimci",
+       "labs": 0,
+       "minutes": 5,
+       "number": "24.7",
+       "steps": 1,
+       "title": "Slim CI in one command"
+      },
+      {
+       "id": "ch24-s8",
+       "label": "sec:sdr-retry",
+       "labs": 1,
+       "minutes": 20,
+       "number": "24.8",
+       "steps": 4,
+       "title": "dbt retry: restart from the point of failure"
+      },
+      {
+       "id": "ch24-s9",
+       "label": "sec:sdr-finish",
+       "labs": 1,
+       "minutes": 15,
+       "number": "24.9",
+       "steps": 1,
+       "title": "Finish the chapter: merge, deploy, refresh the state"
+      }
+     ],
+     "minutes": 155,
+     "number": 24,
+     "objectives": [
+      "3.4",
+      "4.1",
+      "4.2",
+      "7.1",
+      "7.2"
+     ],
+     "printed": "24",
+     "quizQuestions": 19,
+     "title": "State, Defer and dbt retry"
+    },
+    {
+     "id": "ch25",
+     "kind": "chapter",
+     "label": "ch:environments-ci",
+     "labs": 3,
+     "lessons": [
+      {
+       "id": "ch25-s1",
+       "label": "sec:envci-environments",
+       "labs": 0,
+       "minutes": 5,
+       "number": "25.1",
+       "steps": 2,
+       "title": "Three environments, one project"
+      },
+      {
+       "id": "ch25-s2",
+       "label": "sec:envci-workflow",
+       "labs": 0,
+       "minutes": 5,
+       "number": "25.2",
+       "steps": 1,
+       "title": "From a branch to production"
+      },
+      {
+       "id": "ch25-s3",
+       "label": "sec:envci-platform",
+       "labs": 0,
+       "minutes": 5,
+       "number": "25.3",
+       "steps": 7,
+       "title": "Environments and jobs in the dbt platform"
+      },
+      {
+       "id": "ch25-s4",
+       "label": "sec:envci-gha",
+       "labs": 3,
+       "minutes": 55,
+       "number": "25.4",
+       "steps": 4,
+       "title": "CI for dbt Core with GitHub Actions"
+      },
+      {
+       "id": "ch25-s5",
+       "label": "sec:envci-pr",
+       "labs": 0,
+       "minutes": 5,
+       "number": "25.5",
+       "steps": 1,
+       "title": "Pull request template and required checks"
+      },
+      {
+       "id": "ch25-s6",
+       "label": "sec:envci-tests",
+       "labs": 0,
+       "minutes": 5,
+       "number": "25.6",
+       "steps": 1,
+       "title": "Where each kind of test runs"
+      },
+      {
+       "id": "ch25-s7",
+       "label": "sec:envci-prod",
+       "labs": 0,
+       "minutes": 5,
+       "number": "25.7",
+       "steps": 3,
+       "title": "Designing the production job"
+      }
+     ],
+     "minutes": 110,
+     "number": 25,
+     "objectives": [
+      "CP0-GIT",
+      "1.12",
+      "3.4",
+      "5.3",
+      "7.1"
+     ],
+     "printed": "25",
+     "quizQuestions": 18,
+     "title": "Environments, Jobs and CI/CD"
+    }
+   ],
+   "label": "Part VII",
+   "number": 7,
+   "title": "State, CI and Deployment"
+  },
+  {
+   "chapters": [
+    {
+     "id": "ch26",
+     "kind": "chapter",
+     "label": "ch:capstone",
+     "labs": 15,
+     "lessons": [
+      {
+       "id": "ch26-s1",
+       "label": "sec:cap-story",
+       "labs": 0,
+       "minutes": 10,
+       "number": "26.1",
+       "steps": 6,
+       "title": "The ShopFlow story"
+      },
+      {
+       "id": "ch26-s2",
+       "label": "sec:cap-m00",
+       "labs": 1,
+       "minutes": 15,
+       "number": "26.2",
+       "steps": 4,
+       "title": "Milestone m00 — Setup"
+      },
+      {
+       "id": "ch26-s3",
+       "label": "sec:cap-m01",
+       "labs": 1,
+       "minutes": 15,
+       "number": "26.3",
+       "steps": 4,
+       "title": "Milestone m01 — Sources and freshness"
+      },
+      {
+       "id": "ch26-s4",
+       "label": "sec:cap-m02",
+       "labs": 1,
+       "minutes": 15,
+       "number": "26.4",
+       "steps": 4,
+       "title": "Milestone m02 — Staging"
+      },
+      {
+       "id": "ch26-s5",
+       "label": "sec:cap-m03",
+       "labs": 1,
+       "minutes": 10,
+       "number": "26.5",
+       "steps": 3,
+       "title": "Milestone m03 — Seeds"
+      },
+      {
+       "id": "ch26-s6",
+       "label": "sec:cap-m04",
+       "labs": 1,
+       "minutes": 15,
+       "number": "26.6",
+       "steps": 4,
+       "title": "Milestone m04 — Intermediate models and marts"
+      },
+      {
+       "id": "ch26-s7",
+       "label": "sec:cap-m05",
+       "labs": 1,
+       "minutes": 15,
+       "number": "26.7",
+       "steps": 3,
+       "title": "Milestone m05 — Jinja, macros and packages"
+      },
+      {
+       "id": "ch26-s8",
+       "label": "sec:cap-m06",
+       "labs": 1,
+       "minutes": 20,
+       "number": "26.8",
+       "steps": 4,
+       "title": "Milestone m06 — Data tests"
+      },
+      {
+       "id": "ch26-s9",
+       "label": "sec:cap-m07",
+       "labs": 1,
+       "minutes": 15,
+       "number": "26.9",
+       "steps": 4,
+       "title": "Milestone m07 — Unit tests"
+      },
+      {
+       "id": "ch26-s10",
+       "label": "sec:cap-m08",
+       "labs": 1,
+       "minutes": 15,
+       "number": "26.10",
+       "steps": 4,
+       "title": "Milestone m08 — Snapshots"
+      },
+      {
+       "id": "ch26-s11",
+       "label": "sec:cap-m09",
+       "labs": 1,
+       "minutes": 20,
+       "number": "26.11",
+       "steps": 4,
+       "title": "Milestone m09 — Incremental models and microbatch"
+      },
+      {
+       "id": "ch26-s12",
+       "label": "sec:cap-m10",
+       "labs": 1,
+       "minutes": 15,
+       "number": "26.12",
+       "steps": 3,
+       "title": "Milestone m10 — A Python model"
+      },
+      {
+       "id": "ch26-s13",
+       "label": "sec:cap-m11",
+       "labs": 1,
+       "minutes": 15,
+       "number": "26.13",
+       "steps": 4,
+       "title": "Milestone m11 — Governance"
+      },
+      {
+       "id": "ch26-s14",
+       "label": "sec:cap-m12",
+       "labs": 1,
+       "minutes": 15,
+       "number": "26.14",
+       "steps": 3,
+       "title": "Milestone m12 — Documentation and exposures"
+      },
+      {
+       "id": "ch26-s15",
+       "label": "sec:cap-m13",
+       "labs": 1,
+       "minutes": 20,
+       "number": "26.15",
+       "steps": 4,
+       "title": "Milestone m13 — Production, state and slim CI"
+      },
+      {
+       "id": "ch26-s16",
+       "label": "sec:cap-m14",
+       "labs": 1,
+       "minutes": 15,
+       "number": "26.16",
+       "steps": 2,
+       "title": "Milestone m14 — Release"
+      },
+      {
+       "id": "ch26-s17",
+       "label": "sec:cap-traps",
+       "labs": 0,
+       "minutes": 5,
+       "number": "26.17",
+       "steps": 1,
+       "title": "The trap hunt: what the data was hiding"
+      },
+      {
+       "id": "ch26-s18",
+       "label": "sec:cap-rubric",
+       "labs": 0,
+       "minutes": 5,
+       "number": "26.18",
+       "steps": 3,
+       "title": "Self-assessment rubric"
+      },
+      {
+       "id": "ch26-s19",
+       "label": "sec:cap-stuck",
+       "labs": 0,
+       "minutes": 5,
+       "number": "26.19",
+       "steps": 1,
+       "title": "If you are stuck"
+      }
+     ],
+     "minutes": 285,
+     "number": 26,
+     "objectives": [
+      "CP0-CLI",
+      "CP0-GIT",
+      "CP0-SQL",
+      "1.1",
+      "1.2",
+      "1.3",
+      "1.4",
+      "1.5",
+      "1.6",
+      "1.7",
+      "1.8",
+      "1.9",
+      "1.10",
+      "1.11",
+      "1.12",
+      "1.13",
+      "1.14",
+      "2.1",
+      "2.2",
+      "2.3",
+      "3.1",
+      "3.2",
+      "3.3",
+      "3.4",
+      "3.5",
+      "4.1",
+      "4.2",
+      "5.1",
+      "5.2",
+      "5.3",
+      "6.1",
+      "6.2",
+      "7.1",
+      "7.2"
+     ],
+     "printed": "26",
+     "quizQuestions": 17,
+     "title": "Capstone Project: ShopFlow"
+    }
+   ],
+   "label": "Part VIII",
+   "number": 8,
+   "title": "Capstone Project"
+  },
+  {
+   "chapters": [
+    {
+     "id": "ch27",
+     "kind": "strategy",
+     "label": "ch:exam-strategy",
+     "labs": 0,
+     "lessons": [
+      {
+       "id": "ch27-s1",
+       "label": "sec:strategy-anatomy",
+       "labs": 0,
+       "minutes": 5,
+       "number": "27.1",
+       "steps": 1,
+       "title": "How an exam question is built"
+      },
+      {
+       "id": "ch27-s2",
+       "label": "sec:strategy-read",
+       "labs": 0,
+       "minutes": 5,
+       "number": "27.2",
+       "steps": 4,
+       "title": "Reading a scenario question in five steps"
+      },
+      {
+       "id": "ch27-s3",
+       "label": "sec:strategy-eliminate",
+       "labs": 0,
+       "minutes": 5,
+       "number": "27.3",
+       "steps": 1,
+       "title": "Elimination techniques"
+      },
+      {
+       "id": "ch27-s4",
+       "label": "sec:strategy-formats",
+       "labs": 0,
+       "minutes": 5,
+       "number": "27.4",
+       "steps": 8,
+       "title": "The six formats, one by one"
+      },
+      {
+       "id": "ch27-s5",
+       "label": "sec:strategy-pacing",
+       "labs": 0,
+       "minutes": 5,
+       "number": "27.5",
+       "steps": 3,
+       "title": "Pacing: your 120-minute plan"
+      },
+      {
+       "id": "ch27-s6",
+       "label": "sec:strategy-traps",
+       "labs": 0,
+       "minutes": 5,
+       "number": "27.6",
+       "steps": 12,
+       "title": "The top traps"
+      },
+      {
+       "id": "ch27-s7",
+       "label": "sec:strategy-week",
+       "labs": 0,
+       "minutes": 5,
+       "number": "27.7",
+       "steps": 1,
+       "title": "The last 7 days"
+      },
+      {
+       "id": "ch27-s8",
+       "label": "sec:strategy-checklist",
+       "labs": 0,
+       "minutes": 5,
+       "number": "27.8",
+       "steps": 4,
+       "title": "Exam-day checklist"
+      },
+      {
+       "id": "ch27-s9",
+       "label": "sec:strategy-after",
+       "labs": 0,
+       "minutes": 5,
+       "number": "27.9",
+       "steps": 1,
+       "title": "After the exam"
+      }
+     ],
+     "minutes": 45,
+     "number": 27,
+     "objectives": [
+      "ALL",
+      "EXAM",
+      "PLAN"
+     ],
+     "printed": "27",
+     "quizQuestions": 0,
+     "title": "Exam Strategy and the Top Traps"
+    },
+    {
+     "id": "ch28",
+     "kind": "mock",
+     "label": "ch:mock1",
+     "labs": 0,
+     "lessons": [
+      {
+       "id": "ch28-s1",
+       "label": null,
+       "labs": 0,
+       "minutes": 5,
+       "number": "",
+       "steps": 1,
+       "title": "Answer sheet"
+      }
+     ],
+     "minutes": 5,
+     "mock": 1,
+     "number": 28,
+     "objectives": [],
+     "printed": "28",
+     "quizQuestions": 0,
+     "title": "Mock Exam 1"
+    },
+    {
+     "id": "ch29",
+     "kind": "mock-answers",
+     "label": "ch:mock1-answers",
+     "labs": 0,
+     "lessons": [
+      {
+       "id": "ch29-s1",
+       "label": null,
+       "labs": 0,
+       "minutes": 5,
+       "number": "",
+       "steps": 1,
+       "title": "How to score"
+      }
+     ],
+     "minutes": 5,
+     "mock": 1,
+     "number": 29,
+     "objectives": [],
+     "printed": "29",
+     "quizQuestions": 0,
+     "title": "Mock Exam 1: Answers and Explanations"
+    },
+    {
+     "id": "ch30",
+     "kind": "mock",
+     "label": "ch:mock2",
+     "labs": 0,
+     "lessons": [
+      {
+       "id": "ch30-s1",
+       "label": null,
+       "labs": 0,
+       "minutes": 5,
+       "number": "",
+       "steps": 1,
+       "title": "The scenario: RideNow"
+      },
+      {
+       "id": "ch30-s2",
+       "label": null,
+       "labs": 0,
+       "minutes": 5,
+       "number": "",
+       "steps": 1,
+       "title": "Answer sheet"
+      }
+     ],
+     "minutes": 10,
+     "mock": 2,
+     "number": 30,
+     "objectives": [],
+     "printed": "30",
+     "quizQuestions": 0,
+     "title": "Mock Exam 2"
+    },
+    {
+     "id": "ch31",
+     "kind": "mock-answers",
+     "label": "ch:mock2-answers",
+     "labs": 0,
+     "lessons": [
+      {
+       "id": "ch31-s1",
+       "label": null,
+       "labs": 0,
+       "minutes": 5,
+       "number": "",
+       "steps": 1,
+       "title": "Score table"
+      }
+     ],
+     "minutes": 5,
+     "mock": 2,
+     "number": 31,
+     "objectives": [],
+     "printed": "31",
+     "quizQuestions": 0,
+     "title": "Mock Exam 2: Answers and Explanations"
+    },
+    {
+     "id": "ch32",
+     "kind": "mock",
+     "label": "ch:mock3",
+     "labs": 0,
+     "lessons": [
+      {
+       "id": "ch32-s1",
+       "label": null,
+       "labs": 0,
+       "minutes": 5,
+       "number": "",
+       "steps": 1,
+       "title": "Answer sheet"
+      }
+     ],
+     "minutes": 5,
+     "mock": 3,
+     "number": 32,
+     "objectives": [],
+     "printed": "32",
+     "quizQuestions": 0,
+     "title": "Mock Exam 3"
+    },
+    {
+     "id": "ch33",
+     "kind": "mock-answers",
+     "label": "ch:mock3-answers",
+     "labs": 0,
+     "lessons": [
+      {
+       "id": "ch33-s1",
+       "label": null,
+       "labs": 0,
+       "minutes": 5,
+       "number": "",
+       "steps": 1,
+       "title": "Score table"
+      },
+      {
+       "id": "ch33-s2",
+       "label": null,
+       "labs": 0,
+       "minutes": 5,
+       "number": "",
+       "steps": 1,
+       "title": "Quick answer key"
+      }
+     ],
+     "minutes": 10,
+     "mock": 3,
+     "number": 33,
+     "objectives": [],
+     "printed": "33",
+     "quizQuestions": 0,
+     "title": "Mock Exam 3: Answers and Explanations"
+    }
+   ],
+   "label": "Part IX",
+   "number": 9,
+   "title": "Exam Mastery"
+  }
+ ],
+ "title": "The dbt Analytics Engineering Bible"
+}

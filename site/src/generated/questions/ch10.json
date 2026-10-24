@@ -1,0 +1,2319 @@
+[
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The properties file (level 2) beats ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " (level 3), whatever the depth of the folder. A: the ",
+     {
+      "t": "code",
+      "v": "marts"
+     },
+     " folder beats the project level, but both lose against the properties file. C: ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " is the ",
+     {
+      "c": [
+       "least"
+      ],
+      "t": "i"
+     },
+     " specific place. D: several values are normal; dbt just picks the most specific one."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch10-01",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "table"
+     },
+     ", because the ",
+     {
+      "t": "code",
+      "v": "marts"
+     },
+     " folder is deeper than the project level."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "view"
+     },
+     ", because the properties file is more specific than ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "table"
+     },
+     ", because ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " always has the final word."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt stops with a \"conflicting configs\" error."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 1
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " sets ",
+     {
+      "t": "code",
+      "v": "+materialized: view"
+     },
+     " under ",
+     {
+      "t": "code",
+      "v": "models: jaffle_dbt:"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "+materialized: table"
+     },
+     " under ",
+     {
+      "t": "code",
+      "v": "marts:"
+     },
+     ". The properties file of ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " (in ",
+     {
+      "t": "code",
+      "v": "models/marts/"
+     },
+     ") has ",
+     {
+      "t": "code",
+      "v": "config: materialized: view"
+     },
+     ". The file ",
+     {
+      "t": "code",
+      "v": "fct_orders.sql"
+     },
+     " has no ",
+     {
+      "t": "code",
+      "v": "config()"
+     },
+     " call. How is ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " materialized?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "description"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "columns"
+     },
+     " are properties, only in YAML. B, D and E are configs: they can be set in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     ", in a ",
+     {
+      "t": "code",
+      "v": "config:"
+     },
+     " block, or in ",
+     {
+      "t": "code",
+      "v": "config()"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch10-02",
+  "key": [
+   "A",
+   "C"
+  ],
+  "keyRaw": "\\textbf{A and C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "description"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "tags"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "columns"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "materialized"
+     }
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "grants"
+     }
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 2
+  },
+  "stem": [
+   {
+    "c": [
+     "Which two settings can be written ",
+     {
+      "c": [
+       "only"
+      ],
+      "t": "i"
+     },
+     " in a YAML properties file, and never in a ",
+     {
+      "t": "code",
+      "v": "{{ config() }}"
+     },
+     " call?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "dbt_sara_finance"
+       },
+       "."
+      ],
+      "t": "b"
+     },
+     " The default macro concatenates ",
+     {
+      "t": "code",
+      "v": "target.schema"
+     },
+     ", an underscore and the custom schema. Not ",
+     {
+      "t": "code",
+      "v": "finance"
+     },
+     " (that needs an override macro), not ",
+     {
+      "t": "code",
+      "v": "finance_dbt_sara"
+     },
+     " (wrong order)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch10-03",
+  "key": {
+   "accepted": [
+    "dbt_sara_finance"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{dbt\\_sara\\_finance}.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 3
+  },
+  "stem": [
+   {
+    "c": [
+     "A developer's target schema is ",
+     {
+      "t": "code",
+      "v": "dbt_sara"
+     },
+     ". A model has ",
+     {
+      "t": "code",
+      "v": "+schema: finance"
+     },
+     " and the project uses dbt's ",
+     {
+      "c": [
+       "default"
+      ],
+      "t": "i"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "generate_schema_name"
+     },
+     ". The model is built in the schema ",
+     {
+      "t": "blank"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "1-b, 2-a, 3-c, 4-d."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "target.name"
+     },
+     " is the label of the output, ",
+     {
+      "t": "code",
+      "v": "target.schema"
+     },
+     " its schema; ",
+     {
+      "t": "code",
+      "v": "var"
+     },
+     " reads project variables, ",
+     {
+      "t": "code",
+      "v": "env_var"
+     },
+     " reads the environment (strings only)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "match",
+  "formatLabel": "Matching",
+  "id": "q-ch10-04",
+  "key": {
+   "1": "b",
+   "2": "a",
+   "3": "c",
+   "4": "d"
+  },
+  "keyRaw": "\\textbf{1-b, 2-a, 3-c, 4-d.}",
+  "keyStatus": "ok",
+  "match": {
+   "left": [
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "{{ target.name }}"
+      }
+     ],
+     "id": "1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "{{ var('start_date') }}"
+      }
+     ],
+     "id": "2"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "{{ env_var('DBT_WAREHOUSE') }}"
+      }
+     ],
+     "id": "3"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "{{ target.schema }}"
+      }
+     ],
+     "id": "4"
+    }
+   ],
+   "right": [
+    {
+     "c": [
+      "A value from ",
+      {
+       "t": "code",
+       "v": "--vars"
+      },
+      " or the ",
+      {
+       "t": "code",
+       "v": "vars:"
+      },
+      " block of ",
+      {
+       "t": "code",
+       "v": "dbt_project.yml"
+      }
+     ],
+     "id": "a"
+    },
+    {
+     "c": [
+      "The label of the active output, such as ",
+      {
+       "t": "code",
+       "v": "prod"
+      }
+     ],
+     "id": "b"
+    },
+    {
+     "c": [
+      "A value from the shell (or dbt platform) environment, always a string"
+     ],
+     "id": "c"
+    },
+    {
+     "c": [
+      "The schema of the active output, such as ",
+      {
+       "t": "code",
+       "v": "dbt_adnane"
+      }
+     ],
+     "id": "d"
+    }
+   ]
+  },
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 4
+  },
+  "stem": [
+   {
+    "c": [
+     "Match each Jinja expression with what it returns."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "c, f, d, e, b, a, g."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "BEGIN"
+     },
+     "; project hooks before the model's own hooks; the table; the project post-hook (here ",
+     {
+      "t": "code",
+      "v": "analyze"
+     },
+     "); ",
+     {
+      "t": "code",
+      "v": "COMMIT"
+     },
+     "; ",
+     {
+      "t": "code",
+      "v": "after_commit"
+     },
+     " hooks run outside the transaction, after the commit. This is exactly what ",
+     {
+      "t": "code",
+      "v": "logs/dbt.log"
+     },
+     " showed in our demo."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "order",
+  "formatLabel": "Build list — put in order",
+  "id": "q-ch10-05",
+  "key": [
+   "C",
+   "F",
+   "D",
+   "E",
+   "B",
+   "A",
+   "G"
+  ],
+  "keyRaw": "\\textbf{c, f, d, e, b, a, g.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "COMMIT"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "the project post-hook (",
+     {
+      "t": "code",
+      "v": "analyze …"
+     },
+     ")"
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "BEGIN"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "the model's own pre-hook"
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "create table … as (select …)"
+     }
+    ],
+    "id": "E"
+   },
+   {
+    "c": [
+     "the project pre-hook"
+    ],
+    "id": "F"
+   },
+   {
+    "c": [
+     "the ",
+     {
+      "t": "code",
+      "v": "after_commit"
+     },
+     " hook"
+    ],
+    "id": "G"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 5
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " has a project-level pre-hook and post-hook (from its folder), its own pre-hook, and its own ",
+     {
+      "t": "code",
+      "v": "after_commit()"
+     },
+     " post-hook. Put the statements dbt sends for this model (on an adapter with transactions) in order:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "Line 9."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "persist_docs"
+     },
+     " is a dictionary config without ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     ", so dbt reads it as a sub-folder ",
+     {
+      "t": "code",
+      "v": "models/marts/persist_docs/"
+     },
+     ", which does not exist: unused path, and no comments are persisted. Lines 6, 8 and 12 are correct configs; line 4 is the project name, as required."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "hotspot",
+  "formatLabel": "Hotspot — which line",
+  "hotspot": {
+   "codeId": "ch10-c113",
+   "lines": 12,
+   "numbering": "listing"
+  },
+  "id": "q-ch10-06",
+  "key": 9,
+  "keyRaw": "\\textbf{Line 9.}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 6
+  },
+  "stem": [
+   {
+    "c": [
+     "dbt prints \"Configuration paths exist in your dbt_project.yml file which do not apply to any resources\", and the marts tables have no comments in the warehouse. Which line is the cause?"
+    ],
+    "t": "p"
+   },
+   {
+    "id": "ch10-c113",
+    "lang": "yaml",
+    "lineNumbers": true,
+    "t": "code",
+    "text": "name: 'shop'\nprofile: 'shop'\nmodels:\n  shop:\n    staging:\n      +materialized: view\n    marts:\n      +materialized: table\n      persist_docs:\n        relation: true\n        columns: true\n      +tags: ['marts']"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, YES, NO."
+      ],
+      "t": "b"
+     },
+     " A missing variable without default is a ",
+     {
+      "c": [
+       "Parsing Error"
+      ],
+      "t": "i"
+     },
+     " (\"Env var required but not provided\"), not an empty string. Values are strings: we got \"'2' is not of type 'integer\"' without ",
+     {
+      "t": "code",
+      "v": "| int"
+     },
+     ". Secrets are allowed in ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " (and ",
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     ") and refused elsewhere: \"Secret env vars are allowed only in profiles.yml or packages.yml\"."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch10-07",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": true,
+   "D": false
+  },
+  "keyRaw": "\\textbf{NO, YES, YES, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "If ",
+     {
+      "t": "code",
+      "v": "DBT_X"
+     },
+     " is not set, ",
+     {
+      "t": "code",
+      "v": "{{ env_var('DBT_X') }}"
+     },
+     " renders an empty string."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The value is a string, so ",
+     {
+      "t": "code",
+      "v": "threads: \"{{ env_var('DBT_THREADS') }}\""
+     },
+     " needs ",
+     {
+      "t": "code",
+      "v": "| int"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A variable called ",
+     {
+      "t": "code",
+      "v": "DBT_ENV_SECRET_PASSWORD"
+     },
+     " may be used in ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A variable called ",
+     {
+      "t": "code",
+      "v": "DBT_ENV_SECRET_TOKEN"
+     },
+     " may be used in a model's SQL."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 7
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "env_var()"
+     },
+     " in dbt Core 1.11:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " Tags are added across all levels. A and B forget that tags are not replaced; D ignores the more specific levels."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch10-08",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "['pii']"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "['finance', 'pii']"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "['nightly', 'finance', 'pii']"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "['nightly']"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 8
+  },
+  "stem": [
+   {
+    "c": [
+     "The ",
+     {
+      "t": "code",
+      "v": "marts"
+     },
+     " folder has ",
+     {
+      "t": "code",
+      "v": "+tags: ['nightly']"
+     },
+     ". The properties file of ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " has ",
+     {
+      "t": "code",
+      "v": "config: tags: ['finance']"
+     },
+     ". ",
+     {
+      "t": "code",
+      "v": "fct_orders.sql"
+     },
+     " starts with ",
+     {
+      "t": "code",
+      "v": "{{ config(tags=['pii']) }}"
+     },
+     ". What are the tags of ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "meta"
+     },
+     " is merged only at the top level: ",
+     {
+      "t": "code",
+      "v": "owner"
+     },
+     " is inherited, but the nested dictionary ",
+     {
+      "t": "code",
+      "v": "sla"
+     },
+     " is replaced as a whole, so ",
+     {
+      "t": "code",
+      "v": "alert"
+     },
+     " disappears (we saw it with ",
+     {
+      "t": "code",
+      "v": "dbt ls"
+     },
+     "). A treats ",
+     {
+      "t": "code",
+      "v": "meta"
+     },
+     " as replaced; B is a deep merge, which dbt does not do; D ignores the model value."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch10-09",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "{sla: {hours: 6}}"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "{owner: data_team, sla: {hours: 6, alert: slack}}"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "{owner: data_team, sla: {hours: 6}}"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "{owner: data_team, sla: {hours: 24, alert: slack}}"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 9
+  },
+  "stem": [
+   {
+    "c": [
+     "The folder sets ",
+     {
+      "t": "code",
+      "v": "+meta: {owner: data_team, sla: {hours: 24, alert: slack}}"
+     },
+     ". A model sets ",
+     {
+      "t": "code",
+      "v": "meta: {sla: {hours: 6}}"
+     },
+     ". What is the model's final ",
+     {
+      "t": "code",
+      "v": "meta"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "'+select'"
+     },
+     " adds the model's grantees to the inherited list. A is the result ",
+     {
+      "c": [
+       "without"
+      ],
+      "t": "i"
+     },
+     " the ",
+     {
+      "t": "code",
+      "v": "+"
+     },
+     ". C: model configs are not ignored. D: dbt applies grants itself, right after the build."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch10-10",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Only ",
+     {
+      "t": "code",
+      "v": "finance"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "reporter"
+     },
+     ", ",
+     {
+      "t": "code",
+      "v": "bi_tool"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "finance"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "reporter"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "bi_tool"
+     },
+     "; the model config is ignored."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "Nobody until someone runs ",
+     {
+      "t": "code",
+      "v": "dbt run-operation grant"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 10
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " gives the marts ",
+     {
+      "t": "code",
+      "v": "+grants: {select: ['reporter', 'bi_tool']}"
+     },
+     ". ",
+     {
+      "t": "code",
+      "v": "fct_orders.sql"
+     },
+     " has ",
+     {
+      "t": "code",
+      "v": "{{ config(grants={'+select': ['finance']}) }}"
+     },
+     ". On Snowflake, to which roles does dbt grant ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     " on ",
+     {
+      "t": "code",
+      "v": "fct_orders"
+     },
+     " during ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " An empty list tells dbt that nobody should have ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     ", so it revokes the existing grants. A: without a grants config, dbt stops managing grants and changes nothing. C: ",
+     {
+      "t": "code",
+      "v": "'+select': []"
+     },
+     " adds nothing to the inherited list. D: ",
+     {
+      "t": "code",
+      "v": "'none'"
+     },
+     " is just a grantee name."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch10-11",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "Delete the whole ",
+     {
+      "t": "code",
+      "v": "grants"
+     },
+     " config."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "grants: {select: []}"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "grants: {'+select': []}"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "grants: {select: ['none']}"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 11
+  },
+  "stem": [
+   {
+    "c": [
+     "An incremental model has ",
+     {
+      "t": "code",
+      "v": "grants: {select: ['auditor']}"
+     },
+     ". The team wants dbt to remove the ",
+     {
+      "t": "code",
+      "v": "select"
+     },
+     " privilege of ",
+     {
+      "c": [
+       "every"
+      ],
+      "t": "i"
+     },
+     " grantee on this table at the next run. What should they write?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "on-run-start"
+     },
+     " runs once per command. A and C are model hooks: they run once per model (A for every model of the project). D: hooks are not discovered by macro name."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch10-12",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "+pre-hook"
+     },
+     " on the top level of ",
+     {
+      "t": "code",
+      "v": "models:"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     "."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "on-run-start"
+     },
+     " at the top level of ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "pre_hook"
+     },
+     " in the ",
+     {
+      "t": "code",
+      "v": "config()"
+     },
+     " of the first model of the DAG."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "In a macro called ",
+     {
+      "t": "code",
+      "v": "on_run_start"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "macros/"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 12
+  },
+  "stem": [
+   {
+    "c": [
+     "You need one SQL statement to run exactly once at the beginning of every ",
+     {
+      "t": "code",
+      "v": "dbt build"
+     },
+     ", before any model. Where do you put it?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "post_hook"
+       }
+      ],
+      "t": "b"
+     },
+     " (underscore). In ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " you write ",
+     {
+      "t": "code",
+      "v": "+post-hook"
+     },
+     "; in ",
+     {
+      "t": "code",
+      "v": "config()"
+     },
+     " a hyphen is not valid in an argument name (Jinja reads ",
+     {
+      "t": "code",
+      "v": "post-hook"
+     },
+     " as a subtraction and parsing stops with a Compilation Error)."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch10-13",
+  "key": {
+   "accepted": [
+    "post_hook"
+   ]
+  },
+  "keyRaw": "\\textbf{\\code{post\\_hook}}",
+  "keyStatus": "ok",
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 13
+  },
+  "stem": [
+   {
+    "c": [
+     "Inside a model, ",
+     {
+      "t": "code",
+      "v": "{{ config("
+     },
+     {
+      "t": "blank"
+     },
+     {
+      "t": "code",
+      "v": "=\"analyze {{ this }}\") }}"
+     },
+     " runs the statement after the model is built. Write the keyword argument."
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " ",
+     {
+      "t": "code",
+      "v": "--vars"
+     },
+     " has the highest priority. A: the default of ",
+     {
+      "t": "code",
+      "v": "var()"
+     },
+     " is used only when no definition exists. B: the project value loses against the CLI. D: several definitions are normal; precedence decides."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch10-14",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "2024-01-01"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "2025-01-01"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "2026-01-01"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "A compilation error: the variable is defined twice."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 14
+  },
+  "stem": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " has ",
+     {
+      "t": "code",
+      "v": "vars: {start_date: '2025-01-01'}"
+     },
+     ". A model uses ",
+     {
+      "t": "code",
+      "v": "{{ var('start_date', '2024-01-01') }}"
+     },
+     ". You run ",
+     {
+      "t": "code",
+      "v": "dbt run --vars '{start_date: 2026-01-01}'"
+     },
+     ". Which date is compiled?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "choose": 2,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "A and B."
+      ],
+      "t": "b"
+     },
+     " Both implement the dev/prod pattern (B uses dbt's built-in ",
+     {
+      "t": "code",
+      "v": "generate_schema_name_for_env"
+     },
+     "). C gives ",
+     {
+      "t": "code",
+      "v": "dbt_<user>_marts"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "prod_marts"
+     },
+     ". D: a ",
+     {
+      "t": "code",
+      "v": "generate_schema_name"
+     },
+     " in a package does not apply to your models (the docs say it is ignored; at most it serves that package's own models). E only changes the target schema of prod: models without a custom schema would land in ",
+     {
+      "t": "code",
+      "v": "marts"
+     },
+     " too (and, with the default macro, the marts in ",
+     {
+      "t": "code",
+      "v": "marts_marts"
+     },
+     "); it does nothing for dev."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "ms",
+  "formatLabel": "Multiple select — choose 2",
+  "id": "q-ch10-15",
+  "key": [
+   "A",
+   "B"
+  ],
+  "keyRaw": "\\textbf{A and B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "generate_schema_name"
+     },
+     " macro in your project that returns ",
+     {
+      "t": "code",
+      "v": "custom_schema_name"
+     },
+     " when ",
+     {
+      "t": "code",
+      "v": "target.name == 'prod'"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "target.schema"
+     },
+     " otherwise."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "A ",
+     {
+      "t": "code",
+      "v": "generate_schema_name"
+     },
+     " macro in your project that calls ",
+     {
+      "t": "code",
+      "v": "{{ generate_schema_name_for_env(custom_schema_name, node) }}"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "+schema: marts"
+     },
+     " with dbt's default ",
+     {
+      "t": "code",
+      "v": "generate_schema_name"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The same override macro, but placed in an installed package."
+    ],
+    "id": "D"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "schema: marts"
+     },
+     " in the ",
+     {
+      "t": "code",
+      "v": "prod"
+     },
+     " output of ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     "."
+    ],
+    "id": "E"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 15
+  },
+  "stem": [
+   {
+    "c": [
+     "You want the marts in a schema called ",
+     {
+      "t": "code",
+      "v": "marts"
+     },
+     " in production, and every model of every developer in that developer's own target schema. Which two solutions work?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "NO, YES, YES, NO."
+      ],
+      "t": "b"
+     },
+     " Names allow letters, digits and underscores only (we got \"'jaffle-dbt' does not match\" followed by the pattern of valid names). ",
+     {
+      "t": "code",
+      "v": "require-dbt-version"
+     },
+     " stopped dbt with \"This version of dbt is not supported\". ",
+     {
+      "t": "code",
+      "v": "target-path"
+     },
+     " printed the deprecation warning. ",
+     {
+      "t": "code",
+      "v": "config-version: 1"
+     },
+     " gave \"Got an unexpected project version=1, expected 2\"."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "domc",
+  "formatLabel": "DOMC — judge each option YES/NO independently",
+  "id": "q-ch10-16",
+  "key": {
+   "A": false,
+   "B": true,
+   "C": true,
+   "D": false
+  },
+  "keyRaw": "\\textbf{NO, YES, YES, NO.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "name: 'jaffle-shop'"
+     },
+     " is a valid project name."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "With ",
+     {
+      "t": "code",
+      "v": "require-dbt-version: \">=1.12.0\""
+     },
+     ", dbt 1.11 stops before doing anything."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "target-path"
+     },
+     " in ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " is deprecated; use ",
+     {
+      "t": "code",
+      "v": "--target-path"
+     },
+     " or ",
+     {
+      "t": "code",
+      "v": "DBT_TARGET_PATH"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "config-version: 1"
+     },
+     " is still supported for old projects."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 16
+  },
+  "stem": [
+   {
+    "c": [
+     "Statements about ",
+     {
+      "t": "code",
+      "v": "dbt_project.yml"
+     },
+     " in dbt Core 1.11:"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "B."
+      ],
+      "t": "b"
+     },
+     " The macro tests ",
+     {
+      "t": "code",
+      "v": "target.name"
+     },
+     "; on the platform it comes from the job's Target Name, so the job took the \"else\" branch (the target schema). A: ",
+     {
+      "t": "code",
+      "v": "database"
+     },
+     " is unrelated. C: the platform uses the same macros. D: ",
+     {
+      "t": "code",
+      "v": "target"
+     },
+     " is not a var."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch10-17",
+  "key": "B",
+  "keyRaw": "\\textbf{B.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "The ",
+     {
+      "t": "code",
+      "v": "+schema: marts"
+     },
+     " config needs a ",
+     {
+      "t": "code",
+      "v": "database"
+     },
+     " config too."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "The job's ",
+     {
+      "c": [
+       "Target Name"
+      ],
+      "t": "i"
+     },
+     " setting is not ",
+     {
+      "t": "code",
+      "v": "prod"
+     },
+     "."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "The dbt platform ignores macros in ",
+     {
+      "t": "code",
+      "v": "macros/"
+     },
+     "."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "The job must run ",
+     {
+      "t": "code",
+      "v": "dbt run --vars '{target: prod}'"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 17
+  },
+  "stem": [
+   {
+    "c": [
+     "On the dbt platform, the project overrides ",
+     {
+      "t": "code",
+      "v": "generate_schema_name"
+     },
+     " with a ",
+     {
+      "t": "code",
+      "v": "target.name == 'prod'"
+     },
+     " test. The production job builds the marts in the environment's target schema ",
+     {
+      "t": "code",
+      "v": "analytics"
+     },
+     " instead of ",
+     {
+      "t": "code",
+      "v": "marts"
+     },
+     ". What is the most likely cause?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " You always ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " the model name; dbt returns the relation, which uses the alias. A: ",
+     {
+      "t": "code",
+      "v": "ref('monthly_revenue')"
+     },
+     " fails, no model has this name. B ignores the alias. D: ",
+     {
+      "t": "code",
+      "v": "ref"
+     },
+     " has no ",
+     {
+      "t": "code",
+      "v": "alias"
+     },
+     " argument."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch10-18",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ref('monthly_revenue')"
+     },
+     " → ",
+     {
+      "t": "code",
+      "v": "dbt_adnane.monthly_revenue"
+     }
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ref('fct_monthly_revenue')"
+     },
+     " → ",
+     {
+      "t": "code",
+      "v": "dbt_adnane.fct_monthly_revenue"
+     }
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ref('fct_monthly_revenue')"
+     },
+     " → ",
+     {
+      "t": "code",
+      "v": "dbt_adnane.monthly_revenue"
+     }
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     {
+      "t": "code",
+      "v": "ref('fct_monthly_revenue', alias=true)"
+     },
+     " → ",
+     {
+      "t": "code",
+      "v": "dbt_adnane.monthly_revenue"
+     }
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 18
+  },
+  "stem": [
+   {
+    "c": [
+     "The file ",
+     {
+      "t": "code",
+      "v": "fct_monthly_revenue.sql"
+     },
+     " starts with ",
+     {
+      "t": "code",
+      "v": "{{ config(alias='monthly_revenue') }}"
+     },
+     ". Another model needs it. What do you write, and which relation (schema.table) does it compile to in dev?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       "C."
+      ],
+      "t": "b"
+     },
+     " An unknown path is only a warning (\"unused configuration paths\"), and models without config get the default ",
+     {
+      "t": "code",
+      "v": "view"
+     },
+     ". A: it is not a parsing error. B: dbt never guesses. D: dbt never creates folders in ",
+     {
+      "t": "code",
+      "v": "models/"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "mc",
+  "formatLabel": "Multiple choice",
+  "id": "q-ch10-19",
+  "key": "C",
+  "keyRaw": "\\textbf{C.}",
+  "keyStatus": "ok",
+  "options": [
+   {
+    "c": [
+     "A parsing error that names the line."
+    ],
+    "id": "A"
+   },
+   {
+    "c": [
+     "dbt guesses the folder and builds tables."
+    ],
+    "id": "B"
+   },
+   {
+    "c": [
+     "A warning about unused configuration paths; the marts are built as views (the default)."
+    ],
+    "id": "C"
+   },
+   {
+    "c": [
+     "dbt creates an empty folder ",
+     {
+      "t": "code",
+      "v": "models/mart/"
+     },
+     "."
+    ],
+    "id": "D"
+   }
+  ],
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 19
+  },
+  "stem": [
+   {
+    "c": [
+     "Under ",
+     {
+      "t": "code",
+      "v": "models: jaffle_dbt:"
+     },
+     ", a developer writes ",
+     {
+      "t": "code",
+      "v": "mart:"
+     },
+     " instead of ",
+     {
+      "t": "code",
+      "v": "marts:"
+     },
+     " above ",
+     {
+      "t": "code",
+      "v": "+materialized: table"
+     },
+     ". What happens at the next ",
+     {
+      "t": "code",
+      "v": "dbt run"
+     },
+     "?"
+    ],
+    "t": "p"
+   }
+  ]
+ },
+ {
+  "blanks": 1,
+  "explanation": [
+   {
+    "c": [
+     {
+      "c": [
+       {
+        "t": "code",
+        "v": "DBT_ENV_SECRET_"
+       }
+      ],
+      "t": "b"
+     },
+     " (the docs write it ",
+     {
+      "t": "code",
+      "v": "DBT_ENV_SECRET"
+     },
+     "; both answers mean the same prefix). (",
+     {
+      "t": "code",
+      "v": "DBT_ENV_CUSTOM_ENV_"
+     },
+     " is the other special prefix: copied into the artifacts' metadata.)"
+    ],
+    "t": "p"
+   }
+  ],
+  "format": "fill",
+  "formatLabel": "Fill in the blank",
+  "id": "q-ch10-20",
+  "key": {
+   "accepted": [
+    "DBT_ENV_SECRET_"
+   ]
+  },
+  "keyNote": "alternative answers mentioned after the key: '(the docs write it DBT_ENV_SECRET; both answers mean the same prefix)'",
+  "keyRaw": "\\textbf{\\code{DBT\\_ENV\\_SECRET\\_}}",
+  "keyStatus": "todo",
+  "source": {
+   "chapter": 10,
+   "kind": "chapter",
+   "n": 20
+  },
+  "stem": [
+   {
+    "c": [
+     "Environment variables whose name starts with ",
+     {
+      "t": "blank"
+     },
+     " are masked as ",
+     {
+      "t": "code",
+      "v": "*****"
+     },
+     " in the logs and can be used only in ",
+     {
+      "t": "code",
+      "v": "profiles.yml"
+     },
+     " and ",
+     {
+      "t": "code",
+      "v": "packages.yml"
+     },
+     "."
+    ],
+    "t": "p"
+   }
+  ]
+ }
+]

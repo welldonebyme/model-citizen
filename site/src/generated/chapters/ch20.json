@@ -1,0 +1,6823 @@
+{
+ "id": "ch20",
+ "intro": [
+  {
+   "blocks": [
+    {
+     "c": [
+      "The current exam outline lists ",
+      {
+       "t": "code",
+       "v": "docs"
+      },
+      " among the commands of objective 1.4. The older outline had documentation as a topic of its own, and many questions about it are still in circulation, so this chapter covers the subject completely."
+     ],
+     "t": "p"
+    }
+   ],
+   "items": [
+    {
+     "c": [
+      "The ",
+      {
+       "t": "code",
+       "v": "docs"
+      },
+      " commands: ",
+      {
+       "t": "code",
+       "v": "dbt docs generate"
+      },
+      " (",
+      {
+       "t": "code",
+       "v": "index.html"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "manifest.json"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "catalog.json"
+      },
+      "; flags ",
+      {
+       "t": "code",
+       "v": "--select"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "--no-compile"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "--empty-catalog"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "--static"
+      },
+      ") and ",
+      {
+       "t": "code",
+       "v": "dbt docs serve"
+      },
+      " (",
+      {
+       "t": "code",
+       "v": "--port"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "--host"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "--no-browser"
+      },
+      ")."
+     ],
+     "id": "1.4"
+    },
+    {
+     "c": [
+      "Descriptions and doc blocks in ",
+      {
+       "t": "code",
+       "v": ".yml"
+      },
+      " files: where a ",
+      {
+       "t": "code",
+       "v": "description"
+      },
+      " is allowed, quoting, Markdown, ",
+      {
+       "t": "code",
+       "v": "{% docs %}"
+      },
+      " blocks, ",
+      {
+       "t": "code",
+       "v": "doc()"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "__overview__"
+      },
+      ", and the real errors (missing block, duplicate block, Jinja without quotes)."
+     ],
+     "id": "3.3"
+    },
+    {
+     "c": [
+      "Documentation configs: ",
+      {
+       "t": "code",
+       "v": "persist_docs"
+      },
+      " (",
+      {
+       "t": "code",
+       "v": "relation"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "columns"
+      },
+      "), ",
+      {
+       "t": "code",
+       "v": "docs"
+      },
+      " (",
+      {
+       "t": "code",
+       "v": "show"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "node_color"
+      },
+      "), ",
+      {
+       "t": "code",
+       "v": "meta"
+      },
+      "; where to set them and which resources accept them."
+     ],
+     "id": "1.6"
+    },
+    {
+     "c": [
+      "A real side effect: ",
+      {
+       "t": "code",
+       "v": "persist_docs"
+      },
+      " plus parallel microbatch batches on DuckDB, and the ",
+      {
+       "t": "code",
+       "v": "concurrent_batches=False"
+      },
+      " fix."
+     ],
+     "id": "1.14"
+    },
+    {
+     "c": [
+      "Preview: a description-only change counts for ",
+      {
+       "t": "code",
+       "v": "state:modified"
+      },
+      " only when ",
+      {
+       "t": "code",
+       "v": "persist_docs"
+      },
+      " is on."
+     ],
+     "id": "7.1"
+    },
+    {
+     "c": [
+      "Context: sources and exposures on the documentation site (exposures are taught in ",
+      {
+       "href": "/learn/ch21/",
+       "label": "ch:freshness-exposures",
+       "t": "ref",
+       "text": "Chapter 21"
+      },
+      ")."
+     ],
+     "id": "6.1"
+    },
+    {
+     "c": [
+      "Platform view: dbt Catalog (formerly dbt Explorer), the Studio IDE docs view, the ",
+      {
+       "c": [
+        "Generate docs on run"
+       ],
+       "t": "i"
+      },
+      " checkbox, documentation coverage, and the ",
+      {
+       "t": "code",
+       "v": "codegen"
+      },
+      " package for YAML skeletons."
+     ],
+     "id": "1.4"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "On her first day at the Jaffle Shop, Sara, a new analyst, opens the warehouse and finds a table ",
+      {
+       "t": "code",
+       "v": "fct_orders"
+      },
+      " with a column ",
+      {
+       "t": "code",
+       "v": "amount"
+      },
+      ". Is it in cents or in dollars? Does it include failed payments? Which statuses exist, and what does ",
+      {
+       "t": "code",
+       "v": "return_pending"
+      },
+      " mean? She sends five messages to the data team, waits two days, and finally guesses. Her first dashboard is wrong."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "Documentation is the answer to every one of those messages, written once, next to the code, and published where people look. In dbt, documentation is not a separate Word file that nobody updates: it lives in the same YAML files as your tests, it is version-controlled with Git, it is reviewed in pull requests, and dbt turns it into a website with a lineage graph. On the dbt platform, the same information feeds dbt Catalog for the whole company. On the exam you will meet the commands, the files they produce, the ",
+      {
+       "t": "code",
+       "v": "doc()"
+      },
+      " function, the special ",
+      {
+       "t": "code",
+       "v": "__overview__"
+      },
+      " block, ",
+      {
+       "t": "code",
+       "v": "persist_docs"
+      },
+      " and the platform view. This chapter gives you all of them, tested on your own project."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "You document a dbt project by writing ",
+      {
+       "t": "code",
+       "v": "description"
+      },
+      " keys in YAML files, and by writing longer, reusable texts in doc blocks (",
+      {
+       "t": "code",
+       "v": "{% docs name %}"
+      },
+      " in ",
+      {
+       "t": "code",
+       "v": ".md"
+      },
+      " files) that you insert with ",
+      {
+       "t": "code",
+       "v": "doc('name')"
+      },
+      ". ",
+      {
+       "t": "code",
+       "v": "dbt docs generate"
+      },
+      " combines what the project knows (",
+      {
+       "t": "code",
+       "v": "manifest.json"
+      },
+      ") with what the warehouse knows (",
+      {
+       "t": "code",
+       "v": "catalog.json"
+      },
+      ") into a static website that ",
+      {
+       "t": "code",
+       "v": "dbt docs serve"
+      },
+      " shows on your laptop, and that dbt Catalog shows on the dbt platform. With ",
+      {
+       "t": "code",
+       "v": "persist_docs"
+      },
+      ", dbt also writes the descriptions into the warehouse as table and column comments, so that every SQL client and BI tool can see them."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:documentation",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-doc-why"
+   ],
+   "checkpoints": [],
+   "id": "ch20-s1",
+   "label": "sec:doc-why",
+   "labs": [],
+   "minutes": 5,
+   "number": "20.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A dbt project has three kinds of readers, and each one needs something different:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Data consumers"
+             ],
+             "t": "b"
+            },
+            " (analysts, finance and marketing teams, BI developers). They do not read SQL. They need to know what one row of a table means, the unit of each number, the allowed values of each status, and whether they can trust the table. A ",
+            {
+             "en": [
+              "data consumer"
+             ],
+             "fr": "consommateur de données",
+             "id": "term-data-consumer",
+             "t": "term"
+            },
+            " who finds this in two minutes does not need to ask you."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "New analytics engineers"
+             ],
+             "t": "b"
+            },
+            ". During ",
+            {
+             "en": [
+              "onboarding"
+             ],
+             "fr": "intégration d'un nouvel arrivant",
+             "id": "term-onboarding",
+             "t": "term"
+            },
+            ", a newcomer must understand the layers (staging, intermediate, marts), the naming rules and the business logic. A good overview page and a lineage graph save days of explanation."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Governance"
+             ],
+             "t": "b"
+            },
+            " (data owners, security, auditors). They need to know who owns a model, which columns contain personal data, and which dashboards depend on which tables. Owners, ",
+            {
+             "t": "code",
+             "v": "meta"
+            },
+            " keys such as ",
+            {
+             "t": "code",
+             "v": "contains_pii"
+            },
+            ", groups (",
+            {
+             "href": "/learn/ch17/",
+             "label": "ch:governance",
+             "t": "ref",
+             "text": "Chapter 17"
+            },
+            ") and exposures (",
+            {
+             "href": "/learn/ch21/",
+             "label": "ch:freshness-exposures",
+             "t": "ref",
+             "text": "Chapter 21"
+            },
+            ") all appear in the documentation."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Think of a public library. The books are your tables. Without a catalogue card for each book (title, author, subject, shelf), the library is just a room full of paper: you must open every book to know what is inside. dbt documentation is the catalogue card of each table and column, plus a map of the shelves (the lineage graph). And just as a library catalogue is updated every time a new book arrives, dbt rebuilds the documentation from the project every time you run ",
+          {
+           "t": "code",
+           "v": "dbt docs generate"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      }
+     ],
+     "id": "ch20-s1-1",
+     "number": "20.1.1",
+     "title": [
+      "Three groups of readers"
+     ],
+     "titleText": "Three groups of readers"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The documentation website mixes three kinds of information. Keep this picture in mind: it explains every command of this chapter."
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "What you write"
+             ],
+             "t": "b"
+            },
+            ": descriptions, doc blocks, ",
+            {
+             "t": "code",
+             "v": "meta"
+            },
+            ", owners. Without your work, these fields are empty."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "What dbt knows from the code"
+             ],
+             "t": "b"
+            },
+            ": the lineage (from ",
+            {
+             "t": "code",
+             "v": "ref"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "source"
+            },
+            "), the SQL (source and compiled), the configs, the tests on each column. dbt gets all of this by parsing and compiling the project, with no help from you."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "What the warehouse knows"
+             ],
+             "t": "b"
+            },
+            ": the real column names and data types of each table or view, the table type, and some statistics. dbt gets this by asking the warehouse for its ",
+            {
+             "en": [
+              "metadata"
+             ],
+             "fr": "métadonnées",
+             "id": "term-metadata",
+             "t": "term"
+            },
+            " (data about the data)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "alt": "How the dbt documentation site is made. Your project (.sql .yml .md: descriptions, doc blocks) → parse + compile → manifest.json. The warehouse (information schema: columns, types, stats) → metadata queries → catalog.json. dbt itself (the website code) → copied → index.html. The three files are in target/ after dbt docs generate; dbt docs serve starts a local web server → your browser.",
+       "id": "ch20-fig1",
+       "src": "figures/ch20-fig1.svg",
+       "t": "figure"
+      }
+     ],
+     "id": "ch20-s1-2",
+     "number": "20.1.2",
+     "title": [
+      "Where the information comes from"
+     ],
+     "titleText": "Where the information comes from"
+    }
+   ],
+   "title": [
+    "Why document a dbt project"
+   ],
+   "titleText": "Why document a dbt project"
+  },
+  {
+   "anchors": [
+    "sec-doc-descriptions"
+   ],
+   "checkpoints": [],
+   "id": "ch20-s2",
+   "label": "sec:doc-descriptions",
+   "labs": [],
+   "minutes": 5,
+   "number": "20.2",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "description"
+         ],
+         "fr": "description",
+         "id": "term-description",
+         "t": "term"
+        },
+        " is a text attached to a resource or to one of its columns, written with the key ",
+        {
+         "t": "code",
+         "v": "description:"
+        },
+        " in a properties YAML file. You have written many since ",
+        {
+         "href": "/learn/ch07/",
+         "label": "ch:models-sources-dag",
+         "t": "ref",
+         "text": "Chapter 7"
+        },
+        ". Here is the start of the marts file of your project:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c1",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nmodels:\n  - name: fct_orders\n    description: One row per order, with the amount paid (successful payments only).\n    config:\n      group: finance\n      access: public\n      event_time: order_date\n      tags: ['finance']\n      meta:\n        owner: finance-team\n        contains_pii: false\n    columns:\n      - name: order_id\n        description: Primary key of the order.\n        data_tests:\n          - unique\n          - not_null",
+       "title": "models/marts/_marts__models.yml (start)"
+      },
+      {
+       "c": [
+        "Almost every resource accepts a description. Learn this table: the exam likes to ask \"can you document X?\"."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Resource"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Where the description goes"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Model"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "models: - name:"
+           },
+           " … ",
+           {
+            "t": "code",
+            "v": "description:"
+           },
+           ", and each column under ",
+           {
+            "t": "code",
+            "v": "columns:"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Source"
+          ]
+         },
+         {
+          "c": [
+           "the source, each table under ",
+           {
+            "t": "code",
+            "v": "tables:"
+           },
+           ", and each column of a table"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Seed"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "seeds: - name:"
+           },
+           " … and its columns (see ",
+           {
+            "t": "code",
+            "v": "seeds/_seeds.yml"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Snapshot"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "snapshots: - name:"
+           },
+           " … and its columns (see ",
+           {
+            "t": "code",
+            "v": "snapshots/snapshots.yml"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Analysis"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "analyses: - name:"
+           },
+           " … and its columns"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Macro"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "macros: - name:"
+           },
+           " … and each argument under ",
+           {
+            "t": "code",
+            "v": "arguments:"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Data test"
+          ]
+         },
+         {
+          "c": [
+           "a generic test (under the test, next to ",
+           {
+            "t": "code",
+            "v": "arguments:"
+           },
+           ") or a singular test (",
+           {
+            "t": "code",
+            "v": "data_tests:"
+           },
+           " at the top level of a YAML file)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Unit test"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "unit_tests: - name:"
+           },
+           " … ",
+           {
+            "t": "code",
+            "v": "description:"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Exposure"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "exposures: - name:"
+           },
+           " … (",
+           {
+            "href": "/learn/ch21/",
+            "label": "ch:freshness-exposures",
+            "t": "ref",
+            "text": "Chapter 21"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Group"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "groups: - name:"
+           },
+           " … (dbt 1.10 and later)"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Two examples that are ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " in the reference project (we tested them in a throwaway copy, and ",
+        {
+         "t": "code",
+         "v": "dbt parse"
+        },
+        " accepted both). A macro with its argument, in any ",
+        {
+         "t": "code",
+         "v": ".yml"
+        },
+        " file of ",
+        {
+         "t": "code",
+         "v": "macros/"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c2",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nmacros:\n  - name: cents_to_dollars\n    description: Converts an amount in cents into dollars, rounded to 2 decimals.\n    arguments:\n      - name: column_name\n        type: string\n        description: The column (or SQL expression) that holds the amount in cents.",
+       "title": "macros/_macros.yml (example, not kept)"
+      },
+      {
+       "c": [
+        "A singular test (a ",
+        {
+         "t": "code",
+         "v": ".sql"
+        },
+        " file of ",
+        {
+         "t": "code",
+         "v": "tests/"
+        },
+        ") described in a YAML file of the ",
+        {
+         "t": "code",
+         "v": "tests/"
+        },
+        " folder:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c3",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\ndata_tests:\n  - name: assert_payments_match_order_totals\n    description: The amount of each order equals the sum of its 4 payment-method columns.",
+       "title": "tests/_singular_tests.yml (example, not kept)"
+      }
+     ],
+     "id": "ch20-s2-1",
+     "number": "20.2.1",
+     "title": [
+      "The ",
+      {
+       "t": "code",
+       "v": "description"
+      },
+      " key"
+     ],
+     "titleText": "The description key"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Descriptions are written in ",
+        {
+         "en": [
+          "Markdown"
+         ],
+         "fr": "Markdown",
+         "id": "term-markdown",
+         "t": "term"
+        },
+        ", a light text format: ",
+        {
+         "t": "code",
+         "v": "**bold**"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "`code`"
+        },
+        ", lists that start with ",
+        {
+         "t": "code",
+         "v": "-"
+        },
+        ", tables with ",
+        {
+         "t": "code",
+         "v": "|"
+        },
+        ", links ",
+        {
+         "t": "code",
+         "v": "[text](url)"
+        },
+        ". The documentation site shows the formatted result. For a long description, use a YAML block (",
+        {
+         "href": "/learn/ch05/",
+         "label": "ch:yaml-jinja-python",
+         "t": "ref",
+         "text": "Chapter 5"
+        },
+        "): ",
+        {
+         "t": "code",
+         "v": ">"
+        },
+        " folds the lines into one paragraph, ",
+        {
+         "t": "code",
+         "v": "|"
+        },
+        " keeps the line breaks (needed for Markdown lists and tables)."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c4",
+       "lang": "yaml",
+       "t": "code",
+       "text": "  - name: fct_monthly_revenue\n    description: >\n      Orders and revenue per order month and customer country.\n      Returned orders are excluded. Amounts are in dollars.",
+       "title": "a long model description (example)"
+      }
+     ],
+     "id": "ch20-s2-2",
+     "number": "20.2.2",
+     "title": [
+      "Markdown and long texts"
+     ],
+     "titleText": "Markdown and long texts"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A description is a YAML value, so all the quoting rules of ",
+        {
+         "href": "/learn/ch05/",
+         "label": "ch:yaml-jinja-python",
+         "t": "ref",
+         "text": "Chapter 5"
+        },
+        " apply. Quote the value when it contains a colon followed by a space, when it starts with a special character (",
+        {
+         "t": "code",
+         "v": "{"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "["
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "*"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "&"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "!"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "%"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "@"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "`"
+        },
+        "), and ",
+        {
+         "c": [
+          "always"
+         ],
+         "t": "i"
+        },
+        " when it contains Jinja such as ",
+        {
+         "t": "code",
+         "v": "doc()"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "description: Note: built daily"
+          },
+          " breaks the file (\"mapping values are not allowed\"), because of the second colon (trap T20 in ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          "). ",
+          {
+           "t": "code",
+           "v": "description: {{ doc('order_status') }}"
+          },
+          " breaks it too: a value that starts with ",
+          {
+           "t": "code",
+           "v": "{"
+          },
+          " is read as a YAML mapping (trap T19). You will see the exact error in the lab of ",
+          {
+           "href": "/learn/ch20/ch20-s3/",
+           "label": "sec:doc-blocks",
+           "t": "ref",
+           "text": "Section 20.3"
+          },
+          ". Write ",
+          {
+           "t": "code",
+           "v": "description: \"{{ doc('order_status') }}\""
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A resource is described in ",
+          {
+           "c": [
+            "one"
+           ],
+           "t": "i"
+          },
+          " properties entry only. If two YAML files both contain ",
+          {
+           "t": "code",
+           "v": "- name: fct_orders"
+          },
+          " under ",
+          {
+           "t": "code",
+           "v": "models:"
+          },
+          " (for example, you add a second file just for descriptions), dbt refuses to parse the project:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c5",
+         "lang": "output",
+         "t": "code",
+         "text": "Compilation Error\n  dbt found two schema.yml entries for the same resource named fct_orders. Resources and their associated columns may only be described a single time. To fix this, remove the resource entry for fct_orders in one of these files:\n   - models/marts/_marts__models.yml\n  models/marts/_dup.yml"
+        },
+        {
+         "c": [
+          "Descriptions, tests, configs and columns of a model all go into the same entry. The name of the file does not matter."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch20-s2-3",
+     "number": "20.2.3",
+     "title": [
+      "Quoting: the YAML rules still apply"
+     ],
+     "titleText": "Quoting: the YAML rules still apply"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "You do not have to list every column in YAML. The website takes the list of columns ",
+        {
+         "c": [
+          "from the warehouse"
+         ],
+         "t": "i"
+        },
+        " (the catalog) and adds your descriptions to the columns you documented. A column that exists in the table but not in your YAML is shown with its data type and an empty description. This is useful, but it also hides gaps: the page looks complete even when half of the descriptions are missing."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch20-s2-4",
+     "number": "20.2.4",
+     "title": [
+      "Undocumented columns still appear"
+     ],
+     "titleText": "Undocumented columns still appear"
+    }
+   ],
+   "title": [
+    "Descriptions: what you can document"
+   ],
+   "titleText": "Descriptions: what you can document"
+  },
+  {
+   "anchors": [
+    "sec-doc-blocks"
+   ],
+   "checkpoints": [],
+   "id": "ch20-s3",
+   "label": "sec:doc-blocks",
+   "labs": [
+    "ch20-lab1"
+   ],
+   "minutes": 20,
+   "number": "20.3",
+   "objectives": [
+    "1.3",
+    "3.3"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The column ",
+        {
+         "t": "code",
+         "v": "status"
+        },
+        " exists in ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__orders"
+        },
+        " and again in ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        ". Its meaning is the same in both models, and it deserves more than one line: five statuses, each with an explanation. Copying the same long text into two YAML files breaks the DRY rule of ",
+        {
+         "href": "/learn/ch09/",
+         "label": "ch:modularity-refactoring",
+         "t": "ref",
+         "text": "Chapter 9"
+        },
+        ": one day somebody updates one copy and forgets the other."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch20-s3-1",
+     "number": "20.3.1",
+     "title": [
+      "The problem"
+     ],
+     "titleText": "The problem"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A ",
+        {
+         "en": [
+          "doc block"
+         ],
+         "fr": "bloc de documentation",
+         "id": "term-doc-block",
+         "t": "term"
+        },
+        " is a named piece of Markdown, written in a file with the ",
+        {
+         "t": "code",
+         "v": ".md"
+        },
+        " extension, between two Jinja tags:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c6",
+       "lang": "plain",
+       "t": "code",
+       "text": "{% docs order_status %}\nOne of the following values:\n\n| status         | meaning                                                   |\n|----------------|-----------------------------------------------------------|\n| placed         | The order is placed but not yet paid or shipped           |\n| shipped        | The order has been shipped to the customer                |\n| completed      | The order has been received by the customer               |\n| return_pending | The customer asked to return the order                    |\n| returned       | The order has been returned and refunded                  |\n{% enddocs %}",
+       "title": "models/docs.md (the second block)"
+      },
+      {
+       "c": [
+        "You then use it with the ",
+        {
+         "t": "code",
+         "v": "doc()"
+        },
+        " Jinja function, in place of (or inside) a description:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c7",
+       "lang": "yaml",
+       "t": "code",
+       "text": "      - name: status\n        description: \"{{ doc('order_status') }}\"",
+       "title": "models/staging/jaffle_shop/_jaffle_shop__models.yml (the status column)"
+      },
+      {
+       "c": [
+        "When dbt parses the project, it replaces ",
+        {
+         "t": "code",
+         "v": "{{ doc('order_status') }}"
+        },
+        " with the text of the block. The function works like ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        ": it looks up a block by name and fails if the block does not exist. You can also mix normal text and a block: ",
+        {
+         "t": "code",
+         "v": "description: \"Order status. {{ doc('order_status') }}\""
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The rules to remember:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "File"
+             ],
+             "t": "b"
+            },
+            ": any file ending in ",
+            {
+             "t": "code",
+             "v": ".md"
+            },
+            ", in any resource folder of the project (",
+            {
+             "t": "code",
+             "v": "models/"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "seeds/"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "snapshots/"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "macros/"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "tests/"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "analyses/"
+            },
+            "). With the project key ",
+            {
+             "t": "code",
+             "v": "docs-paths"
+            },
+            " (in ",
+            {
+             "t": "code",
+             "v": "dbt_project.yml"
+            },
+            ") you can restrict the search to the folders you list. One file can contain many blocks; most projects keep one ",
+            {
+             "t": "code",
+             "v": "docs.md"
+            },
+            " per folder or one per topic."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Name"
+             ],
+             "t": "b"
+            },
+            ": letters, digits and underscores only, and it cannot start with a digit (",
+            {
+             "t": "code",
+             "v": "order_status"
+            },
+            " is fine, ",
+            {
+             "t": "code",
+             "v": "2nd_status"
+            },
+            " is not)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Unique"
+             ],
+             "t": "b"
+            },
+            ": two blocks with the same name are an error in dbt 1.11 (the exact message is in the lab below)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Where ",
+              {
+               "t": "code",
+               "v": "doc()"
+              },
+              " works"
+             ],
+             "t": "b"
+            },
+            ": only in ",
+            {
+             "t": "code",
+             "v": "description"
+            },
+            " fields of YAML properties files. It is not a function you call in a SQL model."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Quotes"
+             ],
+             "t": "b"
+            },
+            ": always, because the value starts with ",
+            {
+             "t": "code",
+             "v": "{"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch20-s3-2",
+     "number": "20.3.2",
+     "title": [
+      "The syntax"
+     ],
+     "titleText": "The syntax"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The documentation site opens on an ",
+        {
+         "c": [
+          "overview"
+         ],
+         "t": "i"
+        },
+        " page. By default, dbt shows a generic text about dbt itself. If your project contains a doc block named ",
+        {
+         "t": "code",
+         "v": "__overview__"
+        },
+        " (two underscores on each side), dbt uses it as the home page instead."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c8",
+       "lang": "plain",
+       "t": "code",
+       "text": "{% docs __overview__ %}\n# Jaffle Shop analytics (practice project)\n\nThis project turns the raw data of the Jaffle Shop (schemas `jaffle_shop` and `stripe`)\ninto tested, documented tables for the finance and marketing teams.\n\n- **staging**: one model per raw table, light cleaning only (rename, cast, cents to dollars)\n- **intermediate**: reusable building blocks (private to the finance group)\n- **marts**: the tables people use: `fct_orders`, `fct_monthly_revenue`, `dim_customers`, ...\n\nBuilt with dbt Core 1.11 on DuckDB while studying for the dbt Analytics Engineering Certification.\n{% enddocs %}",
+       "title": "models/docs.md (the first block)"
+      },
+      {
+       "c": [
+        "Good overview pages explain the layers, the naming rules, who to contact, and links to the main dashboards. You can also write a block named ",
+        {
+         "t": "code",
+         "v": "__<project_name>__"
+        },
+        ", for example ",
+        {
+         "t": "code",
+         "v": "__dbt_utils__"
+        },
+        ": it becomes the overview page shown when someone opens that package in the site."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "In ",
+          {
+           "t": "code",
+           "v": "manifest.json"
+          },
+          " you will see two overview blocks: ",
+          {
+           "t": "code",
+           "v": "doc.dbt.__overview__"
+          },
+          " (the default one, shipped inside dbt) and ",
+          {
+           "t": "code",
+           "v": "doc.jaffle_dbt.__overview__"
+          },
+          " (yours). Yours wins. This is not a \"duplicate name\" error, because the default block belongs to another package (",
+          {
+           "t": "code",
+           "v": "dbt"
+          },
+          ")."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " write the two doc blocks of the reference project, use ",
+          {
+           "t": "code",
+           "v": "order_status"
+          },
+          " in two models, check the result in the manifest, then break the YAML on purpose to learn the three errors. Work in ",
+          {
+           "t": "code",
+           "v": "~/dbt-course/jaffle_dbt"
+          },
+          " with the virtual environment active and no DuckDB CLI session open. Your project is at the state of the end of ",
+          {
+           "href": "/learn/ch19/",
+           "label": "ch:unit-tests",
+           "t": "ref",
+           "text": "Chapter 19"
+          },
+          " (tag ",
+          {
+           "t": "code",
+           "v": "ch19"
+          },
+          ")."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Create ",
+          {
+           "t": "code",
+           "v": "models/docs.md"
+          },
+          " with the two blocks shown above: ",
+          {
+           "t": "code",
+           "v": "__overview__"
+          },
+          " first, then a blank line, then ",
+          {
+           "t": "code",
+           "v": "order_status"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "models/staging/jaffle_shop/_jaffle_shop__models.yml"
+          },
+          ", replace the one-line description of the ",
+          {
+           "t": "code",
+           "v": "status"
+          },
+          " column of ",
+          {
+           "t": "code",
+           "v": "stg_jaffle_shop__orders"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c9",
+         "lang": "yaml",
+         "t": "code",
+         "text": "      - name: status\n        description: \"{{ doc('order_status') }}\"\n        data_tests:\n          - accepted_values:\n              arguments:\n                values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']",
+         "title": "models/staging/jaffle_shop/_jaffle_shop__models.yml (status column)"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "models/marts/_marts__models.yml"
+          },
+          ", document the ",
+          {
+           "t": "code",
+           "v": "status"
+          },
+          " column of ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " too. Add the two lines between the ",
+          {
+           "t": "code",
+           "v": "order_id"
+          },
+          " column and the ",
+          {
+           "t": "code",
+           "v": "amount"
+          },
+          " column:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c10",
+         "lang": "yaml",
+         "t": "code",
+         "text": "    columns:\n      - name: order_id\n        description: Primary key of the order.\n        data_tests:\n          - unique\n          - not_null\n      - name: status\n        description: \"{{ doc('order_status') }}\"\n      - name: amount\n        description: Total of the successful payments, in dollars (0 when not paid yet).",
+         "title": "models/marts/_marts__models.yml (columns of fct_orders)"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Parse the project, then ask the manifest which doc blocks it knows and what the ",
+          {
+           "t": "code",
+           "v": "status"
+          },
+          " description of ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " became:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c11",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt parse\n$ python -c \"import json; m=json.load(open('target/manifest.json')); print(sorted(m['docs'].keys()))\"\n$ python -c \"import json; m=json.load(open('target/manifest.json')); print(m['nodes']['model.jaffle_dbt.fct_orders']['columns']['status']['description'])\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (",
+          {
+           "t": "code",
+           "v": "dbt parse"
+          },
+          " ends without error; then):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c12",
+         "lang": "output",
+         "t": "code",
+         "text": "['doc.dbt.__overview__', 'doc.jaffle_dbt.__overview__', 'doc.jaffle_dbt.order_status']\nOne of the following values:\n\n| status         | meaning                                                   |\n|----------------|-----------------------------------------------------------|\n| placed         | The order is placed but not yet paid or shipped           |\n| shipped        | The order has been shipped to the customer                |\n| completed      | The order has been received by the customer               |\n| return_pending | The customer asked to return the order                    |\n| returned       | The order has been returned and refunded                  |"
+        },
+        {
+         "c": [
+          "The ",
+          {
+           "t": "code",
+           "v": "doc()"
+          },
+          " call is already resolved in the manifest: the website (and dbt Catalog) only see the final text."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5 (break it: no quotes)."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "_marts__models.yml"
+          },
+          ", remove the double quotes around ",
+          {
+           "t": "code",
+           "v": "{{ doc('order_status') }}"
+          },
+          " and run ",
+          {
+           "t": "code",
+           "v": "dbt parse"
+          },
+          ". ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c13",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "Parsing Error\n  Error reading jaffle_dbt: marts/_marts__models.yml - Runtime Error\n    Syntax error near line 21\n    ------------------------------\n    18 |           - unique\n    19 |           - not_null\n    20 |       - name: status\n    21 |         description: {{ doc('order_status') }}\n    22 |       - name: amount\n    23 |         description: Total of the successful payments, in dollars (0 when not paid yet).\n    24 |         data_tests:\n\n    Raw Error:\n    ------------------------------\n    while constructing a mapping\n      in \"<unicode string>\", line 21, column 22\n    found unhashable key\n      in \"<unicode string>\", line 21, column 23"
+        },
+        {
+         "c": [
+          "YAML reads ",
+          {
+           "t": "code",
+           "v": "{"
+          },
+          " as the start of an inline mapping (",
+          {
+           "href": "/learn/ch05/",
+           "label": "ch:yaml-jinja-python",
+           "t": "ref",
+           "text": "Chapter 5"
+          },
+          "); dbt never gets to the Jinja. Put the quotes back."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6 (break it: a wrong name)."
+           ],
+           "t": "b"
+          },
+          " Change the call to ",
+          {
+           "t": "code",
+           "v": "doc('order_statuses')"
+          },
+          " and run ",
+          {
+           "t": "code",
+           "v": "dbt parse"
+          },
+          ". ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c14",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "Compilation Error\n  Documentation for 'model.jaffle_dbt.fct_orders' depends on doc 'order_statuses'  which was not found"
+        },
+        {
+         "c": [
+          "The YAML is valid this time; the error comes later, when dbt resolves the ",
+          {
+           "t": "code",
+           "v": "doc()"
+          },
+          " call. Put ",
+          {
+           "t": "code",
+           "v": "order_status"
+          },
+          " back."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 7 (break it: a duplicate)."
+           ],
+           "t": "b"
+          },
+          " Add a second block with the same name at the end of ",
+          {
+           "t": "code",
+           "v": "models/docs.md"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c15",
+         "lang": "plain",
+         "t": "code",
+         "text": "{% docs order_status %}\nSecond copy.\n{% enddocs %}",
+         "title": "end of models/docs.md (temporary)"
+        },
+        {
+         "c": [
+          "Run ",
+          {
+           "t": "code",
+           "v": "dbt parse"
+          },
+          ". ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c16",
+         "lang": "output",
+         "t": "code",
+         "text": "Compilation Error\n  dbt found two docs with the name \"order_status\".\n\n  Since these resources have the same name, dbt will be unable to find the correct resource\n  when looking for doc(\"order_status\").\n\n  To fix this, change the name of one of these resources:\n  - doc.jaffle_dbt.order_status (models/docs.md)\n  - doc.jaffle_dbt.order_status (models/docs.md)"
+        },
+        {
+         "c": [
+          "Delete the three temporary lines and run ",
+          {
+           "t": "code",
+           "v": "dbt parse"
+          },
+          " again: it must end without error."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result of the whole lab:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "git status"
+          },
+          " shows one new file and two modified files:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c17",
+         "lang": "output",
+         "t": "code",
+         "text": " M models/marts/_marts__models.yml\n M models/staging/jaffle_shop/_jaffle_shop__models.yml\n?? models/docs.md"
+        }
+       ],
+       "id": "ch20-lab1",
+       "objectives": [
+        "3.3",
+        "1.3"
+       ],
+       "t": "lab",
+       "title": [
+        "Doc blocks and the overview page"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Learn to classify the three errors of this lab, because exam questions show an error and ask for the cause (objective 3.3). A YAML syntax problem is a ",
+          {
+           "c": [
+            "Parsing Error"
+           ],
+           "t": "b"
+          },
+          " with a line number (the file cannot even be read). A missing or duplicate doc block is a ",
+          {
+           "c": [
+            "Compilation Error"
+           ],
+           "t": "b"
+          },
+          " (the YAML is fine, but dbt cannot resolve the name). None of them reaches the warehouse."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch20-s3-3",
+     "number": "20.3.3",
+     "title": [
+      "The ",
+      {
+       "t": "code",
+       "v": "__overview__"
+      },
+      " block: your home page"
+     ],
+     "titleText": "The __overview__ block: your home page"
+    }
+   ],
+   "title": [
+    "Doc blocks: long texts you write once"
+   ],
+   "titleText": "Doc blocks: long texts you write once"
+  },
+  {
+   "anchors": [
+    "sec-doc-generate"
+   ],
+   "checkpoints": [],
+   "id": "ch20-s4",
+   "label": "sec:doc-generate",
+   "labs": [],
+   "minutes": 10,
+   "number": "20.4",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt docs generate"
+        },
+        " does three things (the dbt documentation lists them in this order; internally dbt compiles first):"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "It ",
+            {
+             "c": [
+              "copies the website"
+             ],
+             "t": "b"
+            },
+            " (one file, ",
+            {
+             "t": "code",
+             "v": "index.html"
+            },
+            ", which contains all the JavaScript of the site) into ",
+            {
+             "t": "code",
+             "v": "target/"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "It ",
+            {
+             "c": [
+              "compiles the project"
+             ],
+             "t": "b"
+            },
+            ", like ",
+            {
+             "t": "code",
+             "v": "dbt compile"
+            },
+            ", and writes ",
+            {
+             "t": "code",
+             "v": "target/manifest.json"
+            },
+            ". The manifest contains everything dbt knows from your files: every node, its description (with the doc blocks resolved), its configs, its tests, its parents and children, its raw SQL and its compiled SQL."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "It ",
+            {
+             "c": [
+              "queries the warehouse metadata"
+             ],
+             "t": "b"
+            },
+            " for every relation of the project (models, seeds, snapshots, sources) and writes ",
+            {
+             "t": "code",
+             "v": "target/catalog.json"
+            },
+            ". The ",
+            {
+             "en": [
+              "catalog"
+             ],
+             "fr": "catalogue",
+             "id": "term-catalog",
+             "t": "term"
+            },
+            " contains what only the warehouse knows: the table type (",
+            {
+             "t": "code",
+             "v": "BASE TABLE"
+            },
+            " or ",
+            {
+             "t": "code",
+             "v": "VIEW"
+            },
+            "), the real column names and data types in their real order, the table comment, the owner and statistics when the platform provides them."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "c": [
+        "It builds nothing: no table is created or changed. But it connects to the warehouse (to compile in step 2, like ",
+        {
+         "t": "code",
+         "v": "dbt compile"
+        },
+        ", and to query the metadata in step 3), and it renders Jinja for step 2. If the compilation fails, dbt stops and writes no catalog."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c18",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt docs generate"
+      },
+      {
+       "id": "ch20-c19",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "21:19:58  Running with dbt=1.11.16\n21:19:59  Registered adapter: duckdb=1.11.0\n21:19:59  Found 15 models, 2 analyses, 45 data tests, 1 seed, 2 snapshots, 5 sources, 670 macros, 2 groups, 5 unit tests\n21:19:59\n21:19:59  Concurrency: 4 threads (target='dev')\n21:19:59\n21:19:59  Building catalog\n21:19:59  Catalog written to /Users/you/dbt-course/jaffle_dbt/target/catalog.json",
+       "textBook": "21:19:58  Running with dbt=1.11.16\n21:19:59  Registered adapter: duckdb=1.11.0\n21:19:59  Found 15 models, 2 analyses, 45 data tests, 1 seed, 2 snapshots, 5 sources, 670 macros, 2 groups, 5 unit tests\n21:19:59\n21:19:59  Concurrency: 4 threads (target='dev')\n21:19:59\n21:19:59  Building catalog\n21:19:59  Catalog written to /Users/mac/dbt-course/jaffle_dbt/target/catalog.json"
+      },
+      {
+       "id": "ch20-c20",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ ls -la target/index.html target/manifest.json target/catalog.json"
+      },
+      {
+       "id": "ch20-c21",
+       "lang": "output",
+       "t": "code",
+       "text": "-rw-r--r--@ 1 mac  wheel    23489 Oct 21 21:19 target/catalog.json\n-rw-r--r--@ 1 mac  wheel  1818461 Oct 21 21:19 target/index.html\n-rw-r--r--@ 1 mac  wheel  1012063 Oct 21 21:19 target/manifest.json"
+      },
+      {
+       "c": [
+        "The site is these three files (plus the folders listed in the project key ",
+        {
+         "t": "code",
+         "v": "asset-paths"
+        },
+        ", for example images used in your descriptions, which ",
+        {
+         "t": "code",
+         "v": "dbt docs generate"
+        },
+        " also copies into ",
+        {
+         "t": "code",
+         "v": "target/"
+        },
+        "). Any ",
+        {
+         "en": [
+          "web server"
+         ],
+         "fr": "serveur web",
+         "id": "term-web-server",
+         "t": "term"
+        },
+        " that can send static files can publish it."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch20-s4-1",
+     "number": "20.4.1",
+     "title": [
+      "What the command does"
+     ],
+     "titleText": "What the command does"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "For ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        ", the catalog (from the warehouse) says:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c22",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ python -c \"import json; c=json.load(open('target/catalog.json')); n=c['nodes']['model.jaffle_dbt.fct_orders']; print('metadata:', n['metadata']); print('columns:'); [print('  ', k, v['type'], v['index']) for k, v in n['columns'].items()]; print('stats:', list(n['stats'].keys()))\""
+      },
+      {
+       "id": "ch20-c23",
+       "lang": "output",
+       "t": "code",
+       "text": "metadata: {'type': 'BASE TABLE', 'schema': 'dbt_adnane', 'name': 'fct_orders', 'database': 'practice', 'comment': 'One row per order, with the amount paid (successful payments only).', 'owner': None}\ncolumns:\n   order_id INTEGER 1\n   customer_id INTEGER 2\n   order_date DATE 3\n   status VARCHAR 4\n   bank_transfer_amount DECIMAL(38,2) 5\n   coupon_amount DECIMAL(38,2) 6\n   credit_card_amount DECIMAL(38,2) 7\n   gift_card_amount DECIMAL(38,2) 8\n   amount DECIMAL(38,2) 9\n   loaded_at TIMESTAMP 10\nstats: ['has_stats']"
+      },
+      {
+       "c": [
+        "(The ",
+        {
+         "t": "code",
+         "v": "comment"
+        },
+        " is filled because this output was captured after the third lab of this chapter, which switches ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        " on; before that lab you will see ",
+        {
+         "t": "code",
+         "v": "'comment': None"
+        },
+        ".) The manifest (from the project) says:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c24",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ python -c \"import json; m=json.load(open('target/manifest.json')); n=m['nodes']['model.jaffle_dbt.fct_orders']; print('description:', n['description']); print('docs:', n['docs'])\""
+      },
+      {
+       "id": "ch20-c25",
+       "lang": "output",
+       "t": "code",
+       "text": "description: One row per order, with the amount paid (successful payments only).\ndocs: {'show': True, 'node_color': '#1565C0'}"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "manifest.json"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "catalog.json"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Source of truth"
+          ]
+         },
+         {
+          "c": [
+           "your project files (parse + compile)"
+          ]
+         },
+         {
+          "c": [
+           "the warehouse (metadata queries)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Written by"
+          ]
+         },
+         {
+          "c": [
+           "almost every command (",
+           {
+            "t": "code",
+            "v": "parse"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "compile"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "run"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "build"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "docs generate"
+           },
+           "…)"
+          ]
+         },
+         {
+          "c": [
+           "only ",
+           {
+            "t": "code",
+            "v": "dbt docs generate"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Contains"
+          ]
+         },
+         {
+          "c": [
+           "descriptions, doc blocks, configs, tests, lineage, raw and compiled SQL, ",
+           {
+            "t": "code",
+            "v": "meta"
+           },
+           ", owners"
+          ]
+         },
+         {
+          "c": [
+           "table type, column names and types, comments, statistics"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Needs the warehouse?"
+          ]
+         },
+         {
+          "c": [
+           "no (except to compile introspective macros)"
+          ]
+         },
+         {
+          "c": [
+           "yes"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Used by"
+          ]
+         },
+         {
+          "c": [
+           "the site, state comparison (",
+           {
+            "t": "code",
+            "v": "--state"
+           },
+           "), dbt Catalog"
+          ]
+         },
+         {
+          "c": [
+           "the site, dbt Catalog"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch20-s4-2",
+     "number": "20.4.2",
+     "title": [
+      "Manifest or catalog? Who knows what"
+     ],
+     "titleText": "Manifest or catalog? Who knows what"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The catalog describes relations that ",
+        {
+         "c": [
+          "exist"
+         ],
+         "t": "i"
+        },
+        " in the warehouse. In your project, ",
+        {
+         "t": "code",
+         "v": "dbt docs generate"
+        },
+        " found 17 relations and one model is missing:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c26",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ python -c \"import json; c=json.load(open('target/catalog.json')); m=json.load(open('target/manifest.json')); print('catalog nodes:', len(c['nodes']), ' sources:', len(c['sources'])); print('in manifest but not in catalog:', [k for k,v in m['nodes'].items() if v['resource_type'] in ('model','seed','snapshot') and k not in c['nodes']])\""
+      },
+      {
+       "id": "ch20-c27",
+       "lang": "output",
+       "t": "code",
+       "text": "catalog nodes: 17  sources: 5\nin manifest but not in catalog: ['model.jaffle_dbt.int_payments__successful']"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "int_payments__successful"
+        },
+        " is ",
+        {
+         "t": "code",
+         "v": "ephemeral"
+        },
+        " (",
+        {
+         "href": "/learn/ch08/",
+         "label": "ch:materializations",
+         "t": "ref",
+         "text": "Chapter 8"
+        },
+        "): it never becomes a table or a view, so the warehouse knows nothing about it. The same happens to a model that you have not built yet, or that you built in another schema (another target). Its page in the site then shows only the columns you wrote in YAML, without data types. This is why the dbt documentation recommends running ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " ",
+        {
+         "c": [
+          "before"
+         ],
+         "t": "i"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "dbt docs generate"
+        },
+        ", with the same target."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch20-s4-3",
+     "number": "20.4.3",
+     "title": [
+      "Only existing relations are in the catalog"
+     ],
+     "titleText": "Only existing relations are in the catalog"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Flag"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Effect"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--select"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "--exclude"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Limit the ",
+           {
+            "c": [
+             "catalog"
+            ],
+            "t": "i"
+           },
+           " to the selected nodes (fewer metadata queries). The manifest still contains the whole project."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--no-compile"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Skip step 2 (compilation). Faster, but compiled SQL is missing; use it only when another command just wrote the manifest."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--empty-catalog"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Skip step 3: write an empty ",
+           {
+            "t": "code",
+            "v": "catalog.json"
+           },
+           ", without the metadata queries. Lineage and descriptions only; no data types. (Step 2 still connects to the warehouse.)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--static"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Also write ",
+           {
+            "t": "code",
+            "v": "target/static_index.html"
+           },
+           ": one HTML file with the manifest and the catalog inside, which you can open or e-mail without a server."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--target"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "-t"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Document another target, for example ",
+           {
+            "t": "code",
+            "v": "prod"
+           },
+           ", so the catalog describes the production relations."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Here are real outputs (the commands are in the second lab of this chapter). With the selection ",
+        {
+         "t": "code",
+         "v": "--select +fct_monthly_revenue"
+        },
+        ", only that model and its parents are in the catalog, but the manifest still has all 65 nodes:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c28",
+       "lang": "output",
+       "t": "code",
+       "text": "catalog nodes: ['model.jaffle_dbt.fct_monthly_revenue', 'model.jaffle_dbt.int_orders__enriched', 'model.jaffle_dbt.stg_jaffle_shop__customers', 'model.jaffle_dbt.stg_jaffle_shop__orders', 'model.jaffle_dbt.stg_stripe__payments'] sources: ['source.jaffle_dbt.jaffle_shop.customers', 'source.jaffle_dbt.jaffle_shop.orders', 'source.jaffle_dbt.stripe.payments']\nmanifest nodes: 65"
+      },
+      {
+       "c": [
+        "With ",
+        {
+         "t": "code",
+         "v": "--empty-catalog"
+        },
+        ", notice that the line ",
+        {
+         "t": "code",
+         "v": "Building catalog"
+        },
+        " is missing, and the catalog is empty:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c29",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:19:21  Running with dbt=1.11.16\n22:19:22  Registered adapter: duckdb=1.11.0\n22:19:22  Found 15 models, 2 analyses, 1 seed, 45 data tests, 2 snapshots, 5 sources, 670 macros, 2 groups, 5 unit tests\n22:19:22\n22:19:22  Concurrency: 4 threads (target='dev')\n22:19:22\n22:19:23  Catalog written to /Users/you/dbt-course/jaffle_dbt/target/catalog.json\ncatalog nodes: 0 sources: 0",
+       "textBook": "22:19:21  Running with dbt=1.11.16\n22:19:22  Registered adapter: duckdb=1.11.0\n22:19:22  Found 15 models, 2 analyses, 1 seed, 45 data tests, 2 snapshots, 5 sources, 670 macros, 2 groups, 5 unit tests\n22:19:22\n22:19:22  Concurrency: 4 threads (target='dev')\n22:19:22\n22:19:23  Catalog written to /Users/mac/dbt-course/jaffle_dbt/target/catalog.json\ncatalog nodes: 0 sources: 0"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "In our test, ",
+          {
+           "t": "code",
+           "v": "dbt docs generate --no-compile"
+          },
+          " run in an ",
+          {
+           "c": [
+            "empty"
+           ],
+           "t": "i"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "target/"
+          },
+          " folder wrote ",
+          {
+           "t": "code",
+           "v": "catalog.json"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "index.html"
+          },
+          " but no ",
+          {
+           "t": "code",
+           "v": "manifest.json"
+          },
+          " at all, so the site could not open. ",
+          {
+           "t": "code",
+           "v": "--no-compile"
+          },
+          " is a speed option for pipelines that ran ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " (or ",
+          {
+           "t": "code",
+           "v": "dbt compile"
+          },
+          ") just before, in the same ",
+          {
+           "t": "code",
+           "v": "target/"
+          },
+          " folder."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "deep",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Trap T36 of ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          ": ",
+          {
+           "t": "code",
+           "v": "dbt docs generate"
+          },
+          " does ",
+          {
+           "c": [
+            "not"
+           ],
+           "t": "i"
+          },
+          " open the website and does ",
+          {
+           "c": [
+            "not"
+           ],
+           "t": "i"
+          },
+          " start a server. It only writes files into ",
+          {
+           "t": "code",
+           "v": "target/"
+          },
+          ". Two more traps: it does not build or refresh any model (if a table is missing, it is missing from the catalog), and, unlike ",
+          {
+           "t": "code",
+           "v": "dbt parse"
+          },
+          ", it needs a working connection to the warehouse. Even ",
+          {
+           "t": "code",
+           "v": "--empty-catalog"
+          },
+          " alone does not avoid it, because the compile step connects: with a database path that does not exist, ",
+          {
+           "t": "code",
+           "v": "dbt docs generate --empty-catalog"
+          },
+          " failed in our test, and only ",
+          {
+           "t": "code",
+           "v": "dbt docs generate --empty-catalog --no-compile"
+          },
+          " succeeded."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch20-s4-4",
+     "number": "20.4.4",
+     "title": [
+      "The flags of ",
+      {
+       "t": "code",
+       "v": "dbt docs generate"
+      }
+     ],
+     "titleText": "The flags of dbt docs generate"
+    }
+   ],
+   "title": [
+    "Generating the documentation: ",
+    {
+     "t": "code",
+     "v": "dbt docs generate"
+    }
+   ],
+   "titleText": "Generating the documentation: dbt docs generate"
+  },
+  {
+   "anchors": [
+    "sec-doc-serve"
+   ],
+   "checkpoints": [],
+   "id": "ch20-s5",
+   "label": "sec:doc-serve",
+   "labs": [
+    "ch20-lab2"
+   ],
+   "minutes": 20,
+   "number": "20.5",
+   "objectives": [
+    "1.4",
+    "1.5"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt docs serve"
+        },
+        " starts a small local web server whose root is the ",
+        {
+         "t": "code",
+         "v": "target/"
+        },
+        " folder, and opens your default browser on it."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c30",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt docs serve"
+      },
+      {
+       "id": "ch20-c31",
+       "lang": "output",
+       "t": "code",
+       "text": "22:31:20  Running with dbt=1.11.16\nServing docs at 8080\nTo access from your browser, navigate to: http://localhost:8080\n\n\n\nPress Ctrl+C to exit.\n127.0.0.1 - - [21/Oct/2026 22:31:24] \"GET / HTTP/1.1\" 200 -\n127.0.0.1 - - [21/Oct/2026 22:31:24] \"GET /catalog.json HTTP/1.1\" 200 -\n..."
+      },
+      {
+       "c": [
+        "The terminal stays busy while the server runs: each line ",
+        {
+         "t": "code",
+         "v": "GET … 200"
+        },
+        " is a file sent to the browser. In a real browser you will see more lines, for example ",
+        {
+         "t": "code",
+         "v": "GET /manifest.json?cb=…"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "GET /catalog.json?cb=…"
+        },
+        " (the ",
+        {
+         "t": "code",
+         "v": "cb"
+        },
+        " number only stops the browser from using an old copy), and a few ",
+        {
+         "t": "code",
+         "v": "404"
+        },
+        " lines for small icons such as ",
+        {
+         "t": "code",
+         "v": "favicon.ico"
+        },
+        ": they are harmless. Stop the server with ",
+        {
+         "t": "key",
+         "v": "Ctrl+C"
+        },
+        ". The options:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "--port 8001"
+            },
+            ": use another ",
+            {
+             "en": [
+              "port"
+             ],
+             "fr": "port",
+             "id": "term-port",
+             "t": "term"
+            },
+            " (the default is ",
+            {
+             "c": [
+              "8080"
+             ],
+             "t": "b"
+            },
+            "). Useful when 8080 is already used by another program."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "--host"
+            },
+            ": the network address to listen on. Since dbt 1.8.1 the default is ",
+            {
+             "t": "code",
+             "v": "127.0.0.1"
+            },
+            " (only your own computer can open the site); ",
+            {
+             "t": "code",
+             "v": "--host \"\""
+            },
+            " listens on every address. This flag exists only in dbt Core."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "--no-browser"
+            },
+            ": do not open the browser automatically."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "dbt docs serve"
+          },
+          " does not generate anything. It only serves the files that are already in ",
+          {
+           "t": "code",
+           "v": "target/"
+          },
+          ". We started it in an empty folder: the server started, ",
+          {
+           "t": "code",
+           "v": "index.html"
+          },
+          " was copied and sent, but the browser's request for ",
+          {
+           "t": "code",
+           "v": "catalog.json"
+          },
+          " failed with ",
+          {
+           "t": "code",
+           "v": "\"GET /catalog.json HTTP/1.1\" 404"
+          },
+          ", so the page cannot show the project. Always run ",
+          {
+           "t": "code",
+           "v": "dbt docs generate"
+          },
+          " first. And ",
+          {
+           "t": "code",
+           "v": "dbt docs serve"
+          },
+          " is a development tool: the dbt documentation warns not to use it to host the site for a company. Host the static files (S3, Netlify, your own web server), or use dbt Catalog on the dbt platform. The Studio IDE does not support ",
+          {
+           "t": "code",
+           "v": "dbt docs serve"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch20-s5-1",
+     "number": "20.5.1",
+     "title": [
+      {
+       "t": "code",
+       "v": "dbt docs serve"
+      }
+     ],
+     "titleText": "dbt docs serve"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Everything below was checked in a browser on the documentation of your project."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Left panel."
+         ],
+         "t": "b"
+        },
+        " Three tabs at the top: ",
+        {
+         "c": [
+          "Project"
+         ],
+         "t": "b"
+        },
+        " (the files, grouped as in your folders: ",
+        {
+         "t": "code",
+         "v": "analyses"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "macros"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "models/intermediate"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "models/marts"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "models/staging"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "seeds"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "snapshots"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "tests"
+        },
+        "), ",
+        {
+         "c": [
+          "Database"
+         ],
+         "t": "b"
+        },
+        " (the same nodes grouped by database and schema, as the warehouse sees them) and ",
+        {
+         "c": [
+          "Group"
+         ],
+         "t": "b"
+        },
+        " (the groups of ",
+        {
+         "href": "/learn/ch17/",
+         "label": "ch:governance",
+         "t": "ref",
+         "text": "Chapter 17"
+        },
+        "). Below: ",
+        {
+         "c": [
+          "Sources"
+         ],
+         "t": "b"
+        },
+        ", ",
+        {
+         "c": [
+          "Exposures"
+         ],
+         "t": "b"
+        },
+        " (grouped by type: Dashboard, Notebook…), and ",
+        {
+         "c": [
+          "Projects"
+         ],
+         "t": "b"
+        },
+        ": your project and every installed package (",
+        {
+         "t": "code",
+         "v": "dbt_utils"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "audit_helper"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Overview page."
+         ],
+         "t": "b"
+        },
+        " The text of your ",
+        {
+         "t": "code",
+         "v": "__overview__"
+        },
+        " block."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Model page"
+         ],
+         "t": "b"
+        },
+        " (open ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        "). Six sections:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Details"
+             ],
+             "t": "b"
+            },
+            ": the ",
+            {
+             "t": "code",
+             "v": "meta"
+            },
+            " keys (OWNER finance-team, CONTAINS_PII false), the tags (marts, finance), the owner of the model's group (Finance analytics team), the materialization, package, language, relation (",
+            {
+             "t": "code",
+             "v": "practice.dbt_adnane.fct_orders"
+            },
+            "), access, version and contract status."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Description"
+             ],
+             "t": "b"
+            },
+            ": the model description, rendered as Markdown."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Columns"
+             ],
+             "t": "b"
+            },
+            ": one row per column, with ",
+            {
+             "c": [
+              "TYPE"
+             ],
+             "t": "b"
+            },
+            " (from the catalog), ",
+            {
+             "c": [
+              "DESCRIPTION"
+             ],
+             "t": "b"
+            },
+            " (from YAML), constraints, and ",
+            {
+             "c": [
+              "DATA TESTS"
+             ],
+             "t": "b"
+            },
+            " shown as letters: ",
+            {
+             "c": [
+              "U"
+             ],
+             "t": "b"
+            },
+            " = unique, ",
+            {
+             "c": [
+              "N"
+             ],
+             "t": "b"
+            },
+            " = not_null, ",
+            {
+             "c": [
+              "A"
+             ],
+             "t": "b"
+            },
+            " = accepted_values, ",
+            {
+             "c": [
+              "F"
+             ],
+             "t": "b"
+            },
+            " = relationships (\"foreign key\"), ",
+            {
+             "c": [
+              "+"
+             ],
+             "t": "b"
+            },
+            " = any other test (our custom ",
+            {
+             "t": "code",
+             "v": "is_positive"
+            },
+            "). Click a column to see its full description: the ",
+            {
+             "t": "code",
+             "v": "status"
+            },
+            " column shows the table of the ",
+            {
+             "t": "code",
+             "v": "order_status"
+            },
+            " block."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Referenced By"
+             ],
+             "t": "b"
+            },
+            " and ",
+            {
+             "c": [
+              "Depends On"
+             ],
+             "t": "b"
+            },
+            ": children and parents (models, data tests, unit tests)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Code"
+             ],
+             "t": "b"
+            },
+            ": two tabs, ",
+            {
+             "c": [
+              "Source"
+             ],
+             "t": "b"
+            },
+            " (your SQL with Jinja) and ",
+            {
+             "c": [
+              "Compiled"
+             ],
+             "t": "b"
+            },
+            " (the SQL after rendering, from the manifest)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Search."
+         ],
+         "t": "b"
+        },
+        " The search box at the top looks in names and, depending on the check boxes you tick, also in descriptions, column names, column descriptions and SQL code."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "The lineage graph."
+         ],
+         "t": "b"
+        },
+        " The ",
+        {
+         "en": [
+          "lineage graph"
+         ],
+         "fr": "graphe de lignage",
+         "id": "term-lineage-graph",
+         "t": "term"
+        },
+        " draws the DAG. The round button at the bottom right of a page opens a ",
+        {
+         "c": [
+          "mini-map"
+         ],
+         "t": "i"
+        },
+        " with the direct parents and children of the current node. ",
+        {
+         "c": [
+          "View Fullscreen"
+         ],
+         "t": "b"
+        },
+        " opens the full graph, with a control bar at the bottom:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "resources"
+             ],
+             "t": "b"
+            },
+            ": which node types to show (Models, Seeds, Snapshots, Sources, Tests, Analyses, Exposures, Metrics, Unit tests…);"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "packages"
+             ],
+             "t": "b"
+            },
+            " and ",
+            {
+             "c": [
+              "tags"
+             ],
+             "t": "b"
+            },
+            ": filter by package or tag;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "--select"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "--exclude"
+            },
+            ": two text boxes that accept the ",
+            {
+             "c": [
+              "same selection syntax as the command line"
+             ],
+             "t": "i"
+            },
+            " (",
+            {
+             "href": "/learn/ch16/",
+             "label": "ch:commands-selection",
+             "t": "ref",
+             "text": "Chapter 16"
+            },
+            "), such as ",
+            {
+             "t": "code",
+             "v": "+fct_monthly_revenue"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "tag:finance"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "2+dim_customers+1"
+            },
+            " or ",
+            {
+             "t": "code",
+             "v": "source:stripe+"
+            },
+            "; then click ",
+            {
+             "c": [
+              "Update Graph"
+             ],
+             "t": "b"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "When you open the full graph from the page of ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        ", the ",
+        {
+         "t": "code",
+         "v": "--select"
+        },
+        " box already contains ",
+        {
+         "t": "code",
+         "v": "+fct_orders+"
+        },
+        " (the model, all its parents and all its children), and this selection is kept in the page address, so you can send the link to a colleague. Nodes have the colours of ",
+        {
+         "t": "code",
+         "v": "docs.node_color"
+        },
+        " (green staging, yellow intermediate, blue marts in your project), and a right-click on a node opens a small menu (for example, to jump to its documentation page)."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "A sketch of the lineage graph in the dbt docs website. stripe.payments → stg_stripe__payments and jaffle_shop.orders → stg_jaffle_shop__orders; both feed int_orders__enriched, which feeds fct_monthly_revenue and fct_orders; fct_monthly_revenue feeds monthly_revenue_dashboard. The bar at the bottom has resources, packages, tags, a --select box with +fct_monthly_revenue+, an --exclude box and an Update Graph button.",
+       "id": "ch20-fig2",
+       "src": "figures/ch20-fig2.svg",
+       "t": "figure"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " build the site of your project, open it, find your doc blocks, and use the selection syntax in the lineage graph. Same folder and environment as the first lab."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Make sure every model exists in your dev schema, then generate the documentation:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c32",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build\n$ dbt docs generate"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the build ends with ",
+          {
+           "t": "code",
+           "v": "PASS=66 WARN=1"
+          },
+          " (the warning is the ",
+          {
+           "t": "code",
+           "v": "relationships"
+          },
+          " test on the orphan order 159, as in ",
+          {
+           "href": "/learn/ch18/",
+           "label": "ch:data-tests",
+           "t": "ref",
+           "text": "Chapter 18"
+          },
+          "); ",
+          {
+           "t": "code",
+           "v": "dbt docs generate"
+          },
+          " prints ",
+          {
+           "t": "code",
+           "v": "Building catalog"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "Catalog written to …/target/catalog.json"
+          },
+          " (full output above). If your database is brand new, remember the order of ",
+          {
+           "href": "/learn/ch19/",
+           "label": "ch:unit-tests",
+           "t": "ref",
+           "text": "Chapter 19"
+          },
+          ": run ",
+          {
+           "t": "code",
+           "v": "dbt build --exclude-resource-type unit_test"
+          },
+          " once, then ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Check the three files and the 17 catalog nodes with the ",
+          {
+           "t": "code",
+           "v": "ls -la"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "python -c"
+          },
+          " commands of ",
+          {
+           "href": "/learn/ch20/ch20-s4/",
+           "label": "sec:doc-generate",
+           "t": "ref",
+           "text": "Section 20.4"
+          },
+          ". ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the three files exist, and only ",
+          {
+           "t": "code",
+           "v": "int_payments__successful"
+          },
+          " is missing from the catalog."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Start the server:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c33",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt docs serve"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "Serving docs at 8080"
+          },
+          ", and your browser opens ",
+          {
+           "t": "code",
+           "v": "http://localhost:8080"
+          },
+          ". If port 8080 is busy, stop with ",
+          {
+           "t": "key",
+           "v": "Ctrl+C"
+          },
+          " and use ",
+          {
+           "t": "code",
+           "v": "dbt docs serve --port 8001"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " In the browser, check each item:"
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "The home page shows \"Jaffle Shop analytics (practice project)\" (your ",
+              {
+               "t": "code",
+               "v": "__overview__"
+              },
+              " block)."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Project tab → ",
+              {
+               "t": "code",
+               "v": "jaffle_dbt"
+              },
+              " → ",
+              {
+               "t": "code",
+               "v": "models"
+              },
+              " → ",
+              {
+               "t": "code",
+               "v": "marts"
+              },
+              " → ",
+              {
+               "t": "code",
+               "v": "fct_orders"
+              },
+              ": the Columns section shows 10 columns with types; ",
+              {
+               "t": "code",
+               "v": "order_id"
+              },
+              " has the tests ",
+              {
+               "c": [
+                "U N"
+               ],
+               "t": "b"
+              },
+              ", ",
+              {
+               "t": "code",
+               "v": "amount"
+              },
+              " has ",
+              {
+               "c": [
+                "+"
+               ],
+               "t": "b"
+              },
+              "; click ",
+              {
+               "t": "code",
+               "v": "status"
+              },
+              ": the five statuses appear as a table."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Open ",
+              {
+               "t": "code",
+               "v": "stg_jaffle_shop__orders"
+              },
+              ": its ",
+              {
+               "t": "code",
+               "v": "status"
+              },
+              " column shows the same table (one block, two models), and its ",
+              {
+               "t": "code",
+               "v": "customer_id"
+              },
+              " column shows ",
+              {
+               "c": [
+                "N"
+               ],
+               "t": "b"
+              },
+              " and ",
+              {
+               "c": [
+                "F"
+               ],
+               "t": "b"
+              },
+              " (the relationships test)."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Code section of ",
+              {
+               "t": "code",
+               "v": "fct_orders"
+              },
+              ": compare the Source tab (with ",
+              {
+               "t": "code",
+               "v": "{{ ref(…) }}"
+              },
+              " and ",
+              {
+               "t": "code",
+               "v": "is_incremental()"
+              },
+              ") and the Compiled tab (with ",
+              {
+               "t": "code",
+               "v": "\"practice\".\"dbt_adnane\"…"
+              },
+              ")."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Open the lineage graph (round button, bottom right), then ",
+              {
+               "c": [
+                "View Fullscreen"
+               ],
+               "t": "b"
+              },
+              ". In ",
+              {
+               "t": "code",
+               "v": "--select"
+              },
+              ", type ",
+              {
+               "t": "code",
+               "v": "+fct_monthly_revenue"
+              },
+              " and click ",
+              {
+               "c": [
+                "Update Graph"
+               ],
+               "t": "b"
+              },
+              ": only the model and its parents remain. Then type ",
+              {
+               "t": "code",
+               "v": "source:stripe+"
+              },
+              ": only the payments branch remains. In ",
+              {
+               "c": [
+                "resources"
+               ],
+               "t": "b"
+              },
+              ", untick ",
+              {
+               "c": [
+                "Tests"
+               ],
+               "t": "b"
+              },
+              " if they hide the picture."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        },
+        {
+         "c": [
+          "Stop the server with ",
+          {
+           "t": "key",
+           "v": "Ctrl+C"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Try two flags, and after each one count what is in the catalog and in the manifest; then restore the full documentation:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c34",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt docs generate --select +fct_monthly_revenue\n$ python -c \"import json; c=json.load(open('target/catalog.json')); m=json.load(open('target/manifest.json')); print('catalog nodes:', sorted(c['nodes']), 'sources:', sorted(c['sources'])); print('manifest nodes:', len(m['nodes']))\"\n$ dbt docs generate --empty-catalog\n$ python -c \"import json; c=json.load(open('target/catalog.json')); print('catalog nodes:', len(c['nodes']), 'sources:', len(c['sources']))\"\n$ dbt docs generate"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the first command also prints the compiled SQL of the model, after a line ",
+          {
+           "t": "code",
+           "v": "Compiled node 'fct_monthly_revenue' is:"
+          },
+          " (with a selection, the compile step behaves like ",
+          {
+           "t": "code",
+           "v": "dbt compile --select"
+          },
+          "); you can ignore it. Then the catalog has 5 models and 3 sources, and the manifest still has 65 nodes (output in ",
+          {
+           "href": "/learn/ch20/ch20-s4/",
+           "label": "sec:doc-generate",
+           "t": "ref",
+           "text": "Section 20.4"
+          },
+          "); after the second the catalog is empty (",
+          {
+           "t": "code",
+           "v": "catalog nodes: 0 sources: 0"
+          },
+          ") and the dbt output has no ",
+          {
+           "t": "code",
+           "v": "Building catalog"
+          },
+          " line; the third puts the 17 nodes back. (If you serve the site after the second command, the column types disappear from every page.)"
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6 (optional)."
+           ],
+           "t": "b"
+          },
+          " One file you can e-mail:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c35",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt docs generate --static && ls -la target/static_index.html"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (the dbt lines, then):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c36",
+         "lang": "output",
+         "t": "code",
+         "text": "21:20:03  Catalog written to /Users/you/dbt-course/jaffle_dbt/target/catalog.json\n-rw-r--r--@ 1 mac  wheel  2853959 Oct 21 21:20 target/static_index.html",
+         "textBook": "21:20:03  Catalog written to /Users/mac/dbt-course/jaffle_dbt/target/catalog.json\n-rw-r--r--@ 1 mac  wheel  2853959 Oct 21 21:20 target/static_index.html"
+        },
+        {
+         "c": [
+          "Double-click ",
+          {
+           "t": "code",
+           "v": "target/static_index.html"
+          },
+          " in Finder: the site opens without any server, because the manifest and the catalog are inside the HTML file. Nothing in this lab changes a file of your project (",
+          {
+           "t": "code",
+           "v": "target/"
+          },
+          " is ignored by Git)."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch20-lab2",
+       "objectives": [
+        "1.4",
+        "1.5"
+       ],
+       "t": "lab",
+       "title": [
+        "Generate, serve and explore the documentation"
+       ]
+      }
+     ],
+     "id": "ch20-s5-2",
+     "number": "20.5.2",
+     "title": [
+      "A tour of the site"
+     ],
+     "titleText": "A tour of the site"
+    }
+   ],
+   "title": [
+    "Serving and exploring the site"
+   ],
+   "titleText": "Serving and exploring the site"
+  },
+  {
+   "anchors": [
+    "sec-doc-meta"
+   ],
+   "checkpoints": [],
+   "id": "ch20-s6",
+   "label": "sec:doc-meta",
+   "labs": [],
+   "minutes": 5,
+   "number": "20.6",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "meta"
+        },
+        " is a dictionary of free keys and values. dbt does nothing with it except store it in the manifest and show it on the site (Details section, in capitals). Teams use it for owners, PII flags, SLAs, the name of the source system, or links; external tools (data catalogues, alerting tools) read it from the manifest. Since dbt 1.10, write it under ",
+        {
+         "t": "code",
+         "v": "config:"
+        },
+        " in properties files; in ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        " it is ",
+        {
+         "t": "code",
+         "v": "+meta:"
+        },
+        ", and the dictionaries are merged from the project down to the model (",
+        {
+         "href": "/learn/ch10/",
+         "label": "ch:configuration",
+         "t": "ref",
+         "text": "Chapter 10"
+        },
+        "). In your project, every mart has ",
+        {
+         "t": "code",
+         "v": "owner: analytics-engineering"
+        },
+        " from ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        ", and ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " overrides it: ",
+        {
+         "t": "code",
+         "v": "owner: finance-team"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "contains_pii: false"
+        },
+        ". The site shows exactly that."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch20-s6-1",
+     "number": "20.6.1",
+     "title": [
+      {
+       "t": "code",
+       "v": "meta"
+      },
+      ": your own keys"
+     ],
+     "titleText": "meta: your own keys"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The ",
+        {
+         "t": "code",
+         "v": "docs"
+        },
+        " config has two keys:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "show"
+            },
+            " (default ",
+            {
+             "t": "code",
+             "v": "true"
+            },
+            "). With ",
+            {
+             "t": "code",
+             "v": "show: false"
+            },
+            ", the node is hidden from the navigation of the site (it still exists in the project and is still built). It is useful for technical models and for packages you do not want to display, for example ",
+            {
+             "t": "code",
+             "v": "+docs: {show: false}"
+            },
+            " on a whole package in ",
+            {
+             "t": "code",
+             "v": "dbt_project.yml"
+            },
+            ". In the lineage graph a hidden node can still appear, marked as hidden."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "node_color"
+            },
+            ": the colour of the node in the lineage graph, as a colour name (",
+            {
+             "t": "code",
+             "v": "purple"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "gold"
+            },
+            ") or a hex code ",
+            {
+             "c": [
+              "in quotes"
+             ],
+             "t": "i"
+            },
+            " (",
+            {
+             "t": "code",
+             "v": "\"#1565C0\""
+            },
+            "). It works for models, seeds, snapshots and analyses. Sources do not accept the ",
+            {
+             "t": "code",
+             "v": "docs"
+            },
+            " config at all."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "Precedence is the usual one (",
+        {
+         "href": "/learn/ch10/",
+         "label": "ch:configuration",
+         "t": "ref",
+         "text": "Chapter 10"
+        },
+        "): ",
+        {
+         "t": "code",
+         "v": "config()"
+        },
+        " in the SQL file wins over the properties file, which wins over ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        ". Your project sets the colours per folder:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c37",
+       "lang": "yaml",
+       "t": "code",
+       "text": "    staging:\n      +docs:\n        node_color: \"#2E7D32\"   # green in the docs lineage graph\n    marts:\n      +docs:\n        node_color: \"#1565C0\"   # blue",
+       "title": "dbt_project.yml (extract)"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "In YAML, ",
+          {
+           "t": "code",
+           "v": "#"
+          },
+          " starts a comment. ",
+          {
+           "t": "code",
+           "v": "node_color: #1565C0"
+          },
+          " without quotes is read as ",
+          {
+           "t": "code",
+           "v": "node_color:"
+          },
+          " followed by a comment, so the value is ",
+          {
+           "t": "code",
+           "v": "null"
+          },
+          ". dbt says nothing: in our test the manifest contained ",
+          {
+           "t": "code",
+           "v": "{'show': True, 'node_color': None}"
+          },
+          " and the nodes simply had the default colour. Always quote hex colours. Also know that ",
+          {
+           "t": "code",
+           "v": "node_color"
+          },
+          " is ignored by dbt Catalog, which uses ",
+          {
+           "c": [
+            "lenses"
+           ],
+           "t": "i"
+          },
+          " instead (",
+          {
+           "href": "/learn/ch20/ch20-s8/",
+           "label": "sec:doc-platform",
+           "t": "ref",
+           "text": "Section 20.8"
+          },
+          ")."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Since dbt 1.10, ",
+          {
+           "t": "code",
+           "v": "docs"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "meta"
+          },
+          " belong under ",
+          {
+           "t": "code",
+           "v": "config:"
+          },
+          " in properties files. The old top-level form still works, but on Snowflake, BigQuery, Databricks and Redshift dbt prints a ",
+          {
+           "t": "code",
+           "v": "PropertyMovedToConfigDeprecation"
+          },
+          " warning such as \"Found ",
+          {
+           "t": "code",
+           "v": "docs"
+          },
+          " as a top-level property of ",
+          {
+           "t": "code",
+           "v": "models[1]"
+          },
+          " … should be moved into the ",
+          {
+           "t": "code",
+           "v": "config"
+          },
+          " of ",
+          {
+           "t": "code",
+           "v": "models[1]"
+          },
+          "\". On DuckDB this YAML validation is skipped, so you will not see the warning in your labs (",
+          {
+           "href": "/learn/ch22/",
+           "label": "ch:debugging",
+           "t": "ref",
+           "text": "Chapter 22"
+          },
+          ")."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch20-s6-2",
+     "number": "20.6.2",
+     "title": [
+      {
+       "t": "code",
+       "v": "docs"
+      },
+      ": ",
+      {
+       "t": "code",
+       "v": "show"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "node_color"
+      }
+     ],
+     "titleText": "docs: show and node_color"
+    }
+   ],
+   "title": [
+    {
+     "t": "code",
+     "v": "meta"
+    },
+    ", ",
+    {
+     "t": "code",
+     "v": "docs.show"
+    },
+    " and ",
+    {
+     "t": "code",
+     "v": "docs.node_color"
+    }
+   ],
+   "titleText": "meta, docs.show and docs.node_color"
+  },
+  {
+   "anchors": [
+    "sec-doc-persist"
+   ],
+   "checkpoints": [],
+   "id": "ch20-s7",
+   "label": "sec:doc-persist",
+   "labs": [
+    "ch20-lab3"
+   ],
+   "minutes": 30,
+   "number": "20.7",
+   "objectives": [
+    "1.4",
+    "1.6",
+    "1.14"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Most people who use your tables never open the dbt site. They open a SQL client, a notebook or a BI tool, and these tools show the ",
+        {
+         "en": [
+          "comment"
+         ],
+         "fr": "commentaire (de table ou de colonne)",
+         "id": "term-comment",
+         "t": "term"
+        },
+        " that the warehouse stores for each table and column. With ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        ", dbt copies your descriptions into these comments every time it builds the relation, so the documentation follows the data everywhere."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch20-s7-1",
+     "number": "20.7.1",
+     "title": [
+      "Why"
+     ],
+     "titleText": "Why"
+    },
+    {
+     "blocks": [
+      {
+       "id": "ch20-c38",
+       "lang": "yaml",
+       "t": "code",
+       "text": "    marts:\n      +materialized: table\n      ...\n      # write the descriptions into the database as COMMENTs (tables and columns)\n      +persist_docs:\n        relation: true\n        columns: true",
+       "title": "dbt_project.yml (the marts block of your project, new lines)"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "relation: true"
+            },
+            " writes the ",
+            {
+             "c": [
+              "model"
+             ],
+             "t": "i"
+            },
+            " description as the comment of the table or view."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "columns: true"
+            },
+            " writes each ",
+            {
+             "c": [
+              "column"
+             ],
+             "t": "i"
+            },
+            " description as a column comment. Only columns that have a description in YAML get one; the others stay without comment."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Both keys default to ",
+            {
+             "t": "code",
+             "v": "false"
+            },
+            ": documentation persistence is ",
+            {
+             "c": [
+              "off"
+             ],
+             "t": "b"
+            },
+            " unless you switch it on."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Where: ",
+            {
+             "t": "code",
+             "v": "+persist_docs"
+            },
+            " in ",
+            {
+             "t": "code",
+             "v": "dbt_project.yml"
+            },
+            " (for a folder or the whole project), under ",
+            {
+             "t": "code",
+             "v": "config:"
+            },
+            " in a properties file, or in a ",
+            {
+             "t": "code",
+             "v": "config()"
+            },
+            " block of the SQL file:",
+            {
+             "t": "br"
+            },
+            {
+             "t": "code",
+             "v": "persist_docs={\"relation\": true, \"columns\": true}"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Which resources: ",
+            {
+             "c": [
+              "models, seeds and snapshots"
+             ],
+             "t": "b"
+            },
+            ". It is ",
+            {
+             "c": [
+              "not implemented for sources"
+             ],
+             "t": "b"
+            },
+            ": dbt does not create the raw tables, so it does not change them."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Which platforms: the main adapters support it (Postgres, Redshift, Snowflake, BigQuery, Databricks, Spark, Trino/Starburst), with limits on some (for example, column comments on Databricks need the Delta file format; on Snowflake, mixed-case column names need ",
+            {
+             "t": "code",
+             "v": "quote: true"
+            },
+            "). On DuckDB it works for tables ",
+            {
+             "c": [
+              "and"
+             ],
+             "t": "i"
+            },
+            " views, with ",
+            {
+             "t": "code",
+             "v": "COMMENT ON"
+            },
+            " statements."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch20-s7-2",
+     "number": "20.7.2",
+     "title": [
+      "The config"
+     ],
+     "titleText": "The config"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "After it builds a mart, dbt runs one ",
+        {
+         "t": "code",
+         "v": "comment on table"
+        },
+        " statement and one ",
+        {
+         "t": "code",
+         "v": "comment on column"
+        },
+        " statement per documented column. You can see them in ",
+        {
+         "t": "code",
+         "v": "logs/dbt.log"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c39",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ grep -n -i 'comment on' logs/dbt.log | tail -4"
+      },
+      {
+       "id": "ch20-c40",
+       "lang": "output",
+       "t": "code",
+       "text": "91160:    comment on column \"practice\".\"dbt_adnane\".\"dim_customers_v2\".full_name is $dbt_comment_literal_block$First name and last name.$dbt_comment_literal_block$;\n91336:  comment on table \"practice\".\"dbt_adnane\".\"customer_segments\" is $dbt_comment_literal_block$One row per customer with a marketing segment and a value tier (Python model, pandas).$dbt_comment_literal_block$;\n91372:    comment on column \"practice\".\"dbt_adnane\".\"customer_segments\".customer_id is $dbt_comment_literal_block$Primary key.$dbt_comment_literal_block$;\n91376:    comment on column \"practice\".\"dbt_adnane\".\"customer_segments\".segment is $dbt_comment_literal_block$no orders, new, regular or loyal.$dbt_comment_literal_block$;"
+      },
+      {
+       "c": [
+        "The strange ",
+        {
+         "t": "code",
+         "v": "$dbt_comment_literal_block$"
+        },
+        " is a quoting trick: the description is put between two identical markers, so that quotes or apostrophes inside your text cannot break the SQL statement. Notice that it works for a Python model too (",
+        {
+         "t": "code",
+         "v": "customer_segments"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch20-s7-3",
+     "number": "20.7.3",
+     "title": [
+      "What dbt runs"
+     ],
+     "titleText": "What dbt runs"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "In ",
+        {
+         "href": "/learn/ch14/",
+         "label": "ch:incremental-microbatch",
+         "t": "ref",
+         "text": "Chapter 14"
+        },
+        " you built ",
+        {
+         "t": "code",
+         "v": "fct_order_items_daily"
+        },
+        ", a microbatch model with monthly batches. When the adapter allows it, dbt runs the batches of a microbatch model ",
+        {
+         "c": [
+          "in parallel"
+         ],
+         "t": "i"
+        },
+        " (except the first and the last batch, which always run alone). dbt-duckdb allows it. Now think about what ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        " adds: ",
+        {
+         "c": [
+          "every batch"
+         ],
+         "t": "i"
+        },
+        " ends with the statement ",
+        {
+         "t": "code",
+         "v": "comment on table … fct_order_items_daily"
+        },
+        ", which changes the catalog entry of the table. DuckDB lets only one transaction change a table's catalog entry at a time; when two batches do it together, one of them fails with ",
+        {
+         "c": [
+          "Catalog write-write conflict"
+         ],
+         "t": "i"
+        },
+        ". We switched ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        " on and rebuilt the model from scratch:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c41",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt run --select fct_order_items_daily --full-refresh"
+      },
+      {
+       "id": "ch20-c42",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:17:32  1 of 1 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]\n22:17:32  Batch 1 of 22 START batch 2025-01 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:17:32  Batch 1 of 22 OK created batch 2025-01 of dbt_adnane.fct_order_items_daily ........... [OK in 0.09s]\n22:17:32  Batch 2 of 22 START batch 2025-02 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:17:32  Batch 3 of 22 START batch 2025-03 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:17:32  Batch 4 of 22 START batch 2025-04 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:17:32  Batch 3 of 22 OK created batch 2025-03 of dbt_adnane.fct_order_items_daily ........... [OK in 0.07s]\n22:17:32  Batch 5 of 22 START batch 2025-05 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:17:32  Unhandled error while executing\nException on worker thread. Runtime Error\n  TransactionContext Error: Catalog write-write conflict on alter with \"fct_order_items_daily\"\n...\n22:17:32  Batch 2 of 22 ERROR creating batch 2025-02 of dbt_adnane.fct_order_items_daily ....... [ERROR in 0.08s]\n22:17:32  Batch 4 of 22 ERROR creating batch 2025-04 of dbt_adnane.fct_order_items_daily ....... [ERROR in 0.08s]\n...\n22:17:33  Batch 22 of 22 OK created batch 2026-10 of dbt_adnane.fct_order_items_daily .......... [OK in 0.02s]\n22:17:33  1 of 1 PARTIALLY created sql microbatch model dbt_adnane.fct_order_items_daily . [PARTIAL SUCCESS (12/22) in 1.14s]\n22:17:33\n22:17:33  Finished running 1 incremental model in 0 hours 0 minutes and 1.27 seconds (1.27s).\n22:17:33\n22:17:33  Completed with 1 partial success and 0 warnings\n22:17:33\n22:17:33  Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1"
+      },
+      {
+       "c": [
+        "Ten months of data are missing: the table had 264 rows instead of 596. Two proofs that ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        " is the cause: the same command ",
+        {
+         "c": [
+          "without"
+         ],
+         "t": "i"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        " succeeded three times in a row, and in ",
+        {
+         "t": "code",
+         "v": "logs/dbt.log"
+        },
+        " the statement just before the first conflict is the ",
+        {
+         "t": "code",
+         "v": "comment on table"
+        },
+        ". The conflict depends on ",
+        {
+         "c": [
+          "timing"
+         ],
+         "t": "i"
+        },
+        " (two batches must touch the table at the same moment): on our laptop it happened in every run we tried, with 8 to 13 failed batches, but on another computer it may happen only sometimes, or not at all. A run that succeeds by luck is not safe."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The fix is a microbatch config from dbt 1.9: ",
+        {
+         "t": "code",
+         "v": "concurrent_batches"
+        },
+        ". By default dbt decides alone whether batches can run in parallel (it already runs them one by one when the model uses ",
+        {
+         "t": "code",
+         "v": "{{ this }}"
+        },
+        "); ",
+        {
+         "t": "code",
+         "v": "concurrent_batches=False"
+        },
+        " forces sequential batches, ",
+        {
+         "t": "code",
+         "v": "True"
+        },
+        " forces parallel batches. Sequential batches are also required when the logic depends on the order of the batches (cumulative totals, for example)."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c43",
+       "lang": "dbt",
+       "t": "code",
+       "text": "-- concurrent_batches=False: run the batches one after the other. Since Chapter 20,\n-- persist_docs writes a COMMENT ON TABLE in every batch; on DuckDB, batches that\n-- change the same table at the same time fail with \"Catalog write-write conflict\".\n{{\n    config(\n        materialized='incremental',\n        incremental_strategy='microbatch',\n        event_time='order_date',\n        begin='2025-01-01',\n        batch_size='month',\n        lookback=1,\n        concurrent_batches=False\n    )\n}}",
+       "title": "models/marts/fct_order_items_daily.sql (the config, after the fix)"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A ",
+          {
+           "t": "code",
+           "v": "PARTIAL SUCCESS"
+          },
+          " is not a success. The run summary counts the model as ",
+          {
+           "t": "code",
+           "v": "ERROR=1"
+          },
+          ", the exit code is not zero, and the table is incomplete until the failed batches are rebuilt (with ",
+          {
+           "t": "code",
+           "v": "dbt retry"
+          },
+          ", ",
+          {
+           "href": "/learn/ch24/",
+           "label": "ch:state-defer-retry",
+           "t": "ref",
+           "text": "Chapter 24"
+          },
+          ", or a new run). When a microbatch model fails only in some batches, read the first error message of the log: here, a configuration that looks unrelated (documentation!) was the cause. We could only test this conflict on DuckDB; other warehouses handle concurrent changes to one table in their own way, but the lesson about parallel batches that touch the same table is general."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch20-s7-4",
+     "number": "20.7.4",
+     "title": [
+      "A side effect: microbatch batches that collide"
+     ],
+     "titleText": "A side effect: microbatch batches that collide"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "State comparison (",
+        {
+         "href": "/learn/ch24/",
+         "label": "ch:state-defer-retry",
+         "t": "ref",
+         "text": "Chapter 24"
+        },
+        ") decides whether a model has changed by comparing your project with an older manifest. Is a model \"modified\" when only its description changes? It depends on ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        ". We saved the manifest, changed the descriptions of two models, ",
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " (a mart: ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        " on) and ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__orders"
+        },
+        " (staging: ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        " off), and listed the modified nodes:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c44",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt ls --select state:modified --state ../state_docs"
+      },
+      {
+       "id": "ch20-c45",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:18:45  Found 15 models, 2 analyses, 1 seed, 45 data tests, 2 snapshots, 5 sources, 670 macros, 2 groups, 5 unit tests\njaffle_dbt.marts.fct_orders\njaffle_dbt.assert_paid_orders_match_items\njaffle_dbt.assert_payments_match_order_totals\njaffle_dbt.marts.is_positive_fct_orders_True__amount\njaffle_dbt.marts.not_null_fct_orders_order_id\njaffle_dbt.marts.unique_fct_orders_order_id\nunit_test:jaffle_dbt.test_fct_orders_full_refresh_keeps_all_rows\nunit_test:jaffle_dbt.test_fct_orders_incremental_keeps_only_new_rows"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "fct_orders"
+        },
+        " is selected (with its tests, by indirect selection), ",
+        {
+         "t": "code",
+         "v": "stg_jaffle_shop__orders"
+        },
+        " is not. Logic: without ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        ", a new description changes nothing in the warehouse, so there is nothing to rebuild; with ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        ", the comment in the warehouse is out of date until the model is rebuilt. The sub-selector ",
+        {
+         "t": "code",
+         "v": "state:modified.persisted_descriptions"
+        },
+        " selects exactly this kind of change."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " switch ",
+          {
+           "t": "code",
+           "v": "persist_docs"
+          },
+          " on, try to see the microbatch conflict with your own eyes, fix it (whether you saw the conflict or not), check the comments in DuckDB, then commit and compare with the reference tag ",
+          {
+           "t": "code",
+           "v": "ch20"
+          },
+          ". Same folder and environment; no DuckDB CLI open."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "dbt_project.yml"
+          },
+          ", inside the ",
+          {
+           "t": "code",
+           "v": "marts:"
+          },
+          " block, add the four lines between the ",
+          {
+           "t": "code",
+           "v": "+docs"
+          },
+          " block and the ",
+          {
+           "t": "code",
+           "v": "+post-hook"
+          },
+          " line:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c46",
+         "lang": "yaml",
+         "t": "code",
+         "text": "    marts:\n      +materialized: table\n      +schema: marts\n      +tags: ['marts']\n      +meta:\n        owner: analytics-engineering\n      +docs:\n        node_color: \"#1565C0\"   # blue\n      # write the descriptions into the database as COMMENTs (tables and columns)\n      +persist_docs:\n        relation: true\n        columns: true\n      # after each mart is built, refresh the optimizer statistics of the new table\n      +post-hook: \"analyze {{ this }}\"\n      +grants: \"{{ {'select': ['reporter']} if target.name == 'prod' else {} }}\"",
+         "title": "dbt_project.yml (marts block)"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Rebuild the microbatch model from scratch (22 monthly batches when this book was run, in October 2026; one more for each month after that, see ",
+          {
+           "href": "/learn/ch14/",
+           "label": "ch:incremental-microbatch",
+           "t": "ref",
+           "text": "Chapter 14"
+          },
+          "):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c47",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt run --select fct_order_items_daily --full-refresh"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " you may or may not see the conflict, because it depends on timing."
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "Most likely (it happened in every one of our runs): a ",
+              {
+               "t": "code",
+               "v": "PARTIAL SUCCESS"
+              },
+              " like the output above, with several ",
+              {
+               "t": "code",
+               "v": "Catalog write-write conflict"
+              },
+              " errors and ",
+              {
+               "t": "code",
+               "v": "ERROR=1"
+              },
+              ". The number of failed batches changes from one run to the next."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Possible on some computers: ",
+              {
+               "t": "code",
+               "v": "SUCCESS"
+              },
+              " and ",
+              {
+               "t": "code",
+               "v": "PASS=1"
+              },
+              ", because the batches happened not to overlap. Run the command once or twice more if you want to see the conflict. If it never appears, simply continue: the model is still unsafe, and Step 4 applies the fix in every case."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ul",
+         "t": "list"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Count the rows (596 is the correct number for the data of ",
+          {
+           "href": "/learn/ch14/",
+           "label": "ch:incremental-microbatch",
+           "t": "ref",
+           "text": "Chapter 14"
+          },
+          "):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c48",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\"",
+         "textBook": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " after a ",
+          {
+           "t": "code",
+           "v": "PARTIAL SUCCESS"
+          },
+          " (your numbers will be different, but lower than 596 and 1064; if Step 2 ended with ",
+          {
+           "t": "code",
+           "v": "SUCCESS"
+          },
+          ", you see 596 and 1064):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c49",
+         "lang": "output",
+         "t": "code",
+         "text": "+--------+----------+\n| n_rows | quantity |\n+--------+----------+\n|    264 |      461 |\n+--------+----------+\n(1 row)"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Open ",
+          {
+           "t": "code",
+           "v": "models/marts/fct_order_items_daily.sql"
+          },
+          ". Add the three comment lines just above ",
+          {
+           "t": "code",
+           "v": "{{"
+          },
+          ", and add ",
+          {
+           "t": "code",
+           "v": "concurrent_batches=False"
+          },
+          " to the config (do not forget the comma after ",
+          {
+           "t": "code",
+           "v": "lookback=1"
+          },
+          "), exactly as in the block shown above."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Rebuild from scratch again, then count again:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c50",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt run --select fct_order_items_daily --full-refresh\n$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\"",
+         "textBook": "$ dbt run --select fct_order_items_daily --full-refresh\n$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select count(*) as n_rows, sum(quantity) as quantity from dbt_adnane.fct_order_items_daily\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the batches now run one after the other (each ",
+          {
+           "t": "code",
+           "v": "START"
+          },
+          " is followed by its ",
+          {
+           "t": "code",
+           "v": "OK"
+          },
+          " before the next ",
+          {
+           "t": "code",
+           "v": "START"
+          },
+          "), and the table is complete:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c51",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "22:17:49  1 of 1 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]\n22:17:49  Batch 1 of 22 START batch 2025-01 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:17:49  Batch 1 of 22 OK created batch 2025-01 of dbt_adnane.fct_order_items_daily ........... [OK in 0.09s]\n22:17:49  Batch 2 of 22 START batch 2025-02 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:17:49  Batch 2 of 22 OK created batch 2025-02 of dbt_adnane.fct_order_items_daily ........... [OK in 0.04s]\n...\n22:17:50  Batch 22 of 22 OK created batch 2026-10 of dbt_adnane.fct_order_items_daily .......... [OK in 0.02s]\n22:17:50  1 of 1 OK created sql microbatch model dbt_adnane.fct_order_items_daily ........ [SUCCESS in 0.58s]\n...\n22:17:50  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\n+--------+----------+\n| n_rows | quantity |\n+--------+----------+\n|    596 |     1064 |\n+--------+----------+\n(1 row)"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6."
+           ],
+           "t": "b"
+          },
+          " Build all the marts (and their tests), so that every mart receives its comments:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c52",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --select marts"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (the end):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c53",
+         "lang": "output",
+         "t": "code",
+         "text": "22:18:29  Finished running 2 incremental models, 5 table models, 15 data tests, 4 unit tests in 0 hours 0 minutes and 1.44 seconds (1.44s).\n22:18:29\n22:18:29  Completed successfully\n22:18:29\n22:18:29  Done. PASS=26 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=26"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 7."
+           ],
+           "t": "b"
+          },
+          " Read the comments in DuckDB: tables, then the columns of ",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          ", then the views:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c54",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select table_name, left(comment, 60) as comment from duckdb_tables() where schema_name = 'dbt_adnane' and table_name like 'fct_%' order by 1\"\n$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select column_name, left(comment, 60) as comment from duckdb_columns() where schema_name = 'dbt_adnane' and table_name = 'fct_orders' order by column_index\" --max 20\n$ python -I ~/dbt-course/kit/tools/run_sql.py --db ../practice/practice.duckdb \"select view_name, comment from duckdb_views() where schema_name = 'dbt_adnane' and not internal order by 1\"",
+         "textBook": "$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select table_name, left(comment, 60) as comment from duckdb_tables() where schema_name = 'dbt_adnane' and table_name like 'fct_%' order by 1\"\n$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select column_name, left(comment, 60) as comment from duckdb_columns() where schema_name = 'dbt_adnane' and table_name = 'fct_orders' order by column_index\" --max 20\n$ python -I ~/Documents/Adnane/dbt-bible/tools/run_sql.py --db ../practice/practice.duckdb \"select view_name, comment from duckdb_views() where schema_name = 'dbt_adnane' and not internal order by 1\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c55",
+         "lang": "output",
+         "t": "code",
+         "text": "+-----------------------+--------------------------------------------------------------+\n| table_name            | comment                                                      |\n+-----------------------+--------------------------------------------------------------+\n| fct_monthly_revenue   | Orders and revenue per order month and customer country (ret |\n| fct_order_items       | One row per order line (order x product), with the line amou |\n| fct_order_items_daily | Quantity and revenue per day and product (microbatch increme |\n| fct_orders            | One row per order, with the amount paid (successful payments |\n+-----------------------+--------------------------------------------------------------+\n(4 rows)\n+----------------------+--------------------------------------------------------------+\n| column_name          | comment                                                      |\n+----------------------+--------------------------------------------------------------+\n| order_id             | Primary key of the order.                                    |\n| customer_id          | NULL                                                         |\n| order_date           | NULL                                                         |\n| status               | One of the following values:\n\n| status         | meaning     |\n| bank_transfer_amount | NULL                                                         |\n| coupon_amount        | NULL                                                         |\n| credit_card_amount   | NULL                                                         |\n| gift_card_amount     | NULL                                                         |\n| amount               | Total of the successful payments, in dollars (0 when not pai |\n| loaded_at            | NULL                                                         |\n+----------------------+--------------------------------------------------------------+\n(10 rows)\n+-------------------------------------+---------+\n| view_name                           | comment |\n+-------------------------------------+---------+\n| int_orders__enriched                | NULL    |\n| int_orders__payment_methods_pivoted | NULL    |\n| stg_jaffle_shop__customers          | NULL    |\n| stg_jaffle_shop__order_items        | NULL    |\n| stg_jaffle_shop__orders             | NULL    |\n| stg_jaffle_shop__products           | NULL    |\n| stg_stripe__payments                | NULL    |\n+-------------------------------------+---------+\n(7 rows)"
+        },
+        {
+         "c": [
+          "Read it carefully: the ",
+          {
+           "t": "code",
+           "v": "status"
+          },
+          " comment is the doc block (with its line breaks, which break the little table of the tool); undocumented columns have no comment; the staging and intermediate ",
+          {
+           "c": [
+            "views"
+           ],
+           "t": "i"
+          },
+          " have no comment, because ",
+          {
+           "t": "code",
+           "v": "persist_docs"
+          },
+          " is set only on the ",
+          {
+           "t": "code",
+           "v": "marts"
+          },
+          " folder (DuckDB would accept comments on views too)."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 8."
+           ],
+           "t": "b"
+          },
+          " Commit, then compare with the reference:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch20-c56",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git add .\n$ git commit -m \"Docs: overview and order_status doc blocks, persist_docs on marts; microbatch runs one batch at a time\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch20 --stat"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the last command prints nothing (or only small differences in comments and blank lines). If the ",
+          {
+           "t": "code",
+           "v": "reference"
+          },
+          " remote does not exist yet, add it first with ",
+          {
+           "t": "code",
+           "textBook": "git remote add reference ~/Documents/Adnane/dbt-bible/labs/practice-project/jaffle_dbt",
+           "v": "git remote add reference ~/dbt-course/kit/labs/practice-project/jaffle_dbt"
+          },
+          ". Your commit adds ",
+          {
+           "t": "code",
+           "v": "models/docs.md"
+          },
+          " and changes ",
+          {
+           "t": "code",
+           "v": "dbt_project.yml"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "models/marts/_marts__models.yml"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "models/marts/fct_order_items_daily.sql"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "models/staging/jaffle_shop/_jaffle_shop__models.yml"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch20-lab3",
+       "objectives": [
+        "1.6",
+        "1.14",
+        "1.4"
+       ],
+       "t": "lab",
+       "title": [
+        "persist_docs on the marts, and a safe microbatch model"
+       ]
+      }
+     ],
+     "id": "ch20-s7-5",
+     "number": "20.7.5",
+     "title": [
+      {
+       "t": "code",
+       "v": "persist_docs"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "state:modified"
+      }
+     ],
+     "titleText": "persist_docs and state:modified"
+    }
+   ],
+   "title": [
+    {
+     "t": "code",
+     "v": "persist_docs"
+    },
+    ": descriptions inside the warehouse"
+   ],
+   "titleText": "persist_docs: descriptions inside the warehouse"
+  },
+  {
+   "anchors": [
+    "sec-doc-platform"
+   ],
+   "checkpoints": [],
+   "id": "ch20-s8",
+   "label": "sec:doc-platform",
+   "labs": [],
+   "minutes": 5,
+   "number": "20.8",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "In the Studio IDE (the exam may still say \"Cloud IDE\"), you run ",
+        {
+         "t": "code",
+         "v": "dbt docs generate"
+        },
+        " in the command bar. It documents your ",
+        {
+         "c": [
+          "development"
+         ],
+         "t": "i"
+        },
+        " version (your branch, your dev schema). Then a documentation icon above the file tree opens the result in a new browser tab. You cannot run ",
+        {
+         "t": "code",
+         "v": "dbt docs serve"
+        },
+        " there: the platform serves the site for you. This lets you check your descriptions before you open a pull request."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch20-s8-1",
+     "number": "20.8.1",
+     "title": [
+      "In the Studio IDE"
+     ],
+     "titleText": "In the Studio IDE"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "c": [
+          "dbt Catalog"
+         ],
+         "t": "b"
+        },
+        " is the documentation experience of the dbt platform, on Starter, Enterprise and Enterprise+ plans. It is a dynamic site built from the metadata of your ",
+        {
+         "c": [
+          "jobs"
+         ],
+         "t": "i"
+        },
+        ", not from a command you run by hand. The facts to know:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "When it updates."
+             ],
+             "t": "b"
+            },
+            " After each job run in the environment marked as ",
+            {
+             "c": [
+              "production"
+             ],
+             "t": "i"
+            },
+            " (or ",
+            {
+             "c": [
+              "staging"
+             ],
+             "t": "i"
+            },
+            "). CI jobs do ",
+            {
+             "c": [
+              "not"
+             ],
+             "t": "i"
+            },
+            " update it, because they do not represent production. It shows the ",
+            {
+             "c": [
+              "applied state"
+             ],
+             "t": "i"
+            },
+            ": models that were really built, not only defined."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "What feeds it."
+             ],
+             "t": "b"
+            },
+            " Lineage, details and results come from ",
+            {
+             "t": "code",
+             "v": "dbt run"
+            },
+            " / ",
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            "; test results from ",
+            {
+             "t": "code",
+             "v": "dbt test"
+            },
+            " / ",
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            "; source freshness from ",
+            {
+             "t": "code",
+             "v": "dbt source freshness"
+            },
+            " (",
+            {
+             "href": "/learn/ch21/",
+             "label": "ch:freshness-exposures",
+             "t": "ref",
+             "text": "Chapter 21"
+            },
+            "); and ",
+            {
+             "c": [
+              "columns and statistics"
+             ],
+             "t": "b"
+            },
+            " from ",
+            {
+             "t": "code",
+             "v": "dbt docs generate"
+            },
+            ". To see everything, a production job runs ",
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "dbt docs generate"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "dbt source freshness"
+            },
+            ". Running ",
+            {
+             "t": "code",
+             "v": "dbt docs generate"
+            },
+            " alone does not create model entries in Catalog."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Generating docs in a job."
+             ],
+             "t": "b"
+            },
+            " Either tick ",
+            {
+             "c": [
+              "Generate docs on run"
+             ],
+             "t": "b"
+            },
+            " in the job's execution settings, or add ",
+            {
+             "t": "code",
+             "v": "dbt docs generate"
+            },
+            " as a step. The outcomes differ: with the ",
+            {
+             "c": [
+              "checkbox"
+             ],
+             "t": "i"
+            },
+            ", a failure of the docs step does not make the job fail; as a ",
+            {
+             "c": [
+              "step"
+             ],
+             "t": "i"
+            },
+            ", a failure makes the job fail and skips the following steps. (The same logic exists for source freshness, ",
+            {
+             "href": "/learn/ch21/",
+             "label": "ch:freshness-exposures",
+             "t": "ref",
+             "text": "Chapter 21"
+            },
+            ".)"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Features."
+             ],
+             "t": "b"
+            },
+            " A search over all resources (models, sources, seeds, snapshots, exposures, metrics) across projects; a lineage graph where you can type selectors (all methods except the ones that need a state comparison: ",
+            {
+             "t": "code",
+             "v": "state:"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "result:"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "source_status:"
+            },
+            "); ",
+            {
+             "c": [
+              "lenses"
+             ],
+             "t": "i"
+            },
+            " that colour the graph by materialization, test status and more (this replaces ",
+            {
+             "t": "code",
+             "v": "node_color"
+            },
+            "); a page per resource with description, columns, tests, recent runs, freshness; ",
+            {
+             "c": [
+              "data health signals"
+             ],
+             "t": "b"
+            },
+            "; and, on Enterprise and Enterprise+ plans only, ",
+            {
+             "c": [
+              "project recommendations"
+             ],
+             "t": "b"
+            },
+            " that point out missing descriptions and tests, ",
+            {
+             "c": [
+              "column-level lineage"
+             ],
+             "t": "b"
+            },
+            ", ",
+            {
+             "c": [
+              "model performance"
+             ],
+             "t": "b"
+            },
+            " (run times over time), model query history, multi-project lineage, and downstream exposures created automatically from Tableau."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Who can read it."
+             ],
+             "t": "b"
+            },
+            " Developer and read-only seats. Sharing documentation with a business user means giving them a read-only seat."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The older static site still exists on the dbt platform as ",
+          {
+           "c": [
+            "dbt Docs"
+           ],
+           "t": "i"
+          },
+          " (Developer plan): a job generates the docs, and in the project settings (",
+          {
+           "c": [
+            "Artifacts"
+           ],
+           "t": "b"
+          },
+          ") you choose which job's documentation to show. It always shows the last ",
+          {
+           "c": [
+            "fully successful"
+           ],
+           "t": "i"
+          },
+          " run of that job. For the exam, remember the modern answer: ",
+          {
+           "c": [
+            "documentation on the dbt platform = dbt Catalog, refreshed automatically by production jobs"
+           ],
+           "t": "b"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "dbt Docs (",
+             {
+              "t": "code",
+              "v": "dbt docs generate"
+             },
+             " / ",
+             {
+              "t": "code",
+              "v": "serve"
+             },
+             ")"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "dbt Catalog (platform)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Built by"
+          ]
+         },
+         {
+          "c": [
+           "you, with two commands"
+          ]
+         },
+         {
+          "c": [
+           "production / staging jobs, automatically"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Hosting"
+          ]
+         },
+         {
+          "c": [
+           "your laptop, or static files you host"
+          ]
+         },
+         {
+          "c": [
+           "the dbt platform"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Freshness of content"
+          ]
+         },
+         {
+          "c": [
+           "the moment you ran ",
+           {
+            "t": "code",
+            "v": "generate"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the last job run"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Lineage"
+          ]
+         },
+         {
+          "c": [
+           "model level, ",
+           {
+            "t": "code",
+            "v": "--select"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "--exclude"
+           },
+           " boxes"
+          ]
+         },
+         {
+          "c": [
+           "model level + column-level lineage (Enterprise), lenses"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Extra"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "node_color"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "__overview__"
+           }
+          ]
+         },
+         {
+          "c": [
+           "data health; on Enterprise: performance, recommendations, query history"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch20-s8-2",
+     "number": "20.8.2",
+     "title": [
+      "dbt Catalog (formerly dbt Explorer)"
+     ],
+     "titleText": "dbt Catalog (formerly dbt Explorer)"
+    }
+   ],
+   "title": [
+    "Documentation on the dbt platform: dbt Catalog"
+   ],
+   "titleText": "Documentation on the dbt platform: dbt Catalog"
+  },
+  {
+   "anchors": [
+    "sec-doc-habits"
+   ],
+   "checkpoints": [],
+   "id": "ch20-s9",
+   "label": "sec:doc-habits",
+   "labs": [],
+   "minutes": 5,
+   "number": "20.9",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "You cannot document everything on day one. A good order:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Marts"
+             ],
+             "t": "b"
+            },
+            ": every model and every column that consumers read. They are the public face of the project."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Primary keys and grain"
+             ],
+             "t": "b"
+            },
+            ": \"one row per order\" is the most useful sentence of a model description."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Business definitions"
+             ],
+             "t": "b"
+            },
+            " that appear in several models (statuses, revenue rules): doc blocks, written once."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Sources"
+             ],
+             "t": "b"
+            },
+            ": what system loads them, how often, who owns them (",
+            {
+             "t": "code",
+             "v": "meta"
+            },
+            "), and their freshness (",
+            {
+             "href": "/learn/ch21/",
+             "label": "ch:freshness-exposures",
+             "t": "ref",
+             "text": "Chapter 21"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "The overview page"
+             ],
+             "t": "b"
+            },
+            ": layers, naming rules, contacts, links."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      }
+     ],
+     "id": "ch20-s9-1",
+     "number": "20.9.1",
+     "title": [
+      "What to document first"
+     ],
+     "titleText": "What to document first"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Documentation that is not checked is soon out of date. Habits that work:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "A line in the pull request template: \"new models and columns are described\" (",
+            {
+             "href": "/learn/ch25/",
+             "label": "ch:environments-ci",
+             "t": "ref",
+             "text": "Chapter 25"
+            },
+            " adds one to your project)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Review descriptions like code: a reviewer who cannot understand a column from its description asks for a better one."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Measure ",
+            {
+             "en": [
+              "documentation coverage"
+             ],
+             "fr": "taux de documentation",
+             "id": "term-documentation-coverage",
+             "t": "term"
+            },
+            ": the share of models and columns that have a description. dbt Catalog's project recommendations show it (Enterprise plans); in dbt Core, the ",
+            {
+             "t": "code",
+             "v": "dbt_project_evaluator"
+            },
+            " package checks it, and you can also count it from ",
+            {
+             "t": "code",
+             "v": "manifest.json"
+            },
+            " with a few lines of Python."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch20-s9-2",
+     "number": "20.9.2",
+     "title": [
+      "Make it part of the workflow"
+     ],
+     "titleText": "Make it part of the workflow"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Writing the same YAML skeleton for each new model is boring. The ",
+        {
+         "t": "code",
+         "v": "codegen"
+        },
+        " package (by dbt Labs) has macros that print it for you: ",
+        {
+         "t": "code",
+         "v": "generate_model_yaml"
+        },
+        " (a model with all its columns, read from the warehouse), ",
+        {
+         "t": "code",
+         "v": "generate_source"
+        },
+        " (a sources file from a schema), ",
+        {
+         "t": "code",
+         "v": "generate_base_model"
+        },
+        " (a first staging model for a source table). You install it like any package (",
+        {
+         "href": "/learn/ch11/",
+         "label": "ch:jinja-macros-packages",
+         "t": "ref",
+         "text": "Chapter 11"
+        },
+        "), then call a macro with ",
+        {
+         "t": "code",
+         "v": "dbt run-operation"
+        },
+        ". We tried it in a throwaway copy of the project (codegen 0.14.1), ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " in the reference project:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch20-c57",
+       "lang": "yaml",
+       "t": "code",
+       "text": "  - package: dbt-labs/codegen\n    version: [\">=0.14.0\", \"<0.15.0\"]",
+       "title": "packages.yml (throwaway copy only)"
+      },
+      {
+       "id": "ch20-c58",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt deps\n$ dbt run-operation generate_model_yaml --args '{\"model_names\": [\"stg_jaffle_shop__customers\"]}'"
+      },
+      {
+       "id": "ch20-c59",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:20:57  Found 15 models, 2 analyses, 45 data tests, 1 seed, 2 snapshots, 5 sources, 698 macros, 2 groups, 5 unit tests\nversion: 2\n\nmodels:\n  - name: stg_jaffle_shop__customers\n    description: \"\"\n    columns:\n      - name: customer_id\n        data_type: integer\n        description: \"\"\n\n      - name: first_name\n        data_type: varchar\n        description: \"\"\n...\n      - name: signup_date\n        data_type: date\n        description: \"\""
+      },
+      {
+       "c": [
+        "You copy this into a properties file and fill the empty descriptions. The macro needs the model to exist in the warehouse (it reads the columns from there). Its option ",
+        {
+         "t": "code",
+         "v": "upstream_descriptions: true"
+        },
+        " copies the description of a column with the same name from a parent model. Two limits we met: a macro of a package cannot reference a ",
+        {
+         "t": "code",
+         "v": "private"
+        },
+        " model of a group (\"… which is not allowed because the referenced node is private to the 'finance' group\", ",
+        {
+         "href": "/learn/ch17/",
+         "label": "ch:governance",
+         "t": "ref",
+         "text": "Chapter 17"
+        },
+        "), and ",
+        {
+         "t": "code",
+         "v": "generate_source"
+        },
+        " failed on DuckDB with ",
+        {
+         "t": "code",
+         "v": "Catalog Error: Table with name \"information_schema.tables\" does not exist"
+        },
+        ", because it reads the information schema in a way DuckDB does not accept. On Snowflake, BigQuery or Postgres it is the usual way to start a sources file."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The skeleton contains a ",
+          {
+           "t": "code",
+           "v": "data_type"
+          },
+          " for each column because the macro option ",
+          {
+           "t": "code",
+           "v": "include_data_types"
+          },
+          " is ",
+          {
+           "t": "code",
+           "v": "true"
+          },
+          " by default. Keep the types if you want a contract (",
+          {
+           "href": "/learn/ch17/",
+           "label": "ch:governance",
+           "t": "ref",
+           "text": "Chapter 17"
+          },
+          "); for documentation alone, ",
+          {
+           "t": "code",
+           "v": "name"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "description"
+          },
+          " are enough, and you can pass ",
+          {
+           "t": "code",
+           "v": "\"include_data_types\": false"
+          },
+          " in ",
+          {
+           "t": "code",
+           "v": "--args"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch20-s9-3",
+     "number": "20.9.3",
+     "title": [
+      "Writing YAML faster with ",
+      {
+       "t": "code",
+       "v": "codegen"
+      }
+     ],
+     "titleText": "Writing YAML faster with codegen"
+    }
+   ],
+   "title": [
+    "Good documentation habits"
+   ],
+   "titleText": "Good documentation habits"
+  }
+ ],
+ "minutes": 135,
+ "number": 20,
+ "objectives": [
+  "1.4",
+  "1.6",
+  "1.14",
+  "3.3",
+  "6.1",
+  "7.1"
+ ],
+ "part": 5,
+ "partLabel": "Part V",
+ "partTitle": "Documentation and External Dependencies",
+ "printed": "20",
+ "quiz": [
+  "q-ch20-01",
+  "q-ch20-02",
+  "q-ch20-03",
+  "q-ch20-04",
+  "q-ch20-05",
+  "q-ch20-06",
+  "q-ch20-07",
+  "q-ch20-08",
+  "q-ch20-09",
+  "q-ch20-10",
+  "q-ch20-11",
+  "q-ch20-12",
+  "q-ch20-13",
+  "q-ch20-14",
+  "q-ch20-15",
+  "q-ch20-16",
+  "q-ch20-17",
+  "q-ch20-18",
+  "q-ch20-19"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-doc-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch20-01",
+      "q-ch20-02",
+      "q-ch20-03",
+      "q-ch20-04",
+      "q-ch20-05",
+      "q-ch20-06",
+      "q-ch20-07",
+      "q-ch20-08",
+      "q-ch20-09",
+      "q-ch20-10",
+      "q-ch20-11",
+      "q-ch20-12",
+      "q-ch20-13",
+      "q-ch20-14",
+      "q-ch20-15",
+      "q-ch20-16",
+      "q-ch20-17",
+      "q-ch20-18",
+      "q-ch20-19"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch20-01",
+    "q-ch20-02",
+    "q-ch20-03",
+    "q-ch20-04",
+    "q-ch20-05",
+    "q-ch20-06",
+    "q-ch20-07",
+    "q-ch20-08",
+    "q-ch20-09",
+    "q-ch20-10",
+    "q-ch20-11",
+    "q-ch20-12",
+    "q-ch20-13",
+    "q-ch20-14",
+    "q-ch20-15",
+    "q-ch20-16",
+    "q-ch20-17",
+    "q-ch20-18",
+    "q-ch20-19"
+   ],
+   "label": "sec:doc-quiz",
+   "number": "20.10",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Document for three readers: data consumers, new team members, governance. The grain (\"one row per…\"), units and allowed values are the most useful facts."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "description:"
+        },
+        " exists for models, sources (and tables), seeds, snapshots, analyses, columns, macros (and arguments), data tests, unit tests, exposures and groups. Descriptions are Markdown; follow the YAML quoting rules."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Doc blocks: ",
+        {
+         "t": "code",
+         "v": "{% docs name %}…{% enddocs %}"
+        },
+        " in ",
+        {
+         "t": "code",
+         "v": ".md"
+        },
+        " files, used with ",
+        {
+         "t": "code",
+         "v": "\"{{ doc('name') }}\""
+        },
+        " (quotes!). Missing or duplicate names are compilation errors; a block named ",
+        {
+         "t": "code",
+         "v": "__overview__"
+        },
+        " becomes the home page."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt docs generate"
+        },
+        " = copy ",
+        {
+         "t": "code",
+         "v": "index.html"
+        },
+        " + compile into ",
+        {
+         "t": "code",
+         "v": "manifest.json"
+        },
+        " + query the warehouse into ",
+        {
+         "t": "code",
+         "v": "catalog.json"
+        },
+        ". It builds nothing. Flags: ",
+        {
+         "t": "code",
+         "v": "--select"
+        },
+        " (catalog only), ",
+        {
+         "t": "code",
+         "v": "--no-compile"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "--empty-catalog"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "--static"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The catalog only contains relations that exist: build first; ephemeral models are never in it."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt docs serve"
+        },
+        " only serves ",
+        {
+         "t": "code",
+         "v": "target/"
+        },
+        " (port 8080, ",
+        {
+         "t": "code",
+         "v": "--port"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "--host"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "--no-browser"
+        },
+        "); it is a local tool, not a production host."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The lineage graph accepts ",
+        {
+         "t": "code",
+         "v": "--select"
+        },
+        " / ",
+        {
+         "t": "code",
+         "v": "--exclude"
+        },
+        " with the normal selection syntax, and resource, package and tag filters."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "persist_docs: {relation: true, columns: true}"
+        },
+        " writes descriptions as warehouse comments for models, seeds and snapshots (not sources); then a description change counts as ",
+        {
+         "t": "code",
+         "v": "state:modified"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "On DuckDB, ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        " plus parallel microbatch batches can give ",
+        {
+         "t": "code",
+         "v": "Catalog write-write conflict"
+        },
+        " (it depends on timing); ",
+        {
+         "t": "code",
+         "v": "concurrent_batches=False"
+        },
+        " fixes it for good."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "On the dbt platform, dbt Catalog (formerly dbt Explorer) is refreshed by production and staging jobs (not CI jobs); columns and statistics need ",
+        {
+         "t": "code",
+         "v": "dbt docs generate"
+        },
+        " in the job (checkbox: failure tolerated; step: failure fails the job)."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "Documentation"
+}

@@ -1,0 +1,5577 @@
+{
+ "id": "ch21",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "Source freshness: ",
+      {
+       "t": "code",
+       "v": "loaded_at_field"
+      },
+      " (and ",
+      {
+       "t": "code",
+       "v": "loaded_at_query"
+      },
+      "), ",
+      {
+       "t": "code",
+       "v": "warn_after"
+      },
+      " / ",
+      {
+       "t": "code",
+       "v": "error_after"
+      },
+      " with ",
+      {
+       "t": "code",
+       "v": "count"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "period"
+      },
+      " (",
+      {
+       "t": "code",
+       "v": "minute"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "hour"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "day"
+      },
+      "), ",
+      {
+       "t": "code",
+       "v": "filter"
+      },
+      ", the ",
+      {
+       "t": "code",
+       "v": "config:"
+      },
+      " form, inheritance from source to table, ",
+      {
+       "t": "code",
+       "v": "freshness: null"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "dbt source freshness"
+      },
+      ", its statuses and exit codes, ",
+      {
+       "t": "code",
+       "v": "target/sources.json"
+      },
+      "."
+     ],
+     "id": "6.2"
+    },
+    {
+     "c": [
+      "Freshness on the dbt platform: the ",
+      {
+       "c": [
+        "Run source freshness"
+       ],
+       "t": "i"
+      },
+      " checkbox versus an explicit job step, and how often to check."
+     ],
+     "id": "6.2"
+    },
+    {
+     "c": [
+      "Exposures: what they are, every property (",
+      {
+       "t": "code",
+       "v": "name"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "type"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "owner"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "depends_on"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "maturity"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "url"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "label"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "description"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "config"
+      },
+      "), the real validation errors, selection with ",
+      {
+       "t": "code",
+       "v": "+exposure:name"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "NO-OP"
+      },
+      " in ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      ", exposures in the docs and in impact analysis."
+     ],
+     "id": "6.1"
+    },
+    {
+     "c": [
+      "Raw object dependencies: checking that the raw data dbt depends on has really arrived, before trusting what is built on it."
+     ],
+     "id": "1.1"
+    },
+    {
+     "c": [
+      "Preview: ",
+      {
+       "t": "code",
+       "v": "source_status:fresher+"
+      },
+      " with ",
+      {
+       "t": "code",
+       "v": "--state"
+      },
+      " rebuilds only what depends on new data."
+     ],
+     "id": "7.1"
+    },
+    {
+     "c": [
+      {
+       "t": "code",
+       "v": "dbt source freshness"
+      },
+      " is a command of its own: ",
+      {
+       "t": "code",
+       "v": "dbt build"
+      },
+      " does not check freshness."
+     ],
+     "id": "1.4"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "Monday, 9 a.m. The finance team opens the revenue dashboard. The numbers look normal, so they use them in the weekly meeting. At 11 a.m. someone notices that the last order in the dashboard is from Friday afternoon. The tool that copies data from the web shop into the warehouse stopped on Friday at 5 p.m. Every dbt job of the weekend ran ",
+      {
+       "c": [
+        "successfully"
+       ],
+       "t": "i"
+      },
+      ": the models were rebuilt, every test passed… on old data. Nothing was broken in dbt, so nothing turned red."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "Now the opposite direction. You rename a column of ",
+      {
+       "t": "code",
+       "v": "fct_monthly_revenue"
+      },
+      ". The SQL is correct, the tests pass, the pull request is approved. On Tuesday, the dashboard of the finance director is broken, because it read that column. Nobody in the data team knew the dashboard used it."
+     ],
+     "t": "p"
+    },
+    {
+     "c": [
+      "Both stories are about ",
+      {
+       "c": [
+        "external dependencies"
+       ],
+       "t": "b"
+      },
+      ", exam topic 6: what comes ",
+      {
+       "c": [
+        "into"
+       ],
+       "t": "i"
+      },
+      " your project from outside (raw data loaded by other tools) and what goes ",
+      {
+       "c": [
+        "out"
+       ],
+       "t": "i"
+      },
+      " of it (dashboards, notebooks, applications that read your models). dbt gives you one tool for each direction: ",
+      {
+       "c": [
+        "source freshness"
+       ],
+       "t": "b"
+      },
+      " tells you whether the incoming data is recent enough, and ",
+      {
+       "c": [
+        "exposures"
+       ],
+       "t": "b"
+      },
+      " write down who uses your models. The exam asks precise questions about both: keys, periods, statuses, commands, selection syntax, and the platform settings."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "Source freshness compares the newest load time of a raw table (",
+      {
+       "t": "code",
+       "v": "max"
+      },
+      " of its ",
+      {
+       "t": "code",
+       "v": "loaded_at_field"
+      },
+      ") with the current time, and reports ",
+      {
+       "t": "code",
+       "v": "PASS"
+      },
+      ", ",
+      {
+       "t": "code",
+       "v": "WARN"
+      },
+      " or ",
+      {
+       "t": "code",
+       "v": "ERROR STALE"
+      },
+      " according to the ",
+      {
+       "t": "code",
+       "v": "warn_after"
+      },
+      " and ",
+      {
+       "t": "code",
+       "v": "error_after"
+      },
+      " thresholds you declare. It runs only with ",
+      {
+       "t": "code",
+       "v": "dbt source freshness"
+      },
+      ", writes ",
+      {
+       "t": "code",
+       "v": "target/sources.json"
+      },
+      ", and with ",
+      {
+       "t": "code",
+       "v": "source_status:fresher+"
+      },
+      " lets you rebuild only the models that depend on sources with new data. An exposure is a YAML declaration of a downstream use of your models (dashboard, notebook, analysis, ML model, application) with an owner: dbt never runs it, but it appears in the lineage, in the docs, and in selection, so you can build, test and protect everything it needs."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "chapter",
+ "label": "ch:freshness-exposures",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-fx-external"
+   ],
+   "checkpoints": [],
+   "id": "ch21-s1",
+   "label": "sec:fx-external",
+   "labs": [],
+   "minutes": 5,
+   "number": "21.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Your dbt project sits in the middle of a chain it does not fully control:"
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "The chain around a dbt project: Web shop, Stripe (source systems) → Loader (Fivetran, Airbyte, a script) → Raw tables = dbt sources → dbt models (staging, marts) → Dashboards, notebooks = dbt exposures. The first two steps are outside dbt. Source freshness asks “did new data arrive?”; exposures answer “who uses my models?”.",
+       "id": "ch21-fig1",
+       "src": "figures/ch21-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "dbt does not load data (the loader does) and does not draw charts (the BI tool does). What dbt can do is ",
+        {
+         "c": [
+          "check"
+         ],
+         "t": "i"
+        },
+        " the input and ",
+        {
+         "c": [
+          "document"
+         ],
+         "t": "i"
+        },
+        " the output."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Think of a restaurant kitchen. Every morning, suppliers deliver vegetables and milk. Before cooking, a good chef checks the delivery date: if the milk was delivered a week ago, the dish may look perfect but it is not safe to serve. That is source freshness. In the dining room, regular customers always order the same dishes; if the chef changes the recipe of the lasagne, he should first check who orders it. The list of \"who eats what\" is your exposures."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      }
+     ],
+     "id": "ch21-s1-0",
+     "title": [
+      "External dependencies: what comes in, what goes out"
+     ],
+     "titleText": "External dependencies: what comes in, what goes out"
+    }
+   ],
+   "title": [
+    "External dependencies: what comes in, what goes out"
+   ],
+   "titleText": "External dependencies: what comes in, what goes out"
+  },
+  {
+   "anchors": [
+    "sec-fx-freshness-idea"
+   ],
+   "checkpoints": [],
+   "id": "ch21-s2",
+   "label": "sec:fx-freshness-idea",
+   "labs": [],
+   "minutes": 5,
+   "number": "21.2",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Most loaders add a column to every row they write: the time of the load. In your practice data it is ",
+        {
+         "t": "code",
+         "v": "_loaded_at"
+        },
+        ", in ",
+        {
+         "t": "code",
+         "v": "jaffle_shop.orders"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "stripe.payments"
+        },
+        " (the other three raw tables have none). To know whether a table is fresh, dbt asks one question: ",
+        {
+         "c": [
+          "when was the newest row loaded?"
+         ],
+         "t": "i"
+        }
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "dbt runs ",
+            {
+             "t": "code",
+             "v": "select max(_loaded_at), now()"
+            },
+            " on the raw table."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "It computes the age: ",
+            {
+             "c": [
+              "now"
+             ],
+             "t": "i"
+            },
+            " minus ",
+            {
+             "c": [
+              "max(_loaded_at)"
+             ],
+             "t": "i"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "It compares the age with two thresholds that you choose: older than ",
+            {
+             "t": "code",
+             "v": "warn_after"
+            },
+            " gives a warning, older than ",
+            {
+             "t": "code",
+             "v": "error_after"
+            },
+            " gives an error."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "c": [
+        "The thresholds express your ",
+        {
+         "en": [
+          "service level agreement"
+         ],
+         "fr": "accord de niveau de service",
+         "id": "term-service-level-agreement",
+         "t": "term"
+        },
+        " (SLA): \"the finance dashboard is never more than 24 hours behind\". ",
+        {
+         "en": [
+          "Source freshness"
+         ],
+         "fr": "fraîcheur des sources",
+         "id": "term-source-freshness",
+         "t": "term"
+        },
+        " turns this promise into a check."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "Source freshness on an age axis, where age = now − max(_loaded_at). From age 0 (just loaded) to warn_after (12 hours) the result is PASS; from 12 hours to error_after (24 hours) it is WARN; after 24 hours it is ERROR STALE.",
+       "id": "ch21-fig2",
+       "src": "figures/ch21-fig2.svg",
+       "t": "figure"
+      }
+     ],
+     "id": "ch21-s2-0",
+     "title": [
+      "Source freshness: the idea"
+     ],
+     "titleText": "Source freshness: the idea"
+    }
+   ],
+   "title": [
+    "Source freshness: the idea"
+   ],
+   "titleText": "Source freshness: the idea"
+  },
+  {
+   "anchors": [
+    "sec-fx-freshness-config"
+   ],
+   "checkpoints": [],
+   "id": "ch21-s3",
+   "label": "sec:fx-freshness-config",
+   "labs": [
+    "ch21-lab1"
+   ],
+   "minutes": 25,
+   "number": "21.3",
+   "objectives": [
+    "1.1",
+    "3.3",
+    "6.2"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Freshness is configured on sources, in the sources YAML files you wrote in ",
+        {
+         "href": "/learn/ch07/",
+         "label": "ch:models-sources-dag",
+         "t": "ref",
+         "text": "Chapter 7"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Key"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "loaded_at_field"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The column (or SQL expression) that holds the load time, for example ",
+           {
+            "t": "code",
+            "v": "_loaded_at"
+           },
+           ", or ",
+           {
+            "t": "code",
+            "v": "\"loaded_at::timestamp\""
+           },
+           ". dbt computes its ",
+           {
+            "t": "code",
+            "v": "max"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "freshness"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The thresholds, with two optional keys:"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "warn_after"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{count: <positive integer>, period: minute | hour | day}"
+           },
+           ". Older than this = ",
+           {
+            "t": "code",
+            "v": "WARN"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "error_after"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Same shape. Older than this = ",
+           {
+            "t": "code",
+            "v": "ERROR STALE"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "filter"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A SQL condition added as a ",
+           {
+            "t": "code",
+            "v": "WHERE"
+           },
+           " clause to the freshness query (to scan less data, or to count only some rows)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "loaded_at_query"
+           }
+          ]
+         },
+         {
+          "c": [
+           "(dbt 1.10 and later) A whole SQL query that returns the newest load time. An alternative to ",
+           {
+            "t": "code",
+            "v": "loaded_at_field"
+           },
+           "."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "At least one of ",
+        {
+         "t": "code",
+         "v": "warn_after"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "error_after"
+        },
+        " is needed; with neither, dbt does not check the table. Each one needs both ",
+        {
+         "t": "code",
+         "v": "count"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "period"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch21-s3-1",
+     "number": "21.3.1",
+     "title": [
+      "The keys"
+     ],
+     "titleText": "The keys"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Since dbt 1.9 ",
+        {
+         "t": "code",
+         "v": "freshness"
+        },
+        ", and since dbt 1.10 ",
+        {
+         "t": "code",
+         "v": "loaded_at_field"
+        },
+        ", are ",
+        {
+         "c": [
+          "configs"
+         ],
+         "t": "i"
+        },
+        ": you write them under ",
+        {
+         "t": "code",
+         "v": "config:"
+        },
+        " of a source or of a source table. You can also set ",
+        {
+         "t": "code",
+         "v": "+freshness"
+        },
+        " for many sources at once in ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        ", under a ",
+        {
+         "t": "code",
+         "v": "sources:"
+        },
+        " key; we tested this default for every source of the project (it is not kept in your project):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c1",
+       "lang": "yaml",
+       "t": "code",
+       "text": "sources:\n  jaffle_dbt:\n    +freshness:\n      warn_after: {count: 2, period: hour}",
+       "title": "dbt_project.yml (experiment, not kept)"
+      },
+      {
+       "c": [
+        "Settings in the sources YAML files are more specific and win over this default. Careful: between ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        " and a YAML file there is no key-by-key merge. In our test, a project default with only ",
+        {
+         "t": "code",
+         "v": "warn_after"
+        },
+        " (2 hours) and a table block with only ",
+        {
+         "t": "code",
+         "v": "error_after"
+        },
+        " gave the table ",
+        {
+         "t": "code",
+         "v": "'warn_after': {'count': None, 'period': None}"
+        },
+        ": the YAML block replaced the project default completely. (Inside the YAML files, between a source and its tables, the merge ",
+        {
+         "c": [
+          "is"
+         ],
+         "t": "i"
+        },
+        " key by key, as you will see below.) This is the configuration of your project at the end of this chapter:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c2",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nsources:\n  - name: jaffle_shop\n    description: Raw data copied every night from the Jaffle Shop web application.\n    schema: jaffle_shop   # same as the source name, so this line is optional\n    config:\n      # freshness for every table of this source...\n      loaded_at_field: _loaded_at\n      freshness:\n        warn_after: {count: 12, period: hour}\n        error_after: {count: 24, period: hour}\n    tables:\n      - name: customers\n        description: One row per customer account.\n        config:\n          freshness: null          # ...except the tables without a _loaded_at column\n        columns:\n          - name: id\n            data_tests:\n              - unique\n              - not_null\n      - name: orders\n        description: One row per order. user_id points to customers.id.\n        config:\n          event_time: order_date   # used by microbatch and --sample\n        ...",
+       "title": "models/staging/jaffle_shop/_jaffle_shop__sources.yml (beginning)"
+      },
+      {
+       "id": "ch21-c3",
+       "lang": "yaml",
+       "t": "code",
+       "text": "sources:\n  - name: stripe\n    description: Raw data from Stripe, our payment provider.\n    tables:\n      - name: payments\n        description: One row per payment attempt. Amounts are in cents.\n        config:\n          event_time: created\n          loaded_at_field: _loaded_at\n          freshness:\n            warn_after: {count: 6, period: hour}\n            error_after: {count: 1, period: day}\n            filter: \"status = 'success'\"   # only successful payments count",
+       "title": "models/staging/stripe/_stripe__sources.yml (extract)"
+      },
+      {
+       "c": [
+        "Two designs are visible. For ",
+        {
+         "t": "code",
+         "v": "jaffle_shop"
+        },
+        ", the rule is written once at the ",
+        {
+         "c": [
+          "source"
+         ],
+         "t": "i"
+        },
+        " level and every table inherits it; three tables without a ",
+        {
+         "t": "code",
+         "v": "_loaded_at"
+        },
+        " column switch it off with ",
+        {
+         "t": "code",
+         "v": "freshness: null"
+        },
+        ". For ",
+        {
+         "t": "code",
+         "v": "stripe"
+        },
+        ", the rule is written on the ",
+        {
+         "c": [
+          "table"
+         ],
+         "t": "i"
+        },
+        ", with a stricter SLA (6 and 24 hours) and a ",
+        {
+         "t": "code",
+         "v": "filter"
+        },
+        ": only successful payments prove that the payment flow works."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The older form, with ",
+          {
+           "t": "code",
+           "v": "freshness:"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "loaded_at_field:"
+          },
+          " directly under the source or table (not under ",
+          {
+           "t": "code",
+           "v": "config:"
+          },
+          "), still works in dbt 1.11. On Snowflake, BigQuery, Databricks and Redshift, dbt then prints a deprecation warning: ",
+          {
+           "t": "code",
+           "v": "[WARNING][PropertyMovedToConfigDeprecation]: … Found `freshness` as a top-level property of `sources[0].tables[0]` … should be moved into the `config` of `sources[0].tables[0]`"
+          },
+          ". On DuckDB this validation is skipped and nothing is printed (we checked). Exam questions may show either form; in your own projects, use ",
+          {
+           "t": "code",
+           "v": "config:"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch21-s3-2",
+     "number": "21.3.2",
+     "title": [
+      "Where to write them: under ",
+      {
+       "t": "code",
+       "v": "config:"
+      }
+     ],
+     "titleText": "Where to write them: under config:"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Freshness and ",
+        {
+         "t": "code",
+         "v": "loaded_at_field"
+        },
+        " set on a source flow down to all its tables. A table can override them. The detail that the exam likes: the override works ",
+        {
+         "c": [
+          "key by key"
+         ],
+         "t": "i"
+        },
+        ". We gave ",
+        {
+         "t": "code",
+         "v": "jaffle_shop.orders"
+        },
+        " only a ",
+        {
+         "t": "code",
+         "v": "warn_after"
+        },
+        " of 30 days, and looked at the criteria dbt really used (in ",
+        {
+         "t": "code",
+         "v": "target/sources.json"
+        },
+        "):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c4",
+       "lang": "yaml",
+       "t": "code",
+       "text": "      - name: orders\n        config:\n          event_time: order_date\n          freshness:\n            warn_after: {count: 30, period: day}",
+       "title": "experiment (not kept): only warn_after on the orders table"
+      },
+      {
+       "id": "ch21-c5",
+       "lang": "output",
+       "t": "code",
+       "text": "source.jaffle_dbt.jaffle_shop.orders error {'warn_after': {'count': 30, 'period': 'day'}, 'error_after': {'count': 24, 'period': 'hour'}, 'filter': None}"
+      },
+      {
+       "c": [
+        "The table's ",
+        {
+         "t": "code",
+         "v": "warn_after"
+        },
+        " replaced the source's one, and the source's ",
+        {
+         "t": "code",
+         "v": "error_after"
+        },
+        " (24 hours) was still applied. To switch the check off for one table, write ",
+        {
+         "t": "code",
+         "v": "freshness: null"
+        },
+        ": the table then disappears from the freshness run."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Inheritance also explains a classic error. ",
+        {
+         "t": "code",
+         "v": "loaded_at_field"
+        },
+        " flows down too, so if you forget ",
+        {
+         "t": "code",
+         "v": "freshness: null"
+        },
+        " on ",
+        {
+         "t": "code",
+         "v": "customers"
+        },
+        " (a table without a ",
+        {
+         "t": "code",
+         "v": "_loaded_at"
+        },
+        " column), that table is checked with the inherited column, and the check fails:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c6",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "23:06:53  1 of 3 ERROR freshness of jaffle_shop.customers ................................ [ERROR in 0.09s]\n23:06:53    Runtime Error in source customers (models/staging/jaffle_shop/_jaffle_shop__sources.yml)\n  Binder Error: Referenced column \"_loaded_at\" not found in FROM clause!"
+      },
+      {
+       "c": [
+        "This is ",
+        {
+         "t": "code",
+         "v": "ERROR"
+        },
+        " (the check could not run), not ",
+        {
+         "t": "code",
+         "v": "ERROR STALE"
+        },
+        ". The other tables are still checked: dbt does not stop at the first table that fails. A table can also override only ",
+        {
+         "t": "code",
+         "v": "loaded_at_field"
+        },
+        " (for example ",
+        {
+         "t": "code",
+         "v": "loaded_at_field: updated_at"
+        },
+        ") and keep the thresholds of its source."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Trap T134 of ",
+          {
+           "href": "/learn/ch27/",
+           "label": "ch:exam-strategy",
+           "t": "ref",
+           "text": "Chapter 27"
+          },
+          ": a table-level ",
+          {
+           "t": "code",
+           "v": "freshness"
+          },
+          " block does ",
+          {
+           "c": [
+            "not"
+           ],
+           "t": "i"
+          },
+          " replace the whole source-level block. Keys you do not repeat are inherited. If a question shows a source with ",
+          {
+           "t": "code",
+           "v": "warn_after: 12 hour"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "error_after: 24 hour"
+          },
+          ", and a table with only ",
+          {
+           "t": "code",
+           "v": "warn_after: {count: 6, period: hour}"
+          },
+          ", the table warns after 6 hours and errors after 24 hours."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch21-s3-3",
+     "number": "21.3.3",
+     "title": [
+      "Inheritance: a table overrides only the keys it sets"
+     ],
+     "titleText": "Inheritance: a table overrides only the keys it sets"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "filter"
+        },
+        " adds a ",
+        {
+         "t": "code",
+         "v": "WHERE"
+        },
+        " clause to the freshness query. Two reasons to use it: to avoid a full scan of a huge table (for example, only the last two days of a partitioned table on BigQuery), or, as in your project, to define which rows count as \"fresh data\". You will see the generated SQL in the first lab. The filter has no effect on anything else: models that read the source still see every row."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch21-s3-4",
+     "number": "21.3.4",
+     "title": [
+      {
+       "t": "code",
+       "v": "filter"
+      }
+     ],
+     "titleText": "filter"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Since dbt 1.10 you can give a whole query instead of a column. It must return one value, the newest load time; ",
+        {
+         "t": "code",
+         "v": "{{ this }}"
+        },
+        " is the source table. We tried it on DuckDB with dbt 1.11.16:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c7",
+       "lang": "yaml",
+       "t": "code",
+       "text": "        config:\n          loaded_at_query: |\n            select max(_loaded_at) from {{ this }} where amount > 0\n          freshness:\n            warn_after: {count: 6, period: hour}\n            error_after: {count: 1, period: day}",
+       "title": "experiment (not kept)"
+      },
+      {
+       "id": "ch21-c8",
+       "lang": "output",
+       "t": "code",
+       "text": "with source_query as (\n    select max(_loaded_at) from \"practice\".\"stripe\".\"payments\" where amount > 0\n  )\n  select\n    (select * from source_query) as max_loaded_at,\n    now() as snapshotted_at"
+      },
+      {
+       "c": [
+        "It works. Two rules, both verified: the ",
+        {
+         "t": "code",
+         "v": "filter"
+        },
+        " is ",
+        {
+         "c": [
+          "not"
+         ],
+         "t": "i"
+        },
+        " applied to a ",
+        {
+         "t": "code",
+         "v": "loaded_at_query"
+        },
+        " (our filter was still in the file and was ignored), and you cannot set both keys on the same table:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c9",
+       "lang": "output",
+       "t": "code",
+       "text": "Parsing Error\n  Cannot specify both loaded_at_field and loaded_at_query at table level."
+      }
+     ],
+     "id": "ch21-s3-5",
+     "number": "21.3.5",
+     "title": [
+      {
+       "t": "code",
+       "v": "loaded_at_query"
+      },
+      ": when one column is not enough"
+     ],
+     "titleText": "loaded_at_query: when one column is not enough"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Some warehouses record when each table was last modified (Snowflake uses its ",
+        {
+         "t": "code",
+         "v": "LAST_ALTERED"
+        },
+        " metadata, for example). On those adapters, a source with a ",
+        {
+         "t": "code",
+         "v": "freshness"
+        },
+        " block but no ",
+        {
+         "t": "code",
+         "v": "loaded_at_field"
+        },
+        " is checked from that metadata. DuckDB cannot do it. We removed ",
+        {
+         "t": "code",
+         "v": "loaded_at_field"
+        },
+        " from ",
+        {
+         "t": "code",
+         "v": "stripe.payments"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c10",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:22:23  The configured adapter does not support metadata-based freshness. A loaded_at_field must be specified for source 'stripe.payments'.\n...\n22:22:23  1 of 1 START freshness of stripe.payments ...................................... [RUN]\n22:22:23  1 of 1 ERROR freshness of stripe.payments ...................................... [ERROR in 0.00s]\n...\n22:22:23    Runtime Error in source payments (models/staging/stripe/_stripe__sources.yml)\n  Could not compute freshness for source payments: no 'loaded_at_field' provided and duckdb adapter does not support metadata-based freshness checks."
+      },
+      {
+       "c": [
+        "Metadata freshness says when the table was last ",
+        {
+         "c": [
+          "changed"
+         ],
+         "t": "i"
+        },
+        ", which is not always when useful rows arrived (a loader can touch a table without adding data). A real ",
+        {
+         "t": "code",
+         "v": "loaded_at_field"
+        },
+        " is more precise when you have one."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Trap T133: writing ",
+          {
+           "t": "code",
+           "v": "warn_after"
+          },
+          " is not enough. dbt also needs to know ",
+          {
+           "c": [
+            "when"
+           ],
+           "t": "i"
+          },
+          " rows were loaded: a ",
+          {
+           "t": "code",
+           "v": "loaded_at_field"
+          },
+          " (or a ",
+          {
+           "t": "code",
+           "v": "loaded_at_query"
+          },
+          "), unless the adapter supports metadata-based freshness. And the period must be ",
+          {
+           "t": "code",
+           "v": "minute"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "hour"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "day"
+          },
+          ". ",
+          {
+           "t": "code",
+           "v": "period: week"
+          },
+          " stops the parse with a Python-style message: ",
+          {
+           "t": "code",
+           "v": "Field \"error_after\" of type Optional[Time] in FreshnessThreshold has invalid value {'count': 1, 'period': 'week'}"
+          },
+          ". Worse, ",
+          {
+           "t": "code",
+           "v": "error_after: {count: 1}"
+          },
+          " without a period was accepted silently and simply ignored in our test (dbt 1.11 on DuckDB): the criteria became ",
+          {
+           "t": "code",
+           "v": "'error_after': {'count': None, 'period': None}"
+          },
+          " and the table could only reach ",
+          {
+           "t": "code",
+           "v": "WARN"
+          },
+          ". The documentation is clear: each threshold needs ",
+          {
+           "c": [
+            "both"
+           ],
+           "t": "i"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "count"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "period"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " add the freshness configuration of the reference project, run the check, and read the result in the terminal, in ",
+          {
+           "t": "code",
+           "v": "target/sources.json"
+          },
+          " and in ",
+          {
+           "t": "code",
+           "v": "logs/dbt.log"
+          },
+          ". Work in ",
+          {
+           "t": "code",
+           "v": "~/dbt-course/jaffle_dbt"
+          },
+          " with the virtual environment active and no DuckDB CLI open. Your project is at tag ",
+          {
+           "t": "code",
+           "v": "ch20"
+          },
+          ", and your raw data is the \"day 2\" data of ",
+          {
+           "href": "/learn/ch13/",
+           "label": "ch:snapshots",
+           "t": "ref",
+           "text": "Chapters 13"
+          },
+          " and ",
+          {
+           "href": "/learn/ch14/",
+           "label": "ch:incremental-microbatch",
+           "t": "ref",
+           "text": "14"
+          },
+          " (newest load: 4 January 2026)."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "models/staging/jaffle_shop/_jaffle_shop__sources.yml"
+          },
+          ", add the ",
+          {
+           "t": "code",
+           "v": "config:"
+          },
+          " block of the source (six lines, between ",
+          {
+           "t": "code",
+           "v": "schema:"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "tables:"
+          },
+          "), and add ",
+          {
+           "t": "code",
+           "v": "config: freshness: null"
+          },
+          " to the tables ",
+          {
+           "t": "code",
+           "v": "customers"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "order_items"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "products"
+          },
+          ", exactly as in the first file of ",
+          {
+           "href": "/learn/ch21/ch21-s3/",
+           "label": "sec:fx-freshness-config",
+           "t": "ref",
+           "text": "Section 21.3"
+          },
+          ". For example:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c11",
+         "lang": "yaml",
+         "t": "code",
+         "text": "      - name: order_items\n        description: One row per product line inside an order.\n        config:\n          freshness: null\n        columns:",
+         "title": "models/staging/jaffle_shop/_jaffle_shop__sources.yml (one of the three tables)"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " In ",
+          {
+           "t": "code",
+           "v": "models/staging/stripe/_stripe__sources.yml"
+          },
+          ", add the five lines under the existing ",
+          {
+           "t": "code",
+           "v": "event_time: created"
+          },
+          " of the ",
+          {
+           "t": "code",
+           "v": "payments"
+          },
+          " table (second file of the same section)."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Run the check, then print its exit code:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c12",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt source freshness\n$ echo $?"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (only the two tables with a ",
+          {
+           "t": "code",
+           "v": "_loaded_at"
+          },
+          " are checked; your times differ):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c13",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "21:21:18  Running with dbt=1.11.16\n21:21:18  Registered adapter: duckdb=1.11.0\n21:21:19  Found 1 seed, 45 data tests, 2 snapshots, 15 models, 2 analyses, 5 sources, 670 macros, 2 groups, 5 unit tests\n21:21:19\n21:21:19  Concurrency: 4 threads (target='dev')\n21:21:19\n21:21:19  1 of 2 START freshness of jaffle_shop.orders ................................... [RUN]\n21:21:19  2 of 2 START freshness of stripe.payments ...................................... [RUN]\n21:21:19  1 of 2 ERROR STALE freshness of jaffle_shop.orders ............................. [ERROR STALE in 0.01s]\n21:21:19  2 of 2 ERROR STALE freshness of stripe.payments ................................ [ERROR STALE in 0.01s]\n21:21:19\n21:21:19  Finished running 2 sources in 0 hours 0 minutes and 0.13 seconds (0.13s).\n21:21:19\n21:21:19  Failure in source orders (models/staging/jaffle_shop/_jaffle_shop__sources.yml)\n21:21:19    Status: error\n21:21:19\n21:21:19  Failure in source payments (models/staging/stripe/_stripe__sources.yml)\n21:21:19    Status: error\n21:21:19  Done.\n1"
+        },
+        {
+         "c": [
+          "The data was loaded in January 2026, and the check ran in October 2026: far beyond 24 hours. The exit code is 1, so a scheduler or a CI pipeline sees a failure."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Read the artifact. Each checked table has one result with its newest load time, the time of the check, the age in seconds and the criteria:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c14",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ python -c \"import json; d=json.load(open('target/sources.json')); [print(r['unique_id'], r['status'], r['max_loaded_at'], r['snapshotted_at'], round(r['max_loaded_at_time_ago_in_s']/3600, 1), 'hours ago', r['criteria']) for r in d['results']]\""
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (your number of hours depends on today's date):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c15",
+         "lang": "output",
+         "t": "code",
+         "text": "source.jaffle_dbt.jaffle_shop.orders error 2026-01-04T16:13:00+00:00 2026-10-21T21:21:19.467238+00:00 6965.1 hours ago {'warn_after': {'count': 12, 'period': 'hour'}, 'error_after': {'count': 24, 'period': 'hour'}, 'filter': None}\nsource.jaffle_dbt.stripe.payments error 2026-01-04T16:16:00+00:00 2026-10-21T21:21:19.467496+00:00 6965.1 hours ago {'warn_after': {'count': 6, 'period': 'hour'}, 'error_after': {'count': 1, 'period': 'day'}, 'filter': \"status = 'success'\"}"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Find the two queries dbt ran (they are written on several lines, so we search for a piece of them):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c16",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ grep -n -B4 -A8 'max(_loaded_at) as max_loaded_at' logs/dbt.log | tail -26"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (extract; note the ",
+          {
+           "t": "code",
+           "v": "where"
+          },
+          " clause that comes from ",
+          {
+           "t": "code",
+           "v": "filter"
+          },
+          "):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c17",
+         "lang": "output",
+         "t": "code",
+         "text": "93059-select\n93060:      max(_loaded_at) as max_loaded_at,\n93061-      now() as snapshotted_at\n93062-    from \"practice\".\"jaffle_shop\".\"orders\"\n...\n93067-select\n93068:      max(_loaded_at) as max_loaded_at,\n93069-      now() as snapshotted_at\n93070-    from \"practice\".\"stripe\".\"payments\"\n93071-\n93072-    where status = 'success'"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6."
+           ],
+           "t": "b"
+          },
+          " Keep this result for the next lab, in a folder ",
+          {
+           "c": [
+            "outside"
+           ],
+           "t": "i"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "target/"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c18",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ mkdir -p ../state_freshness && cp target/sources.json ../state_freshness/"
+        }
+       ],
+       "id": "ch21-lab1",
+       "objectives": [
+        "6.2",
+        "1.1",
+        "3.3"
+       ],
+       "t": "lab",
+       "title": [
+        "Configure freshness and meet your first ERROR STALE"
+       ]
+      }
+     ],
+     "id": "ch21-s3-6",
+     "number": "21.3.6",
+     "title": [
+      "Without ",
+      {
+       "t": "code",
+       "v": "loaded_at_field"
+      },
+      ": warehouse metadata"
+     ],
+     "titleText": "Without loaded_at_field: warehouse metadata"
+    }
+   ],
+   "title": [
+    "Configuring freshness"
+   ],
+   "titleText": "Configuring freshness"
+  },
+  {
+   "anchors": [
+    "sec-fx-freshness-run"
+   ],
+   "checkpoints": [],
+   "id": "ch21-s4",
+   "label": "sec:fx-freshness-run",
+   "labs": [],
+   "minutes": 5,
+   "number": "21.4",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Printed"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "In ",
+             {
+              "t": "code",
+              "v": "sources.json"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "PASS"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "pass"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The newest row is younger than ",
+           {
+            "t": "code",
+            "v": "warn_after"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "WARN"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "warn"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Older than ",
+           {
+            "t": "code",
+            "v": "warn_after"
+           },
+           ", younger than ",
+           {
+            "t": "code",
+            "v": "error_after"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ERROR STALE"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "error"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Older than ",
+           {
+            "t": "code",
+            "v": "error_after"
+           },
+           ": the data is stale."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ERROR"
+           }
+          ]
+         },
+         {
+          "c": [
+           "(not written)"
+          ]
+         },
+         {
+          "c": [
+           "The check itself failed: ",
+           {
+            "t": "code",
+            "v": "Runtime Error"
+           },
+           ", for example a wrong column name, or no ",
+           {
+            "t": "code",
+            "v": "loaded_at_field"
+           },
+           " on an adapter without metadata freshness."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "ERROR STALE"
+        },
+        " is a statement about your ",
+        {
+         "c": [
+          "data"
+         ],
+         "t": "i"
+        },
+        "; ",
+        {
+         "t": "code",
+         "v": "ERROR"
+        },
+        " is a problem with your ",
+        {
+         "c": [
+          "configuration or connection"
+         ],
+         "t": "i"
+        },
+        " (trap T135). With a typo in the column name, DuckDB answers with a Binder Error (on other warehouses you would see a Database Error):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c19",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:42:22  1 of 1 START freshness of stripe.payments ...................................... [RUN]\n22:42:22  1 of 1 ERROR freshness of stripe.payments ...................................... [ERROR in 0.02s]\n22:42:22\n22:42:22  Finished running 1 source in 0 hours 0 minutes and 0.10 seconds (0.10s).\n22:42:22\n22:42:22    Runtime Error in source payments (models/staging/stripe/_stripe__sources.yml)\n  Binder Error: Referenced column \"_loaded_att\" not found in FROM clause!\n  Candidate bindings: \"_loaded_at\", \"orderid\", \"paymentmethod\", \"id\"\n\n  LINE 3:       max(_loaded_att) as max_loaded_at,\n                    ^\n22:42:22  Done."
+      }
+     ],
+     "id": "ch21-s4-1",
+     "number": "21.4.1",
+     "title": [
+      "The four outcomes"
+     ],
+     "titleText": "The four outcomes"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "What a scheduler sees is the exit code. We measured all three cases on dbt 1.11.16:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "ERROR STALE"
+            },
+            " on at least one table: exit code ",
+            {
+             "c": [
+              "1"
+             ],
+             "t": "b"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "ERROR"
+            },
+            " (runtime error): exit code ",
+            {
+             "c": [
+              "1"
+             ],
+             "t": "b"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Only ",
+            {
+             "t": "code",
+             "v": "PASS"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "WARN"
+            },
+            ": exit code ",
+            {
+             "c": [
+              "0"
+             ],
+             "t": "b"
+            },
+            ". A warning does not fail the command (we removed ",
+            {
+             "t": "code",
+             "v": "error_after"
+            },
+            " from ",
+            {
+             "t": "code",
+             "v": "stripe.payments"
+            },
+            ": the run printed ",
+            {
+             "t": "code",
+             "v": "WARN freshness of stripe.payments"
+            },
+            " and ",
+            {
+             "t": "code",
+             "v": "echo $?"
+            },
+            " printed 0)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch21-s4-2",
+     "number": "21.4.2",
+     "title": [
+      "Exit codes"
+     ],
+     "titleText": "Exit codes"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "dbt source freshness"
+            },
+            " checks every source table that has a freshness config (and is not ",
+            {
+             "t": "code",
+             "v": "null"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "--select"
+            },
+            " (or ",
+            {
+             "t": "code",
+             "v": "-s"
+            },
+            ") limits the check: ",
+            {
+             "t": "code",
+             "v": "dbt source freshness --select source:stripe"
+            },
+            " (one source) or ",
+            {
+             "t": "code",
+             "v": "--select source:jaffle_shop.orders"
+            },
+            " (one table)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "--output"
+            },
+            " (or ",
+            {
+             "t": "code",
+             "v": "-o"
+            },
+            ") writes the JSON report somewhere else than ",
+            {
+             "t": "code",
+             "v": "target/sources.json"
+            },
+            ", for example ",
+            {
+             "t": "code",
+             "v": "dbt source freshness -o target/freshness_today.json"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The usual global flags work: ",
+            {
+             "t": "code",
+             "v": "--target prod"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "--threads"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "-q"
+            },
+            "…"
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Trap T132: ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " does ",
+          {
+           "c": [
+            "not"
+           ],
+           "t": "i"
+          },
+          " check freshness, and neither does ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "dbt test"
+          },
+          ". We ran ",
+          {
+           "t": "code",
+           "v": "dbt build --select source:stripe"
+          },
+          " on stale data: it ran the two data tests of the source (",
+          {
+           "t": "code",
+           "v": "source_unique_stripe_payments_id"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "source_not_null_stripe_payments_id"
+          },
+          ") and ended with ",
+          {
+           "t": "code",
+           "v": "PASS=2"
+          },
+          ", without any freshness line. Freshness is its own step: ",
+          {
+           "t": "code",
+           "v": "dbt source freshness"
+          },
+          ". The other direction is true too: a ",
+          {
+           "t": "code",
+           "v": "WARN"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "ERROR STALE"
+          },
+          " result never makes a later ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " skip a model. To act on freshness, stop the job on the failed step, or select with ",
+          {
+           "t": "code",
+           "v": "source_status:fresher+"
+          },
+          ". (A newer engine, dbt v2 / Fusion, has a ",
+          {
+           "t": "code",
+           "v": "dbt freshness"
+          },
+          " command that also covers models; in dbt Core 1.11 it does not exist: ",
+          {
+           "t": "code",
+           "v": "Error: No such command 'freshness'"
+          },
+          ".)"
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch21-s4-3",
+     "number": "21.4.3",
+     "title": [
+      "The command and its options"
+     ],
+     "titleText": "The command and its options"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt computes the age in UTC. If ",
+        {
+         "t": "code",
+         "v": "_loaded_at"
+        },
+        " is a ",
+        {
+         "t": "code",
+         "v": "TIMESTAMP"
+        },
+        " without a time zone (as in your practice data), dbt reads its values as UTC. A loader that writes local time into such a column makes the data look older or younger by the time difference: two hours in Paris in summer, which can turn a ",
+        {
+         "t": "code",
+         "v": "PASS"
+        },
+        " into a ",
+        {
+         "t": "code",
+         "v": "WARN"
+        },
+        ". This is why ",
+        {
+         "t": "code",
+         "v": "fresh_load.sql"
+        },
+        " stores ",
+        {
+         "t": "code",
+         "v": "current_timestamp at time zone 'UTC'"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch21-s4-4",
+     "number": "21.4.4",
+     "title": [
+      "A word on time zones"
+     ],
+     "titleText": "A word on time zones"
+    }
+   ],
+   "title": [
+    "Running the check and reading the results"
+   ],
+   "titleText": "Running the check and reading the results"
+  },
+  {
+   "anchors": [
+    "sec-fx-fresher"
+   ],
+   "checkpoints": [],
+   "id": "ch21-s5",
+   "label": "sec:fx-fresher",
+   "labs": [
+    "ch21-lab2"
+   ],
+   "minutes": 20,
+   "number": "21.5",
+   "objectives": [
+    "1.4",
+    "6.2",
+    "7.1"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Freshness results are more than an alarm. If you compare two freshness runs, you know ",
+        {
+         "c": [
+          "which"
+         ],
+         "t": "i"
+        },
+        " sources received new rows between them, and you can rebuild only the models downstream of those sources. This is the selection method ",
+        {
+         "t": "code",
+         "v": "source_status"
+        },
+        ", and its only value is ",
+        {
+         "t": "code",
+         "v": "fresher"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c20",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt source freshness                       # the current state: target/sources.json\n$ dbt build --select \"source_status:fresher+\" --state path/to/previous/artifacts"
+      },
+      {
+       "c": [
+        "How dbt decides, read from the dbt-core 1.11 source code:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "It reads two ",
+            {
+             "t": "code",
+             "v": "sources.json"
+            },
+            " files: the ",
+            {
+             "c": [
+              "previous"
+             ],
+             "t": "i"
+            },
+            " one, in the ",
+            {
+             "t": "code",
+             "v": "--state"
+            },
+            " folder, and the ",
+            {
+             "c": [
+              "current"
+             ],
+             "t": "i"
+            },
+            " one, in ",
+            {
+             "t": "code",
+             "v": "target/"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A source is \"fresher\" when its ",
+            {
+             "t": "code",
+             "v": "max_loaded_at"
+            },
+            " is greater now than in the previous file, or when it is absent from the previous file."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Sources whose check ended with a runtime error are left out. The status (",
+            {
+             "t": "code",
+             "v": "pass"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "warn"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "error"
+            },
+            ") does not matter: only the newest load time is compared."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The ",
+            {
+             "t": "code",
+             "v": "+"
+            },
+            " then adds everything downstream. Without ",
+            {
+             "t": "code",
+             "v": "+"
+            },
+            " you select only the source nodes, which ",
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            " cannot build."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "Without a previous ",
+        {
+         "t": "code",
+         "v": "sources.json"
+        },
+        ", dbt stops (trap T144: ",
+        {
+         "t": "code",
+         "v": "source_status"
+        },
+        " needs the ",
+        {
+         "t": "code",
+         "v": "sources.json"
+        },
+        " of the previous ",
+        {
+         "c": [
+          "and"
+         ],
+         "t": "i"
+        },
+        " of the current freshness run):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c21",
+       "lang": "output",
+       "t": "code",
+       "text": "Internal Error\n  No previous state comparison freshness results in sources.json"
+      },
+      {
+       "c": [
+        "(We got this message both without ",
+        {
+         "t": "code",
+         "v": "--state"
+        },
+        " and with a ",
+        {
+         "t": "code",
+         "v": "--state"
+        },
+        " folder that only contained a ",
+        {
+         "t": "code",
+         "v": "manifest.json"
+        },
+        ".)"
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "dbt source freshness --select …"
+          },
+          " ",
+          {
+           "c": [
+            "replaces"
+           ],
+           "t": "i"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "target/sources.json"
+          },
+          " with a file that contains only the selected sources. If you run a partial check just before ",
+          {
+           "t": "code",
+           "v": "source_status:fresher+"
+          },
+          ", the other sources are not compared at all, and their children are silently left out. You will see it happen in the next lab. Rule: run the ",
+          {
+           "c": [
+            "full"
+           ],
+           "t": "i"
+          },
+          " freshness check right before using ",
+          {
+           "t": "code",
+           "v": "source_status:fresher"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " load new rows, see the freshness turn green, then use ",
+          {
+           "t": "code",
+           "v": "source_status:fresher+"
+          },
+          ", first the wrong way (to see the trap), then the right way. You need ",
+          {
+           "t": "code",
+           "v": "../state_freshness/sources.json"
+          },
+          " from the previous lab. The script ",
+          {
+           "t": "code",
+           "v": "fresh_load.sql"
+          },
+          " must be in ",
+          {
+           "t": "code",
+           "v": "~/dbt-course/practice/updates/"
+          },
+          "; if it is missing, copy the folder again: ",
+          {
+           "t": "code",
+           "textBook": "cp -r ~/Documents/Adnane/dbt-bible/labs/updates ~/dbt-course/practice/",
+           "v": "cp -r ~/dbt-course/kit/labs/updates ~/dbt-course/practice/"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Look at the script. It adds two small orders (with one item and one successful payment each) whose ",
+          {
+           "t": "code",
+           "v": "_loaded_at"
+          },
+          " is ",
+          {
+           "c": [
+            "now"
+           ],
+           "t": "i"
+          },
+          ", in UTC:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c22",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ cd ~/dbt-course/practice\n$ sed -n '1,25p' updates/fresh_load.sql"
+        },
+        {
+         "id": "ch21-c23",
+         "lang": "output",
+         "t": "code",
+         "text": "-- =====================================================================\n--  fresh_load.sql -- \"data arrived a moment ago\"\n--\n--  Adds 2 small new orders (with their items and successful payments)\n--  whose _loaded_at is the current time. Use it when you want\n--  `dbt source freshness` to report PASS (Chapter 21).\n--\n--  From your practice folder (DuckDB CLI closed everywhere else):\n--      duckdb practice.duckdb < updates/fresh_load.sql\n--\n--  Unlike day2.sql, every run adds 2 MORE orders: the new ids are\n--  \"current max id + 1\" and \"current max id + 2\".\n--  To go back to the original data, re-run setup.sql.\n--\n--  Why \"at time zone 'UTC'\"? _loaded_at has no time zone (TIMESTAMP).\n--  dbt reads such values as UTC when it computes the age of the data,\n--  so we store the current UTC time, whatever your computer's time zone.\n-- =====================================================================\n..."
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " Load the new rows, then go back to the project and check freshness again:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c24",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ duckdb practice.duckdb < updates/fresh_load.sql\n$ cd ~/dbt-course/jaffle_dbt\n$ dbt source freshness"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result."
+           ],
+           "t": "b"
+          },
+          " The script ends with a check query: ",
+          {
+           "t": "code",
+           "v": "jaffle_shop.orders"
+          },
+          " now has ",
+          {
+           "c": [
+            "322"
+           ],
+           "t": "b"
+          },
+          " rows and ",
+          {
+           "t": "code",
+           "v": "stripe.payments"
+          },
+          " ",
+          {
+           "c": [
+            "373"
+           ],
+           "t": "b"
+          },
+          ", both with a newest ",
+          {
+           "t": "code",
+           "v": "_loaded_at"
+          },
+          " of a few seconds ago. (We ran the same statements with the book's Python helper, which prints ",
+          {
+           "t": "code",
+           "v": "jaffle_shop.orders 322 2026-10-21 21:21:42.104743"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "stripe.payments 373 2026-10-21 21:21:42.104743"
+          },
+          "; the DuckDB CLI shows the same values in a table.) Then:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c25",
+         "lang": "output",
+         "small": true,
+         "t": "code",
+         "text": "21:21:44  1 of 2 START freshness of jaffle_shop.orders ................................... [RUN]\n21:21:44  2 of 2 START freshness of stripe.payments ...................................... [RUN]\n21:21:44  2 of 2 PASS freshness of stripe.payments ....................................... [PASS in 0.01s]\n21:21:44  1 of 2 PASS freshness of jaffle_shop.orders .................................... [PASS in 0.05s]\n21:21:44\n21:21:44  Finished running 2 sources in 0 hours 0 minutes and 0.12 seconds (0.12s).\n21:21:44  Done."
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Check only one source:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c26",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt source freshness --select source:stripe"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " ",
+          {
+           "t": "code",
+           "v": "1 of 1 PASS freshness of stripe.payments"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4 (the trap)."
+           ],
+           "t": "b"
+          },
+          " Ask which models are downstream of a fresher source:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c27",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt ls --select source_status:fresher+ --state ../state_freshness --resource-type model"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c28",
+         "lang": "output",
+         "t": "code",
+         "text": "jaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers.v1\njaffle_dbt.marts.dim_customers.v2\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.stripe.stg_stripe__payments"
+        },
+        {
+         "c": [
+          "Only the children of ",
+          {
+           "t": "code",
+           "v": "stripe.payments"
+          },
+          "! ",
+          {
+           "t": "code",
+           "v": "stg_jaffle_shop__orders"
+          },
+          " is missing, although ",
+          {
+           "t": "code",
+           "v": "jaffle_shop.orders"
+          },
+          " also received new rows. Step 3 replaced ",
+          {
+           "t": "code",
+           "v": "target/sources.json"
+          },
+          " with a file that contains ",
+          {
+           "t": "code",
+           "v": "stripe.payments"
+          },
+          " only, so the orders table was not compared. (",
+          {
+           "t": "code",
+           "v": "fct_orders"
+          },
+          " is in the list only because it also reads payments.)"
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5 (the right way)."
+           ],
+           "t": "b"
+          },
+          " Start a new cycle: a full check kept as the state, new data, a full check again, then the selection:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c29",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ rm -r ../state_freshness\n$ dbt source freshness -q; mkdir -p ../state_freshness && cp target/sources.json ../state_freshness/\n$ cd ~/dbt-course/practice && duckdb practice.duckdb < updates/fresh_load.sql && cd ~/dbt-course/jaffle_dbt\n$ dbt source freshness\n$ dbt ls --select source_status:fresher+ --state ../state_freshness --resource-type model"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " after this second load, ",
+          {
+           "t": "code",
+           "v": "jaffle_shop.orders"
+          },
+          " has 324 rows and ",
+          {
+           "t": "code",
+           "v": "stripe.payments"
+          },
+          " 375; both checks ",
+          {
+           "t": "code",
+           "v": "PASS"
+          },
+          "; and the list now contains the children of both sources (12 models):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c30",
+         "lang": "output",
+         "t": "code",
+         "text": "jaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers.v1\njaffle_dbt.marts.dim_customers.v2\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6."
+           ],
+           "t": "b"
+          },
+          " Build them (tests excluded only to keep the output short), then clean up:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c31",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --select source_status:fresher+ --state ../state_freshness --exclude-resource-type test --exclude-resource-type unit_test\n$ rm -r ../state_freshness"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (extract):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c32",
+         "lang": "output",
+         "t": "code",
+         "text": "21:22:20  1 of 12 START sql view model dbt_adnane.stg_jaffle_shop__orders ................ [RUN]\n21:22:20  2 of 12 START sql view model dbt_adnane.stg_stripe__payments ................... [RUN]\n21:22:20  3 of 12 START snapshot dbt_adnane.orders_snapshot .............................. [RUN]\n...\n21:22:20  12 of 12 START python table model dbt_adnane.customer_segments ................. [RUN]\n21:22:21  12 of 12 OK created python table model dbt_adnane.customer_segments ............ [OK in 0.41s]\n21:22:21\n21:22:21  Finished running 2 incremental models, 1 snapshot, 5 table models, 4 view models in 0 hours 0 minutes and 1.04 seconds (1.04s).\n21:22:21\n21:22:21  Completed successfully\n21:22:21\n21:22:21  Done. PASS=12 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=12"
+        },
+        {
+         "c": [
+          "Notice ",
+          {
+           "t": "code",
+           "v": "orders_snapshot"
+          },
+          ": ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " also selected the snapshot that reads ",
+          {
+           "t": "code",
+           "v": "jaffle_shop.orders"
+          },
+          ", because it is downstream of a fresher source. Your raw data is now \"day 2 plus two fresh loads\"; the following chapters use this state."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch21-lab2",
+       "objectives": [
+        "6.2",
+        "7.1",
+        "1.4"
+       ],
+       "t": "lab",
+       "title": [
+        "Fresh data, PASS, and rebuilding only what changed"
+       ]
+      }
+     ],
+     "id": "ch21-s5-1",
+     "number": "21.5.1",
+     "title": [
+      "The idea"
+     ],
+     "titleText": "The idea"
+    }
+   ],
+   "title": [
+    "Building only what has new data: ",
+    {
+     "t": "code",
+     "v": "source_status:fresher+"
+    }
+   ],
+   "titleText": "Building only what has new data: source_status:fresher+"
+  },
+  {
+   "anchors": [
+    "sec-fx-platform-freshness"
+   ],
+   "checkpoints": [],
+   "id": "ch21-s6",
+   "label": "sec:fx-platform-freshness",
+   "labs": [],
+   "minutes": 5,
+   "number": "21.6",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "On the dbt platform you do not type ",
+        {
+         "t": "code",
+         "v": "dbt source freshness"
+        },
+        " every hour: a ",
+        {
+         "c": [
+          "job"
+         ],
+         "t": "i"
+        },
+        " does it. There are two ways, and the exam asks about the difference."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Checkbox \"Run source freshness\""
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "An explicit step ",
+             {
+              "t": "code",
+              "v": "dbt source freshness"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Where"
+          ]
+         },
+         {
+          "c": [
+           "Job settings, ",
+           {
+            "c": [
+             "Execution settings"
+            ],
+            "t": "i"
+           }
+          ]
+         },
+         {
+          "c": [
+           "In the list of commands of the job"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "When it runs"
+          ]
+         },
+         {
+          "c": [
+           "Always as the ",
+           {
+            "c": [
+             "first"
+            ],
+            "t": "b"
+           },
+           " step"
+          ]
+         },
+         {
+          "c": [
+           "Where you put it (first, last, or alone)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "If data is stale"
+          ]
+         },
+         {
+          "c": [
+           "The job ",
+           {
+            "c": [
+             "continues"
+            ],
+            "t": "b"
+           },
+           ": the following steps still run"
+          ]
+         },
+         {
+          "c": [
+           "The step ",
+           {
+            "c": [
+             "fails"
+            ],
+            "t": "b"
+           },
+           ", the following steps do ",
+           {
+            "c": [
+             "not"
+            ],
+            "t": "b"
+           },
+           " run, and notifications follow the result"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Typical use"
+          ]
+         },
+         {
+          "c": [
+           "Monitor freshness without blocking the build"
+          ]
+         },
+         {
+          "c": [
+           "Block the build on stale data (put it first), or alert at the end (put it last), or a dedicated freshness job"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Two more facts. A job needs at least one command: a job that only runs the checkbox needs a placeholder step such as ",
+        {
+         "t": "code",
+         "v": "dbt compile"
+        },
+        ". And the dbt documentation gives a rule of thumb for scheduling: check freshness at least ",
+        {
+         "c": [
+          "twice as often"
+         ],
+         "t": "b"
+        },
+        " as your tightest SLA (1-hour SLA: every 30 minutes; 1-day SLA: every 12 hours; 1-week SLA: about daily)."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "The results appear in the platform: the run shows the freshness step, and dbt Catalog shows, on each source page, whether the last check passed, when the source was last loaded and when it was checked (",
+        {
+         "href": "/learn/ch20/",
+         "label": "ch:documentation",
+         "t": "ref",
+         "text": "Chapter 20"
+        },
+        "); data health signals use them too. With dbt Core, you schedule the same command yourself (cron, Airflow, GitHub Actions…; ",
+        {
+         "href": "/learn/ch25/",
+         "label": "ch:environments-ci",
+         "t": "ref",
+         "text": "Chapter 25"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The dbt documentation describes a \"build only on fresh data\" pattern: check freshness often (for example every 30 minutes), and run a job that executes ",
+          {
+           "t": "code",
+           "v": "dbt build --select source_status:fresher+"
+          },
+          " (for example every hour). The ",
+          {
+           "t": "code",
+           "v": "--state"
+          },
+          " folder must contain the ",
+          {
+           "t": "code",
+           "v": "sources.json"
+          },
+          " of an earlier check: dbt keeps the artifacts of every job run, and ",
+          {
+           "href": "/learn/ch24/",
+           "label": "ch:state-defer-retry",
+           "t": "ref",
+           "text": "Chapters 24"
+          },
+          " and ",
+          {
+           "href": "/learn/ch25/",
+           "label": "ch:environments-ci",
+           "t": "ref",
+           "text": "25"
+          },
+          " show how a job compares itself with earlier artifacts."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch21-s6-0",
+     "title": [
+      "Freshness on the dbt platform"
+     ],
+     "titleText": "Freshness on the dbt platform"
+    }
+   ],
+   "title": [
+    "Freshness on the dbt platform"
+   ],
+   "titleText": "Freshness on the dbt platform"
+  },
+  {
+   "anchors": [
+    "sec-fx-limits"
+   ],
+   "checkpoints": [],
+   "id": "ch21-s7",
+   "label": "sec:fx-limits",
+   "labs": [],
+   "minutes": 5,
+   "number": "21.7",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Freshness looks at one number: the newest load time. A ",
+        {
+         "t": "code",
+         "v": "PASS"
+        },
+        " means \"",
+        {
+         "c": [
+          "some"
+         ],
+         "t": "i"
+        },
+        " rows arrived recently\", nothing more. It cannot tell you:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "whether the load is complete"
+             ],
+             "t": "b"
+            },
+            ": one new row out of the expected ten thousand still gives ",
+            {
+             "t": "code",
+             "v": "PASS"
+            },
+            ";"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "whether the data is correct"
+             ],
+             "t": "b"
+            },
+            ": wrong amounts, duplicates or broken keys need data tests (",
+            {
+             "href": "/learn/ch18/",
+             "label": "ch:data-tests",
+             "t": "ref",
+             "text": "Chapter 18"
+            },
+            ");"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "whether your models are fresh"
+             ],
+             "t": "b"
+            },
+            ": ",
+            {
+             "t": "code",
+             "v": "dbt source freshness"
+            },
+            " looks at sources only. A model is as fresh as its last successful build; check your job runs, or test a model with ",
+            {
+             "t": "code",
+             "v": "dbt_utils.recency"
+            },
+            ", a generic test of the ",
+            {
+             "t": "code",
+             "v": "dbt_utils"
+            },
+            " package that fails when the newest date in a column is too old (trap T136);"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "whether the ",
+              {
+               "t": "code",
+               "v": "loaded_at_field"
+              },
+              " means what you think"
+             ],
+             "t": "b"
+            },
+            ": a loader that updates ",
+            {
+             "t": "code",
+             "v": "_loaded_at"
+            },
+            " on every row each night makes old data look fresh; a column in the wrong time zone shifts every age;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "anything about tables without a configuration"
+             ],
+             "t": "b"
+            },
+            ": ",
+            {
+             "t": "code",
+             "v": "freshness: null"
+            },
+            ", or no block at all, means no check."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "c": [
+        "Freshness is a smoke detector, not a full inspection. Use it together with tests."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch21-s7-0",
+     "title": [
+      "What freshness cannot tell you"
+     ],
+     "titleText": "What freshness cannot tell you"
+    }
+   ],
+   "title": [
+    "What freshness cannot tell you"
+   ],
+   "titleText": "What freshness cannot tell you"
+  },
+  {
+   "anchors": [
+    "sec-fx-exposures"
+   ],
+   "checkpoints": [],
+   "id": "ch21-s8",
+   "label": "sec:fx-exposures",
+   "labs": [],
+   "minutes": 5,
+   "number": "21.8",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "An ",
+        {
+         "en": [
+          "exposure"
+         ],
+         "fr": "exposition (usage en aval)",
+         "id": "term-exposure",
+         "t": "term"
+        },
+        " is a YAML declaration of something ",
+        {
+         "c": [
+          "outside"
+         ],
+         "t": "i"
+        },
+        " dbt that reads your models: a dashboard, a notebook, an analysis, a machine-learning model, an application. It says what it is, who owns it, where to find it, and which models (or sources) it depends on. dbt never builds or runs it. But because it depends on models with ",
+        {
+         "t": "code",
+         "v": "ref()"
+        },
+        ", it becomes the last node of the lineage graph, and that gives you three things:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "selection"
+             ],
+             "t": "b"
+            },
+            ": build, test or list everything a dashboard needs with ",
+            {
+             "t": "code",
+             "v": "+exposure:name"
+            },
+            ";"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "documentation"
+             ],
+             "t": "b"
+            },
+            ": a page per exposure on the docs site and in dbt Catalog, with its owner and link;"
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "impact analysis"
+             ],
+             "t": "b"
+            },
+            ": before you change a model, ask which exposures are downstream, and whom to warn."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch21-s8-1",
+     "number": "21.8.1",
+     "title": [
+      "What an exposure is"
+     ],
+     "titleText": "What an exposure is"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Exposures live in any ",
+        {
+         "t": "code",
+         "v": ".yml"
+        },
+        " file under ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        ", under the key ",
+        {
+         "t": "code",
+         "v": "exposures:"
+        },
+        ". Most teams use one file, ",
+        {
+         "t": "code",
+         "v": "models/exposures.yml"
+        },
+        ", or one per domain."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Property"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Status"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Rule"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "name"
+           }
+          ]
+         },
+         {
+          "c": [
+           "required"
+          ]
+         },
+         {
+          "c": [
+           "Unique; letters, digits and underscores only (snake case). Other characters: only a warning in 1.11."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "type"
+           }
+          ]
+         },
+         {
+          "c": [
+           "required"
+          ]
+         },
+         {
+          "c": [
+           "One of ",
+           {
+            "t": "code",
+            "v": "dashboard"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "notebook"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "analysis"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "ml"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "application"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "owner"
+           }
+          ]
+         },
+         {
+          "c": [
+           "required"
+          ]
+         },
+         {
+          "c": [
+           "A mapping with ",
+           {
+            "t": "code",
+            "v": "name"
+           },
+           " and/or ",
+           {
+            "t": "code",
+            "v": "email"
+           },
+           "; at least one of the two."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "depends_on"
+           }
+          ]
+         },
+         {
+          "c": [
+           "expected"
+          ]
+         },
+         {
+          "c": [
+           "A list of ",
+           {
+            "t": "code",
+            "v": "ref('model')"
+           },
+           " (models, seeds, snapshots), ",
+           {
+            "t": "code",
+            "v": "source('src', 'table')"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "metric('m')"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "label"
+           }
+          ]
+         },
+         {
+          "c": [
+           "optional"
+          ]
+         },
+         {
+          "c": [
+           "A human name: spaces, capitals and special characters allowed."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "maturity"
+           }
+          ]
+         },
+         {
+          "c": [
+           "optional"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "high"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "medium"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "low"
+           },
+           ": how stable and trusted the exposure is."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "url"
+           }
+          ]
+         },
+         {
+          "c": [
+           "optional"
+          ]
+         },
+         {
+          "c": [
+           "Link to the dashboard or notebook (the \"View this exposure\" link on the docs site)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "description"
+           }
+          ]
+         },
+         {
+          "c": [
+           "optional"
+          ]
+         },
+         {
+          "c": [
+           "Markdown, ",
+           {
+            "t": "code",
+            "v": "doc()"
+           },
+           " allowed, like every description."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "config"
+           }
+          ]
+         },
+         {
+          "c": [
+           "optional"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "tags"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "meta"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "enabled"
+           },
+           " (",
+           {
+            "t": "code",
+            "v": "tags"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "meta"
+           },
+           " moved under ",
+           {
+            "t": "code",
+            "v": "config"
+           },
+           " in dbt 1.10)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "In ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        ", under a top-level ",
+        {
+         "t": "code",
+         "v": "exposures:"
+        },
+        " key, the documentation lists only one config for exposures: ",
+        {
+         "t": "code",
+         "v": "+enabled"
+        },
+        ". (In our test, dbt 1.11 also accepted ",
+        {
+         "t": "code",
+         "v": "+tags"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "+meta"
+        },
+        " there, but for the exam remember ",
+        {
+         "t": "code",
+         "v": "+enabled"
+        },
+        ", and keep tags and meta in the exposure's ",
+        {
+         "t": "code",
+         "v": "config:"
+        },
+        ".)"
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "Your project declares two exposures:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c33",
+       "lang": "yaml",
+       "t": "code",
+       "text": "version: 2\n\nexposures:\n  - name: monthly_revenue_dashboard\n    label: Monthly revenue dashboard\n    type: dashboard\n    maturity: high\n    url: https://bi.jaffle.example/dashboards/monthly-revenue\n    description: >\n      Revenue and number of orders per month and country, with the customer\n      list for drill-down. Used by the finance team every Monday morning.\n    depends_on:\n      - ref('fct_monthly_revenue')\n      - ref('dim_customers')\n    owner:\n      name: Finance analytics team\n      email: finance-data@jaffle.example\n    config:\n      tags: ['finance']\n\n  - name: customer_segmentation_notebook\n    label: Customer segmentation notebook\n    type: notebook\n    maturity: medium\n    url: https://notebooks.jaffle.example/marketing/segments\n    description: Marketing notebook that targets campaigns by customer segment.\n    depends_on:\n      - ref('customer_segments')\n    owner:\n      name: Marketing analytics team\n      email: marketing-data@jaffle.example",
+       "title": "models/exposures.yml"
+      },
+      {
+       "c": [
+        "Note that ",
+        {
+         "t": "code",
+         "v": "ref('dim_customers')"
+        },
+        " has no version: as for any ",
+        {
+         "t": "code",
+         "v": "ref"
+        },
+        ", dbt resolves it to the latest version, ",
+        {
+         "t": "code",
+         "v": "v2"
+        },
+        " (",
+        {
+         "href": "/learn/ch17/",
+         "label": "ch:governance",
+         "t": "ref",
+         "text": "Chapter 17"
+        },
+        "). A dashboard that still reads the old relation should pin it with ",
+        {
+         "t": "code",
+         "v": "ref('dim_customers', v=1)"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch21-s8-2",
+     "number": "21.8.2",
+     "title": [
+      "The properties"
+     ],
+     "titleText": "The properties"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "dbt validates exposures when it parses the project. We broke the file in a throwaway copy, one mistake at a time (the long middle of each message is replaced by ",
+        {
+         "t": "code",
+         "v": "..."
+        },
+        "):"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "No owner"
+             ],
+             "t": "b"
+            },
+            " → Parsing Error:"
+           ],
+           "t": "p"
+          },
+          {
+           "id": "ch21-c34",
+           "lang": "output",
+           "t": "code",
+           "text": "Parsing Error\n  Invalid exposures config given in FilePath(searched_path='models', relative_path='exposures.yml', ...) @ exposures: {...} - at path []: 'owner' is a required property"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "An owner with only ",
+              {
+               "t": "code",
+               "v": "slack: \"#marketing\""
+              }
+             ],
+             "t": "b"
+            },
+            " → ",
+            {
+             "t": "code",
+             "v": "- at path []: Exposure owner must have at least one of 'name' or 'email'."
+            }
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "type: report"
+              }
+             ],
+             "t": "b"
+            },
+            " → ",
+            {
+             "t": "code",
+             "v": "- at path ['type']: 'report' is not one of ['dashboard', 'notebook', 'analysis', 'ml', 'application']"
+            }
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "maturity: very_high"
+              }
+             ],
+             "t": "b"
+            },
+            " → ",
+            {
+             "t": "code",
+             "v": "- at path ['maturity']: 'very_high' is not valid under any of the given schemas"
+            }
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "ref('customer_segmentz')"
+              }
+             ],
+             "t": "b"
+            },
+            " (a model that does not exist) → Compilation Error:"
+           ],
+           "t": "p"
+          },
+          {
+           "id": "ch21-c35",
+           "lang": "output",
+           "t": "code",
+           "text": "Compilation Error\n  Exposure 'exposure.jaffle_dbt.customer_segmentation_notebook' (models/exposures.yml) depends on a node named 'customer_segmentz' which was not found"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "A name with a dash and a space"
+             ],
+             "t": "b"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "customer-segmentation notebook"
+            },
+            " → only a ",
+            {
+             "c": [
+              "warning"
+             ],
+             "t": "i"
+            },
+            " for now:"
+           ],
+           "t": "p"
+          },
+          {
+           "id": "ch21-c36",
+           "lang": "output",
+           "t": "code",
+           "text": "[WARNING]: Deprecated functionality\nStarting in v1.3, the 'name' of an exposure should contain only letters,\nnumbers, and underscores. Exposures support a new property, 'label', which may\ncontain spaces, capital letters, and special characters. customer-segmentation\nnotebook does not follow this pattern. Please update the 'name', and use the\n'label' property for a human-friendly title. This will raise an error in a\nfuture version of dbt-core."
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Trap T138: ",
+          {
+           "t": "code",
+           "v": "owner"
+          },
+          " is required (with a ",
+          {
+           "t": "code",
+           "v": "name"
+          },
+          " or an ",
+          {
+           "t": "code",
+           "v": "email"
+          },
+          "), and ",
+          {
+           "t": "code",
+           "v": "type"
+          },
+          " must be one of exactly five values: ",
+          {
+           "t": "code",
+           "v": "dashboard"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "notebook"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "analysis"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "ml"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "application"
+          },
+          ". \"report\", \"bi\" or \"model\" are wrong answers. ",
+          {
+           "t": "code",
+           "v": "maturity"
+          },
+          " is optional, and its values are ",
+          {
+           "t": "code",
+           "v": "high"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "medium"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "low"
+          },
+          ". Do not confuse the ",
+          {
+           "t": "code",
+           "v": "name"
+          },
+          " (snake case, used in selection) with the ",
+          {
+           "t": "code",
+           "v": "label"
+          },
+          " (free text, shown in the docs)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch21-s8-3",
+     "number": "21.8.3",
+     "title": [
+      "What dbt checks, with the real messages"
+     ],
+     "titleText": "What dbt checks, with the real messages"
+    }
+   ],
+   "title": [
+    "Exposures: who uses your models"
+   ],
+   "titleText": "Exposures: who uses your models"
+  },
+  {
+   "anchors": [
+    "sec-fx-exposures-use"
+   ],
+   "checkpoints": [],
+   "id": "ch21-s9",
+   "label": "sec:fx-exposures-use",
+   "labs": [
+    "ch21-lab3"
+   ],
+   "minutes": 20,
+   "number": "21.9",
+   "objectives": [
+    "1.4",
+    "1.5",
+    "6.1"
+   ],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The selection method ",
+        {
+         "t": "code",
+         "v": "exposure:"
+        },
+        " selects an exposure node; graph operators do the rest (",
+        {
+         "href": "/learn/ch16/",
+         "label": "ch:commands-selection",
+         "t": "ref",
+         "text": "Chapter 16"
+        },
+        "):"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Selector"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Selects"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "exposure:monthly_revenue_dashboard"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the exposure node alone (nothing to build)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "+exposure:monthly_revenue_dashboard"
+           }
+          ]
+         },
+         {
+          "c": [
+           "the exposure and ",
+           {
+            "c": [
+             "all its parents"
+            ],
+            "t": "i"
+           },
+           ": the models, seeds, snapshots and sources it needs"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "+exposure:*"
+           }
+          ]
+         },
+         {
+          "c": [
+           "everything upstream of every exposure"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "tag:finance"
+           }
+          ]
+         },
+         {
+          "c": [
+           "also exposures with that tag (",
+           {
+            "t": "code",
+            "v": "config: tags:"
+           },
+           ")"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--resource-type exposure"
+           }
+          ]
+         },
+         {
+          "c": [
+           "keep only exposure nodes, for example in ",
+           {
+            "t": "code",
+            "v": "dbt ls"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "What happens when you \"run\" an exposure alone (real outputs):"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c37",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt run --select exposure:monthly_revenue_dashboard"
+      },
+      {
+       "id": "ch21-c38",
+       "lang": "output",
+       "t": "code",
+       "text": "22:26:53  Found 1 seed, 45 data tests, 2 snapshots, 15 models, 2 analyses, 5 sources, 2 exposures, 670 macros, 2 groups, 5 unit tests\n22:26:53  Nothing to do. Try checking your model configs and model specification args"
+      },
+      {
+       "id": "ch21-c39",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt build --select exposure:monthly_revenue_dashboard"
+      },
+      {
+       "id": "ch21-c40",
+       "lang": "output",
+       "small": true,
+       "t": "code",
+       "text": "22:26:56  1 of 1 NO-OP exposure monthly_revenue_dashboard ................................ [NO-OP in 0.00s]\n22:26:56\n22:26:56  Finished running 1 exposure in 0 hours 0 minutes and 0.12 seconds (0.12s).\n22:26:56\n22:26:56  Completed successfully\n22:26:56\n22:26:56  Done. PASS=0 WARN=0 ERROR=0 SKIP=0 NO-OP=1 TOTAL=1"
+      },
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " lists the exposure and counts it as ",
+        {
+         "t": "code",
+         "v": "NO-OP"
+        },
+        " (\"no operation\"): it is part of the selection, but there is nothing to execute. To build what the dashboard needs, put the ",
+        {
+         "t": "code",
+         "v": "+"
+        },
+        " in front."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Trap T137: an exposure is never run, materialized or tested. ",
+          {
+           "t": "code",
+           "v": "dbt run -s exposure:x"
+          },
+          " says \"Nothing to do\"; ",
+          {
+           "t": "code",
+           "v": "dbt build -s exposure:x"
+          },
+          " shows one ",
+          {
+           "t": "code",
+           "v": "NO-OP"
+          },
+          ". The useful selector is ",
+          {
+           "t": "code",
+           "v": "+exposure:x"
+          },
+          ". And remember the direction: ",
+          {
+           "t": "code",
+           "v": "exposure:x+"
+          },
+          " would select the exposure and its ",
+          {
+           "c": [
+            "children"
+           ],
+           "t": "i"
+          },
+          ", and an exposure has no children."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch21-s9-1",
+     "number": "21.9.1",
+     "title": [
+      "Selecting with exposures"
+     ],
+     "titleText": "Selecting with exposures"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "After ",
+        {
+         "t": "code",
+         "v": "dbt docs generate"
+        },
+        ", the left panel of the site has an ",
+        {
+         "c": [
+          "Exposures"
+         ],
+         "t": "b"
+        },
+        " section, grouped by type (Dashboard, Notebook…), which shows the ",
+        {
+         "t": "code",
+         "v": "label"
+        },
+        ". The page of ",
+        {
+         "t": "code",
+         "v": "monthly_revenue_dashboard"
+        },
+        " (checked in a browser) has a ",
+        {
+         "c": [
+          "View this exposure"
+         ],
+         "t": "b"
+        },
+        " link (the ",
+        {
+         "t": "code",
+         "v": "url"
+        },
+        "), and the sections ",
+        {
+         "c": [
+          "Details"
+         ],
+         "t": "b"
+        },
+        " (tags, maturity ",
+        {
+         "t": "code",
+         "v": "high"
+        },
+        ", owner \"Finance analytics team <finance-data@jaffle.example>\", exposure name), ",
+        {
+         "c": [
+          "Description"
+         ],
+         "t": "b"
+        },
+        " and ",
+        {
+         "c": [
+          "Depends On"
+         ],
+         "t": "b"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "dim_customers"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "fct_monthly_revenue"
+        },
+        "). In the lineage graph, exposures are the last nodes on the right; the ",
+        {
+         "c": [
+          "resources"
+         ],
+         "t": "b"
+        },
+        " filter can show or hide them. In the manifest they have their own section:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c41",
+       "lang": "output",
+       "t": "code",
+       "text": "exposure.jaffle_dbt.monthly_revenue_dashboard -> ['model.jaffle_dbt.fct_monthly_revenue', 'model.jaffle_dbt.dim_customers.v2']\nexposure.jaffle_dbt.customer_segmentation_notebook -> ['model.jaffle_dbt.customer_segments']"
+      }
+     ],
+     "id": "ch21-s9-2",
+     "number": "21.9.2",
+     "title": [
+      "Exposures on the docs site"
+     ],
+     "titleText": "Exposures on the docs site"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Before you change a model, list the exposures downstream of it. Two real examples:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c42",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt ls --select stg_stripe__payments+ --resource-type exposure"
+      },
+      {
+       "id": "ch21-c43",
+       "lang": "output",
+       "t": "code",
+       "text": "exposure:jaffle_dbt.customer_segmentation_notebook\nexposure:jaffle_dbt.monthly_revenue_dashboard"
+      },
+      {
+       "id": "ch21-c44",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt ls --select fct_order_items+ --resource-type exposure"
+      },
+      {
+       "id": "ch21-c45",
+       "lang": "output",
+       "t": "code",
+       "text": "22:27:11  No nodes selected!"
+      },
+      {
+       "c": [
+        "A change to the payments staging model can affect both exposures (and their owners should hear about it); a change to ",
+        {
+         "t": "code",
+         "v": "fct_order_items"
+        },
+        " affects no declared exposure. \"No declared exposure\" is the key word: dbt only knows the exposures you wrote. An undeclared dashboard is invisible."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch21-s9-3",
+     "number": "21.9.3",
+     "title": [
+      "Impact analysis: who is affected if I change this?"
+     ],
+     "titleText": "Impact analysis: who is affected if I change this?"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The same question can be asked automatically for a pull request. With the production manifest as the state (",
+        {
+         "href": "/learn/ch24/",
+         "label": "ch:state-defer-retry",
+         "t": "ref",
+         "text": "Chapters 24"
+        },
+        " and ",
+        {
+         "href": "/learn/ch25/",
+         "label": "ch:environments-ci",
+         "t": "ref",
+         "text": "25"
+        },
+        "), list the exposures downstream of what the pull request changed. We added a harmless comment to ",
+        {
+         "t": "code",
+         "v": "fct_monthly_revenue.sql"
+        },
+        " and compared with the manifest saved before:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "ch21-c46",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt ls --select state:modified+ --resource-type exposure --state ../st"
+      },
+      {
+       "id": "ch21-c47",
+       "lang": "output",
+       "t": "code",
+       "text": "exposure:jaffle_dbt.monthly_revenue_dashboard"
+      },
+      {
+       "c": [
+        "A CI job can print this list in the pull request, or require the approval of the exposure owner when a ",
+        {
+         "t": "code",
+         "v": "maturity: high"
+        },
+        " exposure is affected. The exposure is a node of the manifest too: when we changed only its ",
+        {
+         "t": "code",
+         "v": "url"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt ls --select state:modified"
+        },
+        " listed ",
+        {
+         "t": "code",
+         "v": "exposure:jaffle_dbt.monthly_revenue_dashboard"
+        },
+        ". On the dbt platform, the same information appears in dbt Catalog."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch21-s9-4",
+     "number": "21.9.4",
+     "title": [
+      "Exposures in CI"
+     ],
+     "titleText": "Exposures in CI"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "In dbt Catalog, each exposure has a page with its status, its lineage, its owner, maturity and type, and the health of the data it depends on (data health signals: freshness and test results of its parents). On Enterprise plans, dbt can also create ",
+        {
+         "c": [
+          "downstream exposures automatically"
+         ],
+         "t": "i"
+        },
+        " from a supported BI tool (Tableau): they appear in Catalog and behave like manual exposures, but they are stored in the platform's metadata, not in your YAML files. A ",
+        {
+         "c": [
+          "data health tile"
+         ],
+         "t": "i"
+        },
+        " (also Enterprise plans) can even be embedded in the dashboard itself, to tell its readers whether the data behind it is fresh and tested."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Goal:"
+           ],
+           "t": "b"
+          },
+          " create ",
+          {
+           "t": "code",
+           "v": "models/exposures.yml"
+          },
+          ", list and select the exposures, build what the notebook needs, see the exposures in the docs, then commit and compare with the reference tag ",
+          {
+           "t": "code",
+           "v": "ch21"
+          },
+          ". Same folder and environment."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1."
+           ],
+           "t": "b"
+          },
+          " Create ",
+          {
+           "t": "code",
+           "v": "models/exposures.yml"
+          },
+          " with exactly the content shown in ",
+          {
+           "href": "/learn/ch21/ch21-s8/",
+           "label": "sec:fx-exposures",
+           "t": "ref",
+           "text": "Section 21.8"
+          },
+          ", then parse:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c48",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt parse --no-partial-parse"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " no warning, no error (the last line is ",
+          {
+           "t": "code",
+           "v": "Performance info: …/target/perf_info.json"
+          },
+          ")."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 2."
+           ],
+           "t": "b"
+          },
+          " List the exposures, everything the dashboard needs, and the exposures with the tag ",
+          {
+           "t": "code",
+           "v": "finance"
+          },
+          ":"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c49",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt ls --resource-type exposure\n$ dbt ls --select +exposure:monthly_revenue_dashboard --resource-type model\n$ dbt ls --select tag:finance --resource-type exposure"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the ",
+          {
+           "t": "code",
+           "v": "Found"
+          },
+          " line now counts ",
+          {
+           "t": "code",
+           "v": "2 exposures"
+          },
+          "; then:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c50",
+         "lang": "output",
+         "t": "code",
+         "text": "21:22:43  Found 15 models, 2 analyses, 45 data tests, 1 seed, 2 snapshots, 5 sources, 2 exposures, 670 macros, 2 groups, 5 unit tests\nexposure:jaffle_dbt.customer_segmentation_notebook\nexposure:jaffle_dbt.monthly_revenue_dashboard"
+        },
+        {
+         "id": "ch21-c51",
+         "lang": "output",
+         "t": "code",
+         "text": "jaffle_dbt.marts.dim_customers.v2\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments"
+        },
+        {
+         "id": "ch21-c52",
+         "lang": "output",
+         "t": "code",
+         "text": "exposure:jaffle_dbt.monthly_revenue_dashboard"
+        },
+        {
+         "c": [
+          "Only ",
+          {
+           "t": "code",
+           "v": "v2"
+          },
+          " of ",
+          {
+           "t": "code",
+           "v": "dim_customers"
+          },
+          " is a parent: the unpinned ",
+          {
+           "t": "code",
+           "v": "ref"
+          },
+          " chose the latest version."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 3."
+           ],
+           "t": "b"
+          },
+          " Look at one exposure node as JSON:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c53",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt ls --select monthly_revenue_dashboard --output json --output-keys name type maturity owner depends_on"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (the last line):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c54",
+         "lang": "output",
+         "t": "code",
+         "text": "{\"name\": \"monthly_revenue_dashboard\", \"type\": \"dashboard\", \"maturity\": \"high\", \"owner\": {\"email\": \"finance-data@jaffle.example\", \"name\": \"Finance analytics team\"}, \"depends_on\": {\"macros\": [], \"nodes\": [\"model.jaffle_dbt.fct_monthly_revenue\", \"model.jaffle_dbt.dim_customers.v2\"]}}"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 4."
+           ],
+           "t": "b"
+          },
+          " Build everything behind the notebook (tests excluded to keep the output short):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c55",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt build --select +exposure:customer_segmentation_notebook --exclude-resource-type test --exclude-resource-type unit_test"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result"
+           ],
+           "t": "b"
+          },
+          " (extract):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c56",
+         "lang": "output",
+         "t": "code",
+         "text": "21:22:56  4 of 10 START seed file dbt_adnane.country_regions ............................. [RUN]\n21:22:56  4 of 10 OK loaded seed file dbt_adnane.country_regions ......................... [INSERT 6 in 0.09s]\n...\n21:22:56  9 of 10 START python table model dbt_adnane.customer_segments .................. [RUN]\n21:22:56  9 of 10 OK created python table model dbt_adnane.customer_segments ............. [OK in 0.30s]\n21:22:56  10 of 10 NO-OP exposure customer_segmentation_notebook ......................... [NO-OP in 0.00s]\n21:22:56\n21:22:56  Finished running 1 exposure, 1 incremental model, 1 seed, 2 table models, 5 view models in 0 hours 0 minutes and 0.77 seconds (0.77s).\n21:22:56\n21:22:56  Completed successfully\n21:22:56\n21:22:56  Done. PASS=9 WARN=0 ERROR=0 SKIP=0 NO-OP=1 TOTAL=10"
+        },
+        {
+         "c": [
+          "The seed ",
+          {
+           "t": "code",
+           "v": "country_regions"
+          },
+          " is included because ",
+          {
+           "t": "code",
+           "v": "dim_customers"
+          },
+          " reads it: ",
+          {
+           "t": "code",
+           "v": "+"
+          },
+          " follows every kind of parent."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 5."
+           ],
+           "t": "b"
+          },
+          " Who would be affected by a change of the payments staging model? Run the first impact-analysis command of this section (",
+          {
+           "t": "code",
+           "v": "dbt ls --select stg_stripe__payments+ --resource-type exposure"
+          },
+          "). ",
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " both exposures."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 6."
+           ],
+           "t": "b"
+          },
+          " Regenerate and open the documentation; find the ",
+          {
+           "c": [
+            "Exposures"
+           ],
+           "t": "b"
+          },
+          " section in the left panel and open ",
+          {
+           "c": [
+            "Monthly revenue dashboard"
+           ],
+           "t": "i"
+          },
+          ". Stop the server with ",
+          {
+           "t": "key",
+           "v": "Ctrl+C"
+          },
+          "."
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c57",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ dbt docs generate\n$ dbt docs serve"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Step 7."
+           ],
+           "t": "b"
+          },
+          " Commit and compare with the reference:"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch21-c58",
+         "lang": "bash",
+         "t": "code",
+         "text": "$ git add .\n$ git commit -m \"Source freshness (config form, filter) and exposures\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch21 --stat"
+        },
+        {
+         "c": [
+          {
+           "c": [
+            "Expected result:"
+           ],
+           "t": "b"
+          },
+          " the last command prints nothing (or only differences in comments and blank lines). Your commit adds ",
+          {
+           "t": "code",
+           "v": "models/exposures.yml"
+          },
+          " and changes the two sources files."
+         ],
+         "t": "p"
+        }
+       ],
+       "id": "ch21-lab3",
+       "objectives": [
+        "6.1",
+        "1.4",
+        "1.5"
+       ],
+       "t": "lab",
+       "title": [
+        "Declare two exposures and use them"
+       ]
+      }
+     ],
+     "id": "ch21-s9-5",
+     "number": "21.9.5",
+     "title": [
+      "Exposures on the dbt platform"
+     ],
+     "titleText": "Exposures on the dbt platform"
+    }
+   ],
+   "title": [
+    "Using exposures: selection, docs, impact analysis, CI"
+   ],
+   "titleText": "Using exposures: selection, docs, impact analysis, CI"
+  }
+ ],
+ "minutes": 125,
+ "number": 21,
+ "objectives": [
+  "1.1",
+  "1.4",
+  "6.1",
+  "6.2",
+  "7.1"
+ ],
+ "part": 5,
+ "partLabel": "Part V",
+ "partTitle": "Documentation and External Dependencies",
+ "printed": "21",
+ "quiz": [
+  "q-ch21-01",
+  "q-ch21-02",
+  "q-ch21-03",
+  "q-ch21-04",
+  "q-ch21-05",
+  "q-ch21-06",
+  "q-ch21-07",
+  "q-ch21-08",
+  "q-ch21-09",
+  "q-ch21-10",
+  "q-ch21-11",
+  "q-ch21-12",
+  "q-ch21-13",
+  "q-ch21-14",
+  "q-ch21-15",
+  "q-ch21-16",
+  "q-ch21-17",
+  "q-ch21-18",
+  "q-ch21-19",
+  "q-ch21-20"
+ ],
+ "quizSections": [
+  {
+   "anchor": "sec-fx-quiz",
+   "blocks": [
+    {
+     "ids": [
+      "q-ch21-01",
+      "q-ch21-02",
+      "q-ch21-03",
+      "q-ch21-04",
+      "q-ch21-05",
+      "q-ch21-06",
+      "q-ch21-07",
+      "q-ch21-08",
+      "q-ch21-09",
+      "q-ch21-10",
+      "q-ch21-11",
+      "q-ch21-12",
+      "q-ch21-13",
+      "q-ch21-14",
+      "q-ch21-15",
+      "q-ch21-16",
+      "q-ch21-17",
+      "q-ch21-18",
+      "q-ch21-19",
+      "q-ch21-20"
+     ],
+     "t": "quiz"
+    }
+   ],
+   "ids": [
+    "q-ch21-01",
+    "q-ch21-02",
+    "q-ch21-03",
+    "q-ch21-04",
+    "q-ch21-05",
+    "q-ch21-06",
+    "q-ch21-07",
+    "q-ch21-08",
+    "q-ch21-09",
+    "q-ch21-10",
+    "q-ch21-11",
+    "q-ch21-12",
+    "q-ch21-13",
+    "q-ch21-14",
+    "q-ch21-15",
+    "q-ch21-16",
+    "q-ch21-17",
+    "q-ch21-18",
+    "q-ch21-19",
+    "q-ch21-20"
+   ],
+   "label": "sec:fx-quiz",
+   "number": "21.10",
+   "title": [
+    "Check yourself"
+   ],
+   "titleText": "Check yourself"
+  }
+ ],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "External dependencies (topic 6): sources come ",
+        {
+         "c": [
+          "in"
+         ],
+         "t": "i"
+        },
+        " (check them with freshness), exposures go ",
+        {
+         "c": [
+          "out"
+         ],
+         "t": "i"
+        },
+        " (declare them)."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Freshness = ",
+        {
+         "t": "code",
+         "v": "max(loaded_at_field)"
+        },
+        " compared with now; thresholds ",
+        {
+         "t": "code",
+         "v": "warn_after"
+        },
+        " / ",
+        {
+         "t": "code",
+         "v": "error_after"
+        },
+        " with ",
+        {
+         "t": "code",
+         "v": "count"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "period"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "minute"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "hour"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "day"
+        },
+        "); optional ",
+        {
+         "t": "code",
+         "v": "filter"
+        },
+        "; ",
+        {
+         "t": "code",
+         "v": "loaded_at_query"
+        },
+        " (1.10+) as an alternative, never together with the field."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Write ",
+        {
+         "t": "code",
+         "v": "freshness"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "loaded_at_field"
+        },
+        " under ",
+        {
+         "t": "code",
+         "v": "config:"
+        },
+        " (the top-level form is deprecated). Source-level settings flow to tables; a table overrides key by key; ",
+        {
+         "t": "code",
+         "v": "freshness: null"
+        },
+        " switches it off."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Without ",
+        {
+         "t": "code",
+         "v": "loaded_at_field"
+        },
+        ", only adapters with metadata freshness can check (DuckDB cannot: runtime ",
+        {
+         "t": "code",
+         "v": "ERROR"
+        },
+        ")."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt source freshness"
+        },
+        ": ",
+        {
+         "t": "code",
+         "v": "PASS"
+        },
+        " / ",
+        {
+         "t": "code",
+         "v": "WARN"
+        },
+        " / ",
+        {
+         "t": "code",
+         "v": "ERROR STALE"
+        },
+        " / ",
+        {
+         "t": "code",
+         "v": "ERROR"
+        },
+        "; exit code 1 for stale or error, 0 for warnings; results in ",
+        {
+         "t": "code",
+         "v": "target/sources.json"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "-o"
+        },
+        " to change); ",
+        {
+         "t": "code",
+         "v": "--select source:x"
+        },
+        "."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "run"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "test"
+        },
+        " never check freshness."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "t": "code",
+         "v": "source_status:fresher+"
+        },
+        " with ",
+        {
+         "t": "code",
+         "v": "--state"
+        },
+        " compares two ",
+        {
+         "t": "code",
+         "v": "sources.json"
+        },
+        " files; run the ",
+        {
+         "c": [
+          "full"
+         ],
+         "t": "i"
+        },
+        " check just before it."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Platform: the checkbox runs freshness first and never blocks the job; an explicit step fails the job and skips later steps. Check at least twice as often as the SLA."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Exposures: ",
+        {
+         "t": "code",
+         "v": "name"
+        },
+        " (snake case), ",
+        {
+         "t": "code",
+         "v": "type"
+        },
+        " (dashboard, notebook, analysis, ml, application), ",
+        {
+         "t": "code",
+         "v": "owner"
+        },
+        " (name or email) are required; ",
+        {
+         "t": "code",
+         "v": "depends_on"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "label"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "maturity"
+        },
+        " (high, medium, low), ",
+        {
+         "t": "code",
+         "v": "url"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "description"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "config"
+        },
+        " (tags, meta, enabled) complete them."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Exposures are never built: ",
+        {
+         "t": "code",
+         "v": "exposure:x"
+        },
+        " alone is \"Nothing to do\" / ",
+        {
+         "t": "code",
+         "v": "NO-OP"
+        },
+        "; use ",
+        {
+         "t": "code",
+         "v": "+exposure:x"
+        },
+        ". Use ",
+        {
+         "t": "code",
+         "v": "dbt ls -s model+ --resource-type exposure"
+        },
+        " (or ",
+        {
+         "t": "code",
+         "v": "state:modified+"
+        },
+        ") for impact analysis."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "Source Freshness and Exposures"
+}

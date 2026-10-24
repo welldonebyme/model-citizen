@@ -1,0 +1,4726 @@
+{
+ "id": "ch27",
+ "intro": [
+  {
+   "items": [
+    {
+     "c": [
+      "Read a scenario question the way it was built: stem first, then the objective, then the keywords that decide the answer (\"only\", \"first-degree\", \"default\", \"without rebuilding\"…)."
+     ],
+     "id": "EXAM"
+    },
+    {
+     "c": [
+      "Eliminate distractors, and use the right tactic for each of the six formats, especially DOMC."
+     ],
+     "id": "EXAM"
+    },
+    {
+     "c": [
+      "Manage the 120 minutes with checkpoints, marking for review and smart guessing."
+     ],
+     "id": "EXAM"
+    },
+    {
+     "c": [
+      "Recognise the most frequent traps of the 7 official topics and of the prerequisites (SQL, Git, YAML, Jinja): 145 traps, each with the chapter that teaches it."
+     ],
+     "id": "ALL"
+    },
+    {
+     "c": [
+      "Use the last 7 days well, pass the exam-day checklist, and know what happens after the exam."
+     ],
+     "id": "PLAN"
+    }
+   ],
+   "t": "objectives"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "Imagine two candidates who know exactly the same things about dbt. The first one reads every question from top to bottom, answers ",
+      {
+       "c": [
+        "YES"
+       ],
+       "t": "i"
+      },
+      " too quickly in DOMC questions, misses the word \"only\" in a selection question and spends six minutes on one long log. She finishes question 60 when the time is over. The second one reads the stem first, predicts the answer, keeps an eye on the clock and guesses smartly when she is not sure. The difference between them is easily six or eight questions: the difference between 62% (fail) and 74% (pass). Knowledge is necessary, but ",
+      {
+       "c": [
+        "strategy"
+       ],
+       "t": "i"
+      },
+      " turns knowledge into points. This chapter gives you that strategy, and then a list of 145 traps: the condensed error notebook of the whole bible."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "why",
+   "t": "callout"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      "Every exam question tests one sub-objective, and a few words in the question (such as \"only\", \"first-degree\", \"default\" or \"without rebuilding\") decide which option is right. Read the stem first, predict the answer, then judge each option on its own: in DOMC this is the only way, because you see one option at a time and cannot go back. Keep a steady pace (question 22 by minute 40 and question 44 by minute 80 at the latest), never leave a question empty, and spend your last week on the traps of this chapter instead of new topics."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "idea",
+   "t": "callout"
+  }
+ ],
+ "kind": "strategy",
+ "label": "ch:exam-strategy",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-strategy-anatomy"
+   ],
+   "checkpoints": [],
+   "id": "ch27-s1",
+   "label": "sec:strategy-anatomy",
+   "labs": [],
+   "minutes": 5,
+   "number": "27.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Scenario questions are usually built with the same recipe. If you know the recipe, you know where to look. A typical scenario question has four parts:"
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "The four parts of a scenario question and the order to read them. On the page the parts are Scenario, Evidence, Stem, Options. Read them in this order: 1. the Stem (the real question, usually the last sentence, with the question mark): read it first, name the objective, circle the keywords; 2. the Scenario (the story: a team, a project, a problem to solve), with the question already in mind; 3. the Evidence (code, YAML, a log, a command or its output): look for the detail the stem asks about; 4. the Options (one correct answer, sometimes more, and several plausible wrong answers): predict first, then eliminate.",
+       "id": "ch27-fig1",
+       "src": "figures/ch27-fig1.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "Two new words help us talk about questions. The ",
+        {
+         "en": [
+          "stem"
+         ],
+         "fr": "énoncé (la question elle-même)",
+         "id": "term-stem",
+         "t": "term"
+        },
+        " is the question itself, without the options. A ",
+        {
+         "en": [
+          "distractor"
+         ],
+         "fr": "distracteur (mauvaise réponse plausible)",
+         "id": "term-distractor",
+         "t": "term"
+        },
+        " is a wrong option written to look right. Good distractors are not silly: each one matches a real misconception. For example, if the correct answer is ",
+        {
+         "t": "code",
+         "v": "dbt run -s 1+fct_orders"
+        },
+        ", the distractors will be ",
+        {
+         "t": "code",
+         "v": "fct_orders+1"
+        },
+        " (children instead of parents), ",
+        {
+         "t": "code",
+         "v": "+fct_orders"
+        },
+        " (all ancestors instead of the direct parents) and ",
+        {
+         "t": "code",
+         "v": "@fct_orders"
+        },
+        ". This is why the list of traps in ",
+        {
+         "href": "/learn/ch27/ch27-s6/",
+         "label": "sec:strategy-traps",
+         "t": "ref",
+         "text": "Section 27.6"
+        },
+        " is so useful: it is a list of the misconceptions that distractors are made from."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "A scenario question is like a letter at the post office. The scenario is the envelope (who, where), the evidence is the parcel (what is inside), and the stem is the address (where it must go). A postman who reads the address first knows immediately what to look for in the parcel. A postman who opens every parcel first loses time."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "analogy",
+       "t": "callout"
+      }
+     ],
+     "id": "ch27-s1-0",
+     "title": [
+      "How an exam question is built"
+     ],
+     "titleText": "How an exam question is built"
+    }
+   ],
+   "title": [
+    "How an exam question is built"
+   ],
+   "titleText": "How an exam question is built"
+  },
+  {
+   "anchors": [
+    "sec-strategy-read"
+   ],
+   "checkpoints": [],
+   "id": "ch27-s2",
+   "label": "sec:strategy-read",
+   "labs": [],
+   "minutes": 5,
+   "number": "27.2",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Use the same five steps for every question. After the three mock exams they will be automatic."
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Read the stem first."
+             ],
+             "t": "b"
+            },
+            " Jump to the last sentence (the one with the question mark). Now you know what you are looking for."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Name the objective."
+             ],
+             "t": "b"
+            },
+            " Ask yourself: \"which of the 31 sub-objectives is this?\" (",
+            {
+             "href": "/learn/ch00/ch00-s6/",
+             "label": "sec:start-topics",
+             "t": "ref",
+             "text": "Section 0.6"
+            },
+            "). Once you know that the question is about, say, incremental strategies (1.11), only a few facts are relevant."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Circle the keywords."
+             ],
+             "t": "b"
+            },
+            " A handful of words change the answer completely (table below)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Read the scenario and the evidence"
+             ],
+             "t": "b"
+            },
+            " with the question in mind, then ",
+            {
+             "c": [
+              "predict"
+             ],
+             "t": "b"
+            },
+            " the answer before you look at the options."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Read the options and eliminate."
+             ],
+             "t": "b"
+            },
+            " If your prediction is there, check it once against the keywords and choose it. If it is not there, eliminate (",
+            {
+             "href": "/learn/ch27/ch27-s3/",
+             "label": "sec:strategy-eliminate",
+             "t": "ref",
+             "text": "Section 27.3"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      }
+     ],
+     "id": "ch27-s2-0",
+     "title": [
+      "Reading a scenario question in five steps"
+     ],
+     "titleText": "Reading a scenario question in five steps"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "If the scenario talks about…"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "…think first of"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "raw tables, \"where does this data come from\", hard-coded table names"
+          ]
+         },
+         {
+          "c": [
+           "sources and ",
+           {
+            "t": "code",
+            "v": "source()"
+           },
+           " (1.1, Chapter 7)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"only the new rows\", a huge table, late-arriving data"
+          ]
+         },
+         {
+          "c": [
+           "incremental models, strategies, microbatch (1.11, 1.14, Chapter 14)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"keep the history\", \"what was the value last month\""
+          ]
+         },
+         {
+          "c": [
+           "snapshots (1.10, Chapter 13)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"the columns and types must never change\", consumers break"
+          ]
+         },
+         {
+          "c": [
+           "contracts (2.1, Chapter 17)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"a new shape of the model, but old users need time\""
+          ]
+         },
+         {
+          "c": [
+           "versions and ",
+           {
+            "t": "code",
+            "v": "deprecation_date"
+           },
+           " (2.2, Chapter 17)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"check that the SQL works, without the cost\""
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--empty"
+           },
+           " (1.12, Chapter 16)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"a smaller time window of data in dev\""
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--sample"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "event_time"
+           },
+           " (1.13, Chapter 16)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "an error message, ",
+           {
+            "t": "code",
+            "v": "target/compiled"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "logs/dbt.log"
+           }
+          ]
+         },
+         {
+          "c": [
+           "debugging (3.1–3.3, Chapter 22)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"a model failed in the middle of the job\""
+          ]
+         },
+         {
+          "c": [
+           "failure points, skip behaviour, ",
+           {
+            "t": "code",
+            "v": "dbt retry"
+           },
+           " (4.1, 7.2, Chapters 23–24)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"only what changed in this pull request\""
+          ]
+         },
+         {
+          "c": [
+           "state selection and defer (7.1, Chapter 24)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "a dashboard, a notebook, an ML model that uses dbt models"
+          ]
+         },
+         {
+          "c": [
+           "exposures (6.1, Chapter 21)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"how old is the raw data\""
+          ]
+         },
+         {
+          "c": [
+           "source freshness (6.2, Chapter 21)"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"the logic of this calculation, with fake input rows\""
+          ]
+         },
+         {
+          "c": [
+           "unit tests (5.1, Chapter 19)"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch27-s2-1",
+     "number": "27.2.1",
+     "title": [
+      "Clues that tell you the objective"
+     ],
+     "titleText": "Clues that tell you the objective"
+    },
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Keyword"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it changes"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Typical effect on the answer"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "\"only\""
+          ]
+         },
+         {
+          "c": [
+           "The scope is exact: nothing more, nothing less."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-s model"
+           },
+           " instead of ",
+           {
+            "t": "code",
+            "v": "model+"
+           },
+           "; ",
+           {
+            "t": "code",
+            "v": "state:new"
+           },
+           " instead of ",
+           {
+            "t": "code",
+            "v": "state:modified"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"directly\", \"first-degree\", \"immediate\""
+          ]
+         },
+         {
+          "c": [
+           "One level of the DAG, not all levels."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "1+model"
+           },
+           " (direct parents) or ",
+           {
+            "t": "code",
+            "v": "model+1"
+           },
+           " (direct children)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"all upstream\", \"everything it depends on\""
+          ]
+         },
+         {
+          "c": [
+           "All ancestors, up to the sources."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "+model"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"everything needed to build the children\""
+          ]
+         },
+         {
+          "c": [
+           "Descendants and their other parents."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "@model"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"without rebuilding\", \"without recomputing\""
+          ]
+         },
+         {
+          "c": [
+           "You must reuse existing objects or results."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--defer"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "dbt clone"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "dbt retry"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"without creating objects\""
+          ]
+         },
+         {
+          "c": [
+           "Nothing new may appear in the warehouse."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--defer"
+           },
+           " (not ",
+           {
+            "t": "code",
+            "v": "dbt clone"
+           },
+           "); ",
+           {
+            "t": "code",
+            "v": "dbt compile"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "dbt show"
+           },
+           " (not ",
+           {
+            "t": "code",
+            "v": "dbt run"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"by default\", \"with no extra configuration\""
+          ]
+         },
+         {
+          "c": [
+           "Use the default value of the config."
+          ]
+         },
+         {
+          "c": [
+           "View materialization; ",
+           {
+            "t": "code",
+            "v": "on_schema_change: ignore"
+           },
+           "; ",
+           {
+            "t": "code",
+            "v": "severity: error"
+           },
+           "; access ",
+           {
+            "t": "code",
+            "v": "protected"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"the first time\", \"on the first run\""
+          ]
+         },
+         {
+          "c": [
+           "Special first-run behaviour."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "is_incremental()"
+           },
+           " is false; snapshot tables are created."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"the next run\""
+          ]
+         },
+         {
+          "c": [
+           "Behaviour once the object exists."
+          ]
+         },
+         {
+          "c": [
+           "The incremental filter applies; new columns follow ",
+           {
+            "t": "code",
+            "v": "on_schema_change"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"most efficient\", \"fewest steps\", \"least compute\""
+          ]
+         },
+         {
+          "c": [
+           "Several options work; choose the cheapest."
+          ]
+         },
+         {
+          "c": [
+           "One command instead of two; ",
+           {
+            "t": "code",
+            "v": "state:modified+"
+           },
+           " instead of everything."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"best practice\", \"recommended\""
+          ]
+         },
+         {
+          "c": [
+           "dbt Labs guidance, not just \"it runs\"."
+          ]
+         },
+         {
+          "c": [
+           "Staging 1:1 with sources; ",
+           {
+            "t": "code",
+            "v": "ref()"
+           },
+           " not hard-coded names; unit tests in dev and CI only."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"NOT\", \"EXCEPT\", \"FALSE\""
+          ]
+         },
+         {
+          "c": [
+           "The question is reversed."
+          ]
+         },
+         {
+          "c": [
+           "Find the one wrong statement. Re-read the stem before you answer."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"choose two\", \"select all that apply\""
+          ]
+         },
+         {
+          "c": [
+           "The number of correct options."
+          ]
+         },
+         {
+          "c": [
+           "Exactly that number for \"choose two\"."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"in production\", \"in CI\", \"in development\""
+          ]
+         },
+         {
+          "c": [
+           "The environment, so the target and the state."
+          ]
+         },
+         {
+          "c": [
+           "Defer to production artifacts in CI; no unit tests in production."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "\"dbt Core\" vs \"dbt platform\""
+          ]
+         },
+         {
+          "c": [
+           "What the tool offers."
+          ]
+         },
+         {
+          "c": [
+           "Jobs, Studio IDE toggles and the scheduler exist only in the dbt platform."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch27-s2-2",
+     "number": "27.2.2",
+     "title": [
+      "Keywords that change the answer"
+     ],
+     "titleText": "Keywords that change the answer"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The examples below are original. Read each one with the five steps before you look at the explanation."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Adnane changed the SQL of ",
+          {
+           "t": "code",
+           "v": "stg_stripe__payments"
+          },
+          ". He wants to rebuild this model and ",
+          {
+           "c": [
+            "only"
+           ],
+           "t": "i"
+          },
+          " the models that select ",
+          {
+           "c": [
+            "directly"
+           ],
+           "t": "i"
+          },
+          " from it. Which command does exactly that?"
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "dbt run -s stg_stripe__payments+"
+              }
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "dbt run -s stg_stripe__payments+1"
+              }
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "dbt run -s 1+stg_stripe__payments"
+              }
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "dbt run -s @stg_stripe__payments"
+              }
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "marker": "A.",
+         "t": "list"
+        }
+       ],
+       "kind": "quiz",
+       "t": "callout",
+       "title": [
+        {
+         "name": "question-circle",
+         "t": "icon"
+        },
+        " Worked example 1: the word \"only\""
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Step 1–2:"
+           ],
+           "t": "b"
+          },
+          " the stem asks for a selection (objective 1.4, Chapter 16). ",
+          {
+           "c": [
+            "Step 3:"
+           ],
+           "t": "b"
+          },
+          " the keywords are \"only\" and \"directly\": one level, downstream. ",
+          {
+           "c": [
+            "Prediction:"
+           ],
+           "t": "b"
+          },
+          " the model plus its direct children, that is ",
+          {
+           "t": "code",
+           "v": "model+1"
+          },
+          ". ",
+          {
+           "c": [
+            "Answer B."
+           ],
+           "t": "b"
+          },
+          " A selects ",
+          {
+           "c": [
+            "all"
+           ],
+           "t": "i"
+          },
+          " descendants (too many). C selects the model and its direct ",
+          {
+           "c": [
+            "parents"
+           ],
+           "t": "i"
+          },
+          " (wrong direction). D selects all descendants ",
+          {
+           "c": [
+            "and"
+           ],
+           "t": "i"
+          },
+          " their other parents (far too many)."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "answer",
+       "t": "callout",
+       "title": [
+        {
+         "name": "check-circle",
+         "t": "icon"
+        },
+        " How to reason"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "dbt run -s dim_customers"
+          },
+          " prints the error below. What is the fastest correct fix?"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch27-c1",
+         "lang": "output",
+         "t": "code",
+         "text": "20:55:58  Running with dbt=1.11.16\n20:55:58  Registered adapter: duckdb=1.11.0\n20:55:58  Encountered an error:\nCompilation Error\n  Model 'model.jaffle_dbt.dim_customers' (models/marts/dim_customers.sql) depends on a node named 'fct_order' which was not found"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "Ask the warehouse administrator to create the table ",
+              {
+               "t": "code",
+               "v": "fct_order"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Correct the name inside ",
+              {
+               "t": "code",
+               "v": "ref()"
+              },
+              " in ",
+              {
+               "t": "code",
+               "v": "dim_customers.sql"
+              },
+              " to ",
+              {
+               "t": "code",
+               "v": "fct_orders"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Run ",
+              {
+               "t": "code",
+               "v": "dbt run --full-refresh -s dim_customers"
+              },
+              "."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Run ",
+              {
+               "t": "code",
+               "v": "dbt deps"
+              },
+              ", because a package is missing."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "marker": "A.",
+         "t": "list"
+        }
+       ],
+       "kind": "quiz",
+       "t": "callout",
+       "title": [
+        {
+         "name": "question-circle",
+         "t": "icon"
+        },
+        " Worked example 2: read the first line of the error"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The first line says ",
+          {
+           "c": [
+            "Compilation Error"
+           ],
+           "t": "i"
+          },
+          ": dbt stopped before any SQL reached the warehouse (objective 3.1, Chapter 22). \"depends on a node named … which was not found\" means a ",
+          {
+           "t": "code",
+           "v": "ref()"
+          },
+          " points to a model that does not exist in the project: a typo. ",
+          {
+           "c": [
+            "Answer B."
+           ],
+           "t": "b"
+          },
+          " A treats it as a warehouse problem (it is not). C changes nothing for a compilation error. D would be the fix for a missing ",
+          {
+           "c": [
+            "package"
+           ],
+           "t": "i"
+          },
+          " macro, and the message would say so."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "answer",
+       "t": "callout",
+       "title": [
+        {
+         "name": "check-circle",
+         "t": "icon"
+        },
+        " How to reason"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "An incremental model has ",
+          {
+           "t": "code",
+           "v": "unique_key: order_id"
+          },
+          " and no other configuration. You add a new column ",
+          {
+           "t": "code",
+           "v": "discount"
+          },
+          " to its SQL and run ",
+          {
+           "t": "code",
+           "v": "dbt run"
+          },
+          " (no flags). What happens, with the default settings?"
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "The run fails because the schema changed."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "The run succeeds, and ",
+              {
+               "t": "code",
+               "v": "discount"
+              },
+              " is added and filled for all existing rows."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "The run succeeds, but the table does not get the new column."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "dbt automatically does a full refresh of the model."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "marker": "A.",
+         "t": "list"
+        }
+       ],
+       "kind": "quiz",
+       "t": "callout",
+       "title": [
+        {
+         "name": "question-circle",
+         "t": "icon"
+        },
+        " Worked example 3: the word \"default\""
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "\"Default\" points to the default of ",
+          {
+           "t": "code",
+           "v": "on_schema_change"
+          },
+          ", which is ",
+          {
+           "t": "code",
+           "v": "ignore"
+          },
+          " (objective 1.11, Chapter 14). ",
+          {
+           "c": [
+            "Answer C"
+           ],
+           "t": "b"
+          },
+          ": the run succeeds and the new column is silently ignored (we verified it on DuckDB). A describes ",
+          {
+           "t": "code",
+           "v": "on_schema_change: fail"
+          },
+          ". B is wrong twice: ",
+          {
+           "t": "code",
+           "v": "append_new_columns"
+          },
+          " would add the column but never fills old rows. D never happens automatically."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "answer",
+       "t": "callout",
+       "title": [
+        {
+         "name": "check-circle",
+         "t": "icon"
+        },
+        " How to reason"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "In a CI job, you build only the models changed in a pull request. Their parents exist in production but not in the CI schema. You must ",
+          {
+           "c": [
+            "not create any extra object"
+           ],
+           "t": "i"
+          },
+          " in the warehouse. What do you add to ",
+          {
+           "t": "code",
+           "v": "dbt build -s state:modified+ --state prod-artifacts"
+          },
+          "?"
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "--defer"
+              }
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "a previous step ",
+              {
+               "t": "code",
+               "v": "dbt clone --state prod-artifacts"
+              }
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "--full-refresh"
+              }
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              {
+               "t": "code",
+               "v": "--empty"
+              }
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "marker": "A.",
+         "t": "list"
+        }
+       ],
+       "kind": "quiz",
+       "t": "callout",
+       "title": [
+        {
+         "name": "question-circle",
+         "t": "icon"
+        },
+        " Worked example 4: \"without creating objects\""
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Objective 7.1 (Chapter 24). Both ",
+          {
+           "t": "code",
+           "v": "--defer"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "dbt clone"
+          },
+          " solve \"the parents are missing\", but the keyword \"without creating any extra object\" removes ",
+          {
+           "t": "code",
+           "v": "clone"
+          },
+          ", which creates views or clones in your schema. ",
+          {
+           "c": [
+            "Answer A."
+           ],
+           "t": "b"
+          },
+          " C only changes how incremental models are rebuilt: the parents are still missing. D builds empty objects, which is useful for cheap checks, but the parents are still missing too."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "answer",
+       "t": "callout",
+       "title": [
+        {
+         "name": "check-circle",
+         "t": "icon"
+        },
+        " How to reason"
+       ]
+      }
+     ],
+     "id": "ch27-s2-3",
+     "number": "27.2.3",
+     "title": [
+      "Four worked examples"
+     ],
+     "titleText": "Four worked examples"
+    }
+   ],
+   "title": [
+    "Reading a scenario question in five steps"
+   ],
+   "titleText": "Reading a scenario question in five steps"
+  },
+  {
+   "anchors": [
+    "sec-strategy-eliminate"
+   ],
+   "checkpoints": [],
+   "id": "ch27-s3",
+   "label": "sec:strategy-eliminate",
+   "labs": [],
+   "minutes": 5,
+   "number": "27.3",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "When you cannot see the answer immediately, remove the options that cannot be right. Each removed option makes your final choice (or guess) better. Here are eight techniques, from the most reliable to the least."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Technique"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "How it works, with a dbt example"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "1. Invalid syntax"
+          ]
+         },
+         {
+          "c": [
+           "An option that cannot even parse is wrong. ",
+           {
+            "t": "code",
+            "v": "source('orders')"
+           },
+           " has one argument (it needs two); ",
+           {
+            "t": "code",
+            "v": "{{ ref(stg_orders) }}"
+           },
+           " has no quotes; ",
+           {
+            "t": "code",
+            "v": "dbt run --select model --full refresh"
+           },
+           " has a space in the flag."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "2. Wrong resource"
+          ]
+         },
+         {
+          "c": [
+           "The option uses the right idea on the wrong object: ",
+           {
+            "t": "code",
+            "v": "dbt run"
+           },
+           " to load a seed, ",
+           {
+            "t": "code",
+            "v": "dbt snapshot"
+           },
+           " to build a model, a ",
+           {
+            "t": "code",
+            "v": "freshness"
+           },
+           " block on a model instead of a source."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "3. Wrong direction or depth"
+          ]
+         },
+         {
+          "c": [
+           "Selection and lineage questions: parents versus children (",
+           {
+            "t": "code",
+            "v": "+model"
+           },
+           " vs ",
+           {
+            "t": "code",
+            "v": "model+"
+           },
+           "), one level versus all levels (",
+           {
+            "t": "code",
+            "v": "1+"
+           },
+           " vs ",
+           {
+            "t": "code",
+            "v": "+"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "4. Wrong layer of the stack"
+          ]
+         },
+         {
+          "c": [
+           "dbt transforms data that is already in the warehouse (the \"T\" of ELT). An option where dbt ingests data from an API, or schedules itself in dbt Core, is wrong."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "5. Old syntax or old version"
+          ]
+         },
+         {
+          "c": [
+           "The exam is on dbt Core 1.11. Old material uses ",
+           {
+            "t": "code",
+            "v": "tests:"
+           },
+           " instead of ",
+           {
+            "t": "code",
+            "v": "data_tests:"
+           },
+           ", test arguments without ",
+           {
+            "t": "code",
+            "v": "arguments:"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "invalidate_hard_deletes"
+           },
+           " instead of ",
+           {
+            "t": "code",
+            "v": "hard_deletes"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "target_schema"
+           },
+           " in snapshots. Old syntax may still work, but a question about the ",
+           {
+            "c": [
+             "recommended"
+            ],
+            "t": "i"
+           },
+           " way wants the new one."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "6. Two halves, one wrong"
+          ]
+         },
+         {
+          "c": [
+           "Long options often join two claims: \"",
+           {
+            "t": "code",
+            "v": "dbt clone"
+           },
+           " creates zero-copy clones ",
+           {
+            "c": [
+             "and works without a state directory"
+            ],
+            "t": "i"
+           },
+           "\". If one half is false, the whole option is false."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "7. Does it answer ",
+           {
+            "c": [
+             "this"
+            ],
+            "t": "i"
+           },
+           " stem?"
+          ]
+         },
+         {
+          "c": [
+           "A true statement that answers a different question is a distractor. \"Contracts check column names and types\" is true, but it does not answer \"how do you warn consumers that v1 will be removed?\"."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "8. Absolute words"
+          ]
+         },
+         {
+          "c": [
+           "\"always\", \"never\", \"all\", \"any\". Be suspicious, but check: some absolutes are true (\"a test always passes when its query returns zero rows\")."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "The last-two rule."
+           ],
+           "t": "b"
+          },
+          " When two options remain, write (in your head) the one word that makes them different: ",
+          {
+           "c": [
+            "parents/children"
+           ],
+           "t": "i"
+          },
+          ", ",
+          {
+           "c": [
+            "creates/does not create"
+           ],
+           "t": "i"
+          },
+          ", ",
+          {
+           "c": [
+            "new/modified"
+           ],
+           "t": "i"
+          },
+          ", ",
+          {
+           "c": [
+            "warn/error"
+           ],
+           "t": "i"
+          },
+          ", ",
+          {
+           "c": [
+            "check/timestamp"
+           ],
+           "t": "i"
+          },
+          ". Then go back to the stem and find which of the two words it asks for. This settles most 50/50 situations."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Platform behaviour versus dbt behaviour."
+           ],
+           "t": "b"
+          },
+          " Some features depend on the data platform: constraints (enforced or not), ",
+          {
+           "t": "code",
+           "v": "dbt clone"
+          },
+          " (zero-copy clone or a view), materialized views, the default incremental strategy, Python models. When the question names a platform (\"on Snowflake\"), use that platform's behaviour. When it does not, answer with the general dbt behaviour described in the dbt documentation, not with what you saw on DuckDB in the labs."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch27-s3-0",
+     "title": [
+      "Elimination techniques"
+     ],
+     "titleText": "Elimination techniques"
+    }
+   ],
+   "title": [
+    "Elimination techniques"
+   ],
+   "titleText": "Elimination techniques"
+  },
+  {
+   "anchors": [
+    "sec-strategy-formats",
+    "sec-strategy-domc"
+   ],
+   "checkpoints": [],
+   "id": "ch27-s4",
+   "label": "sec:strategy-formats",
+   "labs": [],
+   "minutes": 5,
+   "number": "27.4",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "href": "/learn/ch00/",
+         "label": "ch:start",
+         "t": "ref",
+         "text": "Chapter 0"
+        },
+        " (",
+        {
+         "href": "/learn/ch00/ch00-s5/#sec-start-formats",
+         "label": "sec:start-formats",
+         "t": "ref",
+         "text": "Section 0.5.4"
+        },
+        ") showed one example of each format. Here are the tactics."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch27-s4-0",
+     "title": [
+      "The six formats, one by one"
+     ],
+     "titleText": "The six formats, one by one"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Predict before reading the options. If your prediction is there, check the keywords once and move on."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "\"Best\" questions often have two options that ",
+            {
+             "c": [
+              "work"
+             ],
+             "t": "i"
+            },
+            ". Choose the one that respects the constraint of the stem (cheapest, simplest, recommended, no new objects)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Do not choose an option because it is long or detailed. Exam writers make distractors as precise as the answer."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch27-s4-1",
+     "number": "27.4.1",
+     "title": [
+      "Multiple choice (one answer)"
+     ],
+     "titleText": "Multiple choice (one answer)"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Treat every option as a separate true/false statement, like a DOMC question."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Select exactly the number asked. If you find more true options than asked, one of them breaks a condition of the stem: read it again. If you find fewer, choose the most plausible remaining one: an empty choice is always wrong."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Scoring is one point or zero, so a selection is right only if it is ",
+            {
+             "c": [
+              "exactly"
+             ],
+             "t": "i"
+            },
+            " right. Do not rush the last option."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch27-s4-2",
+     "number": "27.4.2",
+     "title": [
+      "Multiple select (choose two, choose three…)"
+     ],
+     "titleText": "Multiple select (choose two, choose three…)"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "You type the answer, so spelling counts. Most errors come from hyphens and underscores. dbt follows a clear pattern:"
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Kind of name"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Rule and examples"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Command-line flags"
+          ]
+         },
+         {
+          "c": [
+           "Hyphens, two leading dashes: ",
+           {
+            "t": "code",
+            "v": "--full-refresh"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--fail-fast"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--warn-error"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--event-time-start"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--exclude-resource-type"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Configs and properties"
+          ]
+         },
+         {
+          "c": [
+           "Underscores: ",
+           {
+            "t": "code",
+            "v": "full_refresh"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "on_schema_change"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "unique_key"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "incremental_strategy"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "check_cols"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "updated_at"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "warn_if"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "store_failures"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "latest_version"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "loaded_at_field"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "data_tests"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "data_type"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Project-level keys"
+          ]
+         },
+         {
+          "c": [
+           "Hyphens: ",
+           {
+            "t": "code",
+            "v": "model-paths"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "seed-paths"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "clean-targets"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "require-dbt-version"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "on-run-start"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "on-run-end"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Hooks"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "pre-hook"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "post-hook"
+           },
+           " in YAML (dbt also accepts underscores there); ",
+           {
+            "t": "code",
+            "v": "pre_hook"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "post_hook"
+           },
+           " inside ",
+           {
+            "t": "code",
+            "v": "config()"
+           },
+           " in SQL, because a Python-style argument cannot contain a hyphen."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Commands"
+          ]
+         },
+         {
+          "c": [
+           "Words separated by spaces, except one: ",
+           {
+            "t": "code",
+            "v": "dbt source freshness"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "dbt docs generate"
+           },
+           ", but ",
+           {
+            "t": "code",
+            "v": "dbt run-operation"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Selection methods"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "method:value"
+           },
+           ", lower case: ",
+           {
+            "t": "code",
+            "v": "state:modified"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "test_type:unit"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "resource_type:seed"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "config.materialized:incremental"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "source_status:fresher"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "result:error"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Jinja functions"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ref"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "source"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "var"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "env_var"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "is_incremental"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "run_query"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "generate_schema_name"
+           },
+           "."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Type exactly what the blank asks for: if the text around the blank already contains the brackets, do not type them again. Do not add spaces or capital letters."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch27-s4-3",
+     "number": "27.4.3",
+     "title": [
+      "Fill in the blank"
+     ],
+     "titleText": "Fill in the blank"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Start with the pair you are surest about, then the next one: each sure pair removes one option for the others."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Typical matching families: materializations; ",
+            {
+             "t": "code",
+             "v": "on_schema_change"
+            },
+            " values (",
+            {
+             "t": "code",
+             "v": "ignore"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "append_new_columns"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "sync_all_columns"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "fail"
+            },
+            "); access levels (",
+            {
+             "t": "code",
+             "v": "private"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "protected"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "public"
+            },
+            "); indirect selection modes (",
+            {
+             "t": "code",
+             "v": "eager"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "buildable"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "cautious"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "empty"
+            },
+            "); artifacts and the commands that write them; error types and their causes."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The names are often very similar on purpose. Say the definition of each item to yourself before matching."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch27-s4-4",
+     "number": "27.4.4",
+     "title": [
+      "Matching"
+     ],
+     "titleText": "Matching"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Read line by line from the top, and ask \"could this line run?\" for each one."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "In YAML, check in this order: indentation (spaces only, aligned keys), the dash in front of list items, quotes around Jinja (",
+            {
+             "t": "code",
+             "v": "\"{{ doc('x') }}\""
+            },
+            "), quotes around values like ",
+            {
+             "t": "code",
+             "v": "yes"
+            },
+            "/",
+            {
+             "t": "code",
+             "v": "no"
+            },
+            ", the right key name in the right place (",
+            {
+             "t": "code",
+             "v": "arguments:"
+            },
+            " under the test, ",
+            {
+             "t": "code",
+             "v": "config:"
+            },
+            " next to it)."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "In SQL with Jinja: quotes inside ",
+            {
+             "t": "code",
+             "v": "ref('...')"
+            },
+            ", two arguments in ",
+            {
+             "t": "code",
+             "v": "source()"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "{{ }}"
+            },
+            " versus ",
+            {
+             "t": "code",
+             "v": "{% %}"
+            },
+            ", a missing ",
+            {
+             "t": "code",
+             "v": "{% endif %}"
+            },
+            ", a trailing comma before ",
+            {
+             "t": "code",
+             "v": "from"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "In a log, the first error line (the one that names the node and the error type) is the answer, not the lines of the stack below it, and not the skipped children."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch27-s4-5",
+     "number": "27.4.5",
+     "title": [
+      "Hotspot (click the line)"
+     ],
+     "titleText": "Hotspot (click the line)"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Place the first and the last step first; the middle becomes easier."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Ask \"what must exist before this step can run?\". A pull request needs commits; ",
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            " needs ",
+            {
+             "t": "code",
+             "v": "dbt deps"
+            },
+            " when the project uses packages; a unit test needs its parent models to exist."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Classic lists: the Git workflow (branch, change, test, commit, push, pull request, review and CI, merge); the order inside ",
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            " for one model (unit tests, then the model, then its data tests); a slim CI job (install, ",
+            {
+             "t": "code",
+             "v": "dbt deps"
+            },
+            ", get production artifacts, ",
+            {
+             "t": "code",
+             "v": "dbt build -s state:modified+ --defer --state …"
+            },
+            "); a debugging session (read the error, open the compiled SQL, fix, rerun the model and its tests, commit)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      }
+     ],
+     "id": "ch27-s4-6",
+     "number": "27.4.6",
+     "title": [
+      "Build list (put in order)"
+     ],
+     "titleText": "Build list (put in order)"
+    },
+    {
+     "anchor": "sec-strategy-domc",
+     "blocks": [
+      {
+       "c": [
+        "DOMC (Discrete Option Multiple Choice) is the format that costs the most points to unprepared candidates. Remember the mechanics from ",
+        {
+         "href": "/learn/ch00/",
+         "label": "ch:start",
+         "t": "ref",
+         "text": "Chapter 0"
+        },
+        ": one option at a time, a YES or NO for each, no way back, and the question may end early once your answers decide the result."
+       ],
+       "t": "p"
+      },
+      {
+       "alt": "How a DOMC question works: the stem is shown (read it twice) → one option appears → you answer YES or NO → if the result is decided, the question ends; if not, the next option appears. There is no way back to an answered option.",
+       "id": "ch27-fig2",
+       "src": "figures/ch27-fig2.svg",
+       "t": "figure"
+      },
+      {
+       "c": [
+        "Ten tactics."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Read the stem twice"
+             ],
+             "t": "b"
+            },
+            " before the first option, and underline (in your head) its conditions: \"with default configs\", \"in dbt Core\", \"on the next run\"."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Predict"
+             ],
+             "t": "b"
+            },
+            " the correct answer, or the family of correct answers, before the first option appears."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Make a full sentence"
+             ],
+             "t": "b"
+            },
+            ": stem + option. Is this sentence true? That is your answer. Nothing else matters."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Partially true is NO."
+             ],
+             "t": "b"
+            },
+            " If one detail of the option is wrong (a wrong flag, a wrong default), answer NO."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "True but irrelevant is NO."
+             ],
+             "t": "b"
+            },
+            " The option must answer the stem, not just be a true fact about dbt."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Do not wait for a better option."
+             ],
+             "t": "b"
+            },
+            " If the option is correct, answer YES now. Several options can be correct."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Do not count the options."
+             ],
+             "t": "b"
+            },
+            " Seeing two or five options tells you nothing; an extra option may appear even after the result is decided."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Do not try to remember earlier options"
+             ],
+             "t": "b"
+            },
+            " to compare: you cannot change them, so let them go."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Be fast."
+             ],
+             "t": "b"
+            },
+            " A DOMC option is a true/false judgement. Most take 15–30 seconds."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Do not plan to come back."
+             ],
+             "t": "b"
+            },
+            " Whatever the interface allows for other questions, decide each DOMC option the first time."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Stem: ",
+          {
+           "c": [
+            "\"You run ",
+            {
+             "t": "code",
+             "v": "dbt build"
+            },
+            " on a project with default configurations. Which of these resources creates or replaces an object in the warehouse?\""
+           ],
+           "t": "i"
+          }
+         ],
+         "t": "p"
+        },
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "A model with no materialization configured."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "An ephemeral model."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "An exposure."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "A seed."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "marker": "A.",
+         "t": "list"
+        }
+       ],
+       "kind": "quiz",
+       "t": "callout",
+       "title": [
+        {
+         "name": "question-circle",
+         "t": "icon"
+        },
+        " Worked DOMC example: judge each option alone"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Prediction:"
+           ],
+           "t": "b"
+          },
+          " models (except ephemeral ones), seeds and snapshots create objects; tests (with default configs), exposures and ephemeral models do not. ",
+          {
+           "c": [
+            "A: YES"
+           ],
+           "t": "b"
+          },
+          " (the default materialization is a view, and a view is an object). ",
+          {
+           "c": [
+            "B: NO"
+           ],
+           "t": "b"
+          },
+          " (an ephemeral model becomes a CTE inside its children; nothing is created). ",
+          {
+           "c": [
+            "C: NO"
+           ],
+           "t": "b"
+          },
+          " (an exposure only documents a downstream use; in ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " it is shown as ",
+          {
+           "t": "code",
+           "v": "NO-OP"
+          },
+          "). ",
+          {
+           "c": [
+            "D: YES"
+           ],
+           "t": "b"
+          },
+          " (a seed becomes a table). Notice the trap in C: the exposure ",
+          {
+           "c": [
+            "appears"
+           ],
+           "t": "i"
+          },
+          " in the ",
+          {
+           "t": "code",
+           "v": "dbt build"
+          },
+          " output, which may tempt you to say YES. Appearing is not creating. If you had answered YES to C, the question could have ended there with 0 points, and you would never have seen D."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "answer",
+       "t": "callout",
+       "title": [
+        {
+         "name": "check-circle",
+         "t": "icon"
+        },
+        " The walk-through"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "Practise DOMC on paper."
+           ],
+           "t": "b"
+          },
+          " In the mock exams, cover the options with a sheet of paper. Slide it down to show one option, write YES or NO next to it, then show the next one. Never slide the sheet back up. It feels strange the first time, and normal after twenty questions: exactly what you want on exam day."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch27-s4-7",
+     "number": "27.4.7",
+     "title": [
+      "DOMC in depth"
+     ],
+     "titleText": "DOMC in depth"
+    }
+   ],
+   "title": [
+    "The six formats, one by one"
+   ],
+   "titleText": "The six formats, one by one"
+  },
+  {
+   "anchors": [
+    "sec-strategy-pacing"
+   ],
+   "checkpoints": [],
+   "id": "ch27-s5",
+   "label": "sec:strategy-pacing",
+   "labs": [],
+   "minutes": 5,
+   "number": "27.5",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "You have 120 minutes for 65 questions, about 1 minute 50 seconds per question. ",
+        {
+         "href": "/learn/ch00/",
+         "label": "ch:start",
+         "t": "ref",
+         "text": "Chapter 0"
+        },
+        " gave you the three passes: a ",
+        {
+         "c": [
+          "first pass"
+         ],
+         "t": "b"
+        },
+        " of about 75 minutes, a ",
+        {
+         "c": [
+          "second pass"
+         ],
+         "t": "b"
+        },
+        " of about 30 minutes for the questions you marked, and a ",
+        {
+         "c": [
+          "final check"
+         ],
+         "t": "b"
+        },
+        " of about 10 minutes. Good ",
+        {
+         "en": [
+          "pacing"
+         ],
+         "fr": "gestion du rythme",
+         "id": "term-pacing",
+         "t": "term"
+        },
+        " means checking, at fixed moments, that you are on schedule. Two kinds of ",
+        {
+         "en": [
+          "checkpoint"
+         ],
+         "fr": "point de contrôle",
+         "id": "term-checkpoint",
+         "t": "term"
+        },
+        " help:"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Target checkpoints"
+             ],
+             "t": "b"
+            },
+            " (three-pass plan): question 22 at about minute 25, question 44 at about minute 50, question 65 at about minute 75. If you are there, you will have time for a calm second pass."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Safety checkpoints"
+             ],
+             "t": "b"
+            },
+            " (the latest acceptable moment, at the even pace of 1 min 50 s per question): ",
+            {
+             "c": [
+              "question 22 at minute 40"
+             ],
+             "t": "b"
+            },
+            " and ",
+            {
+             "c": [
+              "question 44 at minute 80"
+             ],
+             "t": "b"
+            },
+            ". If you are later than this, you are in danger of not finishing: stop re-reading, choose your best answer, mark the question and move on."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "t": "list"
+      },
+      {
+       "alt": "Pacing plan for the 120-minute exam. First pass from minute 0 to 75 (answer, guess, mark), second pass from 75 to 105, check from 105 to 120. Target checkpoints: Q22 at minute 25, Q44 at minute 50, Q65 at minute 75. Safety checkpoints (at the latest): Q22 at minute 40, Q44 at minute 80.",
+       "id": "ch27-fig3",
+       "src": "figures/ch27-fig3.svg",
+       "t": "figure"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Moment"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What to do"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Minute 0"
+          ]
+         },
+         {
+          "c": [
+           "Read the instructions on screen. Note the clock time at which the exam will end. Breathe slowly three times."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Minutes 0–75"
+          ]
+         },
+         {
+          "c": [
+           "First pass. Answer every question. When a question needs more than about 3 minutes, choose your best option, mark it for review (if the interface offers it) and continue."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Q22 / Q44"
+          ]
+         },
+         {
+          "c": [
+           "Look at the clock. Target: minutes 25 / 50. Latest: minutes 40 / 80. Behind the safety line? No more re-reading: answer and move on."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Minutes 75–105"
+          ]
+         },
+         {
+          "c": [
+           "Second pass on the marked questions, with fresh eyes. Change an answer only if you find a concrete reason (a keyword you missed, a fact you remembered), never because of a vague feeling."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Minutes 105–115"
+          ]
+         },
+         {
+          "c": [
+           "Final check: is every question answered? A blank is a certain zero."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Last 5 minutes"
+          ]
+         },
+         {
+          "c": [
+           "Buffer. Submit calmly."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "ch27-s5-0",
+     "title": [
+      "Pacing: your 120-minute plan"
+     ],
+     "titleText": "Pacing: your 120-minute plan"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Mark a question when you have chosen an answer but you are not sure, or when you skipped a long question to save time. Do not mark more than about 15 questions: a second pass of 30 minutes gives you about 2 minutes per marked question. Always choose an answer ",
+        {
+         "c": [
+          "before"
+         ],
+         "t": "i"
+        },
+        " you mark: if the time runs out, your best guess still counts."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch27-s5-1",
+     "number": "27.5.1",
+     "title": [
+      "Marking for review"
+     ],
+     "titleText": "Marking for review"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A wrong answer gives 0 points, exactly like an empty answer. So an answer can only help you. To make an ",
+        {
+         "en": [
+          "educated guess"
+         ],
+         "fr": "réponse au jugé, après élimination",
+         "id": "term-educated-guess",
+         "t": "term"
+        },
+        ":"
+       ],
+       "t": "p"
+      },
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Eliminate everything you can (",
+            {
+             "href": "/learn/ch27/ch27-s3/",
+             "label": "sec:strategy-eliminate",
+             "t": "ref",
+             "text": "Section 27.3"
+            },
+            ")."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Among the rest, prefer the option that uses current dbt 1.11 syntax and the recommended practice."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "For a multiple select question, select exactly the number asked."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "For a fill-in-the-blank, type your best spelling; an empty field cannot be right."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ol",
+       "t": "list"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "The long-question trap."
+           ],
+           "t": "b"
+          },
+          " A question with 30 lines of logs is not necessarily hard: often the answer is in the first error line. But it can eat 6 minutes if you read every line. Read the stem first, then search the evidence for the one detail the stem needs (error type, node name, line number). If you still need more than 3 minutes, answer, mark and move on."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch27-s5-2",
+     "number": "27.5.2",
+     "title": [
+      "Guessing: no penalty"
+     ],
+     "titleText": "Guessing: no penalty"
+    }
+   ],
+   "title": [
+    "Pacing: your 120-minute plan"
+   ],
+   "titleText": "Pacing: your 120-minute plan"
+  },
+  {
+   "anchors": [
+    "sec-strategy-traps"
+   ],
+   "checkpoints": [],
+   "id": "ch27-s6",
+   "label": "sec:strategy-traps",
+   "labs": [],
+   "minutes": 5,
+   "number": "27.6",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "This section is the heart of the chapter: 145 traps, grouped like the official outline, with the prerequisites first. Each trap has three parts: the ",
+        {
+         "c": [
+          "confusion"
+         ],
+         "t": "b"
+        },
+        " (what many candidates believe), the ",
+        {
+         "c": [
+          "truth"
+         ],
+         "t": "b"
+        },
+        " (what is correct for dbt Core 1.11), and the chapter where it is taught. Every truth about dbt behaviour was checked by running dbt Core 1.11.16 with DuckDB, or in the dbt documentation when it depends on another platform."
+       ],
+       "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "How to use this list."
+           ],
+           "t": "b"
+          },
+          " Cover the ",
+          {
+           "c": [
+            "Truth"
+           ],
+           "t": "i"
+          },
+          " line with a sheet of paper, read the ",
+          {
+           "c": [
+            "Confusion"
+           ],
+           "t": "i"
+          },
+          ", and say the truth aloud. Put a small cross in the margin when you get it wrong. Every cross goes into your error notebook, with a re-read of the chapter given at the end of the trap. In the last week (",
+          {
+           "href": "/learn/ch27/ch27-s7/",
+           "label": "sec:strategy-week",
+           "t": "ref",
+           "text": "Section 27.7"
+          },
+          ") you will go through the list twice."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch27-s6-0",
+     "title": [
+      "The top traps"
+     ],
+     "titleText": "The top traps"
+    },
+    {
+     "blocks": [
+      {
+       "ids": [
+        "trap-001",
+        "trap-002",
+        "trap-003",
+        "trap-004",
+        "trap-005",
+        "trap-006",
+        "trap-007",
+        "trap-008",
+        "trap-009"
+       ],
+       "t": "traps"
+      }
+     ],
+     "id": "ch27-s6-1",
+     "number": "27.6.1",
+     "title": [
+      "Prerequisites: SQL"
+     ],
+     "titleText": "Prerequisites: SQL"
+    },
+    {
+     "blocks": [
+      {
+       "ids": [
+        "trap-010",
+        "trap-011",
+        "trap-012",
+        "trap-013",
+        "trap-014",
+        "trap-015",
+        "trap-016"
+       ],
+       "t": "traps"
+      }
+     ],
+     "id": "ch27-s6-2",
+     "number": "27.6.2",
+     "title": [
+      "Prerequisites: Git"
+     ],
+     "titleText": "Prerequisites: Git"
+    },
+    {
+     "blocks": [
+      {
+       "ids": [
+        "trap-017",
+        "trap-018",
+        "trap-019",
+        "trap-020",
+        "trap-021"
+       ],
+       "t": "traps"
+      }
+     ],
+     "id": "ch27-s6-3",
+     "number": "27.6.3",
+     "title": [
+      "Prerequisites: YAML"
+     ],
+     "titleText": "Prerequisites: YAML"
+    },
+    {
+     "blocks": [
+      {
+       "ids": [
+        "trap-022",
+        "trap-023",
+        "trap-024",
+        "trap-025",
+        "trap-026",
+        "trap-027"
+       ],
+       "t": "traps"
+      }
+     ],
+     "id": "ch27-s6-4",
+     "number": "27.6.4",
+     "title": [
+      "Prerequisites: Jinja"
+     ],
+     "titleText": "Prerequisites: Jinja"
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Commands."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "ids": [
+        "trap-028",
+        "trap-029",
+        "trap-030",
+        "trap-031",
+        "trap-032",
+        "trap-033",
+        "trap-034",
+        "trap-035",
+        "trap-036"
+       ],
+       "t": "traps"
+      },
+      {
+       "c": [
+        "Sources, refs and the DAG."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "ids": [
+        "trap-037",
+        "trap-038",
+        "trap-039",
+        "trap-040",
+        "trap-041"
+       ],
+       "t": "traps"
+      },
+      {
+       "c": [
+        "Materializations."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "ids": [
+        "trap-042",
+        "trap-043",
+        "trap-044",
+        "trap-045"
+       ],
+       "t": "traps"
+      },
+      {
+       "c": [
+        "Configuration."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "ids": [
+        "trap-046",
+        "trap-047",
+        "trap-048",
+        "trap-049",
+        "trap-050",
+        "trap-051",
+        "trap-052",
+        "trap-053",
+        "trap-054",
+        "trap-055"
+       ],
+       "t": "traps"
+      },
+      {
+       "c": [
+        "Modularity and packages."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "ids": [
+        "trap-056",
+        "trap-057"
+       ],
+       "t": "traps"
+      },
+      {
+       "c": [
+        "Seeds and snapshots."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "ids": [
+        "trap-058",
+        "trap-059",
+        "trap-060",
+        "trap-061",
+        "trap-062",
+        "trap-063",
+        "trap-064",
+        "trap-065",
+        "trap-066",
+        "trap-067"
+       ],
+       "t": "traps"
+      },
+      {
+       "c": [
+        "Incremental models and microbatch."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "ids": [
+        "trap-068",
+        "trap-069",
+        "trap-070",
+        "trap-071",
+        "trap-072",
+        "trap-073",
+        "trap-074",
+        "trap-075",
+        "trap-076",
+        "trap-077",
+        "trap-078",
+        "trap-079"
+       ],
+       "t": "traps"
+      },
+      {
+       "c": [
+        "Python models."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "ids": [
+        "trap-080",
+        "trap-081",
+        "trap-082"
+       ],
+       "t": "traps"
+      },
+      {
+       "c": [
+        "The ",
+        {
+         "t": "code",
+         "v": "--empty"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "--sample"
+        },
+        " flags."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "ids": [
+        "trap-083",
+        "trap-084",
+        "trap-085",
+        "trap-086"
+       ],
+       "t": "traps"
+      },
+      {
+       "c": [
+        "Node selection."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "ids": [
+        "trap-087",
+        "trap-088",
+        "trap-089",
+        "trap-090",
+        "trap-091",
+        "trap-092"
+       ],
+       "t": "traps"
+      }
+     ],
+     "id": "ch27-s6-5",
+     "number": "27.6.5",
+     "title": [
+      "Topic 1: Developing and optimizing dbt models"
+     ],
+     "titleText": "Topic 1: Developing and optimizing dbt models"
+    },
+    {
+     "blocks": [
+      {
+       "ids": [
+        "trap-093",
+        "trap-094",
+        "trap-095",
+        "trap-096",
+        "trap-097",
+        "trap-098",
+        "trap-099",
+        "trap-100",
+        "trap-101",
+        "trap-102",
+        "trap-103",
+        "trap-104"
+       ],
+       "t": "traps"
+      }
+     ],
+     "id": "ch27-s6-6",
+     "number": "27.6.6",
+     "title": [
+      "Topic 2: Managing dbt model governance"
+     ],
+     "titleText": "Topic 2: Managing dbt model governance"
+    },
+    {
+     "blocks": [
+      {
+       "ids": [
+        "trap-105",
+        "trap-106",
+        "trap-107",
+        "trap-108",
+        "trap-109",
+        "trap-110",
+        "trap-111",
+        "trap-112"
+       ],
+       "t": "traps"
+      }
+     ],
+     "id": "ch27-s6-7",
+     "number": "27.6.7",
+     "title": [
+      "Topic 3: Debugging data modeling errors"
+     ],
+     "titleText": "Topic 3: Debugging data modeling errors"
+    },
+    {
+     "blocks": [
+      {
+       "ids": [
+        "trap-113",
+        "trap-114",
+        "trap-115",
+        "trap-116",
+        "trap-117"
+       ],
+       "t": "traps"
+      }
+     ],
+     "id": "ch27-s6-8",
+     "number": "27.6.8",
+     "title": [
+      "Topic 4: Troubleshooting and optimizing dbt pipelines"
+     ],
+     "titleText": "Topic 4: Troubleshooting and optimizing dbt pipelines"
+    },
+    {
+     "blocks": [
+      {
+       "ids": [
+        "trap-118",
+        "trap-119",
+        "trap-120",
+        "trap-121",
+        "trap-122",
+        "trap-123",
+        "trap-124",
+        "trap-125",
+        "trap-126",
+        "trap-127",
+        "trap-128",
+        "trap-129",
+        "trap-130",
+        "trap-131"
+       ],
+       "t": "traps"
+      }
+     ],
+     "id": "ch27-s6-9",
+     "number": "27.6.9",
+     "title": [
+      "Topic 5: Implementing dbt tests"
+     ],
+     "titleText": "Topic 5: Implementing dbt tests"
+    },
+    {
+     "blocks": [
+      {
+       "ids": [
+        "trap-132",
+        "trap-133",
+        "trap-134",
+        "trap-135",
+        "trap-136",
+        "trap-137",
+        "trap-138"
+       ],
+       "t": "traps"
+      }
+     ],
+     "id": "ch27-s6-10",
+     "number": "27.6.10",
+     "title": [
+      "Topic 6: Implementing and maintaining external dependencies"
+     ],
+     "titleText": "Topic 6: Implementing and maintaining external dependencies"
+    },
+    {
+     "blocks": [
+      {
+       "ids": [
+        "trap-139",
+        "trap-140",
+        "trap-141",
+        "trap-142",
+        "trap-143",
+        "trap-144",
+        "trap-145"
+       ],
+       "t": "traps"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "From traps to points."
+           ],
+           "t": "b"
+          },
+          " After you finish the list, count your crosses per topic. The topic with the most crosses is the one to review first: it is also where the mock exams will cost you the most points."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "t": "callout"
+      }
+     ],
+     "id": "ch27-s6-11",
+     "number": "27.6.11",
+     "title": [
+      "Topic 7: Leveraging dbt state"
+     ],
+     "titleText": "Topic 7: Leveraging dbt state"
+    }
+   ],
+   "title": [
+    "The top traps"
+   ],
+   "titleText": "The top traps"
+  },
+  {
+   "anchors": [
+    "sec-strategy-week"
+   ],
+   "checkpoints": [],
+   "id": "ch27-s7",
+   "label": "sec:strategy-week",
+   "labs": [],
+   "minutes": 5,
+   "number": "27.7",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        {
+         "href": "/learn/ch00/",
+         "label": "ch:start",
+         "t": "ref",
+         "text": "Chapter 0"
+        },
+        " told you to book the exam about one week after you reach the booking conditions, and to use that week for ",
+        {
+         "c": [
+          "light review only"
+         ],
+         "t": "i"
+        },
+        ". No new topic, no new course. The goal is to arrive rested, with the traps fresh in your memory."
+       ],
+       "t": "p"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Day"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What to do (about 1–1.5 hours)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Done when"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "D−7"
+          ]
+         },
+         {
+          "c": [
+           "Traps T1–T27 (prerequisites) and the Topic 1 traps on commands, sources and materializations. Re-read the error notebook entries of Chapters 1–8."
+          ]
+         },
+         {
+          "c": [
+           "Every cross is in the error notebook."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "D−6"
+          ]
+         },
+         {
+          "c": [
+           "The rest of the Topic 1 traps. Cheat sheets: selection, materializations, incremental, snapshots (",
+           {
+            "href": "/learn/appA/",
+            "label": "app:cheatsheets",
+            "t": "ref",
+            "text": "Appendix A"
+           },
+           ")."
+          ]
+         },
+         {
+          "c": [
+           "You can write the selection operators from memory."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "D−5"
+          ]
+         },
+         {
+          "c": [
+           "Traps of Topics 2, 3 and 4. Cheat sheets: governance, artifacts, flags. 30 minutes of hands-on practice: break a model in your practice project, read the error, fix it, use ",
+           {
+            "t": "code",
+            "v": "dbt retry"
+           },
+           "."
+          ]
+         },
+         {
+          "c": [
+           "You read an error message without panic."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "D−4"
+          ]
+         },
+         {
+          "c": [
+           "Traps of Topics 5, 6 and 7. Cheat sheets: tests, freshness, state/defer/clone/retry. Redo only the mock questions you got wrong, DOMC style with a sheet of paper."
+          ]
+         },
+         {
+          "c": [
+           "Your wrong mock questions are now right, with the reason."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "D−3"
+          ]
+         },
+         {
+          "c": [
+           "A timed drill: 20 mock questions you had marked or got wrong, in 35 minutes, to keep your pacing reflexes. Re-read the summary boxes of Chapters 6–25."
+          ]
+         },
+         {
+          "c": [
+           "Pace under 1 min 50 s per question."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "D−2"
+          ]
+         },
+         {
+          "c": [
+           "Technical day: run the Talview system check, test your webcam, microphone and internet, prepare the room and the ID. Read the whole error notebook one last time."
+          ]
+         },
+         {
+          "c": [
+           "Every item of the checklist below is ticked."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "D−1"
+          ]
+         },
+         {
+          "c": [
+           "Rest. At most 30 minutes: this chapter's summary and the traps that still have a cross. Prepare everything for tomorrow, go to bed early."
+          ]
+         },
+         {
+          "c": [
+           "You stop studying before dinner."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "D0"
+          ]
+         },
+         {
+          "c": [
+           "The exam. Follow the exam-day checklist."
+          ]
+         },
+         {
+          "c": [
+           "–"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          {
+           "c": [
+            "The last-minute cramming trap."
+           ],
+           "t": "b"
+          },
+          " Learning a new topic in the last two days usually costs more than it brings: it mixes with what you know and creates doubt. If a topic is still weak at D−2, move the exam date (free on Talview up to 24 hours before the appointment) rather than cramming."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "trap",
+       "t": "callout"
+      }
+     ],
+     "id": "ch27-s7-0",
+     "title": [
+      "The last 7 days"
+     ],
+     "titleText": "The last 7 days"
+    }
+   ],
+   "title": [
+    "The last 7 days"
+   ],
+   "titleText": "The last 7 days"
+  },
+  {
+   "anchors": [
+    "sec-strategy-checklist"
+   ],
+   "checkpoints": [],
+   "id": "ch27-s8",
+   "label": "sec:strategy-checklist",
+   "labs": [],
+   "minutes": 5,
+   "number": "27.8",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The exam is delivered online, through Talview, with a remote proctor (a person who watches through your webcam). The rules below come from the dbt certification FAQ and Talview's test-taker guide; read the current versions of both before your exam, because details can change."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch27-s8-0",
+     "title": [
+      "Exam-day checklist"
+     ],
+     "titleText": "Exam-day checklist"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "The booking is confirmed in Talview: date, time and ",
+            {
+             "c": [
+              "time zone"
+             ],
+             "t": "b"
+            },
+            ". Convert the time to your local time, and be careful if a change of summer/winter time happens between booking and exam day."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Your computer passes the Talview system check. Prefer a personal computer: the security settings of a work laptop can block the exam."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A supported web browser: the study guide links to the list of browsers supported by Caveon (the exam platform); the dbt FAQ names Chrome, Edge, Firefox and Safari, and Talview's guide lists recent versions of Chrome and Edge. A recent Chrome satisfies both."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Webcam and microphone work. Your face is clearly visible and well lit."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Stable internet: Talview asks for about 5 Mbps up and down. Use a cable if you can, and ask the people at home not to stream videos during the exam."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A valid government-issued photo ID, with the same name as your registration."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A quiet, private room with a desk and a chair (not a bed or a sofa), where nobody will come in."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "marker": "checkbox",
+       "t": "list"
+      }
+     ],
+     "id": "ch27-s8-1",
+     "title": [
+      "Some days before"
+     ],
+     "titleText": "Some days before"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Restart the computer. Close every other application (mail, chat, music, cloud sync) and turn off notifications."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Plug in the laptop. Use ",
+            {
+             "c": [
+              "one screen only"
+             ],
+             "t": "b"
+            },
+            ": disconnect any second monitor."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            {
+             "c": [
+              "Nothing on the desk"
+             ],
+             "t": "b"
+            },
+            ": no notes, no book, no phone, no second device, no smartwatch. The exam is not open book."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Toilet, glass of water before you sit down, phone in another room or out of reach and silent."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Log in a few minutes early: the check-in (ID, room scan) takes time."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "marker": "checkbox",
+       "t": "list"
+      }
+     ],
+     "id": "ch27-s8-2",
+     "title": [
+      "One hour before"
+     ],
+     "titleText": "One hour before"
+    },
+    {
+     "blocks": [
+      {
+       "items": [
+        {
+         "blocks": [
+          {
+           "c": [
+            "Show your ID to the camera. Be ready to scan the room and the desk with the webcam when asked."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Stay in front of the camera, do not leave your seat, do not talk to anyone, do not read the questions aloud: these behaviours can be flagged by the proctor."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "Follow your pacing plan: Q22 by minute 40 and Q44 by minute 80 at the latest. DOMC: decide each option the first time."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "No empty answer at the end."
+           ],
+           "t": "p"
+          }
+         ]
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "A technical problem? Stay calm, use the Talview support chat and follow the proctor's instructions. The dbt certification team can be reached by email (the address is in the dbt certification FAQ)."
+           ],
+           "t": "p"
+          }
+         ]
+        }
+       ],
+       "kind": "ul",
+       "marker": "checkbox",
+       "t": "list"
+      }
+     ],
+     "id": "ch27-s8-3",
+     "title": [
+      "Check-in and during the exam"
+     ],
+     "titleText": "Check-in and during the exam"
+    }
+   ],
+   "title": [
+    "Exam-day checklist"
+   ],
+   "titleText": "Exam-day checklist"
+  },
+  {
+   "anchors": [
+    "sec-strategy-after"
+   ],
+   "checkpoints": [],
+   "id": "ch27-s9",
+   "label": "sec:strategy-after",
+   "labs": [],
+   "minutes": 5,
+   "number": "27.9",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "The result."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "c": [
+        "You see it immediately at the end: pass or fail, and your percentage of scored questions answered correctly. You do not see which questions you missed."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "If you passed."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "c": [
+        "Congratulations! dbt Labs sends you a ",
+        {
+         "en": [
+          "digital badge"
+         ],
+         "fr": "badge numérique",
+         "id": "term-digital-badge",
+         "t": "term"
+        },
+        " through ",
+        {
+         "c": [
+          "Accredible"
+         ],
+         "t": "b"
+        },
+        ", which you can add to LinkedIn, your CV or a personal website, and a digital certificate. The certification is valid for ",
+        {
+         "c": [
+          "2 years"
+         ],
+         "t": "b"
+        },
+        " from the date it is awarded. To keep it, a shorter ",
+        {
+         "c": [
+          "renewal exam"
+         ],
+         "t": "b"
+        },
+        " exists (1 hour instead of 2), only for people who earned the credential with the full exam. Its eligibility rules can change, so read them on the dbt certification page when your 2 years come to an end. Keep your practice project alive: new versions of dbt bring new features, and you will use them at work."
+       ],
+       "t": "p"
+      },
+      {
+       "c": [
+        "If you did not pass."
+       ],
+       "level": 4,
+       "t": "h"
+      },
+      {
+       "c": [
+        "It happens to many good analytics engineers, and it is not the end of anything. Right after the exam, write down the ",
+        {
+         "c": [
+          "topics"
+         ],
+         "t": "i"
+        },
+        " that felt difficult (not the questions: exam content is confidential, so never copy or share questions). Compare with your mock-exam weak topics, re-read those chapters, redo their labs and quizzes, take a mock again, and book a retake when you are back above 80%. Each attempt is paid again, so take the time to prepare."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "ch27-s9-0",
+     "title": [
+      "After the exam"
+     ],
+     "titleText": "After the exam"
+    }
+   ],
+   "title": [
+    "After the exam"
+   ],
+   "titleText": "After the exam"
+  }
+ ],
+ "minutes": 45,
+ "number": 27,
+ "objectives": [
+  "ALL",
+  "EXAM",
+  "PLAN"
+ ],
+ "part": 9,
+ "partLabel": "Part IX",
+ "partTitle": "Exam Mastery",
+ "printed": "27",
+ "quiz": [],
+ "quizSections": [],
+ "summary": [
+  {
+   "items": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Read the stem first, name the objective, circle the keywords, predict, then eliminate."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "A few words decide many answers: \"only\", \"directly/first-degree\", \"by default\", \"the first run\", \"without rebuilding\", \"without creating objects\", \"best practice\", \"NOT\"."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Eliminate invalid syntax, the wrong resource, the wrong direction or depth, old syntax, and options with one false half."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "DOMC: one option at a time, no way back. Make a full sentence with the stem; partially true or true-but-irrelevant is NO."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Pacing: first pass about 75 minutes, second pass about 30, final check about 10. Safety checkpoints: Q22 by minute 40, Q44 by minute 80."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "Mark at most about 15 questions, always answer before you mark, and never leave a blank: there is no penalty for a wrong answer."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The 145 traps are the misconceptions that distractors are built from: go through them twice in the last week."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "The last week is for light review; D−2 is the technical check (Talview, browser, webcam, internet, ID, room); D−1 is rest."
+       ],
+       "t": "p"
+      }
+     ]
+    },
+    {
+     "blocks": [
+      {
+       "c": [
+        "After a pass: Accredible badge, valid 2 years, then a shorter renewal exam. After a fail: note the weak topics, never the questions."
+       ],
+       "t": "p"
+      }
+     ]
+    }
+   ],
+   "kind": "ul",
+   "t": "list"
+  }
+ ],
+ "title": "Exam Strategy and the Top Traps"
+}

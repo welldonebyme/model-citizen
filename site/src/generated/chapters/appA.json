@@ -1,0 +1,7406 @@
+{
+ "id": "appA",
+ "intro": [
+  {
+   "c": [
+    "These pages are a dense reference for the last weeks before the exam. They do not explain: each line points back to a chapter that does. Every YAML skeleton below was validated with ",
+    {
+     "t": "code",
+     "v": "dbt parse"
+    },
+    " on dbt Core 1.11.16, and the whole set of files (YAML, SQL, Jinja and Python) was built together with ",
+    {
+     "t": "code",
+     "v": "dbt build"
+    },
+    " in a scratch copy of the practice project (",
+    {
+     "t": "code",
+     "v": "jaffle_dbt"
+    },
+    ") on DuckDB. When a behaviour depends on the data platform, the table says so."
+   ],
+   "t": "p"
+  },
+  {
+   "blocks": [
+    {
+     "c": [
+      {
+       "c": [
+        "How to use the cheat sheets."
+       ],
+       "t": "b"
+      },
+      " Print them, or keep them open next to the mock exams. When a mock question surprises you, find the line here, then look for the matching trap in ",
+      {
+       "href": "/learn/ch27/",
+       "label": "ch:exam-strategy",
+       "t": "ref",
+       "text": "Chapter 27"
+      },
+      ": it tells you which chapter to re-read. In the last week, read one or two sections per day (see ",
+      {
+       "href": "/learn/ch27/ch27-s7/",
+       "label": "sec:strategy-week",
+       "t": "ref",
+       "text": "Section 27.7"
+      },
+      ")."
+     ],
+     "t": "p"
+    }
+   ],
+   "kind": "tip",
+   "t": "callout"
+  }
+ ],
+ "kind": "appendix",
+ "label": "app:cheatsheets",
+ "lessons": [
+  {
+   "anchors": [
+    "sec-cheat-commands"
+   ],
+   "checkpoints": [],
+   "id": "appA-s1",
+   "label": "sec:cheat-commands",
+   "labs": [],
+   "minutes": 5,
+   "number": "A.1",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Command"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it does"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Key flags and notes"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt init <name>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Creates a project folder (and asks for a connection profile)."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--skip-profile-setup"
+           },
+           " (",
+           {
+            "t": "code",
+            "v": "-s"
+           },
+           "). Creates ",
+           {
+            "t": "code",
+            "v": ".gitignore"
+           },
+           " with ",
+           {
+            "t": "code",
+            "v": "target/"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "dbt_packages/"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "logs/"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt debug"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Checks the installation, ",
+           {
+            "t": "code",
+            "v": "dbt_project.yml"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "profiles.yml"
+           },
+           " and the connection."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--config-dir"
+           },
+           " prints where ",
+           {
+            "t": "code",
+            "v": "profiles.yml"
+           },
+           " is read from."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt deps"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Installs packages into ",
+           {
+            "t": "code",
+            "v": "dbt_packages/"
+           },
+           " and writes ",
+           {
+            "t": "code",
+            "v": "package-lock.yml"
+           },
+           "."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--upgrade"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--add-package"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--lock"
+           },
+           ". Run it after every change to ",
+           {
+            "t": "code",
+            "v": "packages.yml"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt clean"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Deletes the ",
+           {
+            "t": "code",
+            "v": "clean-targets"
+           },
+           " folders (usually ",
+           {
+            "t": "code",
+            "v": "target/"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "dbt_packages/"
+           },
+           ")."
+          ]
+         },
+         {
+          "c": [
+           "Run ",
+           {
+            "t": "code",
+            "v": "dbt deps"
+           },
+           " again afterwards."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt parse"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Reads every file and writes ",
+           {
+            "t": "code",
+            "v": "manifest.json"
+           },
+           ". Catches YAML errors and Jinja syntax errors."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--no-partial-parse"
+           },
+           " to force a full parse."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt compile"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Renders Jinja into SQL in ",
+           {
+            "t": "code",
+            "v": "target/compiled"
+           },
+           ". Creates nothing."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-s"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--inline \"select …\""
+           },
+           ". Also compiles analyses."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt show"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Runs a query and prints a preview. Creates nothing in the warehouse."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-s model"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "--inline"
+           },
+           "; ",
+           {
+            "t": "code",
+            "v": "--limit"
+           },
+           " (default 5); ",
+           {
+            "t": "code",
+            "v": "--output json"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt run"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Builds (materializes) models only."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-s"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--exclude"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "-f"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "--full-refresh"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--empty"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--sample"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--event-time-start/-end"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--defer --state"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--favor-state"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "-x"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt test"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Runs data tests ",
+           {
+            "c": [
+             "and"
+            ],
+            "t": "i"
+           },
+           " unit tests."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-s"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--store-failures"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--exclude-resource-type unit_test"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "-s test_type:unit"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt build"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Seeds, snapshots, models and tests (unit tests before each model, data tests after it) in DAG order. A failing node makes its children ",
+           {
+            "t": "code",
+            "v": "SKIP"
+           },
+           "."
+          ]
+         },
+         {
+          "c": [
+           "Everything ",
+           {
+            "t": "code",
+            "v": "run"
+           },
+           " accepts, plus ",
+           {
+            "t": "code",
+            "v": "--resource-type"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "--exclude-resource-type"
+           },
+           ". Exposures appear as ",
+           {
+            "t": "code",
+            "v": "NO-OP"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt seed"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Loads the CSV files of ",
+           {
+            "t": "code",
+            "v": "seeds/"
+           },
+           " into tables."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-f"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "--full-refresh"
+           },
+           " (needed when columns change), ",
+           {
+            "t": "code",
+            "v": "--show"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt snapshot"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Runs the snapshots (history of changes)."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-s"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--empty"
+           },
+           ". No ",
+           {
+            "t": "code",
+            "v": "--full-refresh"
+           },
+           " flag."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt source freshness"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Checks how recent the source data is."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-s source:jaffle_shop"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "-o <file>"
+           },
+           ". Writes ",
+           {
+            "t": "code",
+            "v": "sources.json"
+           },
+           ". Not run by ",
+           {
+            "t": "code",
+            "v": "dbt build"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt docs generate"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Writes ",
+           {
+            "t": "code",
+            "v": "catalog.json"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "manifest.json"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "index.html"
+           },
+           "."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--no-compile"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--empty-catalog"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--static"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt docs serve"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Starts a local website to browse the docs."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--port"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--host"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--no-browser"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt ls"
+           },
+           " (",
+           {
+            "t": "code",
+            "v": "dbt list"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "Lists the resources a selection matches. Runs nothing."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-s"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--resource-type"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--output json|name|path|selector"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--output-keys"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt run-operation <macro>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Runs one macro (maintenance, grants, logs…)."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--args '{name: value}'"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt clone"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Creates in your target the selected nodes of another state (zero-copy clone or view)."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--state"
+           },
+           " (required), ",
+           {
+            "t": "code",
+            "v": "-s"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--full-refresh"
+           },
+           " (recreate existing relations)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt retry"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Reruns the nodes that errored, failed (tests) or were skipped in the last command."
+          ]
+         },
+         {
+          "c": [
+           "Reads ",
+           {
+            "t": "code",
+            "v": "target/run_results.json"
+           },
+           ". Same command, same selection."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Global flag (most commands)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-t"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "--target dev"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Which output of the profile to use."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--vars '{key: value}'"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Override ",
+           {
+            "t": "code",
+            "v": "vars:"
+           },
+           " of ",
+           {
+            "t": "code",
+            "v": "dbt_project.yml"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--threads 8"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Number of nodes built in parallel (the DAG order is always respected)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-s"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "--exclude"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "--selector"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Node selection (",
+           {
+            "href": "/learn/appA/appA-s2/",
+            "label": "sec:cheat-selection",
+            "t": "ref",
+            "text": "Section A.2"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-x"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "--fail-fast"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Stop the whole command at the first failure."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--warn-error"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Every warning becomes an error."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--warn-error-options '{\"error\": […], \"warn\": […]}'"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Choose which warnings become errors (keys ",
+           {
+            "t": "code",
+            "v": "error"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "warn"
+           },
+           "; ",
+           {
+            "t": "code",
+            "v": "include"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "exclude"
+           },
+           " are deprecated)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-d"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "--debug"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--log-level debug"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Debug logs (all SQL) in the console. They are always in ",
+           {
+            "t": "code",
+            "v": "logs/dbt.log"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-q"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "--quiet"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Only errors (and ",
+           {
+            "t": "code",
+            "v": "dbt ls"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "dbt show"
+           },
+           " results)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--profiles-dir"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--project-dir"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Where to find ",
+           {
+            "t": "code",
+            "v": "profiles.yml"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "dbt_project.yml"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--state <dir>"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--defer"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--favor-state"
+           }
+          ]
+         },
+         {
+          "c": [
+           "State comparison and deferral (",
+           {
+            "href": "/learn/appA/appA-s12/",
+            "label": "sec:cheat-state",
+            "t": "ref",
+            "text": "Section A.12"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--indirect-selection eager|buildable|cautious|empty"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Which tests come with the selected nodes."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--no-partial-parse"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--show-all-deprecations"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Full re-parse; show every occurrence of each deprecation, not only the first one."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Flag precedence:"
+         ],
+         "t": "b"
+        },
+        " command line > environment variable (",
+        {
+         "t": "code",
+         "v": "DBT_…"
+        },
+        ") > ",
+        {
+         "t": "code",
+         "v": "flags:"
+        },
+        " in ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        " > default. Paths such as ",
+        {
+         "t": "code",
+         "v": "--state"
+        },
+        " cannot be set in ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        "; behaviour-change flags can only be set there."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "appA-s1-0",
+     "title": [
+      "Commands and key flags"
+     ],
+     "titleText": "Commands and key flags"
+    }
+   ],
+   "title": [
+    "Commands and key flags"
+   ],
+   "titleText": "Commands and key flags"
+  },
+  {
+   "anchors": [
+    "sec-cheat-selection"
+   ],
+   "checkpoints": [],
+   "id": "appA-s2",
+   "label": "sec:cheat-selection",
+   "labs": [],
+   "minutes": 5,
+   "number": "A.2",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Syntax"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Selects"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dim_customers"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The node (by name). A folder name such as ",
+           {
+            "t": "code",
+            "v": "marts"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "staging.stripe"
+           },
+           " selects by path in the project (FQN)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "+dim_customers"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The node and ",
+           {
+            "c": [
+             "all"
+            ],
+            "t": "i"
+           },
+           " its ancestors (parents, grandparents… up to sources and seeds)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dim_customers+"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The node and all its descendants."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "1+dim_customers"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The node and its direct (first-degree) parents only."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dim_customers+1"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The node and its direct children only."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "2+dim_customers+"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Two levels up, and all levels down."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "@stg_stripe__payments"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The node, all its descendants, and all the ancestors of those descendants. Prefix only."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "stg_*"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "*payments*"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Wildcards on names."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "a b"
+           },
+           " (space)"
+          ]
+         },
+         {
+          "c": [
+           "Union: a ",
+           {
+            "c": [
+             "or"
+            ],
+            "t": "b"
+           },
+           " b."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "a,b"
+           },
+           " (comma)"
+          ]
+         },
+         {
+          "c": [
+           "Intersection: a ",
+           {
+            "c": [
+             "and"
+            ],
+            "t": "b"
+           },
+           " b (",
+           {
+            "t": "code",
+            "v": "tag:nightly,tag:finance"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--exclude x"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Difference: remove x from the selection."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Method"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Example and meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "tag:"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "tag:nightly"
+           },
+           ": nodes with that tag."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "path:"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "path:models/staging"
+           },
+           ": every resource in the folder, ",
+           {
+            "c": [
+             "including sources"
+            ],
+            "t": "i"
+           },
+           " declared there."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "file:"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "file:fct_orders.sql"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "fqn:"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "fqn:marts"
+           },
+           ": by position in the project (the default method for a bare word). Never matches sources (use ",
+           {
+            "t": "code",
+            "v": "source:"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "source:"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "source:jaffle_shop"
+           },
+           " (whole source) or ",
+           {
+            "t": "code",
+            "v": "source:jaffle_shop.orders"
+           },
+           "; ",
+           {
+            "t": "code",
+            "v": "source:stripe+"
+           },
+           " = its children."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "resource_type:"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "resource_type:seed"
+           },
+           " (also ",
+           {
+            "t": "code",
+            "v": "model"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "snapshot"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "test"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "unit_test"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "source"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "exposure"
+           },
+           "…)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "test_type:"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "test_type:unit"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "test_type:data"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "test_type:generic"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "test_type:singular"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "test_name:"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "test_name:relationships"
+           },
+           ": every instance of a generic test."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "config.<key>:"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "config.materialized:incremental"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "config.schema:marts"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "package:"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "package:dbt_utils"
+           },
+           ": nodes of a package (your project's name works too)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "exposure:"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "+exposure:weekly_kpis"
+           },
+           ": everything an exposure depends on."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "access:"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "group:"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "version:"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "access:public"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "group:finance"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "version:latest"
+           },
+           " (or ",
+           {
+            "t": "code",
+            "v": "old"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "prerelease"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "state:"
+           },
+           " (needs ",
+           {
+            "t": "code",
+            "v": "--state"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "state:new"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "state:modified"
+           },
+           " (= new + changed), sub-selectors ",
+           {
+            "t": "code",
+            "v": "state:modified.body"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": ".configs"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": ".relation"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": ".persisted_descriptions"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": ".macros"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": ".contract"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "result:"
+           },
+           " (needs ",
+           {
+            "t": "code",
+            "v": "--state"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "result:error"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "result:fail"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "result:warn"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "result:skipped"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "result:success"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "result:pass"
+           },
+           "; reads ",
+           {
+            "t": "code",
+            "v": "run_results.json"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "source_status:"
+           },
+           " (needs ",
+           {
+            "t": "code",
+            "v": "--state"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "source_status:fresher+"
+           },
+           ": children of sources that got new data since the previous freshness run (reads both ",
+           {
+            "t": "code",
+            "v": "sources.json"
+           },
+           ")."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Indirect selection"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Tests selected with ",
+             {
+              "t": "code",
+              "v": "-s fct_orders"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "eager"
+           },
+           " (default)"
+          ]
+         },
+         {
+          "c": [
+           "Every test that touches ",
+           {
+            "t": "code",
+            "v": "fct_orders"
+           },
+           ", even if it also depends on unselected nodes (e.g. a ",
+           {
+            "t": "code",
+            "v": "relationships"
+           },
+           " test to ",
+           {
+            "t": "code",
+            "v": "dim_customers"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "buildable"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Tests whose other parents are selected or are ancestors of the selection."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "cautious"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Only tests whose parents are ",
+           {
+            "c": [
+             "all"
+            ],
+            "t": "i"
+           },
+           " selected."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "empty"
+           }
+          ]
+         },
+         {
+          "c": [
+           "No tests at all (only the selected nodes)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "id": "appA-c1",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt build -s +fct_orders                     # model and all its parents\n$ dbt run -s 1+dim_customers                   # model and its direct parents\n$ dbt run -s path:models/staging --exclude stg_stripe__payments\n$ dbt ls -s \"tag:finance,config.materialized:table\" --resource-type model\n$ dbt test -s test_type:unit                   # only unit tests\n$ dbt build -s +exposure:weekly_kpis           # everything the dashboard needs\n$ dbt build --selector nightly                 # a YAML selector (below)\n$ dbt build -s state:modified+ --defer --state prod-artifacts   # slim CI"
+      },
+      {
+       "id": "appA-c2",
+       "lang": "yaml",
+       "t": "code",
+       "text": "selectors:\n  - name: nightly\n    description: Every finance or marketing model, with all its parents\n    definition:\n      union:\n        - method: tag\n          value: finance\n          parents: true\n        - method: tag\n          value: marketing\n          parents: true\n  - name: finance_marts\n    description: Finance models in the marts folder (intersection)\n    definition:\n      intersection:\n        - method: tag\n          value: finance\n        - method: path\n          value: models/marts\n  - name: no_python\n    description: Everything except the Python model\n    definition:\n      union:\n        - method: fqn\n          value: \"*\"\n        - exclude:\n            - method: fqn\n              value: customer_segments",
+       "title": "selectors.yml"
+      }
+     ],
+     "id": "appA-s2-0",
+     "title": [
+      "Node selection"
+     ],
+     "titleText": "Node selection"
+    }
+   ],
+   "title": [
+    "Node selection"
+   ],
+   "titleText": "Node selection"
+  },
+  {
+   "anchors": [
+    "sec-cheat-project"
+   ],
+   "checkpoints": [],
+   "id": "appA-s3",
+   "label": "sec:cheat-project",
+   "labs": [],
+   "minutes": 5,
+   "number": "A.3",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "id": "appA-c3",
+       "lang": "yaml",
+       "t": "code",
+       "text": "name: jaffle_dbt                    # letters, digits and _ only\nversion: '1.0.0'\nprofile: jaffle_dbt                 # profile name in profiles.yml\nrequire-dbt-version: [\">=1.11.0\", \"<2.0.0\"]\n\nmodel-paths: [\"models\"]             # project keys use hyphens\nseed-paths: [\"seeds\"]\ntest-paths: [\"tests\"]\nanalysis-paths: [\"analyses\"]\nmacro-paths: [\"macros\"]\nsnapshot-paths: [\"snapshots\"]\nclean-targets: [\"target\", \"dbt_packages\"]\n\nvars:\n  dev_start_date: '2025-01-01'      # read with var('dev_start_date')\n\nflags:                              # project defaults for flags\n  send_anonymous_usage_stats: false\n\non-run-start:\n  - \"{{ log('Run starting on target ' ~ target.name, info=True) }}\"\non-run-end:\n  - \"{{ log('Run finished', info=True) }}\"\n\nmodels:\n  jaffle_dbt:                       # must match name: above\n    staging:\n      +materialized: view\n      +tags: ['staging']\n      +docs:\n        node_color: \"#2E7D32\"\n    intermediate:\n      +materialized: view\n      +group: finance\n      +access: private              # only the finance group may ref them\n    marts:\n      +materialized: table\n      +schema: marts                # dbt_adnane_marts with the default macro\n      +tags: ['marts']\n      +meta:\n        owner: analytics-engineering\n      +post-hook: \"analyze {{ this }}\"\n      +grants:\n        select: ['reporter']        # applied after the build\n      +persist_docs:\n        relation: true\n        columns: true\n\nseeds:\n  jaffle_dbt:\n    +schema: seeds\n\nsnapshots:\n  jaffle_dbt:\n    +schema: snapshots\n\ndata_tests:\n  jaffle_dbt:\n    +severity: error                # default anyway\n    +store_failures: false",
+       "title": "dbt_project.yml"
+      },
+      {
+       "head": [
+        [
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Wins"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Where the config is written"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Example"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "align": "c",
+          "c": [
+           "1"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "config()"
+           },
+           " in the model's ",
+           {
+            "t": "code",
+            "v": ".sql"
+           },
+           " (or ",
+           {
+            "t": "code",
+            "v": "dbt.config()"
+           },
+           " in ",
+           {
+            "t": "code",
+            "v": ".py"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{{ config(materialized='incremental') }}"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "align": "c",
+          "c": [
+           "2"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "config:"
+           },
+           " in a properties YAML file"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "models: - name: fct_orders / config: materialized: table"
+           }
+          ]
+         }
+        ],
+        [
+         {
+          "align": "c",
+          "c": [
+           "3"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_project.yml"
+           },
+           ", deepest folder first"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "marts: +materialized: table"
+           },
+           " beats ",
+           {
+            "t": "code",
+            "v": "+materialized: view"
+           },
+           " at the top"
+          ]
+         }
+        ],
+        [
+         {
+          "align": "c",
+          "c": [
+           "4"
+          ]
+         },
+         {
+          "c": [
+           "dbt default"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "view"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "on_schema_change: ignore"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "severity: error"
+           },
+           ", access ",
+           {
+            "t": "code",
+            "v": "protected"
+           }
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Merging exceptions:"
+         ],
+         "t": "b"
+        },
+        " ",
+        {
+         "t": "code",
+         "v": "tags"
+        },
+        " and hooks are added together (project hooks first); ",
+        {
+         "t": "code",
+         "v": "meta"
+        },
+        " and ",
+        {
+         "t": "code",
+         "v": "docs"
+        },
+        " are merged one level deep, ",
+        {
+         "t": "code",
+         "v": "quoting"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "contract"
+        },
+        ", seed ",
+        {
+         "t": "code",
+         "v": "column_types"
+        },
+        " and source ",
+        {
+         "t": "code",
+         "v": "freshness"
+        },
+        " key by key; ",
+        {
+         "t": "code",
+         "v": "persist_docs"
+        },
+        " is replaced; ",
+        {
+         "t": "code",
+         "v": "grants"
+        },
+        " are replaced per privilege, unless the privilege has a ",
+        {
+         "t": "code",
+         "v": "+"
+        },
+        " prefix (",
+        {
+         "t": "code",
+         "v": "'+select'"
+        },
+        " appends). The ",
+        {
+         "t": "code",
+         "v": "+"
+        },
+        " before a key in ",
+        {
+         "t": "code",
+         "v": "dbt_project.yml"
+        },
+        " only marks it as a config (not a folder). ",
+        {
+         "c": [
+          "Custom schema:"
+         ],
+         "t": "b"
+        },
+        " the default ",
+        {
+         "t": "code",
+         "v": "generate_schema_name"
+        },
+        " gives ",
+        {
+         "t": "code",
+         "v": "<target.schema>_<custom>"
+        },
+        " (for example ",
+        {
+         "t": "code",
+         "v": "dbt_adnane_marts"
+        },
+        "); ",
+        {
+         "t": "code",
+         "v": "alias"
+        },
+        " changes the relation name, ",
+        {
+         "t": "code",
+         "v": "database"
+        },
+        " the database (",
+        {
+         "t": "code",
+         "v": "generate_alias_name"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "generate_database_name"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "appA-c4",
+       "lang": "yaml",
+       "t": "code",
+       "text": "jaffle_dbt:                         # = profile: in dbt_project.yml\n  target: dev                       # default target\n  outputs:\n    dev:\n      type: duckdb\n      path: ../practice/practice.duckdb\n      schema: dbt_adnane\n      threads: 4\n    prod:\n      type: duckdb\n      path: ../practice/practice.duckdb\n      schema: prod\n      threads: 4",
+       "title": " /.dbt/profiles.yml"
+      }
+     ],
+     "id": "appA-s3-0",
+     "title": [
+      "dbt_project.yml and configuration"
+     ],
+     "titleText": "dbt_project.yml and configuration"
+    }
+   ],
+   "title": [
+    "dbt_project.yml and configuration"
+   ],
+   "titleText": "dbt_project.yml and configuration"
+  },
+  {
+   "anchors": [
+    "sec-cheat-properties"
+   ],
+   "checkpoints": [],
+   "id": "appA-s4",
+   "label": "sec:cheat-properties",
+   "labs": [],
+   "minutes": 20,
+   "number": "A.4",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "c": [
+        "Property files are the ",
+        {
+         "t": "code",
+         "v": ".yml"
+        },
+        " files inside ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "seeds/"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "snapshots/"
+        },
+        "… (any name). The skeletons below use the dbt 1.11 syntax: tests under ",
+        {
+         "t": "code",
+         "v": "data_tests:"
+        },
+        ", test arguments under ",
+        {
+         "t": "code",
+         "v": "arguments:"
+        },
+        ", configs under ",
+        {
+         "t": "code",
+         "v": "config:"
+        },
+        "."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "appA-c5",
+       "lang": "yaml",
+       "t": "code",
+       "text": "sources:\n  - name: jaffle_shop               # source('jaffle_shop', ...)\n    description: Raw tables of the shop application\n    schema: jaffle_shop             # default = the source name\n    config:\n      loaded_at_field: _loaded_at\n      freshness:                    # inherited by every table\n        warn_after: {count: 12, period: hour}\n        error_after: {count: 24, period: hour}\n    tables:\n      - name: orders\n        identifier: orders          # real table name, if different\n        description: One row per order\n        config:\n          event_time: order_date    # for microbatch children and --sample\n          freshness:                # merged with the source block\n            warn_after: {count: 6, period: hour}\n            filter: \"_loaded_at >= current_date - interval '30 days'\"\n        columns:\n          - name: id\n            data_tests:\n              - unique\n              - not_null\n      - name: customers\n        config:\n          freshness: null           # no freshness check here\n      - name: order_items\n        config:\n          freshness: null\n      - name: products\n        config:\n          freshness: null",
+       "title": "models/staging/jaffle_shop/_jaffle_shop__sources.yml"
+      },
+      {
+       "id": "appA-c6",
+       "lang": "yaml",
+       "t": "code",
+       "text": "models:\n  - name: stg_jaffle_shop__orders\n    description: Cleaned orders, one row per order\n    config:\n      event_time: order_date        # for microbatch children and --sample\n      meta:\n        owner: adnane\n    columns:\n      - name: order_id\n        description: Primary key\n        data_tests:\n          - unique\n          - not_null\n      - name: customer_id\n        data_tests:\n          - relationships:\n              arguments:\n                to: ref('stg_jaffle_shop__customers')\n                field: customer_id\n              config:\n                severity: warn      # order 159 is an orphan\n      - name: status\n        description: \"{{ doc('order_status') }}\"\n        data_tests:\n          - accepted_values:\n              arguments:\n                values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']\n              config:\n                where: \"order_date >= '2025-01-01'\"\n                warn_if: \">0\"\n                error_if: \">10\"\n  - name: stg_jaffle_shop__customers\n    columns:\n      - name: customer_id\n        data_tests:\n          - unique\n          - not_null",
+       "title": "models/staging/jaffle_shop/_jaffle_shop__models.yml"
+      },
+      {
+       "id": "appA-c7",
+       "lang": "yaml",
+       "t": "code",
+       "text": "models:\n  - name: fct_orders\n    description: One row per order, with the amount paid\n    config:\n      group: finance\n      access: public                # private | protected (default) | public\n      tags: ['finance']\n      event_time: order_date\n    data_tests:                     # model-level test from dbt_utils\n      - dbt_utils.expression_is_true:\n          arguments:\n            expression: \"amount >= 0\"\n    columns:\n      - name: order_id\n        data_tests: [unique, not_null]\n      - name: amount\n        data_tests:\n          - is_positive             # custom generic test (tests/generic)\n  - name: fct_order_items\n    description: One row per order line\n    config:\n      group: finance\n      tags: ['finance']\n      event_time: order_date        # read batch by batch by its microbatch child\n  - name: fct_order_items_daily\n    config:\n      group: finance\n      tags: ['finance']",
+       "title": "models/marts/_marts__models.yml"
+      },
+      {
+       "id": "appA-c8",
+       "lang": "yaml",
+       "t": "code",
+       "text": "models:\n  - name: dim_customers\n    description: One row per customer\n    latest_version: 2               # ref('dim_customers') -> v2\n    config:\n      group: marketing\n      access: public\n      tags: ['marketing']\n      contract:\n        enforced: true              # every column needs data_type\n    constraints:                    # model-level constraint\n      - type: check\n        expression: \"lifetime_value >= 0\"\n        name: lifetime_value_not_negative\n    columns:\n      - name: customer_id\n        data_type: integer\n        constraints:\n          - type: not_null\n          - type: primary_key\n      - name: first_name\n        data_type: varchar\n      - name: last_name\n        data_type: varchar\n      - name: email\n        data_type: varchar\n      - name: country\n        data_type: varchar\n      - name: region\n        data_type: varchar\n      - name: first_order_date\n        data_type: date\n      - name: most_recent_order_date\n        data_type: date\n      - name: number_of_orders\n        data_type: bigint\n      - name: lifetime_value\n        data_type: decimal(38, 2)\n    versions:\n      - v: 1\n        defined_in: dim_customers   # file dim_customers.sql\n        deprecation_date: 2027-06-30\n      - v: 2                        # file dim_customers_v2.sql (default name)\n        columns:\n          - include: all\n            exclude: [first_name, last_name]\n          - name: full_name\n            data_type: varchar",
+       "title": "models/marts/dim_customers.yml"
+      },
+      {
+       "id": "appA-c9",
+       "lang": "yaml",
+       "t": "code",
+       "text": "groups:\n  - name: finance\n    owner:\n      name: Finance analytics team\n      email: finance-data@jaffle.example\n  - name: marketing\n    owner:\n      email: marketing-data@jaffle.example",
+       "title": "models/_groups.yml"
+      },
+      {
+       "id": "appA-c10",
+       "lang": "yaml",
+       "t": "code",
+       "text": "unit_tests:\n  - name: test_dim_customers_lifetime_value\n    description: lifetime_value is the sum of the order amounts\n    model: dim_customers\n    versions:\n      include: [2]\n    given:\n      - input: ref('stg_jaffle_shop__customers')\n        rows:\n          - {customer_id: 1, first_name: Ana, last_name: Diaz, country: France}\n      - input: ref('fct_orders')\n        format: csv\n        rows: |\n          order_id,customer_id,order_date,amount\n          10,1,2025-03-01,5.00\n          11,1,2025-04-01,7.50\n      - input: ref('country_regions')\n        rows:\n          - {country: France, region: Europe}\n    expect:\n      rows:\n        - {customer_id: 1, full_name: Ana Diaz, number_of_orders: 2, lifetime_value: 12.50}\n  - name: test_fct_orders_only_new_rows\n    model: fct_orders\n    overrides:\n      macros:\n        is_incremental: true        # test the incremental branch\n    given:\n      - input: ref('int_orders__enriched')\n        rows:\n          - {order_id: 1, paid_amount: 5.00, loaded_at: '2025-06-01 00:00:00'}\n          - {order_id: 2, paid_amount: 9.50, loaded_at: '2025-07-01 00:00:00'}\n      - input: this                 # rows already in the table\n        rows:\n          - {order_id: 1, loaded_at: '2025-06-01 00:00:00'}\n    expect:\n      rows:\n        - {order_id: 2, amount: 9.50}\n  - name: test_int_orders__enriched_paid_amount\n    model: int_orders__enriched\n    given:\n      - input: ref('stg_jaffle_shop__orders')\n        rows:\n          - {order_id: 7, customer_id: 1}\n      - input: ref('stg_jaffle_shop__customers')\n        rows:\n          - {customer_id: 1, country: Morocco}\n      - input: ref('int_payments__successful')\n        format: sql                 # ephemeral input: sql format required\n        rows: |\n          select 7 as order_id, cast(3.00 as decimal(16, 2)) as amount\n          union all\n          select 7 as order_id, cast(4.50 as decimal(16, 2)) as amount\n    expect:\n      rows:\n        - {order_id: 7, country: Morocco, paid_amount: 7.50}",
+       "title": "models/marts/_marts__unit_tests.yml"
+      },
+      {
+       "id": "appA-c11",
+       "lang": "yaml",
+       "t": "code",
+       "text": "seeds:\n  - name: country_regions\n    description: Small static lookup table (country -> region, currency)\n    config:\n      column_types:\n        country: varchar\n        region: varchar\n        currency: varchar\n      delimiter: \",\"\n    columns:\n      - name: country\n        data_tests: [unique, not_null]",
+       "title": "seeds/_seeds.yml"
+      },
+      {
+       "id": "appA-c12",
+       "lang": "yaml",
+       "t": "code",
+       "text": "snapshots:\n  - name: customers_snapshot\n    relation: source('jaffle_shop', 'customers')\n    description: History of email and country\n    config:\n      schema: snapshots             # goes through generate_schema_name\n      unique_key: id\n      strategy: check\n      check_cols: [email, country]  # or 'all'\n      hard_deletes: invalidate      # ignore (default) | invalidate | new_record\n  - name: orders_snapshot\n    relation: source('jaffle_shop', 'orders')\n    config:\n      schema: snapshots\n      unique_key: id\n      strategy: timestamp\n      updated_at: _loaded_at\n      dbt_valid_to_current: \"cast('9999-12-31' as timestamp)\"",
+       "title": "snapshots/snapshots.yml"
+      },
+      {
+       "id": "appA-c13",
+       "lang": "yaml",
+       "t": "code",
+       "text": "exposures:\n  - name: weekly_kpis\n    label: Weekly KPIs\n    type: dashboard                 # dashboard | notebook | analysis | ml | application\n    maturity: high                  # high | medium | low\n    url: https://bi.example.com/dashboards/1\n    description: Revenue and customer KPIs for the weekly meeting\n    depends_on:\n      - ref('fct_monthly_revenue')\n      - ref('dim_customers')\n    owner:                          # required: name and/or email\n      name: Adnane\n      email: adnane@example.com",
+       "title": "models/exposures.yml"
+      },
+      {
+       "id": "appA-c14",
+       "lang": "yaml",
+       "t": "code",
+       "text": "data_tests:\n  - name: assert_payments_match_order_totals\n    description: Every order amount equals its successful payments\n    config:\n      severity: warn",
+       "title": "tests/_singular_tests.yml"
+      },
+      {
+       "id": "appA-c15",
+       "lang": "yaml",
+       "t": "code",
+       "text": "packages:\n  - package: dbt-labs/dbt_utils\n    version: [\">=1.3.0\", \"<2.0.0\"]  # a range: latest 1.x release\n  - package: dbt-labs/audit_helper\n    version: [\">=0.12.0\", \"<1.0.0\"]",
+       "title": "packages.yml"
+      }
+     ],
+     "id": "appA-s4-0",
+     "title": [
+      "Property files"
+     ],
+     "titleText": "Property files"
+    }
+   ],
+   "title": [
+    "Property files"
+   ],
+   "titleText": "Property files"
+  },
+  {
+   "anchors": [
+    "sec-cheat-materializations"
+   ],
+   "checkpoints": [],
+   "id": "appA-s5",
+   "label": "sec:cheat-materializations",
+   "labs": [],
+   "minutes": 5,
+   "number": "A.5",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Materialization"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What exists in the warehouse"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Good for"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Watch out"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "view"
+           },
+           " (default)"
+          ]
+         },
+         {
+          "c": [
+           "A view: only the query, computed at each read."
+          ]
+         },
+         {
+          "c": [
+           "Staging models, light logic, always fresh."
+          ]
+         },
+         {
+          "c": [
+           "Slow for heavy logic read often."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "table"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A table, rebuilt completely at each run."
+          ]
+         },
+         {
+          "c": [
+           "Marts read by BI tools; heavy joins."
+          ]
+         },
+         {
+          "c": [
+           "Full rebuild cost; data as old as the last run."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "incremental"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A table; later runs only process new or changed rows."
+          ]
+         },
+         {
+          "c": [
+           "Large, growing tables (events, orders)."
+          ]
+         },
+         {
+          "c": [
+           "Needs ",
+           {
+            "t": "code",
+            "v": "is_incremental()"
+           },
+           " logic (except microbatch), strategy, ",
+           {
+            "t": "code",
+            "v": "unique_key"
+           },
+           "; ",
+           {
+            "t": "code",
+            "v": "--full-refresh"
+           },
+           " to rebuild."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ephemeral"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Nothing: the SQL becomes a CTE ",
+           {
+            "t": "code",
+            "v": "__dbt__cte__<name>"
+           },
+           " in its children."
+          ]
+         },
+         {
+          "c": [
+           "Small reusable steps."
+          ]
+         },
+         {
+          "c": [
+           "Cannot be queried; no contract; Python models cannot ",
+           {
+            "t": "code",
+            "v": "ref"
+           },
+           " it."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "materialized_view"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A materialized view (platform-managed refresh)."
+          ]
+         },
+         {
+          "c": [
+           "Platforms that support it."
+          ]
+         },
+         {
+          "c": [
+           "Platform-specific options; no contract."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Python model"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "table"
+           },
+           " (default) or ",
+           {
+            "t": "code",
+            "v": "incremental"
+           },
+           " only."
+          ]
+         },
+         {
+          "c": [
+           "pandas-style logic, ML features."
+          ]
+         },
+         {
+          "c": [
+           "No Jinja; ",
+           {
+            "t": "code",
+            "v": "dbt.ref()"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "dbt.source()"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "dbt.config()"
+           },
+           "; no unit tests."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "appA-s5-0",
+     "title": [
+      "Materializations"
+     ],
+     "titleText": "Materializations"
+    }
+   ],
+   "title": [
+    "Materializations"
+   ],
+   "titleText": "Materializations"
+  },
+  {
+   "anchors": [
+    "sec-cheat-incremental"
+   ],
+   "checkpoints": [],
+   "id": "appA-s6",
+   "label": "sec:cheat-incremental",
+   "labs": [],
+   "minutes": 5,
+   "number": "A.6",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Strategy"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What a run does"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "unique_key"
+             },
+             "?"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Choose it when"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "append"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Inserts the selected rows. Never updates, never deduplicates."
+          ]
+         },
+         {
+          "c": [
+           "Ignored"
+          ]
+         },
+         {
+          "c": [
+           "Immutable events (logs, clicks) that are never updated."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "merge"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Updates rows that match the key, inserts the others."
+          ]
+         },
+         {
+          "c": [
+           "Yes (else like append)"
+          ]
+         },
+         {
+          "c": [
+           "Rows can change after loading (order status). Default on Snowflake, BigQuery, Databricks."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "delete+insert"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Deletes target rows with keys present in the new batch, then inserts the batch."
+          ]
+         },
+         {
+          "c": [
+           "Yes"
+          ]
+         },
+         {
+          "c": [
+           "Like merge, when merge is slow or not available (dbt-duckdb used it by default with a key)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "insert_overwrite"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Replaces whole partitions."
+          ]
+         },
+         {
+          "c": [
+           "No (partitions)"
+          ]
+         },
+         {
+          "c": [
+           "Date-partitioned tables, mainly BigQuery and Spark/Databricks."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "microbatch"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Splits the work into time batches on ",
+           {
+            "t": "code",
+            "v": "event_time"
+           },
+           "; each batch replaced independently."
+          ]
+         },
+         {
+          "c": [
+           "Depends on adapter"
+          ]
+         },
+         {
+          "c": [
+           "Very large time series, late data (",
+           {
+            "t": "code",
+            "v": "lookback"
+           },
+           "), backfills, retry of failed batches."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Config"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Values and default"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "incremental_strategy"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "append"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "merge"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "delete+insert"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "insert_overwrite"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "microbatch"
+           },
+           ". Default: adapter-specific."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "unique_key"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A column or a list of columns. Must be unique and not null."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "on_schema_change"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ignore"
+           },
+           " (default: new columns not added), ",
+           {
+            "t": "code",
+            "v": "append_new_columns"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "sync_all_columns"
+           },
+           " (add and remove), ",
+           {
+            "t": "code",
+            "v": "fail"
+           },
+           ". Never backfills old rows. With a contract: only ",
+           {
+            "t": "code",
+            "v": "append_new_columns"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "fail"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "full_refresh"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "false"
+           },
+           " makes dbt ignore ",
+           {
+            "t": "code",
+            "v": "--full-refresh"
+           },
+           " for this model."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "event_time"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Time column. Needed on the microbatch model and on its inputs (refs/sources), and on inputs for ",
+           {
+            "t": "code",
+            "v": "--sample"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "batch_size"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "begin"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Microbatch, required: ",
+           {
+            "t": "code",
+            "v": "hour"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "day"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "month"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "year"
+           },
+           "; the first date to build."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "lookback"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Microbatch: how many previous batches to reprocess. Default 1."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "concurrent_batches"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Microbatch: run batches in parallel (",
+           {
+            "t": "code",
+            "v": "true"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "false"
+           },
+           "; default: dbt decides)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "is_incremental()"
+          },
+          " is true only if"
+         ],
+         "t": "b"
+        },
+        " the model is materialized as ",
+        {
+         "t": "code",
+         "v": "incremental"
+        },
+        ", its table already exists, and ",
+        {
+         "t": "code",
+         "v": "--full-refresh"
+        },
+        " is not passed. First run and ",
+        {
+         "t": "code",
+         "v": "--full-refresh"
+        },
+        ": the filter is skipped and everything is built."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "appA-c16",
+       "lang": "dbt",
+       "t": "code",
+       "text": "{{\n    config(\n        materialized='incremental',\n        unique_key='order_id',\n        incremental_strategy='merge',\n        on_schema_change='append_new_columns'\n    )\n}}\n\nwith orders as (\n    select * from {{ ref('int_orders__enriched') }}\n    {% if is_incremental() %}\n    -- only the rows loaded after the last run (coalesce: the table may be empty)\n    where loaded_at > (\n        select coalesce(max(loaded_at), cast('1900-01-01' as timestamp)) from {{ this }}\n    )\n    {% endif %}\n)\n\nselect\n    order_id,\n    customer_id,\n    order_date,\n    status,\n    paid_amount as amount,\n    loaded_at\nfrom orders",
+       "title": "models/marts/fct_orders.sql"
+      },
+      {
+       "id": "appA-c17",
+       "lang": "dbt",
+       "t": "code",
+       "text": "{{\n    config(\n        materialized='incremental',\n        incremental_strategy='microbatch',\n        event_time='order_date',\n        begin='2025-01-01',\n        batch_size='month',\n        lookback=1\n    )\n}}\n\n-- no is_incremental() here: dbt filters every input that has event_time\n-- (fct_order_items has event_time: order_date in its properties file)\nselect\n    order_date,\n    product_id,\n    product_name,\n    category,\n    count(distinct order_id) as number_of_orders,\n    sum(quantity) as quantity,\n    sum(line_amount) as revenue\nfrom {{ ref('fct_order_items') }}\ngroup by 1, 2, 3, 4",
+       "title": "models/marts/fct_order_items_daily.sql"
+      },
+      {
+       "id": "appA-c18",
+       "lang": "bash",
+       "t": "code",
+       "text": "$ dbt run -s fct_orders --full-refresh          # rebuild from scratch\n$ dbt run -s fct_order_items_daily --event-time-start \"2025-12-01\" --event-time-end \"2026-01-01\"\n$ dbt retry                                     # only the failed batches / nodes"
+      },
+      {
+       "c": [
+        "Both ",
+        {
+         "t": "code",
+         "v": "--event-time-*"
+        },
+        " flags are required together; the end is exclusive."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "appA-s6-0",
+     "title": [
+      "Incremental models and microbatch"
+     ],
+     "titleText": "Incremental models and microbatch"
+    }
+   ],
+   "title": [
+    "Incremental models and microbatch"
+   ],
+   "titleText": "Incremental models and microbatch"
+  },
+  {
+   "anchors": [
+    "sec-cheat-snapshots"
+   ],
+   "checkpoints": [],
+   "id": "appA-s7",
+   "label": "sec:cheat-snapshots",
+   "labs": [],
+   "minutes": 5,
+   "number": "A.7",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Config"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "relation"
+           }
+          ]
+         },
+         {
+          "c": [
+           "What to snapshot: ",
+           {
+            "t": "code",
+            "v": "source('a', 'b')"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "ref('x')"
+           },
+           " (YAML snapshots, 1.9+)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "unique_key"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Required. The key of a row (column or list)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "strategy: timestamp"
+           },
+           " + ",
+           {
+            "t": "code",
+            "v": "updated_at"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A row changed if its ",
+           {
+            "t": "code",
+            "v": "updated_at"
+           },
+           " is newer. ",
+           {
+            "t": "code",
+            "v": "dbt_valid_from"
+           },
+           " = the ",
+           {
+            "t": "code",
+            "v": "updated_at"
+           },
+           " value. Preferred when a reliable timestamp exists."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "strategy: check"
+           },
+           " + ",
+           {
+            "t": "code",
+            "v": "check_cols"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A row changed if one of the listed columns (or ",
+           {
+            "t": "code",
+            "v": "'all'"
+           },
+           ") changed. ",
+           {
+            "t": "code",
+            "v": "dbt_valid_from"
+           },
+           " = time of the snapshot run (or the ",
+           {
+            "t": "code",
+            "v": "updated_at"
+           },
+           " value, if you also set ",
+           {
+            "t": "code",
+            "v": "updated_at"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "hard_deletes"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ignore"
+           },
+           " (default), ",
+           {
+            "t": "code",
+            "v": "invalidate"
+           },
+           " (close the row), ",
+           {
+            "t": "code",
+            "v": "new_record"
+           },
+           " (new row + ",
+           {
+            "t": "code",
+            "v": "dbt_is_deleted"
+           },
+           "). Legacy: ",
+           {
+            "t": "code",
+            "v": "invalidate_hard_deletes"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt_valid_to_current"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Value of ",
+           {
+            "t": "code",
+            "v": "dbt_valid_to"
+           },
+           " for current rows instead of NULL (e.g. 9999-12-31)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "snapshot_meta_column_names"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Rename the meta columns (e.g. ",
+           {
+            "t": "code",
+            "v": "dbt_valid_from: valid_from"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "schema"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "database"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "alias"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Where it is written; ",
+           {
+            "t": "code",
+            "v": "schema"
+           },
+           " goes through ",
+           {
+            "t": "code",
+            "v": "generate_schema_name"
+           },
+           " (legacy ",
+           {
+            "t": "code",
+            "v": "target_schema"
+           },
+           " was exact)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Meta columns added by dbt: ",
+        {
+         "t": "code",
+         "v": "dbt_scd_id"
+        },
+        " (unique id of a version), ",
+        {
+         "t": "code",
+         "v": "dbt_updated_at"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt_valid_from"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "dbt_valid_to"
+        },
+        " (NULL = current row by default), and ",
+        {
+         "t": "code",
+         "v": "dbt_is_deleted"
+        },
+        " with ",
+        {
+         "t": "code",
+         "v": "new_record"
+        },
+        ". Run with ",
+        {
+         "t": "code",
+         "v": "dbt snapshot"
+        },
+        " or ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        ", never ",
+        {
+         "t": "code",
+         "v": "dbt run"
+        },
+        ". Old projects use the legacy SQL syntax, still valid in 1.11:"
+       ],
+       "t": "p"
+      },
+      {
+       "id": "appA-c19",
+       "lang": "jinja",
+       "t": "code",
+       "text": "{% snapshot orders_snapshot_legacy %}\n{{\n    config(\n        target_schema='snapshots',\n        unique_key='id',\n        strategy='timestamp',\n        updated_at='_loaded_at'\n    )\n}}\nselect * from {{ source('jaffle_shop', 'orders') }}\n{% endsnapshot %}",
+       "title": "snapshots/orders_snapshot_legacy.sql (legacy syntax, for recognition)"
+      }
+     ],
+     "id": "appA-s7-0",
+     "title": [
+      "Snapshots"
+     ],
+     "titleText": "Snapshots"
+    }
+   ],
+   "title": [
+    "Snapshots"
+   ],
+   "titleText": "Snapshots"
+  },
+  {
+   "anchors": [
+    "sec-cheat-tests"
+   ],
+   "checkpoints": [],
+   "id": "appA-s8",
+   "label": "sec:cheat-tests",
+   "labs": [],
+   "minutes": 5,
+   "number": "A.8",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Built-in test"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Arguments (under ",
+             {
+              "t": "code",
+              "v": "arguments:"
+             },
+             ")"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "unique"
+           }
+          ]
+         },
+         {
+          "c": [
+           "none: no duplicate values."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "not_null"
+           }
+          ]
+         },
+         {
+          "c": [
+           "none: no NULL values."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "accepted_values"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "values: […]"
+           },
+           "; ",
+           {
+            "t": "code",
+            "v": "quote: false"
+           },
+           " for non-string values. Quote ",
+           {
+            "t": "code",
+            "v": "'yes'"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "'no'"
+           },
+           "!"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "relationships"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "to: ref('parent')"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "field: parent_column"
+           },
+           ". Defined on the child column."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Test config"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Values and default"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "severity"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "error"
+           },
+           " (default) or ",
+           {
+            "t": "code",
+            "v": "warn"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "error_if"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "warn_if"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Strings with a comparison, default ",
+           {
+            "t": "code",
+            "v": "\"!=0\""
+           },
+           ": ",
+           {
+            "t": "code",
+            "v": "\">10\""
+           },
+           ". Severity ",
+           {
+            "t": "code",
+            "v": "error"
+           },
+           ": ",
+           {
+            "t": "code",
+            "v": "error_if"
+           },
+           " checked first, then ",
+           {
+            "t": "code",
+            "v": "warn_if"
+           },
+           ". Severity ",
+           {
+            "t": "code",
+            "v": "warn"
+           },
+           ": ",
+           {
+            "t": "code",
+            "v": "error_if"
+           },
+           " ignored."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "where"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Filter the rows tested: ",
+           {
+            "t": "code",
+            "v": "\"order_date >= '2025-01-01'\""
+           },
+           ". The model is unchanged."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "limit"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Maximum number of failing rows returned."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "fail_calc"
+           }
+          ]
+         },
+         {
+          "c": [
+           "How failures are counted (default ",
+           {
+            "t": "code",
+            "v": "count(*)"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "store_failures"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "true"
+           },
+           ": failing rows saved in a table, schema ",
+           {
+            "t": "code",
+            "v": "<target.schema>_dbt_test__audit"
+           },
+           " (with the default ",
+           {
+            "t": "code",
+            "v": "generate_schema_name"
+           },
+           "). Also ",
+           {
+            "t": "code",
+            "v": "--store-failures"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "store_failures_as"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "table"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "view"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "ephemeral"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "tags"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "enabled"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "meta"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "alias"
+           }
+          ]
+         },
+         {
+          "c": [
+           "As for models."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "A test passes when its query returns ",
+        {
+         "c": [
+          "zero rows"
+         ],
+         "t": "b"
+        },
+        ". Where tests live: generic tests in YAML (",
+        {
+         "t": "code",
+         "v": "data_tests:"
+        },
+        "); singular tests as ",
+        {
+         "t": "code",
+         "v": ".sql"
+        },
+        " files in ",
+        {
+         "t": "code",
+         "v": "tests/"
+        },
+        "; custom generic tests in ",
+        {
+         "t": "code",
+         "v": "tests/generic/"
+        },
+        " (or ",
+        {
+         "t": "code",
+         "v": "macros/"
+        },
+        "); unit tests in YAML under ",
+        {
+         "t": "code",
+         "v": "models/"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "unit_tests:"
+        },
+        ")."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "appA-c20",
+       "lang": "jinja",
+       "t": "code",
+       "text": "{% test is_positive(model, column_name) %}\nselect *\nfrom {{ model }}\nwhere {{ column_name }} < 0\n{% endtest %}",
+       "title": "tests/generic/test_is_positive.sql"
+      },
+      {
+       "id": "appA-c21",
+       "lang": "dbt",
+       "t": "code",
+       "text": "-- singular test: returns the orders whose amount differs from their payments\nwith payments as (\n    select order_id, sum(amount) as paid\n    from {{ ref('stg_stripe__payments') }}\n    where status = 'success'\n    group by order_id\n)\n\nselect\n    orders.order_id,\n    orders.amount,\n    payments.paid\nfrom {{ ref('fct_orders') }} as orders\njoin payments on orders.order_id = payments.order_id\nwhere abs(orders.amount - payments.paid) > 0.01",
+       "title": "tests/assert_payments_match_order_totals.sql"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Unit test key"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Meaning"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "model"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The SQL model tested (current project only; not Python, not materialized views)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "given"
+           }
+          ]
+         },
+         {
+          "c": [
+           "One ",
+           {
+            "t": "code",
+            "v": "input"
+           },
+           " per ",
+           {
+            "t": "code",
+            "v": "ref"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "source"
+           },
+           " used (",
+           {
+            "t": "code",
+            "v": "this"
+           },
+           " for the existing incremental table), with ",
+           {
+            "t": "code",
+            "v": "rows"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "format"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dict"
+           },
+           " (default), ",
+           {
+            "t": "code",
+            "v": "csv"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "sql"
+           },
+           " (required for ephemeral inputs); or a ",
+           {
+            "t": "code",
+            "v": "fixture"
+           },
+           " file in ",
+           {
+            "t": "code",
+            "v": "tests/fixtures/"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "expect"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Expected rows; only the listed columns are compared."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "overrides"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "macros"
+           },
+           " (e.g. ",
+           {
+            "t": "code",
+            "v": "is_incremental: true"
+           },
+           "), ",
+           {
+            "t": "code",
+            "v": "vars"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "env_vars"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "versions"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "include"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "exclude"
+           },
+           " for versioned models (default: all versions)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "config"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "tags"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "enabled"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "meta"
+           },
+           "."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Unit tests need the ",
+        {
+         "c": [
+          "direct parents to exist"
+         ],
+         "t": "b"
+        },
+        " in the warehouse, and the incremental model itself when a test uses ",
+        {
+         "t": "code",
+         "v": "this"
+        },
+        " (build them with ",
+        {
+         "t": "code",
+         "v": "--empty"
+        },
+        " if needed: on a brand-new schema the first ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        " fails on such a test). In ",
+        {
+         "t": "code",
+         "v": "dbt build"
+        },
+        ": unit tests → model → data tests. Recommended in development and CI only: ",
+        {
+         "t": "code",
+         "v": "dbt build --exclude-resource-type unit_test"
+        },
+        " in production."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "appA-s8-0",
+     "title": [
+      "Data tests and unit tests"
+     ],
+     "titleText": "Data tests and unit tests"
+    }
+   ],
+   "title": [
+    "Data tests and unit tests"
+   ],
+   "titleText": "Data tests and unit tests"
+  },
+  {
+   "anchors": [
+    "sec-cheat-governance"
+   ],
+   "checkpoints": [],
+   "id": "appA-s9",
+   "label": "sec:cheat-governance",
+   "labs": [],
+   "minutes": 5,
+   "number": "A.9",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Feature"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "How"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Rules to remember"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Contract"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "config: contract: {enforced: true}"
+           },
+           " + ",
+           {
+            "t": "code",
+            "v": "name"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "data_type"
+           },
+           " for ",
+           {
+            "c": [
+             "every"
+            ],
+            "t": "i"
+           },
+           " column."
+          ]
+         },
+         {
+          "c": [
+           "Checks names and types before building (order free; the table follows the YAML order). Extra or untyped column = error. table, view (no constraints), incremental (",
+           {
+            "t": "code",
+            "v": "on_schema_change"
+           },
+           " ",
+           {
+            "t": "code",
+            "v": "append_new_columns"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "fail"
+           },
+           "). Not ephemeral, not Python, not materialized views."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Constraints"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "constraints:"
+           },
+           " on a column, or at model level with ",
+           {
+            "t": "code",
+            "v": "columns: […]"
+           },
+           " for multi-column keys. Types: ",
+           {
+            "t": "code",
+            "v": "not_null"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "unique"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "primary_key"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "foreign_key"
+           },
+           " (",
+           {
+            "t": "code",
+            "v": "to"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "to_columns"
+           },
+           "), ",
+           {
+            "t": "code",
+            "v": "check"
+           },
+           " (",
+           {
+            "t": "code",
+            "v": "expression"
+           },
+           "), ",
+           {
+            "t": "code",
+            "v": "custom"
+           },
+           "."
+          ]
+         },
+         {
+          "c": [
+           "Applied only with an enforced contract, on ",
+           {
+            "t": "code",
+            "v": "table"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "incremental"
+           },
+           ". Enforced by the platform (table below). ",
+           {
+            "t": "code",
+            "v": "warn_unenforced: false"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "warn_unsupported: false"
+           },
+           " silence warnings."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Versions"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "versions: - v: 1 …"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "latest_version"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "defined_in"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "deprecation_date"
+           },
+           ", per-version ",
+           {
+            "t": "code",
+            "v": "columns"
+           },
+           " with ",
+           {
+            "t": "code",
+            "v": "include"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "exclude"
+           },
+           "."
+          ]
+         },
+         {
+          "c": [
+           "Version N lives in ",
+           {
+            "t": "code",
+            "v": "<model>_vN.sql"
+           },
+           " and builds ",
+           {
+            "t": "code",
+            "v": "<model>_vN"
+           },
+           ". ",
+           {
+            "t": "code",
+            "v": "ref('m')"
+           },
+           " = ",
+           {
+            "t": "code",
+            "v": "latest_version"
+           },
+           " (or the highest number if not set). ",
+           {
+            "t": "code",
+            "v": "ref('m', v=1)"
+           },
+           " pins. Past ",
+           {
+            "t": "code",
+            "v": "deprecation_date"
+           },
+           " = warnings only."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Access"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "config: access: private|protected|public"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Default ",
+           {
+            "t": "code",
+            "v": "protected"
+           },
+           " (same project). ",
+           {
+            "t": "code",
+            "v": "private"
+           },
+           ": only the same ",
+           {
+            "t": "code",
+            "v": "group"
+           },
+           " (error at parse). ",
+           {
+            "t": "code",
+            "v": "public"
+           },
+           ": other projects too (dbt Mesh)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Groups"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "groups:"
+           },
+           " with ",
+           {
+            "t": "code",
+            "v": "name"
+           },
+           " and ",
+           {
+            "t": "code",
+            "v": "owner"
+           },
+           " (",
+           {
+            "t": "code",
+            "v": "name"
+           },
+           " and/or ",
+           {
+            "t": "code",
+            "v": "email"
+           },
+           "); ",
+           {
+            "t": "code",
+            "v": "config: group: finance"
+           },
+           "."
+          ]
+         },
+         {
+          "c": [
+           "Needed for ",
+           {
+            "t": "code",
+            "v": "private"
+           },
+           " access; owners are documented."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Constraint"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Snowflake"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "BigQuery"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Redshift"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Postgres"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "align": "c",
+          "c": [
+           {
+            "c": [
+             "Databricks"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "not_null"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "enforced"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "primary_key"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not enforced"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "foreign_key"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not enforced"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "unique"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not supported"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not supported"
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "check"
+           }
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not supported"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not supported"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "not supported"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "enforced"
+          ]
+         },
+         {
+          "align": "c",
+          "c": [
+           "enforced"
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Source: dbt documentation (constraints). \"Not enforced\" = accepted as metadata only: keep a data test."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "appA-s9-0",
+     "title": [
+      "Governance: contracts, constraints, versions, access"
+     ],
+     "titleText": "Governance: contracts, constraints, versions, access"
+    }
+   ],
+   "title": [
+    "Governance: contracts, constraints, versions, access"
+   ],
+   "titleText": "Governance: contracts, constraints, versions, access"
+  },
+  {
+   "anchors": [
+    "sec-cheat-jinja"
+   ],
+   "checkpoints": [],
+   "id": "appA-s10",
+   "label": "sec:cheat-jinja",
+   "labs": [],
+   "minutes": 5,
+   "number": "A.10",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Function / variable"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it gives you"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{{ ref('model') }}"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The relation of a model, seed or snapshot, and a DAG edge. ",
+           {
+            "t": "code",
+            "v": "ref('pkg', 'model')"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "ref('m', v=2)"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{{ source('src', 'table') }}"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The relation of a raw table declared in YAML, and a DAG edge."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{{ config(…) }}"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Sets configs in a model; ",
+           {
+            "t": "code",
+            "v": "config.get('materialized')"
+           },
+           " reads one."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "var('name', 'default')"
+           }
+          ]
+         },
+         {
+          "c": [
+           "A project variable (",
+           {
+            "t": "code",
+            "v": "vars:"
+           },
+           " or ",
+           {
+            "t": "code",
+            "v": "--vars"
+           },
+           "). No value and no default = compilation error."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "env_var('NAME', 'default')"
+           }
+          ]
+         },
+         {
+          "c": [
+           "An environment variable. No value and no default = parsing error. ",
+           {
+            "t": "code",
+            "v": "DBT_ENV_SECRET_…"
+           },
+           " only in ",
+           {
+            "t": "code",
+            "v": "profiles.yml"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "packages.yml"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "target.name"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "target.schema"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "target.database"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "target.type"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "target.threads"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The active target of the profile (",
+           {
+            "t": "code",
+            "v": "dev"
+           },
+           "/",
+           {
+            "t": "code",
+            "v": "prod"
+           },
+           ", schema, adapter type…)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{{ this }}"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The relation of the current model (e.g. ",
+           {
+            "t": "code",
+            "v": "max(loaded_at)"
+           },
+           " of the existing incremental table)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "is_incremental()"
+           }
+          ]
+         },
+         {
+          "c": [
+           "True only if incremental + table exists + no ",
+           {
+            "t": "code",
+            "v": "--full-refresh"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "run_query(sql)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Runs SQL during compilation and returns a table (use inside ",
+           {
+            "t": "code",
+            "v": "{% if execute %}"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "execute"
+           }
+          ]
+         },
+         {
+          "c": [
+           "False while dbt parses, true when it executes."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "log(msg, info=True)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Writes a message to the console (and to ",
+           {
+            "t": "code",
+            "v": "logs/dbt.log"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "adapter.get_relation(…)"
+           },
+           ",",
+           {
+            "t": "br"
+           },
+           {
+            "t": "code",
+            "v": "adapter.get_columns_in_relation(…)"
+           },
+           ",",
+           {
+            "t": "br"
+           },
+           {
+            "t": "code",
+            "v": "adapter.dispatch(…)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Introspection of the warehouse; platform-specific macro versions."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{{ return(value) }}"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Gives back a real object (list, dict) from a macro."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{{ doc('name') }}"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Text of a ",
+           {
+            "t": "code",
+            "v": "{% docs name %}"
+           },
+           " block from a ",
+           {
+            "t": "code",
+            "v": ".md"
+           },
+           " file."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{% set x = … %}"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "{% do … %}"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "{% if %}"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "{% for %}"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Statements; ",
+           {
+            "t": "code",
+            "v": "loop.last"
+           },
+           " in a for loop; ",
+           {
+            "t": "code",
+            "v": "{%- -%}"
+           },
+           " trims whitespace."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{{ }}"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "{% %}"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "{# #}"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Print an expression / run a statement / comment (SQL comments do ",
+           {
+            "c": [
+             "not"
+            ],
+            "t": "i"
+           },
+           " hide Jinja)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "id": "appA-c22",
+       "lang": "jinja",
+       "t": "code",
+       "text": "{% macro cents_to_dollars(column_name, scale=2) -%}\n    cast({{ column_name }} / 100 as decimal(16, {{ scale }}))\n{%- endmacro %}",
+       "title": "macros/cents_to_dollars.sql"
+      },
+      {
+       "id": "appA-c23",
+       "lang": "dbt",
+       "t": "code",
+       "text": "select\n    id as payment_id,\n    orderid as order_id,\n    paymentmethod as payment_method,\n    status,\n    {{ cents_to_dollars('amount') }} as amount,\n    created as created_at,\n    _loaded_at as loaded_at\nfrom {{ source('stripe', 'payments') }}",
+       "title": "models/staging/stripe/stg_stripe__payments.sql"
+      },
+      {
+       "id": "appA-c24",
+       "lang": "jinja",
+       "t": "code",
+       "text": "{% macro print_row_counts(materializations=['table', 'incremental']) %}\n    {% if execute %}\n        {% for node in graph.nodes.values()\n              | selectattr('resource_type', 'equalto', 'model')\n              | sort(attribute='name') %}\n            {% if node.config.materialized in materializations %}\n                {% set relation = adapter.get_relation(\n                    database=node.database,\n                    schema=node.schema,\n                    identifier=node.alias) %}\n                {% if relation is none %}\n                    {{ log(node.name ~ ': not built yet', info=true) }}\n                {% else %}\n                    {% set result = run_query('select count(*) from ' ~ relation) %}\n                    {{ log(node.name ~ ': ' ~ result.columns[0].values()[0] ~ ' rows', info=true) }}\n                {% endif %}\n            {% endif %}\n        {% endfor %}\n    {% endif %}\n{% endmacro %}",
+       "title": "macros/print_row_counts.sql (dbt run-operation print_row_counts)"
+      },
+      {
+       "id": "appA-c25",
+       "lang": "jinja",
+       "t": "code",
+       "text": "{% macro generate_schema_name(custom_schema_name, node) -%}\n    {%- set default_schema = target.schema -%}\n    {%- if target.name == 'prod' and custom_schema_name is not none -%}\n        {{ custom_schema_name | trim }}\n    {%- else -%}\n        {{ default_schema }}\n    {%- endif -%}\n{%- endmacro %}",
+       "title": "macros/generate_schema_name.sql (common dev/prod override)"
+      },
+      {
+       "c": [
+        "With this override, development puts every model in the developer's schema (",
+        {
+         "t": "code",
+         "v": "dbt_adnane"
+        },
+        ") and production uses the custom schema as it is (",
+        {
+         "t": "code",
+         "v": "marts"
+        },
+        "). Without the file, dbt uses the built-in version, which returns ",
+        {
+         "t": "code",
+         "v": "<target.schema>_<custom>"
+        },
+        " (",
+        {
+         "t": "code",
+         "v": "dbt_adnane_marts"
+        },
+        ", ",
+        {
+         "t": "code",
+         "v": "prod_marts"
+        },
+        ") whenever a custom schema is set."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "appA-c26",
+       "lang": "python",
+       "t": "code",
+       "text": "def model(dbt, session):\n    dbt.config(materialized=\"table\")          # table or incremental only\n\n    customers = dbt.ref(\"dim_customers\").df()  # .df(): DuckDB relation -> pandas\n\n    def segment(row):\n        if row[\"number_of_orders\"] == 0:\n            return \"no orders\"\n        if row[\"number_of_orders\"] >= 4 or row[\"lifetime_value\"] >= 100:\n            return \"loyal\"\n        if row[\"number_of_orders\"] >= 2:\n            return \"regular\"\n        return \"new\"\n\n    customers[\"segment\"] = customers.apply(segment, axis=1)\n    return customers[[\"customer_id\", \"country\", \"number_of_orders\", \"lifetime_value\", \"segment\"]]",
+       "title": "models/marts/customer_segments.py"
+      }
+     ],
+     "id": "appA-s10-0",
+     "title": [
+      "Jinja: functions and context variables"
+     ],
+     "titleText": "Jinja: functions and context variables"
+    }
+   ],
+   "title": [
+    "Jinja: functions and context variables"
+   ],
+   "titleText": "Jinja: functions and context variables"
+  },
+  {
+   "anchors": [
+    "sec-cheat-artifacts"
+   ],
+   "checkpoints": [],
+   "id": "appA-s11",
+   "label": "sec:cheat-artifacts",
+   "labs": [],
+   "minutes": 5,
+   "number": "A.11",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "File in ",
+             {
+              "t": "code",
+              "v": "target/"
+             }
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Content"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Written by"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Read by"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "manifest.json"
+           }
+          ]
+         },
+         {
+          "c": [
+           "The full project: every node, config, dependency, compiled SQL."
+          ]
+         },
+         {
+          "c": [
+           "Almost every command: ",
+           {
+            "t": "code",
+            "v": "parse"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "compile"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "ls"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "run"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "test"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "build"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "seed"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "snapshot"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "show"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "docs generate"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "source freshness"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "clone"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "run-operation"
+           },
+           "."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--state"
+           },
+           " (",
+           {
+            "t": "code",
+            "v": "state:"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "--defer"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "clone"
+           },
+           "), docs site, dbt platform."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "run_results.json"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Result, status, timing and message of each executed node."
+          ]
+         },
+         {
+          "c": [
+           "Commands that execute nodes: ",
+           {
+            "t": "code",
+            "v": "run"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "test"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "build"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "seed"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "snapshot"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "compile"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "show"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "docs generate"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "run-operation"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "clone"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "retry"
+           },
+           ". Not ",
+           {
+            "t": "code",
+            "v": "parse"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "ls"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "source freshness"
+           },
+           "."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt retry"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "result:"
+           },
+           " selectors."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "catalog.json"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Warehouse metadata: columns, types, row counts…"
+          ]
+         },
+         {
+          "c": [
+           "Only ",
+           {
+            "t": "code",
+            "v": "dbt docs generate"
+           },
+           "."
+          ]
+         },
+         {
+          "c": [
+           "Docs site (",
+           {
+            "t": "code",
+            "v": "dbt docs serve"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "sources.json"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Freshness result of each source table."
+          ]
+         },
+         {
+          "c": [
+           "Only ",
+           {
+            "t": "code",
+            "v": "dbt source freshness"
+           },
+           "."
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "source_status:fresher+"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "semantic_manifest.json"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Semantic Layer definitions."
+          ]
+         },
+         {
+          "c": [
+           "Parsing commands."
+          ]
+         },
+         {
+          "c": [
+           "Semantic Layer (out of exam scope)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "Other outputs: ",
+        {
+         "t": "code",
+         "v": "target/compiled/"
+        },
+        " (rendered SELECT), ",
+        {
+         "t": "code",
+         "v": "target/run/"
+        },
+        " (full executed statements), ",
+        {
+         "t": "code",
+         "v": "logs/dbt.log"
+        },
+        " (debug log)."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "appA-s11-0",
+     "title": [
+      "Artifacts"
+     ],
+     "titleText": "Artifacts"
+    }
+   ],
+   "title": [
+    "Artifacts"
+   ],
+   "titleText": "Artifacts"
+  },
+  {
+   "anchors": [
+    "sec-cheat-state"
+   ],
+   "checkpoints": [],
+   "id": "appA-s12",
+   "label": "sec:cheat-state",
+   "labs": [],
+   "minutes": 5,
+   "number": "A.12",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "You need to…"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Use"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "It needs"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           "Build only what changed and its children (slim CI)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt build -s state:modified+ --defer --state prod-artifacts"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Production ",
+           {
+            "t": "code",
+            "v": "manifest.json"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Select only brand-new nodes"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "-s state:new --state …"
+           },
+           " (",
+           {
+            "t": "code",
+            "v": "state:modified"
+           },
+           " = new + changed)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "manifest.json"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Read unbuilt parents from production, creating nothing"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "--defer --state prod-artifacts"
+           },
+           " (",
+           {
+            "t": "code",
+            "v": "--favor-state"
+           },
+           ": prefer prod even if dev exists)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "manifest.json"
+           },
+           "; prod objects exist."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Have real objects in your schema that point to / copy production"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt clone --state prod-artifacts"
+           },
+           " (zero-copy clone where supported, else views; ",
+           {
+            "t": "code",
+            "v": "--full-refresh"
+           },
+           " to replace existing)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "manifest.json"
+           },
+           "; prod objects exist."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Rerun only what failed or was skipped last time"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt retry"
+           },
+           " (after fixing the cause)"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "target/run_results.json"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Rebuild the nodes that errored and their children"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt build -s result:error+ --state target"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "run_results.json"
+           },
+           " in the state folder."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Rebuild what depends on sources with new data"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt source freshness"
+           },
+           ", then ",
+           {
+            "t": "code",
+            "v": "dbt build -s source_status:fresher+ --state prod-artifacts"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "sources.json"
+           },
+           " of both runs."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Check SQL and schemas cheaply in CI"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt build -s state:modified+ --defer --state … --empty"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Same as slim CI."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        "In the dbt platform, CI jobs compare with (and defer to) the production environment by default, and the Studio IDE has a ",
+        {
+         "c": [
+          "Defer"
+         ],
+         "t": "i"
+        },
+        " setting in its command bar; ",
+        {
+         "t": "code",
+         "v": "dbt clone"
+        },
+        " in the dbt platform CLI defers automatically."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "appA-s12-0",
+     "title": [
+      "State, defer, clone and retry"
+     ],
+     "titleText": "State, defer, clone and retry"
+    }
+   ],
+   "title": [
+    "State, defer, clone and retry"
+   ],
+   "titleText": "State, defer, clone and retry"
+  },
+  {
+   "anchors": [
+    "sec-cheat-freshness"
+   ],
+   "checkpoints": [],
+   "id": "appA-s13",
+   "label": "sec:cheat-freshness",
+   "labs": [],
+   "minutes": 5,
+   "number": "A.13",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Item"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Rule"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "loaded_at_field"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Timestamp column used to compute the age (unless the adapter can use warehouse metadata)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "warn_after"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "error_after"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "{count: 12, period: hour}"
+           },
+           "; periods ",
+           {
+            "t": "code",
+            "v": "minute"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "hour"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "day"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "filter"
+           }
+          ]
+         },
+         {
+          "c": [
+           "SQL condition to limit the rows scanned."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Inheritance"
+          ]
+         },
+         {
+          "c": [
+           "Source-level block inherited by tables; keys merged; ",
+           {
+            "t": "code",
+            "v": "freshness: null"
+           },
+           " disables a table."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Command"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dbt source freshness [-s source:jaffle_shop]"
+           },
+           "; writes ",
+           {
+            "t": "code",
+            "v": "target/sources.json"
+           },
+           "; not part of ",
+           {
+            "t": "code",
+            "v": "dbt build"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           "Statuses"
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "PASS"
+           },
+           "; ",
+           {
+            "t": "code",
+            "v": "WARN"
+           },
+           "; ",
+           {
+            "t": "code",
+            "v": "ERROR STALE"
+           },
+           " (older than ",
+           {
+            "t": "code",
+            "v": "error_after"
+           },
+           "); ",
+           {
+            "t": "code",
+            "v": "ERROR"
+           },
+           " (the query failed, e.g. missing column)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      }
+     ],
+     "id": "appA-s13-0",
+     "title": [
+      "Source freshness"
+     ],
+     "titleText": "Source freshness"
+    }
+   ],
+   "title": [
+    "Source freshness"
+   ],
+   "titleText": "Source freshness"
+  },
+  {
+   "anchors": [
+    "sec-cheat-git"
+   ],
+   "checkpoints": [],
+   "id": "appA-s14",
+   "label": "sec:cheat-git",
+   "labs": [],
+   "minutes": 5,
+   "number": "A.14",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Command"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "What it does"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git clone <url>"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "git init"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Copy a remote repository / start a new one."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git status"
+           }
+          ]
+         },
+         {
+          "c": [
+           "What changed, what is staged, which branch."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git switch -c feature/x"
+           },
+           " (",
+           {
+            "t": "code",
+            "v": "git checkout -b"
+           },
+           ")"
+          ]
+         },
+         {
+          "c": [
+           "Create a branch and move to it. ",
+           {
+            "t": "code",
+            "v": "git switch main"
+           },
+           " to go back."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git add <file>"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "git add ."
+           }
+          ]
+         },
+         {
+          "c": [
+           "Stage changes for the next commit."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git commit -m \"message\""
+           }
+          ]
+         },
+         {
+          "c": [
+           "Save the staged changes in the ",
+           {
+            "c": [
+             "local"
+            ],
+            "t": "i"
+           },
+           " history."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git push -u origin feature/x"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Send the branch to the remote (first time with ",
+           {
+            "t": "code",
+            "v": "-u"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git fetch"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Download remote commits without changing your files."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git pull"
+           }
+          ]
+         },
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "fetch"
+           },
+           " + ",
+           {
+            "t": "code",
+            "v": "merge"
+           },
+           " (or rebase) into your branch."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git merge main"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Bring the commits of ",
+           {
+            "t": "code",
+            "v": "main"
+           },
+           " into your branch. Conflicts are marked with ",
+           {
+            "t": "code",
+            "v": "<<<<<<<"
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": "======="
+           },
+           ", ",
+           {
+            "t": "code",
+            "v": ">>>>>>>"
+           },
+           "."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git diff"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "git diff --staged"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Unstaged changes / staged changes."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git log --oneline --graph"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Short history."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git restore <file>"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "git restore --staged <file>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Discard local changes / unstage."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git revert <sha>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "New commit that undoes an old one (safe on shared branches)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git reset --hard <sha>"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Move the branch and ",
+           {
+            "c": [
+             "throw away"
+            ],
+            "t": "i"
+           },
+           " changes (dangerous)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git stash"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "git stash pop"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Put changes aside / bring them back."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "git rm -r --cached target"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Stop tracking a folder (then add it to ",
+           {
+            "t": "code",
+            "v": ".gitignore"
+           },
+           ")."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "c": [
+        {
+         "c": [
+          "Workflow:"
+         ],
+         "t": "b"
+        },
+        " branch from ",
+        {
+         "t": "code",
+         "v": "main"
+        },
+        " → change and test (",
+        {
+         "t": "code",
+         "v": "dbt build -s model+"
+        },
+        ") → commit → push → pull request → review + CI → merge → production job. In the dbt platform Studio IDE, the primary branch is protected: you commit to a new branch."
+       ],
+       "t": "p"
+      },
+      {
+       "id": "appA-c27",
+       "lang": "plain",
+       "t": "code",
+       "text": "target/\ndbt_packages/\nlogs/",
+       "title": ".gitignore (created by dbt init)"
+      }
+     ],
+     "id": "appA-s14-0",
+     "title": [
+      "Git"
+     ],
+     "titleText": "Git"
+    }
+   ],
+   "title": [
+    "Git"
+   ],
+   "titleText": "Git"
+  },
+  {
+   "anchors": [
+    "sec-cheat-sql"
+   ],
+   "checkpoints": [],
+   "id": "appA-s15",
+   "label": "sec:cheat-sql",
+   "labs": [],
+   "minutes": 5,
+   "number": "A.15",
+   "objectives": [],
+   "steps": [
+    {
+     "blocks": [
+      {
+       "head": [
+        [
+         {
+          "c": [
+           {
+            "c": [
+             "Function"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         },
+         {
+          "c": [
+           {
+            "c": [
+             "Result (rows are kept, a column is added)"
+            ],
+            "t": "b"
+           }
+          ],
+          "header": true
+         }
+        ]
+       ],
+       "rows": [
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "row_number() over (partition by k order by d)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "1, 2, 3, 4 inside each partition, even with ties."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "rank() over (…)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Ties share a rank, then a gap: 1, 2, 2, 4."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "dense_rank() over (…)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Ties share a rank, no gap: 1, 2, 2, 3."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "ntile(4) over (order by x)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Splits the rows into 4 groups of (nearly) equal size."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "lag(x) over (order by d)"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "lead(x)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Value of the previous / next row (NULL at the edge)."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "first_value(x)"
+           },
+           " / ",
+           {
+            "t": "code",
+            "v": "last_value(x)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "First / last value of the window frame (for ",
+           {
+            "t": "code",
+            "v": "last_value"
+           },
+           " set the frame to ",
+           {
+            "t": "code",
+            "v": "unbounded following"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "sum(x) over (order by d rows between unbounded preceding and current row)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Running total."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "avg(x) over (order by d rows between 6 preceding and current row)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "7-row moving average."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "sum(x) over (partition by k)"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Total of the partition on every row (share of total: ",
+           {
+            "t": "code",
+            "v": "x / sum(x) over (…)"
+           },
+           ")."
+          ]
+         }
+        ],
+        [
+         {
+          "c": [
+           {
+            "t": "code",
+            "v": "qualify row_number() over (…) = 1"
+           }
+          ]
+         },
+         {
+          "c": [
+           "Filter on a window function (Snowflake, BigQuery, Databricks, DuckDB; not Postgres)."
+          ]
+         }
+        ]
+       ],
+       "t": "table"
+      },
+      {
+       "id": "appA-c28",
+       "lang": "sql",
+       "t": "code",
+       "text": "with ranked as (\n    select\n        user_id,\n        id as order_id,\n        order_date,\n        row_number() over (\n            partition by user_id\n            order by order_date desc, id desc\n        ) as rn\n    from jaffle_shop.orders\n)\nselect user_id, order_id, order_date\nfrom ranked\nwhere rn = 1",
+       "title": "Latest order per customer (portable deduplication)"
+      },
+      {
+       "id": "appA-c29",
+       "lang": "sql",
+       "t": "code",
+       "text": "select\n    order_date,\n    count(*) as orders_that_day,\n    sum(count(*)) over (\n        order by order_date\n        rows between unbounded preceding and current row\n    ) as running_orders,\n    -- previous row = previous day WITH orders\n    lag(count(*)) over (order by order_date) as orders_previous_row\nfrom jaffle_shop.orders\ngroup by order_date\norder by order_date",
+       "title": "Orders per day, running total and previous row"
+      },
+      {
+       "c": [
+        "Order of evaluation: ",
+        {
+         "t": "code",
+         "v": "from"
+        },
+        "/",
+        {
+         "t": "code",
+         "v": "join"
+        },
+        " → ",
+        {
+         "t": "code",
+         "v": "where"
+        },
+        " → ",
+        {
+         "t": "code",
+         "v": "group by"
+        },
+        " → ",
+        {
+         "t": "code",
+         "v": "having"
+        },
+        " → window functions → ",
+        {
+         "t": "code",
+         "v": "qualify"
+        },
+        " → ",
+        {
+         "t": "code",
+         "v": "select"
+        },
+        " aliases / ",
+        {
+         "t": "code",
+         "v": "distinct"
+        },
+        " → ",
+        {
+         "t": "code",
+         "v": "order by"
+        },
+        " → ",
+        {
+         "t": "code",
+         "v": "limit"
+        },
+        ". This is why ",
+        {
+         "t": "code",
+         "v": "where"
+        },
+        " cannot use an aggregate or a window function."
+       ],
+       "t": "p"
+      }
+     ],
+     "id": "appA-s15-0",
+     "title": [
+      "SQL window functions"
+     ],
+     "titleText": "SQL window functions"
+    }
+   ],
+   "title": [
+    "SQL window functions"
+   ],
+   "titleText": "SQL window functions"
+  }
+ ],
+ "minutes": 90,
+ "number": 34,
+ "objectives": [],
+ "part": 9,
+ "partLabel": "Part IX",
+ "partTitle": "Exam Mastery",
+ "printed": "A",
+ "quiz": [],
+ "quizSections": [],
+ "summary": [],
+ "title": "Cheat Sheets"
+}

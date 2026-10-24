@@ -1,0 +1,22 @@
+# Path rewrites for the website (docs/05-content-pipeline.md section 6).
+#
+# The book is Adnane's personal edition: its labs point to the book folder on his Mac. On the website the
+# practice kit is downloaded to ~/dbt-course/kit and keeps the book's folder layout below it
+# (kit/labs/data, kit/labs/practice-project, kit/tools/run_sql.py ...), so only the prefix changes.
+#
+# Rules are regular expressions applied in order to every generated string (code blocks, inline code, titles,
+# prose). Keys, ids, hrefs and keyRaw are never rewritten. When a code block or inline code changes, the original
+# text is kept in textBook (titleBook for code titles). Every rewrite is listed in report.json.
+rules:
+  - id: kit-home
+    pattern: '~/Documents/Adnane/dbt-bible(?=/|\b|$)'
+    replace: '~/dbt-course/kit'
+    note: the book folder -> the downloaded practice kit
+  - id: kit-absolute
+    pattern: '/Users/mac/Documents/Adnane/dbt-bible(?=/|\b|$)'
+    replace: '/Users/you/dbt-course/kit'
+    note: the same folder printed as an absolute path in command outputs
+  - id: home-absolute
+    pattern: '/Users/mac(?=[/''"<>\s,;:)}\]]|$)'
+    replace: '/Users/you'
+    note: the author's macOS home folder in command outputs and prose

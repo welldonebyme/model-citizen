@@ -13,3 +13,7 @@ playwright-report/
 spikes/
 site/public/pdf/
 site/public/figures/
+
+# dbt in the browser: engine files are fetched and checked at build time (site/scripts/dbt/build-engine.mjs)
+site/.cache/
+site/public/engines/

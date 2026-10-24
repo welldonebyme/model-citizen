@@ -89,6 +89,7 @@ const labHref = lesson.labs[0] ? `${url(routes.lesson(lesson, chapter.id))}#${le
       {steps.map((s, i) => (
         <section class="step" id={s.id} data-step={s.id} aria-labelledby={`${s.id}-h`}
           data-hints={s.titleText === 'Hints' ? '' : undefined} data-checkpoint={s.titleText === 'Checkpoint' ? '' : undefined}>
+          {s.anchor && <span class="mc-anchor" id={s.anchor} />}
           {i > 0 ? <h2 class="step-h" id={`${s.id}-h`}><span class="step-n">Step {i + 1} of {steps.length}</span><Inline c={s.title} /></h2>
                  : <h2 class="visually-hidden" id={`${s.id}-h`}>Step 1 of {steps.length}: {s.titleText}</h2>}
           <div class="step-body"><StaticBlocks blocks={s.blocks} figures={figures} /></div>

@@ -27,7 +27,9 @@ function InlineNode({ n }: { n: InlineT }): ReactNode {
         </a>
       );
     case 'key': return <kbd className="mc-key">{n.v}</kbd>;
-    case 'obj': return <a className="mc-obj" href={url(`reference/coverage/#obj-${n.id}`)} title={`Exam objective ${n.id}`}>{n.id}</a>;
+    case 'obj': return /^(CP0-[A-Z]+|\d+\.\d+)$/.test(n.id)
+      ? <a className="mc-obj" href={url(`reference/coverage/#obj-${n.id}`)} title={`Exam objective ${n.id}`}>{n.id}</a>
+      : <span className="mc-obj mc-obj-study" title={n.id === 'EXAM' ? 'About the exam itself' : 'Study method'}>{n.id === 'EXAM' ? 'Exam' : n.id === 'PLAN' ? 'Plan' : n.id === 'ALL' ? 'All' : n.id}</span>;
     case 'ref': return <a href={href(n.href)}>{n.text}</a>;
     case 'link': return <a href={n.href} rel="noopener" target="_blank"><Inline c={n.c} /></a>;
     case 'icon': return <span className="mc-icon" aria-hidden="true">{ICONS[n.name] ?? '•'}</span>;

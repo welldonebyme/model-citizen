@@ -86,6 +86,7 @@ function BlockNode({ b, inLab, labId, runnable }: { b: Block; inLab?: boolean; l
     case 'lab':
       return (
         <section className="mc-lab" id={b.id} data-lab={b.id} aria-labelledby={`${b.id}-t`}>
+          {b.anchor && b.anchor !== b.id && <span className="mc-anchor" id={b.anchor} />}
           <header className="mc-lab-head">
             <span className="mc-lab-icon" aria-hidden="true">
               <svg width="18" height="18" viewBox="0 0 18 18"><path d="M6.5 2h5M7.5 2v5L3 14.5A1.5 1.5 0 0 0 4.3 16.7h9.4A1.5 1.5 0 0 0 15 14.5L10.5 7V2" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" /><path d="M5 12h8" stroke="currentColor" strokeWidth="1.7" /></svg>
@@ -108,12 +109,12 @@ function BlockNode({ b, inLab, labId, runnable }: { b: Block; inLab?: boolean; l
       return (
         <section className="mc-objectives" aria-label="Exam objectives covered">
           <h3>Exam objectives covered</h3>
-          <ul>{b.items.map((it) => <li key={it.id}><Inline c={[{ t: 'obj', id: it.id }]} /><span><Inline c={it.c} /></span></li>)}</ul>
+          <ul>{b.items.map((it, i) => <li key={i}>{it.id ? <Inline c={[{ t: 'obj', id: it.id }]} /> : <span className="mc-obj-none" aria-hidden="true" />}<span><Inline c={it.c} /></span></li>)}</ul>
         </section>
       );
     case 'table':
       return (
-        <div className="mc-table-wrap" tabIndex={0} role="region" aria-label="Table">
+        <div className="mc-table-wrap" tabIndex={0} role="region" aria-label="Table" id={b.anchor}>
           <table className="mc-table">
             {b.caption && <caption><Inline c={b.caption} /></caption>}
             {b.head && <thead>{b.head.map((r, ri) => <tr key={ri}>{r.map((cell, ci) => <th key={ci} colSpan={cell.colspan} rowSpan={cell.rowspan} className={cell.align ? `mc-al-${cell.align}` : undefined}><CellContent c={cell.c} /></th>)}</tr>)}</thead>}
@@ -133,6 +134,7 @@ function BlockNode({ b, inLab, labId, runnable }: { b: Block; inLab?: boolean; l
       const svg = figs[b.id];
       return (
         <figure className="mc-fig" id={b.id}>
+          {b.anchor && b.anchor !== b.id && <span className="mc-anchor" id={b.anchor} />}
           {svg
             ? <div className="mc-fig-svg" role="img" aria-label={b.alt} dangerouslySetInnerHTML={{ __html: svg }} />
             : <div className="mc-fig-svg"><img src={url(`figures/${b.id}.svg`)} alt={b.alt} loading="lazy" /></div>}

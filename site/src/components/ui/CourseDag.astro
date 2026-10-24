@@ -26,7 +26,7 @@ const height = PAD * 2 + 2 * ROWH + H;
 const firstChapter = (n: number) => present.find((p) => p.part === n)?.chapters[0];
 ---
 <div class:list={['dag', { compact }]}>
-  <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Course map: Part 0 to Part IX. Each part depends on the ones before it.">
+  <svg viewBox={`0 0 ${width} ${height}`} role="group" aria-label="Course map: Part 0 to Part IX. Each part depends on the ones before it.">
     {edges.map((e) => <path class="edge" d={e.d} data-edge-from={e.a} data-edge-to={e.b} />)}
     {present.map((p) => {
       const [c, r] = COL[p.part];

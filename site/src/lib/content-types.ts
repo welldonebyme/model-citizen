@@ -32,10 +32,10 @@ export type Block =
   | { t: 'callout'; kind: CalloutKind; title?: Inline[]; blocks: Block[];
       /** OS note (converter/overrides/os-notes.yaml): shown only when the OS switch is one of these */
       os?: ('mac' | 'win' | 'wsl')[]; osNote?: string }
-  | { t: 'lab'; id: string; title: Inline[]; objectives: string[]; blocks: Block[] }
+  | { t: 'lab'; id: string; anchor?: string; title: Inline[]; objectives: string[]; blocks: Block[] }
   | { t: 'objectives'; items: { id: string; c: Inline[] }[] }
-  | { t: 'table'; head?: Cell[][]; rows: Cell[][]; groupRows?: number[]; caption?: Inline[] }
-  | { t: 'figure'; id: string; src: string; alt: string; caption?: Inline[]; width?: number; height?: number }
+  | { t: 'table'; anchor?: string; head?: Cell[][]; rows: Cell[][]; groupRows?: number[]; caption?: Inline[] }
+  | { t: 'figure'; anchor?: string; id: string; src: string; alt: string; caption?: Inline[]; width?: number; height?: number }
   | { t: 'quiz'; ids: string[] }
   | { t: 'hr' };
 

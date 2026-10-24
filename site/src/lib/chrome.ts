@@ -84,3 +84,26 @@ document.addEventListener('keydown', (e) => {
 document.querySelectorAll('[data-search-open]').forEach((b) =>
   b.addEventListener('click', () => document.dispatchEvent(new CustomEvent('mc:search-open'))),
 );
+
+// Code and figures that scroll sideways must be reachable with the keyboard (WCAG 2.1.1). Only the ones that
+// really overflow get a tab stop, so the keyboard path does not go through every code block of a lesson.
+function scrollStops() {
+  document.querySelectorAll<HTMLElement>('.mc-code-body, .mc-fig-svg').forEach((el) => {
+    const over = el.clientWidth > 0 && el.scrollWidth > el.clientWidth + 1;
+    if (over && !el.hasAttribute('tabindex')) {
+      el.tabIndex = 0;
+      el.setAttribute('role', 'group');
+      el.setAttribute('aria-label', el.matches('.mc-fig-svg') ? 'Figure, scroll sideways to see all of it' : 'Code, scroll sideways to see all of it');
+      el.dataset.scrollStop = '';
+    } else if (!over && el.dataset.scrollStop !== undefined) {
+      el.removeAttribute('tabindex'); el.removeAttribute('role'); el.removeAttribute('aria-label');
+      delete el.dataset.scrollStop;
+    }
+  });
+}
+let scrollTimer = 0;
+const queueScrollStops = () => { clearTimeout(scrollTimer); scrollTimer = window.setTimeout(scrollStops, 150); };
+scrollStops();
+window.addEventListener('resize', queueScrollStops);
+document.addEventListener('mc:os', queueScrollStops);
+document.addEventListener('toggle', queueScrollStops, true); // code inside <details> has no width until it opens

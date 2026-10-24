@@ -161,3 +161,8 @@ details[open].mc-callout > summary { margin-bottom: 8px; }
 .mc-hints-bar .btn[hidden] { display: none; }
 .mc-hints-note { color: var(--muted); font-size: var(--fs-sm); }
 [data-hints] .step-body li:focus { outline: none; }
+
+/* the book's \label of a section, figure, table or lab: an extra link target next to the element */
+.mc-anchor { display: block; height: 0; scroll-margin-top: calc(var(--header-h) + 64px); }
+.mc-obj-study { background: var(--surface-2); color: var(--muted); border-color: var(--line-strong); }
+.mc-obj-none { display: block; }

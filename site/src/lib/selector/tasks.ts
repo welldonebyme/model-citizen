@@ -513,7 +513,7 @@ function renderTerminal(res: CommandResult, clock: string, project: Project): st
   const out: string[] = [];
   const quiet = res.parsed?.args.quiet ?? false;
   const ts = (t: string) => `${clock}  ${t}`;
-  if (res.error && (res.error.kind === 'Usage' || res.error.kind === 'Shell')) return res.error.lines(res.command ?? 'ls');
+  if (res.error && ['Usage', 'UsageTop', 'UsageShort', 'Shell'].includes(res.error.kind)) return res.error.lines(res.command ?? 'ls');
   if (!quiet) {
     out.push(ts('Running with dbt=1.11.16'), ts('Registered adapter: duckdb=1.11.0'));
     if (project.dag.found_line) out.push(ts(project.dag.found_line));

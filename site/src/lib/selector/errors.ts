@@ -1,16 +1,21 @@
 /** Errors with the same title and message dbt 1.11 prints ("Encountered an error:" block). */
 
-export type ErrorKind = 'Runtime Error' | 'Internal Error' | 'Compilation Error' | 'Usage' | 'Unhandled' | 'Shell';
+export type ErrorKind = 'Runtime Error' | 'Internal Error' | 'Compilation Error' | 'Usage' | 'UsageTop' | 'UsageShort' | 'Unhandled' | 'Shell';
 
 export class DbtError extends Error {
+  /** the command word as typed (usage lines say "dbt list" when the user typed list) */
+  cmd?: string;
   constructor(readonly kind: ErrorKind, message: string, readonly hint?: string) {
     super(message);
   }
   /** The lines dbt prints after "Encountered an error:" (or the click usage block). */
   lines(command = 'ls'): string[] {
+    command = this.cmd ?? command;
     if (this.kind === 'Usage') {
       return [`Usage: dbt ${command} [OPTIONS]`, `Try 'dbt ${command} --help' for help.`, '', `Error: ${this.message}`];
     }
+    if (this.kind === 'UsageTop') return ['Usage: dbt [OPTIONS] [COMMAND] [ARGS]...', "Try 'dbt --help' for help.", '', `Error: ${this.message}`];
+    if (this.kind === 'UsageShort') return [`Error: ${this.message}`];
     if (this.kind === 'Unhandled' || this.kind === 'Shell') return this.message.split('\n');
     return [this.kind, ...this.message.split('\n').map((l) => `  ${l}`)];
   }

@@ -238,3 +238,27 @@ describe('the "1.11.16 vs docs" facts show what they say', () => {
     expect(r.output.length).toBe(2);
   });
 });
+
+import { getCloseMatches, ratio } from '../../src/lib/selector/difflib';
+
+describe('click usage errors (formats checked with real dbt 1.11.16)', () => {
+  const p = loadProject('jaffle', 'ch16');
+  const err = (line: string) => runCommand(p, line).terminal.join('\n');
+  it('difflib = Python', () => {
+    const ref = JSON.parse(readFileSync(`${SITE}tests/selector/fixtures/difflib.json`, 'utf8')) as [string, string[], string[], number[]][];
+    for (const [w, ps, matches, ratios] of ref) {
+      expect(getCloseMatches(w, ps)).toEqual(matches);
+      ps.forEach((x, i) => expect(ratio(x, w)).toBeCloseTo(ratios[i], 5));
+    }
+  });
+  it('no such option, with suggestions', () => {
+    expect(err('dbt ls --selec x')).toBe("Usage: dbt ls [OPTIONS]\nTry 'dbt ls --help' for help.\n\nError: No such option '--selec'. (Did you mean one of: '--help', '--select', '--selector'?)");
+    expect(err('dbt ls --foo')).toBe("Usage: dbt ls [OPTIONS]\nTry 'dbt ls --help' for help.\n\nError: No such option '--foo'.");
+    expect(err('dbt run --resource-type model')).toContain("Usage: dbt run [OPTIONS]");
+  });
+  it('no such command, missing argument', () => {
+    expect(err('dbt bild')).toBe("Usage: dbt [OPTIONS] [COMMAND] [ARGS]...\nTry 'dbt --help' for help.\n\nError: No such command 'bild'. Did you mean 'build'?");
+    expect(err('dbt ls --select')).toBe("Error: Option '--select' requires an argument.");
+    expect(err('dbt ls fct_orders')).toBe("Usage: dbt ls [OPTIONS]\nTry 'dbt ls --help' for help.\n\nError: Got unexpected extra argument (fct_orders)");
+  });
+});

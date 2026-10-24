@@ -7,6 +7,7 @@
  *  - dbt 1.11 click rules: multi-value options (--select a b c) eat words until the next "-..." word,
  *    global flags are accepted before or after the command, unknown options are usage errors
  */
+import { getCloseMatches } from './difflib';
 import { DbtError, usageError } from './errors';
 import { fnmatchRegExp } from './fnmatch';
 import type { Indirect } from './spec';
@@ -242,6 +243,22 @@ const COMMAND_OPTS: Partial<Record<CommandName, OptDef[]>> = {
   deps: [P.projectDir, P.vars], debug: [P.projectDir, P.vars], clean: [P.profilesDir, P.projectDir, P.targetPath, P.vars],
 };
 
+const COMMANDS = ['build', 'clean', 'clone', 'compile', 'debug', 'deps', 'docs', 'init', 'list', 'ls', 'parse', 'retry', 'run', 'run-operation', 'seed', 'show', 'snapshot', 'source', 'test'];
+
+/** click: "Did you mean '--select'?" or "(Did you mean one of: '--select', '--selector'?)" */
+function suggest(word: string, possibilities: string[]): string {
+  const m = getCloseMatches(word, possibilities).sort();
+  if (!m.length) return '';
+  const list = m.map((x) => `'${x}'`).join(', ');
+  return m.length === 1 ? ` Did you mean ${list}?` : ` (Did you mean one of: ${list}?)`;
+}
+
+function noSuchOption(word: string, defs: OptDef[]): DbtError {
+  const name = word.split('=')[0];
+  const longs = name.startsWith('--') ? [...new Set([...defs.flatMap((d) => [...d.names, ...(d.neg ?? [])]), '--help'].filter((n) => n.startsWith('--')))] : [];
+  return usageError(`No such option '${name}'.${longs.length ? suggest(name, longs) : ''}`);
+}
+
 function envGet(env: Record<string, string>, name: string): string | undefined {
   // dbt 1.11: DBT_ENGINE_<X> is preferred, the old DBT_<X> still works
   const engine = name.replace(/^DBT_/, 'DBT_ENGINE_');
@@ -302,7 +319,7 @@ export function parseCommandLine(line: string, opts: ParseOptions = {}): ParsedC
       let first: string;
       if (inlineVal !== null) first = inlineVal;
       else {
-        if (rest.length === 0) throw usageError(`Option '${name}' requires an argument.`);
+        if (rest.length === 0) throw new DbtError('UsageShort', `Option '${name}' requires an argument.`);
         first = rest[0];
         used = 1;
       }
@@ -329,7 +346,7 @@ export function parseCommandLine(line: string, opts: ParseOptions = {}): ParsedC
 
   while (i < argv.length && argv[i].startsWith('-')) {
     const used = takeOption(GLOBAL, argv[i], argv.slice(i + 1));
-    if (used === null) throw usageError(`No such option '${argv[i].split('=')[0]}'.`);
+    if (used === null) throw new DbtError('UsageTop', noSuchOption(argv[i], GLOBAL).message);
     i += 1 + used;
   }
   if (i >= argv.length) throw usageError('Missing command. Try: dbt ls, dbt build, dbt run, dbt test, dbt seed, dbt snapshot.');
@@ -344,19 +361,24 @@ export function parseCommandLine(line: string, opts: ParseOptions = {}): ParsedC
   } else if (['build', 'run', 'test', 'seed', 'snapshot', 'compile', 'show', 'clone', 'parse', 'retry', 'run-operation', 'deps', 'debug', 'clean', 'init'].includes(cmdWord)) {
     command = cmdWord as CommandName;
   } else {
-    throw usageError(`No such command '${cmdWord}'.`);
+    throw new DbtError('UsageTop', `No such command '${cmdWord}'.${suggest(cmdWord, COMMANDS)}`);
   }
   i++;
   const cmdOpts = [...(COMMAND_OPTS[command] ?? []), ...GLOBAL];
-  while (i < argv.length) {
-    const word = argv[i];
-    if (!word.startsWith('-') || word === '-') {
-      if (command === 'run-operation' && values.macro === undefined) { values.macro = word; i++; continue; }
-      throw usageError(`Got unexpected extra argument (${argv.slice(i).join(' ')})`);
+  try {
+    while (i < argv.length) {
+      const word = argv[i];
+      if (!word.startsWith('-') || word === '-') {
+        if (command === 'run-operation' && values.macro === undefined) { values.macro = word; i++; continue; }
+        throw usageError(`Got unexpected extra argument (${argv.slice(i).join(' ')})`);
+      }
+      const used = takeOption(cmdOpts, word, argv.slice(i + 1));
+      if (used === null) throw noSuchOption(word, cmdOpts);
+      i += 1 + used;
     }
-    const used = takeOption(cmdOpts, word, argv.slice(i + 1));
-    if (used === null) throw usageError(`No such option '${word.split('=')[0]}'.`);
-    i += 1 + used;
+  } catch (e) {
+    if (e instanceof DbtError) e.cmd = cmdWord;
+    throw e;
   }
 
   // environment variables (CLI wins)

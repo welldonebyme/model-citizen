@@ -1209,6 +1209,35 @@
        "textBook": "From /Users/mac/Documents/Adnane/dbt-bible/labs/capstone/shopflow_dbt\n * [new tag]         m00        -> solution/m00\n * [new tag]         m01        -> solution/m01\n * [new tag]         m02        -> solution/m02\n ..."
       },
       {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. On your computer the paths start with ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>\\"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": "/Users/you/"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "auto-win-out-ch26-c2",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
        "c": [
         "The option ",
         {
@@ -1249,7 +1278,10 @@
        "id": "ch26-c4",
        "lang": "bash",
        "t": "code",
-       "text": "$ git diff --stat solution/m03 solution/m04      # what the solution changed in m04\n$ git diff solution/m04 -- models/marts          # your files compared with the solution\n$ git show solution/m04:models/marts/finance/fct_orders.sql   # read one solution file"
+       "text": "$ git diff --stat solution/m03 solution/m04      # what the solution changed in m04\n$ git diff solution/m04 -- models/marts          # your files compared with the solution\n$ git show solution/m04:models/marts/finance/fct_orders.sql   # read one solution file",
+       "variants": {
+        "win": "PS> git diff --stat solution/m03 solution/m04      # what the solution changed in m04\nPS> git diff solution/m04 -- models/marts          # your files compared with the solution\nPS> git show solution/m04:models/marts/finance/fct_orders.sql   # read one solution file"
+       }
       },
       {
        "id": "ch26-c5",
@@ -2015,7 +2047,10 @@
        "id": "ch26-c7",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt debug"
+       "text": "$ dbt debug",
+       "variants": {
+        "win": "PS> dbt debug"
+       }
       },
       {
        "id": "ch26-c8",
@@ -2028,7 +2063,10 @@
        "id": "ch26-c9",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls"
+       "text": "$ dbt ls",
+       "variants": {
+        "win": "PS> dbt ls"
+       }
       },
       {
        "id": "ch26-c10",
@@ -2543,7 +2581,10 @@
        "id": "ch26-c11",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls --resource-type source"
+       "text": "$ dbt ls --resource-type source",
+       "variants": {
+        "win": "PS> dbt ls --resource-type source"
+       }
       },
       {
        "id": "ch26-c12",
@@ -2555,7 +2596,10 @@
        "id": "ch26-c13",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt source freshness"
+       "text": "$ dbt source freshness",
+       "variants": {
+        "win": "PS> dbt source freshness"
+       }
       },
       {
        "id": "ch26-c14",
@@ -3256,7 +3300,10 @@
        "id": "ch26-c19",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --inline \"select count(*) as n_rows, count(distinct event_id) as n_ids from {{ source('web_analytics', 'events') }}\""
+       "text": "$ dbt show --inline \"select count(*) as n_rows, count(distinct event_id) as n_ids from {{ source('web_analytics', 'events') }}\"",
+       "variants": {
+        "win": "PS> dbt show --inline \"select count(*) as n_rows, count(distinct event_id) as n_ids from {{ source('web_analytics', 'events') }}\""
+       }
       },
       {
        "id": "ch26-c20",
@@ -5053,7 +5100,10 @@
        "id": "ch26-c38",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run-operation profile_key --args '{source_name: web_analytics, table_name: events, key: event_id}'\n$ dbt run-operation profile_key --args '{source_name: shopflow_app, table_name: customers, key: customer_id}'"
+       "text": "$ dbt run-operation profile_key --args '{source_name: web_analytics, table_name: events, key: event_id}'\n$ dbt run-operation profile_key --args '{source_name: shopflow_app, table_name: customers, key: customer_id}'",
+       "variants": {
+        "win": "PS> dbt run-operation profile_key --args '{source_name: web_analytics, table_name: events, key: event_id}'\nPS> dbt run-operation profile_key --args '{source_name: shopflow_app, table_name: customers, key: customer_id}'"
+       }
       },
       {
        "id": "ch26-c39",
@@ -6184,7 +6234,10 @@
        "id": "ch26-c50",
        "lang": "bash",
        "t": "code",
-       "text": "$ git diff solution/m05 solution/m06 -- models/intermediate/int_payments__per_order.sql\n$ git show solution/m06:models/staging/shopflow_app/_shopflow_app__models.yml"
+       "text": "$ git diff solution/m05 solution/m06 -- models/intermediate/int_payments__per_order.sql\n$ git show solution/m06:models/staging/shopflow_app/_shopflow_app__models.yml",
+       "variants": {
+        "win": "PS> git diff solution/m05 solution/m06 -- models/intermediate/int_payments__per_order.sql\nPS> git show solution/m06:models/staging/shopflow_app/_shopflow_app__models.yml"
+       }
       },
       {
        "blocks": [
@@ -8183,7 +8236,10 @@
        "id": "ch26-c63",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run -s fct_events --event-time-start \"2025-12-30\" --event-time-end \"2026-01-03\""
+       "text": "$ dbt run -s fct_events --event-time-start \"2025-12-30\" --event-time-end \"2026-01-03\"",
+       "variants": {
+        "win": "PS> dbt run -s fct_events --event-time-start \"2025-12-30\" --event-time-end \"2026-01-03\""
+       }
       },
       {
        "id": "ch26-c64",

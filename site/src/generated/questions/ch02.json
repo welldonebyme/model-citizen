@@ -378,6 +378,35 @@
      " A new terminal does not have the venv active. A is dangerous and installs outside the venv; C changes the version (the exam needs 1.11); D does not activate anything."
     ],
     "t": "p"
+   },
+   {
+    "blocks": [
+     {
+      "c": [
+       "In PowerShell the message reads ",
+       {
+        "t": "code",
+        "v": "dbt : The term 'dbt' is not recognized ..."
+       },
+       ", and the fix is the same: activate the venv, there with ",
+       {
+        "t": "code",
+        "v": ".venv\\Scripts\\Activate.ps1"
+       },
+       "."
+      ],
+      "t": "p"
+     }
+    ],
+    "kind": "tip",
+    "os": [
+     "win"
+    ],
+    "osNote": "win-q-ch02-05",
+    "t": "callout",
+    "title": [
+     "On Windows"
+    ]
    }
   ],
   "format": "mc",
@@ -599,6 +628,40 @@
      " Create the folder, create the venv, activate it, install, then check."
     ],
     "t": "p"
+   },
+   {
+    "blocks": [
+     {
+      "c": [
+       "On Windows the same order uses ",
+       {
+        "t": "code",
+        "v": "New-Item -ItemType Directory -Force $HOME\\dbt-course"
+       },
+       " and ",
+       {
+        "t": "code",
+        "v": "cd $HOME\\dbt-course"
+       },
+       " (step C) and ",
+       {
+        "t": "code",
+        "v": ".venv\\Scripts\\Activate.ps1"
+       },
+       " (step B)."
+      ],
+      "t": "p"
+     }
+    ],
+    "kind": "tip",
+    "os": [
+     "win"
+    ],
+    "osNote": "win-q-ch02-08",
+    "t": "callout",
+    "title": [
+     "On Windows"
+    ]
    }
   ],
   "format": "order",
@@ -1107,6 +1170,40 @@
      ")."
     ],
     "t": "p"
+   },
+   {
+    "blocks": [
+     {
+      "c": [
+       "This question is about ",
+       {
+        "t": "code",
+        "v": "ls"
+       },
+       " (macOS, Linux and WSL). In PowerShell the option that shows hidden items is ",
+       {
+        "t": "code",
+        "v": "-Force"
+       },
+       ": ",
+       {
+        "t": "code",
+        "v": "Get-ChildItem -Force"
+       },
+       "."
+      ],
+      "t": "p"
+     }
+    ],
+    "kind": "tip",
+    "os": [
+     "win"
+    ],
+    "osNote": "win-q-ch02-14",
+    "t": "callout",
+    "title": [
+     "On Windows"
+    ]
    }
   ],
   "format": "fill",

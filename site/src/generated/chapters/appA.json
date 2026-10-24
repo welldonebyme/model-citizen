@@ -2160,7 +2160,10 @@
        "id": "appA-c1",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt build -s +fct_orders                     # model and all its parents\n$ dbt run -s 1+dim_customers                   # model and its direct parents\n$ dbt run -s path:models/staging --exclude stg_stripe__payments\n$ dbt ls -s \"tag:finance,config.materialized:table\" --resource-type model\n$ dbt test -s test_type:unit                   # only unit tests\n$ dbt build -s +exposure:weekly_kpis           # everything the dashboard needs\n$ dbt build --selector nightly                 # a YAML selector (below)\n$ dbt build -s state:modified+ --defer --state prod-artifacts   # slim CI"
+       "text": "$ dbt build -s +fct_orders                     # model and all its parents\n$ dbt run -s 1+dim_customers                   # model and its direct parents\n$ dbt run -s path:models/staging --exclude stg_stripe__payments\n$ dbt ls -s \"tag:finance,config.materialized:table\" --resource-type model\n$ dbt test -s test_type:unit                   # only unit tests\n$ dbt build -s +exposure:weekly_kpis           # everything the dashboard needs\n$ dbt build --selector nightly                 # a YAML selector (below)\n$ dbt build -s state:modified+ --defer --state prod-artifacts   # slim CI",
+       "variants": {
+        "win": "PS> dbt build -s +fct_orders                     # model and all its parents\nPS> dbt run -s 1+dim_customers                   # model and its direct parents\nPS> dbt run -s path:models/staging --exclude stg_stripe__payments\nPS> dbt ls -s \"tag:finance,config.materialized:table\" --resource-type model\nPS> dbt test -s test_type:unit                   # only unit tests\nPS> dbt build -s +exposure:weekly_kpis           # everything the dashboard needs\nPS> dbt build --selector nightly                 # a YAML selector (below)\nPS> dbt build -s state:modified+ --defer --state prod-artifacts   # slim CI"
+       }
       },
       {
        "id": "appA-c2",
@@ -3451,7 +3454,10 @@
        "id": "appA-c18",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run -s fct_orders --full-refresh          # rebuild from scratch\n$ dbt run -s fct_order_items_daily --event-time-start \"2025-12-01\" --event-time-end \"2026-01-01\"\n$ dbt retry                                     # only the failed batches / nodes"
+       "text": "$ dbt run -s fct_orders --full-refresh          # rebuild from scratch\n$ dbt run -s fct_order_items_daily --event-time-start \"2025-12-01\" --event-time-end \"2026-01-01\"\n$ dbt retry                                     # only the failed batches / nodes",
+       "variants": {
+        "win": "PS> dbt run -s fct_orders --full-refresh          # rebuild from scratch\nPS> dbt run -s fct_order_items_daily --event-time-start \"2025-12-01\" --event-time-end \"2026-01-01\"\nPS> dbt retry                                     # only the failed batches / nodes"
+       }
       },
       {
        "c": [

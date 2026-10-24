@@ -3,7 +3,8 @@
     variants(text, ctx) -> {"win": str, "wsl": str} (only the OSes whose text differs) + a log
 
 Every command line (`$ ...` or `(.venv) $ ...`) is translated; output lines are kept as they are.
-- the prompt becomes `PS> ` / `(.venv) PS> ` (Windows); WSL keeps `$ `
+- the prompt becomes `PS> ` / `(.venv) PS> ` (Windows); WSL keeps `$ `. Every block with a command line has a
+  Windows variant, even when only the prompt changes (dbt commands), so Windows mode never shows a `$` prompt
 - `a && b` becomes two lines (Windows PowerShell 5.1 has no &&), `a; b` stays on one line
 - each simple command goes through the `transforms` of os-commands.yaml (regex -> PowerShell template, or a named
   function of this module for the few that need logic: env-var prefixes, grep options, sed ranges, echo, source)
@@ -434,9 +435,9 @@ class OsCommands:
             ps = self.line(cmd, block_id, ctx)
             prompt = f"{venv}PS> " if venv else "PS> "
             new = [prompt + p for p in ps]
-            # a variant only when a COMMAND differs (the prompt alone does not count)
-            if ps != [cmd] or len(raw) > 1:
-                changed_win = True
+            # every block with a command line gets a Windows variant, even when only the prompt changes: in
+            # Windows mode the learner sees `PS>` everywhere (a `$` prompt next to $HOME / $env: confuses)
+            changed_win = True
             win.extend(new)
             w = self.wsl_line(cmd)
             if w is not None:

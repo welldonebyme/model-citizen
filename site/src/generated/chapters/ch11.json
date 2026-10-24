@@ -799,7 +799,10 @@
        "id": "ch11-c1",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --inline \"select '{{ run_started_at.strftime('%Y-%m-%d') }}' as run_day, '{{ flags.WHICH }}' as command, '{{ project_name }}' as project, '{{ modules.datetime.date(2026, 1, 31) }}' as d\""
+       "text": "$ dbt compile --inline \"select '{{ run_started_at.strftime('%Y-%m-%d') }}' as run_day, '{{ flags.WHICH }}' as command, '{{ project_name }}' as project, '{{ modules.datetime.date(2026, 1, 31) }}' as d\"",
+       "variants": {
+        "win": "PS> dbt compile --inline \"select '{{ run_started_at.strftime('%Y-%m-%d') }}' as run_day, '{{ flags.WHICH }}' as command, '{{ project_name }}' as project, '{{ modules.datetime.date(2026, 1, 31) }}' as d\""
+       }
       },
       {
        "id": "ch11-c2",
@@ -863,7 +866,10 @@
        "id": "ch11-c4",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile -s tmp_this_demo\n$ dbt compile -s tmp_this_demo --target prod"
+       "text": "$ dbt compile -s tmp_this_demo\n$ dbt compile -s tmp_this_demo --target prod",
+       "variants": {
+        "win": "PS> dbt compile -s tmp_this_demo\nPS> dbt compile -s tmp_this_demo --target prod"
+       }
       },
       {
        "id": "ch11-c5",
@@ -1031,7 +1037,10 @@
        "id": "ch11-c6",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --inline \"select 1 as x {{ log('execute is ' ~ execute, info=true) }}\""
+       "text": "$ dbt compile --inline \"select 1 as x {{ log('execute is ' ~ execute, info=true) }}\"",
+       "variants": {
+        "win": "PS> dbt compile --inline \"select 1 as x {{ log('execute is ' ~ execute, info=true) }}\""
+       }
       },
       {
        "id": "ch11-c7",
@@ -1146,7 +1155,10 @@
        "id": "ch11-c9",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls -s 1+tmp_comment_demo --resource-type model"
+       "text": "$ dbt ls -s 1+tmp_comment_demo --resource-type model",
+       "variants": {
+        "win": "PS> dbt ls -s 1+tmp_comment_demo --resource-type model"
+       }
       },
       {
        "id": "ch11-c10",
@@ -1607,7 +1619,10 @@
        "id": "ch11-c15",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --inline \"select {{ cents_to_dollars(amount) }} as amount from {{ ref('stg_stripe__payments') }}\""
+       "text": "$ dbt compile --inline \"select {{ cents_to_dollars(amount) }} as amount from {{ ref('stg_stripe__payments') }}\"",
+       "variants": {
+        "win": "PS> dbt compile --inline \"select {{ cents_to_dollars(amount) }} as amount from {{ ref('stg_stripe__payments') }}\""
+       }
       },
       {
        "id": "ch11-c16",
@@ -1678,7 +1693,10 @@
        "id": "ch11-c18",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --inline \"select {{ cents_to_dollars('1999') }} as a, {{ cents_to_dollars('1999', scale=1) }} as b\""
+       "text": "$ dbt show --inline \"select {{ cents_to_dollars('1999') }} as a, {{ cents_to_dollars('1999', scale=1) }} as b\"",
+       "variants": {
+        "win": "PS> dbt show --inline \"select {{ cents_to_dollars('1999') }} as a, {{ cents_to_dollars('1999', scale=1) }} as b\""
+       }
       },
       {
        "id": "ch11-c19",
@@ -1757,7 +1775,10 @@
        "id": "ch11-c20",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --inline \"select {{ cents_to_dollars('amount', 2, 'x') }} as a\""
+       "text": "$ dbt compile --inline \"select {{ cents_to_dollars('amount', 2, 'x') }} as a\"",
+       "variants": {
+        "win": "PS> dbt compile --inline \"select {{ cents_to_dollars('amount', 2, 'x') }} as a\""
+       }
       },
       {
        "id": "ch11-c21",
@@ -1944,7 +1965,10 @@
        "id": "ch11-c22",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --inline \"select {{ cent_to_dollars('amount') }} as a from {{ ref('stg_stripe__payments') }}\""
+       "text": "$ dbt compile --inline \"select {{ cent_to_dollars('amount') }} as a from {{ ref('stg_stripe__payments') }}\"",
+       "variants": {
+        "win": "PS> dbt compile --inline \"select {{ cent_to_dollars('amount') }} as a from {{ ref('stg_stripe__payments') }}\""
+       }
       },
       {
        "id": "ch11-c23",
@@ -2532,7 +2556,10 @@
        "id": "ch11-c33",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile -s tmp_methods"
+       "text": "$ dbt compile -s tmp_methods",
+       "variants": {
+        "win": "PS> dbt compile -s tmp_methods"
+       }
       },
       {
        "id": "ch11-c34",
@@ -2626,7 +2653,10 @@
        "id": "ch11-c36",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile -s tmp_methods"
+       "text": "$ dbt compile -s tmp_methods",
+       "variants": {
+        "win": "PS> dbt compile -s tmp_methods"
+       }
       },
       {
        "id": "ch11-c37",
@@ -2799,7 +2829,10 @@
        "id": "ch11-c38",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --inline \"{{ exceptions.raise_compiler_error('Stop: the variable start_date is missing') }}\""
+       "text": "$ dbt compile --inline \"{{ exceptions.raise_compiler_error('Stop: the variable start_date is missing') }}\"",
+       "variants": {
+        "win": "PS> dbt compile --inline \"{{ exceptions.raise_compiler_error('Stop: the variable start_date is missing') }}\""
+       }
       },
       {
        "id": "ch11-c39",
@@ -2981,7 +3014,10 @@
        "id": "ch11-c41",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run-operation describe_relation --args '{model_name: stg_stripe__payments}'"
+       "text": "$ dbt run-operation describe_relation --args '{model_name: stg_stripe__payments}'",
+       "variants": {
+        "win": "PS> dbt run-operation describe_relation --args '{model_name: stg_stripe__payments}'"
+       }
       },
       {
        "id": "ch11-c42",
@@ -3123,7 +3159,10 @@
        "id": "ch11-c44",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run-operation print_row_counts"
+       "text": "$ dbt run-operation print_row_counts",
+       "variants": {
+        "win": "PS> dbt run-operation print_row_counts"
+       }
       },
       {
        "id": "ch11-c45",
@@ -3146,7 +3185,10 @@
        "id": "ch11-c46",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run-operation print_row_counts --args '{materializations: [view]}'"
+       "text": "$ dbt run-operation print_row_counts --args '{materializations: [view]}'",
+       "variants": {
+        "win": "PS> dbt run-operation print_row_counts --args '{materializations: [view]}'"
+       }
       },
       {
        "id": "ch11-c47",
@@ -4231,7 +4273,10 @@
        "id": "ch11-c53",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt deps"
+       "text": "$ dbt deps",
+       "variants": {
+        "win": "PS> dbt deps"
+       }
       },
       {
        "id": "ch11-c54",
@@ -4240,6 +4285,35 @@
        "t": "code",
        "text": "20:50:02  Running with dbt=1.11.16\n20:50:02  Updating lock file in file path: /Users/you/dbt-course/jaffle_dbt/package-lock.yml\n20:50:02  Installing dbt-labs/dbt_utils\n20:50:03  Installed from version 1.4.1\n20:50:03  Up to date!\n20:50:03  Installing dbt-labs/audit_helper\n20:50:03  Installed from version 0.14.0\n20:50:03  Up to date!",
        "textBook": "20:50:02  Running with dbt=1.11.16\n20:50:02  Updating lock file in file path: /Users/mac/dbt-course/jaffle_dbt/package-lock.yml\n20:50:02  Installing dbt-labs/dbt_utils\n20:50:03  Installed from version 1.4.1\n20:50:03  Up to date!\n20:50:03  Installing dbt-labs/audit_helper\n20:50:03  Installed from version 0.14.0\n20:50:03  Up to date!"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. On your computer the paths start with ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>\\"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": "/Users/you/"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "auto-win-out-ch11-c53",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "c": [
@@ -4687,6 +4761,35 @@
        "textBook": "22:10:19  Running with dbt=1.11.16\n22:10:19  Added new package dbt-labs/codegen@0.13.1 to /Users/mac/dbt-course/jaffle_dbt/packages.yml\n22:10:20  Updating lock file in file path: /Users/mac/dbt-course/jaffle_dbt/package-lock.yml\n...\n22:10:20  Installing dbt-labs/codegen\n22:10:21  Installed from version 0.13.1\n22:10:21  Updated version available: 0.14.1\n22:10:21\n22:10:21  Updates available for packages: ['dbt-labs/codegen']\nUpdate your versions in packages.yml, then run dbt deps"
       },
       {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. On your computer the paths start with ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>\\"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": "/Users/you/"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "auto-win-out-ch11-c56",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
        "c": [
         "Because we pinned an exact version (",
         {
@@ -4772,7 +4875,10 @@
        "id": "ch11-c58",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt build"
+       "text": "$ dbt build",
+       "variants": {
+        "win": "PS> dbt build"
+       }
       },
       {
        "id": "ch11-c59",
@@ -4806,7 +4912,10 @@
        "id": "ch11-c60",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt clean"
+       "text": "$ dbt clean",
+       "variants": {
+        "win": "PS> dbt clean"
+       }
       },
       {
        "id": "ch11-c61",
@@ -4815,6 +4924,35 @@
        "t": "code",
        "text": "22:12:11  Running with dbt=1.11.16\n22:12:11  Checking /Users/you/dbt-course/jaffle_dbt/target/*\n22:12:11  Cleaned /Users/you/dbt-course/jaffle_dbt/target/*\n22:12:11  Checking /Users/you/dbt-course/jaffle_dbt/dbt_packages/*\n22:12:11  Cleaned /Users/you/dbt-course/jaffle_dbt/dbt_packages/*\n22:12:11  Finished cleaning all paths.",
        "textBook": "22:12:11  Running with dbt=1.11.16\n22:12:11  Checking /Users/mac/dbt-course/jaffle_dbt/target/*\n22:12:11  Cleaned /Users/mac/dbt-course/jaffle_dbt/target/*\n22:12:11  Checking /Users/mac/dbt-course/jaffle_dbt/dbt_packages/*\n22:12:11  Cleaned /Users/mac/dbt-course/jaffle_dbt/dbt_packages/*\n22:12:11  Finished cleaning all paths."
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. On your computer the paths start with ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>\\"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": "/Users/you/"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "auto-win-out-ch11-c60",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "c": [
@@ -4966,7 +5104,10 @@
        "id": "ch11-c63",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls -s fct_orders        # with require-dbt-version: [\">=1.12.0\", \"<2.0.0\"] in our dbt_project.yml"
+       "text": "$ dbt ls -s fct_orders        # with require-dbt-version: [\">=1.12.0\", \"<2.0.0\"] in our dbt_project.yml",
+       "variants": {
+        "win": "PS> dbt ls -s fct_orders        # with require-dbt-version: [\">=1.12.0\", \"<2.0.0\"] in our dbt_project.yml"
+       }
       },
       {
        "id": "ch11-c64",
@@ -5233,7 +5374,10 @@
        "id": "ch11-c67",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --select int_orders__payment_methods_pivoted"
+       "text": "$ dbt compile --select int_orders__payment_methods_pivoted",
+       "variants": {
+        "win": "PS> dbt compile --select int_orders__payment_methods_pivoted"
+       }
       },
       {
        "id": "ch11-c68",
@@ -5417,7 +5561,10 @@
        "id": "ch11-c69",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --inline \"{% set methods = dbt_utils.get_column_values(table=ref('stg_stripe__payments'), column='payment_method') %}select '{{ methods | join(', ') }}' as methods_found\""
+       "text": "$ dbt compile --inline \"{% set methods = dbt_utils.get_column_values(table=ref('stg_stripe__payments'), column='payment_method') %}select '{{ methods | join(', ') }}' as methods_found\"",
+       "variants": {
+        "win": "PS> dbt compile --inline \"{% set methods = dbt_utils.get_column_values(table=ref('stg_stripe__payments'), column='payment_method') %}select '{{ methods | join(', ') }}' as methods_found\""
+       }
       },
       {
        "id": "ch11-c70",
@@ -5450,7 +5597,10 @@
        "id": "ch11-c71",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --inline \"select order_id, {{ dbt_utils.pivot('payment_method', dbt_utils.get_column_values(ref('stg_stripe__payments'), 'payment_method', order_by='payment_method'), agg='sum', then_value='amount', suffix='_amount') }} from {{ ref('stg_stripe__payments') }} where status = 'success' group by order_id order by order_id\" --limit 3"
+       "text": "$ dbt show --inline \"select order_id, {{ dbt_utils.pivot('payment_method', dbt_utils.get_column_values(ref('stg_stripe__payments'), 'payment_method', order_by='payment_method'), agg='sum', then_value='amount', suffix='_amount') }} from {{ ref('stg_stripe__payments') }} where status = 'success' group by order_id order by order_id\" --limit 3",
+       "variants": {
+        "win": "PS> dbt show --inline \"select order_id, {{ dbt_utils.pivot('payment_method', dbt_utils.get_column_values(ref('stg_stripe__payments'), 'payment_method', order_by='payment_method'), agg='sum', then_value='amount', suffix='_amount') }} from {{ ref('stg_stripe__payments') }} where status = 'success' group by order_id order by order_id\" --limit 3"
+       }
       },
       {
        "id": "ch11-c72",
@@ -5637,7 +5787,10 @@
        "id": "ch11-c76",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --inline \"select {{ dbt_utils.star(from=ref('stg_jaffle_shop__customers'), except=['email', 'signup_date']) }} from {{ ref('stg_jaffle_shop__customers') }}\""
+       "text": "$ dbt compile --inline \"select {{ dbt_utils.star(from=ref('stg_jaffle_shop__customers'), except=['email', 'signup_date']) }} from {{ ref('stg_jaffle_shop__customers') }}\"",
+       "variants": {
+        "win": "PS> dbt compile --inline \"select {{ dbt_utils.star(from=ref('stg_jaffle_shop__customers'), except=['email', 'signup_date']) }} from {{ ref('stg_jaffle_shop__customers') }}\""
+       }
       },
       {
        "id": "ch11-c77",
@@ -5681,7 +5834,10 @@
        "id": "ch11-c78",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --inline \"{{ dbt_utils.union_relations(relations=[ref('stg_jaffle_shop__orders'), ref('stg_jaffle_shop__customers')], include=['customer_id']) }}\" --limit 3"
+       "text": "$ dbt show --inline \"{{ dbt_utils.union_relations(relations=[ref('stg_jaffle_shop__orders'), ref('stg_jaffle_shop__customers')], include=['customer_id']) }}\" --limit 3",
+       "variants": {
+        "win": "PS> dbt show --inline \"{{ dbt_utils.union_relations(relations=[ref('stg_jaffle_shop__orders'), ref('stg_jaffle_shop__customers')], include=['customer_id']) }}\" --limit 3"
+       }
       },
       {
        "id": "ch11-c79",
@@ -6132,7 +6288,10 @@
          "id": "ch11-c86",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt compile --select int_orders__payment_methods_pivoted fct_order_items\n$ dbt build\n$ dbt show --select fct_orders --limit 5\n$ dbt show --select fct_order_items --limit 5"
+         "text": "$ dbt compile --select int_orders__payment_methods_pivoted fct_order_items\n$ dbt build\n$ dbt show --select fct_orders --limit 5\n$ dbt show --select fct_order_items --limit 5",
+         "variants": {
+          "win": "PS> dbt compile --select int_orders__payment_methods_pivoted fct_order_items\nPS> dbt build\nPS> dbt show --select fct_orders --limit 5\nPS> dbt show --select fct_order_items --limit 5"
+         }
         },
         {
          "c": [
@@ -6336,7 +6495,10 @@
        "id": "ch11-c89",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --select audit_fct_monthly_revenue"
+       "text": "$ dbt show --select audit_fct_monthly_revenue",
+       "variants": {
+        "win": "PS> dbt show --select audit_fct_monthly_revenue"
+       }
       },
       {
        "id": "ch11-c90",
@@ -6565,7 +6727,10 @@
        "id": "ch11-c91",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run-operation generate_base_model --args '{source_name: stripe, table_name: payments}'"
+       "text": "$ dbt run-operation generate_base_model --args '{source_name: stripe, table_name: payments}'",
+       "variants": {
+        "win": "PS> dbt run-operation generate_base_model --args '{source_name: stripe, table_name: payments}'"
+       }
       },
       {
        "id": "ch11-c92",
@@ -6600,7 +6765,10 @@
        "id": "ch11-c93",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run-operation generate_source --args '{schema_name: stripe}'"
+       "text": "$ dbt run-operation generate_source --args '{schema_name: stripe}'",
+       "variants": {
+        "win": "PS> dbt run-operation generate_source --args '{schema_name: stripe}'"
+       }
       },
       {
        "id": "ch11-c94",
@@ -6866,7 +7034,10 @@
        "id": "ch11-c98",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run-operation generate_source --args '{schema_name: stripe}'"
+       "text": "$ dbt run-operation generate_source --args '{schema_name: stripe}'",
+       "variants": {
+        "win": "PS> dbt run-operation generate_source --args '{schema_name: stripe}'"
+       }
       },
       {
        "id": "ch11-c99",
@@ -7165,7 +7336,10 @@
          "id": "ch11-c100",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt run-operation print_row_counts\n$ dbt run-operation print_row_counts --args '{materializations: [view]}'"
+         "text": "$ dbt run-operation print_row_counts\n$ dbt run-operation print_row_counts --args '{materializations: [view]}'",
+         "variants": {
+          "win": "PS> dbt run-operation print_row_counts\nPS> dbt run-operation print_row_counts --args '{materializations: [view]}'"
+         }
         },
         {
          "c": [
@@ -7212,7 +7386,10 @@
          "id": "ch11-c101",
          "lang": "bash",
          "t": "code",
-         "text": "$ git status --short\n$ git add .\n$ git commit -m \"Macros and packages: cents_to_dollars, dbt_utils, audit_helper, pivot, fct_order_items, print_row_counts\""
+         "text": "$ git status --short\n$ git add .\n$ git commit -m \"Macros and packages: cents_to_dollars, dbt_utils, audit_helper, pivot, fct_order_items, print_row_counts\"",
+         "variants": {
+          "win": "PS> git status --short\nPS> git add .\nPS> git commit -m \"Macros and packages: cents_to_dollars, dbt_utils, audit_helper, pivot, fct_order_items, print_row_counts\""
+         }
         },
         {
          "c": [

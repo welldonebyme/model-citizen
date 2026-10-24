@@ -3959,7 +3959,10 @@
          "id": "ch22-c20",
          "lang": "bash",
          "t": "code",
-         "text": "$ git apply $B/01-jinja-missing-endif.patch\n$ git diff --stat\n$ dbt parse\n$ git apply -R $B/01-jinja-missing-endif.patch\n$ git status --short"
+         "text": "$ git apply $B/01-jinja-missing-endif.patch\n$ git diff --stat\n$ dbt parse\n$ git apply -R $B/01-jinja-missing-endif.patch\n$ git status --short",
+         "variants": {
+          "win": "PS> git apply $B/01-jinja-missing-endif.patch\nPS> git diff --stat\nPS> dbt parse\nPS> git apply -R $B/01-jinja-missing-endif.patch\nPS> git status --short"
+         }
         },
         {
          "c": [
@@ -5046,7 +5049,10 @@
        "id": "ch22-c29",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile -s stg_jaffle_shop__products"
+       "text": "$ dbt compile -s stg_jaffle_shop__products",
+       "variants": {
+        "win": "PS> dbt compile -s stg_jaffle_shop__products"
+       }
       },
       {
        "id": "ch22-c30",
@@ -5105,7 +5111,10 @@
        "id": "ch22-c31",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show -s stg_jaffle_shop__customers --limit 3"
+       "text": "$ dbt show -s stg_jaffle_shop__customers --limit 3",
+       "variants": {
+        "win": "PS> dbt show -s stg_jaffle_shop__customers --limit 3"
+       }
       },
       {
        "id": "ch22-c32",
@@ -6050,7 +6059,10 @@
          "id": "ch22-c39",
          "lang": "bash",
          "t": "code",
-         "text": "$ git apply -R $B/03-database-error-bad-column.patch\n$ dbt run -s stg_jaffle_shop__customers\n$ dbt show -s stg_jaffle_shop__customers --limit 3"
+         "text": "$ git apply -R $B/03-database-error-bad-column.patch\n$ dbt run -s stg_jaffle_shop__customers\n$ dbt show -s stg_jaffle_shop__customers --limit 3",
+         "variants": {
+          "win": "PS> git apply -R $B/03-database-error-bad-column.patch\nPS> dbt run -s stg_jaffle_shop__customers\nPS> dbt show -s stg_jaffle_shop__customers --limit 3"
+         }
         },
         {
          "c": [
@@ -6753,7 +6765,10 @@
          "id": "ch22-c42",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build -s stg_jaffle_shop__products+"
+         "text": "$ dbt build -s stg_jaffle_shop__products+",
+         "variants": {
+          "win": "PS> dbt build -s stg_jaffle_shop__products+"
+         }
         },
         {
          "c": [
@@ -6820,7 +6835,10 @@
          "id": "ch22-c44",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls -s state:modified+ --state ../main-state --resource-type model"
+         "text": "$ dbt ls -s state:modified+ --state ../main-state --resource-type model",
+         "variants": {
+          "win": "PS> dbt ls -s state:modified+ --state ../main-state --resource-type model"
+         }
         },
         {
          "c": [
@@ -6876,7 +6894,10 @@
          "id": "ch22-c46",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build -s stg_jaffle_shop__products+"
+         "text": "$ dbt build -s stg_jaffle_shop__products+",
+         "variants": {
+          "win": "PS> dbt build -s stg_jaffle_shop__products+"
+         }
         },
         {
          "c": [
@@ -6918,7 +6939,10 @@
          "id": "ch22-c48",
          "lang": "bash",
          "t": "code",
-         "text": "$ git status --short\n$ dbt ls -s state:modified+ --state ../main-state\n$ git switch main\n$ git branch -d fix/products-semicolon"
+         "text": "$ git status --short\n$ dbt ls -s state:modified+ --state ../main-state\n$ git switch main\n$ git branch -d fix/products-semicolon",
+         "variants": {
+          "win": "PS> git status --short\nPS> dbt ls -s state:modified+ --state ../main-state\nPS> git switch main\nPS> git branch -d fix/products-semicolon"
+         }
         },
         {
          "c": [
@@ -9896,7 +9920,10 @@
          "id": "ch22-c65",
          "lang": "bash",
          "t": "code",
-         "text": "$ git switch main\n$ git switch -c chore/project-flags"
+         "text": "$ git switch main\n$ git switch -c chore/project-flags",
+         "variants": {
+          "win": "PS> git switch main\nPS> git switch -c chore/project-flags"
+         }
         },
         {
          "c": [
@@ -9977,7 +10004,10 @@
          "id": "ch22-c67",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build"
+         "text": "$ dbt build",
+         "variants": {
+          "win": "PS> dbt build"
+         }
         },
         {
          "c": [
@@ -10141,7 +10171,10 @@
          "id": "ch22-c70",
          "lang": "bash",
          "t": "code",
-         "text": "$ git add dbt_project.yml\n$ git commit -m \"Debugging: project flags (behavior change flags opted in)\"\n$ git switch main\n$ git merge chore/project-flags\n$ git branch -d chore/project-flags\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch22 --stat"
+         "text": "$ git add dbt_project.yml\n$ git commit -m \"Debugging: project flags (behavior change flags opted in)\"\n$ git switch main\n$ git merge chore/project-flags\n$ git branch -d chore/project-flags\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch22 --stat",
+         "variants": {
+          "win": "PS> git add dbt_project.yml\nPS> git commit -m \"Debugging: project flags (behavior change flags opted in)\"\nPS> git switch main\nPS> git merge chore/project-flags\nPS> git branch -d chore/project-flags\nPS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nPS> git diff ref-ch22 --stat"
+         }
         },
         {
          "c": [

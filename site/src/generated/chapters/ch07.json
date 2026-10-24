@@ -1505,6 +1505,47 @@
              "variants": {
               "win": "PS> cd $HOME\\dbt-course\\jaffle_dbt\nPS> ..\\.venv\\Scripts\\Activate.ps1\n(.venv) PS> New-Item -ItemType Directory -Force models\\staging\\jaffle_shop, models\\staging\\stripe, models\\marts"
              }
+            },
+            {
+             "blocks": [
+              {
+               "c": [
+                "If the activation prints ",
+                {
+                 "t": "code",
+                 "v": "running scripts is disabled on this system"
+                },
+                ", run once ",
+                {
+                 "t": "code",
+                 "v": "Set-ExecutionPolicy -Scope CurrentUser RemoteSigned"
+                },
+                " (",
+                {
+                 "href": "/learn/ch02/ch02-s8/#ch02-s8-2",
+                 "site": true,
+                 "t": "ref",
+                 "text": "Section 2.8"
+                },
+                "), answer ",
+                {
+                 "t": "code",
+                 "v": "Y"
+                },
+                ", then activate again."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "win-ch07-activate",
+             "t": "callout",
+             "title": [
+              "On Windows"
+             ]
             }
            ]
           },
@@ -1579,7 +1620,10 @@
              "id": "ch07-c8",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ dbt ls --select \"source:*\""
+             "text": "(.venv) $ dbt ls --select \"source:*\"",
+             "variants": {
+              "win": "(.venv) PS> dbt ls --select \"source:*\""
+             }
             },
             {
              "id": "ch07-c9",
@@ -1867,7 +1911,10 @@
            "id": "ch07-c11",
            "lang": "bash",
            "t": "code",
-           "text": "(.venv) $ dbt show --inline \"select table_schema, table_name from information_schema.tables where table_schema in ('jaffle_shop', 'stripe') order by 1, 2\""
+           "text": "(.venv) $ dbt show --inline \"select table_schema, table_name from information_schema.tables where table_schema in ('jaffle_shop', 'stripe') order by 1, 2\"",
+           "variants": {
+            "win": "(.venv) PS> dbt show --inline \"select table_schema, table_name from information_schema.tables where table_schema in ('jaffle_shop', 'stripe') order by 1, 2\""
+           }
           },
           {
            "id": "ch07-c12",
@@ -1912,7 +1959,10 @@
            "id": "ch07-c13",
            "lang": "bash",
            "t": "code",
-           "text": "(.venv) $ dbt show --inline \"select count(*) as n from {{ source('stripe', 'payments') }}\"\n...\n|   n |\n| --- |\n| 341 |"
+           "text": "(.venv) $ dbt show --inline \"select count(*) as n from {{ source('stripe', 'payments') }}\"\n...\n|   n |\n| --- |\n| 341 |",
+           "variants": {
+            "win": "(.venv) PS> dbt show --inline \"select count(*) as n from {{ source('stripe', 'payments') }}\"\n...\n|   n |\n| --- |\n| 341 |"
+           }
           }
          ]
         },
@@ -2078,11 +2128,35 @@
             "search the code: ",
             {
              "t": "code",
-             "v": "grep -rn \"from stripe\\.|from jaffle_shop\\.\" models/"
+             "textBook": "grep -rn \"from stripe\\.|from jaffle_shop\\.\" models/",
+             "v": "grep -rnE \"from (stripe|jaffle_shop)\\.\" models/"
             },
             ";"
            ],
            "t": "p"
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "In PowerShell: ",
+              {
+               "t": "code",
+               "v": "Get-ChildItem -Recurse models -Filter *.sql | Select-String 'from (stripe|jaffle_shop)\\.'"
+              }
+             ],
+             "t": "p"
+            }
+           ],
+           "kind": "tip",
+           "os": [
+            "win"
+           ],
+           "osNote": "win-ch07-find-raw",
+           "t": "callout",
+           "title": [
+            "On Windows"
+           ]
           }
          ]
         },
@@ -2806,7 +2880,10 @@
              "id": "ch07-c23",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ dbt run"
+             "text": "(.venv) $ dbt run",
+             "variants": {
+              "win": "(.venv) PS> dbt run"
+             }
             },
             {
              "id": "ch07-c24",
@@ -2867,7 +2944,10 @@
              "id": "ch07-c25",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ dbt show --select stg_stripe__payments"
+             "text": "(.venv) $ dbt show --select stg_stripe__payments",
+             "variants": {
+              "win": "(.venv) PS> dbt show --select stg_stripe__payments"
+             }
             },
             {
              "id": "ch07-c26",
@@ -4070,7 +4150,10 @@
              "id": "ch07-c36",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ dbt build"
+             "text": "(.venv) $ dbt build",
+             "variants": {
+              "win": "(.venv) PS> dbt build"
+             }
             },
             {
              "id": "ch07-c37",
@@ -4118,7 +4201,10 @@
              "id": "ch07-c38",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ dbt show --inline \"select customer_id, number_of_orders, lifetime_value from {{ ref('dim_customers') }} order by customer_id\" --limit 10"
+             "text": "(.venv) $ dbt show --inline \"select customer_id, number_of_orders, lifetime_value from {{ ref('dim_customers') }} order by customer_id\" --limit 10",
+             "variants": {
+              "win": "(.venv) PS> dbt show --inline \"select customer_id, number_of_orders, lifetime_value from {{ ref('dim_customers') }} order by customer_id\" --limit 10"
+             }
             },
             {
              "id": "ch07-c39",
@@ -4154,7 +4240,10 @@
              "id": "ch07-c40",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ dbt show --inline \"select count(*) as n_customers, sum(number_of_orders) as total_orders, sum(lifetime_value) as total_lifetime_value, count(*) filter (where number_of_orders = 0) as customers_without_orders from {{ ref('dim_customers') }}\"\n(.venv) $ dbt show --inline \"select count(*) as n_orders, sum(amount) as total_amount from {{ ref('fct_orders') }}\""
+             "text": "(.venv) $ dbt show --inline \"select count(*) as n_customers, sum(number_of_orders) as total_orders, sum(lifetime_value) as total_lifetime_value, count(*) filter (where number_of_orders = 0) as customers_without_orders from {{ ref('dim_customers') }}\"\n(.venv) $ dbt show --inline \"select count(*) as n_orders, sum(amount) as total_amount from {{ ref('fct_orders') }}\"",
+             "variants": {
+              "win": "(.venv) PS> dbt show --inline \"select count(*) as n_customers, sum(number_of_orders) as total_orders, sum(lifetime_value) as total_lifetime_value, count(*) filter (where number_of_orders = 0) as customers_without_orders from {{ ref('dim_customers') }}\"\n(.venv) PS> dbt show --inline \"select count(*) as n_orders, sum(amount) as total_amount from {{ ref('fct_orders') }}\""
+             }
             },
             {
              "id": "ch07-c41",
@@ -5709,7 +5798,10 @@
              "id": "ch07-c53",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ git status --short\n?? models/\n(.venv) $ git add .\n(.venv) $ git commit -m \"Add sources, staging models, fct_orders and dim_customers\"\n[main 170c057] Add sources, staging models, fct_orders and dim_customers\n 11 files changed, 289 insertions(+)\n ..."
+             "text": "(.venv) $ git status --short\n?? models/\n(.venv) $ git add .\n(.venv) $ git commit -m \"Add sources, staging models, fct_orders and dim_customers\"\n[main 170c057] Add sources, staging models, fct_orders and dim_customers\n 11 files changed, 289 insertions(+)\n ...",
+             "variants": {
+              "win": "(.venv) PS> git status --short\n?? models/\n(.venv) PS> git add .\n(.venv) PS> git commit -m \"Add sources, staging models, fct_orders and dim_customers\"\n[main 170c057] Add sources, staging models, fct_orders and dim_customers\n 11 files changed, 289 insertions(+)\n ..."
+             }
             },
             {
              "c": [
@@ -5887,7 +5979,10 @@
              "id": "ch07-c54",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ duckdb ../practice/practice.duckdb\nD drop schema dbt_adnane cascade;\nD .quit\n(.venv) $ dbt run"
+             "text": "(.venv) $ duckdb ../practice/practice.duckdb\nD drop schema dbt_adnane cascade;\nD .quit\n(.venv) $ dbt run",
+             "variants": {
+              "win": "(.venv) PS> duckdb ../practice/practice.duckdb\nD drop schema dbt_adnane cascade;\nD .quit\n(.venv) PS> dbt run"
+             }
             },
             {
              "c": [
@@ -6041,7 +6136,10 @@
              "id": "ch07-c55",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ git push"
+             "text": "(.venv) $ git push",
+             "variants": {
+              "win": "(.venv) PS> git push"
+             }
             },
             {
              "c": [
@@ -6115,7 +6213,10 @@
              "id": "ch07-c56",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ git diff ref-ch07 --stat"
+             "text": "(.venv) $ git diff ref-ch07 --stat",
+             "variants": {
+              "win": "(.venv) PS> git diff ref-ch07 --stat"
+             }
             },
             {
              "c": [

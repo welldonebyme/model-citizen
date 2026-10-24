@@ -179,12 +179,34 @@ def _local(tag: str) -> str:
     return tag.split("}", 1)[-1]
 
 
+def _repair_text(svg: str, page) -> str:
+    """MuPDF's SVG writer turns a backslash followed by U (as in C:\\Users) into one U+FFFD. Put back the text
+    of the PDF span that the broken string comes from (every U+FFFD stands for a backslash and one character)."""
+    if "\ufffd" not in svg:
+        return svg
+    spans = {"".join(c["c"] for c in s["chars"]) for b in page.get_text("rawdict")["blocks"]
+             for l in b.get("lines", []) for s in l["spans"]}
+
+    def fix(m):
+        broken = m.group(1)
+        rx = re.compile("".join(r"\\." if ch == "\ufffd" else re.escape(ch) for ch in broken))
+        hits = sorted({s for s in spans if rx.fullmatch(s)})
+        if len(hits) != 1:
+            raise SystemExit(f"U+FFFD in figure text {broken!r}: {len(hits)} PDF spans match")
+        return m.group(0).replace(broken, hits[0].replace("&", "&amp;").replace("<", "&lt;"))
+
+    return re.sub(r">([^<>]*\ufffd[^<>]*)<", fix, svg)
+
+
 def pdf_to_svg_text(pdf_path) -> str:
     doc = pymupdf.open(str(pdf_path))
     try:
         if doc.page_count != 1:
             raise SystemExit(f"{pdf_path}: expected one page, got {doc.page_count}")
-        return doc[0].get_svg_image(text_as_path=False)
+        svg = _repair_text(doc[0].get_svg_image(text_as_path=False), doc[0])
+        if "\ufffd" in svg:
+            raise SystemExit(f"{pdf_path}: U+FFFD (unknown glyph) left in the SVG text")
+        return svg
     finally:
         doc.close()
 

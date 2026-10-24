@@ -83,7 +83,7 @@
     "alt": "A folder tree from the root folder / to the course folders. /Users/you/ is the home folder (~). It contains dbt-course/ (your course folder, made by the kit's setup) and .dbt/ (hidden: dbt connection settings). On Windows the home folder is C:\\Users\\you.",
     "description": "/ (root) → Users/ → you/ (home = ~). Inside you/: dbt-course/ (your course folder, made by the kit's setup) with .venv/ (Python 3.12 + dbt 1.11), practice/ (your workspace for the Chapter 2 lab: practice.duckdb, setup.sql and data/), kit/ (the practice kit: data/, updates/, bugs/, tools/ ...) and reference/ (the finished project, to compare); and .dbt/ (hidden: dbt connection settings). On Windows the same tree starts at C:\\Users\\you (written $HOME in PowerShell): C:\\Users\\you\\dbt-course\\practice, C:\\Users\\you\\.dbt.",
     "override": "converter/figures/overrides/ch02-fig1.tex",
-    "overrideSha1": "79368f329e2f786c3b835e3c7c568bf65a934732"
+    "overrideSha1": "7d7fa2ceb88d94ad1f35e96ae7e5109a2ffc4f99"
   },
   {
     "id": "ch03-fig1",

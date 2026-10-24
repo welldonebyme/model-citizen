@@ -35,12 +35,17 @@ You do NOT need to install Python yourself: uv downloads Python 3.12.
 
 ## 3. Run the setup
 
-Unzip the kit (anywhere, for example in Downloads), open a terminal in the unzipped folder, then:
+Unzip the kit (for example in Downloads: Safari may already have done it, then you see a
+`dbt-course-kit` folder there), go into the unzipped folder, then run the setup:
 
 ```bash
+unzip -q -o ~/Downloads/dbt-course-kit.zip -d ~/Downloads     # not needed if Safari already unzipped it
 cd ~/Downloads/dbt-course-kit
 bash setup.sh
 ```
+
+The website's lesson 1.6 ("Get the course files") copies the kit into `~/dbt-course/kit` before Chapter 2;
+the setup also works when you start it from there: `bash ~/dbt-course/kit/setup.sh`.
 
 It takes one or two minutes. You can run it again at any time: it keeps your venv, your files and your
 database. The end of the output must look like this:
@@ -205,5 +210,24 @@ The patches were made against tag `ch21` (they also apply to `ch22` ... `ch25`).
 | `error: patch does not apply` | Your file differs from the reference: compare with `git diff ref-ch21`, or make the 1 to 3 line change by hand. |
 | `uv: command not found` after installing it | Open a new terminal. |
 
-WSL (Ubuntu on Windows): follow this README inside the Ubuntu terminal. Keep the course folder in the
-Linux home (`~/dbt-course`), not under `/mnt/c/...` (much slower, and file locks behave differently).
+## 11. WSL (Ubuntu on Windows)
+
+Follow this README inside the Ubuntu terminal. Once:
+
+1. In Windows, right-click the Start button and open **Terminal (Admin)** (or Windows PowerShell (Admin)),
+   run `wsl --install` (it installs WSL and Ubuntu) and restart the computer when it asks.
+2. Open **Ubuntu** from the Start menu and choose a Linux user name and a password (`sudo` asks for it).
+3. Install the tools: `sudo apt update && sudo apt install -y unzip git`, then
+   `curl -LsSf https://astral.sh/uv/install.sh | sh` and open a new Ubuntu terminal.
+4. Copy the kit from your Windows Downloads folder into Linux, unzip it and run the setup:
+
+```bash
+mkdir -p ~/Downloads
+cp /mnt/c/Users/*/Downloads/dbt-course-kit.zip ~/Downloads/     # your Windows Downloads folder
+unzip -q -o ~/Downloads/dbt-course-kit.zip -d ~/Downloads
+cd ~/Downloads/dbt-course-kit
+bash setup.sh
+```
+
+Keep the course folder in the Linux home (`~/dbt-course`), not under `/mnt/c/...` (much slower, and file
+locks behave differently).

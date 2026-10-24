@@ -4,8 +4,8 @@ The book is written for a Mac. Everything works on Windows too: **dbt commands a
 only a few shell commands change. This file shows the Windows way, step by step. Use **PowerShell**
 (Start menu > "Windows PowerShell" or "Terminal"), not the old `cmd`.
 
-> Alternative: WSL (Ubuntu inside Windows). If you prefer Linux, install WSL, open the Ubuntu terminal and
-> follow `README.md` instead of this file.
+> Alternative: WSL (Ubuntu inside Windows). If you prefer Linux, install WSL (`README.md`, section 11),
+> open the Ubuntu terminal and follow `README.md` instead of this file.
 
 ## 1. What is in the kit
 
@@ -49,16 +49,26 @@ git config --global core.autocrlf true
 
 ## 3. Run the setup
 
-Right-click the downloaded `dbt-course-kit.zip` > **Extract All...** (for example into `Downloads`).
-In PowerShell, go into the extracted folder and run the setup:
+Unzip the kit with PowerShell (this puts the files in `Downloads\dbt-course-kit`), go into that folder and
+run the setup:
 
 ```powershell
+Expand-Archive $HOME\Downloads\dbt-course-kit.zip -DestinationPath $HOME\Downloads -Force
 cd $HOME\Downloads\dbt-course-kit
 powershell -ExecutionPolicy Bypass -File .\setup.ps1
 ```
 
-`-ExecutionPolicy Bypass` lets Windows run this one script; it changes no setting. If you
-extracted the zip somewhere else, `cd` into that folder (the one that contains `setup.ps1`).
+`-ExecutionPolicy Bypass` lets Windows run this one script; it changes no setting.
+
+If you prefer File Explorer: **Extract All...** proposes the folder `Downloads\dbt-course-kit`, and the zip
+already contains a `dbt-course-kit` folder, so the files land in `Downloads\dbt-course-kit\dbt-course-kit`.
+Then `cd $HOME\Downloads\dbt-course-kit\dbt-course-kit` (the folder that contains `setup.ps1`), or remove
+the last `dbt-course-kit` from the folder that Extract All proposes. If PowerShell says
+`The argument '.\setup.ps1' to the -File parameter does not exist`, you are in the outer folder.
+
+The website's lesson 1.6 ("Get the course files") copies the kit into `$HOME\dbt-course\kit` before
+Chapter 2; the setup also works when you start it from there:
+`powershell -ExecutionPolicy Bypass -File $HOME\dbt-course\kit\setup.ps1`.
 
 It takes one or two minutes. You can run it again at any time: it keeps your venv, your files and your
 database. The end of the output must look like this:
@@ -95,16 +105,9 @@ shows the paths rewritten; README.md section 6 has the full table).
 When the book says `~/dbt-course`, use `$HOME\dbt-course`. When it says `~/.dbt/profiles.yml`, use
 `$HOME\.dbt\profiles.yml` (you create it in Chapter 6; the setup never touches it).
 
-**Activate the venv** every time you open a new PowerShell window:
-
-```powershell
-cd $HOME\dbt-course
-.venv\Scripts\Activate.ps1
-dbt --version        # installed: 1.11.x  and  duckdb: 1.11.x
-```
-
-If PowerShell says "running scripts is disabled on this system", allow scripts for your user once,
-then activate again:
+**Once per computer, before the first activation**, allow PowerShell to run local scripts such as the venv's
+`Activate.ps1` (it asks for a confirmation: type `Y`). Without it, the activation stops with
+"... cannot be loaded because running scripts is disabled on this system":
 
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
@@ -112,6 +115,14 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 
 (Without changing that setting you can also call the programs by their full path:
 `$HOME\dbt-course\.venv\Scripts\dbt.exe --version`.)
+
+**Activate the venv** every time you open a new PowerShell window:
+
+```powershell
+cd $HOME\dbt-course
+.venv\Scripts\Activate.ps1
+dbt --version        # installed: 1.11.x  and  duckdb: 1.11.x
+```
 
 ## 5. Versions: one DuckDB version everywhere
 
@@ -131,7 +142,7 @@ python -c "import duckdb; print(duckdb.__version__)"   # the library (venv activ
 Then either align the venv with your CLI (use YOUR number, without the "v"):
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\setup.ps1 -DuckDBVersion 1.5.7
+powershell -ExecutionPolicy Bypass -File .\setup.ps1 -DuckDBVersion 1.5.7    # from the kit folder
 ```
 
 or install exactly 1.5.6: `winget install DuckDB.cli --version 1.5.6` (if winget offers that version).

@@ -48,20 +48,20 @@ class PathRewriter:
             if obj.get("t") == "code" and "text" in obj:           # code block
                 new, used = self.apply(obj["text"])
                 if used:
-                    obj["textBook"] = obj["text"]
+                    obj.setdefault("textBook", obj["text"])   # keep the book text (site edits ran first)
                     obj["text"] = new
                     log.append({"where": f"{where}#{obj.get('id')}", "field": "text", "rules": used})
                 if "title" in obj:
                     new, used = self.apply(obj["title"])
                     if used:
-                        obj["titleBook"] = obj["title"]
+                        obj.setdefault("titleBook", obj["title"])
                         obj["title"] = new
                         log.append({"where": f"{where}#{obj.get('id')}", "field": "title", "rules": used})
                 return obj
             if obj.get("t") == "code" and "v" in obj:              # inline code
                 new, used = self.apply(obj["v"])
                 if used:
-                    obj["textBook"] = obj["v"]
+                    obj.setdefault("textBook", obj["v"])
                     obj["v"] = new
                     log.append({"where": where, "field": "inline code", "rules": used, "before": obj["textBook"]})
                 return obj

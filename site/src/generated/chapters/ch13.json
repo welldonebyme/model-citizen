@@ -1260,7 +1260,10 @@
          "id": "ch13-c2",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt run -s customers_snapshot"
+         "text": "$ dbt run -s customers_snapshot",
+         "variants": {
+          "win": "PS> dbt run -s customers_snapshot"
+         }
         },
         {
          "id": "ch13-c3",
@@ -3462,7 +3465,10 @@
          "id": "ch13-c17",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls --resource-type snapshot --output json --output-keys name schema"
+         "text": "$ dbt ls --resource-type snapshot --output json --output-keys name schema",
+         "variants": {
+          "win": "PS> dbt ls --resource-type snapshot --output json --output-keys name schema"
+         }
         },
         {
          "id": "ch13-c18",
@@ -3514,7 +3520,10 @@
          "id": "ch13-c19",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt snapshot"
+         "text": "$ dbt snapshot",
+         "variants": {
+          "win": "PS> dbt snapshot"
+         }
         },
         {
          "id": "ch13-c20",
@@ -4103,7 +4112,10 @@
          "id": "ch13-c35",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build\n$ dbt run-operation print_row_counts"
+         "text": "$ dbt build\n$ dbt run-operation print_row_counts",
+         "variants": {
+          "win": "PS> dbt build\nPS> dbt run-operation print_row_counts"
+         }
         },
         {
          "c": [
@@ -4517,7 +4529,10 @@
        "id": "ch13-c44",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --inline \"select * from {{ ref('customers_snapshot') }}\""
+       "text": "$ dbt compile --inline \"select * from {{ ref('customers_snapshot') }}\"",
+       "variants": {
+        "win": "PS> dbt compile --inline \"select * from {{ ref('customers_snapshot') }}\""
+       }
       },
       {
        "id": "ch13-c45",
@@ -6014,7 +6029,10 @@
        "id": "ch13-c57",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt snapshot --full-refresh"
+       "text": "$ dbt snapshot --full-refresh",
+       "variants": {
+        "win": "PS> dbt snapshot --full-refresh"
+       }
       },
       {
        "id": "ch13-c58",
@@ -6268,7 +6286,10 @@
          "id": "ch13-c60",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --empty"
+         "text": "$ dbt build --empty",
+         "variants": {
+          "win": "PS> dbt build --empty"
+         }
         },
         {
          "id": "ch13-c61",
@@ -6331,7 +6352,10 @@
          "id": "ch13-c62",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --empty --exclude resource_type:snapshot\n$ dbt build --empty --exclude-resource-type snapshot"
+         "text": "$ dbt build --empty --exclude resource_type:snapshot\n$ dbt build --empty --exclude-resource-type snapshot",
+         "variants": {
+          "win": "PS> dbt build --empty --exclude resource_type:snapshot\nPS> dbt build --empty --exclude-resource-type snapshot"
+         }
         },
         {
          "c": [
@@ -7309,7 +7333,10 @@
          "id": "ch13-c66",
          "lang": "bash",
          "t": "code",
-         "text": "$ git diff ref-ch13 --stat"
+         "text": "$ git diff ref-ch13 --stat",
+         "variants": {
+          "win": "PS> git diff ref-ch13 --stat"
+         }
         },
         {
          "c": [

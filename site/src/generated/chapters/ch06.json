@@ -1126,6 +1126,57 @@
        }
       },
       {
+       "blocks": [
+        {
+         "c": [
+          "If the activation prints ",
+          {
+           "t": "code",
+           "v": "running scripts is disabled on this system"
+          },
+          ", run the one-time ",
+          {
+           "t": "code",
+           "v": "Set-ExecutionPolicy -Scope CurrentUser RemoteSigned"
+          },
+          " of ",
+          {
+           "href": "/learn/ch02/ch02-s8/#ch02-s8-2",
+           "site": true,
+           "t": "ref",
+           "text": "Section 2.8"
+          },
+          ", answer ",
+          {
+           "t": "code",
+           "v": "Y"
+          },
+          ", then activate again. The last command prints ",
+          {
+           "t": "code",
+           "v": "practice.duckdb"
+          },
+          " on Windows (the output above was recorded on macOS), or a red ",
+          {
+           "t": "code",
+           "v": "Cannot find path"
+          },
+          " error when the database is missing."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch06-check-workspace",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
        "c": [
         "You need three things: the prompt starts with ",
         {
@@ -1189,6 +1240,55 @@
         "."
        ],
        "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "On Windows every terminal of this course starts with two lines: ",
+          {
+           "t": "code",
+           "v": "cd $HOME\\dbt-course"
+          },
+          ", then ",
+          {
+           "t": "code",
+           "v": ".venv\\Scripts\\Activate.ps1"
+          },
+          " (Windows PowerShell 5.1 has no ",
+          {
+           "t": "code",
+           "v": "&&"
+          },
+          "). Where this paragraph says ",
+          {
+           "t": "code",
+           "v": "ls"
+          },
+          " and No such file or directory, the Windows check is ",
+          {
+           "t": "code",
+           "v": "Get-ChildItem"
+          },
+          ", and its error says ",
+          {
+           "t": "code",
+           "v": "Cannot find path"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch06-every-terminal",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "blocks": [
@@ -1315,7 +1415,7 @@
          "textBook": "/Users/mac",
          "v": "/Users/you"
         },
-        "; on your Mac you see your own home folder."
+        "; on your computer you see your own home folder."
        ],
        "t": "p"
       },
@@ -1570,6 +1670,47 @@
              "variants": {
               "win": "PS> cd $HOME\\dbt-course\nPS> .venv\\Scripts\\Activate.ps1"
              }
+            },
+            {
+             "blocks": [
+              {
+               "c": [
+                "If the activation prints ",
+                {
+                 "t": "code",
+                 "v": "running scripts is disabled on this system"
+                },
+                ", run once ",
+                {
+                 "t": "code",
+                 "v": "Set-ExecutionPolicy -Scope CurrentUser RemoteSigned"
+                },
+                " (",
+                {
+                 "href": "/learn/ch02/ch02-s8/#ch02-s8-2",
+                 "site": true,
+                 "t": "ref",
+                 "text": "Section 2.8"
+                },
+                "), answer ",
+                {
+                 "t": "code",
+                 "v": "Y"
+                },
+                ", then activate again."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "win-ch06-lab-activate",
+             "t": "callout",
+             "title": [
+              "On Windows"
+             ]
             }
            ]
           },
@@ -1585,7 +1726,10 @@
              "id": "ch06-c5",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ dbt init jaffle_dbt --skip-profile-setup"
+             "text": "(.venv) $ dbt init jaffle_dbt --skip-profile-setup",
+             "variants": {
+              "win": "(.venv) PS> dbt init jaffle_dbt --skip-profile-setup"
+             }
             },
             {
              "c": [
@@ -1607,7 +1751,7 @@
             },
             {
              "c": [
-              "If you have never used dbt on this Mac, you also see a second line, ",
+              "If you have never used dbt on this computer, you also see a second line, ",
               {
                "t": "code",
                "textBook": "Creating dbt configuration folder at /Users/mac/.dbt",
@@ -1691,7 +1835,49 @@
              "lang": "bash",
              "t": "code",
              "text": "(.venv) $ cd jaffle_dbt\n(.venv) $ pwd\n/Users/you/dbt-course/jaffle_dbt",
-             "textBook": "(.venv) $ cd jaffle_dbt\n(.venv) $ pwd\n/Users/mac/dbt-course/jaffle_dbt"
+             "textBook": "(.venv) $ cd jaffle_dbt\n(.venv) $ pwd\n/Users/mac/dbt-course/jaffle_dbt",
+             "variants": {
+              "win": "(.venv) PS> cd jaffle_dbt\n(.venv) PS> pwd\n/Users/you/dbt-course/jaffle_dbt"
+             }
+            },
+            {
+             "blocks": [
+              {
+               "c": [
+                "The output above was recorded on macOS. On your computer the paths start with ",
+                {
+                 "t": "code",
+                 "v": "C:\\Users\\<you>\\"
+                },
+                " instead of ",
+                {
+                 "t": "code",
+                 "v": "/Users/you/"
+                },
+                ". PowerShell's ",
+                {
+                 "t": "code",
+                 "v": "pwd"
+                },
+                " prints a small table: the word ",
+                {
+                 "t": "code",
+                 "v": "Path"
+                },
+                ", a line of dashes, then the folder."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "auto-win-out-ch06-c9",
+             "t": "callout",
+             "title": [
+              "On Windows"
+             ]
             }
            ]
           }
@@ -1730,6 +1916,30 @@
           "."
          ],
          "t": "p"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "On Windows: ",
+            {
+             "t": "code",
+             "v": "Remove-Item -Recurse $HOME\\dbt-course\\logs"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch06-remove-logs",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
         }
        ],
        "id": "ch06-lab1",
@@ -4044,7 +4254,10 @@
        "id": "ch06-c22",
        "lang": "bash",
        "t": "code",
-       "text": "(.venv) $ dbt debug --target prod\n...\n22:07:12    schema: prod\n22:07:12    Connection test: [OK connection ok]\n22:07:12  All checks passed!"
+       "text": "(.venv) $ dbt debug --target prod\n...\n22:07:12    schema: prod\n22:07:12    Connection test: [OK connection ok]\n22:07:12  All checks passed!",
+       "variants": {
+        "win": "(.venv) PS> dbt debug --target prod\n...\n22:07:12    schema: prod\n22:07:12    Connection test: [OK connection ok]\n22:07:12  All checks passed!"
+       }
       },
       {
        "c": [
@@ -4419,6 +4632,45 @@
          "t": "code",
          "text": "20:35:32  Running with dbt=1.11.16\n20:35:32  dbt version: 1.11.16\n20:35:32  python version: 3.12.13\n20:35:32  python path: /Users/you/dbt-course/.venv/bin/python\n20:35:32  os info: macOS-26.2-arm64-arm-64bit\n20:35:32  Using profiles dir at /Users/you/.dbt\n20:35:32  Using profiles.yml file at /Users/you/.dbt/profiles.yml\n20:35:32  Using dbt_project.yml file at /Users/you/dbt-course/jaffle_dbt/dbt_project.yml\n20:35:32  adapter type: duckdb\n20:35:32  adapter version: 1.11.0\n20:35:32  Configuration:\n20:35:32    profiles.yml file [OK found and valid]\n20:35:32    dbt_project.yml file [OK found and valid]\n20:35:32  Required dependencies:\n20:35:32   - git [OK found]\n\n20:35:32  Connection:\n20:35:32    database: practice\n20:35:32    schema: dbt_adnane\n20:35:32    path: ../practice/practice.duckdb\n...\n20:35:32  Registered adapter: duckdb=1.11.0\n20:35:32    Connection test: [OK connection ok]\n\n20:35:32  All checks passed!",
          "textBook": "20:35:32  Running with dbt=1.11.16\n20:35:32  dbt version: 1.11.16\n20:35:32  python version: 3.12.13\n20:35:32  python path: /Users/mac/dbt-course/.venv/bin/python\n20:35:32  os info: macOS-26.2-arm64-arm-64bit\n20:35:32  Using profiles dir at /Users/mac/.dbt\n20:35:32  Using profiles.yml file at /Users/mac/.dbt/profiles.yml\n20:35:32  Using dbt_project.yml file at /Users/mac/dbt-course/jaffle_dbt/dbt_project.yml\n20:35:32  adapter type: duckdb\n20:35:32  adapter version: 1.11.0\n20:35:32  Configuration:\n20:35:32    profiles.yml file [OK found and valid]\n20:35:32    dbt_project.yml file [OK found and valid]\n20:35:32  Required dependencies:\n20:35:32   - git [OK found]\n\n20:35:32  Connection:\n20:35:32    database: practice\n20:35:32    schema: dbt_adnane\n20:35:32    path: ../practice/practice.duckdb\n...\n20:35:32  Registered adapter: duckdb=1.11.0\n20:35:32    Connection test: [OK connection ok]\n\n20:35:32  All checks passed!"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The output above was recorded on macOS. On Windows, ",
+            {
+             "t": "code",
+             "v": "dbt debug"
+            },
+            " prints Windows paths (python path ",
+            {
+             "t": "code",
+             "v": "C:\\Users\\<you>\\dbt-course\\.venv\\Scripts\\python.exe"
+            },
+            ", profiles dir ",
+            {
+             "t": "code",
+             "v": "C:\\Users\\<you>\\.dbt"
+            },
+            ", and so on) and ",
+            {
+             "t": "code",
+             "v": "os info"
+            },
+            " names Windows. The checks and the connection lines are the same."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch06-out-debug",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
         }
        ],
        "id": "ch06-lab2",
@@ -5352,7 +5604,10 @@
        "id": "ch06-c33",
        "lang": "bash",
        "t": "code",
-       "text": "(.venv) $ dbt show --inline \"select table_schema, table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane'\""
+       "text": "(.venv) $ dbt show --inline \"select table_schema, table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane'\"",
+       "variants": {
+        "win": "(.venv) PS> dbt show --inline \"select table_schema, table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane'\""
+       }
       },
       {
        "id": "ch06-c34",
@@ -5983,6 +6238,30 @@
           ". Chapter 22 uses the log to debug real errors."
          ],
          "t": "p"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "In PowerShell, search the log with ",
+            {
+             "t": "code",
+             "v": "Select-String -SimpleMatch 'create view' logs\\dbt.log"
+            },
+            ": it prints each matching line with the file name and the line number."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch06-grep-log",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
         }
        ],
        "kind": "tip",
@@ -6149,6 +6428,45 @@
               "."
              ],
              "t": "p"
+            },
+            {
+             "blocks": [
+              {
+               "c": [
+                "In PowerShell, ",
+                {
+                 "t": "code",
+                 "v": "$LASTEXITCODE"
+                },
+                " prints ",
+                {
+                 "t": "code",
+                 "v": "1"
+                },
+                " (and ",
+                {
+                 "t": "code",
+                 "v": "$?"
+                },
+                " prints ",
+                {
+                 "t": "code",
+                 "v": "False"
+                },
+                ")."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "win-ch06-lab-exit-code",
+             "t": "callout",
+             "title": [
+              "On Windows"
+             ]
             }
            ]
           },
@@ -6270,6 +6588,30 @@
               "."
              ],
              "t": "p"
+            },
+            {
+             "blocks": [
+              {
+               "c": [
+                "In PowerShell: ",
+                {
+                 "t": "code",
+                 "v": "Select-String -SimpleMatch 'rename to' logs\\dbt.log"
+                },
+                " (each line comes with the file name and the line number)."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "win-ch06-lab-grep",
+             "t": "callout",
+             "title": [
+              "On Windows"
+             ]
             }
            ]
           },
@@ -7012,7 +7354,10 @@
              "id": "ch06-c50",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ duckdb ../practice/practice.duckdb\nD drop view dbt_adnane.my_second_dbt_model;\nD drop table dbt_adnane.my_first_dbt_model;\nD .quit"
+             "text": "(.venv) $ duckdb ../practice/practice.duckdb\nD drop view dbt_adnane.my_second_dbt_model;\nD drop table dbt_adnane.my_first_dbt_model;\nD .quit",
+             "variants": {
+              "win": "(.venv) PS> duckdb ../practice/practice.duckdb\nD drop view dbt_adnane.my_second_dbt_model;\nD drop table dbt_adnane.my_first_dbt_model;\nD .quit"
+             }
             }
            ]
           },
@@ -7041,7 +7386,10 @@
              "lang": "bash",
              "t": "code",
              "text": "(.venv) $ git init\nInitialized empty Git repository in /Users/you/dbt-course/jaffle_dbt/.git/\n(.venv) $ git status",
-             "textBook": "(.venv) $ git init\nInitialized empty Git repository in /Users/mac/dbt-course/jaffle_dbt/.git/\n(.venv) $ git status"
+             "textBook": "(.venv) $ git init\nInitialized empty Git repository in /Users/mac/dbt-course/jaffle_dbt/.git/\n(.venv) $ git status",
+             "variants": {
+              "win": "(.venv) PS> git init\nInitialized empty Git repository in /Users/you/dbt-course/jaffle_dbt/.git/\n(.venv) PS> git status"
+             }
             },
             {
              "id": "ch06-c52",
@@ -7049,6 +7397,35 @@
              "small": true,
              "t": "code",
              "text": "On branch main\n\nNo commits yet\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n  .gitignore\n  README.md\n  analyses/\n  dbt_project.yml\n  macros/\n  seeds/\n  snapshots/\n  tests/\n\nnothing added to commit but untracked files present (use \"git add\" to track)"
+            },
+            {
+             "blocks": [
+              {
+               "c": [
+                "The output above was recorded on macOS. On your computer the paths start with ",
+                {
+                 "t": "code",
+                 "v": "C:\\Users\\<you>\\"
+                },
+                " instead of ",
+                {
+                 "t": "code",
+                 "v": "/Users/you/"
+                },
+                "."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "auto-win-out-ch06-c51",
+             "t": "callout",
+             "title": [
+              "On Windows"
+             ]
             },
             {
              "c": [
@@ -7096,7 +7473,10 @@
              "id": "ch06-c53",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ git add .\n(.venv) $ git commit -m \"Create jaffle_dbt project with dbt init\""
+             "text": "(.venv) $ git add .\n(.venv) $ git commit -m \"Create jaffle_dbt project with dbt init\"",
+             "variants": {
+              "win": "(.venv) PS> git add .\n(.venv) PS> git commit -m \"Create jaffle_dbt project with dbt init\""
+             }
             },
             {
              "id": "ch06-c54",
@@ -7160,7 +7540,10 @@
              "id": "ch06-c55",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ git remote add origin https://github.com/adnane-data/jaffle_dbt.git\n(.venv) $ git push -u origin main\nTo https://github.com/adnane-data/jaffle_dbt.git\n * [new branch]      main -> main\nbranch 'main' set up to track 'origin/main'."
+             "text": "(.venv) $ git remote add origin https://github.com/adnane-data/jaffle_dbt.git\n(.venv) $ git push -u origin main\nTo https://github.com/adnane-data/jaffle_dbt.git\n * [new branch]      main -> main\nbranch 'main' set up to track 'origin/main'.",
+             "variants": {
+              "win": "(.venv) PS> git remote add origin https://github.com/adnane-data/jaffle_dbt.git\n(.venv) PS> git push -u origin main\nTo https://github.com/adnane-data/jaffle_dbt.git\n * [new branch]      main -> main\nbranch 'main' set up to track 'origin/main'."
+             }
             },
             {
              "c": [
@@ -7215,6 +7598,35 @@
              "variants": {
               "win": "(.venv) PS> git remote add reference $HOME\\dbt-course\\kit\\jaffle_dbt.bundle\n(.venv) PS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nFrom /Users/you/dbt-course/kit/jaffle_dbt.bundle\n * [new tag]         ch06       -> ref-ch06\n * [new tag]         ch07       -> ref-ch07\n ...\n(.venv) PS> git diff ref-ch06 --stat"
              }
+            },
+            {
+             "blocks": [
+              {
+               "c": [
+                "The output above was recorded on macOS. On your computer the paths start with ",
+                {
+                 "t": "code",
+                 "v": "C:\\Users\\<you>\\"
+                },
+                " instead of ",
+                {
+                 "t": "code",
+                 "v": "/Users/you/"
+                },
+                "."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "auto-win-out-ch06-c56",
+             "t": "callout",
+             "title": [
+              "On Windows"
+             ]
             },
             {
              "c": [

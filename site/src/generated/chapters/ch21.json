@@ -1619,7 +1619,10 @@
          "id": "ch21-c14",
          "lang": "bash",
          "t": "code",
-         "text": "$ python -c \"import json; d=json.load(open('target/sources.json')); [print(r['unique_id'], r['status'], r['max_loaded_at'], r['snapshotted_at'], round(r['max_loaded_at_time_ago_in_s']/3600, 1), 'hours ago', r['criteria']) for r in d['results']]\""
+         "text": "$ python -c \"import json; d=json.load(open('target/sources.json')); [print(r['unique_id'], r['status'], r['max_loaded_at'], r['snapshotted_at'], round(r['max_loaded_at_time_ago_in_s']/3600, 1), 'hours ago', r['criteria']) for r in d['results']]\"",
+         "variants": {
+          "win": "PS> python -c \"import json; d=json.load(open('target/sources.json')); [print(r['unique_id'], r['status'], r['max_loaded_at'], r['snapshotted_at'], round(r['max_loaded_at_time_ago_in_s']/3600, 1), 'hours ago', r['criteria']) for r in d['results']]\""
+         }
         },
         {
          "c": [
@@ -2402,7 +2405,10 @@
        "id": "ch21-c20",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt source freshness                       # the current state: target/sources.json\n$ dbt build --select \"source_status:fresher+\" --state path/to/previous/artifacts"
+       "text": "$ dbt source freshness                       # the current state: target/sources.json\n$ dbt build --select \"source_status:fresher+\" --state path/to/previous/artifacts",
+       "variants": {
+        "win": "PS> dbt source freshness                       # the current state: target/sources.json\nPS> dbt build --select \"source_status:fresher+\" --state path/to/previous/artifacts"
+       }
       },
       {
        "c": [
@@ -2794,7 +2800,10 @@
          "id": "ch21-c26",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt source freshness --select source:stripe"
+         "text": "$ dbt source freshness --select source:stripe",
+         "variants": {
+          "win": "PS> dbt source freshness --select source:stripe"
+         }
         },
         {
          "c": [
@@ -2829,7 +2838,10 @@
          "id": "ch21-c27",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls --select source_status:fresher+ --state ../state_freshness --resource-type model"
+         "text": "$ dbt ls --select source_status:fresher+ --state ../state_freshness --resource-type model",
+         "variants": {
+          "win": "PS> dbt ls --select source_status:fresher+ --state ../state_freshness --resource-type model"
+         }
         },
         {
          "c": [
@@ -4481,7 +4493,10 @@
        "id": "ch21-c37",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run --select exposure:monthly_revenue_dashboard"
+       "text": "$ dbt run --select exposure:monthly_revenue_dashboard",
+       "variants": {
+        "win": "PS> dbt run --select exposure:monthly_revenue_dashboard"
+       }
       },
       {
        "id": "ch21-c38",
@@ -4493,7 +4508,10 @@
        "id": "ch21-c39",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt build --select exposure:monthly_revenue_dashboard"
+       "text": "$ dbt build --select exposure:monthly_revenue_dashboard",
+       "variants": {
+        "win": "PS> dbt build --select exposure:monthly_revenue_dashboard"
+       }
       },
       {
        "id": "ch21-c40",
@@ -4685,7 +4703,10 @@
        "id": "ch21-c42",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls --select stg_stripe__payments+ --resource-type exposure"
+       "text": "$ dbt ls --select stg_stripe__payments+ --resource-type exposure",
+       "variants": {
+        "win": "PS> dbt ls --select stg_stripe__payments+ --resource-type exposure"
+       }
       },
       {
        "id": "ch21-c43",
@@ -4697,7 +4718,10 @@
        "id": "ch21-c44",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls --select fct_order_items+ --resource-type exposure"
+       "text": "$ dbt ls --select fct_order_items+ --resource-type exposure",
+       "variants": {
+        "win": "PS> dbt ls --select fct_order_items+ --resource-type exposure"
+       }
       },
       {
        "id": "ch21-c45",
@@ -4755,7 +4779,10 @@
        "id": "ch21-c46",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls --select state:modified+ --resource-type exposure --state ../st"
+       "text": "$ dbt ls --select state:modified+ --resource-type exposure --state ../st",
+       "variants": {
+        "win": "PS> dbt ls --select state:modified+ --resource-type exposure --state ../st"
+       }
       },
       {
        "id": "ch21-c47",
@@ -4871,7 +4898,10 @@
          "id": "ch21-c48",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt parse --no-partial-parse"
+         "text": "$ dbt parse --no-partial-parse",
+         "variants": {
+          "win": "PS> dbt parse --no-partial-parse"
+         }
         },
         {
          "c": [
@@ -4911,7 +4941,10 @@
          "id": "ch21-c49",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls --resource-type exposure\n$ dbt ls --select +exposure:monthly_revenue_dashboard --resource-type model\n$ dbt ls --select tag:finance --resource-type exposure"
+         "text": "$ dbt ls --resource-type exposure\n$ dbt ls --select +exposure:monthly_revenue_dashboard --resource-type model\n$ dbt ls --select tag:finance --resource-type exposure",
+         "variants": {
+          "win": "PS> dbt ls --resource-type exposure\nPS> dbt ls --select +exposure:monthly_revenue_dashboard --resource-type model\nPS> dbt ls --select tag:finance --resource-type exposure"
+         }
         },
         {
          "c": [
@@ -4990,7 +5023,10 @@
          "id": "ch21-c53",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls --select monthly_revenue_dashboard --output json --output-keys name type maturity owner depends_on"
+         "text": "$ dbt ls --select monthly_revenue_dashboard --output json --output-keys name type maturity owner depends_on",
+         "variants": {
+          "win": "PS> dbt ls --select monthly_revenue_dashboard --output json --output-keys name type maturity owner depends_on"
+         }
         },
         {
          "c": [
@@ -5026,7 +5062,10 @@
          "id": "ch21-c55",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select +exposure:customer_segmentation_notebook --exclude-resource-type test --exclude-resource-type unit_test"
+         "text": "$ dbt build --select +exposure:customer_segmentation_notebook --exclude-resource-type test --exclude-resource-type unit_test",
+         "variants": {
+          "win": "PS> dbt build --select +exposure:customer_segmentation_notebook --exclude-resource-type test --exclude-resource-type unit_test"
+         }
         },
         {
          "c": [
@@ -5126,7 +5165,10 @@
          "id": "ch21-c57",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt docs generate\n$ dbt docs serve"
+         "text": "$ dbt docs generate\n$ dbt docs serve",
+         "variants": {
+          "win": "PS> dbt docs generate\nPS> dbt docs serve"
+         }
         },
         {
          "c": [
@@ -5144,7 +5186,10 @@
          "id": "ch21-c58",
          "lang": "bash",
          "t": "code",
-         "text": "$ git add .\n$ git commit -m \"Source freshness (config form, filter) and exposures\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch21 --stat"
+         "text": "$ git add .\n$ git commit -m \"Source freshness (config form, filter) and exposures\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch21 --stat",
+         "variants": {
+          "win": "PS> git add .\nPS> git commit -m \"Source freshness (config form, filter) and exposures\"\nPS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nPS> git diff ref-ch21 --stat"
+         }
         },
         {
          "c": [

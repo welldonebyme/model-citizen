@@ -1653,7 +1653,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt run -s country_regions\n...\n22:12:42  Found 14 models, 2 analyses, 1 seed, 14 data tests, 2 snapshots, 5 sources, 669 macros\n22:12:42  Nothing to do. Try checking your model configs and model specification args\n\n$ dbt run -s int_payments__successful\n...\n22:12:45  Concurrency: 4 threads (target='dev')\n22:12:45  Finished running  in 0 hours 0 minutes and 0.09 seconds (0.09s)."
+       "text": "$ dbt run -s country_regions\n...\n22:12:42  Found 14 models, 2 analyses, 1 seed, 14 data tests, 2 snapshots, 5 sources, 669 macros\n22:12:42  Nothing to do. Try checking your model configs and model specification args\n\n$ dbt run -s int_payments__successful\n...\n22:12:45  Concurrency: 4 threads (target='dev')\n22:12:45  Finished running  in 0 hours 0 minutes and 0.09 seconds (0.09s).",
+       "variants": {
+        "win": "PS> dbt run -s country_regions\n...\n22:12:42  Found 14 models, 2 analyses, 1 seed, 14 data tests, 2 snapshots, 5 sources, 669 macros\n22:12:42  Nothing to do. Try checking your model configs and model specification args\n\nPS> dbt run -s int_payments__successful\n...\n22:12:45  Concurrency: 4 threads (target='dev')\n22:12:45  Finished running  in 0 hours 0 minutes and 0.09 seconds (0.09s)."
+       }
       },
       {
        "c": [
@@ -1771,7 +1774,10 @@
        "id": "ch16-c2",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile -s stg_jaffle_shop__products\n...\nCompiled node 'stg_jaffle_shop__products' is:\nwith\n\nsource as (\n\n    select * from \"practice\".\"jaffle_shop\".\"products\"\n\n),\n..."
+       "text": "$ dbt compile -s stg_jaffle_shop__products\n...\nCompiled node 'stg_jaffle_shop__products' is:\nwith\n\nsource as (\n\n    select * from \"practice\".\"jaffle_shop\".\"products\"\n\n),\n...",
+       "variants": {
+        "win": "PS> dbt compile -s stg_jaffle_shop__products\n...\nCompiled node 'stg_jaffle_shop__products' is:\nwith\n\nsource as (\n\n    select * from \"practice\".\"jaffle_shop\".\"products\"\n\n),\n..."
+       }
       }
      ],
      "id": "ch16-s1-4",
@@ -2051,7 +2057,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt build -s stg_stripe__payments+\n...\n22:14:25  1 of 12 OK created sql view model dbt_adnane.stg_stripe__payments .............. [OK in 0.08s]\n22:14:25  2 of 12 START test demo_payment_check .......................................... [RUN]\n22:14:25  3 of 12 START test not_null_stg_stripe__payments_payment_id .................... [RUN]\n22:14:25  4 of 12 START test unique_stg_stripe__payments_payment_id ...................... [RUN]\n22:14:25  3 of 12 PASS not_null_stg_stripe__payments_payment_id .......................... [PASS in 0.04s]\n22:14:25  2 of 12 FAIL 1 demo_payment_check .............................................. [FAIL 1 in 0.04s]\n22:14:25  4 of 12 PASS unique_stg_stripe__payments_payment_id ............................ [PASS in 0.04s]\n22:14:25  5 of 12 SKIP relation dbt_adnane.int_orders__enriched due to ephemeral model status 'skipped'  [ERROR SKIP]\n22:14:25  6 of 12 SKIP relation dbt_adnane.int_orders__payment_methods_pivoted due to ephemeral model status 'skipped'  [ERROR SKIP]\n22:14:25  7 of 12 SKIP relation dbt_adnane.fct_monthly_revenue ........................... [SKIP]\n22:14:25  8 of 12 SKIP relation dbt_adnane.fct_orders .................................... [SKIP]\n22:14:25  9 of 12 SKIP relation dbt_adnane.dim_customers ................................. [SKIP]\n22:14:25  10 of 12 SKIP relation dbt_adnane.customer_segments ............................ [SKIP]\n22:14:25  11 of 12 SKIP test not_null_customer_segments_customer_id ...................... [SKIP]\n22:14:25  12 of 12 SKIP test unique_customer_segments_customer_id ........................ [SKIP]\n...\n22:14:25  Done. PASS=3 WARN=0 ERROR=1 SKIP=8 NO-OP=0 TOTAL=12"
+       "text": "$ dbt build -s stg_stripe__payments+\n...\n22:14:25  1 of 12 OK created sql view model dbt_adnane.stg_stripe__payments .............. [OK in 0.08s]\n22:14:25  2 of 12 START test demo_payment_check .......................................... [RUN]\n22:14:25  3 of 12 START test not_null_stg_stripe__payments_payment_id .................... [RUN]\n22:14:25  4 of 12 START test unique_stg_stripe__payments_payment_id ...................... [RUN]\n22:14:25  3 of 12 PASS not_null_stg_stripe__payments_payment_id .......................... [PASS in 0.04s]\n22:14:25  2 of 12 FAIL 1 demo_payment_check .............................................. [FAIL 1 in 0.04s]\n22:14:25  4 of 12 PASS unique_stg_stripe__payments_payment_id ............................ [PASS in 0.04s]\n22:14:25  5 of 12 SKIP relation dbt_adnane.int_orders__enriched due to ephemeral model status 'skipped'  [ERROR SKIP]\n22:14:25  6 of 12 SKIP relation dbt_adnane.int_orders__payment_methods_pivoted due to ephemeral model status 'skipped'  [ERROR SKIP]\n22:14:25  7 of 12 SKIP relation dbt_adnane.fct_monthly_revenue ........................... [SKIP]\n22:14:25  8 of 12 SKIP relation dbt_adnane.fct_orders .................................... [SKIP]\n22:14:25  9 of 12 SKIP relation dbt_adnane.dim_customers ................................. [SKIP]\n22:14:25  10 of 12 SKIP relation dbt_adnane.customer_segments ............................ [SKIP]\n22:14:25  11 of 12 SKIP test not_null_customer_segments_customer_id ...................... [SKIP]\n22:14:25  12 of 12 SKIP test unique_customer_segments_customer_id ........................ [SKIP]\n...\n22:14:25  Done. PASS=3 WARN=0 ERROR=1 SKIP=8 NO-OP=0 TOTAL=12",
+       "variants": {
+        "win": "PS> dbt build -s stg_stripe__payments+\n...\n22:14:25  1 of 12 OK created sql view model dbt_adnane.stg_stripe__payments .............. [OK in 0.08s]\n22:14:25  2 of 12 START test demo_payment_check .......................................... [RUN]\n22:14:25  3 of 12 START test not_null_stg_stripe__payments_payment_id .................... [RUN]\n22:14:25  4 of 12 START test unique_stg_stripe__payments_payment_id ...................... [RUN]\n22:14:25  3 of 12 PASS not_null_stg_stripe__payments_payment_id .......................... [PASS in 0.04s]\n22:14:25  2 of 12 FAIL 1 demo_payment_check .............................................. [FAIL 1 in 0.04s]\n22:14:25  4 of 12 PASS unique_stg_stripe__payments_payment_id ............................ [PASS in 0.04s]\n22:14:25  5 of 12 SKIP relation dbt_adnane.int_orders__enriched due to ephemeral model status 'skipped'  [ERROR SKIP]\n22:14:25  6 of 12 SKIP relation dbt_adnane.int_orders__payment_methods_pivoted due to ephemeral model status 'skipped'  [ERROR SKIP]\n22:14:25  7 of 12 SKIP relation dbt_adnane.fct_monthly_revenue ........................... [SKIP]\n22:14:25  8 of 12 SKIP relation dbt_adnane.fct_orders .................................... [SKIP]\n22:14:25  9 of 12 SKIP relation dbt_adnane.dim_customers ................................. [SKIP]\n22:14:25  10 of 12 SKIP relation dbt_adnane.customer_segments ............................ [SKIP]\n22:14:25  11 of 12 SKIP test not_null_customer_segments_customer_id ...................... [SKIP]\n22:14:25  12 of 12 SKIP test unique_customer_segments_customer_id ........................ [SKIP]\n...\n22:14:25  Done. PASS=3 WARN=0 ERROR=1 SKIP=8 NO-OP=0 TOTAL=12"
+       }
       },
       {
        "c": [
@@ -2138,7 +2147,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt run -s stg_stripe__payments+\n...\n22:14:37  Finished running 1 incremental model, 3 table models, 3 view models in 0 hours 0 minutes and 0.79 seconds (0.79s).\n...\n22:14:37  Done. PASS=7 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=7"
+       "text": "$ dbt run -s stg_stripe__payments+\n...\n22:14:37  Finished running 1 incremental model, 3 table models, 3 view models in 0 hours 0 minutes and 0.79 seconds (0.79s).\n...\n22:14:37  Done. PASS=7 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=7",
+       "variants": {
+        "win": "PS> dbt run -s stg_stripe__payments+\n...\n22:14:37  Finished running 1 incremental model, 3 table models, 3 view models in 0 hours 0 minutes and 0.79 seconds (0.79s).\n...\n22:14:37  Done. PASS=7 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=7"
+       }
       },
       {
        "c": [
@@ -2751,7 +2763,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt ls --select fct_orders\n22:27:31  Running with dbt=1.11.16\n22:27:31  Registered adapter: duckdb=1.11.0\n22:27:32  Found 14 models, 2 analyses, 1 seed, 14 data tests, 2 snapshots, 5 sources, 669 macros\njaffle_dbt.marts.fct_orders"
+       "text": "$ dbt ls --select fct_orders\n22:27:31  Running with dbt=1.11.16\n22:27:31  Registered adapter: duckdb=1.11.0\n22:27:32  Found 14 models, 2 analyses, 1 seed, 14 data tests, 2 snapshots, 5 sources, 669 macros\njaffle_dbt.marts.fct_orders",
+       "variants": {
+        "win": "PS> dbt ls --select fct_orders\n22:27:31  Running with dbt=1.11.16\n22:27:31  Registered adapter: duckdb=1.11.0\n22:27:32  Found 14 models, 2 analyses, 1 seed, 14 data tests, 2 snapshots, 5 sources, 669 macros\njaffle_dbt.marts.fct_orders"
+       }
       },
       {
        "c": [
@@ -2950,7 +2965,10 @@
        "id": "ch16-c9",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt -q ls -s staging.stripe\njaffle_dbt.staging.stripe.stg_stripe__payments\njaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id\njaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id"
+       "text": "$ dbt -q ls -s staging.stripe\njaffle_dbt.staging.stripe.stg_stripe__payments\njaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id\njaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id",
+       "variants": {
+        "win": "PS> dbt -q ls -s staging.stripe\njaffle_dbt.staging.stripe.stg_stripe__payments\njaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id\njaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id"
+       }
       },
       {
        "blocks": [
@@ -3043,7 +3061,34 @@
          "id": "ch16-c10",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls -s stg_jaffle_shop__*\nzsh: no matches found: stg_jaffle_shop__*"
+         "text": "$ dbt ls -s stg_jaffle_shop__*\nzsh: no matches found: stg_jaffle_shop__*",
+         "variants": {
+          "win": "PS> dbt ls -s stg_jaffle_shop__*\nzsh: no matches found: stg_jaffle_shop__*"
+         }
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "This error comes from zsh on macOS. PowerShell on Windows passes the ",
+            {
+             "t": "code",
+             "v": "*"
+            },
+            " to dbt unchanged, and dbt then lists the matching models. Quote the selection anyway: then the command works the same in every shell."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch16-out-stars",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
         },
         {
          "c": [
@@ -3413,7 +3458,10 @@
        "id": "ch16-c11",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt -q ls -s +fct_orders --resource-type model\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments\n\n$ dbt -q ls -s fct_orders+ --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders"
+       "text": "$ dbt -q ls -s +fct_orders --resource-type model\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments\n\n$ dbt -q ls -s fct_orders+ --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders",
+       "variants": {
+        "win": "PS> dbt -q ls -s +fct_orders --resource-type model\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments\n\nPS> dbt -q ls -s fct_orders+ --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders"
+       }
       },
       {
        "c": [
@@ -3459,7 +3507,10 @@
        "id": "ch16-c12",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt -q ls -s 1+fct_orders --resource-type model\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\n\n$ dbt -q ls -s fct_orders+1 --resource-type model\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\n\n$ dbt -q ls -s 2+dim_customers --resource-type model\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers"
+       "text": "$ dbt -q ls -s 1+fct_orders --resource-type model\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\n\n$ dbt -q ls -s fct_orders+1 --resource-type model\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\n\n$ dbt -q ls -s 2+dim_customers --resource-type model\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers",
+       "variants": {
+        "win": "PS> dbt -q ls -s 1+fct_orders --resource-type model\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\n\nPS> dbt -q ls -s fct_orders+1 --resource-type model\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\n\nPS> dbt -q ls -s 2+dim_customers --resource-type model\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers"
+       }
       },
       {
        "c": [
@@ -4000,7 +4051,10 @@
        "id": "ch16-c15",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt -q ls -s fct_orders dim_customers --resource-type model\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\n\n$ dbt -q ls -s \"tag:staging,+fct_monthly_revenue\" --resource-type model\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments"
+       "text": "$ dbt -q ls -s fct_orders dim_customers --resource-type model\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\n\n$ dbt -q ls -s \"tag:staging,+fct_monthly_revenue\" --resource-type model\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments",
+       "variants": {
+        "win": "PS> dbt -q ls -s fct_orders dim_customers --resource-type model\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\n\nPS> dbt -q ls -s \"tag:staging,+fct_monthly_revenue\" --resource-type model\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments"
+       }
       },
       {
        "c": [
@@ -4073,7 +4127,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt -q ls -s \"tag:finance,config.materialized:table tag:staging,stg_stripe__payments\" --resource-type model\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.staging.stripe.stg_stripe__payments"
+       "text": "$ dbt -q ls -s \"tag:finance,config.materialized:table tag:staging,stg_stripe__payments\" --resource-type model\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.staging.stripe.stg_stripe__payments",
+       "variants": {
+        "win": "PS> dbt -q ls -s \"tag:finance,config.materialized:table tag:staging,stg_stripe__payments\" --resource-type model\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.staging.stripe.stg_stripe__payments"
+       }
       },
       {
        "c": [
@@ -4097,7 +4154,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt -q ls -s +fct_monthly_revenue --exclude tag:staging int_payments__successful --resource-type model\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.intermediate.int_orders__enriched\n\n$ dbt -q ls -s tag:marts --exclude fct_orders+ --resource-type model\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily"
+       "text": "$ dbt -q ls -s +fct_monthly_revenue --exclude tag:staging int_payments__successful --resource-type model\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.intermediate.int_orders__enriched\n\n$ dbt -q ls -s tag:marts --exclude fct_orders+ --resource-type model\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily",
+       "variants": {
+        "win": "PS> dbt -q ls -s +fct_monthly_revenue --exclude tag:staging int_payments__successful --resource-type model\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.intermediate.int_orders__enriched\n\nPS> dbt -q ls -s tag:marts --exclude fct_orders+ --resource-type model\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily"
+       }
       },
       {
        "c": [
@@ -4188,7 +4248,10 @@
          "id": "ch16-c18",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls -s \"tag:finance, tag:marketing\" --resource-type model\n...\n22:35:53  The selection criterion 'tag:finance,' does not match any enabled nodes\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers"
+         "text": "$ dbt ls -s \"tag:finance, tag:marketing\" --resource-type model\n...\n22:35:53  The selection criterion 'tag:finance,' does not match any enabled nodes\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers",
+         "variants": {
+          "win": "PS> dbt ls -s \"tag:finance, tag:marketing\" --resource-type model\n...\n22:35:53  The selection criterion 'tag:finance,' does not match any enabled nodes\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers"
+         }
         },
         {
          "c": [
@@ -4884,7 +4947,10 @@
        "id": "ch16-c19",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt -q ls -s tag:finance\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\n\n$ dbt -q ls -s path:models/intermediate\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\n\n$ dbt -q ls -s path:models/marts/fct_orders.sql\njaffle_dbt.marts.fct_orders\n\n$ dbt -q ls -s path:models/staging/stripe\njaffle_dbt.staging.stripe.stg_stripe__payments\nsource:jaffle_dbt.stripe.payments\njaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id\njaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id\n\n$ dbt -q ls -s file:customer_segments.py\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.not_null_customer_segments_customer_id\njaffle_dbt.marts.unique_customer_segments_customer_id\n\n$ dbt -q ls -s fqn:jaffle_dbt.marts.dim_customers\njaffle_dbt.marts.dim_customers"
+       "text": "$ dbt -q ls -s tag:finance\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\n\n$ dbt -q ls -s path:models/intermediate\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\n\n$ dbt -q ls -s path:models/marts/fct_orders.sql\njaffle_dbt.marts.fct_orders\n\n$ dbt -q ls -s path:models/staging/stripe\njaffle_dbt.staging.stripe.stg_stripe__payments\nsource:jaffle_dbt.stripe.payments\njaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id\njaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id\n\n$ dbt -q ls -s file:customer_segments.py\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.not_null_customer_segments_customer_id\njaffle_dbt.marts.unique_customer_segments_customer_id\n\n$ dbt -q ls -s fqn:jaffle_dbt.marts.dim_customers\njaffle_dbt.marts.dim_customers",
+       "variants": {
+        "win": "PS> dbt -q ls -s tag:finance\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\n\nPS> dbt -q ls -s path:models/intermediate\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\n\nPS> dbt -q ls -s path:models/marts/fct_orders.sql\njaffle_dbt.marts.fct_orders\n\nPS> dbt -q ls -s path:models/staging/stripe\njaffle_dbt.staging.stripe.stg_stripe__payments\nsource:jaffle_dbt.stripe.payments\njaffle_dbt.staging.stripe.not_null_stg_stripe__payments_payment_id\njaffle_dbt.staging.stripe.unique_stg_stripe__payments_payment_id\n\nPS> dbt -q ls -s file:customer_segments.py\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.not_null_customer_segments_customer_id\njaffle_dbt.marts.unique_customer_segments_customer_id\n\nPS> dbt -q ls -s fqn:jaffle_dbt.marts.dim_customers\njaffle_dbt.marts.dim_customers"
+       }
       },
       {
        "c": [
@@ -4977,7 +5043,10 @@
        "id": "ch16-c20",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt -q ls -s \"source:*\"\nsource:jaffle_dbt.jaffle_shop.customers\nsource:jaffle_dbt.jaffle_shop.order_items\nsource:jaffle_dbt.jaffle_shop.orders\nsource:jaffle_dbt.jaffle_shop.products\nsource:jaffle_dbt.stripe.payments\n\n$ dbt -q ls -s source:jaffle_shop.orders\nsource:jaffle_dbt.jaffle_shop.orders\n\n$ dbt -q ls -s source:stripe+ --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.stripe.stg_stripe__payments"
+       "text": "$ dbt -q ls -s \"source:*\"\nsource:jaffle_dbt.jaffle_shop.customers\nsource:jaffle_dbt.jaffle_shop.order_items\nsource:jaffle_dbt.jaffle_shop.orders\nsource:jaffle_dbt.jaffle_shop.products\nsource:jaffle_dbt.stripe.payments\n\n$ dbt -q ls -s source:jaffle_shop.orders\nsource:jaffle_dbt.jaffle_shop.orders\n\n$ dbt -q ls -s source:stripe+ --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.stripe.stg_stripe__payments",
+       "variants": {
+        "win": "PS> dbt -q ls -s \"source:*\"\nsource:jaffle_dbt.jaffle_shop.customers\nsource:jaffle_dbt.jaffle_shop.order_items\nsource:jaffle_dbt.jaffle_shop.orders\nsource:jaffle_dbt.jaffle_shop.products\nsource:jaffle_dbt.stripe.payments\n\nPS> dbt -q ls -s source:jaffle_shop.orders\nsource:jaffle_dbt.jaffle_shop.orders\n\nPS> dbt -q ls -s source:stripe+ --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.stripe.stg_stripe__payments"
+       }
       },
       {
        "c": [
@@ -5028,7 +5097,10 @@
        "id": "ch16-c21",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt -q ls -s resource_type:seed resource_type:snapshot\njaffle_dbt.country_regions\njaffle_dbt.customers_snapshot\njaffle_dbt.orders_snapshot\njaffle_dbt.not_null_country_regions_country\njaffle_dbt.unique_country_regions_country\n\n$ dbt -q ls -s config.materialized:incremental\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\n\n$ dbt -q ls -s config.incremental_strategy:microbatch\njaffle_dbt.marts.fct_order_items_daily\n\n$ dbt -q ls -s config.meta.owner:finance-team\njaffle_dbt.marts.fct_orders\n\n$ dbt -q ls -s config.schema:marts\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\njaffle_dbt.marts.not_null_customer_segments_customer_id\njaffle_dbt.marts.unique_customer_segments_customer_id\n\n$ dbt -q ls -s package:dbt_utils"
+       "text": "$ dbt -q ls -s resource_type:seed resource_type:snapshot\njaffle_dbt.country_regions\njaffle_dbt.customers_snapshot\njaffle_dbt.orders_snapshot\njaffle_dbt.not_null_country_regions_country\njaffle_dbt.unique_country_regions_country\n\n$ dbt -q ls -s config.materialized:incremental\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\n\n$ dbt -q ls -s config.incremental_strategy:microbatch\njaffle_dbt.marts.fct_order_items_daily\n\n$ dbt -q ls -s config.meta.owner:finance-team\njaffle_dbt.marts.fct_orders\n\n$ dbt -q ls -s config.schema:marts\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\njaffle_dbt.marts.not_null_customer_segments_customer_id\njaffle_dbt.marts.unique_customer_segments_customer_id\n\n$ dbt -q ls -s package:dbt_utils",
+       "variants": {
+        "win": "PS> dbt -q ls -s resource_type:seed resource_type:snapshot\njaffle_dbt.country_regions\njaffle_dbt.customers_snapshot\njaffle_dbt.orders_snapshot\njaffle_dbt.not_null_country_regions_country\njaffle_dbt.unique_country_regions_country\n\nPS> dbt -q ls -s config.materialized:incremental\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\n\nPS> dbt -q ls -s config.incremental_strategy:microbatch\njaffle_dbt.marts.fct_order_items_daily\n\nPS> dbt -q ls -s config.meta.owner:finance-team\njaffle_dbt.marts.fct_orders\n\nPS> dbt -q ls -s config.schema:marts\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\njaffle_dbt.marts.not_null_customer_segments_customer_id\njaffle_dbt.marts.unique_customer_segments_customer_id\n\nPS> dbt -q ls -s package:dbt_utils"
+       }
       },
       {
        "items": [
@@ -5241,7 +5313,10 @@
        "id": "ch16-c23",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt -q ls -s \"stg_stripe__payment?\" \"fct_order[_s]*\" --resource-type model\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\njaffle_dbt.staging.stripe.stg_stripe__payments"
+       "text": "$ dbt -q ls -s \"stg_stripe__payment?\" \"fct_order[_s]*\" --resource-type model\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\njaffle_dbt.staging.stripe.stg_stripe__payments",
+       "variants": {
+        "win": "PS> dbt -q ls -s \"stg_stripe__payment?\" \"fct_order[_s]*\" --resource-type model\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\njaffle_dbt.staging.stripe.stg_stripe__payments"
+       }
       }
      ],
      "id": "ch16-s6-5",
@@ -5373,7 +5448,10 @@
          "id": "ch16-c25",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls -s selector:nightly\n...\nRuntime Error\n  'selector' is not a valid method name"
+         "text": "$ dbt ls -s selector:nightly\n...\nRuntime Error\n  'selector' is not a valid method name",
+         "variants": {
+          "win": "PS> dbt ls -s selector:nightly\n...\nRuntime Error\n  'selector' is not a valid method name"
+         }
         },
         {
          "c": [
@@ -5546,7 +5624,10 @@
        "id": "ch16-c26",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt -q ls --resource-type seed --resource-type snapshot\njaffle_dbt.country_regions\njaffle_dbt.customers_snapshot\njaffle_dbt.orders_snapshot\n\n$ dbt -q ls -s +dim_customers --exclude-resource-type test\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments\njaffle_dbt.country_regions\nsource:jaffle_dbt.jaffle_shop.customers\nsource:jaffle_dbt.jaffle_shop.orders\nsource:jaffle_dbt.stripe.payments"
+       "text": "$ dbt -q ls --resource-type seed --resource-type snapshot\njaffle_dbt.country_regions\njaffle_dbt.customers_snapshot\njaffle_dbt.orders_snapshot\n\n$ dbt -q ls -s +dim_customers --exclude-resource-type test\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments\njaffle_dbt.country_regions\nsource:jaffle_dbt.jaffle_shop.customers\nsource:jaffle_dbt.jaffle_shop.orders\nsource:jaffle_dbt.stripe.payments",
+       "variants": {
+        "win": "PS> dbt -q ls --resource-type seed --resource-type snapshot\njaffle_dbt.country_regions\njaffle_dbt.customers_snapshot\njaffle_dbt.orders_snapshot\n\nPS> dbt -q ls -s +dim_customers --exclude-resource-type test\njaffle_dbt.marts.dim_customers\njaffle_dbt.marts.fct_orders\njaffle_dbt.intermediate.int_orders__enriched\njaffle_dbt.intermediate.int_orders__payment_methods_pivoted\njaffle_dbt.intermediate.int_payments__successful\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\njaffle_dbt.staging.stripe.stg_stripe__payments\njaffle_dbt.country_regions\nsource:jaffle_dbt.jaffle_shop.customers\nsource:jaffle_dbt.jaffle_shop.orders\nsource:jaffle_dbt.stripe.payments"
+       }
       },
       {
        "c": [
@@ -5617,7 +5698,10 @@
        "id": "ch16-c27",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt -q ls -s revenue_by_region\n$ dbt -q ls --resource-type analysis\njaffle_dbt.analysis.audit_fct_monthly_revenue\njaffle_dbt.analysis.revenue_by_region"
+       "text": "$ dbt -q ls -s revenue_by_region\n$ dbt -q ls --resource-type analysis\njaffle_dbt.analysis.audit_fct_monthly_revenue\njaffle_dbt.analysis.revenue_by_region",
+       "variants": {
+        "win": "PS> dbt -q ls -s revenue_by_region\nPS> dbt -q ls --resource-type analysis\njaffle_dbt.analysis.audit_fct_monthly_revenue\njaffle_dbt.analysis.revenue_by_region"
+       }
       },
       {
        "c": [
@@ -6518,7 +6602,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt -q ls --selector finance_marts\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\n\n$ dbt ls --selector does_not_exist\n...\n22:25:21  Encountered an error:\nRuntime Error\n  Could not find selector named does_not_exist, expected one of ['staging_only', 'nightly', 'finance_marts', 'no_python']"
+       "text": "$ dbt -q ls --selector finance_marts\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\n\n$ dbt ls --selector does_not_exist\n...\n22:25:21  Encountered an error:\nRuntime Error\n  Could not find selector named does_not_exist, expected one of ['staging_only', 'nightly', 'finance_marts', 'no_python']",
+       "variants": {
+        "win": "PS> dbt -q ls --selector finance_marts\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders\n\nPS> dbt ls --selector does_not_exist\n...\n22:25:21  Encountered an error:\nRuntime Error\n  Could not find selector named does_not_exist, expected one of ['staging_only', 'nightly', 'finance_marts', 'no_python']"
+       }
       },
       {
        "c": [
@@ -6575,7 +6662,10 @@
          "id": "ch16-c31",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt -q ls --selector finance_marts --select dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders"
+         "text": "$ dbt -q ls --selector finance_marts --select dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders",
+         "variants": {
+          "win": "PS> dbt -q ls --selector finance_marts --select dim_customers\njaffle_dbt.marts.fct_monthly_revenue\njaffle_dbt.marts.fct_order_items\njaffle_dbt.marts.fct_order_items_daily\njaffle_dbt.marts.fct_orders"
+         }
         },
         {
          "c": [
@@ -6726,7 +6816,10 @@
          "id": "ch16-c34",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt -q ls --selector staging_only\n$ dbt -q ls --selector nightly --resource-type model\n$ dbt -q ls --selector finance_marts\n$ dbt -q ls --selector no_python --resource-type model"
+         "text": "$ dbt -q ls --selector staging_only\n$ dbt -q ls --selector nightly --resource-type model\n$ dbt -q ls --selector finance_marts\n$ dbt -q ls --selector no_python --resource-type model",
+         "variants": {
+          "win": "PS> dbt -q ls --selector staging_only\nPS> dbt -q ls --selector nightly --resource-type model\nPS> dbt -q ls --selector finance_marts\nPS> dbt -q ls --selector no_python --resource-type model"
+         }
         },
         {
          "c": [
@@ -6744,7 +6837,10 @@
          "id": "ch16-c35",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --selector nightly"
+         "text": "$ dbt build --selector nightly",
+         "variants": {
+          "win": "PS> dbt build --selector nightly"
+         }
         },
         {
          "c": [
@@ -7111,14 +7207,20 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt -q ls -s fct_orders --indirect-selection eager\njaffle_dbt.marts.fct_orders\njaffle_dbt.marts.relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_\n$ dbt -q ls -s fct_orders --indirect-selection buildable\njaffle_dbt.marts.fct_orders\njaffle_dbt.marts.relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_\n$ dbt -q ls -s fct_orders --indirect-selection cautious\njaffle_dbt.marts.fct_orders\n$ dbt -q ls -s fct_orders --indirect-selection empty\njaffle_dbt.marts.fct_orders"
+       "text": "$ dbt -q ls -s fct_orders --indirect-selection eager\njaffle_dbt.marts.fct_orders\njaffle_dbt.marts.relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_\n$ dbt -q ls -s fct_orders --indirect-selection buildable\njaffle_dbt.marts.fct_orders\njaffle_dbt.marts.relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_\n$ dbt -q ls -s fct_orders --indirect-selection cautious\njaffle_dbt.marts.fct_orders\n$ dbt -q ls -s fct_orders --indirect-selection empty\njaffle_dbt.marts.fct_orders",
+       "variants": {
+        "win": "PS> dbt -q ls -s fct_orders --indirect-selection eager\njaffle_dbt.marts.fct_orders\njaffle_dbt.marts.relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_\nPS> dbt -q ls -s fct_orders --indirect-selection buildable\njaffle_dbt.marts.fct_orders\njaffle_dbt.marts.relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_\nPS> dbt -q ls -s fct_orders --indirect-selection cautious\njaffle_dbt.marts.fct_orders\nPS> dbt -q ls -s fct_orders --indirect-selection empty\njaffle_dbt.marts.fct_orders"
+       }
       },
       {
        "id": "ch16-c39",
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt -q ls -s stg_jaffle_shop__customers --resource-type test --indirect-selection eager\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id\njaffle_dbt.marts.relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id\n$ dbt -q ls -s stg_jaffle_shop__customers --resource-type test --indirect-selection buildable\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id\n$ dbt -q ls -s stg_jaffle_shop__customers --resource-type test --indirect-selection cautious\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id"
+       "text": "$ dbt -q ls -s stg_jaffle_shop__customers --resource-type test --indirect-selection eager\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id\njaffle_dbt.marts.relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id\n$ dbt -q ls -s stg_jaffle_shop__customers --resource-type test --indirect-selection buildable\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id\n$ dbt -q ls -s stg_jaffle_shop__customers --resource-type test --indirect-selection cautious\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id",
+       "variants": {
+        "win": "PS> dbt -q ls -s stg_jaffle_shop__customers --resource-type test --indirect-selection eager\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id\njaffle_dbt.marts.relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id\nPS> dbt -q ls -s stg_jaffle_shop__customers --resource-type test --indirect-selection buildable\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id\nPS> dbt -q ls -s stg_jaffle_shop__customers --resource-type test --indirect-selection cautious\njaffle_dbt.staging.jaffle_shop.not_null_stg_jaffle_shop__customers_customer_id\njaffle_dbt.staging.jaffle_shop.unique_stg_jaffle_shop__customers_customer_id"
+       }
       },
       {
        "head": [
@@ -7303,7 +7405,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt build -s stg_jaffle_shop__customers\n...\n22:14:08  1 of 4 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ......... [OK in 0.10s]\n22:14:08  2 of 4 START test not_null_stg_jaffle_shop__customers_customer_id .............. [RUN]\n22:14:08  3 of 4 START test unique_stg_jaffle_shop__customers_customer_id ................ [RUN]\n22:14:08  2 of 4 PASS not_null_stg_jaffle_shop__customers_customer_id .................... [PASS in 0.04s]\n22:14:08  3 of 4 PASS unique_stg_jaffle_shop__customers_customer_id ...................... [PASS in 0.04s]\n22:14:08  4 of 4 START test relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_  [RUN]\n22:14:08  4 of 4 FAIL 1 relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_  [FAIL 1 in 0.01s]\n...\n22:14:08  Done. PASS=3 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=4"
+       "text": "$ dbt build -s stg_jaffle_shop__customers\n...\n22:14:08  1 of 4 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ......... [OK in 0.10s]\n22:14:08  2 of 4 START test not_null_stg_jaffle_shop__customers_customer_id .............. [RUN]\n22:14:08  3 of 4 START test unique_stg_jaffle_shop__customers_customer_id ................ [RUN]\n22:14:08  2 of 4 PASS not_null_stg_jaffle_shop__customers_customer_id .................... [PASS in 0.04s]\n22:14:08  3 of 4 PASS unique_stg_jaffle_shop__customers_customer_id ...................... [PASS in 0.04s]\n22:14:08  4 of 4 START test relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_  [RUN]\n22:14:08  4 of 4 FAIL 1 relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_  [FAIL 1 in 0.01s]\n...\n22:14:08  Done. PASS=3 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=4",
+       "variants": {
+        "win": "PS> dbt build -s stg_jaffle_shop__customers\n...\n22:14:08  1 of 4 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ......... [OK in 0.10s]\n22:14:08  2 of 4 START test not_null_stg_jaffle_shop__customers_customer_id .............. [RUN]\n22:14:08  3 of 4 START test unique_stg_jaffle_shop__customers_customer_id ................ [RUN]\n22:14:08  2 of 4 PASS not_null_stg_jaffle_shop__customers_customer_id .................... [PASS in 0.04s]\n22:14:08  3 of 4 PASS unique_stg_jaffle_shop__customers_customer_id ...................... [PASS in 0.04s]\n22:14:08  4 of 4 START test relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_  [RUN]\n22:14:08  4 of 4 FAIL 1 relationships_fct_orders_customer_id__customer_id__ref_stg_jaffle_shop__customers_  [FAIL 1 in 0.01s]\n...\n22:14:08  Done. PASS=3 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=4"
+       }
       },
       {
        "c": [
@@ -7698,7 +7803,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt -q ls --select tag:marketing --output name\ncustomer_segments\ndim_customers\nnot_null_customer_segments_customer_id\nunique_customer_segments_customer_id\n\n$ dbt ls --select source:stripe stg_stripe__payments --output path\n...\nmodels/staging/stripe/stg_stripe__payments.sql\nmodels/staging/stripe/_stripe__sources.yml\nmodels/staging/stripe/_stripe__models.yml\nmodels/staging/stripe/_stripe__models.yml\n\n$ dbt ls --select tag:finance --output json --output-keys name resource_type config.materialized\n...\n{\"name\": \"fct_monthly_revenue\", \"resource_type\": \"model\", \"config.materialized\": \"table\"}\n{\"name\": \"fct_order_items\", \"resource_type\": \"model\", \"config.materialized\": \"table\"}\n{\"name\": \"fct_order_items_daily\", \"resource_type\": \"model\", \"config.materialized\": \"incremental\"}\n{\"name\": \"fct_orders\", \"resource_type\": \"model\", \"config.materialized\": \"incremental\"}"
+       "text": "$ dbt -q ls --select tag:marketing --output name\ncustomer_segments\ndim_customers\nnot_null_customer_segments_customer_id\nunique_customer_segments_customer_id\n\n$ dbt ls --select source:stripe stg_stripe__payments --output path\n...\nmodels/staging/stripe/stg_stripe__payments.sql\nmodels/staging/stripe/_stripe__sources.yml\nmodels/staging/stripe/_stripe__models.yml\nmodels/staging/stripe/_stripe__models.yml\n\n$ dbt ls --select tag:finance --output json --output-keys name resource_type config.materialized\n...\n{\"name\": \"fct_monthly_revenue\", \"resource_type\": \"model\", \"config.materialized\": \"table\"}\n{\"name\": \"fct_order_items\", \"resource_type\": \"model\", \"config.materialized\": \"table\"}\n{\"name\": \"fct_order_items_daily\", \"resource_type\": \"model\", \"config.materialized\": \"incremental\"}\n{\"name\": \"fct_orders\", \"resource_type\": \"model\", \"config.materialized\": \"incremental\"}",
+       "variants": {
+        "win": "PS> dbt -q ls --select tag:marketing --output name\ncustomer_segments\ndim_customers\nnot_null_customer_segments_customer_id\nunique_customer_segments_customer_id\n\nPS> dbt ls --select source:stripe stg_stripe__payments --output path\n...\nmodels/staging/stripe/stg_stripe__payments.sql\nmodels/staging/stripe/_stripe__sources.yml\nmodels/staging/stripe/_stripe__models.yml\nmodels/staging/stripe/_stripe__models.yml\n\nPS> dbt ls --select tag:finance --output json --output-keys name resource_type config.materialized\n...\n{\"name\": \"fct_monthly_revenue\", \"resource_type\": \"model\", \"config.materialized\": \"table\"}\n{\"name\": \"fct_order_items\", \"resource_type\": \"model\", \"config.materialized\": \"table\"}\n{\"name\": \"fct_order_items_daily\", \"resource_type\": \"model\", \"config.materialized\": \"incremental\"}\n{\"name\": \"fct_orders\", \"resource_type\": \"model\", \"config.materialized\": \"incremental\"}"
+       }
       },
       {
        "c": [
@@ -7798,7 +7906,10 @@
        "id": "ch16-c42",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show -s fct_monthly_revenue\n...\nPreviewing node 'fct_monthly_revenue':\n| order_month | country        | number_of_orders | revenue |\n| ----------- | -------------- | ---------------- | ------- |\n|  2025-01-01 | United States  |                1 |     7.5 |\n|  2025-02-01 | Spain          |                6 |   171.9 |\n|  2025-03-01 | United Kingdom |                1 |     9.6 |\n|  2025-04-01 | France         |                4 |   114.2 |\n|  2025-08-01 | United States  |                2 |    63.8 |"
+       "text": "$ dbt show -s fct_monthly_revenue\n...\nPreviewing node 'fct_monthly_revenue':\n| order_month | country        | number_of_orders | revenue |\n| ----------- | -------------- | ---------------- | ------- |\n|  2025-01-01 | United States  |                1 |     7.5 |\n|  2025-02-01 | Spain          |                6 |   171.9 |\n|  2025-03-01 | United Kingdom |                1 |     9.6 |\n|  2025-04-01 | France         |                4 |   114.2 |\n|  2025-08-01 | United States  |                2 |    63.8 |",
+       "variants": {
+        "win": "PS> dbt show -s fct_monthly_revenue\n...\nPreviewing node 'fct_monthly_revenue':\n| order_month | country        | number_of_orders | revenue |\n| ----------- | -------------- | ---------------- | ------- |\n|  2025-01-01 | United States  |                1 |     7.5 |\n|  2025-02-01 | Spain          |                6 |   171.9 |\n|  2025-03-01 | United Kingdom |                1 |     9.6 |\n|  2025-04-01 | France         |                4 |   114.2 |\n|  2025-08-01 | United States  |                2 |    63.8 |"
+       }
       },
       {
        "c": [
@@ -8043,7 +8154,10 @@
            "id": "ch16-c44",
            "lang": "bash",
            "t": "code",
-           "text": "$ dbt show -s customer_segments\n...\nRuntime Error\n  Runtime Error in model customer_segments (models/marts/customer_segments.py)\n    Parser Error: syntax error at or near \"pandas\""
+           "text": "$ dbt show -s customer_segments\n...\nRuntime Error\n  Runtime Error in model customer_segments (models/marts/customer_segments.py)\n    Parser Error: syntax error at or near \"pandas\"",
+           "variants": {
+            "win": "PS> dbt show -s customer_segments\n...\nRuntime Error\n  Runtime Error in model customer_segments (models/marts/customer_segments.py)\n    Parser Error: syntax error at or near \"pandas\""
+           }
           }
          ]
         },
@@ -8076,7 +8190,10 @@
            "lang": "bash",
            "small": true,
            "t": "code",
-           "text": "$ dbt show -s fct_orders\n...\nPreviewing node 'fct_orders':\n| order_id | customer_id | order_date | status | bank_transfer_amount | coupon_amount | ... |\n| -------- | ----------- | ---------- | ------ | -------------------- | ------------- | --- |"
+           "text": "$ dbt show -s fct_orders\n...\nPreviewing node 'fct_orders':\n| order_id | customer_id | order_date | status | bank_transfer_amount | coupon_amount | ... |\n| -------- | ----------- | ---------- | ------ | -------------------- | ------------- | --- |",
+           "variants": {
+            "win": "PS> dbt show -s fct_orders\n...\nPreviewing node 'fct_orders':\n| order_id | customer_id | order_date | status | bank_transfer_amount | coupon_amount | ... |\n| -------- | ----------- | ---------- | ------ | -------------------- | ------------- | --- |"
+           }
           },
           {
            "c": [
@@ -8277,7 +8394,10 @@
        "id": "ch16-c46",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile -s stg_jaffle_shop__products --empty\n...\nCompiled node 'stg_jaffle_shop__products' is:\nwith\n\nsource as (\n\n    select * from (select * from \"practice\".\"jaffle_shop\".\"products\" where false limit 0)\n\n),\n..."
+       "text": "$ dbt compile -s stg_jaffle_shop__products --empty\n...\nCompiled node 'stg_jaffle_shop__products' is:\nwith\n\nsource as (\n\n    select * from (select * from \"practice\".\"jaffle_shop\".\"products\" where false limit 0)\n\n),\n...",
+       "variants": {
+        "win": "PS> dbt compile -s stg_jaffle_shop__products --empty\n...\nCompiled node 'stg_jaffle_shop__products' is:\nwith\n\nsource as (\n\n    select * from (select * from \"practice\".\"jaffle_shop\".\"products\" where false limit 0)\n\n),\n..."
+       }
       },
       {
        "c": [
@@ -8300,7 +8420,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt compile --empty --inline \"select count(*) from {{ source('jaffle_shop', 'orders') }} union all select count(*) from jaffle_shop.orders union all select count(*) from {{ ref('fct_orders').render() }}\"\n...\nCompiled inline node is:\nselect count(*) from (select * from \"practice\".\"jaffle_shop\".\"orders\" where false limit 0) union all select count(*) from jaffle_shop.orders union all select count(*) from \"practice\".\"dbt_adnane\".\"fct_orders\""
+       "text": "$ dbt compile --empty --inline \"select count(*) from {{ source('jaffle_shop', 'orders') }} union all select count(*) from jaffle_shop.orders union all select count(*) from {{ ref('fct_orders').render() }}\"\n...\nCompiled inline node is:\nselect count(*) from (select * from \"practice\".\"jaffle_shop\".\"orders\" where false limit 0) union all select count(*) from jaffle_shop.orders union all select count(*) from \"practice\".\"dbt_adnane\".\"fct_orders\"",
+       "variants": {
+        "win": "PS> dbt compile --empty --inline \"select count(*) from {{ source('jaffle_shop', 'orders') }} union all select count(*) from jaffle_shop.orders union all select count(*) from {{ ref('fct_orders').render() }}\"\n...\nCompiled inline node is:\nselect count(*) from (select * from \"practice\".\"jaffle_shop\".\"orders\" where false limit 0) union all select count(*) from jaffle_shop.orders union all select count(*) from \"practice\".\"dbt_adnane\".\"fct_orders\""
+       }
       },
       {
        "c": [
@@ -8514,7 +8637,10 @@
        "id": "ch16-c48",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt seed --empty\nUsage: dbt seed [OPTIONS]\nTry 'dbt seed --help' for help.\n\nError: No such option '--empty'. Did you mean '--help'?"
+       "text": "$ dbt seed --empty\nUsage: dbt seed [OPTIONS]\nTry 'dbt seed --help' for help.\n\nError: No such option '--empty'. Did you mean '--help'?",
+       "variants": {
+        "win": "PS> dbt seed --empty\nUsage: dbt seed [OPTIONS]\nTry 'dbt seed --help' for help.\n\nError: No such option '--empty'. Did you mean '--help'?"
+       }
       },
       {
        "c": [
@@ -9206,7 +9332,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ dbt build --empty --exclude-resource-type snapshot\n...\n22:26:55  Finished running 2 incremental models, 1 seed, 4 table models, 14 data tests, 7 view models in 0 hours 0 minutes and 1.10 seconds (1.10s).\n22:26:55  Done. PASS=28 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=28"
+         "text": "$ dbt build --empty --exclude-resource-type snapshot\n...\n22:26:55  Finished running 2 incremental models, 1 seed, 4 table models, 14 data tests, 7 view models in 0 hours 0 minutes and 1.10 seconds (1.10s).\n22:26:55  Done. PASS=28 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=28",
+         "variants": {
+          "win": "PS> dbt build --empty --exclude-resource-type snapshot\n...\n22:26:55  Finished running 2 incremental models, 1 seed, 4 table models, 14 data tests, 7 view models in 0 hours 0 minutes and 1.10 seconds (1.10s).\n22:26:55  Done. PASS=28 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=28"
+         }
         },
         {
          "c": [
@@ -10084,7 +10213,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt run --select stg_jaffle_shop__orders --sample='1 week'\nUsage: dbt run [OPTIONS]\nTry 'dbt run --help' for help.\n\nError: Invalid value for '--sample': Runtime Error\n  Invalid grain size 'week'. Must be one of ['hour', 'day', 'month', 'year', 'hours', 'days', 'months', 'years'].\n\n$ dbt compile --select stg_jaffle_shop__orders --sample='3 days'\n...\nError: No such option '--sample'. (Did you mean one of: '--select', '--state'?)"
+       "text": "$ dbt run --select stg_jaffle_shop__orders --sample='1 week'\nUsage: dbt run [OPTIONS]\nTry 'dbt run --help' for help.\n\nError: Invalid value for '--sample': Runtime Error\n  Invalid grain size 'week'. Must be one of ['hour', 'day', 'month', 'year', 'hours', 'days', 'months', 'years'].\n\n$ dbt compile --select stg_jaffle_shop__orders --sample='3 days'\n...\nError: No such option '--sample'. (Did you mean one of: '--select', '--state'?)",
+       "variants": {
+        "win": "PS> dbt run --select stg_jaffle_shop__orders --sample='1 week'\nUsage: dbt run [OPTIONS]\nTry 'dbt run --help' for help.\n\nError: Invalid value for '--sample': Runtime Error\n  Invalid grain size 'week'. Must be one of ['hour', 'day', 'month', 'year', 'hours', 'days', 'months', 'years'].\n\nPS> dbt compile --select stg_jaffle_shop__orders --sample='3 days'\n...\nError: No such option '--sample'. (Did you mean one of: '--select', '--state'?)"
+       }
       },
       {
        "c": [
@@ -10504,7 +10636,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ dbt show -q --inline \"select (select count(*) from {{ ref('stg_jaffle_shop__orders') }}) as stg_orders, (select count(*) from {{ ref('int_orders__enriched') }}) as int_orders, (select count(*) from {{ ref('fct_order_items') }}) as order_items, (select count(*) from {{ ref('fct_orders') }}) as fct_orders\"\n$ dbt show -q --inline \"select replace(view_name, 'stg_jaffle_shop__', '') as staging_view, sql ilike '%2026-01-05%' as keeps_filter from duckdb_views() where schema_name = 'dbt_adnane' and view_name in ('stg_jaffle_shop__orders', 'stg_jaffle_shop__customers') order by 1\""
+         "text": "$ dbt show -q --inline \"select (select count(*) from {{ ref('stg_jaffle_shop__orders') }}) as stg_orders, (select count(*) from {{ ref('int_orders__enriched') }}) as int_orders, (select count(*) from {{ ref('fct_order_items') }}) as order_items, (select count(*) from {{ ref('fct_orders') }}) as fct_orders\"\n$ dbt show -q --inline \"select replace(view_name, 'stg_jaffle_shop__', '') as staging_view, sql ilike '%2026-01-05%' as keeps_filter from duckdb_views() where schema_name = 'dbt_adnane' and view_name in ('stg_jaffle_shop__orders', 'stg_jaffle_shop__customers') order by 1\"",
+         "variants": {
+          "win": "PS> dbt show -q --inline \"select (select count(*) from {{ ref('stg_jaffle_shop__orders') }}) as stg_orders, (select count(*) from {{ ref('int_orders__enriched') }}) as int_orders, (select count(*) from {{ ref('fct_order_items') }}) as order_items, (select count(*) from {{ ref('fct_orders') }}) as fct_orders\"\nPS> dbt show -q --inline \"select replace(view_name, 'stg_jaffle_shop__', '') as staging_view, sql ilike '%2026-01-05%' as keeps_filter from duckdb_views() where schema_name = 'dbt_adnane' and view_name in ('stg_jaffle_shop__orders', 'stg_jaffle_shop__customers') order by 1\""
+         }
         },
         {
          "c": [
@@ -10556,7 +10691,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ dbt run -q --select stg_jaffle_shop__orders --sample='3 days'\n$ dbt show -q --inline \"select count(*) as stg_orders from {{ ref('stg_jaffle_shop__orders') }}\"\n$ dbt run --select stg_jaffle_shop__orders --sample='1 week'"
+         "text": "$ dbt run -q --select stg_jaffle_shop__orders --sample='3 days'\n$ dbt show -q --inline \"select count(*) as stg_orders from {{ ref('stg_jaffle_shop__orders') }}\"\n$ dbt run --select stg_jaffle_shop__orders --sample='1 week'",
+         "variants": {
+          "win": "PS> dbt run -q --select stg_jaffle_shop__orders --sample='3 days'\nPS> dbt show -q --inline \"select count(*) as stg_orders from {{ ref('stg_jaffle_shop__orders') }}\"\nPS> dbt run --select stg_jaffle_shop__orders --sample='1 week'"
+         }
         },
         {
          "c": [
@@ -11121,7 +11259,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt build --select staging tests/demo_always_fails.sql\n...\n22:20:30  6 of 16 FAIL 1 demo_always_fails ............................................... [FAIL 1 in 0.21s]\n...\n22:20:30  Done. PASS=15 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=16\n\n$ dbt build --select staging tests/demo_always_fails.sql --fail-fast --threads 1\n...\n22:20:34  5 of 16 OK created sql view model dbt_adnane.stg_stripe__payments .............. [OK in 0.02s]\n22:20:34  6 of 16 START test demo_always_fails ........................................... [RUN]\n22:20:34  6 of 16 FAIL 1 demo_always_fails ............................................... [FAIL 1 in 0.02s]\n22:20:34  7 of 16 START test not_null_stg_jaffle_shop__customers_customer_id ............. [RUN]\n22:20:34  CANCEL query test.jaffle_dbt.not_null_stg_jaffle_shop__customers_customer_id.b4343d8610  [CANCEL]\n22:20:34  7 of 16 PASS not_null_stg_jaffle_shop__customers_customer_id ................... [PASS in 0.02s]\n...\n22:20:34  Completed with 11 errors, 0 partial successes, and 0 warnings:\n...\n22:20:34  Done. PASS=5 WARN=0 ERROR=1 SKIP=10 NO-OP=0 TOTAL=16"
+       "text": "$ dbt build --select staging tests/demo_always_fails.sql\n...\n22:20:30  6 of 16 FAIL 1 demo_always_fails ............................................... [FAIL 1 in 0.21s]\n...\n22:20:30  Done. PASS=15 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=16\n\n$ dbt build --select staging tests/demo_always_fails.sql --fail-fast --threads 1\n...\n22:20:34  5 of 16 OK created sql view model dbt_adnane.stg_stripe__payments .............. [OK in 0.02s]\n22:20:34  6 of 16 START test demo_always_fails ........................................... [RUN]\n22:20:34  6 of 16 FAIL 1 demo_always_fails ............................................... [FAIL 1 in 0.02s]\n22:20:34  7 of 16 START test not_null_stg_jaffle_shop__customers_customer_id ............. [RUN]\n22:20:34  CANCEL query test.jaffle_dbt.not_null_stg_jaffle_shop__customers_customer_id.b4343d8610  [CANCEL]\n22:20:34  7 of 16 PASS not_null_stg_jaffle_shop__customers_customer_id ................... [PASS in 0.02s]\n...\n22:20:34  Completed with 11 errors, 0 partial successes, and 0 warnings:\n...\n22:20:34  Done. PASS=5 WARN=0 ERROR=1 SKIP=10 NO-OP=0 TOTAL=16",
+       "variants": {
+        "win": "PS> dbt build --select staging tests/demo_always_fails.sql\n...\n22:20:30  6 of 16 FAIL 1 demo_always_fails ............................................... [FAIL 1 in 0.21s]\n...\n22:20:30  Done. PASS=15 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=16\n\nPS> dbt build --select staging tests/demo_always_fails.sql --fail-fast --threads 1\n...\n22:20:34  5 of 16 OK created sql view model dbt_adnane.stg_stripe__payments .............. [OK in 0.02s]\n22:20:34  6 of 16 START test demo_always_fails ........................................... [RUN]\n22:20:34  6 of 16 FAIL 1 demo_always_fails ............................................... [FAIL 1 in 0.02s]\n22:20:34  7 of 16 START test not_null_stg_jaffle_shop__customers_customer_id ............. [RUN]\n22:20:34  CANCEL query test.jaffle_dbt.not_null_stg_jaffle_shop__customers_customer_id.b4343d8610  [CANCEL]\n22:20:34  7 of 16 PASS not_null_stg_jaffle_shop__customers_customer_id ................... [PASS in 0.02s]\n...\n22:20:34  Completed with 11 errors, 0 partial successes, and 0 warnings:\n...\n22:20:34  Done. PASS=5 WARN=0 ERROR=1 SKIP=10 NO-OP=0 TOTAL=16"
+       }
       },
       {
        "c": [
@@ -11187,7 +11328,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt run --select staging --threads 1\n...\n22:20:48  Concurrency: 1 threads (target='dev')\n22:20:48  1 of 5 START sql view model dbt_adnane.stg_jaffle_shop__customers .............. [RUN]\n22:20:48  1 of 5 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ......... [OK in 0.14s]\n22:20:48  2 of 5 START sql view model dbt_adnane.stg_jaffle_shop__order_items ............ [RUN]\n...\n$ dbt run --select staging --threads 8\n...\n22:20:52  Concurrency: 8 threads (target='dev')\n22:20:52  1 of 5 START sql view model dbt_adnane.stg_jaffle_shop__customers .............. [RUN]\n22:20:52  2 of 5 START sql view model dbt_adnane.stg_jaffle_shop__order_items ............ [RUN]\n22:20:52  3 of 5 START sql view model dbt_adnane.stg_jaffle_shop__orders ................. [RUN]\n22:20:52  4 of 5 START sql view model dbt_adnane.stg_jaffle_shop__products ............... [RUN]\n22:20:52  5 of 5 START sql view model dbt_adnane.stg_stripe__payments .................... [RUN]\n..."
+       "text": "$ dbt run --select staging --threads 1\n...\n22:20:48  Concurrency: 1 threads (target='dev')\n22:20:48  1 of 5 START sql view model dbt_adnane.stg_jaffle_shop__customers .............. [RUN]\n22:20:48  1 of 5 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ......... [OK in 0.14s]\n22:20:48  2 of 5 START sql view model dbt_adnane.stg_jaffle_shop__order_items ............ [RUN]\n...\n$ dbt run --select staging --threads 8\n...\n22:20:52  Concurrency: 8 threads (target='dev')\n22:20:52  1 of 5 START sql view model dbt_adnane.stg_jaffle_shop__customers .............. [RUN]\n22:20:52  2 of 5 START sql view model dbt_adnane.stg_jaffle_shop__order_items ............ [RUN]\n22:20:52  3 of 5 START sql view model dbt_adnane.stg_jaffle_shop__orders ................. [RUN]\n22:20:52  4 of 5 START sql view model dbt_adnane.stg_jaffle_shop__products ............... [RUN]\n22:20:52  5 of 5 START sql view model dbt_adnane.stg_stripe__payments .................... [RUN]\n...",
+       "variants": {
+        "win": "PS> dbt run --select staging --threads 1\n...\n22:20:48  Concurrency: 1 threads (target='dev')\n22:20:48  1 of 5 START sql view model dbt_adnane.stg_jaffle_shop__customers .............. [RUN]\n22:20:48  1 of 5 OK created sql view model dbt_adnane.stg_jaffle_shop__customers ......... [OK in 0.14s]\n22:20:48  2 of 5 START sql view model dbt_adnane.stg_jaffle_shop__order_items ............ [RUN]\n...\nPS> dbt run --select staging --threads 8\n...\n22:20:52  Concurrency: 8 threads (target='dev')\n22:20:52  1 of 5 START sql view model dbt_adnane.stg_jaffle_shop__customers .............. [RUN]\n22:20:52  2 of 5 START sql view model dbt_adnane.stg_jaffle_shop__order_items ............ [RUN]\n22:20:52  3 of 5 START sql view model dbt_adnane.stg_jaffle_shop__orders ................. [RUN]\n22:20:52  4 of 5 START sql view model dbt_adnane.stg_jaffle_shop__products ............... [RUN]\n22:20:52  5 of 5 START sql view model dbt_adnane.stg_stripe__payments .................... [RUN]\n..."
+       }
       },
       {
        "c": [
@@ -11213,7 +11357,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt run --select stg_jaffle_shop__products --target prod\n...\n22:20:56  Unable to do partial parsing because config vars, config profile, or config target have changed\n...\n22:20:57  Concurrency: 4 threads (target='prod')\n22:20:57  1 of 1 START sql view model prod.stg_jaffle_shop__products ..................... [RUN]\n22:20:57  1 of 1 OK created sql view model prod.stg_jaffle_shop__products ................ [OK in 0.05s]"
+       "text": "$ dbt run --select stg_jaffle_shop__products --target prod\n...\n22:20:56  Unable to do partial parsing because config vars, config profile, or config target have changed\n...\n22:20:57  Concurrency: 4 threads (target='prod')\n22:20:57  1 of 1 START sql view model prod.stg_jaffle_shop__products ..................... [RUN]\n22:20:57  1 of 1 OK created sql view model prod.stg_jaffle_shop__products ................ [OK in 0.05s]",
+       "variants": {
+        "win": "PS> dbt run --select stg_jaffle_shop__products --target prod\n...\n22:20:56  Unable to do partial parsing because config vars, config profile, or config target have changed\n...\n22:20:57  Concurrency: 4 threads (target='prod')\n22:20:57  1 of 1 START sql view model prod.stg_jaffle_shop__products ..................... [RUN]\n22:20:57  1 of 1 OK created sql view model prod.stg_jaffle_shop__products ................ [OK in 0.05s]"
+       }
       },
       {
        "c": [
@@ -11388,7 +11535,10 @@
        "id": "ch16-c77",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls --select does_not_exist --warn-error\n...\n22:21:18  Encountered an error:\nCompilation Error\n  The selection criterion 'does_not_exist' does not match any enabled nodes"
+       "text": "$ dbt ls --select does_not_exist --warn-error\n...\n22:21:18  Encountered an error:\nCompilation Error\n  The selection criterion 'does_not_exist' does not match any enabled nodes",
+       "variants": {
+        "win": "PS> dbt ls --select does_not_exist --warn-error\n...\n22:21:18  Encountered an error:\nCompilation Error\n  The selection criterion 'does_not_exist' does not match any enabled nodes"
+       }
       },
       {
        "c": [
@@ -11505,7 +11655,39 @@
        "lang": "bash",
        "t": "code",
        "text": "$ dbt parse\n22:22:05  Running with dbt=1.11.16\n22:22:05  Registered adapter: duckdb=1.11.0\n22:22:06  Performance info: /Users/you/dbt-course/jaffle_dbt/target/perf_info.json",
-       "textBook": "$ dbt parse\n22:22:05  Running with dbt=1.11.16\n22:22:05  Registered adapter: duckdb=1.11.0\n22:22:06  Performance info: /Users/mac/dbt-course/jaffle_dbt/target/perf_info.json"
+       "textBook": "$ dbt parse\n22:22:05  Running with dbt=1.11.16\n22:22:05  Registered adapter: duckdb=1.11.0\n22:22:06  Performance info: /Users/mac/dbt-course/jaffle_dbt/target/perf_info.json",
+       "variants": {
+        "win": "PS> dbt parse\n22:22:05  Running with dbt=1.11.16\n22:22:05  Registered adapter: duckdb=1.11.0\n22:22:06  Performance info: /Users/you/dbt-course/jaffle_dbt/target/perf_info.json"
+       }
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. On your computer the paths start with ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>\\"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": "/Users/you/"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "auto-win-out-ch16-c78",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "c": [
@@ -11567,7 +11749,39 @@
        "small": true,
        "t": "code",
        "text": "$ dbt clean\n...\n22:22:10  Checking /Users/you/dbt-course/jaffle_dbt/target/*\n22:22:10  Cleaned /Users/you/dbt-course/jaffle_dbt/target/*\n22:22:10  Checking /Users/you/dbt-course/jaffle_dbt/dbt_packages/*\n22:22:10  Cleaned /Users/you/dbt-course/jaffle_dbt/dbt_packages/*\n22:22:10  Finished cleaning all paths.\n\n$ dbt ls --select fct_orders\n...\n22:22:13  Encountered an error:\nCompilation Error\n  dbt found 2 package(s) specified in packages.yml, but only 0 package(s) installed in dbt_packages. Run \"dbt deps\" to install package dependencies.\n\n$ dbt deps\n...\n22:22:17  Installing dbt-labs/dbt_utils\n22:22:18  Installed from version 1.4.1\n...\n22:22:18  Installing dbt-labs/audit_helper\n22:22:18  Installed from version 0.14.0",
-       "textBook": "$ dbt clean\n...\n22:22:10  Checking /Users/mac/dbt-course/jaffle_dbt/target/*\n22:22:10  Cleaned /Users/mac/dbt-course/jaffle_dbt/target/*\n22:22:10  Checking /Users/mac/dbt-course/jaffle_dbt/dbt_packages/*\n22:22:10  Cleaned /Users/mac/dbt-course/jaffle_dbt/dbt_packages/*\n22:22:10  Finished cleaning all paths.\n\n$ dbt ls --select fct_orders\n...\n22:22:13  Encountered an error:\nCompilation Error\n  dbt found 2 package(s) specified in packages.yml, but only 0 package(s) installed in dbt_packages. Run \"dbt deps\" to install package dependencies.\n\n$ dbt deps\n...\n22:22:17  Installing dbt-labs/dbt_utils\n22:22:18  Installed from version 1.4.1\n...\n22:22:18  Installing dbt-labs/audit_helper\n22:22:18  Installed from version 0.14.0"
+       "textBook": "$ dbt clean\n...\n22:22:10  Checking /Users/mac/dbt-course/jaffle_dbt/target/*\n22:22:10  Cleaned /Users/mac/dbt-course/jaffle_dbt/target/*\n22:22:10  Checking /Users/mac/dbt-course/jaffle_dbt/dbt_packages/*\n22:22:10  Cleaned /Users/mac/dbt-course/jaffle_dbt/dbt_packages/*\n22:22:10  Finished cleaning all paths.\n\n$ dbt ls --select fct_orders\n...\n22:22:13  Encountered an error:\nCompilation Error\n  dbt found 2 package(s) specified in packages.yml, but only 0 package(s) installed in dbt_packages. Run \"dbt deps\" to install package dependencies.\n\n$ dbt deps\n...\n22:22:17  Installing dbt-labs/dbt_utils\n22:22:18  Installed from version 1.4.1\n...\n22:22:18  Installing dbt-labs/audit_helper\n22:22:18  Installed from version 0.14.0",
+       "variants": {
+        "win": "PS> dbt clean\n...\n22:22:10  Checking /Users/you/dbt-course/jaffle_dbt/target/*\n22:22:10  Cleaned /Users/you/dbt-course/jaffle_dbt/target/*\n22:22:10  Checking /Users/you/dbt-course/jaffle_dbt/dbt_packages/*\n22:22:10  Cleaned /Users/you/dbt-course/jaffle_dbt/dbt_packages/*\n22:22:10  Finished cleaning all paths.\n\nPS> dbt ls --select fct_orders\n...\n22:22:13  Encountered an error:\nCompilation Error\n  dbt found 2 package(s) specified in packages.yml, but only 0 package(s) installed in dbt_packages. Run \"dbt deps\" to install package dependencies.\n\nPS> dbt deps\n...\n22:22:17  Installing dbt-labs/dbt_utils\n22:22:18  Installed from version 1.4.1\n...\n22:22:18  Installing dbt-labs/audit_helper\n22:22:18  Installed from version 0.14.0"
+       }
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. On your computer the paths start with ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>\\"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": "/Users/you/"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "auto-win-out-ch16-c79",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "items": [
@@ -11675,7 +11889,39 @@
        "small": true,
        "t": "code",
        "text": "$ dbt debug\n...\n22:16:57  Using profiles.yml file at /Users/you/.dbt/profiles.yml\n22:16:57  Using dbt_project.yml file at /Users/you/dbt-course/jaffle_dbt/dbt_project.yml\n...\n22:16:57    profiles.yml file [OK found and valid]\n22:16:57    dbt_project.yml file [OK found and valid]\n22:16:57   - git [OK found]\n...\n22:16:57    Connection test: [OK connection ok]\n22:16:57  All checks passed!",
-       "textBook": "$ dbt debug\n...\n22:16:57  Using profiles.yml file at /Users/mac/.dbt/profiles.yml\n22:16:57  Using dbt_project.yml file at /Users/mac/dbt-course/jaffle_dbt/dbt_project.yml\n...\n22:16:57    profiles.yml file [OK found and valid]\n22:16:57    dbt_project.yml file [OK found and valid]\n22:16:57   - git [OK found]\n...\n22:16:57    Connection test: [OK connection ok]\n22:16:57  All checks passed!"
+       "textBook": "$ dbt debug\n...\n22:16:57  Using profiles.yml file at /Users/mac/.dbt/profiles.yml\n22:16:57  Using dbt_project.yml file at /Users/mac/dbt-course/jaffle_dbt/dbt_project.yml\n...\n22:16:57    profiles.yml file [OK found and valid]\n22:16:57    dbt_project.yml file [OK found and valid]\n22:16:57   - git [OK found]\n...\n22:16:57    Connection test: [OK connection ok]\n22:16:57  All checks passed!",
+       "variants": {
+        "win": "PS> dbt debug\n...\n22:16:57  Using profiles.yml file at /Users/you/.dbt/profiles.yml\n22:16:57  Using dbt_project.yml file at /Users/you/dbt-course/jaffle_dbt/dbt_project.yml\n...\n22:16:57    profiles.yml file [OK found and valid]\n22:16:57    dbt_project.yml file [OK found and valid]\n22:16:57   - git [OK found]\n...\n22:16:57    Connection test: [OK connection ok]\n22:16:57  All checks passed!"
+       }
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. On your computer the paths start with ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>\\"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": "/Users/you/"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "auto-win-out-ch16-c80",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "c": [
@@ -11729,7 +11975,10 @@
          "id": "ch16-c82",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select staging tests/demo_always_fails.sql\n$ dbt build --select staging tests/demo_always_fails.sql --fail-fast --threads 1"
+         "text": "$ dbt build --select staging tests/demo_always_fails.sql\n$ dbt build --select staging tests/demo_always_fails.sql --fail-fast --threads 1",
+         "variants": {
+          "win": "PS> dbt build --select staging tests/demo_always_fails.sql\nPS> dbt build --select staging tests/demo_always_fails.sql --fail-fast --threads 1"
+         }
         },
         {
          "c": [
@@ -11869,7 +12118,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ git status --short\n M models/marts/customer_segments.py\n?? selectors.yml\n$ git add selectors.yml models/marts/customer_segments.py\n$ git commit -m \"Selectors (staging_only, nightly, finance_marts, no_python); Python model handles empty input\""
+         "text": "$ git status --short\n M models/marts/customer_segments.py\n?? selectors.yml\n$ git add selectors.yml models/marts/customer_segments.py\n$ git commit -m \"Selectors (staging_only, nightly, finance_marts, no_python); Python model handles empty input\"",
+         "variants": {
+          "win": "PS> git status --short\n M models/marts/customer_segments.py\n?? selectors.yml\nPS> git add selectors.yml models/marts/customer_segments.py\nPS> git commit -m \"Selectors (staging_only, nightly, finance_marts, no_python); Python model handles empty input\""
+         }
         },
         {
          "c": [
@@ -12169,7 +12421,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt ls --select result:success --state target --resource-type model\n...\n22:22:59  Warning: The state and target directories are the same: 'target'. This could lead to missing changes due to overwritten state including non-idempotent retries.\n...\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\n..."
+       "text": "$ dbt ls --select result:success --state target --resource-type model\n...\n22:22:59  Warning: The state and target directories are the same: 'target'. This could lead to missing changes due to overwritten state including non-idempotent retries.\n...\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\n...",
+       "variants": {
+        "win": "PS> dbt ls --select result:success --state target --resource-type model\n...\n22:22:59  Warning: The state and target directories are the same: 'target'. This could lead to missing changes due to overwritten state including non-idempotent retries.\n...\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__customers\njaffle_dbt.staging.jaffle_shop.stg_jaffle_shop__orders\n..."
+       }
       },
       {
        "c": [

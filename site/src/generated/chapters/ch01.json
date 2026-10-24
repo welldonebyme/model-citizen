@@ -1849,7 +1849,8 @@
   },
   {
    "anchors": [
-    "sec-dw-modeling"
+    "sec-dw-modeling",
+    "get-the-course-files"
    ],
    "checkpoints": [
     "q-ch01-03",
@@ -2539,6 +2540,148 @@
        ],
        "kind": "dbt",
        "t": "callout"
+      },
+      {
+       "anchor": "get-the-course-files",
+       "blocks": [
+        {
+         "c": [
+          "From this lab on, the labs use the course files: the practice data, the data scripts of later chapters, the bug files and the reference project. Download them once: ",
+          {
+           "href": "/kits/dbt-course-kit.zip",
+           "site": true,
+           "t": "ref",
+           "text": "dbt-course-kit.zip"
+          },
+          " (about 100 KB). Then copy them into the folder ",
+          {
+           "t": "code",
+           "v": "~/dbt-course/kit"
+          },
+          " (on Windows ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>\\dbt-course\\kit"
+          },
+          ") with the commands for your system (the switch at the top of the page chooses it):"
+         ],
+         "t": "p"
+        },
+        {
+         "id": "ch01-kit-c1",
+         "lang": "bash",
+         "osNote": "all-ch01-course-files",
+         "t": "code",
+         "text": "$ mkdir -p ~/dbt-course/kit\n$ unzip -q -o ~/Downloads/dbt-course-kit.zip -d ~/Downloads\n$ cp -R ~/Downloads/dbt-course-kit/. ~/dbt-course/kit/\n$ ls ~/dbt-course/kit/data\ncustomers.csv  order_items.csv  orders.csv  payments.csv  products.csv",
+         "variants": {
+          "win": "PS> New-Item -ItemType Directory -Force $HOME\\dbt-course\\kit | Out-Null\nPS> Expand-Archive $HOME\\Downloads\\dbt-course-kit.zip -DestinationPath $HOME\\Downloads -Force\nPS> Copy-Item -Recurse -Force $HOME\\Downloads\\dbt-course-kit\\* $HOME\\dbt-course\\kit\nPS> Get-ChildItem -Name $HOME\\dbt-course\\kit\\data\ncustomers.csv\norder_items.csv\norders.csv\npayments.csv\nproducts.csv",
+          "wsl": "$ sudo apt update && sudo apt install -y unzip\n$ mkdir -p ~/dbt-course/kit ~/Downloads\n$ cp /mnt/c/Users/*/Downloads/dbt-course-kit.zip ~/Downloads/\n$ unzip -q -o ~/Downloads/dbt-course-kit.zip -d ~/Downloads\n$ cp -R ~/Downloads/dbt-course-kit/. ~/dbt-course/kit/\n$ ls ~/dbt-course/kit/data\ncustomers.csv  order_items.csv  orders.csv  payments.csv  products.csv"
+         }
+        },
+        {
+         "c": [
+          "Safari may unzip the download for you (you then see a ",
+          {
+           "t": "code",
+           "v": "dbt-course-kit"
+          },
+          " folder in Downloads and no zip): skip the ",
+          {
+           "t": "code",
+           "v": "unzip"
+          },
+          " line. On Windows, use the ",
+          {
+           "t": "code",
+           "v": "Expand-Archive"
+          },
+          " line rather than Explorer's Extract All, which puts a second ",
+          {
+           "t": "code",
+           "v": "dbt-course-kit"
+          },
+          " folder inside the first. In WSL, the browser saved the zip in your Windows Downloads folder (",
+          {
+           "t": "code",
+           "v": "/mnt/c/Users/<your-Windows-name>/Downloads"
+          },
+          "): the ",
+          {
+           "t": "code",
+           "v": "cp"
+          },
+          " line copies it into Linux. You can run these lines again: they only replace the kit's own files."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          "To open the CSV files of this lab: in Finder, ",
+          {
+           "c": [
+            "Go > Go to Folder"
+           ],
+           "t": "b"
+          },
+          " and type ",
+          {
+           "t": "code",
+           "v": "~/dbt-course/kit/data"
+          },
+          "; in File Explorer, type ",
+          {
+           "t": "code",
+           "v": "%USERPROFILE%\\dbt-course\\kit\\data"
+          },
+          " in the address bar; in WSL, run ",
+          {
+           "t": "code",
+           "v": "explorer.exe ."
+          },
+          " in that folder."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          "Do not run the kit's setup now. The main lab of Chapter 2 (",
+          {
+           "href": "/learn/ch02/ch02-s9/",
+           "site": true,
+           "t": "ref",
+           "text": "Section 2.9"
+          },
+          ") builds your workspace step by step, and there the setup script can do most of that lab for you: ",
+          {
+           "t": "code",
+           "v": "bash setup.sh"
+          },
+          " (macOS, Linux, WSL) or ",
+          {
+           "t": "code",
+           "v": "powershell -ExecutionPolicy Bypass -File .\\setup.ps1"
+          },
+          " (Windows), started from the unzipped ",
+          {
+           "t": "code",
+           "v": "dbt-course-kit"
+          },
+          " folder in Downloads. The kit's README.md and README-windows.md explain it."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "mac",
+        "win",
+        "wsl"
+       ],
+       "osNote": "all-ch01-course-files",
+       "t": "callout",
+       "title": [
+        "Get the course files"
+       ]
       },
       {
        "blocks": [

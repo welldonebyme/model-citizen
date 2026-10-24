@@ -354,6 +354,55 @@
           ")."
          ],
          "t": "p"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "In PowerShell the prompt is ",
+            {
+             "t": "code",
+             "v": "PS>"
+            },
+            " (the terminal boxes show it so): do not type ",
+            {
+             "t": "code",
+             "v": "PS>"
+            },
+            ", nor ",
+            {
+             "t": "code",
+             "v": "(.venv)"
+            },
+            " before it. A ",
+            {
+             "t": "code",
+             "v": "$"
+            },
+            " inside a command (",
+            {
+             "t": "code",
+             "v": "$HOME"
+            },
+            ", ",
+            {
+             "t": "code",
+             "v": "$env:DBT_DEMO_SECRET"
+            },
+            ") is part of the command: type it."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch02-prompt",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
         }
        ],
        "kind": "tip",
@@ -363,7 +412,10 @@
        "id": "ch02-c1",
        "lang": "bash",
        "t": "code",
-       "text": "$ echo \"Hello dbt\"\nHello dbt"
+       "text": "$ echo \"Hello dbt\"\nHello dbt",
+       "variants": {
+        "win": "PS> echo \"Hello dbt\"\nHello dbt"
+       }
       },
       {
        "c": [
@@ -703,6 +755,45 @@
        }
       },
       {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. In PowerShell, ",
+          {
+           "t": "code",
+           "v": "pwd"
+          },
+          " prints a small table: the word ",
+          {
+           "t": "code",
+           "v": "Path"
+          },
+          ", a line of dashes, then the folder, which starts with ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>"
+          },
+          ". ",
+          {
+           "t": "code",
+           "v": "cd -"
+          },
+          " prints nothing."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-out-pwd",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
        "c": [
         "And ",
         {
@@ -773,6 +864,70 @@
         " (you will create it in this chapter)."
        ],
        "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The output and this paragraph are macOS ones (",
+          {
+           "t": "code",
+           "v": "ls -la"
+          },
+          ": owner ",
+          {
+           "t": "code",
+           "v": "mac"
+          },
+          ", group ",
+          {
+           "t": "code",
+           "v": "staff"
+          },
+          "). In PowerShell, ",
+          {
+           "t": "code",
+           "v": "Get-ChildItem -Name"
+          },
+          " prints one name per line. ",
+          {
+           "t": "code",
+           "v": "Get-ChildItem -Force"
+          },
+          " prints a ",
+          {
+           "t": "code",
+           "v": "Directory:"
+          },
+          " line, then a table with the columns Mode, LastWriteTime, Length (the size in bytes) and Name: no permissions, owner or group. Mode starts with ",
+          {
+           "t": "code",
+           "v": "d"
+          },
+          " for a folder; ",
+          {
+           "t": "code",
+           "v": "-Force"
+          },
+          " plays the role of ",
+          {
+           "t": "code",
+           "v": "-a"
+          },
+          " and also shows hidden items."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-ls-columns",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "blocks": [
@@ -1152,6 +1307,278 @@
        "blocks": [
         {
          "c": [
+          "PowerShell has its own commands for these (the Windows version of each terminal block uses them). Short names such as ",
+          {
+           "t": "code",
+           "v": "cp"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "mv"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "rm"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "cat"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "mkdir"
+          },
+          " exist in PowerShell too, but with PowerShell's options: ",
+          {
+           "t": "code",
+           "v": "-p"
+          },
+          ", ",
+          {
+           "t": "code",
+           "v": "-R"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "-rf"
+          },
+          " do not work there."
+         ],
+         "t": "p"
+        },
+        {
+         "head": [
+          [
+           {
+            "c": [
+             "zsh (macOS, Linux, WSL)"
+            ]
+           },
+           {
+            "c": [
+             "Windows PowerShell"
+            ]
+           }
+          ]
+         ],
+         "rows": [
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "mkdir -p a/b/c"
+             }
+            ]
+           },
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "New-Item -ItemType Directory -Force a\\b\\c"
+             }
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "touch file.txt"
+             }
+            ]
+           },
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "New-Item -ItemType File file.txt"
+             },
+             " (a new, empty file)"
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "cp a.txt b.txt"
+             },
+             ", ",
+             {
+              "t": "code",
+              "v": "cp -R folder new_folder"
+             }
+            ]
+           },
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "Copy-Item a.txt b.txt"
+             },
+             ", ",
+             {
+              "t": "code",
+              "v": "Copy-Item -Recurse folder new_folder"
+             }
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "mv old.txt new.txt"
+             }
+            ]
+           },
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "Move-Item old.txt new.txt"
+             }
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "rm file.txt"
+             },
+             ", ",
+             {
+              "t": "code",
+              "v": "rm -r folder"
+             }
+            ]
+           },
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "Remove-Item file.txt"
+             },
+             ", ",
+             {
+              "t": "code",
+              "v": "Remove-Item -Recurse folder"
+             }
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "cat file.txt"
+             }
+            ]
+           },
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "Get-Content file.txt"
+             }
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "less file.txt"
+             }
+            ]
+           },
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "Get-Content file.txt | more"
+             },
+             " (Space: next page, q: quit)"
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "head -3 f"
+             },
+             " / ",
+             {
+              "t": "code",
+              "v": "tail -2 f"
+             }
+            ]
+           },
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "Get-Content f -TotalCount 3"
+             },
+             " / ",
+             {
+              "t": "code",
+              "v": "Get-Content f -Tail 2"
+             }
+            ]
+           }
+          ],
+          [
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "wc -l file.csv"
+             }
+            ]
+           },
+           {
+            "c": [
+             {
+              "t": "code",
+              "v": "(Get-Content file.csv).Count"
+             }
+            ]
+           }
+          ]
+         ],
+         "t": "table"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-commands-table",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "c": [
           {
            "t": "code",
            "v": "rm"
@@ -1198,6 +1625,46 @@
        "t": "p"
       },
       {
+       "blocks": [
+        {
+         "c": [
+          {
+           "t": "code",
+           "v": "~/dbt-course/practice"
+          },
+          " exists only after the main lab of this chapter (Section 2.9). Until then, run these commands in the kit folder, which has the same ",
+          {
+           "t": "code",
+           "v": "data"
+          },
+          " folder: start with ",
+          {
+           "t": "code",
+           "v": "cd ~/dbt-course/kit"
+          },
+          " (Windows: ",
+          {
+           "t": "code",
+           "v": "cd $HOME\\dbt-course\\kit"
+          },
+          ") instead of the first line."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "mac",
+        "win",
+        "wsl"
+       ],
+       "osNote": "all-ch02-look-in-kit",
+       "t": "callout",
+       "title": [
+        "Before the main lab"
+       ]
+      },
+      {
        "id": "ch02-c5",
        "lang": "bash",
        "t": "code",
@@ -1205,6 +1672,40 @@
        "variants": {
         "win": "PS> cd $HOME\\dbt-course\\practice\nPS> Get-ChildItem -Name data\ncustomers.csv  order_items.csv  orders.csv  payments.csv  products.csv\nPS> Get-Content data\\orders.csv -TotalCount 3\nid,user_id,order_date,status,_loaded_at\n1,51,2025-01-05,completed,2025-01-06 02:51:00\n2,85,2025-01-06,completed,2025-01-06 23:55:00\nPS> Get-Content data\\customers.csv -Tail 2\n99,Olivia,Brown,OLIVIA.BROWN99@EXAMPLE.COM,Morocco,2024-02-27\n100,Mehdi,Bernard,mehdi.bernard100@example.com,Morocco,2024-05-05\nPS> Get-ChildItem data\\*.csv | ForEach-Object { \"{0,7} {1}\" -f (Get-Content $_.FullName).Count, $_.Name }\n     101 data/customers.csv\n     607 data/order_items.csv\n     301 data/orders.csv\n     342 data/payments.csv\n      13 data/products.csv\n    1364 total"
        }
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. ",
+          {
+           "t": "code",
+           "v": "Get-ChildItem -Name data"
+          },
+          " prints one name per line, and the PowerShell line count prints only the file names (",
+          {
+           "t": "code",
+           "v": "101 customers.csv"
+          },
+          " and so on), with no ",
+          {
+           "t": "code",
+           "v": "total"
+          },
+          " line. The numbers are the same."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-out-wc",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "c": [
@@ -1318,6 +1819,40 @@
        "variants": {
         "win": "PS> Get-ChildItem -Name data\\p*          # every name in data/ that starts with p\ndata/payments.csv  data/products.csv"
        }
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. In PowerShell the command prints ",
+          {
+           "t": "code",
+           "v": "payments.csv"
+          },
+          " and ",
+          {
+           "t": "code",
+           "v": "products.csv"
+          },
+          ", one per line, without the ",
+          {
+           "t": "code",
+           "v": "data"
+          },
+          " folder in front."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-out-wildcard",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       }
      ],
      "id": "ch02-s4-2",
@@ -1673,6 +2208,43 @@
          "t": "p"
         },
         {
+         "blocks": [
+          {
+           "c": [
+            {
+             "t": "code",
+             "v": "~/dbt-course/kit"
+            },
+            " is the folder of ",
+            {
+             "href": "/learn/ch01/ch01-s6/#get-the-course-files",
+             "site": true,
+             "t": "ref",
+             "text": "Get the course files"
+            },
+            " (lesson 1.6). Its ",
+            {
+             "t": "code",
+             "v": "data"
+            },
+            " folder holds the same five CSV files as your workspace."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "mac",
+          "win",
+          "wsl"
+         ],
+         "osNote": "all-ch02-lab-explore-kit",
+         "t": "callout",
+         "title": [
+          "The kit folder"
+         ]
+        },
+        {
          "items": [
           {
            "blocks": [
@@ -1813,6 +2385,63 @@
           ") followed by the header of each file."
          ],
          "t": "p"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The same lab in PowerShell, from the folder that contains ",
+            {
+             "t": "code",
+             "v": "data"
+            },
+            " (for example ",
+            {
+             "t": "code",
+             "v": "cd $HOME\\dbt-course\\kit"
+            },
+            "):"
+           ],
+           "t": "p"
+          },
+          {
+           "id": "ch02-lab1-win-c1",
+           "lang": "bash",
+           "osNote": "win-ch02-lab-explore",
+           "t": "code",
+           "text": "PS> pwd\nPS> Get-Content data\\payments.csv -TotalCount 5\nPS> (Select-String -CaseSensitive fail data\\payments.csv).Count\n24\nPS> Get-ChildItem data\\*.csv | ForEach-Object { Get-Content $_.FullName -TotalCount 1 } | Set-Content headers.txt\nPS> Get-Content headers.txt\nPS> Remove-Item headers.txt"
+          },
+          {
+           "c": [
+            "Expected result: ",
+            {
+             "t": "code",
+             "v": "24"
+            },
+            " lines of payments.csv contain ",
+            {
+             "t": "code",
+             "v": "fail"
+            },
+            ", and headers.txt holds the five header lines, one per line (PowerShell writes no ",
+            {
+             "t": "code",
+             "v": "==> data/customers.csv <=="
+            },
+            " title lines)."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch02-lab-explore",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
         }
        ],
        "id": "ch02-lab1",
@@ -2158,6 +2787,45 @@
        }
       },
       {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. In PowerShell, ",
+          {
+           "t": "code",
+           "v": "echo $HOME"
+          },
+          " prints ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>"
+          },
+          ", and ",
+          {
+           "t": "code",
+           "v": "$PSVersionTable.PSVersion"
+          },
+          " prints your PowerShell version as a small table (Major, Minor, ...): 5.1 for Windows PowerShell, 7 for PowerShell 7. There is no ",
+          {
+           "t": "code",
+           "v": "/bin/zsh"
+          },
+          ": your shell is PowerShell."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-out-env",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
        "c": [
         "You can create your own with ",
         {
@@ -2215,6 +2883,50 @@
        "variants": {
         "win": "PS> (Get-Command git).Source\n/usr/bin/git\nPS> (Get-Command python).Source   # Windows: python, not python3\n/opt/homebrew/bin/python3"
        }
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. On Windows, ",
+          {
+           "t": "code",
+           "v": "(Get-Command git).Source"
+          },
+          " prints a Windows path, for example ",
+          {
+           "t": "code",
+           "v": "C:\\Program Files\\Git\\cmd\\git.exe"
+          },
+          ". ",
+          {
+           "t": "code",
+           "v": "Get-Command python"
+          },
+          " may find no python yet (a red \"not recognized\" error) or a ",
+          {
+           "t": "code",
+           "v": "WindowsApps"
+          },
+          " shortcut that opens the Microsoft Store: both are fine, uv brings its own Python and the venv of Section 2.8 gives you ",
+          {
+           "t": "code",
+           "v": "python"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-out-which",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "c": [
@@ -2428,6 +3140,45 @@
        "t": "p"
       },
       {
+       "blocks": [
+        {
+         "c": [
+          "In PowerShell, ",
+          {
+           "t": "code",
+           "v": "$?"
+          },
+          " is ",
+          {
+           "t": "code",
+           "v": "True"
+          },
+          " or ",
+          {
+           "t": "code",
+           "v": "False"
+          },
+          ": did the last command succeed? The number returned by a program such as dbt, git or python is in ",
+          {
+           "t": "code",
+           "v": "$LASTEXITCODE"
+          },
+          " (0 = success). The Windows version of the block below shows both."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-exit-code",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
        "id": "ch02-c13",
        "lang": "bash",
        "t": "code",
@@ -2446,6 +3197,35 @@
         " runs the second command only if the first one succeeded (exit code 0):"
        ],
        "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "PowerShell 7 accepts ",
+          {
+           "t": "code",
+           "v": "&&"
+          },
+          ". Windows PowerShell 5.1 does not: write ",
+          {
+           "t": "code",
+           "v": "dbt build; if ($?) { echo \"All good, ready to deploy\" }"
+          },
+          ", as in the Windows version below."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-and-operator",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "id": "ch02-c14",
@@ -2739,6 +3519,45 @@
        "t": "p"
       },
       {
+       "blocks": [
+        {
+         "c": [
+          "Before your first activation, allow PowerShell to run local scripts such as the venv's ",
+          {
+           "t": "code",
+           "v": "Activate.ps1"
+          },
+          ": run ",
+          {
+           "t": "code",
+           "v": "Set-ExecutionPolicy -Scope CurrentUser RemoteSigned"
+          },
+          " and answer ",
+          {
+           "t": "code",
+           "v": "Y"
+          },
+          ". Without it, the activation stops with a red error that ends with ",
+          {
+           "t": "code",
+           "v": "cannot be loaded because running scripts is disabled on this system"
+          },
+          ". The setting is for your Windows user only, and you do it once."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-execution-policy",
+       "t": "callout",
+       "title": [
+        "On Windows, once per computer"
+       ]
+      },
+      {
        "id": "ch02-c16",
        "lang": "bash",
        "t": "code",
@@ -2747,6 +3566,45 @@
        "variants": {
         "win": "PS> cd $HOME\\dbt-course\nPS> uv venv --python 3.12 .venv\nUsing CPython 3.12.13\nCreating virtual environment at: .venv\nActivate with: source .venv/bin/activate\nPS> .venv\\Scripts\\Activate.ps1\n(.venv) PS> (Get-Command python).Source\n/Users/you/dbt-course/.venv/bin/python"
        }
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. On Windows the venv's programs are in ",
+          {
+           "t": "code",
+           "v": ".venv\\Scripts\\"
+          },
+          ", not ",
+          {
+           "t": "code",
+           "v": ".venv/bin/"
+          },
+          ": uv's last line names the Windows activation script, and ",
+          {
+           "t": "code",
+           "v": "(Get-Command python).Source"
+          },
+          " prints ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>\\dbt-course\\.venv\\Scripts\\python.exe"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-out-venv",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "c": [
@@ -2785,6 +3643,45 @@
         " to leave it. You must activate it again in every new terminal window."
        ],
        "t": "p"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "After ",
+          {
+           "t": "code",
+           "v": ".venv\\Scripts\\Activate.ps1"
+          },
+          " the prompt starts with ",
+          {
+           "t": "code",
+           "v": "(.venv)"
+          },
+          " and the venv's ",
+          {
+           "t": "code",
+           "v": "Scripts\\"
+          },
+          " folder is first in your PATH. ",
+          {
+           "t": "code",
+           "v": "deactivate"
+          },
+          " leaves it, and every new PowerShell window needs the activation again."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-venv-path",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "blocks": [
@@ -2891,7 +3788,10 @@
        "id": "ch02-c17",
        "lang": "bash",
        "t": "code",
-       "text": "(.venv) $ uv pip install \"dbt-core~=1.11.0\" \"dbt-duckdb~=1.11.0\"\nResolved 54 packages in 17ms\nInstalled 54 packages in 229ms\n + agate==1.9.1\n ...\n(.venv) $ dbt --version\nCore:\n  - installed: 1.11.16\n  - latest:    1.12.6  - Update available!\n\n  Your version of dbt-core is out of date!\n  You can find instructions for upgrading here:\n  https://docs.getdbt.com/docs/installation\n\nPlugins:\n  - duckdb: 1.11.0 - Up to date!"
+       "text": "(.venv) $ uv pip install \"dbt-core~=1.11.0\" \"dbt-duckdb~=1.11.0\"\nResolved 54 packages in 17ms\nInstalled 54 packages in 229ms\n + agate==1.9.1\n ...\n(.venv) $ dbt --version\nCore:\n  - installed: 1.11.16\n  - latest:    1.12.6  - Update available!\n\n  Your version of dbt-core is out of date!\n  You can find instructions for upgrading here:\n  https://docs.getdbt.com/docs/installation\n\nPlugins:\n  - duckdb: 1.11.0 - Up to date!",
+       "variants": {
+        "win": "(.venv) PS> uv pip install \"dbt-core~=1.11.0\" \"dbt-duckdb~=1.11.0\"\nResolved 54 packages in 17ms\nInstalled 54 packages in 229ms\n + agate==1.9.1\n ...\n(.venv) PS> dbt --version\nCore:\n  - installed: 1.11.16\n  - latest:    1.12.6  - Update available!\n\n  Your version of dbt-core is out of date!\n  You can find instructions for upgrading here:\n  https://docs.getdbt.com/docs/installation\n\nPlugins:\n  - duckdb: 1.11.0 - Up to date!"
+       }
       },
       {
        "c": [
@@ -3087,7 +3987,10 @@
        "id": "ch02-c18",
        "lang": "bash",
        "t": "code",
-       "text": "(.venv) $ duckdb --version\n# read the version number at the start, for example v1.5.6\n(.venv) $ uv pip install \"duckdb==1.5.6\"    # use YOUR number, without the \"v\"\n(.venv) $ python -c \"import duckdb; print(duckdb.__version__)\"\n1.5.6"
+       "text": "(.venv) $ duckdb --version\n# read the version number at the start, for example v1.5.6\n(.venv) $ uv pip install \"duckdb==1.5.6\"    # use YOUR number, without the \"v\"\n(.venv) $ python -c \"import duckdb; print(duckdb.__version__)\"\n1.5.6",
+       "variants": {
+        "win": "(.venv) PS> duckdb --version\n# read the version number at the start, for example v1.5.6\n(.venv) PS> uv pip install \"duckdb==1.5.6\"    # use YOUR number, without the \"v\"\n(.venv) PS> python -c \"import duckdb; print(duckdb.__version__)\"\n1.5.6"
+       }
       },
       {
        "c": [
@@ -3334,29 +4237,175 @@
           ")."
          ],
          "t": "p"
-        },
-        {
-         "blocks": [
-          {
-           "c": [
-            "You can follow the whole course in PowerShell: with the switch on Windows, every terminal block shows the PowerShell version of its commands (dbt commands stay the same). WSL is a good choice too: choose WSL in the switch and follow the Ubuntu commands."
-           ],
-           "t": "p"
-          }
-         ],
-         "kind": "tip",
-         "os": [
-          "win"
-         ],
-         "osNote": "win-ch02-windows-tip",
-         "t": "callout",
-         "title": [
-          "On this website"
-         ]
         }
        ],
        "kind": "tip",
+       "os": [
+        "mac",
+        "wsl"
+       ],
+       "osHiddenBy": "win-ch02-windows-tip",
        "t": "callout"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "Follow this course in PowerShell: with the switch on Windows, every terminal block shows the PowerShell version of its commands (dbt commands stay the same), and the kit's ",
+          {
+           "t": "code",
+           "v": "setup.ps1"
+          },
+          " builds your workspace. If you prefer Linux, use WSL instead (next box) and choose WSL in the switch."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch02-windows-tip",
+       "t": "callout",
+       "title": [
+        "PowerShell or WSL?"
+       ]
+      },
+      {
+       "blocks": [
+        {
+         "items": [
+          {
+           "blocks": [
+            {
+             "c": [
+              "Right-click the Start button and open ",
+              {
+               "c": [
+                "Terminal (Admin)"
+               ],
+               "t": "b"
+              },
+              " (or Windows PowerShell (Admin)). Run ",
+              {
+               "t": "code",
+               "v": "wsl --install"
+              },
+              ": it installs WSL and Ubuntu. Restart the computer when it asks."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Open ",
+              {
+               "c": [
+                "Ubuntu"
+               ],
+               "t": "b"
+              },
+              " from the Start menu. The first time, choose a Linux user name and a password (",
+              {
+               "t": "code",
+               "v": "sudo"
+              },
+              " asks for it)."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Install the tools in Ubuntu: ",
+              {
+               "t": "code",
+               "v": "sudo apt update && sudo apt install -y unzip git"
+              },
+              ", then uv with ",
+              {
+               "t": "code",
+               "v": "curl -LsSf https://astral.sh/uv/install.sh | sh"
+              },
+              ", and open a new Ubuntu terminal."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Get the course files with the WSL commands of ",
+              {
+               "href": "/learn/ch01/ch01-s6/#get-the-course-files",
+               "site": true,
+               "t": "ref",
+               "text": "lesson 1.6"
+              },
+              ": the browser saves the zip in your Windows Downloads folder, and the commands copy it into Linux."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Work in your Linux home (",
+              {
+               "t": "code",
+               "v": "~/dbt-course"
+              },
+              "), never under ",
+              {
+               "t": "code",
+               "v": "/mnt/c/..."
+              },
+              " (much slower, and file locks behave differently). In the main lab of this chapter, the kit's ",
+              {
+               "t": "code",
+               "v": "bash setup.sh"
+              },
+              " builds the workspace for you."
+             ],
+             "t": "p"
+            }
+           ]
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "Choose WSL in the switch at the top of the page: the terminal blocks then show the Ubuntu commands."
+             ],
+             "t": "p"
+            }
+           ]
+          }
+         ],
+         "kind": "ol",
+         "t": "list"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win",
+        "wsl"
+       ],
+       "osNote": "win-ch02-wsl-install",
+       "t": "callout",
+       "title": [
+        "Using WSL instead"
+       ]
       }
      ],
      "id": "ch02-s8-5",
@@ -3409,6 +4458,70 @@
       {
        "blocks": [
         {
+         "c": [
+          "Step 8 copies files from ",
+          {
+           "t": "code",
+           "v": "~/dbt-course/kit"
+          },
+          ". If that folder does not exist yet, ",
+          {
+           "href": "/learn/ch01/ch01-s6/#get-the-course-files",
+           "site": true,
+           "t": "ref",
+           "text": "get the course files"
+          },
+          " first (lesson 1.6, five minutes)."
+         ],
+         "t": "p"
+        },
+        {
+         "c": [
+          "Shortcut: the kit's setup script does steps 4, 5, 6, 8 and 9 for you (folders, venv, dbt 1.11, the data and ",
+          {
+           "t": "code",
+           "v": "practice.duckdb"
+          },
+          "). Do steps 1 to 3 first (the setup needs uv and git), then run it from the unzipped ",
+          {
+           "t": "code",
+           "v": "dbt-course-kit"
+          },
+          " folder: ",
+          {
+           "t": "code",
+           "v": "bash setup.sh"
+          },
+          " on macOS, Linux and WSL, ",
+          {
+           "t": "code",
+           "v": "powershell -ExecutionPolicy Bypass -File .\\setup.ps1"
+          },
+          " on Windows. Then activate the venv in ",
+          {
+           "t": "code",
+           "v": "~/dbt-course"
+          },
+          " (step 5's second line), do step 7 if the setup warns that your DuckDB versions differ, and finish with steps 10 and 11."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "mac",
+        "win",
+        "wsl"
+       ],
+       "osNote": "all-ch02-lab-course-files",
+       "t": "callout",
+       "title": [
+        "Course files and the setup shortcut"
+       ]
+      },
+      {
+       "blocks": [
+        {
          "items": [
           {
            "blocks": [
@@ -3438,6 +4551,45 @@
               "."
              ],
              "t": "p"
+            },
+            {
+             "blocks": [
+              {
+               "c": [
+                "In PowerShell: ",
+                {
+                 "t": "code",
+                 "v": "cd ~"
+                },
+                ", then ",
+                {
+                 "t": "code",
+                 "v": "pwd"
+                },
+                ". Expected: a small table with ",
+                {
+                 "t": "code",
+                 "v": "Path"
+                },
+                " and ",
+                {
+                 "t": "code",
+                 "v": "C:\\Users\\<your-name>"
+                },
+                "."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "win-ch02-lab-home",
+             "t": "callout",
+             "title": [
+              "On Windows"
+             ]
             }
            ]
           },
@@ -3526,12 +4678,12 @@
                  "t": "code",
                  "v": "git config --global core.autocrlf true"
                 },
-                ". Close and reopen PowerShell after each install. Shortcut: the course kit's ",
+                ". Close and reopen PowerShell after each install. The box at the start of this lab says which steps the kit's ",
                 {
                  "t": "code",
                  "v": "setup.ps1"
                 },
-                " does this whole lab for you (see the kit's README-windows.md)."
+                " does for you."
                ],
                "t": "p"
               }
@@ -3650,6 +4802,42 @@
              "t": "p"
             },
             {
+             "blocks": [
+              {
+               "c": [
+                "Before this activation: ",
+                {
+                 "t": "code",
+                 "v": "Set-ExecutionPolicy -Scope CurrentUser RemoteSigned"
+                },
+                ", then answer ",
+                {
+                 "t": "code",
+                 "v": "Y"
+                },
+                " (",
+                {
+                 "href": "/learn/ch02/ch02-s8/#ch02-s8-2",
+                 "site": true,
+                 "t": "ref",
+                 "text": "Section 2.8"
+                },
+                " explains why)."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "win-ch02-lab-execution-policy",
+             "t": "callout",
+             "title": [
+              "On Windows, once per computer"
+             ]
+            },
+            {
              "id": "ch02-c21",
              "lang": "bash",
              "t": "code",
@@ -3688,7 +4876,10 @@
              "id": "ch02-c22",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ uv pip install \"dbt-core~=1.11.0\" \"dbt-duckdb~=1.11.0\"\n(.venv) $ dbt --version"
+             "text": "(.venv) $ uv pip install \"dbt-core~=1.11.0\" \"dbt-duckdb~=1.11.0\"\n(.venv) $ dbt --version",
+             "variants": {
+              "win": "(.venv) PS> uv pip install \"dbt-core~=1.11.0\" \"dbt-duckdb~=1.11.0\"\n(.venv) PS> dbt --version"
+             }
             },
             {
              "c": [
@@ -3802,6 +4993,40 @@
              "t": "p"
             },
             {
+             "blocks": [
+              {
+               "c": [
+                "PowerShell has no ",
+                {
+                 "t": "code",
+                 "v": "<"
+                },
+                " to send a file into a program. The Windows command asks DuckDB to read the file itself: ",
+                {
+                 "t": "code",
+                 "v": "-c \".read setup.sql\""
+                },
+                " runs DuckDB's ",
+                {
+                 "t": "code",
+                 "v": ".read"
+                },
+                " command, with the same result."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "win-ch02-lab-read",
+             "t": "callout",
+             "title": [
+              "On Windows"
+             ]
+            },
+            {
              "id": "ch02-c24",
              "lang": "bash",
              "t": "code",
@@ -3842,7 +5067,10 @@
              "id": "ch02-c26",
              "lang": "bash",
              "t": "code",
-             "text": "(.venv) $ duckdb practice.duckdb\nD .tables\nD select count(*) from jaffle_shop.orders;\nD .quit"
+             "text": "(.venv) $ duckdb practice.duckdb\nD .tables\nD select count(*) from jaffle_shop.orders;\nD .quit",
+             "variants": {
+              "win": "(.venv) PS> duckdb practice.duckdb\nD .tables\nD select count(*) from jaffle_shop.orders;\nD .quit"
+             }
             },
             {
              "c": [

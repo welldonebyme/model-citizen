@@ -498,7 +498,10 @@
        "id": "ch03-c1",
        "lang": "bash",
        "t": "code",
-       "text": "$ git --version\ngit version 2.50.1 (Apple Git-155)"
+       "text": "$ git --version\ngit version 2.50.1 (Apple Git-155)",
+       "variants": {
+        "win": "PS> git --version\ngit version 2.50.1 (Apple Git-155)"
+       }
       },
       {
        "c": [
@@ -528,7 +531,11 @@
        "id": "ch03-c2",
        "lang": "bash",
        "t": "code",
-       "text": "$ git config --global user.name \"Adnane\"\n$ git config --global user.email \"adnane@example.com\"\n$ git config --global init.defaultBranch main\n$ git config --global pull.rebase false\n$ git config --global --list\nuser.name=Adnane\nuser.email=adnane@example.com\ninit.defaultbranch=main\npull.rebase=false"
+       "text": "$ git config --global user.name \"Your Name\"\n$ git config --global user.email \"you@example.com\"\n$ git config --global init.defaultBranch main\n$ git config --global pull.rebase false\n$ git config --global --list\nuser.name=Your Name\nuser.email=you@example.com\ninit.defaultbranch=main\npull.rebase=false",
+       "textBook": "$ git config --global user.name \"Adnane\"\n$ git config --global user.email \"adnane@example.com\"\n$ git config --global init.defaultBranch main\n$ git config --global pull.rebase false\n$ git config --global --list\nuser.name=Adnane\nuser.email=adnane@example.com\ninit.defaultbranch=main\npull.rebase=false",
+       "variants": {
+        "win": "PS> git config --global user.name \"Your Name\"\nPS> git config --global user.email \"you@example.com\"\nPS> git config --global init.defaultBranch main\nPS> git config --global pull.rebase false\nPS> git config --global --list\nuser.name=Your Name\nuser.email=you@example.com\ninit.defaultbranch=main\npull.rebase=false"
+       }
       },
       {
        "items": [
@@ -755,6 +762,35 @@
        }
       },
       {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. On your computer the paths start with ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>\\"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": "/Users/you/"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "auto-win-out-ch03-c3",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
        "c": [
         {
          "t": "code",
@@ -940,7 +976,10 @@
        "id": "ch03-c5",
        "lang": "bash",
        "t": "code",
-       "text": "$ git status\nOn branch main\n\nNo commits yet\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n    .gitignore\n    data/\n    setup.sql\n\nnothing added to commit but untracked files present (use \"git add\" to track)"
+       "text": "$ git status\nOn branch main\n\nNo commits yet\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n    .gitignore\n    data/\n    setup.sql\n\nnothing added to commit but untracked files present (use \"git add\" to track)",
+       "variants": {
+        "win": "PS> git status\nOn branch main\n\nNo commits yet\n\nUntracked files:\n  (use \"git add <file>...\" to include in what will be committed)\n    .gitignore\n    data/\n    setup.sql\n\nnothing added to commit but untracked files present (use \"git add\" to track)"
+       }
       },
       {
        "c": [
@@ -1124,7 +1163,10 @@
        "id": "ch03-c7",
        "lang": "bash",
        "t": "code",
-       "text": "$ git add .gitignore setup.sql data/\n$ git status\nOn branch main\n\nNo commits yet\n\nChanges to be committed:\n  (use \"git rm --cached <file>...\" to unstage)\n    new file:   .gitignore\n    new file:   data/customers.csv\n    new file:   data/order_items.csv\n    new file:   data/orders.csv\n    new file:   data/payments.csv\n    new file:   data/products.csv\n    new file:   setup.sql\n\n$ git commit -m \"Add practice data and setup script\"\n[main (root-commit) 1300631] Add practice data and setup script\n 7 files changed, 1416 insertions(+)\n create mode 100644 .gitignore\n create mode 100644 data/customers.csv\n create mode 100644 data/order_items.csv\n create mode 100644 data/orders.csv\n create mode 100644 data/payments.csv\n create mode 100644 data/products.csv\n create mode 100644 setup.sql"
+       "text": "$ git add .gitignore setup.sql data/\n$ git status\nOn branch main\n\nNo commits yet\n\nChanges to be committed:\n  (use \"git rm --cached <file>...\" to unstage)\n    new file:   .gitignore\n    new file:   data/customers.csv\n    new file:   data/order_items.csv\n    new file:   data/orders.csv\n    new file:   data/payments.csv\n    new file:   data/products.csv\n    new file:   setup.sql\n\n$ git commit -m \"Add practice data and setup script\"\n[main (root-commit) 1300631] Add practice data and setup script\n 7 files changed, 1416 insertions(+)\n create mode 100644 .gitignore\n create mode 100644 data/customers.csv\n create mode 100644 data/order_items.csv\n create mode 100644 data/orders.csv\n create mode 100644 data/payments.csv\n create mode 100644 data/products.csv\n create mode 100644 setup.sql",
+       "variants": {
+        "win": "PS> git add .gitignore setup.sql data/\nPS> git status\nOn branch main\n\nNo commits yet\n\nChanges to be committed:\n  (use \"git rm --cached <file>...\" to unstage)\n    new file:   .gitignore\n    new file:   data/customers.csv\n    new file:   data/order_items.csv\n    new file:   data/orders.csv\n    new file:   data/payments.csv\n    new file:   data/products.csv\n    new file:   setup.sql\n\nPS> git commit -m \"Add practice data and setup script\"\n[main (root-commit) 1300631] Add practice data and setup script\n 7 files changed, 1416 insertions(+)\n create mode 100644 .gitignore\n create mode 100644 data/customers.csv\n create mode 100644 data/order_items.csv\n create mode 100644 data/orders.csv\n create mode 100644 data/payments.csv\n create mode 100644 data/products.csv\n create mode 100644 setup.sql"
+       }
       },
       {
        "c": [
@@ -1213,7 +1255,11 @@
        "id": "ch03-c8",
        "lang": "bash",
        "t": "code",
-       "text": "$ git log\ncommit 130063169d037d517e121a79b40bcae246396f3a (HEAD -> main)\nAuthor: Adnane <adnane@example.com>\nDate:   Mon Jan 12 09:15:00 2026 +0100\n\n    Add practice data and setup script\n$ git status\nOn branch main\nnothing to commit, working tree clean"
+       "text": "$ git log\ncommit 130063169d037d517e121a79b40bcae246396f3a (HEAD -> main)\nAuthor: Your Name <you@example.com>\nDate:   Mon Jan 12 09:15:00 2026 +0100\n\n    Add practice data and setup script\n$ git status\nOn branch main\nnothing to commit, working tree clean",
+       "textBook": "$ git log\ncommit 130063169d037d517e121a79b40bcae246396f3a (HEAD -> main)\nAuthor: Adnane <adnane@example.com>\nDate:   Mon Jan 12 09:15:00 2026 +0100\n\n    Add practice data and setup script\n$ git status\nOn branch main\nnothing to commit, working tree clean",
+       "variants": {
+        "win": "PS> git log\ncommit 130063169d037d517e121a79b40bcae246396f3a (HEAD -> main)\nAuthor: Your Name <you@example.com>\nDate:   Mon Jan 12 09:15:00 2026 +0100\n\n    Add practice data and setup script\nPS> git status\nOn branch main\nnothing to commit, working tree clean"
+       }
       },
       {
        "c": [
@@ -1497,7 +1543,10 @@
        "id": "ch03-c11",
        "lang": "bash",
        "t": "code",
-       "text": "$ git status\nOn branch main\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n    modified:   queries/orders_by_status.sql\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n$ git diff\ndiff --git a/queries/orders_by_status.sql b/queries/orders_by_status.sql\nindex d0f968c..909327e 100644\n--- a/queries/orders_by_status.sql\n+++ b/queries/orders_by_status.sql\n@@ -1,3 +1,4 @@\n select status, count(*) as n_orders\n from jaffle_shop.orders\n group by status\n+order by n_orders desc"
+       "text": "$ git status\nOn branch main\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n    modified:   queries/orders_by_status.sql\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n$ git diff\ndiff --git a/queries/orders_by_status.sql b/queries/orders_by_status.sql\nindex d0f968c..909327e 100644\n--- a/queries/orders_by_status.sql\n+++ b/queries/orders_by_status.sql\n@@ -1,3 +1,4 @@\n select status, count(*) as n_orders\n from jaffle_shop.orders\n group by status\n+order by n_orders desc",
+       "variants": {
+        "win": "PS> git status\nOn branch main\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n    modified:   queries/orders_by_status.sql\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\nPS> git diff\ndiff --git a/queries/orders_by_status.sql b/queries/orders_by_status.sql\nindex d0f968c..909327e 100644\n--- a/queries/orders_by_status.sql\n+++ b/queries/orders_by_status.sql\n@@ -1,3 +1,4 @@\n select status, count(*) as n_orders\n from jaffle_shop.orders\n group by status\n+order by n_orders desc"
+       }
       },
       {
        "c": [
@@ -1528,7 +1577,10 @@
        "id": "ch03-c12",
        "lang": "bash",
        "t": "code",
-       "text": "$ git add queries/orders_by_status.sql\n$ git diff\n$ git diff --staged\ndiff --git a/queries/orders_by_status.sql b/queries/orders_by_status.sql\nindex d0f968c..909327e 100644\n--- a/queries/orders_by_status.sql\n+++ b/queries/orders_by_status.sql\n@@ -1,3 +1,4 @@\n select status, count(*) as n_orders\n from jaffle_shop.orders\n group by status\n+order by n_orders desc\n$ git commit -m \"Sort statuses by number of orders\"\n[main e51091f] Sort statuses by number of orders\n 1 file changed, 1 insertion(+)\n$ git log --oneline\ne51091f (HEAD -> main) Sort statuses by number of orders\n1a6df95 Add orders by status query\n1300631 Add practice data and setup script"
+       "text": "$ git add queries/orders_by_status.sql\n$ git diff\n$ git diff --staged\ndiff --git a/queries/orders_by_status.sql b/queries/orders_by_status.sql\nindex d0f968c..909327e 100644\n--- a/queries/orders_by_status.sql\n+++ b/queries/orders_by_status.sql\n@@ -1,3 +1,4 @@\n select status, count(*) as n_orders\n from jaffle_shop.orders\n group by status\n+order by n_orders desc\n$ git commit -m \"Sort statuses by number of orders\"\n[main e51091f] Sort statuses by number of orders\n 1 file changed, 1 insertion(+)\n$ git log --oneline\ne51091f (HEAD -> main) Sort statuses by number of orders\n1a6df95 Add orders by status query\n1300631 Add practice data and setup script",
+       "variants": {
+        "win": "PS> git add queries/orders_by_status.sql\nPS> git diff\nPS> git diff --staged\ndiff --git a/queries/orders_by_status.sql b/queries/orders_by_status.sql\nindex d0f968c..909327e 100644\n--- a/queries/orders_by_status.sql\n+++ b/queries/orders_by_status.sql\n@@ -1,3 +1,4 @@\n select status, count(*) as n_orders\n from jaffle_shop.orders\n group by status\n+order by n_orders desc\nPS> git commit -m \"Sort statuses by number of orders\"\n[main e51091f] Sort statuses by number of orders\n 1 file changed, 1 insertion(+)\nPS> git log --oneline\ne51091f (HEAD -> main) Sort statuses by number of orders\n1a6df95 Add orders by status query\n1300631 Add practice data and setup script"
+       }
       },
       {
        "c": [
@@ -1619,7 +1671,10 @@
        "id": "ch03-c13",
        "lang": "bash",
        "t": "code",
-       "text": "$ git status --short\n M setup.sql\n$ git restore setup.sql\n$ git status --short"
+       "text": "$ git status --short\n M setup.sql\n$ git restore setup.sql\n$ git status --short",
+       "variants": {
+        "win": "PS> git status --short\n M setup.sql\nPS> git restore setup.sql\nPS> git status --short"
+       }
       },
       {
        "c": [
@@ -1668,7 +1723,10 @@
        "id": "ch03-c14",
        "lang": "bash",
        "t": "code",
-       "text": "$ git status --short\nM  queries/orders_by_status.sql\n$ git restore --staged queries/orders_by_status.sql\n$ git status --short\n M queries/orders_by_status.sql"
+       "text": "$ git status --short\nM  queries/orders_by_status.sql\n$ git restore --staged queries/orders_by_status.sql\n$ git status --short\n M queries/orders_by_status.sql",
+       "variants": {
+        "win": "PS> git status --short\nM  queries/orders_by_status.sql\nPS> git restore --staged queries/orders_by_status.sql\nPS> git status --short\n M queries/orders_by_status.sql"
+       }
       },
       {
        "c": [
@@ -2026,7 +2084,10 @@
        "id": "ch03-c15",
        "lang": "bash",
        "t": "code",
-       "text": "$ git switch -c feature/revenue-query\nSwitched to a new branch 'feature/revenue-query'"
+       "text": "$ git switch -c feature/revenue-query\nSwitched to a new branch 'feature/revenue-query'",
+       "variants": {
+        "win": "PS> git switch -c feature/revenue-query\nSwitched to a new branch 'feature/revenue-query'"
+       }
       },
       {
        "c": [
@@ -2059,7 +2120,10 @@
        "id": "ch03-c17",
        "lang": "bash",
        "t": "code",
-       "text": "$ git add queries/revenue_by_method.sql\n$ git commit -m \"Add revenue by payment method query\"\n[feature/revenue-query 9793973] Add revenue by payment method query\n 1 file changed, 8 insertions(+)\n create mode 100644 queries/revenue_by_method.sql\n$ git log --oneline --graph --all\n* 9793973 (HEAD -> feature/revenue-query) Add revenue by payment method query\n* e51091f (main) Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script"
+       "text": "$ git add queries/revenue_by_method.sql\n$ git commit -m \"Add revenue by payment method query\"\n[feature/revenue-query 9793973] Add revenue by payment method query\n 1 file changed, 8 insertions(+)\n create mode 100644 queries/revenue_by_method.sql\n$ git log --oneline --graph --all\n* 9793973 (HEAD -> feature/revenue-query) Add revenue by payment method query\n* e51091f (main) Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script",
+       "variants": {
+        "win": "PS> git add queries/revenue_by_method.sql\nPS> git commit -m \"Add revenue by payment method query\"\n[feature/revenue-query 9793973] Add revenue by payment method query\n 1 file changed, 8 insertions(+)\n create mode 100644 queries/revenue_by_method.sql\nPS> git log --oneline --graph --all\n* 9793973 (HEAD -> feature/revenue-query) Add revenue by payment method query\n* e51091f (main) Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script"
+       }
       },
       {
        "c": [
@@ -2155,7 +2219,10 @@
        "id": "ch03-c19",
        "lang": "bash",
        "t": "code",
-       "text": "$ git switch -c feature/customer-count\nSwitched to a new branch 'feature/customer-count'\n$ git commit -m \"Add customers by country query\"\n[feature/customer-count eaadf20] Add customers by country query\n 1 file changed, 4 insertions(+)\n create mode 100644 queries/customers_by_country.sql\n$ git switch main\nSwitched to branch 'main'\n$ git commit -m \"Add README\"\n[main d41cc04] Add README\n 1 file changed, 2 insertions(+)\n create mode 100644 README.md\n$ git log --oneline --graph --all\n* d41cc04 (HEAD -> main) Add README\n| * eaadf20 (feature/customer-count) Add customers by country query\n|/\n* 9793973 Add revenue by payment method query\n* e51091f Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script"
+       "text": "$ git switch -c feature/customer-count\nSwitched to a new branch 'feature/customer-count'\n$ git commit -m \"Add customers by country query\"\n[feature/customer-count eaadf20] Add customers by country query\n 1 file changed, 4 insertions(+)\n create mode 100644 queries/customers_by_country.sql\n$ git switch main\nSwitched to branch 'main'\n$ git commit -m \"Add README\"\n[main d41cc04] Add README\n 1 file changed, 2 insertions(+)\n create mode 100644 README.md\n$ git log --oneline --graph --all\n* d41cc04 (HEAD -> main) Add README\n| * eaadf20 (feature/customer-count) Add customers by country query\n|/\n* 9793973 Add revenue by payment method query\n* e51091f Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script",
+       "variants": {
+        "win": "PS> git switch -c feature/customer-count\nSwitched to a new branch 'feature/customer-count'\nPS> git commit -m \"Add customers by country query\"\n[feature/customer-count eaadf20] Add customers by country query\n 1 file changed, 4 insertions(+)\n create mode 100644 queries/customers_by_country.sql\nPS> git switch main\nSwitched to branch 'main'\nPS> git commit -m \"Add README\"\n[main d41cc04] Add README\n 1 file changed, 2 insertions(+)\n create mode 100644 README.md\nPS> git log --oneline --graph --all\n* d41cc04 (HEAD -> main) Add README\n| * eaadf20 (feature/customer-count) Add customers by country query\n|/\n* 9793973 Add revenue by payment method query\n* e51091f Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script"
+       }
       },
       {
        "c": [
@@ -2188,7 +2255,10 @@
        "id": "ch03-c20",
        "lang": "bash",
        "t": "code",
-       "text": "$ git merge feature/customer-count --no-edit\nMerge made by the 'ort' strategy.\n queries/customers_by_country.sql | 4 ++++\n 1 file changed, 4 insertions(+)\n create mode 100644 queries/customers_by_country.sql\n$ git log --oneline --graph --all\n*   39d4e04 (HEAD -> main) Merge branch 'feature/customer-count'\n|\\\n| * eaadf20 (feature/customer-count) Add customers by country query\n* | d41cc04 Add README\n|/\n* 9793973 Add revenue by payment method query\n* e51091f Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script"
+       "text": "$ git merge feature/customer-count --no-edit\nMerge made by the 'ort' strategy.\n queries/customers_by_country.sql | 4 ++++\n 1 file changed, 4 insertions(+)\n create mode 100644 queries/customers_by_country.sql\n$ git log --oneline --graph --all\n*   39d4e04 (HEAD -> main) Merge branch 'feature/customer-count'\n|\\\n| * eaadf20 (feature/customer-count) Add customers by country query\n* | d41cc04 Add README\n|/\n* 9793973 Add revenue by payment method query\n* e51091f Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script",
+       "variants": {
+        "win": "PS> git merge feature/customer-count --no-edit\nMerge made by the 'ort' strategy.\n queries/customers_by_country.sql | 4 ++++\n 1 file changed, 4 insertions(+)\n create mode 100644 queries/customers_by_country.sql\nPS> git log --oneline --graph --all\n*   39d4e04 (HEAD -> main) Merge branch 'feature/customer-count'\n|\\\n| * eaadf20 (feature/customer-count) Add customers by country query\n* | d41cc04 Add README\n|/\n* 9793973 Add revenue by payment method query\n* e51091f Sort statuses by number of orders\n* 1a6df95 Add orders by status query\n* 1300631 Add practice data and setup script"
+       }
       },
       {
        "c": [
@@ -2503,7 +2573,7 @@
       },
       {
        "c": [
-        "Let us create one on purpose. On a branch, Adnane excludes orders that are not paid yet:"
+        "Let us create one on purpose. On a branch, you exclude orders that are not paid yet:"
        ],
        "t": "p"
       },
@@ -2511,7 +2581,10 @@
        "id": "ch03-c21",
        "lang": "bash",
        "t": "code",
-       "text": "$ git switch -c feature/status-filter\nSwitched to a new branch 'feature/status-filter'\n$ git commit -m \"Exclude unpaid placed orders\"\n[feature/status-filter 950d307] Exclude unpaid placed orders\n 1 file changed, 1 insertion(+)"
+       "text": "$ git switch -c feature/status-filter\nSwitched to a new branch 'feature/status-filter'\n$ git commit -m \"Exclude unpaid placed orders\"\n[feature/status-filter 950d307] Exclude unpaid placed orders\n 1 file changed, 1 insertion(+)",
+       "variants": {
+        "win": "PS> git switch -c feature/status-filter\nSwitched to a new branch 'feature/status-filter'\nPS> git commit -m \"Exclude unpaid placed orders\"\n[feature/status-filter 950d307] Exclude unpaid placed orders\n 1 file changed, 1 insertion(+)"
+       }
       },
       {
        "c": [
@@ -2535,7 +2608,10 @@
        "id": "ch03-c22",
        "lang": "bash",
        "t": "code",
-       "text": "$ git switch main\nSwitched to branch 'main'\n$ git commit -m \"Keep only orders from the second half of 2025\"\n[main 92213b5] Keep only orders from the second half of 2025\n 1 file changed, 1 insertion(+)\n$ git merge feature/status-filter\nAuto-merging queries/orders_by_status.sql\nCONFLICT (content): Merge conflict in queries/orders_by_status.sql\nAutomatic merge failed; fix conflicts and then commit the result."
+       "text": "$ git switch main\nSwitched to branch 'main'\n$ git commit -m \"Keep only orders from the second half of 2025\"\n[main 92213b5] Keep only orders from the second half of 2025\n 1 file changed, 1 insertion(+)\n$ git merge feature/status-filter\nAuto-merging queries/orders_by_status.sql\nCONFLICT (content): Merge conflict in queries/orders_by_status.sql\nAutomatic merge failed; fix conflicts and then commit the result.",
+       "variants": {
+        "win": "PS> git switch main\nSwitched to branch 'main'\nPS> git commit -m \"Keep only orders from the second half of 2025\"\n[main 92213b5] Keep only orders from the second half of 2025\n 1 file changed, 1 insertion(+)\nPS> git merge feature/status-filter\nAuto-merging queries/orders_by_status.sql\nCONFLICT (content): Merge conflict in queries/orders_by_status.sql\nAutomatic merge failed; fix conflicts and then commit the result."
+       }
       }
      ],
      "id": "ch03-s6-1",
@@ -2551,7 +2627,10 @@
        "id": "ch03-c23",
        "lang": "bash",
        "t": "code",
-       "text": "$ git status\nOn branch main\nYou have unmerged paths.\n  (fix conflicts and run \"git commit\")\n  (use \"git merge --abort\" to abort the merge)\n\nUnmerged paths:\n  (use \"git add <file>...\" to mark resolution)\n    both modified:   queries/orders_by_status.sql\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")"
+       "text": "$ git status\nOn branch main\nYou have unmerged paths.\n  (fix conflicts and run \"git commit\")\n  (use \"git merge --abort\" to abort the merge)\n\nUnmerged paths:\n  (use \"git add <file>...\" to mark resolution)\n    both modified:   queries/orders_by_status.sql\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")",
+       "variants": {
+        "win": "PS> git status\nOn branch main\nYou have unmerged paths.\n  (fix conflicts and run \"git commit\")\n  (use \"git merge --abort\" to abort the merge)\n\nUnmerged paths:\n  (use \"git add <file>...\" to mark resolution)\n    both modified:   queries/orders_by_status.sql\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")"
+       }
       },
       {
        "c": [
@@ -2725,7 +2804,10 @@
        "id": "ch03-c26",
        "lang": "bash",
        "t": "code",
-       "text": "$ git add queries/orders_by_status.sql\n$ git status\nOn branch main\nAll conflicts fixed but you are still merging.\n  (use \"git commit\" to conclude merge)\n\nChanges to be committed:\n    modified:   queries/orders_by_status.sql\n\n$ git commit -m \"Merge feature/status-filter: keep both filters\"\n[main a694e58] Merge feature/status-filter: keep both filters"
+       "text": "$ git add queries/orders_by_status.sql\n$ git status\nOn branch main\nAll conflicts fixed but you are still merging.\n  (use \"git commit\" to conclude merge)\n\nChanges to be committed:\n    modified:   queries/orders_by_status.sql\n\n$ git commit -m \"Merge feature/status-filter: keep both filters\"\n[main a694e58] Merge feature/status-filter: keep both filters",
+       "variants": {
+        "win": "PS> git add queries/orders_by_status.sql\nPS> git status\nOn branch main\nAll conflicts fixed but you are still merging.\n  (use \"git commit\" to conclude merge)\n\nChanges to be committed:\n    modified:   queries/orders_by_status.sql\n\nPS> git commit -m \"Merge feature/status-filter: keep both filters\"\n[main a694e58] Merge feature/status-filter: keep both filters"
+       }
       },
       {
        "c": [
@@ -3084,7 +3166,10 @@
        "id": "ch03-c27",
        "lang": "bash",
        "t": "code",
-       "text": "$ git status --short\n M queries/revenue_by_method.sql\n$ git stash\nSaved working directory and index state WIP on main: a694e58 Merge feature/status-filter: keep both filters\n$ git status --short\n$ git stash list\nstash@{0}: WIP on main: a694e58 Merge feature/status-filter: keep both filters\n$ git stash pop\nOn branch main\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n    modified:   queries/revenue_by_method.sql\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\nDropped refs/stash@{0} (1158d93bc86b1319764385a749c9cd0da78de984)"
+       "text": "$ git status --short\n M queries/revenue_by_method.sql\n$ git stash\nSaved working directory and index state WIP on main: a694e58 Merge feature/status-filter: keep both filters\n$ git status --short\n$ git stash list\nstash@{0}: WIP on main: a694e58 Merge feature/status-filter: keep both filters\n$ git stash pop\nOn branch main\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n    modified:   queries/revenue_by_method.sql\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\nDropped refs/stash@{0} (1158d93bc86b1319764385a749c9cd0da78de984)",
+       "variants": {
+        "win": "PS> git status --short\n M queries/revenue_by_method.sql\nPS> git stash\nSaved working directory and index state WIP on main: a694e58 Merge feature/status-filter: keep both filters\nPS> git status --short\nPS> git stash list\nstash@{0}: WIP on main: a694e58 Merge feature/status-filter: keep both filters\nPS> git stash pop\nOn branch main\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n    modified:   queries/revenue_by_method.sql\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\nDropped refs/stash@{0} (1158d93bc86b1319764385a749c9cd0da78de984)"
+       }
       },
       {
        "c": [
@@ -3464,7 +3549,10 @@
        "id": "ch03-c29",
        "lang": "bash",
        "t": "code",
-       "text": "$ git remote add origin https://github.com/adnane-data/dbt-course-practice.git\n$ git remote -v\norigin  https://github.com/adnane-data/dbt-course-practice.git (fetch)\norigin  https://github.com/adnane-data/dbt-course-practice.git (push)\n$ git push -u origin main\nTo https://github.com/adnane-data/dbt-course-practice.git\n * [new branch]      main -> main\nbranch 'main' set up to track 'origin/main'."
+       "text": "$ git remote add origin https://github.com/adnane-data/dbt-course-practice.git\n$ git remote -v\norigin  https://github.com/adnane-data/dbt-course-practice.git (fetch)\norigin  https://github.com/adnane-data/dbt-course-practice.git (push)\n$ git push -u origin main\nTo https://github.com/adnane-data/dbt-course-practice.git\n * [new branch]      main -> main\nbranch 'main' set up to track 'origin/main'.",
+       "variants": {
+        "win": "PS> git remote add origin https://github.com/adnane-data/dbt-course-practice.git\nPS> git remote -v\norigin  https://github.com/adnane-data/dbt-course-practice.git (fetch)\norigin  https://github.com/adnane-data/dbt-course-practice.git (push)\nPS> git push -u origin main\nTo https://github.com/adnane-data/dbt-course-practice.git\n * [new branch]      main -> main\nbranch 'main' set up to track 'origin/main'."
+       }
       },
       {
        "c": [
@@ -3549,7 +3637,10 @@
        "id": "ch03-c30",
        "lang": "bash",
        "t": "code",
-       "text": "$ git status\nOn branch main\nYour branch is up to date with 'origin/main'.\n\nnothing to commit, working tree clean"
+       "text": "$ git status\nOn branch main\nYour branch is up to date with 'origin/main'.\n\nnothing to commit, working tree clean",
+       "variants": {
+        "win": "PS> git status\nOn branch main\nYour branch is up to date with 'origin/main'.\n\nnothing to commit, working tree clean"
+       }
       },
       {
        "c": [
@@ -3573,7 +3664,10 @@
        "id": "ch03-c31",
        "lang": "bash",
        "t": "code",
-       "text": "$ git fetch\nFrom https://github.com/adnane-data/dbt-course-practice\n   a694e58..7fc4b09  main       -> origin/main\n$ git status\nOn branch main\nYour branch is behind 'origin/main' by 1 commit, and can be fast-forwarded.\n  (use \"git pull\" to update your local branch)\n\nnothing to commit, working tree clean\n$ git log --oneline --all -3\n7fc4b09 (origin/main, origin/HEAD) Add products by category query\na694e58 (HEAD -> main) Merge feature/status-filter: keep both filters\n92213b5 Keep only orders from the second half of 2025"
+       "text": "$ git fetch\nFrom https://github.com/adnane-data/dbt-course-practice\n   a694e58..7fc4b09  main       -> origin/main\n$ git status\nOn branch main\nYour branch is behind 'origin/main' by 1 commit, and can be fast-forwarded.\n  (use \"git pull\" to update your local branch)\n\nnothing to commit, working tree clean\n$ git log --oneline --all -3\n7fc4b09 (origin/main, origin/HEAD) Add products by category query\na694e58 (HEAD -> main) Merge feature/status-filter: keep both filters\n92213b5 Keep only orders from the second half of 2025",
+       "variants": {
+        "win": "PS> git fetch\nFrom https://github.com/adnane-data/dbt-course-practice\n   a694e58..7fc4b09  main       -> origin/main\nPS> git status\nOn branch main\nYour branch is behind 'origin/main' by 1 commit, and can be fast-forwarded.\n  (use \"git pull\" to update your local branch)\n\nnothing to commit, working tree clean\nPS> git log --oneline --all -3\n7fc4b09 (origin/main, origin/HEAD) Add products by category query\na694e58 (HEAD -> main) Merge feature/status-filter: keep both filters\n92213b5 Keep only orders from the second half of 2025"
+       }
       },
       {
        "c": [
@@ -3622,7 +3716,10 @@
        "id": "ch03-c32",
        "lang": "bash",
        "t": "code",
-       "text": "$ git pull\nUpdating a694e58..7fc4b09\nFast-forward\n queries/products_by_category.sql | 3 +++\n 1 file changed, 3 insertions(+)\n create mode 100644 queries/products_by_category.sql\n$ git log --oneline -3\n7fc4b09 (HEAD -> main, origin/main, origin/HEAD) Add products by category query\na694e58 Merge feature/status-filter: keep both filters\n92213b5 Keep only orders from the second half of 2025"
+       "text": "$ git pull\nUpdating a694e58..7fc4b09\nFast-forward\n queries/products_by_category.sql | 3 +++\n 1 file changed, 3 insertions(+)\n create mode 100644 queries/products_by_category.sql\n$ git log --oneline -3\n7fc4b09 (HEAD -> main, origin/main, origin/HEAD) Add products by category query\na694e58 Merge feature/status-filter: keep both filters\n92213b5 Keep only orders from the second half of 2025",
+       "variants": {
+        "win": "PS> git pull\nUpdating a694e58..7fc4b09\nFast-forward\n queries/products_by_category.sql | 3 +++\n 1 file changed, 3 insertions(+)\n create mode 100644 queries/products_by_category.sql\nPS> git log --oneline -3\n7fc4b09 (HEAD -> main, origin/main, origin/HEAD) Add products by category query\na694e58 Merge feature/status-filter: keep both filters\n92213b5 Keep only orders from the second half of 2025"
+       }
       },
       {
        "blocks": [
@@ -3793,7 +3890,10 @@
        "id": "ch03-c33",
        "lang": "bash",
        "t": "code",
-       "text": "$ git switch main\nSwitched to branch 'main'\nYour branch is up to date with 'origin/main'.\n$ git pull\nFrom https://github.com/adnane-data/dbt-course-practice\n   7fc4b09..bf4e4b8  main       -> origin/main\nUpdating 7fc4b09..bf4e4b8\nFast-forward\n README.md | 1 +\n 1 file changed, 1 insertion(+)\n$ git switch feature/top-customers\nSwitched to branch 'feature/top-customers'\n$ git merge main --no-edit\nMerge made by the 'ort' strategy.\n README.md | 1 +\n 1 file changed, 1 insertion(+)\n$ git push -u origin feature/top-customers\nTo https://github.com/adnane-data/dbt-course-practice.git\n * [new branch]      feature/top-customers -> feature/top-customers\nbranch 'feature/top-customers' set up to track 'origin/feature/top-customers'."
+       "text": "$ git switch main\nSwitched to branch 'main'\nYour branch is up to date with 'origin/main'.\n$ git pull\nFrom https://github.com/adnane-data/dbt-course-practice\n   7fc4b09..bf4e4b8  main       -> origin/main\nUpdating 7fc4b09..bf4e4b8\nFast-forward\n README.md | 1 +\n 1 file changed, 1 insertion(+)\n$ git switch feature/top-customers\nSwitched to branch 'feature/top-customers'\n$ git merge main --no-edit\nMerge made by the 'ort' strategy.\n README.md | 1 +\n 1 file changed, 1 insertion(+)\n$ git push -u origin feature/top-customers\nTo https://github.com/adnane-data/dbt-course-practice.git\n * [new branch]      feature/top-customers -> feature/top-customers\nbranch 'feature/top-customers' set up to track 'origin/feature/top-customers'.",
+       "variants": {
+        "win": "PS> git switch main\nSwitched to branch 'main'\nYour branch is up to date with 'origin/main'.\nPS> git pull\nFrom https://github.com/adnane-data/dbt-course-practice\n   7fc4b09..bf4e4b8  main       -> origin/main\nUpdating 7fc4b09..bf4e4b8\nFast-forward\n README.md | 1 +\n 1 file changed, 1 insertion(+)\nPS> git switch feature/top-customers\nSwitched to branch 'feature/top-customers'\nPS> git merge main --no-edit\nMerge made by the 'ort' strategy.\n README.md | 1 +\n 1 file changed, 1 insertion(+)\nPS> git push -u origin feature/top-customers\nTo https://github.com/adnane-data/dbt-course-practice.git\n * [new branch]      feature/top-customers -> feature/top-customers\nbranch 'feature/top-customers' set up to track 'origin/feature/top-customers'."
+       }
       },
       {
        "c": [
@@ -4054,7 +4154,10 @@
              "id": "ch03-c35",
              "lang": "bash",
              "t": "code",
-             "text": "$ git remote add origin https://github.com/<your-username>/dbt-course-practice.git\n$ git push -u origin main"
+             "text": "$ git remote add origin https://github.com/<your-username>/dbt-course-practice.git\n$ git push -u origin main",
+             "variants": {
+              "win": "PS> git remote add origin https://github.com/<your-username>/dbt-course-practice.git\nPS> git push -u origin main"
+             }
             }
            ]
           },
@@ -4187,7 +4290,10 @@
              "id": "ch03-c37",
              "lang": "bash",
              "t": "code",
-             "text": "$ git switch main\n$ git pull\n$ git branch -d feature/top-customers"
+             "text": "$ git switch main\n$ git pull\n$ git branch -d feature/top-customers",
+             "variants": {
+              "win": "PS> git switch main\nPS> git pull\nPS> git branch -d feature/top-customers"
+             }
             }
            ]
           }
@@ -5116,7 +5222,10 @@
        "id": "ch03-c38",
        "lang": "bash",
        "t": "code",
-       "text": "$ git commit -m \"Show top 5 cusotmers\"\n[feature/top-customers abfd6b8] Show top 5 cusotmers\n 1 file changed, 1 insertion(+), 1 deletion(-)\n$ git commit --amend -m \"Show top 5 customers\"\n[feature/top-customers 7b6714d] Show top 5 customers\n Date: Tue Jan 13 11:00:00 2026 +0100\n 1 file changed, 1 insertion(+), 1 deletion(-)"
+       "text": "$ git commit -m \"Show top 5 cusotmers\"\n[feature/top-customers abfd6b8] Show top 5 cusotmers\n 1 file changed, 1 insertion(+), 1 deletion(-)\n$ git commit --amend -m \"Show top 5 customers\"\n[feature/top-customers 7b6714d] Show top 5 customers\n Date: Tue Jan 13 11:00:00 2026 +0100\n 1 file changed, 1 insertion(+), 1 deletion(-)",
+       "variants": {
+        "win": "PS> git commit -m \"Show top 5 cusotmers\"\n[feature/top-customers abfd6b8] Show top 5 cusotmers\n 1 file changed, 1 insertion(+), 1 deletion(-)\nPS> git commit --amend -m \"Show top 5 customers\"\n[feature/top-customers 7b6714d] Show top 5 customers\n Date: Tue Jan 13 11:00:00 2026 +0100\n 1 file changed, 1 insertion(+), 1 deletion(-)"
+       }
       },
       {
        "c": [
@@ -5155,7 +5264,10 @@
        "id": "ch03-c39",
        "lang": "bash",
        "t": "code",
-       "text": "$ git revert --no-edit HEAD\n[feature/top-customers 62ddbd3] Revert \"Show top 5 customers\"\n Date: Tue Jan 13 11:05:00 2026 +0100\n 1 file changed, 1 insertion(+), 1 deletion(-)\n$ git log --oneline -3\n62ddbd3 (HEAD -> feature/top-customers) Revert \"Show top 5 customers\"\n7b6714d Show top 5 customers\ne3eb675 (origin/feature/top-customers) Merge branch 'main' into feature/top-customers"
+       "text": "$ git revert --no-edit HEAD\n[feature/top-customers 62ddbd3] Revert \"Show top 5 customers\"\n Date: Tue Jan 13 11:05:00 2026 +0100\n 1 file changed, 1 insertion(+), 1 deletion(-)\n$ git log --oneline -3\n62ddbd3 (HEAD -> feature/top-customers) Revert \"Show top 5 customers\"\n7b6714d Show top 5 customers\ne3eb675 (origin/feature/top-customers) Merge branch 'main' into feature/top-customers",
+       "variants": {
+        "win": "PS> git revert --no-edit HEAD\n[feature/top-customers 62ddbd3] Revert \"Show top 5 customers\"\n Date: Tue Jan 13 11:05:00 2026 +0100\n 1 file changed, 1 insertion(+), 1 deletion(-)\nPS> git log --oneline -3\n62ddbd3 (HEAD -> feature/top-customers) Revert \"Show top 5 customers\"\n7b6714d Show top 5 customers\ne3eb675 (origin/feature/top-customers) Merge branch 'main' into feature/top-customers"
+       }
       },
       {
        "c": [
@@ -5193,7 +5305,10 @@
        "id": "ch03-c40",
        "lang": "bash",
        "t": "code",
-       "text": "$ git reset --hard HEAD~1\nHEAD is now at 7b6714d Show top 5 customers"
+       "text": "$ git reset --hard HEAD~1\nHEAD is now at 7b6714d Show top 5 customers",
+       "variants": {
+        "win": "PS> git reset --hard HEAD~1\nHEAD is now at 7b6714d Show top 5 customers"
+       }
       },
       {
        "c": [

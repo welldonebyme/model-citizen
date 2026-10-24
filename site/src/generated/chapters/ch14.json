@@ -1510,7 +1510,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ dbt show -s fct_orders\n...\nPreviewing node 'fct_orders':\n| order_id | customer_id | order_date | status | bank_transfer_amount | coupon_amount | ... |\n| -------- | ----------- | ---------- | ------ | -------------------- | ------------- | --- |\n$ dbt show --inline \"select count(*) as n_rows from {{ ref('fct_orders') }}\"\n...\n| n_rows |\n| ------ |\n|    300 |"
+         "text": "$ dbt show -s fct_orders\n...\nPreviewing node 'fct_orders':\n| order_id | customer_id | order_date | status | bank_transfer_amount | coupon_amount | ... |\n| -------- | ----------- | ---------- | ------ | -------------------- | ------------- | --- |\n$ dbt show --inline \"select count(*) as n_rows from {{ ref('fct_orders') }}\"\n...\n| n_rows |\n| ------ |\n|    300 |",
+         "variants": {
+          "win": "PS> dbt show -s fct_orders\n...\nPreviewing node 'fct_orders':\n| order_id | customer_id | order_date | status | bank_transfer_amount | coupon_amount | ... |\n| -------- | ----------- | ---------- | ------ | -------------------- | ------------- | --- |\nPS> dbt show --inline \"select count(*) as n_rows from {{ ref('fct_orders') }}\"\n...\n| n_rows |\n| ------ |\n|    300 |"
+         }
         },
         {
          "c": [
@@ -1898,7 +1901,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt run --empty --select +fct_orders\n...\n21:25:50  6 of 6 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.05s]\n...\n$ dbt run --select +fct_orders\n...\n21:25:53  6 of 6 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.10s]\n...\n21:25:53  Done. PASS=6 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=6"
+       "text": "$ dbt run --empty --select +fct_orders\n...\n21:25:50  6 of 6 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.05s]\n...\n$ dbt run --select +fct_orders\n...\n21:25:53  6 of 6 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.10s]\n...\n21:25:53  Done. PASS=6 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=6",
+       "variants": {
+        "win": "PS> dbt run --empty --select +fct_orders\n...\n21:25:50  6 of 6 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.05s]\n...\nPS> dbt run --select +fct_orders\n...\n21:25:53  6 of 6 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.10s]\n...\n21:25:53  Done. PASS=6 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=6"
+       }
       },
       {
        "id": "ch14-c9",
@@ -2359,7 +2365,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt run --select fct_orders\n...\n22:05:58  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]\n22:05:58  1 of 1 ERROR creating sql incremental model dbt_adnane.fct_orders .............. [ERROR in 0.04s]\n...\n22:05:58  Failure in model fct_orders (models/marts/fct_orders.sql)\n22:05:58    Runtime Error in model fct_orders (models/marts/fct_orders.sql)\n  Binder Error: WHERE clause cannot contain aggregates!\n\n  LINE 23:     where loaded_at > (select coalesce(max(loaded_at), '1900-01-01') from \"practice\".\"dbt_adnane...\n                                                  ^\n...\n22:05:58  Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1"
+             "text": "$ dbt run --select fct_orders\n...\n22:05:58  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]\n22:05:58  1 of 1 ERROR creating sql incremental model dbt_adnane.fct_orders .............. [ERROR in 0.04s]\n...\n22:05:58  Failure in model fct_orders (models/marts/fct_orders.sql)\n22:05:58    Runtime Error in model fct_orders (models/marts/fct_orders.sql)\n  Binder Error: WHERE clause cannot contain aggregates!\n\n  LINE 23:     where loaded_at > (select coalesce(max(loaded_at), '1900-01-01') from \"practice\".\"dbt_adnane...\n                                                  ^\n...\n22:05:58  Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1",
+             "variants": {
+              "win": "PS> dbt run --select fct_orders\n...\n22:05:58  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]\n22:05:58  1 of 1 ERROR creating sql incremental model dbt_adnane.fct_orders .............. [ERROR in 0.04s]\n...\n22:05:58  Failure in model fct_orders (models/marts/fct_orders.sql)\n22:05:58    Runtime Error in model fct_orders (models/marts/fct_orders.sql)\n  Binder Error: WHERE clause cannot contain aggregates!\n\n  LINE 23:     where loaded_at > (select coalesce(max(loaded_at), '1900-01-01') from \"practice\".\"dbt_adnane...\n                                                  ^\n...\n22:05:58  Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1"
+             }
             },
             {
              "c": [
@@ -2420,7 +2429,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt run --select fct_orders --full-refresh\n...\n22:06:05  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]\n22:06:06  1 of 1 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.08s]\n...\n22:06:06  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\n$ dbt show --inline \"select count(*) as n_rows, max(loaded_at) as max_loaded_at, sum(amount) as total_amount from {{ ref('fct_orders') }}\"\n...\n| n_rows |       max_loaded_at | total_amount |\n| ------ | ------------------- | ------------ |\n|    300 | 2025-12-31 16:22:00 |      5,004.4 |"
+             "text": "$ dbt run --select fct_orders --full-refresh\n...\n22:06:05  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]\n22:06:06  1 of 1 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.08s]\n...\n22:06:06  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\n$ dbt show --inline \"select count(*) as n_rows, max(loaded_at) as max_loaded_at, sum(amount) as total_amount from {{ ref('fct_orders') }}\"\n...\n| n_rows |       max_loaded_at | total_amount |\n| ------ | ------------------- | ------------ |\n|    300 | 2025-12-31 16:22:00 |      5,004.4 |",
+             "variants": {
+              "win": "PS> dbt run --select fct_orders --full-refresh\n...\n22:06:05  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]\n22:06:06  1 of 1 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.08s]\n...\n22:06:06  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\nPS> dbt show --inline \"select count(*) as n_rows, max(loaded_at) as max_loaded_at, sum(amount) as total_amount from {{ ref('fct_orders') }}\"\n...\n| n_rows |       max_loaded_at | total_amount |\n| ------ | ------------------- | ------------ |\n|    300 | 2025-12-31 16:22:00 |      5,004.4 |"
+             }
             }
            ]
           },
@@ -2443,7 +2455,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt run --select fct_orders\n...\n22:06:24  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1"
+             "text": "$ dbt run --select fct_orders\n...\n22:06:24  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1",
+             "variants": {
+              "win": "PS> dbt run --select fct_orders\n...\n22:06:24  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1"
+             }
             }
            ]
           },
@@ -2532,7 +2547,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt run --select fct_orders dim_customers\n...\n20:57:25  1 of 2 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.15s]\n20:57:25  2 of 2 START sql table model dbt_adnane.dim_customers .......................... [RUN]\n20:57:25  2 of 2 OK created sql table model dbt_adnane.dim_customers ..................... [OK in 0.04s]\n...\n20:57:25  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=2"
+             "text": "$ dbt run --select fct_orders dim_customers\n...\n20:57:25  1 of 2 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.15s]\n20:57:25  2 of 2 START sql table model dbt_adnane.dim_customers .......................... [RUN]\n20:57:25  2 of 2 OK created sql table model dbt_adnane.dim_customers ..................... [OK in 0.04s]\n...\n20:57:25  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=2",
+             "variants": {
+              "win": "PS> dbt run --select fct_orders dim_customers\n...\n20:57:25  1 of 2 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.15s]\n20:57:25  2 of 2 START sql table model dbt_adnane.dim_customers .......................... [RUN]\n20:57:25  2 of 2 OK created sql table model dbt_adnane.dim_customers ..................... [OK in 0.04s]\n...\n20:57:25  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=2"
+             }
             }
            ]
           }
@@ -3109,7 +3127,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt run --select playground\n$ dbt run --select playground\n...\n22:17:56  1 of 4 OK created sql incremental model dbt_adnane.toy_append .................. [OK in 0.18s]\n22:17:56  4 of 4 OK created sql incremental model dbt_adnane.toy_null_key ................ [OK in 0.18s]\n22:17:56  3 of 4 OK created sql incremental model dbt_adnane.toy_dup_merge ............... [OK in 0.18s]\n22:17:56  2 of 4 OK created sql incremental model dbt_adnane.toy_dup_del_ins ............. [OK in 0.18s]\n...\n22:17:56  Done. PASS=4 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=4"
+             "text": "$ dbt run --select playground\n$ dbt run --select playground\n...\n22:17:56  1 of 4 OK created sql incremental model dbt_adnane.toy_append .................. [OK in 0.18s]\n22:17:56  4 of 4 OK created sql incremental model dbt_adnane.toy_null_key ................ [OK in 0.18s]\n22:17:56  3 of 4 OK created sql incremental model dbt_adnane.toy_dup_merge ............... [OK in 0.18s]\n22:17:56  2 of 4 OK created sql incremental model dbt_adnane.toy_dup_del_ins ............. [OK in 0.18s]\n...\n22:17:56  Done. PASS=4 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=4",
+             "variants": {
+              "win": "PS> dbt run --select playground\nPS> dbt run --select playground\n...\n22:17:56  1 of 4 OK created sql incremental model dbt_adnane.toy_append .................. [OK in 0.18s]\n22:17:56  4 of 4 OK created sql incremental model dbt_adnane.toy_null_key ................ [OK in 0.18s]\n22:17:56  3 of 4 OK created sql incremental model dbt_adnane.toy_dup_merge ............... [OK in 0.18s]\n22:17:56  2 of 4 OK created sql incremental model dbt_adnane.toy_dup_del_ins ............. [OK in 0.18s]\n...\n22:17:56  Done. PASS=4 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=4"
+             }
             },
             {
              "c": [
@@ -3143,7 +3164,10 @@
              "id": "ch14-c27",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt show --limit 20 --inline \"select 'toy_append' as model, k, v from {{ ref('toy_append') }} union all select 'toy_dup_merge', k, v from {{ ref('toy_dup_merge') }} union all select 'toy_dup_del_ins', k, v from {{ ref('toy_dup_del_ins') }} union all select 'toy_null_key', k, v from {{ ref('toy_null_key') }} order by 1, 2 nulls last, 3\""
+             "text": "$ dbt show --limit 20 --inline \"select 'toy_append' as model, k, v from {{ ref('toy_append') }} union all select 'toy_dup_merge', k, v from {{ ref('toy_dup_merge') }} union all select 'toy_dup_del_ins', k, v from {{ ref('toy_dup_del_ins') }} union all select 'toy_null_key', k, v from {{ ref('toy_null_key') }} order by 1, 2 nulls last, 3\"",
+             "variants": {
+              "win": "PS> dbt show --limit 20 --inline \"select 'toy_append' as model, k, v from {{ ref('toy_append') }} union all select 'toy_dup_merge', k, v from {{ ref('toy_dup_merge') }} union all select 'toy_dup_del_ins', k, v from {{ ref('toy_dup_del_ins') }} union all select 'toy_null_key', k, v from {{ ref('toy_null_key') }} order by 1, 2 nulls last, 3\""
+             }
             },
             {
              "id": "ch14-c28",
@@ -5993,7 +6017,10 @@
        "id": "ch14-c44",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run --select fct_orders --full-refresh\n$ dbt build -s fct_orders+ -f          # the model and everything downstream"
+       "text": "$ dbt run --select fct_orders --full-refresh\n$ dbt build -s fct_orders+ -f          # the model and everything downstream",
+       "variants": {
+        "win": "PS> dbt run --select fct_orders --full-refresh\nPS> dbt build -s fct_orders+ -f          # the model and everything downstream"
+       }
       },
       {
        "c": [
@@ -6333,7 +6360,10 @@
        "id": "ch14-c47",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run --select big_model --vars '{\"force_full_refresh\": true}'"
+       "text": "$ dbt run --select big_model --vars '{\"force_full_refresh\": true}'",
+       "variants": {
+        "win": "PS> dbt run --select big_model --vars '{\"force_full_refresh\": true}'"
+       }
       },
       {
        "blocks": [
@@ -7709,7 +7739,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt run --select fct_order_items fct_order_items_daily\n...\n22:06:38  1 of 2 OK created sql table model dbt_adnane.fct_order_items ................... [OK in 0.06s]\n22:06:38  2 of 2 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]\n22:06:38  Batch 1 of 22 START batch 2025-01 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:06:38  Batch 1 of 22 OK created batch 2025-01 of dbt_adnane.fct_order_items_daily ........... [OK in 0.03s]\n22:06:38  Batch 2 of 22 START batch 2025-02 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:06:38  Batch 3 of 22 START batch 2025-03 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:06:38  Batch 4 of 22 START batch 2025-04 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:06:38  Batch 3 of 22 OK created batch 2025-03 of dbt_adnane.fct_order_items_daily ........... [OK in 0.06s]\n...\n22:06:39  Batch 21 of 22 OK created batch 2026-09 of dbt_adnane.fct_order_items_daily .......... [OK in 0.02s]\n22:06:39  Batch 22 of 22 START batch 2026-10 of dbt_adnane.fct_order_items_daily ............... [RUN]\n22:06:39  Batch 22 of 22 OK created batch 2026-10 of dbt_adnane.fct_order_items_daily .......... [OK in 0.02s]\n22:06:39  2 of 2 OK created sql microbatch model dbt_adnane.fct_order_items_daily ........ [SUCCESS in 0.50s]\n...\n22:06:39  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=2"
+             "text": "$ dbt run --select fct_order_items fct_order_items_daily\n...\n22:06:38  1 of 2 OK created sql table model dbt_adnane.fct_order_items ................... [OK in 0.06s]\n22:06:38  2 of 2 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]\n22:06:38  Batch 1 of 22 START batch 2025-01 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:06:38  Batch 1 of 22 OK created batch 2025-01 of dbt_adnane.fct_order_items_daily ........... [OK in 0.03s]\n22:06:38  Batch 2 of 22 START batch 2025-02 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:06:38  Batch 3 of 22 START batch 2025-03 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:06:38  Batch 4 of 22 START batch 2025-04 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:06:38  Batch 3 of 22 OK created batch 2025-03 of dbt_adnane.fct_order_items_daily ........... [OK in 0.06s]\n...\n22:06:39  Batch 21 of 22 OK created batch 2026-09 of dbt_adnane.fct_order_items_daily .......... [OK in 0.02s]\n22:06:39  Batch 22 of 22 START batch 2026-10 of dbt_adnane.fct_order_items_daily ............... [RUN]\n22:06:39  Batch 22 of 22 OK created batch 2026-10 of dbt_adnane.fct_order_items_daily .......... [OK in 0.02s]\n22:06:39  2 of 2 OK created sql microbatch model dbt_adnane.fct_order_items_daily ........ [SUCCESS in 0.50s]\n...\n22:06:39  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=2",
+             "variants": {
+              "win": "PS> dbt run --select fct_order_items fct_order_items_daily\n...\n22:06:38  1 of 2 OK created sql table model dbt_adnane.fct_order_items ................... [OK in 0.06s]\n22:06:38  2 of 2 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]\n22:06:38  Batch 1 of 22 START batch 2025-01 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:06:38  Batch 1 of 22 OK created batch 2025-01 of dbt_adnane.fct_order_items_daily ........... [OK in 0.03s]\n22:06:38  Batch 2 of 22 START batch 2025-02 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:06:38  Batch 3 of 22 START batch 2025-03 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:06:38  Batch 4 of 22 START batch 2025-04 of dbt_adnane.fct_order_items_daily ................ [RUN]\n22:06:38  Batch 3 of 22 OK created batch 2025-03 of dbt_adnane.fct_order_items_daily ........... [OK in 0.06s]\n...\n22:06:39  Batch 21 of 22 OK created batch 2026-09 of dbt_adnane.fct_order_items_daily .......... [OK in 0.02s]\n22:06:39  Batch 22 of 22 START batch 2026-10 of dbt_adnane.fct_order_items_daily ............... [RUN]\n22:06:39  Batch 22 of 22 OK created batch 2026-10 of dbt_adnane.fct_order_items_daily .......... [OK in 0.02s]\n22:06:39  2 of 2 OK created sql microbatch model dbt_adnane.fct_order_items_daily ........ [SUCCESS in 0.50s]\n...\n22:06:39  Done. PASS=2 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=2"
+             }
             },
             {
              "c": [
@@ -7945,7 +7978,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt run --select fct_order_items_daily          # lookback not set: default 1\n...\n22:13:24  Batch 1 of 2 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:13:24  Batch 2 of 2 START batch 2026-10 of dbt_adnane.fct_order_items_daily ................. [RUN]\n...\n$ dbt run --select fct_order_items_daily          # with lookback=3\n...\n22:13:34  Batch 1 of 4 START batch 2026-07 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:13:34  Batch 2 of 4 START batch 2026-08 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:13:34  Batch 3 of 4 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:13:34  Batch 4 of 4 START batch 2026-10 of dbt_adnane.fct_order_items_daily ................. [RUN]\n..."
+       "text": "$ dbt run --select fct_order_items_daily          # lookback not set: default 1\n...\n22:13:24  Batch 1 of 2 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:13:24  Batch 2 of 2 START batch 2026-10 of dbt_adnane.fct_order_items_daily ................. [RUN]\n...\n$ dbt run --select fct_order_items_daily          # with lookback=3\n...\n22:13:34  Batch 1 of 4 START batch 2026-07 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:13:34  Batch 2 of 4 START batch 2026-08 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:13:34  Batch 3 of 4 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:13:34  Batch 4 of 4 START batch 2026-10 of dbt_adnane.fct_order_items_daily ................. [RUN]\n...",
+       "variants": {
+        "win": "PS> dbt run --select fct_order_items_daily          # lookback not set: default 1\n...\n22:13:24  Batch 1 of 2 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:13:24  Batch 2 of 2 START batch 2026-10 of dbt_adnane.fct_order_items_daily ................. [RUN]\n...\nPS> dbt run --select fct_order_items_daily          # with lookback=3\n...\n22:13:34  Batch 1 of 4 START batch 2026-07 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:13:34  Batch 2 of 4 START batch 2026-08 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:13:34  Batch 3 of 4 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:13:34  Batch 4 of 4 START batch 2026-10 of dbt_adnane.fct_order_items_daily ................. [RUN]\n..."
+       }
       },
       {
        "alt": "The monthly batches of a microbatch model, from 25-01 (begin: 2025-01-01) to 26-10. A normal run on 2026-10-21 rebuilds only the current batch + lookback=1: 26-09 and 26-10. Late orders of January 2026 (loaded on day 2) are missed; a backfill with --event-time-start 2026-01-01 --event-time-end 2026-02-01 rebuilds the 26-01 batch.",
@@ -8057,7 +8093,10 @@
        "id": "ch14-c64",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run --select fct_order_items_daily --event-time-start '2026-01-01' --event-time-end '2026-02-01'"
+       "text": "$ dbt run --select fct_order_items_daily --event-time-start '2026-01-01' --event-time-end '2026-02-01'",
+       "variants": {
+        "win": "PS> dbt run --select fct_order_items_daily --event-time-start '2026-01-01' --event-time-end '2026-02-01'"
+       }
       },
       {
        "c": [
@@ -8442,7 +8481,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt run --select fct_orders\n...\n22:14:24  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]\n22:14:24  1 of 1 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.21s]\n...\n22:14:24  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\n$ dbt show --inline \"select count(*) as n_rows, count(distinct order_id) as n_orders, max(loaded_at) as max_loaded_at, sum(amount) as total_amount from {{ ref('fct_orders') }}\"\n...\n| n_rows | n_orders |       max_loaded_at | total_amount |\n| ------ | -------- | ------------------- | ------------ |\n|    320 |      320 | 2026-01-04 16:13:00 |      5,443.2 |\n$ dbt show --inline \"select order_id, status, amount, credit_card_amount, loaded_at from {{ ref('fct_orders') }} where order_id in (255, 288, 301) order by order_id\"\n...\n| order_id | status    | amount | credit_card_amount |           loaded_at |\n| -------- | --------- | ------ | ------------------ | ------------------- |\n|      255 | completed |   18.4 |               18.4 | 2026-01-02 07:50:00 |\n|      288 | shipped   |   34.0 |               34.0 | 2026-01-02 07:00:00 |\n|      301 | completed |    6.0 |                6.0 | 2026-01-01 08:00:00 |"
+             "text": "$ dbt run --select fct_orders\n...\n22:14:24  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]\n22:14:24  1 of 1 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.21s]\n...\n22:14:24  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\n$ dbt show --inline \"select count(*) as n_rows, count(distinct order_id) as n_orders, max(loaded_at) as max_loaded_at, sum(amount) as total_amount from {{ ref('fct_orders') }}\"\n...\n| n_rows | n_orders |       max_loaded_at | total_amount |\n| ------ | -------- | ------------------- | ------------ |\n|    320 |      320 | 2026-01-04 16:13:00 |      5,443.2 |\n$ dbt show --inline \"select order_id, status, amount, credit_card_amount, loaded_at from {{ ref('fct_orders') }} where order_id in (255, 288, 301) order by order_id\"\n...\n| order_id | status    | amount | credit_card_amount |           loaded_at |\n| -------- | --------- | ------ | ------------------ | ------------------- |\n|      255 | completed |   18.4 |               18.4 | 2026-01-02 07:50:00 |\n|      288 | shipped   |   34.0 |               34.0 | 2026-01-02 07:00:00 |\n|      301 | completed |    6.0 |                6.0 | 2026-01-01 08:00:00 |",
+             "variants": {
+              "win": "PS> dbt run --select fct_orders\n...\n22:14:24  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]\n22:14:24  1 of 1 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.21s]\n...\n22:14:24  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\nPS> dbt show --inline \"select count(*) as n_rows, count(distinct order_id) as n_orders, max(loaded_at) as max_loaded_at, sum(amount) as total_amount from {{ ref('fct_orders') }}\"\n...\n| n_rows | n_orders |       max_loaded_at | total_amount |\n| ------ | -------- | ------------------- | ------------ |\n|    320 |      320 | 2026-01-04 16:13:00 |      5,443.2 |\nPS> dbt show --inline \"select order_id, status, amount, credit_card_amount, loaded_at from {{ ref('fct_orders') }} where order_id in (255, 288, 301) order by order_id\"\n...\n| order_id | status    | amount | credit_card_amount |           loaded_at |\n| -------- | --------- | ------ | ------------------ | ------------------- |\n|      255 | completed |   18.4 |               18.4 | 2026-01-02 07:50:00 |\n|      288 | shipped   |   34.0 |               34.0 | 2026-01-02 07:00:00 |\n|      301 | completed |    6.0 |                6.0 | 2026-01-01 08:00:00 |"
+             }
             },
             {
              "c": [
@@ -8493,7 +8535,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt run --select fct_order_items\n...\n22:14:44  1 of 1 OK created sql table model dbt_adnane.fct_order_items ................... [OK in 0.07s]\n...\n$ dbt run --select fct_order_items_daily\n...\n22:14:46  1 of 1 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]\n22:14:46  Batch 1 of 2 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:14:46  Batch 1 of 2 OK created batch 2026-09 of dbt_adnane.fct_order_items_daily ............ [OK in 0.07s]\n22:14:46  Batch 2 of 2 START batch 2026-10 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:14:46  Batch 2 of 2 OK created batch 2026-10 of dbt_adnane.fct_order_items_daily ............ [OK in 0.05s]\n22:14:46  1 of 1 OK created sql microbatch model dbt_adnane.fct_order_items_daily ........ [SUCCESS in 0.12s]\n...\n$ dbt show --inline \"select count(*) as rows_in_january_2026 from {{ ref('fct_order_items_daily') }} where order_date >= '2026-01-01' and order_date < '2026-02-01'\"\n...\n| rows_in_january_2026 |\n| -------------------- |\n|                    0 |"
+             "text": "$ dbt run --select fct_order_items\n...\n22:14:44  1 of 1 OK created sql table model dbt_adnane.fct_order_items ................... [OK in 0.07s]\n...\n$ dbt run --select fct_order_items_daily\n...\n22:14:46  1 of 1 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]\n22:14:46  Batch 1 of 2 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:14:46  Batch 1 of 2 OK created batch 2026-09 of dbt_adnane.fct_order_items_daily ............ [OK in 0.07s]\n22:14:46  Batch 2 of 2 START batch 2026-10 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:14:46  Batch 2 of 2 OK created batch 2026-10 of dbt_adnane.fct_order_items_daily ............ [OK in 0.05s]\n22:14:46  1 of 1 OK created sql microbatch model dbt_adnane.fct_order_items_daily ........ [SUCCESS in 0.12s]\n...\n$ dbt show --inline \"select count(*) as rows_in_january_2026 from {{ ref('fct_order_items_daily') }} where order_date >= '2026-01-01' and order_date < '2026-02-01'\"\n...\n| rows_in_january_2026 |\n| -------------------- |\n|                    0 |",
+             "variants": {
+              "win": "PS> dbt run --select fct_order_items\n...\n22:14:44  1 of 1 OK created sql table model dbt_adnane.fct_order_items ................... [OK in 0.07s]\n...\nPS> dbt run --select fct_order_items_daily\n...\n22:14:46  1 of 1 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]\n22:14:46  Batch 1 of 2 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:14:46  Batch 1 of 2 OK created batch 2026-09 of dbt_adnane.fct_order_items_daily ............ [OK in 0.07s]\n22:14:46  Batch 2 of 2 START batch 2026-10 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:14:46  Batch 2 of 2 OK created batch 2026-10 of dbt_adnane.fct_order_items_daily ............ [OK in 0.05s]\n22:14:46  1 of 1 OK created sql microbatch model dbt_adnane.fct_order_items_daily ........ [SUCCESS in 0.12s]\n...\nPS> dbt show --inline \"select count(*) as rows_in_january_2026 from {{ ref('fct_order_items_daily') }} where order_date >= '2026-01-01' and order_date < '2026-02-01'\"\n...\n| rows_in_january_2026 |\n| -------------------- |\n|                    0 |"
+             }
             },
             {
              "c": [
@@ -8528,7 +8573,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt run --select fct_order_items_daily --event-time-start '2026-01-01' --event-time-end '2026-02-01'\n...\n22:14:58  1 of 1 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]\n22:14:58  Batch 1 of 1 START batch 2026-01 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:14:58  Batch 1 of 1 OK created batch 2026-01 of dbt_adnane.fct_order_items_daily ............ [OK in 0.08s]\n22:14:58  1 of 1 OK created sql microbatch model dbt_adnane.fct_order_items_daily ........ [SUCCESS in 0.08s]\n...\n22:14:58  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1"
+             "text": "$ dbt run --select fct_order_items_daily --event-time-start '2026-01-01' --event-time-end '2026-02-01'\n...\n22:14:58  1 of 1 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]\n22:14:58  Batch 1 of 1 START batch 2026-01 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:14:58  Batch 1 of 1 OK created batch 2026-01 of dbt_adnane.fct_order_items_daily ............ [OK in 0.08s]\n22:14:58  1 of 1 OK created sql microbatch model dbt_adnane.fct_order_items_daily ........ [SUCCESS in 0.08s]\n...\n22:14:58  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1",
+             "variants": {
+              "win": "PS> dbt run --select fct_order_items_daily --event-time-start '2026-01-01' --event-time-end '2026-02-01'\n...\n22:14:58  1 of 1 START sql microbatch model dbt_adnane.fct_order_items_daily ............. [RUN]\n22:14:58  Batch 1 of 1 START batch 2026-01 of dbt_adnane.fct_order_items_daily ................. [RUN]\n22:14:58  Batch 1 of 1 OK created batch 2026-01 of dbt_adnane.fct_order_items_daily ............ [OK in 0.08s]\n22:14:58  1 of 1 OK created sql microbatch model dbt_adnane.fct_order_items_daily ........ [SUCCESS in 0.08s]\n...\n22:14:58  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1"
+             }
             }
            ]
           },
@@ -8550,7 +8598,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt show --inline \"select count(*) as n_rows, sum(quantity) as quantity, sum(revenue) as revenue, count(*) filter (where order_date >= '2026-01-01') as rows_in_2026 from {{ ref('fct_order_items_daily') }}\"\n...\n| n_rows | quantity | revenue | rows_in_2026 |\n| ------ | -------- | ------- | ------------ |\n|    596 |     1064 | 5,443.2 |           32 |\n$ dbt show --inline \"select sum(quantity) as quantity, sum(line_amount) as revenue from {{ ref('fct_order_items') }}\"\n...\n| quantity | revenue |\n| -------- | ------- |\n|     1064 | 5,443.2 |"
+             "text": "$ dbt show --inline \"select count(*) as n_rows, sum(quantity) as quantity, sum(revenue) as revenue, count(*) filter (where order_date >= '2026-01-01') as rows_in_2026 from {{ ref('fct_order_items_daily') }}\"\n...\n| n_rows | quantity | revenue | rows_in_2026 |\n| ------ | -------- | ------- | ------------ |\n|    596 |     1064 | 5,443.2 |           32 |\n$ dbt show --inline \"select sum(quantity) as quantity, sum(line_amount) as revenue from {{ ref('fct_order_items') }}\"\n...\n| quantity | revenue |\n| -------- | ------- |\n|     1064 | 5,443.2 |",
+             "variants": {
+              "win": "PS> dbt show --inline \"select count(*) as n_rows, sum(quantity) as quantity, sum(revenue) as revenue, count(*) filter (where order_date >= '2026-01-01') as rows_in_2026 from {{ ref('fct_order_items_daily') }}\"\n...\n| n_rows | quantity | revenue | rows_in_2026 |\n| ------ | -------- | ------- | ------------ |\n|    596 |     1064 | 5,443.2 |           32 |\nPS> dbt show --inline \"select sum(quantity) as quantity, sum(line_amount) as revenue from {{ ref('fct_order_items') }}\"\n...\n| quantity | revenue |\n| -------- | ------- |\n|     1064 | 5,443.2 |"
+             }
             }
            ]
           }
@@ -8910,7 +8961,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt run --select mb_retry\n...\n22:18:45  Unhandled error while executing\nException on worker thread. Runtime Error\n  Conversion Error: Could not convert string 'oops' to INT32\n\n  LINE 17:     cast(case when order_date >= '2025-06-01' and order_date...\n               ^\n22:18:45  Batch 6 of 22 ERROR creating batch 2025-06 of dbt_adnane.mb_retry .................... [ERROR in 0.02s]\n...\n22:18:45  1 of 1 PARTIALLY created sql microbatch model dbt_adnane.mb_retry .............. [PARTIAL SUCCESS (21/22) in 0.43s]\n...\n22:18:45  Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1"
+             "text": "$ dbt run --select mb_retry\n...\n22:18:45  Unhandled error while executing\nException on worker thread. Runtime Error\n  Conversion Error: Could not convert string 'oops' to INT32\n\n  LINE 17:     cast(case when order_date >= '2025-06-01' and order_date...\n               ^\n22:18:45  Batch 6 of 22 ERROR creating batch 2025-06 of dbt_adnane.mb_retry .................... [ERROR in 0.02s]\n...\n22:18:45  1 of 1 PARTIALLY created sql microbatch model dbt_adnane.mb_retry .............. [PARTIAL SUCCESS (21/22) in 0.43s]\n...\n22:18:45  Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1",
+             "variants": {
+              "win": "PS> dbt run --select mb_retry\n...\n22:18:45  Unhandled error while executing\nException on worker thread. Runtime Error\n  Conversion Error: Could not convert string 'oops' to INT32\n\n  LINE 17:     cast(case when order_date >= '2025-06-01' and order_date...\n               ^\n22:18:45  Batch 6 of 22 ERROR creating batch 2025-06 of dbt_adnane.mb_retry .................... [ERROR in 0.02s]\n...\n22:18:45  1 of 1 PARTIALLY created sql microbatch model dbt_adnane.mb_retry .............. [PARTIAL SUCCESS (21/22) in 0.43s]\n...\n22:18:45  Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1"
+             }
             }
            ]
           },
@@ -8959,7 +9013,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt retry\n...\n22:19:19  1 of 1 START sql microbatch model dbt_adnane.mb_retry .......................... [RUN]\n22:19:19  Batch 1 of 1 START batch 2025-06 of dbt_adnane.mb_retry .............................. [RUN]\n22:19:19  Batch 1 of 1 OK created batch 2025-06 of dbt_adnane.mb_retry ......................... [OK in 0.07s]\n22:19:19  1 of 1 OK created sql microbatch model dbt_adnane.mb_retry ..................... [SUCCESS in 0.08s]\n...\n22:19:19  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\n$ dbt show --inline \"select count(*) as n_rows, count(*) filter (where order_date >= '2025-06-01' and order_date < '2025-07-01') as june_rows from {{ ref('mb_retry') }}\"\n...\n| n_rows | june_rows |\n| ------ | --------- |\n|    195 |        14 |"
+             "text": "$ dbt retry\n...\n22:19:19  1 of 1 START sql microbatch model dbt_adnane.mb_retry .......................... [RUN]\n22:19:19  Batch 1 of 1 START batch 2025-06 of dbt_adnane.mb_retry .............................. [RUN]\n22:19:19  Batch 1 of 1 OK created batch 2025-06 of dbt_adnane.mb_retry ......................... [OK in 0.07s]\n22:19:19  1 of 1 OK created sql microbatch model dbt_adnane.mb_retry ..................... [SUCCESS in 0.08s]\n...\n22:19:19  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\n$ dbt show --inline \"select count(*) as n_rows, count(*) filter (where order_date >= '2025-06-01' and order_date < '2025-07-01') as june_rows from {{ ref('mb_retry') }}\"\n...\n| n_rows | june_rows |\n| ------ | --------- |\n|    195 |        14 |",
+             "variants": {
+              "win": "PS> dbt retry\n...\n22:19:19  1 of 1 START sql microbatch model dbt_adnane.mb_retry .......................... [RUN]\n22:19:19  Batch 1 of 1 START batch 2025-06 of dbt_adnane.mb_retry .............................. [RUN]\n22:19:19  Batch 1 of 1 OK created batch 2025-06 of dbt_adnane.mb_retry ......................... [OK in 0.07s]\n22:19:19  1 of 1 OK created sql microbatch model dbt_adnane.mb_retry ..................... [SUCCESS in 0.08s]\n...\n22:19:19  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\nPS> dbt show --inline \"select count(*) as n_rows, count(*) filter (where order_date >= '2025-06-01' and order_date < '2025-07-01') as june_rows from {{ ref('mb_retry') }}\"\n...\n| n_rows | june_rows |\n| ------ | --------- |\n|    195 |        14 |"
+             }
             }
            ]
           },
@@ -9384,7 +9441,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt run --select fct_orders --full-refresh\n...\n22:21:53  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]\n22:21:53  1 of 1 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.13s]\n...\n22:21:53  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\n$ dbt show --inline \"select count(*) as n_rows, sum(amount) as total_amount from {{ ref('fct_orders') }}\"\n...\n| n_rows | total_amount |\n| ------ | ------------ |\n|    320 |      5,443.2 |"
+             "text": "$ dbt run --select fct_orders --full-refresh\n...\n22:21:53  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]\n22:21:53  1 of 1 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.13s]\n...\n22:21:53  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\n$ dbt show --inline \"select count(*) as n_rows, sum(amount) as total_amount from {{ ref('fct_orders') }}\"\n...\n| n_rows | total_amount |\n| ------ | ------------ |\n|    320 |      5,443.2 |",
+             "variants": {
+              "win": "PS> dbt run --select fct_orders --full-refresh\n...\n22:21:53  1 of 1 START sql incremental model dbt_adnane.fct_orders ....................... [RUN]\n22:21:53  1 of 1 OK created sql incremental model dbt_adnane.fct_orders .................. [OK in 0.13s]\n...\n22:21:53  Done. PASS=1 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=1\nPS> dbt show --inline \"select count(*) as n_rows, sum(amount) as total_amount from {{ ref('fct_orders') }}\"\n...\n| n_rows | total_amount |\n| ------ | ------------ |\n|    320 |      5,443.2 |"
+             }
             },
             {
              "c": [
@@ -9418,7 +9478,10 @@
              "lang": "bash",
              "small": true,
              "t": "code",
-             "text": "$ dbt build\n...\n22:21:56  24 of 27 START sql microbatch model dbt_adnane.fct_order_items_daily ........... [RUN]\n22:21:56  Batch 1 of 2 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]\n...\n22:21:57  26 of 27 OK created sql incremental model dbt_adnane.fct_orders ................ [OK in 0.20s]\n...\n22:21:57  24 of 27 OK created sql microbatch model dbt_adnane.fct_order_items_daily ...... [SUCCESS in 0.27s]\n...\n22:21:57  Finished running 2 incremental models, 1 seed, 2 snapshots, 3 table models, 12 data tests, 7 view models in 0 hours 0 minutes and 1.09 seconds (1.09s).\n...\n22:21:57  Done. PASS=27 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=27"
+             "text": "$ dbt build\n...\n22:21:56  24 of 27 START sql microbatch model dbt_adnane.fct_order_items_daily ........... [RUN]\n22:21:56  Batch 1 of 2 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]\n...\n22:21:57  26 of 27 OK created sql incremental model dbt_adnane.fct_orders ................ [OK in 0.20s]\n...\n22:21:57  24 of 27 OK created sql microbatch model dbt_adnane.fct_order_items_daily ...... [SUCCESS in 0.27s]\n...\n22:21:57  Finished running 2 incremental models, 1 seed, 2 snapshots, 3 table models, 12 data tests, 7 view models in 0 hours 0 minutes and 1.09 seconds (1.09s).\n...\n22:21:57  Done. PASS=27 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=27",
+             "variants": {
+              "win": "PS> dbt build\n...\n22:21:56  24 of 27 START sql microbatch model dbt_adnane.fct_order_items_daily ........... [RUN]\n22:21:56  Batch 1 of 2 START batch 2026-09 of dbt_adnane.fct_order_items_daily ................. [RUN]\n...\n22:21:57  26 of 27 OK created sql incremental model dbt_adnane.fct_orders ................ [OK in 0.20s]\n...\n22:21:57  24 of 27 OK created sql microbatch model dbt_adnane.fct_order_items_daily ...... [SUCCESS in 0.27s]\n...\n22:21:57  Finished running 2 incremental models, 1 seed, 2 snapshots, 3 table models, 12 data tests, 7 view models in 0 hours 0 minutes and 1.09 seconds (1.09s).\n...\n22:21:57  Done. PASS=27 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=27"
+             }
             },
             {
              "c": [
@@ -9458,7 +9521,10 @@
              "id": "ch14-c82",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt ls -s config.materialized:incremental --output name -q\nfct_order_items_daily\nfct_orders\n$ dbt ls -s config.incremental_strategy:microbatch --output name -q\nfct_order_items_daily"
+             "text": "$ dbt ls -s config.materialized:incremental --output name -q\nfct_order_items_daily\nfct_orders\n$ dbt ls -s config.incremental_strategy:microbatch --output name -q\nfct_order_items_daily",
+             "variants": {
+              "win": "PS> dbt ls -s config.materialized:incremental --output name -q\nfct_order_items_daily\nfct_orders\nPS> dbt ls -s config.incremental_strategy:microbatch --output name -q\nfct_order_items_daily"
+             }
             }
            ]
           },
@@ -9479,7 +9545,10 @@
              "id": "ch14-c83",
              "lang": "bash",
              "t": "code",
-             "text": "$ git add .\n$ git status --short\nA  models/intermediate/_intermediate__models.yml\nM  models/marts/_marts__models.yml\nA  models/marts/fct_order_items_daily.sql\nM  models/marts/fct_orders.sql\nM  models/staging/jaffle_shop/_jaffle_shop__models.yml\nM  models/staging/jaffle_shop/_jaffle_shop__sources.yml\nM  models/staging/stripe/_stripe__models.yml\nM  models/staging/stripe/_stripe__sources.yml\n$ git commit -m \"Incremental fct_orders (merge on order_id), microbatch fct_order_items_daily, event_time configs\"\n...\n$ git log --oneline -1\nb15358d Incremental fct_orders (merge on order_id), microbatch fct_order_items_daily, event_time configs"
+             "text": "$ git add .\n$ git status --short\nA  models/intermediate/_intermediate__models.yml\nM  models/marts/_marts__models.yml\nA  models/marts/fct_order_items_daily.sql\nM  models/marts/fct_orders.sql\nM  models/staging/jaffle_shop/_jaffle_shop__models.yml\nM  models/staging/jaffle_shop/_jaffle_shop__sources.yml\nM  models/staging/stripe/_stripe__models.yml\nM  models/staging/stripe/_stripe__sources.yml\n$ git commit -m \"Incremental fct_orders (merge on order_id), microbatch fct_order_items_daily, event_time configs\"\n...\n$ git log --oneline -1\nb15358d Incremental fct_orders (merge on order_id), microbatch fct_order_items_daily, event_time configs",
+             "variants": {
+              "win": "PS> git add .\nPS> git status --short\nA  models/intermediate/_intermediate__models.yml\nM  models/marts/_marts__models.yml\nA  models/marts/fct_order_items_daily.sql\nM  models/marts/fct_orders.sql\nM  models/staging/jaffle_shop/_jaffle_shop__models.yml\nM  models/staging/jaffle_shop/_jaffle_shop__sources.yml\nM  models/staging/stripe/_stripe__models.yml\nM  models/staging/stripe/_stripe__sources.yml\nPS> git commit -m \"Incremental fct_orders (merge on order_id), microbatch fct_order_items_daily, event_time configs\"\n...\nPS> git log --oneline -1\nb15358d Incremental fct_orders (merge on order_id), microbatch fct_order_items_daily, event_time configs"
+             }
             },
             {
              "c": [
@@ -9512,7 +9581,10 @@
              "id": "ch14-c84",
              "lang": "bash",
              "t": "code",
-             "text": "$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch14 --stat"
+             "text": "$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch14 --stat",
+             "variants": {
+              "win": "PS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nPS> git diff ref-ch14 --stat"
+             }
             },
             {
              "c": [

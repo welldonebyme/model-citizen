@@ -1,15 +1,20 @@
-# OS notes: short callouts that the website shows only for one OS (the OS switch), where the book's PROSE is
-# written for macOS. Commands inside code blocks get their own Windows / WSL versions (os-commands.yaml); these notes
-# cover the sentences around them. Format and rules: converter/build/osnotes.py. `hash` = sha1 (12 hex) of the
-# anchor paragraph or table as the website shows it: when the book text changes, the build stops and asks to re-check.
-# Simple English, one idea per note. `...` = inline code.
+# OS notes: short callouts that the website shows only for one OS (the OS switch), where the book's PROSE or a
+# recorded OUTPUT is written for macOS, and site boxes shown on every system (os: [mac, win, wsl], such as
+# "Get the course files"). Commands inside code blocks get their own Windows / WSL versions (os-commands.yaml);
+# these notes cover the sentences and outputs around them. Format and rules: converter/build/osnotes.py
+# (anchors: a paragraph or table `starts`, a `code` block, a `lab`; `where: before`, `level: callout` + `hide`,
+# `anchor`, rich `blocks`, `covers`). `hash` = sha1 (12 hex) of the anchor as the website shows it: when the book
+# text changes, the build stops and asks to re-check. A Windows variant keeps the output recorded on macOS (no
+# Windows output is invented): a macOS home path gets an automatic note, any other macOS-only detail (ls -l
+# columns, /bin/zsh, Homebrew paths, .venv/bin, a wc total) needs a note here (`code:` or `covers:`).
+# Simple English, one idea per note. `...` = inline code, [text](/site/path) = a link, **text** = bold.
 notes:
   # ------------------------------------------------------------------ Chapter 0
   - id: win-ch00-setup
     os: [win]
     step: ch00-s1-1
     starts: "Practical."
-    hash: 0103ea8e5a6a
+    hash: e65f976188c4
     title: On Windows
     text: "The same free setup works on Windows: dbt Core and DuckDB run in PowerShell (or in WSL). Choose your
       system with the switch at the top of the page: every terminal command is then shown in its Windows form."
@@ -144,10 +149,32 @@ notes:
     step: ch02-s8-5
     starts: "Windows users:"
     hash: 346fed6c7204
-    title: On this website
-    text: "You can follow the whole course in PowerShell: with the switch on Windows, every terminal block shows the
-      PowerShell version of its commands (dbt commands stay the same). WSL is a good choice too: choose WSL in the
-      switch and follow the Ubuntu commands."
+    level: callout                 # the book's tip recommends WSL first: on Windows the site shows one choice
+    hide: [win]
+    title: "PowerShell or WSL?"
+    text: "Follow this course in PowerShell: with the switch on Windows, every terminal block shows the PowerShell
+      version of its commands (dbt commands stay the same), and the kit's `setup.ps1` builds your workspace. If you
+      prefer Linux, use WSL instead (next box) and choose WSL in the switch."
+  - id: win-ch02-wsl-install
+    os: [win, wsl]
+    step: ch02-s8-5
+    starts: "Windows users:"
+    hash: 346fed6c7204
+    level: callout
+    title: "Using WSL instead"
+    blocks:
+      - ol:
+          - "Right-click the Start button and open **Terminal (Admin)** (or Windows PowerShell (Admin)). Run
+            `wsl --install`: it installs WSL and Ubuntu. Restart the computer when it asks."
+          - "Open **Ubuntu** from the Start menu. The first time, choose a Linux user name and a password (`sudo`
+            asks for it)."
+          - "Install the tools in Ubuntu: `sudo apt update && sudo apt install -y unzip git`, then uv with
+            `curl -LsSf https://astral.sh/uv/install.sh | sh`, and open a new Ubuntu terminal."
+          - "Get the course files with the WSL commands of [lesson 1.6](/learn/ch01/ch01-s6/#get-the-course-files):
+            the browser saves the zip in your Windows Downloads folder, and the commands copy it into Linux."
+          - "Work in your Linux home (`~/dbt-course`), never under `/mnt/c/...` (much slower, and file locks behave
+            differently). In the main lab of this chapter, the kit's `bash setup.sh` builds the workspace for you."
+          - "Choose WSL in the switch at the top of the page: the terminal blocks then show the Ubuntu commands."
   - id: win-ch02-check-tools
     os: [win]
     step: ch02-s9-0
@@ -156,8 +183,8 @@ notes:
     title: On Windows
     text: "Run `winget --version`, `uv --version` and `git --version`. If uv is missing: `winget install
       --id=astral-sh.uv -e`. If Git is missing: `winget install --id Git.Git -e`, then `git config --global
-      core.autocrlf true`. Close and reopen PowerShell after each install. Shortcut: the course kit's `setup.ps1`
-      does this whole lab for you (see the kit's README-windows.md)."
+      core.autocrlf true`. Close and reopen PowerShell after each install. The box at the start of this lab says
+      which steps the kit's `setup.ps1` does for you."
   - id: win-ch02-install-duckdb
     os: [win]
     step: ch02-s9-0
@@ -213,7 +240,7 @@ notes:
     os: [win]
     step: ch06-s3-1
     starts: "The paths in these outputs"
-    hash: 567d34abf039
+    hash: f58610830bc2
     title: On Windows
     text: "On Windows dbt prints Windows paths, for example `C:\\Users\\you\\.dbt` instead of `/Users/you/.dbt`. The
       rest of the messages is the same. Your profile is `$HOME\\.dbt\\profiles.yml`."
@@ -275,3 +302,416 @@ notes:
     title: On Windows
     text: "Double-click `target\\static_index.html` in File Explorer, or run `start target\\static_index.html` in
       PowerShell."
+
+  # ================================================================== course files (every system)
+  # The first lab that needs ~/dbt-course/kit is lab 1.6 (week 1, day 3 of the plan): the box comes right before
+  # it. Its anchor is stable: /learn/ch01/ch01-s6/#get-the-course-files (the Today page links to it).
+  - id: all-ch01-course-files
+    os: [mac, win, wsl]
+    step: ch01-s6-6
+    lab: ch01-lab1
+    hash: a82a934636b2
+    where: before
+    anchor: get-the-course-files
+    title: "Get the course files"
+    text: "From this lab on, the labs use the course files: the practice data, the data scripts of later chapters,
+      the bug files and the reference project. Download them once: [dbt-course-kit.zip](/kits/dbt-course-kit.zip)
+      (about 100 KB). Then copy them into the folder `~/dbt-course/kit` (on Windows `C:\\Users\\<you>\\dbt-course\\kit`)
+      with the commands for your system (the switch at the top of the page chooses it):"
+    blocks:
+      - code:
+          id: ch01-kit-c1
+          text: |
+            $ mkdir -p ~/dbt-course/kit
+            $ unzip -q -o ~/Downloads/dbt-course-kit.zip -d ~/Downloads
+            $ cp -R ~/Downloads/dbt-course-kit/. ~/dbt-course/kit/
+            $ ls ~/dbt-course/kit/data
+            customers.csv  order_items.csv  orders.csv  payments.csv  products.csv
+          win: |
+            PS> New-Item -ItemType Directory -Force $HOME\dbt-course\kit | Out-Null
+            PS> Expand-Archive $HOME\Downloads\dbt-course-kit.zip -DestinationPath $HOME\Downloads -Force
+            PS> Copy-Item -Recurse -Force $HOME\Downloads\dbt-course-kit\* $HOME\dbt-course\kit
+            PS> Get-ChildItem -Name $HOME\dbt-course\kit\data
+            customers.csv
+            order_items.csv
+            orders.csv
+            payments.csv
+            products.csv
+          wsl: |
+            $ sudo apt update && sudo apt install -y unzip
+            $ mkdir -p ~/dbt-course/kit ~/Downloads
+            $ cp /mnt/c/Users/*/Downloads/dbt-course-kit.zip ~/Downloads/
+            $ unzip -q -o ~/Downloads/dbt-course-kit.zip -d ~/Downloads
+            $ cp -R ~/Downloads/dbt-course-kit/. ~/dbt-course/kit/
+            $ ls ~/dbt-course/kit/data
+            customers.csv  order_items.csv  orders.csv  payments.csv  products.csv
+      - p: "Safari may unzip the download for you (you then see a `dbt-course-kit` folder in Downloads and no zip):
+          skip the `unzip` line. On Windows, use the `Expand-Archive` line rather than Explorer's Extract All, which
+          puts a second `dbt-course-kit` folder inside the first. In WSL, the browser saved the zip in your Windows
+          Downloads folder (`/mnt/c/Users/<your-Windows-name>/Downloads`): the `cp` line copies it into Linux. You
+          can run these lines again: they only replace the kit's own files."
+      - p: "To open the CSV files of this lab: in Finder, **Go > Go to Folder** and type `~/dbt-course/kit/data`; in
+          File Explorer, type `%USERPROFILE%\\dbt-course\\kit\\data` in the address bar; in WSL, run `explorer.exe .`
+          in that folder."
+      - p: "Do not run the kit's setup now. The main lab of Chapter 2 ([Section 2.9](/learn/ch02/ch02-s9/)) builds
+          your workspace step by step, and there the setup script can do most of that lab for you: `bash setup.sh`
+          (macOS, Linux, WSL) or `powershell -ExecutionPolicy Bypass -File .\\setup.ps1` (Windows), started from
+          the unzipped `dbt-course-kit` folder in Downloads. The kit's README.md and README-windows.md explain it."
+  - id: all-ch02-lab-course-files
+    os: [mac, win, wsl]
+    step: ch02-s9-0
+    starts: "This lab is mandatory"
+    hash: d78e9962faa4
+    title: "Course files and the setup shortcut"
+    text: "Step 8 copies files from `~/dbt-course/kit`. If that folder does not exist yet,
+      [get the course files](/learn/ch01/ch01-s6/#get-the-course-files) first (lesson 1.6, five minutes)."
+    blocks:
+      - p: "Shortcut: the kit's setup script does steps 4, 5, 6, 8 and 9 for you (folders, venv, dbt 1.11, the data
+          and `practice.duckdb`). Do steps 1 to 3 first (the setup needs uv and git), then run it from the unzipped
+          `dbt-course-kit` folder: `bash setup.sh` on macOS, Linux and WSL, `powershell -ExecutionPolicy Bypass
+          -File .\\setup.ps1` on Windows. Then activate the venv in `~/dbt-course` (step 5's second line), do step 7
+          if the setup warns that your DuckDB versions differ, and finish with steps 10 and 11."
+
+  - id: all-ch02-look-in-kit
+    os: [mac, win, wsl]
+    step: ch02-s3-0
+    starts: "Let us look at the practice data with these commands"
+    hash: b94bc7649cd3
+    title: "Before the main lab"
+    text: "`~/dbt-course/practice` exists only after the main lab of this chapter (Section 2.9). Until then, run
+      these commands in the kit folder, which has the same `data` folder: start with `cd ~/dbt-course/kit`
+      (Windows: `cd $HOME\\dbt-course\\kit`) instead of the first line."
+  - id: all-ch02-lab-explore-kit
+    os: [mac, win, wsl]
+    step: ch02-s4-4
+    starts: "Goal: practise navigation and reading files."
+    hash: b3a80c313252
+    title: "The kit folder"
+    text: "`~/dbt-course/kit` is the folder of [Get the course files](/learn/ch01/ch01-s6/#get-the-course-files)
+      (lesson 1.6). Its `data` folder holds the same five CSV files as your workspace."
+  # ================================================================== Windows prompt (F21)
+  - id: win-ch00-prompt
+    os: [win]
+    step: ch00-s3-0
+    starts: "Dark boxes are the terminal."
+    hash: 265cb4ea39db
+    title: On Windows
+    text: "With Windows chosen in the switch, the terminal boxes start with `PS>` (or `(.venv) PS>` when the venv is
+      active): that is the prompt, do not type it. A `$` inside a command is part of the command: type `$HOME` and
+      `$env:NAME` as they are."
+  - id: win-ch02-prompt
+    os: [win]
+    step: ch02-s1-0
+    starts: "In this book, commands are shown in dark boxes"
+    hash: 8df6868ad940
+    title: On Windows
+    text: "In PowerShell the prompt is `PS>` (the terminal boxes show it so): do not type `PS>`, nor `(.venv)`
+      before it. A `$` inside a command (`$HOME`, `$env:DBT_DEMO_SECRET`) is part of the command: type it."
+
+  # ================================================================== Chapter 2: commands and outputs (F4, F5)
+  - id: win-ch02-out-pwd
+    os: [win]
+    step: ch02-s2-1
+    code: ch02-c2
+    hash: 554f524cd910
+    title: On Windows
+    text: "The output above was recorded on macOS. In PowerShell, `pwd` prints a small table: the word `Path`, a
+      line of dashes, then the folder, which starts with `C:\\Users\\<you>`. `cd -` prints nothing."
+  - id: win-ch02-ls-columns
+    os: [win]
+    step: ch02-s2-1
+    starts: "Read the long format"
+    hash: cd0cd7749e2e
+    covers: [ch02-c3]
+    title: On Windows
+    text: "The output and this paragraph are macOS ones (`ls -la`: owner `mac`, group `staff`). In PowerShell,
+      `Get-ChildItem -Name` prints one name per line. `Get-ChildItem -Force` prints a `Directory:` line, then a
+      table with the columns Mode, LastWriteTime, Length (the size in bytes) and Name: no permissions, owner or
+      group. Mode starts with `d` for a folder; `-Force` plays the role of `-a` and also shows hidden items."
+  - id: win-ch02-commands-table
+    os: [win]
+    step: ch02-s3-0
+    starts: "Command What it does"
+    hash: 78c0e12bde2b
+    title: On Windows
+    text: "PowerShell has its own commands for these (the Windows version of each terminal block uses them). Short
+      names such as `cp`, `mv`, `rm`, `cat` and `mkdir` exist in PowerShell too, but with PowerShell's options:
+      `-p`, `-R` and `-rf` do not work there."
+    blocks:
+      - table:
+          head: ["zsh (macOS, Linux, WSL)", "Windows PowerShell"]
+          rows:
+            - ["`mkdir -p a/b/c`", "`New-Item -ItemType Directory -Force a\\b\\c`"]
+            - ["`touch file.txt`", "`New-Item -ItemType File file.txt` (a new, empty file)"]
+            - ["`cp a.txt b.txt`, `cp -R folder new_folder`", "`Copy-Item a.txt b.txt`, `Copy-Item -Recurse folder new_folder`"]
+            - ["`mv old.txt new.txt`", "`Move-Item old.txt new.txt`"]
+            - ["`rm file.txt`, `rm -r folder`", "`Remove-Item file.txt`, `Remove-Item -Recurse folder`"]
+            - ["`cat file.txt`", "`Get-Content file.txt`"]
+            - ["`less file.txt`", "`Get-Content file.txt | more` (Space: next page, q: quit)"]
+            - ["`head -3 f` / `tail -2 f`", "`Get-Content f -TotalCount 3` / `Get-Content f -Tail 2`"]
+            - ["`wc -l file.csv`", "`(Get-Content file.csv).Count`"]
+  - id: win-ch02-out-wc
+    os: [win]
+    step: ch02-s3-0
+    code: ch02-c5
+    hash: 80e2b0ac79af
+    title: On Windows
+    text: "The output above was recorded on macOS. `Get-ChildItem -Name data` prints one name per line, and the
+      PowerShell line count prints only the file names (`101 customers.csv` and so on), with no `total` line. The
+      numbers are the same."
+  - id: win-ch02-out-wildcard
+    os: [win]
+    step: ch02-s4-2
+    code: ch02-c7
+    hash: 1729c13cc182
+    title: On Windows
+    text: "The output above was recorded on macOS. In PowerShell the command prints `payments.csv` and
+      `products.csv`, one per line, without the `data` folder in front."
+  - id: win-ch02-lab-explore
+    os: [win]
+    step: ch02-s4-4
+    starts: "Expected result: the amount is in the amount column"
+    hash: 19fcea50fa37
+    title: On Windows
+    text: "The same lab in PowerShell, from the folder that contains `data` (for example `cd $HOME\\dbt-course\\kit`):"
+    blocks:
+      - code:
+          id: ch02-lab1-win-c1
+          text: |
+            PS> pwd
+            PS> Get-Content data\payments.csv -TotalCount 5
+            PS> (Select-String -CaseSensitive fail data\payments.csv).Count
+            24
+            PS> Get-ChildItem data\*.csv | ForEach-Object { Get-Content $_.FullName -TotalCount 1 } | Set-Content headers.txt
+            PS> Get-Content headers.txt
+            PS> Remove-Item headers.txt
+      - p: "Expected result: `24` lines of payments.csv contain `fail`, and headers.txt holds the five header lines,
+          one per line (PowerShell writes no `==> data/customers.csv <==` title lines)."
+  - id: win-ch02-out-env
+    os: [win]
+    step: ch02-s6-0
+    code: ch02-c9
+    hash: 0ad69526a0d5
+    title: On Windows
+    text: "The output above was recorded on macOS. In PowerShell, `echo $HOME` prints `C:\\Users\\<you>`, and
+      `$PSVersionTable.PSVersion` prints your PowerShell version as a small table (Major, Minor, ...): 5.1 for
+      Windows PowerShell, 7 for PowerShell 7. There is no `/bin/zsh`: your shell is PowerShell."
+  - id: win-ch02-out-which
+    os: [win]
+    step: ch02-s6-1
+    code: ch02-c11
+    hash: 831a229c73da
+    title: On Windows
+    text: "The output above was recorded on macOS. On Windows, `(Get-Command git).Source` prints a Windows path, for
+      example `C:\\Program Files\\Git\\cmd\\git.exe`. `Get-Command python` may find no python yet (a red \"not
+      recognized\" error) or a `WindowsApps` shortcut that opens the Microsoft Store: both are fine, uv brings its
+      own Python and the venv of Section 2.8 gives you `python`."
+  - id: win-ch02-exit-code
+    os: [win]
+    step: ch02-s7-2
+    starts: "When a command finishes, it returns a small number"
+    hash: bf6465bece8e
+    title: On Windows
+    text: "In PowerShell, `$?` is `True` or `False`: did the last command succeed? The number returned by a program
+      such as dbt, git or python is in `$LASTEXITCODE` (0 = success). The Windows version of the block below shows
+      both."
+  - id: win-ch02-and-operator
+    os: [win]
+    step: ch02-s7-2
+    starts: "The operator && runs the second command"
+    hash: d92a6ef42f6d
+    title: On Windows
+    text: "PowerShell 7 accepts `&&`. Windows PowerShell 5.1 does not: write `dbt build; if ($?) { echo \"All good,
+      ready to deploy\" }`, as in the Windows version below."
+  - id: win-ch02-execution-policy
+    os: [win]
+    step: ch02-s8-2
+    code: ch02-c16
+    hash: 6e85894c3491
+    where: before
+    title: "On Windows, once per computer"
+    text: "Before your first activation, allow PowerShell to run local scripts such as the venv's `Activate.ps1`: run
+      `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` and answer `Y`. Without it, the activation stops with a
+      red error that ends with `cannot be loaded because running scripts is disabled on this system`. The setting
+      is for your Windows user only, and you do it once."
+  - id: win-ch02-out-venv
+    os: [win]
+    step: ch02-s8-2
+    code: ch02-c16
+    hash: 6e85894c3491
+    title: On Windows
+    text: "The output above was recorded on macOS. On Windows the venv's programs are in `.venv\\Scripts\\`, not
+      `.venv/bin/`: uv's last line names the Windows activation script, and `(Get-Command python).Source` prints
+      `C:\\Users\\<you>\\dbt-course\\.venv\\Scripts\\python.exe`."
+  - id: win-ch02-venv-path
+    os: [win]
+    step: ch02-s8-2
+    starts: "After source .venv/bin/activate"
+    hash: 597425a6b247
+    title: On Windows
+    text: "After `.venv\\Scripts\\Activate.ps1` the prompt starts with `(.venv)` and the venv's `Scripts\\` folder is
+      first in your PATH. `deactivate` leaves it, and every new PowerShell window needs the activation again."
+  - id: win-ch02-lab-home
+    os: [win]
+    step: ch02-s9-0
+    starts: "Open a terminal and go home"
+    hash: dde2307f53e6
+    title: On Windows
+    text: "In PowerShell: `cd ~`, then `pwd`. Expected: a small table with `Path` and `C:\\Users\\<your-name>`."
+  - id: win-ch02-lab-execution-policy
+    os: [win]
+    step: ch02-s9-0
+    code: ch02-c21
+    hash: 2d67a6d4fc98
+    where: before
+    title: "On Windows, once per computer"
+    text: "Before this activation: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, then answer `Y`
+      ([Section 2.8](/learn/ch02/ch02-s8/#ch02-s8-2) explains why)."
+  - id: win-ch02-lab-read
+    os: [win]
+    step: ch02-s9-0
+    starts: "Build the practice database."
+    hash: 93d75d4b6bd4
+    title: On Windows
+    text: "PowerShell has no `<` to send a file into a program. The Windows command asks DuckDB to read the file
+      itself: `-c \".read setup.sql\"` runs DuckDB's `.read` command, with the same result."
+
+  # ================================================================== Chapter 6: every terminal, outputs, logs
+  - id: win-ch06-check-workspace
+    os: [win]
+    step: ch06-s2-0
+    code: ch06-c2
+    hash: 56573bb66175
+    title: On Windows
+    text: "If the activation prints `running scripts is disabled on this system`, run the one-time
+      `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` of [Section 2.8](/learn/ch02/ch02-s8/#ch02-s8-2), answer
+      `Y`, then activate again. The last command prints `practice.duckdb` on Windows (the output above was recorded
+      on macOS), or a red `Cannot find path` error when the database is missing."
+  - id: win-ch06-every-terminal
+    os: [win]
+    step: ch06-s2-0
+    starts: "You need three things"
+    hash: 3100bdda3145
+    title: On Windows
+    text: "On Windows every terminal of this course starts with two lines: `cd $HOME\\dbt-course`, then
+      `.venv\\Scripts\\Activate.ps1` (Windows PowerShell 5.1 has no `&&`). Where this paragraph says `ls` and No
+      such file or directory, the Windows check is `Get-ChildItem`, and its error says `Cannot find path`."
+  - id: win-ch06-lab-activate
+    os: [win]
+    step: ch06-s3-2
+    code: ch06-c4
+    hash: 4f93b66f0b3d
+    title: On Windows
+    text: "If the activation prints `running scripts is disabled on this system`, run once
+      `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` ([Section 2.8](/learn/ch02/ch02-s8/#ch02-s8-2)), answer
+      `Y`, then activate again."
+  - id: win-ch06-remove-logs
+    os: [win]
+    step: ch06-s3-2
+    starts: "Expected final state: the folder ~/dbt-course/jaffle_dbt exists"
+    hash: 59b046ab13bb
+    title: On Windows
+    text: "On Windows: `Remove-Item -Recurse $HOME\\dbt-course\\logs`."
+  - id: win-ch06-out-debug
+    os: [win]
+    step: ch06-s7-0
+    code: ch06-c26
+    hash: 68aba2888cca
+    title: On Windows
+    text: "The output above was recorded on macOS. On Windows, `dbt debug` prints Windows paths (python path
+      `C:\\Users\\<you>\\dbt-course\\.venv\\Scripts\\python.exe`, profiles dir `C:\\Users\\<you>\\.dbt`, and so on)
+      and `os info` names Windows. The checks and the connection lines are the same."
+  - id: win-ch06-grep-log
+    os: [win]
+    step: ch06-s9-3
+    starts: "To see the debug lines in the terminal too"
+    hash: 811e75f26ba9
+    title: On Windows
+    text: "In PowerShell, search the log with `Select-String -SimpleMatch 'create view' logs\\dbt.log`: it prints
+      each matching line with the file name and the line number."
+  - id: win-ch06-lab-exit-code
+    os: [win]
+    step: ch06-s9-4
+    starts: "Run dbt test."
+    hash: 33abdfeab5b6
+    title: On Windows
+    text: "In PowerShell, `$LASTEXITCODE` prints `1` (and `$?` prints `False`)."
+  - id: win-ch06-lab-grep
+    os: [win]
+    step: ch06-s9-4
+    starts: "Find the DDL in the log"
+    hash: 28c06182dc28
+    title: On Windows
+    text: "In PowerShell: `Select-String -SimpleMatch 'rename to' logs\\dbt.log` (each line comes with the file name
+      and the line number)."
+
+  # ================================================================== Chapter 7: find raw table names (F11)
+  - id: win-ch07-find-raw
+    os: [win]
+    step: ch07-s3-3
+    starts: "search the code:"
+    hash: 6b6006b1773f
+    title: On Windows
+    text: "In PowerShell: `Get-ChildItem -Recurse models -Filter *.sql | Select-String 'from (stripe|jaffle_shop)\\.'`"
+  - id: win-ch07-activate
+    os: [win]
+    step: ch07-s2-5
+    code: ch07-c7
+    hash: 460831c324c2
+    title: On Windows
+    text: "If the activation prints `running scripts is disabled on this system`, run once
+      `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` ([Section 2.8](/learn/ch02/ch02-s8/#ch02-s8-2)), answer
+      `Y`, then activate again."
+
+  # ================================================================== outputs recorded on macOS, later chapters
+  - id: win-ch16-out-stars
+    os: [win]
+    step: ch16-s3-3
+    code: ch16-c10
+    hash: e614f3363d6d
+    title: On Windows
+    text: "This error comes from zsh on macOS. PowerShell on Windows passes the `*` to dbt unchanged, and dbt then
+      lists the matching models. Quote the selection anyway: then the command works the same in every shell."
+  - id: win-ch20-out-ls
+    os: [win]
+    step: ch20-s4-1
+    code: ch20-c21
+    hash: 4024c958132a
+    title: On Windows
+    text: "The output above was recorded on macOS with `ls -la`. On Windows `Get-ChildItem` prints a `Directory:`
+      line and a table with Mode, LastWriteTime, Length (the size in bytes) and Name, with no owner or group."
+  - id: win-ch20-out-static
+    os: [win]
+    step: ch20-s5-2
+    code: ch20-c36
+    hash: e8b67adf652e
+    title: On Windows
+    text: "The output above was recorded on macOS. On Windows the catalog path is
+      `C:\\Users\\<you>\\dbt-course\\jaffle_dbt\\target\\catalog.json`, and `Get-ChildItem` prints a table (Mode,
+      LastWriteTime, Length, Name) instead of the `ls -la` line."
+
+  # ================================================================== Chapter 2 quiz: macOS shell questions (F17)
+  - id: win-q-ch02-05
+    os: [win]
+    question: q-ch02-05
+    starts: "B. A new terminal does not have the venv active."
+    hash: 211a97c45cda
+    title: On Windows
+    text: "In PowerShell the message reads `dbt : The term 'dbt' is not recognized ...`, and the fix is the same:
+      activate the venv, there with `.venv\\Scripts\\Activate.ps1`."
+  - id: win-q-ch02-08
+    os: [win]
+    question: q-ch02-08
+    starts: "c, d, b, a, e."
+    hash: 0f738336124a
+    title: On Windows
+    text: "On Windows the same order uses `New-Item -ItemType Directory -Force $HOME\\dbt-course` and
+      `cd $HOME\\dbt-course` (step C) and `.venv\\Scripts\\Activate.ps1` (step B)."
+  - id: win-q-ch02-14
+    os: [win]
+    question: q-ch02-14
+    starts: "-a (for example ls -la)."
+    hash: 1741571ffb1c
+    title: On Windows
+    text: "This question is about `ls` (macOS, Linux and WSL). In PowerShell the option that shows hidden items is
+      `-Force`: `Get-ChildItem -Force`."

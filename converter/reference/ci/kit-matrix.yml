@@ -11,7 +11,9 @@
 #   4. tag ch07 of the reference project: `dbt build` prints the summary of reference/builder-logs/ch07.md
 #   5. the 9 bug patches apply at ch21 (Windows: real CRLF working tree with Git for Windows)
 #   6. tag ch25 on a fresh database: dbt deps, pandas, the fresh-database rule of Chapter 19, final summary
-#   7. (windows-latest) every Windows variant of the website's chapters, replayed under pwsh and compared with
+#   7. (windows-latest) the website's "Get the course files" commands (lesson 1.6) under Windows PowerShell 5.1,
+#      then setup.ps1 started from $HOME\dbt-course\kit
+#   8. (windows-latest) every Windows variant of the website's chapters, replayed under pwsh and compared with
 #      the macOS results in converter/golden/win-replay.json (converter/tools/win_replay.py --win-only)
 # Status: written and reviewed on macOS; never executed on GitHub (the same steps were run locally on macOS
 # with bash and with pwsh 7.6, see converter/reference/test_kits.sh and test_kits_pwsh.ps1).
@@ -99,6 +101,34 @@ jobs:
           bash "$RUNNER_TEMP/dbt-course-kit/setup.sh" | tee second-run.log
           grep -q 'existing venv kept' second-run.log
           grep -q 'exists: kept' second-run.log
+
+      # The website's "Get the course files" box (lesson 1.6, block ch01-kit-c1): its Windows commands under Windows
+      # PowerShell 5.1, twice (no nested folder, 30 files), then setup.ps1 started from $HOME\dbt-course\kit.
+      - name: Lesson 1.6 box commands + setup.ps1 from the kit folder (Windows PowerShell 5.1)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          New-Item -ItemType Directory -Force $HOME\Downloads | Out-Null
+          Copy-Item site\public\kits\dbt-course-kit.zip $HOME\Downloads\
+          function Find-Code($o) {
+            if ($o -is [System.Management.Automation.PSCustomObject]) {
+              if ($o.PSObject.Properties['id'] -and $o.id -eq 'ch01-kit-c1') { return $o }
+              foreach ($p in $o.PSObject.Properties) { $h = Find-Code $p.Value; if ($h) { return $h } }
+            } elseif ($o -is [System.Collections.IEnumerable] -and $o -isnot [string]) {
+              foreach ($v in $o) { $h = Find-Code $v; if ($h) { return $h } }
+            }
+            return $null
+          }
+          $code = Find-Code (Get-Content site\src\generated\chapters\ch01.json -Raw | ConvertFrom-Json)
+          $cmds = $code.variants.win -split "`n" | Where-Object { $_ -like 'PS> *' } | ForEach-Object { $_.Substring(4) }
+          foreach ($round in 1, 2) { foreach ($c in $cmds) { Write-Output "PS> $c"; Invoke-Expression $c } }
+          $n = (Get-ChildItem -Recurse -File $HOME\dbt-course\kit | Where-Object { $_.FullName -notlike '*\capstone\*' }).Count
+          if ($n -ne 30 -or (Test-Path $HOME\dbt-course\kit\dbt-course-kit)) { throw "kit folder: $n files" }
+          $out = powershell -ExecutionPolicy Bypass -File $HOME\dbt-course\kit\setup.ps1 *>&1 | Out-String
+          Write-Output $out
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ($out -notmatch 'the kit is already in') { throw 'setup.ps1 did not recognise the kit folder' }
 
       - name: Versions in the venv
         if: runner.os == 'Windows'

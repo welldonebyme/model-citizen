@@ -772,7 +772,10 @@
        "id": "ch12-c5",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt seed"
+       "text": "$ dbt seed",
+       "variants": {
+        "win": "PS> dbt seed"
+       }
       },
       {
        "id": "ch12-c6",
@@ -822,7 +825,10 @@
        "id": "ch12-c7",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --inline \"select column_name, data_type from information_schema.columns where table_schema = 'dbt_adnane' and table_name = 'country_regions' order by ordinal_position\""
+       "text": "$ dbt show --inline \"select column_name, data_type from information_schema.columns where table_schema = 'dbt_adnane' and table_name = 'country_regions' order by ordinal_position\"",
+       "variants": {
+        "win": "PS> dbt show --inline \"select column_name, data_type from information_schema.columns where table_schema = 'dbt_adnane' and table_name = 'country_regions' order by ordinal_position\""
+       }
       },
       {
        "id": "ch12-c8",
@@ -1090,7 +1096,10 @@
        "id": "ch12-c11",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt seed --select country_regions --show"
+       "text": "$ dbt seed --select country_regions --show",
+       "variants": {
+        "win": "PS> dbt seed --select country_regions --show"
+       }
       },
       {
        "id": "ch12-c12",
@@ -1122,7 +1131,10 @@
        "id": "ch12-c13",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run -s country_regions"
+       "text": "$ dbt run -s country_regions",
+       "variants": {
+        "win": "PS> dbt run -s country_regions"
+       }
       },
       {
        "id": "ch12-c14",
@@ -1363,7 +1375,10 @@
          "id": "ch12-c15",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt seed\n$ dbt show --select country_regions\n$ dbt show --inline \"select column_name, data_type from information_schema.columns where table_schema = 'dbt_adnane' and table_name = 'country_regions' order by ordinal_position\""
+         "text": "$ dbt seed\n$ dbt show --select country_regions\n$ dbt show --inline \"select column_name, data_type from information_schema.columns where table_schema = 'dbt_adnane' and table_name = 'country_regions' order by ordinal_position\"",
+         "variants": {
+          "win": "PS> dbt seed\nPS> dbt show --select country_regions\nPS> dbt show --inline \"select column_name, data_type from information_schema.columns where table_schema = 'dbt_adnane' and table_name = 'country_regions' order by ordinal_position\""
+         }
         },
         {
          "c": [
@@ -2269,7 +2284,10 @@
        "id": "ch12-c23",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt seed"
+       "text": "$ dbt seed",
+       "variants": {
+        "win": "PS> dbt seed"
+       }
       },
       {
        "id": "ch12-c24",
@@ -2278,6 +2296,35 @@
        "t": "code",
        "text": "20:53:01  1 of 1 START seed file dbt_adnane.country_regions .............................. [RUN]\n20:53:01  1 of 1 ERROR loading seed file dbt_adnane.country_regions ...................... [ERROR in 0.03s]\n...\n20:53:01  Failure in seed country_regions (seeds/country_regions.csv)\n20:53:01    Runtime Error in seed country_regions (seeds/country_regions.csv)\n  Invalid Input Error: Error when sniffing file \"/Users/you/dbt-course/jaffle_dbt/seeds/country_regions.csv\".\n  It was not possible to automatically detect the CSV parsing dialect\n...\n  * Columns are set as: \"columns = { 'country' : 'VARCHAR', 'region' : 'VARCHAR', 'currency' : 'VARCHAR'}\", and they contain: 3 columns. It does not match the number of columns found by the sniffer: 4. Verify the columns parameter is correctly set.\n...\n20:53:01  Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1",
        "textBook": "20:53:01  1 of 1 START seed file dbt_adnane.country_regions .............................. [RUN]\n20:53:01  1 of 1 ERROR loading seed file dbt_adnane.country_regions ...................... [ERROR in 0.03s]\n...\n20:53:01  Failure in seed country_regions (seeds/country_regions.csv)\n20:53:01    Runtime Error in seed country_regions (seeds/country_regions.csv)\n  Invalid Input Error: Error when sniffing file \"/Users/mac/dbt-course/jaffle_dbt/seeds/country_regions.csv\".\n  It was not possible to automatically detect the CSV parsing dialect\n...\n  * Columns are set as: \"columns = { 'country' : 'VARCHAR', 'region' : 'VARCHAR', 'currency' : 'VARCHAR'}\", and they contain: 3 columns. It does not match the number of columns found by the sniffer: 4. Verify the columns parameter is correctly set.\n...\n20:53:01  Done. PASS=0 WARN=0 ERROR=1 SKIP=0 NO-OP=0 TOTAL=1"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. On your computer the paths start with ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>\\"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": "/Users/you/"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "auto-win-out-ch12-c23",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "c": [
@@ -2304,7 +2351,10 @@
        "id": "ch12-c25",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt seed --full-refresh"
+       "text": "$ dbt seed --full-refresh",
+       "variants": {
+        "win": "PS> dbt seed --full-refresh"
+       }
       },
       {
        "id": "ch12-c26",
@@ -2518,7 +2568,10 @@
        "id": "ch12-c28",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt test -s country_regions"
+       "text": "$ dbt test -s country_regions",
+       "variants": {
+        "win": "PS> dbt test -s country_regions"
+       }
       },
       {
        "id": "ch12-c29",
@@ -2644,7 +2697,10 @@
        "id": "ch12-c31",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run -s dim_customers"
+       "text": "$ dbt run -s dim_customers",
+       "variants": {
+        "win": "PS> dbt run -s dim_customers"
+       }
       },
       {
        "id": "ch12-c32",
@@ -2698,7 +2754,10 @@
        "id": "ch12-c33",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls --resource-type seed\n$ dbt ls --select country_regions+"
+       "text": "$ dbt ls --resource-type seed\n$ dbt ls --select country_regions+",
+       "variants": {
+        "win": "PS> dbt ls --resource-type seed\nPS> dbt ls --select country_regions+"
+       }
       },
       {
        "id": "ch12-c34",
@@ -2730,7 +2789,10 @@
        "id": "ch12-c35",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt build --select country_regions+"
+       "text": "$ dbt build --select country_regions+",
+       "variants": {
+        "win": "PS> dbt build --select country_regions+"
+       }
       },
       {
        "id": "ch12-c36",
@@ -2773,7 +2835,10 @@
        "id": "ch12-c37",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --inline \"select region, count(*) as n_customers, sum(lifetime_value) as lifetime_value from {{ ref('dim_customers') }} group by region order by region\""
+       "text": "$ dbt show --inline \"select region, count(*) as n_customers, sum(lifetime_value) as lifetime_value from {{ ref('dim_customers') }} group by region order by region\"",
+       "variants": {
+        "win": "PS> dbt show --inline \"select region, count(*) as n_customers, sum(lifetime_value) as lifetime_value from {{ ref('dim_customers') }} group by region order by region\""
+       }
       },
       {
        "id": "ch12-c38",
@@ -2957,7 +3022,10 @@
          "id": "ch12-c39",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt compile -s dim_customers"
+         "text": "$ dbt compile -s dim_customers",
+         "variants": {
+          "win": "PS> dbt compile -s dim_customers"
+         }
         },
         {
          "c": [
@@ -3006,7 +3074,10 @@
          "id": "ch12-c40",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select country_regions+\n$ dbt build"
+         "text": "$ dbt build --select country_regions+\n$ dbt build",
+         "variants": {
+          "win": "PS> dbt build --select country_regions+\nPS> dbt build"
+         }
         },
         {
          "c": [
@@ -3278,7 +3349,10 @@
        "id": "ch12-c43",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile -s revenue_by_region"
+       "text": "$ dbt compile -s revenue_by_region",
+       "variants": {
+        "win": "PS> dbt compile -s revenue_by_region"
+       }
       },
       {
        "id": "ch12-c44",
@@ -3342,7 +3416,10 @@
        "id": "ch12-c47",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run --select revenue_by_region"
+       "text": "$ dbt run --select revenue_by_region",
+       "variants": {
+        "win": "PS> dbt run --select revenue_by_region"
+       }
       },
       {
        "id": "ch12-c48",
@@ -3429,7 +3506,10 @@
        "id": "ch12-c49",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --select revenue_by_region"
+       "text": "$ dbt show --select revenue_by_region",
+       "variants": {
+        "win": "PS> dbt show --select revenue_by_region"
+       }
       },
       {
        "id": "ch12-c50",
@@ -3544,7 +3624,10 @@
        "id": "ch12-c51",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls --resource-type analysis"
+       "text": "$ dbt ls --resource-type analysis",
+       "variants": {
+        "win": "PS> dbt ls --resource-type analysis"
+       }
       },
       {
        "id": "ch12-c52",
@@ -4190,7 +4273,10 @@
          "id": "ch12-c58",
          "lang": "bash",
          "t": "code",
-         "text": "$ git status --short\n$ git add .\n$ git commit -m \"Seeds and analyses: country_regions seed, region in dim_customers, revenue_by_region\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch12 --stat\n$ git diff ref-ch11 ref-ch12 --stat"
+         "text": "$ git status --short\n$ git add .\n$ git commit -m \"Seeds and analyses: country_regions seed, region in dim_customers, revenue_by_region\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch12 --stat\n$ git diff ref-ch11 ref-ch12 --stat",
+         "variants": {
+          "win": "PS> git status --short\nPS> git add .\nPS> git commit -m \"Seeds and analyses: country_regions seed, region in dim_customers, revenue_by_region\"\nPS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nPS> git diff ref-ch12 --stat\nPS> git diff ref-ch11 ref-ch12 --stat"
+         }
         },
         {
          "c": [

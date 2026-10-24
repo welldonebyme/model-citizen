@@ -1756,7 +1756,10 @@
          "id": "ch20-c11",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt parse\n$ python -c \"import json; m=json.load(open('target/manifest.json')); print(sorted(m['docs'].keys()))\"\n$ python -c \"import json; m=json.load(open('target/manifest.json')); print(m['nodes']['model.jaffle_dbt.fct_orders']['columns']['status']['description'])\""
+         "text": "$ dbt parse\n$ python -c \"import json; m=json.load(open('target/manifest.json')); print(sorted(m['docs'].keys()))\"\n$ python -c \"import json; m=json.load(open('target/manifest.json')); print(m['nodes']['model.jaffle_dbt.fct_orders']['columns']['status']['description'])\"",
+         "variants": {
+          "win": "PS> dbt parse\nPS> python -c \"import json; m=json.load(open('target/manifest.json')); print(sorted(m['docs'].keys()))\"\nPS> python -c \"import json; m=json.load(open('target/manifest.json')); print(m['nodes']['model.jaffle_dbt.fct_orders']['columns']['status']['description'])\""
+         }
         },
         {
          "c": [
@@ -2184,7 +2187,10 @@
        "id": "ch20-c18",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt docs generate"
+       "text": "$ dbt docs generate",
+       "variants": {
+        "win": "PS> dbt docs generate"
+       }
       },
       {
        "id": "ch20-c19",
@@ -2193,6 +2199,35 @@
        "t": "code",
        "text": "21:19:58  Running with dbt=1.11.16\n21:19:59  Registered adapter: duckdb=1.11.0\n21:19:59  Found 15 models, 2 analyses, 45 data tests, 1 seed, 2 snapshots, 5 sources, 670 macros, 2 groups, 5 unit tests\n21:19:59\n21:19:59  Concurrency: 4 threads (target='dev')\n21:19:59\n21:19:59  Building catalog\n21:19:59  Catalog written to /Users/you/dbt-course/jaffle_dbt/target/catalog.json",
        "textBook": "21:19:58  Running with dbt=1.11.16\n21:19:59  Registered adapter: duckdb=1.11.0\n21:19:59  Found 15 models, 2 analyses, 45 data tests, 1 seed, 2 snapshots, 5 sources, 670 macros, 2 groups, 5 unit tests\n21:19:59\n21:19:59  Concurrency: 4 threads (target='dev')\n21:19:59\n21:19:59  Building catalog\n21:19:59  Catalog written to /Users/mac/dbt-course/jaffle_dbt/target/catalog.json"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. On your computer the paths start with ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>\\"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": "/Users/you/"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "auto-win-out-ch20-c18",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "id": "ch20-c20",
@@ -2208,6 +2243,40 @@
        "lang": "output",
        "t": "code",
        "text": "-rw-r--r--@ 1 mac  wheel    23489 Oct 21 21:19 target/catalog.json\n-rw-r--r--@ 1 mac  wheel  1818461 Oct 21 21:19 target/index.html\n-rw-r--r--@ 1 mac  wheel  1012063 Oct 21 21:19 target/manifest.json"
+      },
+      {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS with ",
+          {
+           "t": "code",
+           "v": "ls -la"
+          },
+          ". On Windows ",
+          {
+           "t": "code",
+           "v": "Get-ChildItem"
+          },
+          " prints a ",
+          {
+           "t": "code",
+           "v": "Directory:"
+          },
+          " line and a table with Mode, LastWriteTime, Length (the size in bytes) and Name, with no owner or group."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "win-ch20-out-ls",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
       },
       {
        "c": [
@@ -2264,7 +2333,10 @@
        "id": "ch20-c22",
        "lang": "bash",
        "t": "code",
-       "text": "$ python -c \"import json; c=json.load(open('target/catalog.json')); n=c['nodes']['model.jaffle_dbt.fct_orders']; print('metadata:', n['metadata']); print('columns:'); [print('  ', k, v['type'], v['index']) for k, v in n['columns'].items()]; print('stats:', list(n['stats'].keys()))\""
+       "text": "$ python -c \"import json; c=json.load(open('target/catalog.json')); n=c['nodes']['model.jaffle_dbt.fct_orders']; print('metadata:', n['metadata']); print('columns:'); [print('  ', k, v['type'], v['index']) for k, v in n['columns'].items()]; print('stats:', list(n['stats'].keys()))\"",
+       "variants": {
+        "win": "PS> python -c \"import json; c=json.load(open('target/catalog.json')); n=c['nodes']['model.jaffle_dbt.fct_orders']; print('metadata:', n['metadata']); print('columns:'); [print('  ', k, v['type'], v['index']) for k, v in n['columns'].items()]; print('stats:', list(n['stats'].keys()))\""
+       }
       },
       {
        "id": "ch20-c23",
@@ -2297,7 +2369,10 @@
        "id": "ch20-c24",
        "lang": "bash",
        "t": "code",
-       "text": "$ python -c \"import json; m=json.load(open('target/manifest.json')); n=m['nodes']['model.jaffle_dbt.fct_orders']; print('description:', n['description']); print('docs:', n['docs'])\""
+       "text": "$ python -c \"import json; m=json.load(open('target/manifest.json')); n=m['nodes']['model.jaffle_dbt.fct_orders']; print('description:', n['description']); print('docs:', n['docs'])\"",
+       "variants": {
+        "win": "PS> python -c \"import json; m=json.load(open('target/manifest.json')); n=m['nodes']['model.jaffle_dbt.fct_orders']; print('description:', n['description']); print('docs:', n['docs'])\""
+       }
       },
       {
        "id": "ch20-c25",
@@ -2502,7 +2577,10 @@
        "id": "ch20-c26",
        "lang": "bash",
        "t": "code",
-       "text": "$ python -c \"import json; c=json.load(open('target/catalog.json')); m=json.load(open('target/manifest.json')); print('catalog nodes:', len(c['nodes']), ' sources:', len(c['sources'])); print('in manifest but not in catalog:', [k for k,v in m['nodes'].items() if v['resource_type'] in ('model','seed','snapshot') and k not in c['nodes']])\""
+       "text": "$ python -c \"import json; c=json.load(open('target/catalog.json')); m=json.load(open('target/manifest.json')); print('catalog nodes:', len(c['nodes']), ' sources:', len(c['sources'])); print('in manifest but not in catalog:', [k for k,v in m['nodes'].items() if v['resource_type'] in ('model','seed','snapshot') and k not in c['nodes']])\"",
+       "variants": {
+        "win": "PS> python -c \"import json; c=json.load(open('target/catalog.json')); m=json.load(open('target/manifest.json')); print('catalog nodes:', len(c['nodes']), ' sources:', len(c['sources'])); print('in manifest but not in catalog:', [k for k,v in m['nodes'].items() if v['resource_type'] in ('model','seed','snapshot') and k not in c['nodes']])\""
+       }
       },
       {
        "id": "ch20-c27",
@@ -2935,7 +3013,10 @@
        "id": "ch20-c30",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt docs serve"
+       "text": "$ dbt docs serve",
+       "variants": {
+        "win": "PS> dbt docs serve"
+       }
       },
       {
        "id": "ch20-c31",
@@ -3675,7 +3756,10 @@
          "id": "ch20-c32",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build\n$ dbt docs generate"
+         "text": "$ dbt build\n$ dbt docs generate",
+         "variants": {
+          "win": "PS> dbt build\nPS> dbt docs generate"
+         }
         },
         {
          "c": [
@@ -3795,7 +3879,10 @@
          "id": "ch20-c33",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt docs serve"
+         "text": "$ dbt docs serve",
+         "variants": {
+          "win": "PS> dbt docs serve"
+         }
         },
         {
          "c": [
@@ -4070,7 +4157,10 @@
          "id": "ch20-c34",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt docs generate --select +fct_monthly_revenue\n$ python -c \"import json; c=json.load(open('target/catalog.json')); m=json.load(open('target/manifest.json')); print('catalog nodes:', sorted(c['nodes']), 'sources:', sorted(c['sources'])); print('manifest nodes:', len(m['nodes']))\"\n$ dbt docs generate --empty-catalog\n$ python -c \"import json; c=json.load(open('target/catalog.json')); print('catalog nodes:', len(c['nodes']), 'sources:', len(c['sources']))\"\n$ dbt docs generate"
+         "text": "$ dbt docs generate --select +fct_monthly_revenue\n$ python -c \"import json; c=json.load(open('target/catalog.json')); m=json.load(open('target/manifest.json')); print('catalog nodes:', sorted(c['nodes']), 'sources:', sorted(c['sources'])); print('manifest nodes:', len(m['nodes']))\"\n$ dbt docs generate --empty-catalog\n$ python -c \"import json; c=json.load(open('target/catalog.json')); print('catalog nodes:', len(c['nodes']), 'sources:', len(c['sources']))\"\n$ dbt docs generate",
+         "variants": {
+          "win": "PS> dbt docs generate --select +fct_monthly_revenue\nPS> python -c \"import json; c=json.load(open('target/catalog.json')); m=json.load(open('target/manifest.json')); print('catalog nodes:', sorted(c['nodes']), 'sources:', sorted(c['sources'])); print('manifest nodes:', len(m['nodes']))\"\nPS> dbt docs generate --empty-catalog\nPS> python -c \"import json; c=json.load(open('target/catalog.json')); print('catalog nodes:', len(c['nodes']), 'sources:', len(c['sources']))\"\nPS> dbt docs generate"
+         }
         },
         {
          "c": [
@@ -4150,6 +4240,40 @@
          "t": "code",
          "text": "21:20:03  Catalog written to /Users/you/dbt-course/jaffle_dbt/target/catalog.json\n-rw-r--r--@ 1 mac  wheel  2853959 Oct 21 21:20 target/static_index.html",
          "textBook": "21:20:03  Catalog written to /Users/mac/dbt-course/jaffle_dbt/target/catalog.json\n-rw-r--r--@ 1 mac  wheel  2853959 Oct 21 21:20 target/static_index.html"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The output above was recorded on macOS. On Windows the catalog path is ",
+            {
+             "t": "code",
+             "v": "C:\\Users\\<you>\\dbt-course\\jaffle_dbt\\target\\catalog.json"
+            },
+            ", and ",
+            {
+             "t": "code",
+             "v": "Get-ChildItem"
+            },
+            " prints a table (Mode, LastWriteTime, Length, Name) instead of the ",
+            {
+             "t": "code",
+             "v": "ls -la"
+            },
+            " line."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "win-ch20-out-static",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
         },
         {
          "c": [
@@ -4939,7 +5063,10 @@
        "id": "ch20-c41",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run --select fct_order_items_daily --full-refresh"
+       "text": "$ dbt run --select fct_order_items_daily --full-refresh",
+       "variants": {
+        "win": "PS> dbt run --select fct_order_items_daily --full-refresh"
+       }
       },
       {
        "id": "ch20-c42",
@@ -5107,7 +5234,10 @@
        "id": "ch20-c44",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls --select state:modified --state ../state_docs"
+       "text": "$ dbt ls --select state:modified --state ../state_docs",
+       "variants": {
+        "win": "PS> dbt ls --select state:modified --state ../state_docs"
+       }
       },
       {
        "id": "ch20-c45",
@@ -5232,7 +5362,10 @@
          "id": "ch20-c47",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt run --select fct_order_items_daily --full-refresh"
+         "text": "$ dbt run --select fct_order_items_daily --full-refresh",
+         "variants": {
+          "win": "PS> dbt run --select fct_order_items_daily --full-refresh"
+         }
         },
         {
          "c": [
@@ -5458,7 +5591,10 @@
          "id": "ch20-c52",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select marts"
+         "text": "$ dbt build --select marts",
+         "variants": {
+          "win": "PS> dbt build --select marts"
+         }
         },
         {
          "c": [
@@ -5566,7 +5702,10 @@
          "id": "ch20-c56",
          "lang": "bash",
          "t": "code",
-         "text": "$ git add .\n$ git commit -m \"Docs: overview and order_status doc blocks, persist_docs on marts; microbatch runs one batch at a time\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch20 --stat"
+         "text": "$ git add .\n$ git commit -m \"Docs: overview and order_status doc blocks, persist_docs on marts; microbatch runs one batch at a time\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch20 --stat",
+         "variants": {
+          "win": "PS> git add .\nPS> git commit -m \"Docs: overview and order_status doc blocks, persist_docs on marts; microbatch runs one batch at a time\"\nPS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nPS> git diff ref-ch20 --stat"
+         }
         },
         {
          "c": [
@@ -6459,7 +6598,10 @@
        "id": "ch20-c58",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt deps\n$ dbt run-operation generate_model_yaml --args '{\"model_names\": [\"stg_jaffle_shop__customers\"]}'"
+       "text": "$ dbt deps\n$ dbt run-operation generate_model_yaml --args '{\"model_names\": [\"stg_jaffle_shop__customers\"]}'",
+       "variants": {
+        "win": "PS> dbt deps\nPS> dbt run-operation generate_model_yaml --args '{\"model_names\": [\"stg_jaffle_shop__customers\"]}'"
+       }
       },
       {
        "id": "ch20-c59",

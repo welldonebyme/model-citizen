@@ -72,7 +72,39 @@ $log3 = Join-Path $Work 'setup3.log'
 & pwsh -NoProfile -ExecutionPolicy Bypass -File (Join-Path $kit 'setup.ps1') -CourseDir $course -RebuildDb *> $log3
 Check '-RebuildDb exits 0 and rebuilds' (($LASTEXITCODE -eq 0) -and ((Get-Content $log3 -Raw) -match 'built '))
 
-# 5. capstone
+# 5. the website's "Get the course files" commands (lesson 1.6, Windows variant of ch01-kit-c1), twice, then
+#    setup.ps1 started from ~/dbt-course/kit (macOS adaptation: \ -> /, as in tools/win_replay.py)
+$boxHome = Join-Path $Work 'home-box'
+New-Item -ItemType Directory -Force -Path (Join-Path $boxHome 'Downloads') | Out-Null
+Copy-Item (Join-Path $Kits 'dbt-course-kit.zip') (Join-Path $boxHome 'Downloads')
+$ch01 = Get-Content (Join-Path $Academy 'site/src/generated/chapters/ch01.json') -Raw | ConvertFrom-Json -Depth 100
+function Find-Code($o) {
+    if ($o -is [System.Management.Automation.PSCustomObject]) {
+        if ($o.PSObject.Properties['id'] -and $o.id -eq 'ch01-kit-c1') { return $o }
+        foreach ($p in $o.PSObject.Properties) { $h = Find-Code $p.Value; if ($h) { return $h } }
+    } elseif ($o -is [System.Collections.IEnumerable] -and $o -isnot [string]) {
+        foreach ($v in $o) { $h = Find-Code $v; if ($h) { return $h } }
+    }
+    return $null
+}
+$boxCmds = ((Find-Code $ch01).variants.win -split "`n" | Where-Object { $_ -like 'PS> *' } |
+    ForEach-Object { $_.Substring(4).Replace('\', '/') }) -join "`n"
+$boxCmds -split "`n" | ForEach-Object { Write-Host "   PS> $_" }
+$env:HOME = $boxHome
+& pwsh -NoProfile -Command "`$ErrorActionPreference = 'Stop'`n$boxCmds" *> (Join-Path $Work 'box1.log')
+Check 'box commands run in pwsh' ($LASTEXITCODE -eq 0)
+& pwsh -NoProfile -Command "`$ErrorActionPreference = 'Stop'`n$boxCmds" *> (Join-Path $Work 'box2.log')
+$files = (Get-ChildItem -Recurse -File (Join-Path $boxHome 'dbt-course/kit')).Count
+Check 'box commands again (same 30 files, no nested folder)' (($LASTEXITCODE -eq 0) -and ($files -eq 30) -and
+    -not (Test-Path (Join-Path $boxHome 'dbt-course/kit/dbt-course-kit')))
+$log5 = Join-Path $Work 'box-setup.log'
+& pwsh -NoProfile -ExecutionPolicy Bypass -File (Join-Path $boxHome 'dbt-course/kit/setup.ps1') *> $log5
+$t5 = Get-Content $log5 -Raw
+Check 'setup.ps1 from ~/dbt-course/kit exits 0 and keeps the kit there' (($LASTEXITCODE -eq 0) -and ($t5 -match 'the kit is already in'))
+Check 'dbt debug passed (setup from the kit folder)' ($t5 -match 'All checks passed!')
+$env:HOME = Join-Path $Work 'home'
+
+# 6. capstone
 $cap = Join-Path $unzip 'shopflow-capstone-kit'
 $log4 = Join-Path $Work 'cap-setup.log'
 & pwsh -NoProfile -ExecutionPolicy Bypass -File (Join-Path $cap 'setup.ps1') -CourseDir $course *> $log4

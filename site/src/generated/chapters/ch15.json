@@ -2012,7 +2012,10 @@
          "id": "ch15-c9",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls -s customer_segments+ --output json --output-keys name resource_type language"
+         "text": "$ dbt ls -s customer_segments+ --output json --output-keys name resource_type language",
+         "variants": {
+          "win": "PS> dbt ls -s customer_segments+ --output json --output-keys name resource_type language"
+         }
         },
         {
          "id": "ch15-c10",
@@ -2037,7 +2040,10 @@
          "id": "ch15-c11",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select +customer_segments"
+         "text": "$ dbt build --select +customer_segments",
+         "variants": {
+          "win": "PS> dbt build --select +customer_segments"
+         }
         },
         {
          "c": [
@@ -2052,6 +2058,35 @@
          "t": "code",
          "text": "22:18:40  16 of 19 OK created sql table model dbt_adnane.dim_customers ................... [OK in 0.04s]\n22:18:40  17 of 19 START python table model dbt_adnane.customer_segments ................. [RUN]\n22:18:41  17 of 19 ERROR creating python table model dbt_adnane.customer_segments ........ [ERROR in 0.07s]\n22:18:41  18 of 19 SKIP test not_null_customer_segments_customer_id ...................... [SKIP]\n22:18:41  19 of 19 SKIP test unique_customer_segments_customer_id ........................ [SKIP]\n...\n22:18:41  Failure in model customer_segments (models/marts/customer_segments.py)\n22:18:41    Runtime Error in model customer_segments (models/marts/customer_segments.py)\n  Python model failed:\n  Traceback (most recent call last):\n    File \"/Users/you/dbt-course/.venv/lib/python3.12/site-packages/dbt/adapters/duckdb/environments/__init__.py\", line 278, in run_python_job\n      spec.loader.exec_module(module)\n    ...\n      import pandas as pd\n  ModuleNotFoundError: No module named 'pandas'\n...\n22:18:41  Done. PASS=16 WARN=0 ERROR=1 SKIP=2 NO-OP=0 TOTAL=19",
          "textBook": "22:18:40  16 of 19 OK created sql table model dbt_adnane.dim_customers ................... [OK in 0.04s]\n22:18:40  17 of 19 START python table model dbt_adnane.customer_segments ................. [RUN]\n22:18:41  17 of 19 ERROR creating python table model dbt_adnane.customer_segments ........ [ERROR in 0.07s]\n22:18:41  18 of 19 SKIP test not_null_customer_segments_customer_id ...................... [SKIP]\n22:18:41  19 of 19 SKIP test unique_customer_segments_customer_id ........................ [SKIP]\n...\n22:18:41  Failure in model customer_segments (models/marts/customer_segments.py)\n22:18:41    Runtime Error in model customer_segments (models/marts/customer_segments.py)\n  Python model failed:\n  Traceback (most recent call last):\n    File \"/Users/mac/dbt-course/.venv/lib/python3.12/site-packages/dbt/adapters/duckdb/environments/__init__.py\", line 278, in run_python_job\n      spec.loader.exec_module(module)\n    ...\n      import pandas as pd\n  ModuleNotFoundError: No module named 'pandas'\n...\n22:18:41  Done. PASS=16 WARN=0 ERROR=1 SKIP=2 NO-OP=0 TOTAL=19"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The output above was recorded on macOS. On your computer the paths start with ",
+            {
+             "t": "code",
+             "v": "C:\\Users\\<you>\\"
+            },
+            " instead of ",
+            {
+             "t": "code",
+             "v": "/Users/you/"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "auto-win-out-ch15-c11",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
         },
         {
          "c": [
@@ -2099,7 +2134,10 @@
          "id": "ch15-c13",
          "lang": "bash",
          "t": "code",
-         "text": "$ uv pip install pandas\n...\nInstalled 2 packages in 40ms\n + numpy==2.5.4\n + pandas==3.0.6"
+         "text": "$ uv pip install pandas\n...\nInstalled 2 packages in 40ms\n + numpy==2.5.4\n + pandas==3.0.6",
+         "variants": {
+          "win": "PS> uv pip install pandas\n...\nInstalled 2 packages in 40ms\n + numpy==2.5.4\n + pandas==3.0.6"
+         }
         },
         {
          "c": [
@@ -2117,7 +2155,10 @@
          "id": "ch15-c14",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select +customer_segments"
+         "text": "$ dbt build --select +customer_segments",
+         "variants": {
+          "win": "PS> dbt build --select +customer_segments"
+         }
         },
         {
          "id": "ch15-c15",
@@ -2163,7 +2204,10 @@
          "id": "ch15-c16",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt show --inline \"select segment, count(*) as n_customers, round(avg(lifetime_value), 2) as avg_lifetime_value, min(number_of_orders) as min_orders, max(number_of_orders) as max_orders from {{ ref('customer_segments') }} group by segment order by min_orders\" --limit 20\n$ dbt show --inline \"select value_tier, count(*) as n_customers, min(lifetime_value) as min_value, max(lifetime_value) as max_value from {{ ref('customer_segments') }} group by value_tier order by min_value\" --limit 20"
+         "text": "$ dbt show --inline \"select segment, count(*) as n_customers, round(avg(lifetime_value), 2) as avg_lifetime_value, min(number_of_orders) as min_orders, max(number_of_orders) as max_orders from {{ ref('customer_segments') }} group by segment order by min_orders\" --limit 20\n$ dbt show --inline \"select value_tier, count(*) as n_customers, min(lifetime_value) as min_value, max(lifetime_value) as max_value from {{ ref('customer_segments') }} group by value_tier order by min_value\" --limit 20",
+         "variants": {
+          "win": "PS> dbt show --inline \"select segment, count(*) as n_customers, round(avg(lifetime_value), 2) as avg_lifetime_value, min(number_of_orders) as min_orders, max(number_of_orders) as max_orders from {{ ref('customer_segments') }} group by segment order by min_orders\" --limit 20\nPS> dbt show --inline \"select value_tier, count(*) as n_customers, min(lifetime_value) as min_value, max(lifetime_value) as max_value from {{ ref('customer_segments') }} group by value_tier order by min_value\" --limit 20"
+         }
         },
         {
          "c": [
@@ -3067,7 +3111,10 @@
        "id": "ch15-c29",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show -s customer_segments"
+       "text": "$ dbt show -s customer_segments",
+       "variants": {
+        "win": "PS> dbt show -s customer_segments"
+       }
       },
       {
        "id": "ch15-c30",
@@ -3376,7 +3423,10 @@
          "id": "ch15-c33",
          "lang": "bash",
          "t": "code",
-         "text": "$ git add models/marts\n$ git status --short\nM  models/marts/_marts__models.yml\nA  models/marts/customer_segments.py"
+         "text": "$ git add models/marts\n$ git status --short\nM  models/marts/_marts__models.yml\nA  models/marts/customer_segments.py",
+         "variants": {
+          "win": "PS> git add models/marts\nPS> git status --short\nM  models/marts/_marts__models.yml\nA  models/marts/customer_segments.py"
+         }
         },
         {
          "c": [
@@ -3511,7 +3561,10 @@
          "id": "ch15-c34",
          "lang": "bash",
          "t": "code",
-         "text": "$ git checkout -- models/marts/customer_segments.py\n$ dbt run -s customer_segments"
+         "text": "$ git checkout -- models/marts/customer_segments.py\n$ dbt run -s customer_segments",
+         "variants": {
+          "win": "PS> git checkout -- models/marts/customer_segments.py\nPS> dbt run -s customer_segments"
+         }
         },
         {
          "c": [
@@ -3784,7 +3837,10 @@
          "id": "ch15-c36",
          "lang": "bash",
          "t": "code",
-         "text": "$ git status --short\nM  models/marts/_marts__models.yml\nA  models/marts/customer_segments.py\n$ git add models/marts\n$ git commit -m \"Chapter 15: Python model customer_segments\"\n[main 68a6bf2] Chapter 15: Python model customer_segments\n 2 files changed, 46 insertions(+)\n create mode 100644 models/marts/customer_segments.py"
+         "text": "$ git status --short\nM  models/marts/_marts__models.yml\nA  models/marts/customer_segments.py\n$ git add models/marts\n$ git commit -m \"Chapter 15: Python model customer_segments\"\n[main 68a6bf2] Chapter 15: Python model customer_segments\n 2 files changed, 46 insertions(+)\n create mode 100644 models/marts/customer_segments.py",
+         "variants": {
+          "win": "PS> git status --short\nM  models/marts/_marts__models.yml\nA  models/marts/customer_segments.py\nPS> git add models/marts\nPS> git commit -m \"Chapter 15: Python model customer_segments\"\n[main 68a6bf2] Chapter 15: Python model customer_segments\n 2 files changed, 46 insertions(+)\n create mode 100644 models/marts/customer_segments.py"
+         }
         },
         {
          "c": [
@@ -3802,7 +3858,10 @@
          "id": "ch15-c37",
          "lang": "bash",
          "t": "code",
-         "text": "$ git diff ref-ch15 --stat"
+         "text": "$ git diff ref-ch15 --stat",
+         "variants": {
+          "win": "PS> git diff ref-ch15 --stat"
+         }
         },
         {
          "c": [

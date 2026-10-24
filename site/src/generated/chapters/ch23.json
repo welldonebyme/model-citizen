@@ -1398,7 +1398,10 @@
        "id": "ch23-c6",
        "lang": "bash",
        "t": "code",
-       "text": "$ duckdb ../practice/practice.duckdb -c \"insert into jaffle_shop.orders values (999, 1, date '2026-10-20', 'cancelled', current_timestamp)\"\n$ dbt build -s stg_jaffle_shop__orders+"
+       "text": "$ duckdb ../practice/practice.duckdb -c \"insert into jaffle_shop.orders values (999, 1, date '2026-10-20', 'cancelled', current_timestamp)\"\n$ dbt build -s stg_jaffle_shop__orders+",
+       "variants": {
+        "win": "PS> duckdb ../practice/practice.duckdb -c \"insert into jaffle_shop.orders values (999, 1, date '2026-10-20', 'cancelled', current_timestamp)\"\nPS> dbt build -s stg_jaffle_shop__orders+"
+       }
       },
       {
        "id": "ch23-c7",
@@ -1738,7 +1741,10 @@
        "id": "ch23-c11",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run -s +fct_orders --threads 1"
+       "text": "$ dbt run -s +fct_orders --threads 1",
+       "variants": {
+        "win": "PS> dbt run -s +fct_orders --threads 1"
+       }
       },
       {
        "id": "ch23-c12",
@@ -2252,7 +2258,10 @@
          "id": "ch23-c17",
          "lang": "bash",
          "t": "code",
-         "text": "$ git diff --stat"
+         "text": "$ git diff --stat",
+         "variants": {
+          "win": "PS> git diff --stat"
+         }
         },
         {
          "c": [
@@ -2377,7 +2386,10 @@
          "id": "ch23-c19",
          "lang": "bash",
          "t": "code",
-         "text": "$ python -c \"import json; r=json.load(open('target/run_results.json')); [print(x['status'], x['unique_id']) for x in r['results'] if x['status'] != 'success']\""
+         "text": "$ python -c \"import json; r=json.load(open('target/run_results.json')); [print(x['status'], x['unique_id']) for x in r['results'] if x['status'] != 'success']\"",
+         "variants": {
+          "win": "PS> python -c \"import json; r=json.load(open('target/run_results.json')); [print(x['status'], x['unique_id']) for x in r['results'] if x['status'] != 'success']\""
+         }
         },
         {
          "c": [
@@ -2422,7 +2434,10 @@
          "id": "ch23-c21",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt run --fail-fast\n$ dbt build --exclude-resource-type unit_test"
+         "text": "$ dbt run --fail-fast\n$ dbt build --exclude-resource-type unit_test",
+         "variants": {
+          "win": "PS> dbt run --fail-fast\nPS> dbt build --exclude-resource-type unit_test"
+         }
         },
         {
          "c": [
@@ -2673,7 +2688,10 @@
          "id": "ch23-c24",
          "lang": "bash",
          "t": "code",
-         "text": "$ duckdb ../practice/practice.duckdb -c \"delete from jaffle_shop.orders where id = 999\"\n$ dbt build -s stg_jaffle_shop__orders+"
+         "text": "$ duckdb ../practice/practice.duckdb -c \"delete from jaffle_shop.orders where id = 999\"\n$ dbt build -s stg_jaffle_shop__orders+",
+         "variants": {
+          "win": "PS> duckdb ../practice/practice.duckdb -c \"delete from jaffle_shop.orders where id = 999\"\nPS> dbt build -s stg_jaffle_shop__orders+"
+         }
         },
         {
          "c": [
@@ -2729,7 +2747,10 @@
          "id": "ch23-c26",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt run -s stg_jaffle_shop__orders stg_jaffle_shop__customers"
+         "text": "$ dbt run -s stg_jaffle_shop__orders stg_jaffle_shop__customers",
+         "variants": {
+          "win": "PS> dbt run -s stg_jaffle_shop__orders stg_jaffle_shop__customers"
+         }
         },
         {
          "c": [
@@ -2813,7 +2834,10 @@
          "id": "ch23-c27",
          "lang": "bash",
          "t": "code",
-         "text": "$ git restore dbt_project.yml\n$ git status --short"
+         "text": "$ git restore dbt_project.yml\n$ git status --short",
+         "variants": {
+          "win": "PS> git restore dbt_project.yml\nPS> git status --short"
+         }
         },
         {
          "c": [
@@ -3444,7 +3468,10 @@
        "id": "ch23-c29",
        "lang": "bash",
        "t": "code",
-       "text": "$ python -c \"import json, collections; r=json.load(open('target/run_results.json')); print(collections.Counter(x['status'] for x in r['results']))\""
+       "text": "$ python -c \"import json, collections; r=json.load(open('target/run_results.json')); print(collections.Counter(x['status'] for x in r['results']))\"",
+       "variants": {
+        "win": "PS> python -c \"import json, collections; r=json.load(open('target/run_results.json')); print(collections.Counter(x['status'] for x in r['results']))\""
+       }
       },
       {
        "id": "ch23-c30",
@@ -3926,7 +3953,10 @@
        "id": "ch23-c32",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt build --target prod --exclude-resource-type unit_test"
+       "text": "$ dbt build --target prod --exclude-resource-type unit_test",
+       "variants": {
+        "win": "PS> dbt build --target prod --exclude-resource-type unit_test"
+       }
       },
       {
        "id": "ch23-c33",
@@ -4044,7 +4074,10 @@
        "id": "ch23-c34",
        "lang": "bash",
        "t": "code",
-       "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select table_schema, count(*) filter (where table_type = 'BASE TABLE') as tables, count(*) filter (where table_type = 'VIEW') as views from information_schema.tables where table_schema not in ('jaffle_shop', 'stripe') group by 1 order by 1\""
+       "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select table_schema, count(*) filter (where table_type = 'BASE TABLE') as tables, count(*) filter (where table_type = 'VIEW') as views from information_schema.tables where table_schema not in ('jaffle_shop', 'stripe') group by 1 order by 1\"",
+       "variants": {
+        "win": "PS> duckdb -readonly ../practice/practice.duckdb -c \"select table_schema, count(*) filter (where table_type = 'BASE TABLE') as tables, count(*) filter (where table_type = 'VIEW') as views from information_schema.tables where table_schema not in ('jaffle_shop', 'stripe') group by 1 order by 1\""
+       }
       },
       {
        "id": "ch23-c35",
@@ -4320,7 +4353,10 @@
          "id": "ch23-c40",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --target prod --exclude-resource-type unit_test"
+         "text": "$ dbt build --target prod --exclude-resource-type unit_test",
+         "variants": {
+          "win": "PS> dbt build --target prod --exclude-resource-type unit_test"
+         }
         },
         {
          "c": [
@@ -4747,7 +4783,10 @@
        "id": "ch23-c43",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt clone --state prod-artifacts"
+       "text": "$ dbt clone --state prod-artifacts",
+       "variants": {
+        "win": "PS> dbt clone --state prod-artifacts"
+       }
       },
       {
        "id": "ch23-c44",
@@ -4804,7 +4843,10 @@
        "id": "ch23-c45",
        "lang": "bash",
        "t": "code",
-       "text": "$ duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.fct_monthly_revenue\"\n$ dbt clone -s fct_monthly_revenue --state prod-artifacts"
+       "text": "$ duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.fct_monthly_revenue\"\n$ dbt clone -s fct_monthly_revenue --state prod-artifacts",
+       "variants": {
+        "win": "PS> duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.fct_monthly_revenue\"\nPS> dbt clone -s fct_monthly_revenue --state prod-artifacts"
+       }
       },
       {
        "id": "ch23-c46",
@@ -5152,7 +5194,10 @@
        "id": "ch23-c52",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt clone -s fct_orders --state prod-artifacts --full-refresh\n$ duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' and table_name in ('fct_orders', 'fct_monthly_revenue') order by 1\""
+       "text": "$ dbt clone -s fct_orders --state prod-artifacts --full-refresh\n$ duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' and table_name in ('fct_orders', 'fct_monthly_revenue') order by 1\"",
+       "variants": {
+        "win": "PS> dbt clone -s fct_orders --state prod-artifacts --full-refresh\nPS> duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' and table_name in ('fct_orders', 'fct_monthly_revenue') order by 1\""
+       }
       },
       {
        "id": "ch23-c53",
@@ -5274,7 +5319,10 @@
        "id": "ch23-c55",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt clone --select \"state:modified+,config.materialized:incremental,state:old\" --state prod-artifacts"
+       "text": "$ dbt clone --select \"state:modified+,config.materialized:incremental,state:old\" --state prod-artifacts",
+       "variants": {
+        "win": "PS> dbt clone --select \"state:modified+,config.materialized:incremental,state:old\" --state prod-artifacts"
+       }
       },
       {
        "c": [
@@ -5884,7 +5932,10 @@
          "id": "ch23-c57",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt clone --state prod-artifacts"
+         "text": "$ dbt clone --state prod-artifacts",
+         "variants": {
+          "win": "PS> dbt clone --state prod-artifacts"
+         }
         },
         {
          "c": [
@@ -5924,7 +5975,10 @@
          "id": "ch23-c58",
          "lang": "bash",
          "t": "code",
-         "text": "$ duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.fct_monthly_revenue\"\n$ dbt clone -s fct_monthly_revenue --state prod-artifacts"
+         "text": "$ duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.fct_monthly_revenue\"\n$ dbt clone -s fct_monthly_revenue --state prod-artifacts",
+         "variants": {
+          "win": "PS> duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.fct_monthly_revenue\"\nPS> dbt clone -s fct_monthly_revenue --state prod-artifacts"
+         }
         },
         {
          "c": [
@@ -6044,7 +6098,10 @@
          "id": "ch23-c61",
          "lang": "bash",
          "t": "code",
-         "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select sql from duckdb_views() where schema_name = 'dbt_adnane' and view_name = 'fct_monthly_revenue'\""
+         "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select sql from duckdb_views() where schema_name = 'dbt_adnane' and view_name = 'fct_monthly_revenue'\"",
+         "variants": {
+          "win": "PS> duckdb -readonly ../practice/practice.duckdb -c \"select sql from duckdb_views() where schema_name = 'dbt_adnane' and view_name = 'fct_monthly_revenue'\""
+         }
         },
         {
          "c": [
@@ -6078,7 +6135,10 @@
          "id": "ch23-c62",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt clone -s fct_orders --state prod-artifacts --full-refresh\n$ duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' and table_name in ('fct_orders', 'fct_monthly_revenue') order by 1\""
+         "text": "$ dbt clone -s fct_orders --state prod-artifacts --full-refresh\n$ duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' and table_name in ('fct_orders', 'fct_monthly_revenue') order by 1\"",
+         "variants": {
+          "win": "PS> dbt clone -s fct_orders --state prod-artifacts --full-refresh\nPS> duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' and table_name in ('fct_orders', 'fct_monthly_revenue') order by 1\""
+         }
         },
         {
          "c": [
@@ -6204,7 +6264,10 @@
          "id": "ch23-c65",
          "lang": "bash",
          "t": "code",
-         "text": "$ git status --short\n$ git add .gitignore dbt_project.yml\n$ git commit -m \"Pipelines: prod-artifacts ignored, post-hook skipped during clone\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch23 --stat"
+         "text": "$ git status --short\n$ git add .gitignore dbt_project.yml\n$ git commit -m \"Pipelines: prod-artifacts ignored, post-hook skipped during clone\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch23 --stat",
+         "variants": {
+          "win": "PS> git status --short\nPS> git add .gitignore dbt_project.yml\nPS> git commit -m \"Pipelines: prod-artifacts ignored, post-hook skipped during clone\"\nPS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nPS> git diff ref-ch23 --stat"
+         }
         },
         {
          "c": [

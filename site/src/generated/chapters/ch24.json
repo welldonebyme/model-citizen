@@ -685,7 +685,10 @@
        "id": "ch24-c2",
        "lang": "bash",
        "t": "code",
-       "text": "$ python -c \"import json; r=json.load(open('target/run_results.json')); print(r['args']['which'], r['args']['select']); [print(x['unique_id'], x['status']) for x in r['results']]\""
+       "text": "$ python -c \"import json; r=json.load(open('target/run_results.json')); print(r['args']['which'], r['args']['select']); [print(x['unique_id'], x['status']) for x in r['results']]\"",
+       "variants": {
+        "win": "PS> python -c \"import json; r=json.load(open('target/run_results.json')); print(r['args']['which'], r['args']['select']); [print(x['unique_id'], x['status']) for x in r['results']]\""
+       }
       },
       {
        "id": "ch24-c3",
@@ -1131,7 +1134,10 @@
        "id": "ch24-c6",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls -s state:modified"
+       "text": "$ dbt ls -s state:modified",
+       "variants": {
+        "win": "PS> dbt ls -s state:modified"
+       }
       },
       {
        "id": "ch24-c7",
@@ -1356,7 +1362,10 @@
          "id": "ch24-c12",
          "lang": "bash",
          "t": "code",
-         "text": "$ git switch -c feature/average-order-value\nSwitched to a new branch 'feature/average-order-value'"
+         "text": "$ git switch -c feature/average-order-value\nSwitched to a new branch 'feature/average-order-value'",
+         "variants": {
+          "win": "PS> git switch -c feature/average-order-value\nSwitched to a new branch 'feature/average-order-value'"
+         }
         },
         {
          "c": [
@@ -1403,7 +1412,10 @@
          "id": "ch24-c14",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls --select state:modified --state prod-artifacts\n$ dbt ls --select state:modified+ --state prod-artifacts"
+         "text": "$ dbt ls --select state:modified --state prod-artifacts\n$ dbt ls --select state:modified+ --state prod-artifacts",
+         "variants": {
+          "win": "PS> dbt ls --select state:modified --state prod-artifacts\nPS> dbt ls --select state:modified+ --state prod-artifacts"
+         }
         },
         {
          "c": [
@@ -1426,7 +1438,10 @@
          "id": "ch24-c15",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls --select state:modified.body --state prod-artifacts\n$ dbt ls --select state:modified.configs --state prod-artifacts\n$ dbt ls --select state:new --state prod-artifacts"
+         "text": "$ dbt ls --select state:modified.body --state prod-artifacts\n$ dbt ls --select state:modified.configs --state prod-artifacts\n$ dbt ls --select state:new --state prod-artifacts",
+         "variants": {
+          "win": "PS> dbt ls --select state:modified.body --state prod-artifacts\nPS> dbt ls --select state:modified.configs --state prod-artifacts\nPS> dbt ls --select state:new --state prod-artifacts"
+         }
         },
         {
          "c": [
@@ -1847,7 +1862,10 @@
        "id": "ch24-c17",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls -s state:modified --state prod-artifacts --resource-type model\njaffle_dbt.marts.fct_monthly_revenue\n$ dbt ls -s state:new --state prod-artifacts --resource-type model\n22:20:20  The selection criterion 'state:new' does not match any enabled nodes\n22:20:20  No nodes selected!\n$ dbt ls -s state:unmodified --state prod-artifacts --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers.v1\n...\njaffle_dbt.staging.stripe.stg_stripe__payments"
+       "text": "$ dbt ls -s state:modified --state prod-artifacts --resource-type model\njaffle_dbt.marts.fct_monthly_revenue\n$ dbt ls -s state:new --state prod-artifacts --resource-type model\n22:20:20  The selection criterion 'state:new' does not match any enabled nodes\n22:20:20  No nodes selected!\n$ dbt ls -s state:unmodified --state prod-artifacts --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers.v1\n...\njaffle_dbt.staging.stripe.stg_stripe__payments",
+       "variants": {
+        "win": "PS> dbt ls -s state:modified --state prod-artifacts --resource-type model\njaffle_dbt.marts.fct_monthly_revenue\nPS> dbt ls -s state:new --state prod-artifacts --resource-type model\n22:20:20  The selection criterion 'state:new' does not match any enabled nodes\n22:20:20  No nodes selected!\nPS> dbt ls -s state:unmodified --state prod-artifacts --resource-type model\njaffle_dbt.marts.customer_segments\njaffle_dbt.marts.dim_customers.v1\n...\njaffle_dbt.staging.stripe.stg_stripe__payments"
+       }
       },
       {
        "c": [
@@ -3327,7 +3345,10 @@
          "id": "ch24-c24",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls -s state:modified.configs --state prod-artifacts --exclude fct_monthly_revenue\n$ dbt ls -s state:modified.body --state prod-artifacts --exclude fct_monthly_revenue\n$ git checkout -- models/marts/_marts__models.yml"
+         "text": "$ dbt ls -s state:modified.configs --state prod-artifacts --exclude fct_monthly_revenue\n$ dbt ls -s state:modified.body --state prod-artifacts --exclude fct_monthly_revenue\n$ git checkout -- models/marts/_marts__models.yml",
+         "variants": {
+          "win": "PS> dbt ls -s state:modified.configs --state prod-artifacts --exclude fct_monthly_revenue\nPS> dbt ls -s state:modified.body --state prod-artifacts --exclude fct_monthly_revenue\nPS> git checkout -- models/marts/_marts__models.yml"
+         }
         },
         {
          "c": [
@@ -4829,7 +4850,10 @@
          "id": "ch24-c39",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt show --inline \"select count(*) as relations_in_dbt_ci from information_schema.tables where table_schema = 'dbt_ci'\" -q"
+         "text": "$ dbt show --inline \"select count(*) as relations_in_dbt_ci from information_schema.tables where table_schema = 'dbt_ci'\" -q",
+         "variants": {
+          "win": "PS> dbt show --inline \"select count(*) as relations_in_dbt_ci from information_schema.tables where table_schema = 'dbt_ci'\" -q"
+         }
         },
         {
          "c": [
@@ -4847,7 +4871,10 @@
          "id": "ch24-c40",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select fct_monthly_revenue --target ci\n$ dbt build --select fct_monthly_revenue --target ci --defer --state prod-artifacts"
+         "text": "$ dbt build --select fct_monthly_revenue --target ci\n$ dbt build --select fct_monthly_revenue --target ci --defer --state prod-artifacts",
+         "variants": {
+          "win": "PS> dbt build --select fct_monthly_revenue --target ci\nPS> dbt build --select fct_monthly_revenue --target ci --defer --state prod-artifacts"
+         }
         },
         {
          "c": [
@@ -5275,7 +5302,10 @@
        "id": "ch24-c48",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt clone --select \"state:modified+,config.materialized:incremental,state:old\" --state prod-artifacts --target ci"
+       "text": "$ dbt clone --select \"state:modified+,config.materialized:incremental,state:old\" --state prod-artifacts --target ci",
+       "variants": {
+        "win": "PS> dbt clone --select \"state:modified+,config.materialized:incremental,state:old\" --state prod-artifacts --target ci"
+       }
       },
       {
        "c": [
@@ -5503,7 +5533,10 @@
        "id": "ch24-c49",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt build --select state:modified+ --defer --state prod-artifacts --target ci"
+       "text": "$ dbt build --select state:modified+ --defer --state prod-artifacts --target ci",
+       "variants": {
+        "win": "PS> dbt build --select state:modified+ --defer --state prod-artifacts --target ci"
+       }
       },
       {
        "id": "ch24-c50",
@@ -5796,7 +5829,10 @@
          "id": "ch24-c51",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --exclude-resource-type unit_test"
+         "text": "$ dbt build --exclude-resource-type unit_test",
+         "variants": {
+          "win": "PS> dbt build --exclude-resource-type unit_test"
+         }
         },
         {
          "c": [
@@ -5819,7 +5855,10 @@
          "id": "ch24-c52",
          "lang": "bash",
          "t": "code",
-         "text": "$ python -c \"import json; r=json.load(open('target/run_results.json')); from collections import Counter; print(r['args']['which'], Counter(x['status'] for x in r['results']))\""
+         "text": "$ python -c \"import json; r=json.load(open('target/run_results.json')); from collections import Counter; print(r['args']['which'], Counter(x['status'] for x in r['results']))\"",
+         "variants": {
+          "win": "PS> python -c \"import json; r=json.load(open('target/run_results.json')); from collections import Counter; print(r['args']['which'], Counter(x['status'] for x in r['results']))\""
+         }
         },
         {
          "c": [
@@ -5842,7 +5881,10 @@
          "id": "ch24-c53",
          "lang": "bash",
          "t": "code",
-         "text": "$ git diff --stat models/staging\n$ dbt retry\n$ dbt retry"
+         "text": "$ git diff --stat models/staging\n$ dbt retry\n$ dbt retry",
+         "variants": {
+          "win": "PS> git diff --stat models/staging\nPS> dbt retry\nPS> dbt retry"
+         }
         },
         {
          "c": [
@@ -6897,7 +6939,10 @@
          "id": "ch24-c62",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select fct_monthly_revenue+"
+         "text": "$ dbt build --select fct_monthly_revenue+",
+         "variants": {
+          "win": "PS> dbt build --select fct_monthly_revenue+"
+         }
         },
         {
          "c": [
@@ -6925,7 +6970,10 @@
          "id": "ch24-c63",
          "lang": "bash",
          "t": "code",
-         "text": "$ python -c \"import duckdb; duckdb.connect('../practice/practice.duckdb').execute('drop schema if exists dbt_ci cascade'); print('dbt_ci dropped')\"\ndbt_ci dropped"
+         "text": "$ python -c \"import duckdb; duckdb.connect('../practice/practice.duckdb').execute('drop schema if exists dbt_ci cascade'); print('dbt_ci dropped')\"\ndbt_ci dropped",
+         "variants": {
+          "win": "PS> python -c \"import duckdb; duckdb.connect('../practice/practice.duckdb').execute('drop schema if exists dbt_ci cascade'); print('dbt_ci dropped')\"\ndbt_ci dropped"
+         }
         },
         {
          "c": [
@@ -6966,7 +7014,10 @@
          "id": "ch24-c64",
          "lang": "bash",
          "t": "code",
-         "text": "$ git add .\n$ git commit -m 'fct_monthly_revenue: add average_order_value'\n$ git switch main\n$ git merge feature/average-order-value\n$ git branch -d feature/average-order-value"
+         "text": "$ git add .\n$ git commit -m 'fct_monthly_revenue: add average_order_value'\n$ git switch main\n$ git merge feature/average-order-value\n$ git branch -d feature/average-order-value",
+         "variants": {
+          "win": "PS> git add .\nPS> git commit -m 'fct_monthly_revenue: add average_order_value'\nPS> git switch main\nPS> git merge feature/average-order-value\nPS> git branch -d feature/average-order-value"
+         }
         },
         {
          "c": [
@@ -7068,7 +7119,10 @@
          "id": "ch24-c68",
          "lang": "bash",
          "t": "code",
-         "text": "$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch24 --stat"
+         "text": "$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch24 --stat",
+         "variants": {
+          "win": "PS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nPS> git diff ref-ch24 --stat"
+         }
         },
         {
          "c": [

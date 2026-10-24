@@ -1625,7 +1625,10 @@
        "id": "ch17-c5",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls --select group:finance        # every node of the finance group\n$ dbt ls --select access:public        # the interface of the project"
+       "text": "$ dbt ls --select group:finance        # every node of the finance group\n$ dbt ls --select access:public        # the interface of the project",
+       "variants": {
+        "win": "PS> dbt ls --select group:finance        # every node of the finance group\nPS> dbt ls --select access:public        # the interface of the project"
+       }
       }
      ],
      "id": "ch17-s2-4",
@@ -2004,7 +2007,10 @@
          "id": "ch17-c10",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls --resource-type model --output json --output-keys name config.group config.access"
+         "text": "$ dbt ls --resource-type model --output json --output-keys name config.group config.access",
+         "variants": {
+          "win": "PS> dbt ls --resource-type model --output json --output-keys name config.group config.access"
+         }
         },
         {
          "c": [
@@ -2050,7 +2056,10 @@
          "id": "ch17-c12",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls --select group:finance\n$ dbt ls --select access:private"
+         "text": "$ dbt ls --select group:finance\n$ dbt ls --select access:private",
+         "variants": {
+          "win": "PS> dbt ls --select group:finance\nPS> dbt ls --select access:private"
+         }
         },
         {
          "c": [
@@ -2103,7 +2112,10 @@
          "id": "ch17-c15",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt parse"
+         "text": "$ dbt parse",
+         "variants": {
+          "win": "PS> dbt parse"
+         }
         },
         {
          "c": [
@@ -5170,7 +5182,10 @@
          "id": "ch17-c34",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select dim_customers"
+         "text": "$ dbt build --select dim_customers",
+         "variants": {
+          "win": "PS> dbt build --select dim_customers"
+         }
         },
         {
          "c": [
@@ -5367,7 +5382,10 @@
          "id": "ch17-c40",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt run --select dim_customers"
+         "text": "$ dbt run --select dim_customers",
+         "variants": {
+          "win": "PS> dbt run --select dim_customers"
+         }
         },
         {
          "c": [
@@ -5581,7 +5599,10 @@
          "id": "ch17-c45",
          "lang": "bash",
          "t": "code",
-         "text": "$ git status --short models/marts/dim_customers.sql; dbt run --select dim_customers"
+         "text": "$ git status --short models/marts/dim_customers.sql; dbt run --select dim_customers",
+         "variants": {
+          "win": "PS> git status --short models/marts/dim_customers.sql; dbt run --select dim_customers"
+         }
         },
         {
          "c": [
@@ -7137,7 +7158,10 @@
        "id": "ch17-c54",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt parse --no-partial-parse --warn-error-options '{\"error\": [\"DeprecatedReference\"]}'"
+       "text": "$ dbt parse --no-partial-parse --warn-error-options '{\"error\": [\"DeprecatedReference\"]}'",
+       "variants": {
+        "win": "PS> dbt parse --no-partial-parse --warn-error-options '{\"error\": [\"DeprecatedReference\"]}'"
+       }
       },
       {
        "id": "ch17-c55",
@@ -7531,7 +7555,10 @@
          "id": "ch17-c60",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls --select dim_customers --resource-type model --output json --output-keys name version latest_version alias"
+         "text": "$ dbt ls --select dim_customers --resource-type model --output json --output-keys name version latest_version alias",
+         "variants": {
+          "win": "PS> dbt ls --select dim_customers --resource-type model --output json --output-keys name version latest_version alias"
+         }
         },
         {
          "c": [
@@ -7567,7 +7594,10 @@
          "id": "ch17-c62",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt run --select dim_customers\n$ dbt ls --select version:latest version:prerelease --resource-type model\n$ dbt ls --select dim_customers.v2"
+         "text": "$ dbt run --select dim_customers\n$ dbt ls --select version:latest version:prerelease --resource-type model\n$ dbt ls --select dim_customers.v2",
+         "variants": {
+          "win": "PS> dbt run --select dim_customers\nPS> dbt ls --select version:latest version:prerelease --resource-type model\nPS> dbt ls --select dim_customers.v2"
+         }
         },
         {
          "c": [
@@ -7613,7 +7643,10 @@
          "id": "ch17-c64",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt compile --inline \"select * from {{ ref('dim_customers') }}\"\n$ dbt compile --inline \"select * from {{ ref('dim_customers', v=2) }}\"\n$ dbt show --inline \"select customer_id, full_name, lifetime_value from {{ ref('dim_customers', v=2) }} order by customer_id\" --limit 3"
+         "text": "$ dbt compile --inline \"select * from {{ ref('dim_customers') }}\"\n$ dbt compile --inline \"select * from {{ ref('dim_customers', v=2) }}\"\n$ dbt show --inline \"select customer_id, full_name, lifetime_value from {{ ref('dim_customers', v=2) }} order by customer_id\" --limit 3",
+         "variants": {
+          "win": "PS> dbt compile --inline \"select * from {{ ref('dim_customers') }}\"\nPS> dbt compile --inline \"select * from {{ ref('dim_customers', v=2) }}\"\nPS> dbt show --inline \"select customer_id, full_name, lifetime_value from {{ ref('dim_customers', v=2) }} order by customer_id\" --limit 3"
+         }
         },
         {
          "c": [
@@ -7685,7 +7718,10 @@
          "id": "ch17-c67",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls --select dim_customers --resource-type model --output json --output-keys name version latest_version deprecation_date\n$ dbt ls --select version:old\n$ dbt compile --inline \"select * from {{ ref('dim_customers') }}\""
+         "text": "$ dbt ls --select dim_customers --resource-type model --output json --output-keys name version latest_version deprecation_date\n$ dbt ls --select version:old\n$ dbt compile --inline \"select * from {{ ref('dim_customers') }}\"",
+         "variants": {
+          "win": "PS> dbt ls --select dim_customers --resource-type model --output json --output-keys name version latest_version deprecation_date\nPS> dbt ls --select version:old\nPS> dbt compile --inline \"select * from {{ ref('dim_customers') }}\""
+         }
         },
         {
          "c": [
@@ -7763,7 +7799,10 @@
          "id": "ch17-c70",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt parse --no-partial-parse\n$ dbt run --select demo_uses_v1"
+         "text": "$ dbt parse --no-partial-parse\n$ dbt run --select demo_uses_v1",
+         "variants": {
+          "win": "PS> dbt parse --no-partial-parse\nPS> dbt run --select demo_uses_v1"
+         }
         },
         {
          "c": [
@@ -8448,7 +8487,10 @@
          "id": "ch17-c78",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls --select state:modified --state ../state-ch17"
+         "text": "$ dbt ls --select state:modified --state ../state-ch17",
+         "variants": {
+          "win": "PS> dbt ls --select state:modified --state ../state-ch17"
+         }
         },
         {
          "c": [
@@ -8500,7 +8542,10 @@
          "id": "ch17-c80",
          "lang": "bash",
          "t": "code",
-         "text": "$ git restore models/\n$ git status --short\n$ dbt ls --select state:modified --state ../state-ch17"
+         "text": "$ git restore models/\n$ git status --short\n$ dbt ls --select state:modified --state ../state-ch17",
+         "variants": {
+          "win": "PS> git restore models/\nPS> git status --short\nPS> dbt ls --select state:modified --state ../state-ch17"
+         }
         },
         {
          "c": [
@@ -8897,7 +8942,10 @@
        "id": "ch17-c83",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --inline \"select * from {{ ref('finance_project', 'fct_orders') }}\""
+       "text": "$ dbt compile --inline \"select * from {{ ref('finance_project', 'fct_orders') }}\"",
+       "variants": {
+        "win": "PS> dbt compile --inline \"select * from {{ ref('finance_project', 'fct_orders') }}\""
+       }
       },
       {
        "id": "ch17-c84",

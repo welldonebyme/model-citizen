@@ -1475,7 +1475,10 @@
        "id": "ch10-c6",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt parse          # with name: 'jaffle-dbt'"
+       "text": "$ dbt parse          # with name: 'jaffle-dbt'",
+       "variants": {
+        "win": "PS> dbt parse          # with name: 'jaffle-dbt'"
+       }
       },
       {
        "id": "ch10-c7",
@@ -1485,10 +1488,42 @@
        "textBook": "22:12:59  Running with dbt=1.11.16\n22:12:59  Encountered an error:\nRuntime Error\n  at path ['name']: 'jaffle-dbt' does not match '^[^\\\\d\\\\W]\\\\w*$'\n\nError encountered in /Users/mac/dbt-course/jaffle_dbt/dbt_project.yml"
       },
       {
+       "blocks": [
+        {
+         "c": [
+          "The output above was recorded on macOS. On your computer the paths start with ",
+          {
+           "t": "code",
+           "v": "C:\\Users\\<you>\\"
+          },
+          " instead of ",
+          {
+           "t": "code",
+           "v": "/Users/you/"
+          },
+          "."
+         ],
+         "t": "p"
+        }
+       ],
+       "kind": "tip",
+       "os": [
+        "win"
+       ],
+       "osNote": "auto-win-out-ch10-c6",
+       "t": "callout",
+       "title": [
+        "On Windows"
+       ]
+      },
+      {
        "id": "ch10-c8",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt parse          # with require-dbt-version: \">=1.12.0\""
+       "text": "$ dbt parse          # with require-dbt-version: \">=1.12.0\"",
+       "variants": {
+        "win": "PS> dbt parse          # with require-dbt-version: \">=1.12.0\""
+       }
       },
       {
        "id": "ch10-c9",
@@ -1500,7 +1535,10 @@
        "id": "ch10-c10",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt parse          # with target-path: \"target_custom\""
+       "text": "$ dbt parse          # with target-path: \"target_custom\"",
+       "variants": {
+        "win": "PS> dbt parse          # with target-path: \"target_custom\""
+       }
       },
       {
        "id": "ch10-c11",
@@ -2158,7 +2196,10 @@
        "id": "ch10-c18",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls -s intermediate --output json --output-keys name config"
+       "text": "$ dbt ls -s intermediate --output json --output-keys name config",
+       "variants": {
+        "win": "PS> dbt ls -s intermediate --output json --output-keys name config"
+       }
       },
       {
        "id": "ch10-c19",
@@ -2170,7 +2211,10 @@
        "id": "ch10-c20",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt --quiet ls -s intermediate --output json --output-keys name config | jq -c '{n: .name, m: .config.materialized, tags: .config.tags, meta: .config.meta}'"
+       "text": "$ dbt --quiet ls -s intermediate --output json --output-keys name config | jq -c '{n: .name, m: .config.materialized, tags: .config.tags, meta: .config.meta}'",
+       "variants": {
+        "win": "PS> dbt --quiet ls -s intermediate --output json --output-keys name config | jq -c '{n: .name, m: .config.materialized, tags: .config.tags, meta: .config.meta}'"
+       }
       },
       {
        "id": "ch10-c21",
@@ -3038,7 +3082,10 @@
        "id": "ch10-c26",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --inline \"select * from {{ ref('fct_monthly_revenue') }}\""
+       "text": "$ dbt compile --inline \"select * from {{ ref('fct_monthly_revenue') }}\"",
+       "variants": {
+        "win": "PS> dbt compile --inline \"select * from {{ ref('fct_monthly_revenue') }}\""
+       }
       },
       {
        "id": "ch10-c27",
@@ -3233,7 +3280,10 @@
              "id": "ch10-c30",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt run"
+             "text": "$ dbt run",
+             "variants": {
+              "win": "PS> dbt run"
+             }
             },
             {
              "id": "ch10-c31",
@@ -3255,7 +3305,10 @@
              "id": "ch10-c32",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt show --limit 10 --inline \"select table_schema, table_name from information_schema.tables where table_name in ('fct_orders', 'dim_customers', 'fct_monthly_revenue') order by 1, 2\""
+             "text": "$ dbt show --limit 10 --inline \"select table_schema, table_name from information_schema.tables where table_name in ('fct_orders', 'dim_customers', 'fct_monthly_revenue') order by 1, 2\"",
+             "variants": {
+              "win": "PS> dbt show --limit 10 --inline \"select table_schema, table_name from information_schema.tables where table_name in ('fct_orders', 'dim_customers', 'fct_monthly_revenue') order by 1, 2\""
+             }
             },
             {
              "id": "ch10-c33",
@@ -3312,7 +3365,10 @@
              "id": "ch10-c34",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt ls --target prod --resource-type model --output json --output-keys name schema"
+             "text": "$ dbt ls --target prod --resource-type model --output json --output-keys name schema",
+             "variants": {
+              "win": "PS> dbt ls --target prod --resource-type model --output json --output-keys name schema"
+             }
             },
             {
              "id": "ch10-c35",
@@ -3349,7 +3405,10 @@
              "id": "ch10-c36",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt ls --resource-type model --output json --output-keys name schema"
+             "text": "$ dbt ls --resource-type model --output json --output-keys name schema",
+             "variants": {
+              "win": "PS> dbt ls --resource-type model --output json --output-keys name schema"
+             }
             },
             {
              "id": "ch10-c37",
@@ -3361,7 +3420,10 @@
              "id": "ch10-c38",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt ls --target prod --resource-type model --output json --output-keys name schema"
+             "text": "$ dbt ls --target prod --resource-type model --output json --output-keys name schema",
+             "variants": {
+              "win": "PS> dbt ls --target prod --resource-type model --output json --output-keys name schema"
+             }
             },
             {
              "id": "ch10-c39",
@@ -3424,7 +3486,10 @@
              "id": "ch10-c40",
              "lang": "bash",
              "t": "code",
-             "text": "$ duckdb ../practice/practice.duckdb -c \"drop schema dbt_adnane_marts cascade\""
+             "text": "$ duckdb ../practice/practice.duckdb -c \"drop schema dbt_adnane_marts cascade\"",
+             "variants": {
+              "win": "PS> duckdb ../practice/practice.duckdb -c \"drop schema dbt_adnane_marts cascade\""
+             }
             },
             {
              "c": [
@@ -3792,7 +3857,10 @@
              "id": "ch10-c44",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt ls --select marts --output json --output-keys name tags"
+             "text": "$ dbt ls --select marts --output json --output-keys name tags",
+             "variants": {
+              "win": "PS> dbt ls --select marts --output json --output-keys name tags"
+             }
             },
             {
              "id": "ch10-c45",
@@ -3804,7 +3872,10 @@
              "id": "ch10-c46",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt ls --select marts --output json --output-keys name meta"
+             "text": "$ dbt ls --select marts --output json --output-keys name meta",
+             "variants": {
+              "win": "PS> dbt ls --select marts --output json --output-keys name meta"
+             }
             },
             {
              "id": "ch10-c47",
@@ -4820,7 +4891,10 @@
              "id": "ch10-c53",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt --quiet ls -s fct_monthly_revenue --output json --output-keys config | jq -c '.config | {materialized, tags}'"
+             "text": "$ dbt --quiet ls -s fct_monthly_revenue --output json --output-keys config | jq -c '.config | {materialized, tags}'",
+             "variants": {
+              "win": "PS> dbt --quiet ls -s fct_monthly_revenue --output json --output-keys config | jq -c '.config | {materialized, tags}'"
+             }
             },
             {
              "id": "ch10-c54",
@@ -4939,7 +5013,10 @@
              "id": "ch10-c59",
              "lang": "bash",
              "t": "code",
-             "text": "$ git checkout -- models/marts/fct_monthly_revenue.sql\n$ dbt --quiet ls -s fct_monthly_revenue --output json --output-keys config | jq -c '.config | {materialized, tags}'"
+             "text": "$ git checkout -- models/marts/fct_monthly_revenue.sql\n$ dbt --quiet ls -s fct_monthly_revenue --output json --output-keys config | jq -c '.config | {materialized, tags}'",
+             "variants": {
+              "win": "PS> git checkout -- models/marts/fct_monthly_revenue.sql\nPS> dbt --quiet ls -s fct_monthly_revenue --output json --output-keys config | jq -c '.config | {materialized, tags}'"
+             }
             },
             {
              "id": "ch10-c60",
@@ -5097,7 +5174,10 @@
        "id": "ch10-c61",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --inline \"select '{{ target.name }}' as name, '{{ target.schema }}' as schema_name, '{{ target.type }}' as type, {{ target.threads }} as threads, '{{ target.database }}' as database_name, '{{ target.profile_name }}' as profile_name\""
+       "text": "$ dbt compile --inline \"select '{{ target.name }}' as name, '{{ target.schema }}' as schema_name, '{{ target.type }}' as type, {{ target.threads }} as threads, '{{ target.database }}' as database_name, '{{ target.profile_name }}' as profile_name\"",
+       "variants": {
+        "win": "PS> dbt compile --inline \"select '{{ target.name }}' as name, '{{ target.schema }}' as schema_name, '{{ target.type }}' as type, {{ target.threads }} as threads, '{{ target.database }}' as database_name, '{{ target.profile_name }}' as profile_name\""
+       }
       },
       {
        "id": "ch10-c62",
@@ -5109,7 +5189,10 @@
        "id": "ch10-c63",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --target prod --threads 8 --inline \"select '{{ target.name }}' as name, '{{ target.schema }}' as schema_name, {{ target.threads }} as threads\""
+       "text": "$ dbt compile --target prod --threads 8 --inline \"select '{{ target.name }}' as name, '{{ target.schema }}' as schema_name, {{ target.threads }} as threads\"",
+       "variants": {
+        "win": "PS> dbt compile --target prod --threads 8 --inline \"select '{{ target.name }}' as name, '{{ target.schema }}' as schema_name, {{ target.threads }} as threads\""
+       }
       },
       {
        "id": "ch10-c64",
@@ -5718,7 +5801,10 @@
          "id": "ch10-c66",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt compile --inline \"select '{{ var('not_defined') }}' as x\""
+         "text": "$ dbt compile --inline \"select '{{ var('not_defined') }}' as x\"",
+         "variants": {
+          "win": "PS> dbt compile --inline \"select '{{ var('not_defined') }}' as x\""
+         }
         },
         {
          "id": "ch10-c67",
@@ -6202,7 +6288,10 @@
              "id": "ch10-c74",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt compile --select stg_jaffle_shop__orders\n$ dbt compile --select stg_jaffle_shop__orders --vars '{dev_start_date: 2025-12-01}'\n$ dbt compile --select stg_jaffle_shop__orders --target prod"
+             "text": "$ dbt compile --select stg_jaffle_shop__orders\n$ dbt compile --select stg_jaffle_shop__orders --vars '{dev_start_date: 2025-12-01}'\n$ dbt compile --select stg_jaffle_shop__orders --target prod",
+             "variants": {
+              "win": "PS> dbt compile --select stg_jaffle_shop__orders\nPS> dbt compile --select stg_jaffle_shop__orders --vars '{dev_start_date: 2025-12-01}'\nPS> dbt compile --select stg_jaffle_shop__orders --target prod"
+             }
             },
             {
              "id": "ch10-c75",
@@ -6235,7 +6324,10 @@
              "id": "ch10-c76",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt run --select stg_jaffle_shop__orders --vars '{dev_start_date: 2025-12-01}'\n$ dbt show --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\""
+             "text": "$ dbt run --select stg_jaffle_shop__orders --vars '{dev_start_date: 2025-12-01}'\n$ dbt show --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\"",
+             "variants": {
+              "win": "PS> dbt run --select stg_jaffle_shop__orders --vars '{dev_start_date: 2025-12-01}'\nPS> dbt show --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\""
+             }
             },
             {
              "id": "ch10-c77",
@@ -6247,7 +6339,10 @@
              "id": "ch10-c78",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt run --select stg_jaffle_shop__orders\n$ dbt show --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\""
+             "text": "$ dbt run --select stg_jaffle_shop__orders\n$ dbt show --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\"",
+             "variants": {
+              "win": "PS> dbt run --select stg_jaffle_shop__orders\nPS> dbt show --inline \"select count(*) as n_orders, min(order_date) as first_date from {{ ref('stg_jaffle_shop__orders') }}\""
+             }
             },
             {
              "id": "ch10-c79",
@@ -6343,7 +6438,10 @@
              "id": "ch10-c83",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt compile --inline \"select '{{ env_var('DBT_NOT_SET') }}' as x\""
+             "text": "$ dbt compile --inline \"select '{{ env_var('DBT_NOT_SET') }}' as x\"",
+             "variants": {
+              "win": "PS> dbt compile --inline \"select '{{ env_var('DBT_NOT_SET') }}' as x\""
+             }
             },
             {
              "id": "ch10-c84",
@@ -6783,7 +6881,10 @@
        "id": "ch10-c86",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run -s fct_orders        # then read logs/dbt.log"
+       "text": "$ dbt run -s fct_orders        # then read logs/dbt.log",
+       "variants": {
+        "win": "PS> dbt run -s fct_orders        # then read logs/dbt.log"
+       }
       },
       {
        "id": "ch10-c87",
@@ -7388,7 +7489,10 @@
              "id": "ch10-c90",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt run"
+             "text": "$ dbt run",
+             "variants": {
+              "win": "PS> dbt run"
+             }
             },
             {
              "id": "ch10-c91",
@@ -7457,7 +7561,10 @@
              "id": "ch10-c94",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt test --select stg_jaffle_shop__orders\n$ dbt compile --select stg_jaffle_shop__orders"
+             "text": "$ dbt test --select stg_jaffle_shop__orders\n$ dbt compile --select stg_jaffle_shop__orders",
+             "variants": {
+              "win": "PS> dbt test --select stg_jaffle_shop__orders\nPS> dbt compile --select stg_jaffle_shop__orders"
+             }
             },
             {
              "c": [
@@ -7503,7 +7610,10 @@
              "id": "ch10-c95",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt show --inline \"select event, count(*) as n from {{ target.schema }}.dbt_run_log group by event order by event\""
+             "text": "$ dbt show --inline \"select event, count(*) as n from {{ target.schema }}.dbt_run_log group by event order by event\"",
+             "variants": {
+              "win": "PS> dbt show --inline \"select event, count(*) as n from {{ target.schema }}.dbt_run_log group by event order by event\""
+             }
             },
             {
              "id": "ch10-c96",
@@ -7566,7 +7676,10 @@
              "id": "ch10-c97",
              "lang": "bash",
              "t": "code",
-             "text": "$ duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.dbt_run_log\""
+             "text": "$ duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.dbt_run_log\"",
+             "variants": {
+              "win": "PS> duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.dbt_run_log\""
+             }
             }
            ]
           }
@@ -8249,7 +8362,10 @@
              "id": "ch10-c103",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt run --select marts"
+             "text": "$ dbt run --select marts",
+             "variants": {
+              "win": "PS> dbt run --select marts"
+             }
             },
             {
              "id": "ch10-c104",
@@ -8327,7 +8443,10 @@
              "id": "ch10-c107",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt --quiet ls -s fct_orders --output json --output-keys config | jq -c '.config.grants'\n$ dbt --quiet ls -s fct_orders --output json --output-keys config --target prod | jq -c '.config.grants'"
+             "text": "$ dbt --quiet ls -s fct_orders --output json --output-keys config | jq -c '.config.grants'\n$ dbt --quiet ls -s fct_orders --output json --output-keys config --target prod | jq -c '.config.grants'",
+             "variants": {
+              "win": "PS> dbt --quiet ls -s fct_orders --output json --output-keys config | jq -c '.config.grants'\nPS> dbt --quiet ls -s fct_orders --output json --output-keys config --target prod | jq -c '.config.grants'"
+             }
             },
             {
              "id": "ch10-c108",
@@ -9340,7 +9459,10 @@
              "id": "ch10-c109",
              "lang": "bash",
              "t": "code",
-             "text": "$ dbt build\n$ dbt docs generate"
+             "text": "$ dbt build\n$ dbt docs generate",
+             "variants": {
+              "win": "PS> dbt build\nPS> dbt docs generate"
+             }
             },
             {
              "id": "ch10-c110",
@@ -9348,6 +9470,35 @@
              "t": "code",
              "text": "20:49:03  Found 10 models, 10 data tests, 5 sources, 501 macros\n...\n20:49:04  Finished running 3 table models, 10 data tests, 6 view models in 0 hours 0 minutes and 0.40 seconds (0.40s).\n20:49:04\n20:49:04  Completed successfully\n20:49:04\n20:49:04  Done. PASS=19 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=19\n...\n20:49:07  Building catalog\n20:49:07  Catalog written to /Users/you/dbt-course/jaffle_dbt/target/catalog.json",
              "textBook": "20:49:03  Found 10 models, 10 data tests, 5 sources, 501 macros\n...\n20:49:04  Finished running 3 table models, 10 data tests, 6 view models in 0 hours 0 minutes and 0.40 seconds (0.40s).\n20:49:04\n20:49:04  Completed successfully\n20:49:04\n20:49:04  Done. PASS=19 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=19\n...\n20:49:07  Building catalog\n20:49:07  Catalog written to /Users/mac/dbt-course/jaffle_dbt/target/catalog.json"
+            },
+            {
+             "blocks": [
+              {
+               "c": [
+                "The output above was recorded on macOS. On your computer the paths start with ",
+                {
+                 "t": "code",
+                 "v": "C:\\Users\\<you>\\"
+                },
+                " instead of ",
+                {
+                 "t": "code",
+                 "v": "/Users/you/"
+                },
+                "."
+               ],
+               "t": "p"
+              }
+             ],
+             "kind": "tip",
+             "os": [
+              "win"
+             ],
+             "osNote": "auto-win-out-ch10-c109",
+             "t": "callout",
+             "title": [
+              "On Windows"
+             ]
             }
            ]
           },
@@ -9363,7 +9514,10 @@
              "id": "ch10-c111",
              "lang": "bash",
              "t": "code",
-             "text": "$ git status --short\n$ git add .\n$ git commit -m \"Configuration: custom schema macro, tags, meta, node colours, vars, dev filter, post-hook, prod grants\""
+             "text": "$ git status --short\n$ git add .\n$ git commit -m \"Configuration: custom schema macro, tags, meta, node colours, vars, dev filter, post-hook, prod grants\"",
+             "variants": {
+              "win": "PS> git status --short\nPS> git add .\nPS> git commit -m \"Configuration: custom schema macro, tags, meta, node colours, vars, dev filter, post-hook, prod grants\""
+             }
             },
             {
              "c": [

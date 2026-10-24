@@ -1143,7 +1143,10 @@
          "id": "ch08-c7",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt run"
+         "text": "$ dbt run",
+         "variants": {
+          "win": "PS> dbt run"
+         }
         },
         {
          "c": [
@@ -1213,7 +1216,10 @@
          "id": "ch08-c9",
          "lang": "bash",
          "t": "code",
-         "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' order by 1\""
+         "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' order by 1\"",
+         "variants": {
+          "win": "PS> duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' order by 1\""
+         }
         },
         {
          "c": [
@@ -2160,7 +2166,10 @@
        "id": "ch08-c19",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run --select int_payments__successful"
+       "text": "$ dbt run --select int_payments__successful",
+       "variants": {
+        "win": "PS> dbt run --select int_payments__successful"
+       }
       },
       {
        "id": "ch08-c20",
@@ -2194,7 +2203,10 @@
        "id": "ch08-c21",
        "lang": "bash",
        "t": "code",
-       "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select count(*) from dbt_adnane.int_payments__successful\""
+       "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select count(*) from dbt_adnane.int_payments__successful\"",
+       "variants": {
+        "win": "PS> duckdb -readonly ../practice/practice.duckdb -c \"select count(*) from dbt_adnane.int_payments__successful\""
+       }
       },
       {
        "id": "ch08-c22",
@@ -2253,7 +2265,10 @@
        "id": "ch08-c23",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --select int_payments__successful --limit 3"
+       "text": "$ dbt show --select int_payments__successful --limit 3",
+       "variants": {
+        "win": "PS> dbt show --select int_payments__successful --limit 3"
+       }
       },
       {
        "id": "ch08-c24",
@@ -3008,7 +3023,10 @@
          "id": "ch08-c29",
          "lang": "bash",
          "t": "code",
-         "text": "$ git status --short"
+         "text": "$ git status --short",
+         "variants": {
+          "win": "PS> git status --short"
+         }
         },
         {
          "id": "ch08-c30",
@@ -3032,7 +3050,10 @@
          "id": "ch08-c31",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt run"
+         "text": "$ dbt run",
+         "variants": {
+          "win": "PS> dbt run"
+         }
         },
         {
          "c": [
@@ -3198,7 +3219,10 @@
          "id": "ch08-c34",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls --select config.materialized:ephemeral config.materialized:table"
+         "text": "$ dbt ls --select config.materialized:ephemeral config.materialized:table",
+         "variants": {
+          "win": "PS> dbt ls --select config.materialized:ephemeral config.materialized:table"
+         }
         },
         {
          "id": "ch08-c35",
@@ -3233,7 +3257,10 @@
          "id": "ch08-c36",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build"
+         "text": "$ dbt build",
+         "variants": {
+          "win": "PS> dbt build"
+         }
         },
         {
          "id": "ch08-c37",
@@ -3246,7 +3273,10 @@
          "id": "ch08-c38",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt show --inline \"select count(*) as n_orders, sum(amount) as total_amount from {{ ref('fct_orders') }}\""
+         "text": "$ dbt show --inline \"select count(*) as n_orders, sum(amount) as total_amount from {{ ref('fct_orders') }}\"",
+         "variants": {
+          "win": "PS> dbt show --inline \"select count(*) as n_orders, sum(amount) as total_amount from {{ ref('fct_orders') }}\""
+         }
         },
         {
          "id": "ch08-c39",
@@ -3283,7 +3313,10 @@
          "id": "ch08-c40",
          "lang": "bash",
          "t": "code",
-         "text": "$ git add .\n$ git commit -m \"Configure materializations; add ephemeral int_payments__successful\""
+         "text": "$ git add .\n$ git commit -m \"Configure materializations; add ephemeral int_payments__successful\"",
+         "variants": {
+          "win": "PS> git add .\nPS> git commit -m \"Configure materializations; add ephemeral int_payments__successful\""
+         }
         },
         {
          "c": [
@@ -3343,7 +3376,10 @@
          "id": "ch08-c41",
          "lang": "bash",
          "t": "code",
-         "text": "$ git diff ref-ch08 --stat\n dbt_project.yml | 8 ++++----\n 1 file changed, 4 insertions(+), 4 deletions(-)\n$ git diff ref-ch08 -- dbt_project.yml"
+         "text": "$ git diff ref-ch08 --stat\n dbt_project.yml | 8 ++++----\n 1 file changed, 4 insertions(+), 4 deletions(-)\n$ git diff ref-ch08 -- dbt_project.yml",
+         "variants": {
+          "win": "PS> git diff ref-ch08 --stat\n dbt_project.yml | 8 ++++----\n 1 file changed, 4 insertions(+), 4 deletions(-)\nPS> git diff ref-ch08 -- dbt_project.yml"
+         }
         },
         {
          "c": [
@@ -3623,7 +3659,10 @@
        "id": "ch08-c43",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls --select config.materialized:view --resource-type model"
+       "text": "$ dbt ls --select config.materialized:view --resource-type model",
+       "variants": {
+        "win": "PS> dbt ls --select config.materialized:view --resource-type model"
+       }
       },
       {
        "id": "ch08-c44",

@@ -82,7 +82,8 @@ def build() -> int:
             "keysFlagged": len(info["todo"]),
             "keysOverridden": len(info["overrides"]),
             "figures": sum(len(r.ctx.figures) for r in res.chapters),
-            "labs": sum(len(r.ctx.lab_records) for r in res.chapters),
+            "labs": sum(len(r.ctx.lab_records) for r in res.chapters),            # lab boxes of the book
+            "siteLabs": sum(len(l["labs"]) for r in res.chapters for l in r.chapter["lessons"]),  # minus samples
             "traps": len(res.state.traps),
             "glossaryTerms": len(files["glossary.json"]),
             "acceptancePassed": R.ok,
@@ -99,6 +100,7 @@ def build() -> int:
                          "appliedByRule": dict(sorted(Counter(x for a in info["rewrites"] for x in a["rules"]).items()))},
         "osVariants": info["osVariants"],
         "osNotes": info["osNotes"],
+        "siteEdits": info["siteEdits"],
         "warnings": [w for r in res.chapters for w in r.ctx.warnings],
         "stats": stats,
     }
@@ -109,7 +111,7 @@ def build() -> int:
     s = report["summary"]
     print(f"chapters {s['chapters']}, lessons {s['lessons']}, questions {s['chapterQuestions']} + mock "
           f"{s['mockQuestions']}, keys parsed {s['keysParsed']}, flagged {s['keysFlagged']}, figures {s['figures']}, "
-          f"labs {s['labs']}, traps {s['traps']}, terms {s['glossaryTerms']}")
+          f"labs {s['labs']} (site {s['siteLabs']}), traps {s['traps']}, terms {s['glossaryTerms']}")
     failed = [i for i in R.items if not i["ok"]]
     for i in failed:
         print("FAIL", i["check"], "--", i["detail"][:300])

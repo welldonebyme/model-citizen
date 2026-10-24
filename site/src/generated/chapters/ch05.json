@@ -2563,7 +2563,10 @@
          "id": "ch05-c24",
          "lang": "bash",
          "t": "code",
-         "text": "$ python -c \"import yaml; yaml.safe_load(open('broken.yml')); print('valid YAML')\""
+         "text": "$ python -c \"import yaml; yaml.safe_load(open('broken.yml')); print('valid YAML')\"",
+         "variants": {
+          "win": "PS> python -c \"import yaml; yaml.safe_load(open('broken.yml')); print('valid YAML')\""
+         }
         },
         {
          "c": [
@@ -2645,7 +2648,10 @@
          "id": "ch05-c27",
          "lang": "bash",
          "t": "code",
-         "text": "$ python -c \"import yaml; print(yaml.safe_load(open('broken.yml'))['models'][0]['config'])\"\nschema:{{ target.schema }}"
+         "text": "$ python -c \"import yaml; print(yaml.safe_load(open('broken.yml'))['models'][0]['config'])\"\nschema:{{ target.schema }}",
+         "variants": {
+          "win": "PS> python -c \"import yaml; print(yaml.safe_load(open('broken.yml'))['models'][0]['config'])\"\nschema:{{ target.schema }}"
+         }
         },
         {
          "c": [
@@ -2701,7 +2707,10 @@
          "id": "ch05-c28",
          "lang": "bash",
          "t": "code",
-         "text": "$ python -c \"import yaml; yaml.safe_load(open('broken.yml')); print('valid YAML')\"\nvalid YAML\n$ python -c \"import yaml; print(yaml.safe_load(open('broken.yml'))['models'][0]['config'])\"\n{'schema': '{{ target.schema }}'}"
+         "text": "$ python -c \"import yaml; yaml.safe_load(open('broken.yml')); print('valid YAML')\"\nvalid YAML\n$ python -c \"import yaml; print(yaml.safe_load(open('broken.yml'))['models'][0]['config'])\"\n{'schema': '{{ target.schema }}'}",
+         "variants": {
+          "win": "PS> python -c \"import yaml; yaml.safe_load(open('broken.yml')); print('valid YAML')\"\nvalid YAML\nPS> python -c \"import yaml; print(yaml.safe_load(open('broken.yml'))['models'][0]['config'])\"\n{'schema': '{{ target.schema }}'}"
+         }
         },
         {
          "c": [
@@ -4211,7 +4220,10 @@
        "id": "ch05-c45",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile --select stg_orders\n...\nCompiled node 'stg_orders' is:\nselect id as order_id, user_id as customer_id, order_date, status\nfrom \"practice\".\"jaffle_shop\".\"orders\""
+       "text": "$ dbt compile --select stg_orders\n...\nCompiled node 'stg_orders' is:\nselect id as order_id, user_id as customer_id, order_date, status\nfrom \"practice\".\"jaffle_shop\".\"orders\"",
+       "variants": {
+        "win": "PS> dbt compile --select stg_orders\n...\nCompiled node 'stg_orders' is:\nselect id as order_id, user_id as customer_id, order_date, status\nfrom \"practice\".\"jaffle_shop\".\"orders\""
+       }
       },
       {
        "c": [
@@ -4700,7 +4712,10 @@
          "id": "ch05-c47",
          "lang": "bash",
          "t": "code",
-         "text": "$ python render.py hello.sql"
+         "text": "$ python render.py hello.sql",
+         "variants": {
+          "win": "PS> python render.py hello.sql"
+         }
         },
         {
          "c": [
@@ -5038,7 +5053,10 @@
        "id": "ch05-c52",
        "lang": "bash",
        "t": "code",
-       "text": "$ python basics.py\n<class 'str'> <class 'int'> <class 'bool'>\ncredit_card 3\ncompleted\nJAFFLE SHOP has 300 orders\n25.2\nmethod: credit_card\nmethod: gift_card"
+       "text": "$ python basics.py\n<class 'str'> <class 'int'> <class 'bool'>\ncredit_card 3\ncompleted\nJAFFLE SHOP has 300 orders\n25.2\nmethod: credit_card\nmethod: gift_card",
+       "variants": {
+        "win": "PS> python basics.py\n<class 'str'> <class 'int'> <class 'bool'>\ncredit_card 3\ncompleted\nJAFFLE SHOP has 300 orders\n25.2\nmethod: credit_card\nmethod: gift_card"
+       }
       },
       {
        "c": [
@@ -5323,7 +5341,10 @@
        "id": "ch05-c54",
        "lang": "bash",
        "t": "code",
-       "text": "$ python explore.py"
+       "text": "$ python explore.py",
+       "variants": {
+        "win": "PS> python explore.py"
+       }
       },
       {
        "id": "ch05-c55",
@@ -5443,7 +5464,10 @@
        "id": "ch05-c57",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run\n...\n1 of 2 OK created python table model dbt_adnane.payments_by_method .... [OK in 0.14s]"
+       "text": "$ dbt run\n...\n1 of 2 OK created python table model dbt_adnane.payments_by_method .... [OK in 0.14s]",
+       "variants": {
+        "win": "PS> dbt run\n...\n1 of 2 OK created python table model dbt_adnane.payments_by_method .... [OK in 0.14s]"
+       }
       },
       {
        "c": [

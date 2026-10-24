@@ -154,12 +154,17 @@ try {
         $setupTarget = Join-Path $target 'setup.sql'
         if (-not (Test-Path $setupTarget)) { Copy-Item -LiteralPath (Join-Path $KitDir 'setup.sql') -Destination $setupTarget }
     }
-    foreach ($item in @('data', 'updates', 'bugs', 'tools', 'check', 'profiles')) {
-        Copy-Missing (Join-Path $KitDir $item) (Join-Path $Kit $item)
-    }
-    foreach ($item in @('README.md', 'README-windows.md', 'KIT-VERSION.txt', 'setup.sql', 'jaffle_dbt.bundle')) {
-        $t = Join-Path $Kit $item
-        if (-not (Test-Path $t)) { Copy-Item -LiteralPath (Join-Path $KitDir $item) -Destination $t }
+    $kitFull = (Resolve-Path $Kit).Path.TrimEnd('\', '/')
+    if ($kitFull -eq (Resolve-Path $KitDir).Path.TrimEnd('\', '/')) {
+        Info "the kit is already in $Kit (setup started from there)"
+    } else {
+        foreach ($item in @('data', 'updates', 'bugs', 'tools', 'check', 'profiles')) {
+            Copy-Missing (Join-Path $KitDir $item) (Join-Path $Kit $item)
+        }
+        foreach ($item in @('README.md', 'README-windows.md', 'KIT-VERSION.txt', 'setup.sql', 'jaffle_dbt.bundle')) {
+            $t = Join-Path $Kit $item
+            if (-not (Test-Path $t)) { Copy-Item -LiteralPath (Join-Path $KitDir $item) -Destination $t }
+        }
     }
     Ok 'kit\ (data, setup.sql, updates, bugs, jaffle_dbt.bundle, tools ...), practice\ and reference\practice\ are in place'
 
@@ -197,7 +202,7 @@ try {
     Ok "DuckDB Python library in the venv: $LibVersion"
     if ($CliVersion -ne '' -and $CliVersion -ne $LibVersion) {
         Warn "your DuckDB CLI is v$CliVersion but the venv has $LibVersion. They must be equal (Chapter 2)."
-        Warn "fix: .\setup.ps1 -DuckDBVersion $CliVersion    (or install DuckDB CLI $LibVersion)"
+        Warn "fix: powershell -ExecutionPolicy Bypass -File `"$PSCommandPath`" -DuckDBVersion $CliVersion    (or install DuckDB CLI $LibVersion)"
     }
 
     # ------------------------------------------------------------ 4. databases

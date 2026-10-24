@@ -2154,7 +2154,10 @@
        "id": "ch09-c4",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls --select +legacy_monthly_revenue+"
+       "text": "$ dbt ls --select +legacy_monthly_revenue+",
+       "variants": {
+        "win": "PS> dbt ls --select +legacy_monthly_revenue+"
+       }
       },
       {
        "id": "ch09-c5",
@@ -2172,7 +2175,10 @@
        "id": "ch09-c6",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls --select +fct_monthly_revenue --resource-type model --resource-type source"
+       "text": "$ dbt ls --select +fct_monthly_revenue --resource-type model --resource-type source",
+       "variants": {
+        "win": "PS> dbt ls --select +fct_monthly_revenue --resource-type model --resource-type source"
+       }
       },
       {
        "id": "ch09-c7",
@@ -2640,7 +2646,10 @@
        "id": "ch09-c10",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --inline \"select count(*) as n_rows, sum(number_of_orders) as n_orders, sum(revenue) as revenue from {{ ref('legacy_monthly_revenue') }}\""
+       "text": "$ dbt show --inline \"select count(*) as n_rows, sum(number_of_orders) as n_orders, sum(revenue) as revenue from {{ ref('legacy_monthly_revenue') }}\"",
+       "variants": {
+        "win": "PS> dbt show --inline \"select count(*) as n_rows, sum(number_of_orders) as n_orders, sum(revenue) as revenue from {{ ref('legacy_monthly_revenue') }}\""
+       }
       },
       {
        "id": "ch09-c11",
@@ -2775,7 +2784,10 @@
        "id": "ch09-c13",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run --select fct_monthly_revenue\n$ dbt ls --select +fct_monthly_revenue"
+       "text": "$ dbt run --select fct_monthly_revenue\n$ dbt ls --select +fct_monthly_revenue",
+       "variants": {
+        "win": "PS> dbt run --select fct_monthly_revenue\nPS> dbt ls --select +fct_monthly_revenue"
+       }
       },
       {
        "id": "ch09-c14",
@@ -2823,7 +2835,10 @@
        "id": "ch09-c15",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --inline \"select * from {{ ref('legacy_monthly_revenue') }} except select * from {{ ref('fct_monthly_revenue') }}\"\n$ dbt show --inline \"select * from {{ ref('fct_monthly_revenue') }} except select * from {{ ref('legacy_monthly_revenue') }}\""
+       "text": "$ dbt show --inline \"select * from {{ ref('legacy_monthly_revenue') }} except select * from {{ ref('fct_monthly_revenue') }}\"\n$ dbt show --inline \"select * from {{ ref('fct_monthly_revenue') }} except select * from {{ ref('legacy_monthly_revenue') }}\"",
+       "variants": {
+        "win": "PS> dbt show --inline \"select * from {{ ref('legacy_monthly_revenue') }} except select * from {{ ref('fct_monthly_revenue') }}\"\nPS> dbt show --inline \"select * from {{ ref('fct_monthly_revenue') }} except select * from {{ ref('legacy_monthly_revenue') }}\""
+       }
       },
       {
        "id": "ch09-c16",
@@ -3026,7 +3041,10 @@
        "id": "ch09-c18",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt run --select fct_monthly_revenue\n$ dbt show --inline \"select (select count(*) from {{ ref('legacy_monthly_revenue') }}) as legacy_rows, (select count(*) from {{ ref('fct_monthly_revenue') }}) as refactored_rows\""
+       "text": "$ dbt run --select fct_monthly_revenue\n$ dbt show --inline \"select (select count(*) from {{ ref('legacy_monthly_revenue') }}) as legacy_rows, (select count(*) from {{ ref('fct_monthly_revenue') }}) as refactored_rows\"",
+       "variants": {
+        "win": "PS> dbt run --select fct_monthly_revenue\nPS> dbt show --inline \"select (select count(*) from {{ ref('legacy_monthly_revenue') }}) as legacy_rows, (select count(*) from {{ ref('fct_monthly_revenue') }}) as refactored_rows\""
+       }
       },
       {
        "id": "ch09-c19",
@@ -3146,7 +3164,10 @@
          "id": "ch09-c21",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt run --select legacy_monthly_revenue\n$ dbt ls --select +legacy_monthly_revenue+\n$ dbt show --inline \"select count(*) as n_rows, sum(number_of_orders) as n_orders, sum(revenue) as revenue from {{ ref('legacy_monthly_revenue') }}\""
+         "text": "$ dbt run --select legacy_monthly_revenue\n$ dbt ls --select +legacy_monthly_revenue+\n$ dbt show --inline \"select count(*) as n_rows, sum(number_of_orders) as n_orders, sum(revenue) as revenue from {{ ref('legacy_monthly_revenue') }}\"",
+         "variants": {
+          "win": "PS> dbt run --select legacy_monthly_revenue\nPS> dbt ls --select +legacy_monthly_revenue+\nPS> dbt show --inline \"select count(*) as n_rows, sum(number_of_orders) as n_orders, sum(revenue) as revenue from {{ ref('legacy_monthly_revenue') }}\""
+         }
         },
         {
          "c": [
@@ -3191,7 +3212,10 @@
          "id": "ch09-c22",
          "lang": "bash",
          "t": "code",
-         "text": "$ git add models/legacy\n$ git commit -m \"Add legacy monthly revenue model (copied from the old tool)\""
+         "text": "$ git add models/legacy\n$ git commit -m \"Add legacy monthly revenue model (copied from the old tool)\"",
+         "variants": {
+          "win": "PS> git add models/legacy\nPS> git commit -m \"Add legacy monthly revenue model (copied from the old tool)\""
+         }
         },
         {
          "c": [
@@ -3561,7 +3585,10 @@
        "id": "ch09-c25",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt build --select +fct_monthly_revenue"
+       "text": "$ dbt build --select +fct_monthly_revenue",
+       "variants": {
+        "win": "PS> dbt build --select +fct_monthly_revenue"
+       }
       },
       {
        "id": "ch09-c26",
@@ -3738,7 +3765,10 @@
        "id": "ch09-c28",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --inline \"select * from {{ ref('fct_monthly_revenue') }} where country is null order by order_month\""
+       "text": "$ dbt show --inline \"select * from {{ ref('fct_monthly_revenue') }} where country is null order by order_month\"",
+       "variants": {
+        "win": "PS> dbt show --inline \"select * from {{ ref('fct_monthly_revenue') }} where country is null order by order_month\""
+       }
       },
       {
        "id": "ch09-c29",
@@ -3804,7 +3834,10 @@
        "id": "ch09-c30",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --inline \"select (select count(*) from (select * from {{ ref('legacy_monthly_revenue') }} except select * from {{ ref('fct_monthly_revenue') }})) as only_in_legacy, (select count(*) from (select * from {{ ref('fct_monthly_revenue') }} except select * from {{ ref('legacy_monthly_revenue') }})) as only_in_refactored\""
+       "text": "$ dbt show --inline \"select (select count(*) from (select * from {{ ref('legacy_monthly_revenue') }} except select * from {{ ref('fct_monthly_revenue') }})) as only_in_legacy, (select count(*) from (select * from {{ ref('fct_monthly_revenue') }} except select * from {{ ref('legacy_monthly_revenue') }})) as only_in_refactored\"",
+       "variants": {
+        "win": "PS> dbt show --inline \"select (select count(*) from (select * from {{ ref('legacy_monthly_revenue') }} except select * from {{ ref('fct_monthly_revenue') }})) as only_in_legacy, (select count(*) from (select * from {{ ref('fct_monthly_revenue') }} except select * from {{ ref('legacy_monthly_revenue') }})) as only_in_refactored\""
+       }
       },
       {
        "id": "ch09-c31",
@@ -3984,7 +4017,10 @@
        "id": "ch09-c34",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt show --inline \"select order_id, customer_id, order_date, status, amount from dbt_adnane.fct_orders except select order_id, customer_id, order_date, status, paid_amount from {{ ref('int_orders__enriched') }}\"\n$ dbt show --inline \"select order_id, customer_id, order_date, status, paid_amount from {{ ref('int_orders__enriched') }} except select order_id, customer_id, order_date, status, amount from dbt_adnane.fct_orders\""
+       "text": "$ dbt show --inline \"select order_id, customer_id, order_date, status, amount from dbt_adnane.fct_orders except select order_id, customer_id, order_date, status, paid_amount from {{ ref('int_orders__enriched') }}\"\n$ dbt show --inline \"select order_id, customer_id, order_date, status, paid_amount from {{ ref('int_orders__enriched') }} except select order_id, customer_id, order_date, status, amount from dbt_adnane.fct_orders\"",
+       "variants": {
+        "win": "PS> dbt show --inline \"select order_id, customer_id, order_date, status, amount from dbt_adnane.fct_orders except select order_id, customer_id, order_date, status, paid_amount from {{ ref('int_orders__enriched') }}\"\nPS> dbt show --inline \"select order_id, customer_id, order_date, status, paid_amount from {{ ref('int_orders__enriched') }} except select order_id, customer_id, order_date, status, amount from dbt_adnane.fct_orders\""
+       }
       },
       {
        "id": "ch09-c35",
@@ -4007,7 +4043,10 @@
        "id": "ch09-c36",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt build --select fct_orders+\n$ dbt ls --select +fct_orders --resource-type model"
+       "text": "$ dbt build --select fct_orders+\n$ dbt ls --select +fct_orders --resource-type model",
+       "variants": {
+        "win": "PS> dbt build --select fct_orders+\nPS> dbt ls --select +fct_orders --resource-type model"
+       }
       },
       {
        "id": "ch09-c37",
@@ -4099,7 +4138,10 @@
        "id": "ch09-c38",
        "lang": "bash",
        "t": "code",
-       "text": "$ git rm -r -q models/legacy\n$ dbt build"
+       "text": "$ git rm -r -q models/legacy\n$ dbt build",
+       "variants": {
+        "win": "PS> git rm -r -q models/legacy\nPS> dbt build"
+       }
       },
       {
        "id": "ch09-c39",
@@ -4118,7 +4160,10 @@
        "id": "ch09-c40",
        "lang": "bash",
        "t": "code",
-       "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' order by 1\""
+       "text": "$ duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' order by 1\"",
+       "variants": {
+        "win": "PS> duckdb -readonly ../practice/practice.duckdb -c \"select table_name, table_type from information_schema.tables where table_schema = 'dbt_adnane' order by 1\""
+       }
       },
       {
        "id": "ch09-c41",
@@ -4154,7 +4199,10 @@
        "id": "ch09-c42",
        "lang": "bash",
        "t": "code",
-       "text": "$ duckdb ../practice/practice.duckdb\nD drop view if exists dbt_adnane.legacy_monthly_revenue;\nD .quit"
+       "text": "$ duckdb ../practice/practice.duckdb\nD drop view if exists dbt_adnane.legacy_monthly_revenue;\nD .quit",
+       "variants": {
+        "win": "PS> duckdb ../practice/practice.duckdb\nD drop view if exists dbt_adnane.legacy_monthly_revenue;\nD .quit"
+       }
       },
       {
        "c": [
@@ -4247,7 +4295,10 @@
          "id": "ch09-c43",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select +fct_monthly_revenue"
+         "text": "$ dbt build --select +fct_monthly_revenue",
+         "variants": {
+          "win": "PS> dbt build --select +fct_monthly_revenue"
+         }
         },
         {
          "c": [
@@ -4417,7 +4468,10 @@
          "id": "ch09-c44",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select fct_orders+"
+         "text": "$ dbt build --select fct_orders+",
+         "variants": {
+          "win": "PS> dbt build --select fct_orders+"
+         }
         },
         {
          "c": [
@@ -4462,7 +4516,10 @@
          "id": "ch09-c45",
          "lang": "bash",
          "t": "code",
-         "text": "$ git rm -r -q models/legacy\n$ dbt build"
+         "text": "$ git rm -r -q models/legacy\n$ dbt build",
+         "variants": {
+          "win": "PS> git rm -r -q models/legacy\nPS> dbt build"
+         }
         },
         {
          "c": [
@@ -4516,7 +4573,10 @@
          "id": "ch09-c46",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls --resource-type model\n$ dbt show --select fct_monthly_revenue --limit 3"
+         "text": "$ dbt ls --resource-type model\n$ dbt show --select fct_monthly_revenue --limit 3",
+         "variants": {
+          "win": "PS> dbt ls --resource-type model\nPS> dbt show --select fct_monthly_revenue --limit 3"
+         }
         },
         {
          "id": "ch09-c47",
@@ -4561,7 +4621,10 @@
          "id": "ch09-c48",
          "lang": "bash",
          "t": "code",
-         "text": "$ git status --short\nD  models/legacy/legacy_monthly_revenue.sql\n M models/marts/fct_orders.sql\n?? models/intermediate/int_orders__enriched.sql\n?? models/marts/fct_monthly_revenue.sql\n$ git add .\n$ git commit -m \"Refactor legacy revenue into int_orders__enriched and fct_monthly_revenue; fct_orders reuses int_orders__enriched\"\n$ git log --oneline -3\n4cc728f Refactor legacy revenue into int_orders__enriched and fct_monthly_revenue; fct_orders reuses int_orders__enriched\n452cde6 Add legacy monthly revenue model (copied from the old tool)\n186aac9 Configure materializations; add ephemeral int_payments__successful\n$ git diff ref-ch09 --stat\n dbt_project.yml | 8 ++++----\n 1 file changed, 4 insertions(+), 4 deletions(-)"
+         "text": "$ git status --short\nD  models/legacy/legacy_monthly_revenue.sql\n M models/marts/fct_orders.sql\n?? models/intermediate/int_orders__enriched.sql\n?? models/marts/fct_monthly_revenue.sql\n$ git add .\n$ git commit -m \"Refactor legacy revenue into int_orders__enriched and fct_monthly_revenue; fct_orders reuses int_orders__enriched\"\n$ git log --oneline -3\n4cc728f Refactor legacy revenue into int_orders__enriched and fct_monthly_revenue; fct_orders reuses int_orders__enriched\n452cde6 Add legacy monthly revenue model (copied from the old tool)\n186aac9 Configure materializations; add ephemeral int_payments__successful\n$ git diff ref-ch09 --stat\n dbt_project.yml | 8 ++++----\n 1 file changed, 4 insertions(+), 4 deletions(-)",
+         "variants": {
+          "win": "PS> git status --short\nD  models/legacy/legacy_monthly_revenue.sql\n M models/marts/fct_orders.sql\n?? models/intermediate/int_orders__enriched.sql\n?? models/marts/fct_monthly_revenue.sql\nPS> git add .\nPS> git commit -m \"Refactor legacy revenue into int_orders__enriched and fct_monthly_revenue; fct_orders reuses int_orders__enriched\"\nPS> git log --oneline -3\n4cc728f Refactor legacy revenue into int_orders__enriched and fct_monthly_revenue; fct_orders reuses int_orders__enriched\n452cde6 Add legacy monthly revenue model (copied from the old tool)\n186aac9 Configure materializations; add ephemeral int_payments__successful\nPS> git diff ref-ch09 --stat\n dbt_project.yml | 8 ++++----\n 1 file changed, 4 insertions(+), 4 deletions(-)"
+         }
         },
         {
          "c": [

@@ -1091,7 +1091,10 @@
          "id": "ch19-c6",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt test --select test_type:unit"
+         "text": "$ dbt test --select test_type:unit",
+         "variants": {
+          "win": "PS> dbt test --select test_type:unit"
+         }
         },
         {
          "c": [
@@ -1943,7 +1946,10 @@
          "id": "ch19-c17",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt test --select test_dim_customers_lifetime_value"
+         "text": "$ dbt test --select test_dim_customers_lifetime_value",
+         "variants": {
+          "win": "PS> dbt test --select test_dim_customers_lifetime_value"
+         }
         },
         {
          "c": [
@@ -2703,7 +2709,10 @@
          "id": "ch19-c26",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt test --select test_type:unit\n$ dbt ls --resource-type unit_test"
+         "text": "$ dbt test --select test_type:unit\n$ dbt ls --resource-type unit_test",
+         "variants": {
+          "win": "PS> dbt test --select test_type:unit\nPS> dbt ls --resource-type unit_test"
+         }
         },
         {
          "c": [
@@ -2744,7 +2753,10 @@
          "id": "ch19-c28",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select +dim_customers --exclude-resource-type test"
+         "text": "$ dbt build --select +dim_customers --exclude-resource-type test",
+         "variants": {
+          "win": "PS> dbt build --select +dim_customers --exclude-resource-type test"
+         }
         },
         {
          "c": [
@@ -3940,7 +3952,10 @@
        "id": "ch19-c38",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt build --exclude-resource-type unit_test"
+       "text": "$ dbt build --exclude-resource-type unit_test",
+       "variants": {
+        "win": "PS> dbt build --exclude-resource-type unit_test"
+       }
       },
       {
        "c": [
@@ -4039,7 +4054,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ dbt build --select +dim_customers --exclude-resource-type unit_test --exclude-resource-type test --target prod"
+         "text": "$ dbt build --select +dim_customers --exclude-resource-type unit_test --exclude-resource-type test --target prod",
+         "variants": {
+          "win": "PS> dbt build --select +dim_customers --exclude-resource-type unit_test --exclude-resource-type test --target prod"
+         }
         },
         {
          "c": [
@@ -4124,7 +4142,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ git add .\n$ git commit -m \"Unit tests: cents to dollars, dim_customers lifetime value, incremental fct_orders\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch19 --stat"
+         "text": "$ git add .\n$ git commit -m \"Unit tests: cents to dollars, dim_customers lifetime value, incremental fct_orders\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch19 --stat",
+         "variants": {
+          "win": "PS> git add .\nPS> git commit -m \"Unit tests: cents to dollars, dim_customers lifetime value, incremental fct_orders\"\nPS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nPS> git diff ref-ch19 --stat"
+         }
         },
         {
          "c": [

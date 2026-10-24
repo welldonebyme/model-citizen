@@ -2135,7 +2135,10 @@
          "id": "ch18-c22",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt test --select stg_jaffle_shop__orders stg_stripe__payments"
+         "text": "$ dbt test --select stg_jaffle_shop__orders stg_stripe__payments",
+         "variants": {
+          "win": "PS> dbt test --select stg_jaffle_shop__orders stg_stripe__payments"
+         }
         },
         {
          "c": [
@@ -2210,7 +2213,10 @@
          "id": "ch18-c24",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select stg_jaffle_shop__orders+"
+         "text": "$ dbt build --select stg_jaffle_shop__orders+",
+         "variants": {
+          "win": "PS> dbt build --select stg_jaffle_shop__orders+"
+         }
         },
         {
          "c": [
@@ -2456,7 +2462,10 @@
        "id": "ch18-c26",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt test --select test_name:relationships --store-failures"
+       "text": "$ dbt test --select test_name:relationships --store-failures",
+       "variants": {
+        "win": "PS> dbt test --select test_name:relationships --store-failures"
+       }
       },
       {
        "id": "ch18-c27",
@@ -2485,7 +2494,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt show --inline 'select * from dbt_adnane.relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c'"
+       "text": "$ dbt show --inline 'select * from dbt_adnane.relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c'",
+       "variants": {
+        "win": "PS> dbt show --inline 'select * from dbt_adnane.relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c'"
+       }
       },
       {
        "id": "ch18-c29",
@@ -2504,7 +2516,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt show --inline \"select order_id, customer_id, order_date, status from {{ ref('stg_jaffle_shop__orders') }} where customer_id = 101\""
+       "text": "$ dbt show --inline \"select order_id, customer_id, order_date, status from {{ ref('stg_jaffle_shop__orders') }} where customer_id = 101\"",
+       "variants": {
+        "win": "PS> dbt show --inline \"select order_id, customer_id, order_date, status from {{ ref('stg_jaffle_shop__orders') }} where customer_id = 101\""
+       }
       },
       {
        "id": "ch18-c31",
@@ -2643,7 +2658,10 @@
        "lang": "bash",
        "small": true,
        "t": "code",
-       "text": "$ dbt -q ls --select test_name:relationships --output json --output-keys alias schema\n{\"alias\": \"relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c\", \"schema\": \"dbt_adnane\"}\n$ dbt -q ls --select test_name:relationships --target prod --output json --output-keys alias schema\n{\"alias\": \"relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c\", \"schema\": \"dbt_test__audit\"}"
+       "text": "$ dbt -q ls --select test_name:relationships --output json --output-keys alias schema\n{\"alias\": \"relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c\", \"schema\": \"dbt_adnane\"}\n$ dbt -q ls --select test_name:relationships --target prod --output json --output-keys alias schema\n{\"alias\": \"relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c\", \"schema\": \"dbt_test__audit\"}",
+       "variants": {
+        "win": "PS> dbt -q ls --select test_name:relationships --output json --output-keys alias schema\n{\"alias\": \"relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c\", \"schema\": \"dbt_adnane\"}\nPS> dbt -q ls --select test_name:relationships --target prod --output json --output-keys alias schema\n{\"alias\": \"relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c\", \"schema\": \"dbt_test__audit\"}"
+       }
       },
       {
        "blocks": [
@@ -3064,7 +3082,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ dbt test --select test_name:relationships --store-failures\n$ dbt show --inline 'select * from dbt_adnane.relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c'"
+         "text": "$ dbt test --select test_name:relationships --store-failures\n$ dbt show --inline 'select * from dbt_adnane.relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c'",
+         "variants": {
+          "win": "PS> dbt test --select test_name:relationships --store-failures\nPS> dbt show --inline 'select * from dbt_adnane.relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c'"
+         }
         },
         {
          "c": [
@@ -3283,7 +3304,10 @@
          "id": "ch18-c42",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build --select stg_jaffle_shop__orders+"
+         "text": "$ dbt build --select stg_jaffle_shop__orders+",
+         "variants": {
+          "win": "PS> dbt build --select stg_jaffle_shop__orders+"
+         }
         },
         {
          "c": [
@@ -3327,7 +3351,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c\""
+         "text": "$ duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c\"",
+         "variants": {
+          "win": "PS> duckdb ../practice/practice.duckdb -c \"drop table dbt_adnane.relationships_stg_jaffle_shop__69c2006accf24d593d7f144684ebb92c\""
+         }
         }
        ],
        "id": "ch18-lab2",
@@ -3468,7 +3495,10 @@
        "id": "ch18-c46",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt test --select \"source:*\""
+       "text": "$ dbt test --select \"source:*\"",
+       "variants": {
+        "win": "PS> dbt test --select \"source:*\""
+       }
       },
       {
        "id": "ch18-c47",
@@ -4213,7 +4243,10 @@
          "id": "ch18-c58",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt test --select test_type:singular"
+         "text": "$ dbt test --select test_type:singular",
+         "variants": {
+          "win": "PS> dbt test --select test_type:singular"
+         }
         },
         {
          "c": [
@@ -5779,7 +5812,10 @@
          "id": "ch18-c74",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt ls --resource-type test --output name"
+         "text": "$ dbt ls --resource-type test --output name",
+         "variants": {
+          "win": "PS> dbt ls --resource-type test --output name"
+         }
         },
         {
          "c": [
@@ -5820,7 +5856,10 @@
          "id": "ch18-c76",
          "lang": "bash",
          "t": "code",
-         "text": "$ dbt build"
+         "text": "$ dbt build",
+         "variants": {
+          "win": "PS> dbt build"
+         }
         },
         {
          "c": [
@@ -5868,7 +5907,10 @@
          "id": "ch18-c78",
          "lang": "bash",
          "t": "code",
-         "text": "$ git add .\n$ git commit -m \"Data tests: generic, singular, custom generic, dbt_utils and source tests\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch18 --stat"
+         "text": "$ git add .\n$ git commit -m \"Data tests: generic, singular, custom generic, dbt_utils and source tests\"\n$ git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\n$ git diff ref-ch18 --stat",
+         "variants": {
+          "win": "PS> git add .\nPS> git commit -m \"Data tests: generic, singular, custom generic, dbt_utils and source tests\"\nPS> git fetch --no-tags reference \"refs/tags/*:refs/tags/ref-*\"\nPS> git diff ref-ch18 --stat"
+         }
         },
         {
          "c": [
@@ -7448,7 +7490,10 @@
          "lang": "bash",
          "small": true,
          "t": "code",
-         "text": "$ git restore .\n$ git status --short          # must print nothing\n$ duckdb ../practice/practice.duckdb -c \"drop view dbt_adnane.one_order_per_customer; drop schema dbt_adnane_dbt_test__audit cascade;\""
+         "text": "$ git restore .\n$ git status --short          # must print nothing\n$ duckdb ../practice/practice.duckdb -c \"drop view dbt_adnane.one_order_per_customer; drop schema dbt_adnane_dbt_test__audit cascade;\"",
+         "variants": {
+          "win": "PS> git restore .\nPS> git status --short          # must print nothing\nPS> duckdb ../practice/practice.duckdb -c \"drop view dbt_adnane.one_order_per_customer; drop schema dbt_adnane_dbt_test__audit cascade;\""
+         }
         }
        ],
        "id": "ch18-lab5",

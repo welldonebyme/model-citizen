@@ -57,7 +57,7 @@
   }
  ],
  "kind": "start",
- "labMinutes": 10,
+ "labMinutes": 0,
  "label": "ch:start",
  "lessons": [
   {
@@ -91,9 +91,9 @@
      ],
      "id": "ch00-s1-0",
      "title": [
-      "Welcome, Adnane"
+      "Welcome"
      ],
-     "titleText": "Welcome, Adnane"
+     "titleText": "Welcome"
     },
     {
      "blocks": [
@@ -162,7 +162,7 @@
              ],
              "t": "b"
             },
-            " You will type every command yourself on a free local setup (dbt Core + DuckDB on your Mac), then build a full capstone project from scratch."
+            " You will type every command yourself on a free local setup (dbt Core + DuckDB on your computer), then build a full capstone project from scratch."
            ],
            "t": "p"
           },
@@ -329,7 +329,7 @@
          },
          {
           "c": [
-           "Your Mac. Everything in the labs runs locally and for free."
+           "Your computer: macOS, Windows or Linux. Everything in the labs runs locally and for free."
           ]
          }
         ],
@@ -360,7 +360,7 @@
          },
          {
           "c": [
-           "GitHub (Week 2), dbt Learn (you already have it), a free dbt platform account (Week 4)."
+           "GitHub (Week 2), dbt Learn (create a free account at learn.getdbt.com in Week 1), a free dbt platform account (Week 4)."
           ]
          }
         ],
@@ -414,9 +414,9 @@
     }
    ],
    "title": [
-    "Welcome, Adnane"
+    "Welcome"
    ],
-   "titleText": "Welcome, Adnane"
+   "titleText": "Welcome"
   },
   {
    "anchors": [
@@ -704,14 +704,13 @@
    ],
    "checkpoints": [],
    "id": "ch00-s3",
-   "labMinutes": 10,
+   "labMinutes": 0,
    "label": "sec:start-anatomy",
-   "labs": [
-    "ch00-lab1"
-   ],
+   "labs": [],
    "minutes": 5,
    "number": "0.3",
-   "objectives": [
+   "objectives": [],
+   "objectivesBook": [
     "1.11"
    ],
    "steps": [
@@ -820,11 +819,18 @@
          "t": "p"
         }
        ],
-       "id": "ch00-lab1",
-       "objectives": [],
-       "t": "lab",
+       "kind": "tip",
+       "sample": {
+        "id": "ch00-lab1",
+        "objectives": [],
+        "t": "lab",
+        "title": [
+         "example"
+        ]
+       },
+       "t": "callout",
        "title": [
-        "example"
+        "Hands-on lab (example of the box)"
        ]
       },
       {
@@ -937,6 +943,50 @@
             " explains why)."
            ],
            "t": "p"
+          },
+          {
+           "blocks": [
+            {
+             "c": [
+              "With Windows chosen in the switch, the terminal boxes start with ",
+              {
+               "t": "code",
+               "v": "PS>"
+              },
+              " (or ",
+              {
+               "t": "code",
+               "v": "(.venv) PS>"
+              },
+              " when the venv is active): that is the prompt, do not type it. A ",
+              {
+               "t": "code",
+               "v": "$"
+              },
+              " inside a command is part of the command: type ",
+              {
+               "t": "code",
+               "v": "$HOME"
+              },
+              " and ",
+              {
+               "t": "code",
+               "v": "$env:NAME"
+              },
+              " as they are."
+             ],
+             "t": "p"
+            }
+           ],
+           "kind": "tip",
+           "os": [
+            "win"
+           ],
+           "osNote": "win-ch00-prompt",
+           "t": "callout",
+           "title": [
+            "On Windows"
+           ]
           }
          ]
         },
@@ -965,7 +1015,10 @@
        "id": "ch00-c1",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt --version        # you type this (without the \"$\")\nCore:\n  - installed: 1.11.16  # the computer prints this"
+       "text": "$ dbt --version        # you type this (without the \"$\")\nCore:\n  - installed: 1.11.16  # the computer prints this",
+       "variants": {
+        "win": "PS> dbt --version        # you type this (without the \"PS>\")\nCore:\n  - installed: 1.11.16  # the computer prints this"
+       }
       },
       {
        "c": [
@@ -2510,7 +2563,8 @@
    "labs": [],
    "minutes": 10,
    "number": "0.6",
-   "objectives": [
+   "objectives": [],
+   "objectivesBook": [
     "1.11"
    ],
    "steps": [
@@ -6323,7 +6377,6 @@
  "minutes": 50,
  "number": 0,
  "objectives": [
-  "1.11",
   "EXAM",
   "PLAN"
  ],

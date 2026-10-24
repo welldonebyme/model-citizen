@@ -38,7 +38,10 @@ def test_prompt_outputs_and_dbt_only_blocks():
     w, wsl, _ = win("$ cd ~/dbt-course\n$ ls\nnotes.txt  practice\n(.venv) $ dbt build")
     assert w == "PS> cd $HOME\\dbt-course\nPS> Get-ChildItem -Name\nnotes.txt  practice\n(.venv) PS> dbt build"
     assert wsl is None
-    assert win("$ dbt build\n...\nDone. PASS=17\n$ dbt ls -s +fct_orders")[0] is None   # same on every OS
+    # same commands on every OS: the Windows variant only changes the prompt (no `$` prompt in Windows mode)
+    assert win("$ dbt build\n...\nDone. PASS=17\n$ dbt ls -s +fct_orders")[0] == \
+        "PS> dbt build\n...\nDone. PASS=17\nPS> dbt ls -s +fct_orders"
+    assert win("Done. PASS=17")[0] is None                                              # no command line
 
 
 def test_and_chain_becomes_two_lines_and_semicolon_stays():

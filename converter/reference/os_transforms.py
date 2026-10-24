@@ -152,4 +152,8 @@ BLOCKS = [
              "PS> dbt --version > $null; $LASTEXITCODE     # programs (dbt, git, python) put their number in $LASTEXITCODE\n0",
          why="PowerShell: $? is True/False for the last command; the exit code of a program is $LASTEXITCODE "
              "(Get-ChildItem is not a program and sets no exit code)"),
+    dict(block="ch00-c1", rule="comment", sha1="5fad5a99a8fa",
+         win='PS> dbt --version        # you type this (without the "PS>")\nCore:\n'
+             "  - installed: 1.11.16  # the computer prints this",
+         why='the example explains the prompt: on Windows it is "PS>", not "$"'),
 ]

@@ -322,7 +322,7 @@
   },
   {
    "check": "Windows/WSL variants of shell blocks = os-commands.yaml",
-   "detail": "572 shell blocks, 171 with a Windows variant; stale: ",
+   "detail": "572 shell blocks, 572 with a Windows variant; stale: ",
    "ok": true
   },
   {
@@ -332,12 +332,27 @@
   },
   {
    "check": "every OS note (os-notes.yaml) appears once, after its anchor",
-   "detail": "32 notes (27 Windows, 5 WSL); problems: ",
+   "detail": "71 notes (66 Windows, 10 WSL, 4 on every system); problems: ",
+   "ok": true
+  },
+  {
+   "check": "every Windows output recorded on macOS has a Windows note",
+   "detail": "17 automatic notes (home paths), 15 blocks explained in os-notes.yaml; missing: ",
    "ok": true
   },
   {
    "check": "no shipped file names the author's folders (/Users/mac, Documents/Adnane, dbt-bible/)",
    "detail": "52 kit zip members (2 git bundles) + 122 files in site/public/{presets,reference,data}; ",
+   "ok": true
+  },
+  {
+   "check": "every site link of the OS notes resolves (lesson anchors, site/public files)",
+   "detail": "9 links; ",
+   "ok": true
+  },
+  {
+   "check": "no U+FFFD (unknown glyph) in figures or generated text",
+   "detail": "",
    "ok": true
   }
  ],
@@ -923,23 +938,48 @@
  ],
  "flaggedKeys": [],
  "osNotes": {
+  "autoOutputNotes": {
+   "auto": 17,
+   "blocks": [
+    "ch03-c3",
+    "ch06-c9",
+    "ch06-c51",
+    "ch06-c56",
+    "ch10-c6",
+    "ch10-c109",
+    "ch11-c53",
+    "ch11-c56",
+    "ch11-c60",
+    "ch12-c23",
+    "ch15-c11",
+    "ch16-c78",
+    "ch16-c79",
+    "ch16-c80",
+    "ch20-c18",
+    "ch25-c13",
+    "ch26-c2"
+   ],
+   "explicit": 11
+  },
+  "everyOs": 4,
   "file": "converter/overrides/os-notes.yaml",
-  "notes": 32,
-  "win": 27,
-  "wsl": 5
+  "mac": 4,
+  "notes": 71,
+  "win": 66,
+  "wsl": 10
  },
  "osVariants": {
   "bashBlocks": 572,
   "byRule": {
    "and-chain": 19,
-   "block-override": 1,
+   "block-override": 2,
    "brew-duckdb": 1,
    "brew-uv": 1,
    "brew-version": 1,
    "cat": 6,
    "cat-n-sed": 2,
    "cd": 44,
-   "comment": 1,
+   "comment": 2,
    "cp": 19,
    "cp-R": 3,
    "diff": 2,
@@ -978,7 +1018,7 @@
   },
   "rules": "converter/overrides/os-commands.yaml",
   "unhandled": [],
-  "withWin": 171,
+  "withWin": 572,
   "withWsl": 3
  },
  "overridesApplied": [
@@ -2539,6 +2579,91 @@
   ],
   "rules": "converter/rules/paths.yaml"
  },
+ "siteEdits": {
+  "file": "converter/overrides/site-edits.yaml",
+  "notLabs": [
+   {
+    "lab": "ch00-lab1",
+    "lesson": "ch00-s3"
+   }
+  ],
+  "objectives": [
+   {
+    "lesson": "ch00-s3",
+    "removed": [
+     "1.11"
+    ]
+   },
+   {
+    "lesson": "ch00-s6",
+    "removed": [
+     "1.11"
+    ]
+   }
+  ],
+  "text": [
+   {
+    "id": "welcome-title",
+    "in": "ch00-s1",
+    "strings": 4
+   },
+   {
+    "id": "what-you-need-computer",
+    "in": "ch00-s1",
+    "strings": 1
+   },
+   {
+    "id": "what-you-need-dbt-learn",
+    "in": "ch00-s1",
+    "strings": 1
+   },
+   {
+    "id": "practical-your-computer",
+    "in": "ch00-s1",
+    "strings": 1
+   },
+   {
+    "id": "git-config-name",
+    "in": "ch03-s2",
+    "strings": 1
+   },
+   {
+    "id": "git-config-list-name",
+    "in": "ch03-s2",
+    "strings": 1
+   },
+   {
+    "id": "git-config-email",
+    "in": "ch03-s2",
+    "strings": 1
+   },
+   {
+    "id": "git-log-author",
+    "in": "ch03-s3",
+    "strings": 1
+   },
+   {
+    "id": "git-conflict-story",
+    "in": "ch03-s6",
+    "strings": 1
+   },
+   {
+    "id": "dbt-init-home-folder",
+    "in": "ch06-s3",
+    "strings": 1
+   },
+   {
+    "id": "dbt-init-first-time",
+    "in": "ch06-s3",
+    "strings": 1
+   },
+   {
+    "id": "grep-raw-tables",
+    "in": "ch07-s3",
+    "strings": 1
+   }
+  ]
+ },
  "stats": {
   "appA": {
    "box:tipbox": 1,
@@ -3439,6 +3564,7 @@
   "labs": 118,
   "lessons": 311,
   "mockQuestions": 195,
+  "siteLabs": 117,
   "traps": 145
  },
  "warnings": []

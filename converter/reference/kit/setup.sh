@@ -112,9 +112,13 @@ for target in "$COURSE/practice" "$COURSE/reference/practice"; do
   copy_tree "$KIT_DIR/updates" "$target/updates"
   [ -e "$target/setup.sql" ] || cp "$KIT_DIR/setup.sql" "$target/setup.sql"
 done
-for item in README.md README-windows.md KIT-VERSION.txt data setup.sql updates bugs tools check profiles jaffle_dbt.bundle; do
-  if [ -d "$KIT_DIR/$item" ]; then copy_tree "$KIT_DIR/$item" "$COURSE/kit/$item"; else cp "$KIT_DIR/$item" "$COURSE/kit/$item"; fi
-done
+if [ "$KIT_DIR" -ef "$COURSE/kit" ]; then
+  info "the kit is already in $COURSE/kit (setup started from there)"
+else
+  for item in README.md README-windows.md KIT-VERSION.txt data setup.sql updates bugs tools check profiles jaffle_dbt.bundle; do
+    if [ -d "$KIT_DIR/$item" ]; then copy_tree "$KIT_DIR/$item" "$COURSE/kit/$item"; else cp "$KIT_DIR/$item" "$COURSE/kit/$item"; fi
+  done
+fi
 ok "kit/ (data, setup.sql, updates, bugs, jaffle_dbt.bundle, tools ...), practice/ and reference/practice/ are in place"
 
 # ---------------------------------------------------------------- 3. venv + dbt
@@ -138,7 +142,7 @@ LIB_VERSION="$("$PY" -c 'import duckdb; print(duckdb.__version__)')"
 ok "DuckDB Python library in the venv: $LIB_VERSION"
 if [ -n "$CLI_VERSION" ] && [ "$CLI_VERSION" != "$LIB_VERSION" ]; then
   warn "your DuckDB CLI is v$CLI_VERSION but the venv has $LIB_VERSION. They must be equal (Chapter 2)."
-  warn "fix: DUCKDB_VERSION=$CLI_VERSION bash setup.sh    (or install DuckDB CLI $LIB_VERSION)"
+  warn "fix: DUCKDB_VERSION=$CLI_VERSION bash \"$KIT_DIR/setup.sh\"    (or install DuckDB CLI $LIB_VERSION)"
 fi
 
 # ---------------------------------------------------------------- 4. databases

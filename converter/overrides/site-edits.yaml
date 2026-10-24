@@ -1,0 +1,98 @@
+# Site edits: the book's text changed for the website (format and rules: converter/build/siteedits.py).
+#
+# The book is its author's personal edition: it greets him, assumes his Mac and an account he already has.
+# The website is for any learner (Windows, macOS or WSL), so these lines are rewritten. `hash` = sha1 (12 hex)
+# of the book strings an edit changes: when the book changes them, the build stops and asks to re-check.
+#
+# Kept on purpose (decided 2026-10-24):
+#   - the dev schema dbt_adnane (and dev_adnane): it is in every profile, preset, golden dbt output (2687
+#     occurrences in converter/golden/outputs.json), cheat sheet and mock; renaming it would make the printed
+#     outputs disagree with what the learner's dbt prints. The kit README says the learner may use dbt_<name>.
+#   - "Adnane" as the analytics engineer of exam scenarios (mock questions, appendix examples): a character name,
+#     like "a developer"; it tells the learner nothing about their own setup.
+#   - adnane-data in example GitHub URLs (the book tells the learner to use their own account there).
+text:
+  # ------------------------------------------------------------------ lesson 0.1: written to the author
+  - id: welcome-title
+    in: ch00-s1
+    find: "Welcome, Adnane"
+    replace: "Welcome"
+    count: 4                        # the lesson title, its text form, the first step's title and its text form
+    hash: 1ff28f9b1454
+  - id: what-you-need-computer
+    in: ch00-s1
+    find: "Your Mac. Everything in the labs runs locally and for free."
+    replace: "Your computer: macOS, Windows or Linux. Everything in the labs runs locally and for free."
+    hash: 219fa3b2fab2
+  - id: what-you-need-dbt-learn
+    in: ch00-s1
+    find: "dbt Learn (you already have it)"
+    replace: "dbt Learn (create a free account at learn.getdbt.com in Week 1)"
+    hash: 500b2e77483a
+  - id: practical-your-computer
+    in: ch00-s1
+    find: "dbt Core + DuckDB on your Mac"
+    replace: "dbt Core + DuckDB on your computer"
+    hash: 537f89de9562
+  # ------------------------------------------------------------------ Chapter 3: the learner's own Git identity
+  - id: git-config-name
+    in: ch03-s2
+    find: 'user.name "Adnane"'
+    replace: 'user.name "Your Name"'
+    hash: 5d9f6af0e7bc
+  - id: git-config-list-name
+    in: ch03-s2
+    find: "user.name=Adnane"
+    replace: "user.name=Your Name"
+    hash: 89c2ca286c66
+  - id: git-config-email
+    in: ch03-s2
+    find: "adnane@example.com"
+    replace: "you@example.com"
+    hash: d366ab0bc98c
+  - id: git-log-author
+    in: ch03-s3
+    find: "Author: Adnane <adnane@example.com>"
+    replace: "Author: Your Name <you@example.com>"
+    hash: 52b075d3c37a
+  - id: git-conflict-story
+    in: ch03-s6
+    find: "On a branch, Adnane excludes orders"
+    replace: "On a branch, you exclude orders"
+    hash: beb0aa46c82a
+  # ------------------------------------------------------------------ Chapter 6: "your Mac"
+  - id: dbt-init-home-folder
+    in: ch06-s3
+    find: "on your Mac you see your own home folder"
+    replace: "on your computer you see your own home folder"
+    hash: af6914c54ac3
+  - id: dbt-init-first-time
+    in: ch06-s3
+    find: "never used dbt on this Mac"
+    replace: "never used dbt on this computer"
+    hash: d4244b9995f1
+  # ------------------------------------------------------------------ Chapter 7: a search that never matched
+  - id: grep-raw-tables
+    in: ch07-s3
+    # basic grep reads | literally: the book's command finds nothing (checked with BSD grep 2.6.0); -E makes
+    # it an alternative (checked: it finds `from stripe.payments` and `from jaffle_shop.orders`)
+    find: 'grep -rn "from stripe\.|from jaffle_shop\." models/'
+    replace: 'grep -rnE "from (stripe|jaffle_shop)\." models/'
+    hash: d82968c8586f
+
+# The objective tags of these lessons are examples of the tag format ("dark tags such as 1.11"), not what the
+# lesson teaches: the lesson header shows no exam objective.
+objectives:
+  - lesson: ch00-s3
+    objectives: []
+    hash: 14b46e8ec03c
+  - lesson: ch00-s6
+    objectives: []
+    hash: 14b46e8ec03c
+
+# The lab box of "Anatomy of a chapter" only shows what a lab looks like: a sample box, not a lab (it leaves the
+# lab lists, the plan's lab minutes and the lab totals: 118 lab boxes in the book, 117 labs on the site).
+not_labs:
+  - lab: ch00-lab1
+    title: "Hands-on lab (example of the box)"
+    hash: ce57fe4933c9

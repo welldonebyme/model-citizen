@@ -7,6 +7,7 @@
 # Steps: unzip the practice kit -> setup.sh from scratch -> setup.sh again (idempotent) -> the reference
 # clone at ch07: dbt build, summary compared with reference/builder-logs/ch07.md -> manual `git clone` of the
 # bundle + the README's "reference" remote -> the 9 bug patches at ch21 (git apply --check) -> duck.py day2.sql
+# -> the website's "Get the course files" commands (lesson 1.6) twice, then setup.sh started from ~/dbt-course/kit
 # -> capstone kit: setup.sh + row counts.
 # --full also builds tag ch25 on a fresh database (dbt deps; the fresh-database rule of Chapter 19).
 set -euo pipefail
@@ -100,6 +101,33 @@ if [ "$FULL" = "--full" ]; then
   check "ch25 second build: PASS=66 WARN=1 ERROR=0" grep -q 'Done\. PASS=66 WARN=1 ERROR=0 SKIP=0' "$WORK/ch25-build2.log"
   git -C "$REF" checkout -q main
 fi
+
+echo "== lesson 1.6 box: the website's commands (ch01-kit-c1), twice, then setup.sh started from ~/dbt-course/kit"
+BOXHOME="$WORK/home-box"
+mkdir -p "$BOXHOME/Downloads" && cp "$KITS/dbt-course-kit.zip" "$BOXHOME/Downloads/"
+PYBIN="$ACADEMY/converter/.venv/bin/python"; [ -x "$PYBIN" ] || PYBIN=python3
+BOX_CMDS="$("$PYBIN" - "$ACADEMY/site/src/generated/chapters/ch01.json" <<'PY'
+import json, sys
+def find(o):
+    if isinstance(o, dict):
+        if o.get("id") == "ch01-kit-c1":
+            return o
+        o = list(o.values())
+    if isinstance(o, list):
+        for v in o:
+            hit = find(v)
+            if hit:
+                return hit
+print("\n".join(l[2:] for l in find(json.load(open(sys.argv[1])))["text"].split("\n") if l.startswith("$ ")))
+PY
+)"
+printf '%s\n' "$BOX_CMDS" > "$WORK/box.zsh"
+sed 's/^/   $ /' "$WORK/box.zsh"
+check "box commands run in zsh" bash -c "HOME='$BOXHOME' zsh -f -e '$WORK/box.zsh' > '$WORK/box1.log' 2>&1"
+check "box commands again (same 30 files, no nested folder)" bash -c "HOME='$BOXHOME' zsh -f -e '$WORK/box.zsh' > '$WORK/box2.log' 2>&1 && [ \$(find '$BOXHOME/dbt-course/kit' -type f | wc -l) -eq 30 ] && [ ! -e '$BOXHOME/dbt-course/kit/dbt-course-kit' ]"
+check "setup.sh from ~/dbt-course/kit exits 0" bash -c "HOME='$BOXHOME' bash '$BOXHOME/dbt-course/kit/setup.sh' > '$WORK/box-setup.log' 2>&1"
+check "it keeps the kit where it is" grep -q "the kit is already in" "$WORK/box-setup.log"
+check "dbt debug passed (setup from the kit folder)" grep -q "All checks passed!" "$WORK/box-setup.log"
 
 echo "== capstone kit"
 CAP="$WORK/unzip/shopflow-capstone-kit"

@@ -263,6 +263,13 @@ def assemble(res: BuildResult, book: Path, rules: Path, overrides: Path) -> tupl
             "topics": {str(k): v for k, v in sorted(Counter(q.get("topic") for q in qs if q.get("topic")).items())},
         }
 
+    # ------------------------------------------------------------------ site edits (overrides/site-edits.yaml)
+    from . import siteedits
+    qjson = {q["id"]: q for k, v in files.items() if k.startswith("questions/") for q in v}
+    qjson.update({q["id"]: q for k, v in files.items() if k.startswith("mocks/") for q in v["questions"]})
+    info["siteEdits"] = siteedits.apply({r.seg.id: r.chapter for r in res.chapters}, qjson,
+                                        overrides / "site-edits.yaml")
+
     # ------------------------------------------------------------------ chapters + book
     book_parts: list[dict] = []
     appendices: list[dict] = []
@@ -276,7 +283,8 @@ def assemble(res: BuildResult, book: Path, rules: Path, overrides: Path) -> tupl
                                 "minutes": l["minutes"], "labMinutes": l["labMinutes"], "steps": len(l["steps"]),
                                 "labs": len(l["labs"])}
                                for l in ch["lessons"]],
-                   "quizQuestions": len(ch["quiz"]), "labs": len(r.ctx.lab_records), "objectives": ch["objectives"]}
+                   "quizQuestions": len(ch["quiz"]), "labs": sum(len(l["labs"]) for l in ch["lessons"]),
+                   "objectives": ch["objectives"]}
         if ch.get("mock"):
             summary["mock"] = ch["mock"]
         if r.seg.unit.appendix:

@@ -106,18 +106,46 @@ def chapter_of_id(i: str) -> str:
 
 # ---------------------------------------------------------------------------------------------- checks
 def without_os_notes(obj):
-    """A copy without the callouts of overrides/os-notes.yaml (site-only content, not book text)."""
+    """A copy without the callouts of overrides/os-notes.yaml (site-only content, not book text), with the sample
+    labs of site-edits.yaml (callouts with `sample`) turned back into the book's lab boxes."""
     if isinstance(obj, dict):
-        return {k: without_os_notes(v) for k, v in obj.items()}
+        if obj.get("t") == "callout" and isinstance(obj.get("sample"), dict):
+            return {**obj["sample"], "blocks": without_os_notes(obj["blocks"])}
+        return {k: without_os_notes(v) for k, v in obj.items() if k not in ("osHiddenBy",)}
     if isinstance(obj, list):
         return [without_os_notes(v) for v in obj if not (isinstance(v, dict) and v.get("osNote"))]
     return obj
 
 
+def without_site_edits(files: dict, path: Path = OVERRIDES / "site-edits.yaml") -> dict:
+    """The book's text back, for the checks that compare with the book: the text edits of site-edits.yaml undone
+    (replace -> find in their scope; book.json and other derived files are left as they are)."""
+    import copy
+    import yaml
+    from .build.siteedits import _scopes, _strings
+    edits = (yaml.safe_load(path.read_text()) or {}).get("text") or [] if path.exists() else []
+    if not edits:
+        return files
+    out = dict(files)
+    for k in out:
+        if k.startswith(("chapters/", "questions/", "mocks/")):
+            out[k] = copy.deepcopy(out[k])
+    chapters = {k.split("/")[1][:-5]: v for k, v in out.items() if k.startswith("chapters/")}
+    qs = {q["id"]: q for k, v in out.items() if k.startswith("questions/") for q in v}
+    scopes = _scopes(chapters, qs)
+    for e in reversed(edits):
+        hits: list = []
+        _strings(scopes[e["in"]], e["replace"], hits)
+        for c, key in hits:
+            c[key] = c[key].replace(e["replace"], e["find"])
+    return out
+
+
 def run_checks(files: dict[str, object], inventory: dict, book: Path = BOOK) -> Results:
     R = Results()
     site_files = files
-    files = {k: without_os_notes(v) if k.startswith("chapters/") else v for k, v in files.items()}
+    files = without_site_edits({k: without_os_notes(v) if k.startswith(("chapters/", "questions/")) else v
+                                for k, v in files.items()})
     chapters = {k.split("/")[1][:-5]: v for k, v in files.items() if k.startswith("chapters/")}
     questions = {k.split("/")[1][:-5]: v for k, v in files.items() if k.startswith("questions/")}
     mocks = {int(k.split("/")[1][4:-5]): v for k, v in files.items() if k.startswith("mocks/")}
@@ -275,7 +303,49 @@ def run_checks(files: dict[str, object], inventory: dict, book: Path = BOOK) -> 
     check_question_map(files, R)
     check_os_variants(site_files, R)
     check_shipped(R)
+    check_site_refs(site_files, R)
+    check_figure_text(R)
     return R
+
+
+def check_site_refs(files, R: Results) -> None:
+    """Links written by the site boxes (os-notes.yaml: [text](/learn/...), [text](/kits/...)): a lesson route with
+    an element id that the lesson page renders (an anchor, a step, a lab, a code block or a figure), or a file of
+    site/public."""
+    from .config import ACADEMY
+    ids: dict[str, set] = {}
+    for k, ch in files.items():
+        if not k.startswith("chapters/"):
+            continue
+        ids[f"/learn/{ch['id']}/"] = set()
+        for l in ch["lessons"]:
+            got = set(l["anchors"]) | {st["id"] for st in l["steps"]} | {st["anchor"] for st in l["steps"]
+                                                                          if st.get("anchor")}
+            for t in ("lab", "code", "figure"):
+                got |= {b["id"] for b in nodes_of(l["steps"], t) if b.get("id")}
+            ids[f"/learn/{ch['id']}/{l['id']}/"] = got
+    bad, n = [], 0
+    for k, doc in files.items():
+        for ref in nodes_of(doc, "ref"):
+            if not ref.get("site"):
+                continue
+            n += 1
+            path, _, frag = ref["href"].partition("#")
+            if path.startswith("/learn/"):
+                if path not in ids or (frag and frag not in ids[path]):
+                    bad.append(f"{k}: {ref['href']}")
+            elif not (ACADEMY / "site" / "public" / path.lstrip("/")).is_file():
+                bad.append(f"{k}: {ref['href']} (no such file in site/public)")
+    R.add("every site link of the OS notes resolves (lesson anchors, site/public files)", not bad,
+          f"{n} links; " + "; ".join(bad[:20]))
+
+
+def check_figure_text(R: Results) -> None:
+    """No figure SVG and no generated text contains U+FFFD (a glyph that the PDF-to-SVG step could not map)."""
+    from .config import OUT
+    bad = [str(p.relative_to(OUT)) for p in sorted(OUT.rglob("*")) if p.is_file() and p.suffix in (".svg", ".json")
+           and "\ufffd" in p.read_text(encoding="utf-8", errors="replace")]
+    R.add("no U+FFFD (unknown glyph) in figures or generated text", not bad, ", ".join(bad[:20]))
 
 
 def check_shipped(R: Results) -> None:
@@ -299,6 +369,8 @@ def check_os_variants(files, R: Results, path: Path = OVERRIDES / "os-commands.y
     for name in sorted(k for k in files if k.startswith("chapters/")):
         ctx = OsCtx()
         for b in bash_blocks(files[name]):
+            if b.get("osNote"):                      # a site box with hand-written variants (os-notes.yaml)
+                continue
             n += 1
             win, wsl, log = eng.block(b["text"], b["id"], ctx)
             want = {k: v for k, v in (("win", win), ("wsl", wsl)) if v is not None}
@@ -311,12 +383,27 @@ def check_os_variants(files, R: Results, path: Path = OVERRIDES / "os-commands.y
     R.add("every shell command line has an OS rule (no unhandled line)", not unhandled, "; ".join(unhandled[:20]))
     import yaml
     notes = (yaml.safe_load((OVERRIDES / "os-notes.yaml").read_text()) or {}).get("notes") or []
-    found = Counter(c.get("osNote") for k, v in files.items() if k.startswith("chapters/")
-                    for c in nodes_of(v, "callout") if c.get("os"))
-    bad = [n["id"] for n in notes if found.get(n["id"]) != 1] + [k for k in found if k not in {n["id"] for n in notes}]
+    from .build.osnotes import AUTO_PREFIX, windows_outputs
+    found = Counter(c.get("osNote") for k, v in files.items() if k.startswith(("chapters/", "questions/"))
+                    for c in nodes_of(v, "callout") if c.get("osNote"))
+    auto = {k for k in found if k.startswith(AUTO_PREFIX)}
+    bad = [n["id"] for n in notes if found.get(n["id"]) != 1] + \
+        [k for k in found if k not in {n["id"] for n in notes} and k not in auto] + [k for k in auto if found[k] != 1]
     R.add("every OS note (os-notes.yaml) appears once, after its anchor", not bad,
           f"{len(notes)} notes ({sum(1 for n in notes if 'win' in n['os'])} Windows, "
-          f"{sum(1 for n in notes if 'wsl' in n['os'])} WSL); problems: " + ", ".join(map(str, bad[:20])))
+          f"{sum(1 for n in notes if 'wsl' in n['os'])} WSL, "
+          f"{sum(1 for n in notes if set(n['os']) == {'mac', 'win', 'wsl'})} on every system); problems: "
+          + ", ".join(map(str, bad[:20])))
+    # a Windows variant keeps the macOS output of the book: each one with a macOS-only detail has a note after it
+    explained = {n["code"] for n in notes if n.get("code")} | {c for n in notes for c in n.get("covers") or []}
+    unexplained = []
+    for k in sorted(x for x in files if x.startswith("chapters/")):
+        for _lst, b, res, marks in windows_outputs(files[k]):
+            if not ({b["id"], res and res["id"]} & explained or AUTO_PREFIX + b["id"] in auto):
+                unexplained.append(f"{b['id']} ({', '.join(sorted(marks))})")
+    R.add("every Windows output recorded on macOS has a Windows note", not unexplained,
+          f"{len(auto)} automatic notes (home paths), {len(explained)} blocks explained in os-notes.yaml; missing: "
+          + ", ".join(unexplained[:20]))
 
 
 def check_question_map(files, R: Results, path: Path = OVERRIDES / "question-map.yaml") -> None:

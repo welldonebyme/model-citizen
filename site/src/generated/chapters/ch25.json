@@ -517,7 +517,10 @@
        "id": "ch25-c2",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target dev -q\n$ dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target ci -q\n$ dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target prod -q"
+       "text": "$ dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target dev -q\n$ dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target ci -q\n$ dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target prod -q",
+       "variants": {
+        "win": "PS> dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target dev -q\nPS> dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target ci -q\nPS> dbt ls -s fct_orders stg_jaffle_shop__orders --resource-type model --output json --output-keys \"name relation_name\" --target prod -q"
+       }
       },
       {
        "id": "ch25-c3",
@@ -2622,7 +2625,10 @@
        "id": "ch25-c7",
        "lang": "bash",
        "t": "code",
-       "text": "$ dbt compile -s fct_monthly_revenue --empty -q"
+       "text": "$ dbt compile -s fct_monthly_revenue --empty -q",
+       "variants": {
+        "win": "PS> dbt compile -s fct_monthly_revenue --empty -q"
+       }
       },
       {
        "id": "ch25-c8",
@@ -3217,7 +3223,10 @@
          "id": "ch25-c13",
          "lang": "bash",
          "t": "code",
-         "text": "$ git add .\n$ git commit -m 'CI: GitHub Actions slim CI workflow, PR template, CI profile and raw data loader'"
+         "text": "$ git add .\n$ git commit -m 'CI: GitHub Actions slim CI workflow, PR template, CI profile and raw data loader'",
+         "variants": {
+          "win": "PS> git add .\nPS> git commit -m 'CI: GitHub Actions slim CI workflow, PR template, CI profile and raw data loader'"
+         }
         },
         {
          "c": [
@@ -3267,6 +3276,35 @@
          "t": "code",
          "text": "top-level keys: ['name', True, 'jobs']\nruns-on: ubuntu-latest\nstep: Check out the pull request (with the history, to find main) | uses\nstep: Set up Python | uses\nstep: Install dbt | run\nstep: Load the raw data into a fresh DuckDB file | run\nstep: Build production from main (state to compare with) | run\nstep: Install packages | run\nstep: List what the pull request changed | run\nstep: Create the changed relations, empty | run\nstep: Build and test the changes (unit tests, models, data tests) | run\nlogs/\nprod-artifacts/\nci_db/\n21:43:36  Running with dbt=1.11.16\n21:43:36  Registered adapter: duckdb=1.11.0\n21:43:38  Performance info: /Users/you/dbt-course/jaffle_dbt/target/perf_info.json",
          "textBook": "top-level keys: ['name', True, 'jobs']\nruns-on: ubuntu-latest\nstep: Check out the pull request (with the history, to find main) | uses\nstep: Set up Python | uses\nstep: Install dbt | run\nstep: Load the raw data into a fresh DuckDB file | run\nstep: Build production from main (state to compare with) | run\nstep: Install packages | run\nstep: List what the pull request changed | run\nstep: Create the changed relations, empty | run\nstep: Build and test the changes (unit tests, models, data tests) | run\nlogs/\nprod-artifacts/\nci_db/\n21:43:36  Running with dbt=1.11.16\n21:43:36  Registered adapter: duckdb=1.11.0\n21:43:38  Performance info: /Users/mac/dbt-course/jaffle_dbt/target/perf_info.json"
+        },
+        {
+         "blocks": [
+          {
+           "c": [
+            "The output above was recorded on macOS. On your computer the paths start with ",
+            {
+             "t": "code",
+             "v": "C:\\Users\\<you>\\"
+            },
+            " instead of ",
+            {
+             "t": "code",
+             "v": "/Users/you/"
+            },
+            "."
+           ],
+           "t": "p"
+          }
+         ],
+         "kind": "tip",
+         "os": [
+          "win"
+         ],
+         "osNote": "auto-win-out-ch25-c13",
+         "t": "callout",
+         "title": [
+          "On Windows"
+         ]
         },
         {
          "c": [
@@ -3399,7 +3437,10 @@
          "id": "ch25-c17",
          "lang": "bash",
          "t": "code",
-         "text": "$ git commit -q -am 'fct_orders: add is_paid'"
+         "text": "$ git commit -q -am 'fct_orders: add is_paid'",
+         "variants": {
+          "win": "PS> git commit -q -am 'fct_orders: add is_paid'"
+         }
         },
         {
          "c": [

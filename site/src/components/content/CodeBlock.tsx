@@ -14,6 +14,8 @@ export interface CodeBlockProps {
   selectedLine?: number | null;
   lineState?: Record<number, 'right' | 'wrong'>;
   hideCopy?: boolean;
+  /** a link to the in-browser playground that trains this kind of code (YAML, Jinja) */
+  playground?: { href: string; label: string };
 }
 
 /**
@@ -32,7 +34,7 @@ function lines(block: CodeBlockT, text: string): string[] {
   return highlight(block.lang, text).split('\n');
 }
 
-export function CodeBlock({ block, runnable, onLine, selectedLine, lineState, hideCopy }: CodeBlockProps): ReactNode {
+export function CodeBlock({ block, runnable, onLine, selectedLine, lineState, hideCopy, playground }: CodeBlockProps): ReactNode {
   const isTerm = block.lang === 'bash';
   const isOut = block.lang === 'output';
   const v = isTerm ? block.variants : undefined;
@@ -58,7 +60,8 @@ export function CodeBlock({ block, runnable, onLine, selectedLine, lineState, hi
             <span key={p.os} className="mc-os-note" data-os-only={p.os}> for {p.os.split(' ').map((o) => OSNAME[o]).join(' and ')}</span>
           ))}
         </span>
-        <span className="mc-code-actions">
+        <span className="mc-code-actions" data-pagefind-ignore="">
+          {playground && <a className="mc-code-act" href={playground.href}>{playground.label}</a>}
           {runnable && <button type="button" className="mc-code-act" data-send-to-workspace={block.id}>Run in workspace</button>}
           {dbtTry.length > 0 && <button type="button" className="mc-code-act" data-dbt-try={dbtTry.join('\n')} hidden>Try in the browser terminal</button>}
           {!isOut && !hideCopy && <button type="button" className="mc-code-act" data-copy="">{isTerm ? 'Copy commands' : 'Copy'}</button>}

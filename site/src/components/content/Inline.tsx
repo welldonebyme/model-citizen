@@ -11,10 +11,40 @@ export function Inline({ c }: { c: InlineT[] | undefined }): ReactNode {
   return c.map((n, i) => <InlineNode key={i} n={n} />);
 }
 
+/**
+ * Inline code may wrap only at spaces and right after a separator (. / \ : , and a run of _), never inside a
+ * name: "analytics.|crm.|accounts_v2", "stg_|jaffle_|shop__|orders". No break that leaves fewer than 3 characters
+ * before it or fewer than 4 after it in the word, so "accounts_v2" and "schema.yml" stay whole. A part with a
+ * hyphen stays on one line ("--resource-type", not "--|resource-type").
+ * Identifier-like code (no space, at most 32 characters) gets mc-ic-id: table key columns keep it on one line.
+ */
+export function codeBreaks(v: string): ReactNode {
+  const out: ReactNode[] = [];
+  let k = 0;
+  const part = (t: string) => out.push(t.includes('-') ? <span key={k++} className="mc-nw">{t}</span> : t);
+  for (const word of v.split(/(\s+)/)) {
+    if (!word) continue;
+    if (/^\s/.test(word)) { out.push(word); continue; }
+    let start = 0;
+    for (let i = 0; word.length >= 8 && i < word.length; i++) {
+      const c = word[i];
+      if (!/[._/\\:,]/.test(c) || (c === '_' && word[i + 1] === '_')) continue;
+      const end = i + 1;
+      if (end - start >= 3 && word.length - end >= 4) {
+        part(word.slice(start, end));
+        out.push(<wbr key={k++} />);
+        start = end;
+      }
+    }
+    part(word.slice(start));
+  }
+  return out.length === 1 ? out[0] : out;
+}
+
 function InlineNode({ n }: { n: InlineT }): ReactNode {
   if (typeof n === 'string') return n;
   switch (n.t) {
-    case 'code': return <code className="mc-ic">{n.v}</code>;
+    case 'code': return <code className={/^\S{1,32}$/.test(n.v) ? 'mc-ic mc-ic-id' : 'mc-ic'}>{codeBreaks(n.v)}</code>;
     case 'b': return <strong><Inline c={n.c} /></strong>;
     case 'i': return <em><Inline c={n.c} /></em>;
     case 'u': return <span className="mc-u"><Inline c={n.c} /></span>;
@@ -23,7 +53,7 @@ function InlineNode({ n }: { n: InlineT }): ReactNode {
       return (
         <a className="mc-term" href={url(`reference/glossary/#${n.id}`)} data-fr={n.fr}>
           <Inline c={n.en} />
-          <span className="mc-term-fr" role="tooltip"><span lang="fr">FR : {n.fr}</span></span>
+          <span className="mc-term-fr" role="tooltip" data-pagefind-ignore=""><span lang="fr">FR : {n.fr}</span><span className="mc-term-more">Tap the word again for the glossary.</span></span>
         </a>
       );
     case 'key': return <kbd className="mc-key">{n.v}</kbd>;

@@ -11,7 +11,7 @@
  * Old caches of a rule are removed by the feature itself (see pruneEngineCaches in src/lib/dbt/engine-cache.ts),
  * because only the page knows which version is current.
  */
-const SW_VERSION = 1;
+const SW_VERSION = 2; // 2: SQL labs rules (sections 2 and 3)
 const BASE = new URL('./', self.location).pathname; // "/model-citizen/" on GitHub Pages, "/" elsewhere
 
 const RULES = [
@@ -32,9 +32,31 @@ const RULES = [
     strategy: 'cache-first',
   },
   // ---------------------------------------------------------------------------------------------------------
-  // Section 2: DuckDB-WASM (owner: SQL playground). Add its rule here (hashed /_assets/*.wasm|js).
+  // Section 2: DuckDB-WASM (owner: SQL labs, src/lib/sql/). Only the two big content-hashed files emitted by
+  // Vite from @duckdb/duckdb-wasm: _assets/duckdb-eh.<hash>.wasm and _assets/duckdb-browser-eh.worker.<hash>.js.
+  // A new DuckDB version = new file names; shared-engine.ts deletes entries that are no longer current.
+  {
+    id: 'sql-duckdb',
+    match: (url) => url.pathname.startsWith(BASE + '_assets/') && /\/duckdb-(eh|browser-eh\.worker)\.[\w-]+\.(wasm|js)$/.test(url.pathname),
+    cacheName: () => 'mc-sql-duckdb',
+    strategy: 'cache-first',
+  },
   // ---------------------------------------------------------------------------------------------------------
-  // Section 3: practice data (owner: SQL playground). Add its rule here.
+  // Section 3: practice data + self-hosted DuckDB extensions (owner: SQL labs). Data URLs carry the content
+  // hash of the data (data/practice/...?v=<hash>), one cache per hash; extensions live in a folder named after
+  // the DuckDB version (data/duckdb-ext/v1.5.4/...), one cache per version. Old caches: see shared-engine.ts.
+  {
+    id: 'sql-data',
+    match: (url) => url.pathname.startsWith(BASE + 'data/practice/') && url.searchParams.has('v'),
+    cacheName: (url) => 'mc-sql-data-' + url.searchParams.get('v'),
+    strategy: 'cache-first',
+  },
+  {
+    id: 'sql-extensions',
+    match: (url) => url.pathname.startsWith(BASE + 'data/duckdb-ext/v'),
+    cacheName: (url) => 'mc-sql-ext-' + url.pathname.slice((BASE + 'data/duckdb-ext/').length).split('/')[0],
+    strategy: 'cache-first',
+  },
   // ---------------------------------------------------------------------------------------------------------
 ];
 

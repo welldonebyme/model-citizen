@@ -147,3 +147,23 @@ describe('explanations', () => {
     expect(lines.some((l) => l.part.includes('--resource-type model'))).toBe(true);
   });
 });
+
+import { CHALLENGES, checkChallenge } from '../../src/lib/selector/challenges';
+
+describe('challenges', () => {
+  for (const c of CHALLENGES) {
+    it(`${c.id}: the answer passes, the start fails`, () => {
+      const [key, tag] = c.project.split('-');
+      const p = loadProject(key, tag);
+      expect(checkChallenge(p, c, c.answer)).toMatchObject({ ok: true });
+      if (c.start) expect(checkChallenge(p, c, c.start).ok).toBe(false);
+      expect(checkChallenge(p, c, '').ok).toBe(false);
+    });
+  }
+  it('another correct expression is accepted', () => {
+    const c = CHALLENGES.find((x) => x.id === 'parents-first-degree')!;
+    const p = loadProject('jaffle', 'ch16');
+    expect(checkChallenge(p, c, 'dbt ls -s 1+fct_orders').ok).toBe(true);
+    expect(checkChallenge(p, c, 'fct_orders int_orders__enriched int_orders__payment_methods_pivoted').message).toContain('Right nodes, but');
+  });
+});

@@ -139,6 +139,9 @@ export const SCENARIOS: Scenario[] = [
   },
 ];
 
+/** The scenarios of a tag: the book's own experiments first, then the generic previous-tag comparison. */
 export function scenariosFor(project: Project): Scenario[] {
-  return SCENARIOS.filter((s) => (s.key === '*' || s.key === project.key) && (s.tag === '*' || s.tag === project.tag) && (s.id !== 'prev-tag' || !!project.extras?.state_prev));
+  const own = SCENARIOS.filter((s) => s.key === project.key && s.tag === project.tag);
+  const generic = SCENARIOS.filter((s) => s.tag === '*' && (s.id !== 'prev-tag' || !!project.extras?.state_prev));
+  return [...own, ...generic];
 }

@@ -1,0 +1,27 @@
+---
+import Base from '../../../layouts/Base.astro';
+import SelectorLab from '../../../components/selector/SelectorLab';
+import { url } from '../../../lib/url';
+---
+<Base title="Node selection playground" section="labs" description="Type a dbt selection and see which nodes dbt 1.11 selects, on the real DAG of the reference project at every chapter: graph operators, set operators, methods, YAML selectors, indirect selection, state and result.">
+  <div class="wrap sel-page">
+    <header class="sel-head">
+      <p class="kicker"><a href={url('labs/')}>Labs</a></p>
+      <h1>Node selection playground</h1>
+      <p class="lead">Type a <code class="mc-ic">dbt ls</code> (or <code class="mc-ic">dbt build</code>) command. The nodes light up on the real DAG of the reference project, and you see exactly what dbt 1.11 prints, with an explanation of every part of your selection.</p>
+    </header>
+    <SelectorLab client:load />
+    <p class="trust">How exact is it? The engine follows the source code of dbt-core 1.11.16. It reproduces the recorded <code class="mc-ic">dbt ls</code> and build outputs of the book and of the build logs (on the project state where each one was recorded), and gives the same output as real dbt on 1,370 more commands. The --state folders marked "simulated" apply the rules of dbt 1.11.16 to the book's experiments. Nothing is sent to a server: everything runs in this page.</p>
+    <noscript><p>This playground needs JavaScript. The book's Chapter 16 has every example with its real output.</p></noscript>
+  </div>
+</Base>
+<style>
+  .sel-page { padding-block: 32px 24px; }
+  .sel-head { max-width: 80ch; margin-bottom: 20px; }
+  .sel-head h1 { margin-bottom: 8px; }
+  .kicker { margin: 0 0 4px; font-size: var(--fs-sm); font-weight: 700; }
+  .kicker a { color: var(--accent-strong); text-decoration: none; }
+  .lead { color: var(--muted); font-size: var(--fs-lg); margin: 0 0 10px; }
+  .trust { font-size: var(--fs-sm); color: var(--muted); margin: 20px 0 0; max-width: 90ch; }
+  @media (max-width: 860px) { .sel-page { padding-block: 20px 16px; } .lead { font-size: var(--fs-md); } }
+</style>

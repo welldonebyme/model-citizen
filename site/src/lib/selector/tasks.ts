@@ -88,6 +88,8 @@ export interface CommandResult {
   execution: ExecStep[];
   spec: Spec | null;
   traces: CriteriaTrace[];
+  /** direct set of each group of the spec (before the resource type filter) */
+  groupResults: Map<Spec, Set<string>>;
   resourceTypes: string[];
   target: Target;
   /** the full terminal text (logs with a fake time stamp, results, errors) */
@@ -324,7 +326,7 @@ function targetOf(args: DbtArgs): Target {
 export function runCommand(project: Project, line: string, opts: RunOptions = {}): CommandResult {
   const res: CommandResult = {
     parsed: null, command: null, exitCode: 0, error: null, logs: [], output: [], selected: [], selectedUnitTests: [],
-    execution: [], spec: null, traces: [], resourceTypes: [], target: 'dev', terminal: [], notes: [], selectorUsed: null,
+    execution: [], spec: null, traces: [], groupResults: new Map(), resourceTypes: [], target: 'dev', terminal: [], notes: [], selectorUsed: null,
   };
   const clock = opts.clock ?? fakeClock();
   const log = (level: 'info' | 'warn' | 'error', text: string) => res.logs.push({ level, text });
@@ -403,6 +405,7 @@ function execute(project: Project, parsed: ParsedCommand, opts: RunOptions, res:
     sel.onWarn = warnOrError;
     const wo = sel.getSelected(spec, true);
     res.traces = sel.traces;
+    res.groupResults = sel.groupResults;
     res.selectedUnitTests = pySort([...full].filter((u) => !wo.has(u)));
     res.selected = pySort([...wo]);
   } else {
@@ -412,6 +415,7 @@ function execute(project: Project, parsed: ParsedCommand, opts: RunOptions, res:
     sel.onWarn = warnOrError;
     const s = sel.getSelected(spec, true);
     res.traces = sel.traces;
+    res.groupResults = sel.groupResults;
     res.selected = pySort([...s]);
   }
 
@@ -540,7 +544,7 @@ export function select(project: Project, args: Partial<DbtArgs> & { command?: Co
   const parsed: ParsedCommand = { raw: '', env: {}, argv: [], command, args: full, pipe: null, notices: [] };
   const res: CommandResult = {
     parsed, command, exitCode: 0, error: null, logs: [], output: [], selected: [], selectedUnitTests: [], execution: [], spec: null,
-    traces: [], resourceTypes: [], target: targetOf(full), terminal: [], notes: [], selectorUsed: null,
+    traces: [], groupResults: new Map(), resourceTypes: [], target: targetOf(full), terminal: [], notes: [], selectorUsed: null,
   };
   execute(project, parsed, { previous }, res, () => {});
   return res.selected;

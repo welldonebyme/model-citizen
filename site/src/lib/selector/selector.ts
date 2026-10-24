@@ -30,6 +30,8 @@ export interface CriteriaTrace {
 
 export class NodeSelector {
   readonly traces: CriteriaTrace[] = [];
+  /** the direct set of every group (union / intersection / difference), for the UI and explanations */
+  readonly groupResults = new Map<Spec, Set<string>>();
   readonly warnings: string[] = [];
   /** called for each warn_or_error event; may throw (--warn-error) */
   onWarn: (event: string, message: string) => void = () => {};
@@ -156,6 +158,7 @@ export class NodeSelector {
     const initialDirect = combine(g.kind, directSets);
     const indirectNodes = combine(g.kind, indirectSets);
     const direct = this.incorporateIndirect(initialDirect, indirectNodes, g.indirect);
+    this.groupResults.set(g, direct);
     if (g.expectExists && direct.size === 0 && warnOnNoNodes) {
       const msg = `The selection criterion '${String(g.raw)}' does not match any enabled nodes`;
       this.onWarn('NoNodesForSelectionCriteria', msg);

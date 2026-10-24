@@ -37,7 +37,7 @@ export function describeMethod(c: Criteria): string {
       if (v === '*') return 'every node except the sources';
       if (hasWild(v)) return `every node whose name matches ${q} (* = any characters, ? = one character)`;
       if (v.includes('.')) return `the nodes under the path ${q} of the project (folder names separated by dots), or the node with this full name`;
-      return `the node named ${q}, or every node in a folder (or package) called ${q}. A bare word never matches a source.`;
+      return `the node named ${q}, or every node in a folder (or package) called ${q}`;
     case 'tag': return `every node with the tag ${q}`;
     case 'path': return `every node whose file is in ${q}: models, tests, sources, seeds... every type`;
     case 'file': return `the nodes defined in a file named ${q} (with or without its extension)`;
@@ -95,8 +95,8 @@ export function explain(project: Project, r: CommandResult): ExplainLine[] {
       const ops = describeOperators(s);
       const counts: string[] = [];
       if (t) {
-        counts.push(`${plural(t.collected.size, 'node')} match`);
-        if (ops.length) counts.push(`${t.collected.size + [...t.neighbors].filter((x) => !t.collected.has(x)).length} with the graph operator`);
+        counts.push(`${t.collected.size} node${t.collected.size === 1 ? ' matches' : 's match'}`);
+        if (ops.length) counts.push(`${t.collected.size + [...t.neighbors].filter((x) => !t.collected.has(x)).length} nodes with the graph operator`);
         const added = [...t.direct].filter((x) => !t.collected.has(x) && !t.neighbors.has(x)).length;
         if (added) counts.push(`+${plural(added, 'test')} added by indirect selection`);
       }

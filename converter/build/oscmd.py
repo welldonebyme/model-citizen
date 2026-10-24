@@ -207,7 +207,7 @@ class Ctx:
 # ---------------------------------------------------------------------------------------------- engine
 class OsCommands:
     def __init__(self, path: Path):
-        data = yaml.safe_load(path.read_text())
+        data = yaml.safe_load(path.read_text(encoding='utf-8'))
         self.data = data
         self.transforms = []
         for t in data.get("transforms", []):

@@ -61,7 +61,7 @@ def apply_overrides(drafts_by_id: dict[str, Draft], overrides: Path) -> list[str
     applied = []
     if not p.exists():
         return applied
-    data = yaml.safe_load(p.read_text()) or {}
+    data = yaml.safe_load(p.read_text(encoding='utf-8')) or {}
     for qid, ov in (data.get("keys") or {}).items():
         d = drafts_by_id.get(qid)
         if d is None:
@@ -80,7 +80,7 @@ def load_question_map(overrides: Path, chapter_qids: list[str], lesson_ids: set[
     """overrides/question-map.yaml: chapter quiz question -> {lesson, objective, ...} (agent-mapped, reviewed).
     Every chapter question must be in it, with an existing lesson of its own chapter and a known objective."""
     p = overrides / "question-map.yaml"
-    data = (yaml.safe_load(p.read_text()) or {}).get("questions") or {} if p.exists() else {}
+    data = (yaml.safe_load(p.read_text(encoding='utf-8')) or {}).get("questions") or {} if p.exists() else {}
     problems = []
     for qid, e in data.items():
         if qid not in chapter_qids:

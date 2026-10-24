@@ -116,7 +116,7 @@ def sh(args, home: Path, cwd: Path | None = None, check=True, env_extra=None) ->
     env = base_env(home)
     if env_extra:
         env.update(env_extra)
-    r = subprocess.run(args, cwd=cwd or home, env=env, capture_output=True, text=True)
+    r = subprocess.run(args, cwd=cwd or home, env=env, capture_output=True, text=True, encoding='utf-8', errors='replace')
     if check and r.returncode != 0:
         raise RuntimeError(f"{args}: {r.stdout[-800:]}\n{r.stderr[-800:]}")
     return r
@@ -179,7 +179,7 @@ def prepare(home: Path, ch: str, doc: dict | None = None) -> dict:
         scripts.symlink_to("bin")
     for block_id, dest in LEARNER_FILES.get(ch, []):
         (home / dest).parent.mkdir(parents=True, exist_ok=True)
-        (home / dest).write_text(code_text(doc, block_id))
+        (home / dest).write_text(code_text(doc, block_id), encoding='utf-8')
     state = {"cwd": "~", "venv": False}
     prof_src = course / "kit" / "profiles" / "profiles.yml"
     if n == 6:
@@ -214,8 +214,8 @@ def prepare(home: Path, ch: str, doc: dict | None = None) -> dict:
         sh(["git", "clone", "-q", str(course / "kit" / "capstone" / "shopflow_dbt.bundle"), str(proj)], home)
         sh(["git", "checkout", "-q", "-b", "learner", "m14"], home, proj)
         (home / ".dbt").mkdir(exist_ok=True)
-        (home / ".dbt" / "profiles.yml").write_text(prof_src.read_text() + "\n" +
-                                                    (course / "kit" / "capstone" / "profiles" / "profiles.yml").read_text())
+        (home / ".dbt" / "profiles.yml").write_text(prof_src.read_text(encoding='utf-8') + "\n" +
+                                                    (course / "kit" / "capstone" / "profiles" / "profiles.yml").read_text(encoding='utf-8'), encoding='utf-8')
         sh([str(bindir / f"dbt{exe}"), "deps"], home, proj)
         state.update(cwd="~/dbt-course/shopflow_dbt", venv=True)
     return state
@@ -365,15 +365,15 @@ def pwsh_script(blocks, state) -> str:
 
 def run_session(shell: str, script: str, home: Path, log: Path, timeout: int) -> dict:
     f = log.with_suffix(".zsh" if shell == "zsh" else ".ps1")
-    f.write_text(script)
+    f.write_text(script, encoding='utf-8')
     args = ["zsh", "-f", str(f)] if shell == "zsh" else ["pwsh", "-NoProfile", "-NonInteractive", "-File", str(f)]
     try:
-        r = subprocess.run(args, cwd=home, env=base_env(home), capture_output=True, text=True, timeout=timeout)
+        r = subprocess.run(args, cwd=home, env=base_env(home), capture_output=True, text=True, encoding='utf-8', errors='replace', timeout=timeout)
         out = r.stdout + "\n" + r.stderr
     except subprocess.TimeoutExpired as e:
         out = (e.stdout or b"").decode() if isinstance(e.stdout, bytes) else (e.stdout or "")
         out += "\n@@TIMEOUT"
-    log.write_text(out)
+    log.write_text(out, encoding='utf-8')
     res: dict[str, dict] = {}
     cur = None
     buf: list[str] = []
@@ -495,13 +495,13 @@ def merge(paths: list[str], out: Path) -> int:
     """Merge the reports of parallel runs (--out of each) into one."""
     chapters, summary = {}, None
     for p in paths:
-        d = json.loads(Path(p).read_text())
+        d = json.loads(Path(p).read_text(encoding='utf-8'))
         chapters.update(d["chapters"])
         summary = d["summary"]
     extra = {k: v for k, v in summary.items() if k not in ("pwsh", "platform", "variant_blocks", "commands")}
     s = summarize(chapters, summary["platform"], summary["pwsh"], extra)
     out.write_text(json.dumps({"summary": s, "chapters": dict(sorted(chapters.items()))}, indent=1,
-                              ensure_ascii=False) + "\n")
+                              ensure_ascii=False) + "\n", encoding='utf-8')
     print(json.dumps(s))
     return 0
 
@@ -534,14 +534,14 @@ def main(argv=None) -> int:
         else:
             homes[side] = (work / side / "home") if a.no_install else install(work / side)
     report_path = Path(a.out) if a.out else REPORT
-    baseline = json.loads(Path(a.baseline).read_text()) if a.win_only else None
+    baseline = json.loads(Path(a.baseline).read_text(encoding='utf-8')) if a.win_only else None
     eng = OsCommands(OVERRIDES / "os-commands.yaml")
     version = subprocess.run(["pwsh", "-NoProfile", "-Command", "$PSVersionTable.PSVersion.ToString()"],
-                             capture_output=True, text=True).stdout.strip()
-    docs = {p.stem: json.loads(p.read_text()) for p in sorted((OUT / "chapters").glob("ch*.json"))}
+                             capture_output=True, text=True, encoding='utf-8', errors='replace').stdout.strip()
+    docs = {p.stem: json.loads(p.read_text(encoding='utf-8')) for p in sorted((OUT / "chapters").glob("ch*.json"))}
     wanted = a.chapters.split(",") if a.chapters else [
         c for c, d in docs.items() if any(b.get("variants", {}).get("win") for b in bash_blocks(d))]
-    old = json.loads(report_path.read_text()) if report_path.exists() else {}
+    old = json.loads(report_path.read_text(encoding='utf-8')) if report_path.exists() else {}
     chapters = dict(old.get("chapters", {}))
     for ch in wanted:
         blocks = plan_chapter(docs[ch], eng, ch)
@@ -579,7 +579,7 @@ def main(argv=None) -> int:
         "duckdb": "CLI" if REAL_DUCKDB else "duck.py substitute",
         "baseline": "macOS zsh results of converter/golden/win-replay.json" if a.win_only else "zsh, same run"})
     report_path.write_text(json.dumps({"summary": summary, "chapters": dict(sorted(chapters.items()))},
-                                      indent=1, ensure_ascii=False) + "\n")
+                                      indent=1, ensure_ascii=False) + "\n", encoding='utf-8')
     print(json.dumps(summary))
     print(f"work folder: {work}")
     return 1 if a.fail_on_differs and summary["variant_blocks"].get("differs") else 0

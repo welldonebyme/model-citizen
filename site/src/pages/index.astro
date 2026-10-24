@@ -1,10 +1,49 @@
 ---
 import Base from '../layouts/Base.astro';
-import { url } from '../lib/url';
+import CourseDag from '../components/ui/CourseDag.astro';
+import TodayApp from '../components/today/TodayApp';
+import { chapters, lessons, parts, routes } from '../lib/content';
+import type { PlanLesson } from '../lib/planner';
+import type { Block } from '../lib/content-types';
+import '../styles/today.css';
+
+const OBJ_FILE = import.meta.glob('../generated/objectives.json', { eager: true, import: 'default' }) as Record<string, { id: string; title: string }[]>;
+const FALLBACK_OBJ = ['CP0-SQL', 'CP0-GIT', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6', '1.7', '1.8', '1.9', '1.10', '1.11', '1.12', '1.13', '1.14', '2.1', '2.2', '2.3', '3.1', '3.2', '3.3', '3.4', '3.5', '4.1', '4.2', '5.1', '5.2', '5.3', '6.1', '6.2', '7.1', '7.2'].map((id) => ({ id, title: id }));
+const objectivesRaw = Object.values(OBJ_FILE)[0];
+const objectives = (Array.isArray(objectivesRaw) ? objectivesRaw : FALLBACK_OBJ)
+  .filter((o) => /^(CP0-(SQL|GIT)|\d+\.\d+)$/.test(o.id))
+  .map((o) => ({ id: o.id, title: o.title }));
+
+const QFILES = import.meta.glob('../generated/questions/*.json', { eager: true, import: 'default' }) as Record<string, { id: string; objective?: string }[]>;
+const MFILES = import.meta.glob('../generated/mocks/*.json', { eager: true, import: 'default' }) as Record<string, { questions?: { id: string; objective?: string }[] }>;
+const questionObjectives: Record<string, string> = {};
+for (const qs of Object.values(QFILES)) for (const q of qs) if (q.objective) questionObjectives[q.id] = q.objective;
+for (const m of Object.values(MFILES)) for (const q of m.questions ?? []) if (q.objective) questionObjectives[q.id] = q.objective;
+
+const planLessons: PlanLesson[] = lessons.map(({ chapter, lesson }) => ({
+  id: lesson.id, chapter: chapter.id, minutes: lesson.minutes, title: lesson.titleText, number: lesson.number, labs: lesson.labs,
+  half: chapter.id === 'ch04' ? (Number(lesson.number.split('.')[1]) <= 9 ? 'a' : 'b') : undefined,
+}));
+const lessonPaths = Object.fromEntries(lessons.map(({ chapter, lesson }) => [lesson.id, routes.lesson(lesson, chapter.id)]));
+const labLessons = Object.fromEntries(lessons.flatMap(({ lesson }) => lesson.labs.map((lab) => [lab, lesson.id])));
+const chapterQuiz: [string, number][] = chapters.filter((c) => c.quiz.length && c.number <= 26).map((c) => [c.id, c.quiz.length]);
+const chapterTitles = Object.fromEntries(chapters.map((c) => [c.id, c.title]));
+// Lab titles, from the lab blocks inside each lesson.
+const labTitles: Record<string, string> = {};
+const text = (c: unknown[]): string => c.map((n) => (typeof n === 'string' ? n : (n as { v?: string; c?: unknown[] }).v ?? text((n as { c?: unknown[] }).c ?? []))).join('');
+const walk = (bs: Block[]) => bs.forEach((b) => { if (b.t === 'lab') labTitles[b.id] = text(b.title); if (b.t === 'callout' || b.t === 'lab') walk(b.blocks); if (b.t === 'list') b.items.forEach((it) => walk(it.blocks)); });
+lessons.forEach(({ lesson }) => lesson.steps.forEach((st) => walk(st.blocks)));
 ---
 <Base title="Model Citizen" section="today">
-  <div class="wrap" style="padding-block: 48px">
-    <h1>Good evening.</h1>
-    <p>The Today page is being built. Meanwhile, see the <a href={url('dev/styleguide/')}>style guide</a>.</p>
+  <div class="wrap today-page">
+    <TodayApp client:load lessons={planLessons} chapterQuiz={chapterQuiz} chapterTitles={chapterTitles} lessonPaths={lessonPaths} labLessons={labLessons} objectives={objectives} questionObjectives={questionObjectives} capstoneMilestones={15} labTitles={labTitles}>
+      <section class="panel today-map" aria-labelledby="map-h">
+        <div class="map-head"><h2 id="map-h">Your course, as a DAG</h2><p>Each part depends on the ones before it, like models in a project.</p></div>
+        <CourseDag compact />
+        <div class="legend"><span><i class="d"></i>Done</span><span><i class="n"></i>In progress</span><span><i></i>Not started</span></div>
+      </section>
+    </TodayApp>
+    <div hidden>{parts.map((p) => <span data-part-lessons={p.part} data-lessons={p.chapters.flatMap((c) => c.lessons.map((l) => l.id)).join(',')} />)}</div>
   </div>
+  <script>import '../lib/path-progress';</script>
 </Base>

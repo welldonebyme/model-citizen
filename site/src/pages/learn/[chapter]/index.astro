@@ -1,0 +1,98 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { StaticBlocks } from '../../../components/content/StaticBlocks';
+import { Inline } from '../../../components/content/Inline';
+import { chapters, partName, routes } from '../../../lib/content';
+import { figuresFor } from '../../../lib/figures';
+import { url } from '../../../lib/url';
+
+export function getStaticPaths() {
+  return chapters.map((c) => ({ params: { chapter: c.id }, props: { id: c.id } }));
+}
+const c = chapters.find((x) => x.id === Astro.props.id)!;
+const i = chapters.indexOf(c);
+const prev = chapters[i - 1];
+const next = chapters[i + 1];
+const labs = c.lessons.flatMap((l) => l.labs.map((lab) => ({ lab, lesson: l })));
+const first = c.lessons[0];
+const mock = /^ch(28|30|32)$/.test(c.id) ? { ch28: 1, ch30: 2, ch32: 3 }[c.id as 'ch28'] : undefined;
+---
+<Base title={`Chapter ${c.number}: ${c.title}`} section="path">
+  <div class="wrap chapter">
+    <header class="ch-head">
+      <p class="kicker"><a href={url('path/')}>{partName(c.part)}, {c.partTitle}</a></p>
+      <h1><span class="no">Chapter {c.number}</span>{c.title}</h1>
+      <p class="facts">{[`${c.lessons.length} lessons`, `about ${Math.max(5, Math.round(c.minutes / 5) * 5)} minutes of reading`, labs.length ? `${labs.length} ${labs.length === 1 ? 'lab' : 'labs'}` : '', c.quiz.length ? `${c.quiz.length} quiz questions` : ''].filter(Boolean).join(', ')}.</p>
+      <div class="cta">
+        {mock ? <a class="btn btn-primary" href={url(`exams/mock${mock}/`)}>Take mock exam {mock}</a>
+              : first && <a class="btn btn-primary" href={url(routes.lesson(first, c.id))}>Start lesson {first.number}</a>}
+        {c.quiz.length > 0 && <a class="btn btn-quiet" href={url(routes.quiz(c))}>Check yourself</a>}
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="intro">
+        <StaticBlocks blocks={c.intro} figures={figuresFor(c.intro)} />
+      </div>
+      <aside class="side">
+        <section class="panel" aria-labelledby="ls-h" data-chapter-progress={c.id} data-lessons={c.lessons.map((l) => l.id).join(',')}>
+          <h2 id="ls-h">Lessons <span class="prog" data-progress-label></span></h2>
+          <ol class="ls">
+            {c.lessons.map((l) => (
+              <li data-lesson-row={l.id}><a href={url(routes.lesson(l, c.id))}><span class="num">{l.number}</span><span><Inline c={l.title} /></span></a><span class="min">{l.minutes} min</span></li>
+            ))}
+            {c.quiz.length > 0 && <li class="q"><a href={url(routes.quiz(c))}><span class="num">?</span><span>Check yourself</span></a><span class="min">{c.quiz.length} q.</span></li>}
+          </ol>
+        </section>
+        {labs.length > 0 && (
+          <section class="panel" aria-labelledby="lb-h">
+            <h2 id="lb-h">Labs in this chapter</h2>
+            <ul class="labs">{labs.map(({ lab, lesson }) => <li><a href={url(routes.lesson(lesson, c.id)) + '#' + lab}>{lab.replace(/^ch\d+-lab/, 'Lab ')}</a> <span class="min">in lesson {lesson.number}</span></li>)}</ul>
+          </section>
+        )}
+      </aside>
+    </div>
+
+    {c.summary.length > 0 && (
+      <section class="summary" aria-label="Chapter summary">
+        <StaticBlocks blocks={c.summary} figures={figuresFor(c.summary)} />
+      </section>
+    )}
+
+    <nav class="pager" aria-label="Chapters">
+      {prev ? <a href={url(routes.chapter(prev))}><span>Previous chapter</span><b>{prev.number}. {prev.title}</b></a> : <span />}
+      {next && <a class="nx" href={url(routes.chapter(next))}><span>Next chapter</span><b>{next.number}. {next.title}</b></a>}
+    </nav>
+  </div>
+  <script>import '../../../lib/path-progress';</script>
+</Base>
+<style>
+  .chapter { padding-block: 36px 16px; }
+  .kicker { margin: 0 0 6px; font-size: var(--fs-sm); font-weight: 700; }
+  .kicker a { color: var(--accent-strong); text-decoration: none; }
+  h1 { display: grid; gap: 2px; max-width: 24ch; }
+  h1 .no { font-size: var(--fs-md); color: var(--muted); font-weight: 600; letter-spacing: 0; }
+  .facts { color: var(--muted); margin: 10px 0 18px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 40px; margin-top: 36px; align-items: start; }
+  .side { display: grid; gap: 16px; position: sticky; top: calc(var(--header-h) + 16px); }
+  .side h2 { font-size: var(--fs-md); margin-bottom: 8px; display: flex; justify-content: space-between; gap: 8px; }
+  .prog { font-size: var(--fs-sm); color: var(--accent-strong); }
+  .ls, .labs { list-style: none; margin: 0; padding: 0; }
+  .ls li { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; border-top: 1px solid var(--line); font-size: var(--fs-sm); }
+  .ls li:first-child { border-top: 0; }
+  .ls a { display: flex; gap: 10px; color: var(--text); text-decoration: none; }
+  .ls a:hover { color: var(--ink); }
+  .ls .num { min-width: 2.6em; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .ls li[data-state="done"] .num::after { content: " ✓"; color: var(--ok); }
+  .min { color: var(--muted); font-size: var(--fs-xs); white-space: nowrap; }
+  .labs li { padding: 4px 0; font-size: var(--fs-sm); }
+  .summary { max-width: 820px; margin-top: 24px; }
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
+  .pager a { display: grid; gap: 2px; padding: 14px 18px; border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface); text-decoration: none; color: var(--text); }
+  .pager span { font-size: var(--fs-sm); color: var(--muted); }
+  .pager b { color: var(--ink); }
+  .pager .nx { text-align: right; }
+  @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } .side { position: static; } }
+  @media (max-width: 600px) { .pager { grid-template-columns: 1fr; } .pager .nx { text-align: left; } }
+</style>

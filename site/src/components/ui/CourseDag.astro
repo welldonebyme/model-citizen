@@ -1,0 +1,76 @@
+---
+// The course drawn as a DAG of its parts: each part depends on the ones before it, like models in a project.
+// Progress is filled in on the client (data-part-node, --p) by lib/path-progress.ts.
+import { parts, partName, routes } from '../../lib/content';
+import { url } from '../../lib/url';
+
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+
+const SHORT: Record<number, string> = { 0: 'Start here', 1: 'Foundations', 2: 'Building with dbt', 3: 'Governance', 4: 'Testing', 5: 'Docs, freshness', 6: 'Debugging', 7: 'State and CI', 8: 'Capstone', 9: 'Exam mastery' };
+// Column layout: 0 → I → II → (III, IV, V in parallel) → VI → VII → VIII → IX
+const COL: Record<number, [number, number]> = { 0: [0, 1], 1: [1, 1], 2: [2, 1], 3: [3, 0], 4: [3, 1], 5: [3, 2], 6: [4, 1], 7: [5, 1], 8: [6, 1], 9: [7, 1] };
+const W = 132, H = 58, GX = 34, ROWH = 72, PAD = 6;
+const x = (c: number) => PAD + c * (W + GX);
+const y = (r: number) => PAD + r * ROWH;
+const present = parts.filter((p) => p.part in COL);
+const has = (n: number) => present.some((p) => p.part === n);
+const EDGES: [number, number][] = [[0, 1], [1, 2], [2, 3], [2, 4], [2, 5], [3, 6], [4, 6], [5, 6], [6, 7], [7, 8], [8, 9]];
+const edges = EDGES.filter(([a, b]) => has(a) && has(b)).map(([a, b]) => {
+  const [ca, ra] = COL[a], [cb, rb] = COL[b];
+  const x1 = x(ca) + W, y1 = y(ra) + H / 2, x2 = x(cb), y2 = y(rb) + H / 2, mx = (x1 + x2) / 2;
+  return { a, b, d: `M${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}` };
+});
+const width = PAD * 2 + 8 * W + 7 * GX;
+const height = PAD * 2 + 2 * ROWH + H;
+const firstChapter = (n: number) => present.find((p) => p.part === n)?.chapters[0];
+---
+<div class:list={['dag', { compact }]}>
+  <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Course map: Part 0 to Part IX. Each part depends on the ones before it.">
+    {edges.map((e) => <path class="edge" d={e.d} data-edge-from={e.a} data-edge-to={e.b} />)}
+    {present.map((p) => {
+      const [c, r] = COL[p.part];
+      const ch = firstChapter(p.part);
+      const lessonsCount = p.chapters.reduce((n, c2) => n + c2.lessons.length, 0);
+      return (
+        <a href={ch ? url(routes.chapter(ch)) : '#'} class="node-link" aria-label={`${partName(p.part)}: ${p.title}`}>
+          <g class="node" transform={`translate(${x(c)},${y(r)})`} data-part-node={p.part} data-lessons={lessonsCount}>
+            <rect class="box" width={W} height={H} rx="12" />
+            <text class="k" x="13" y="20">{partName(p.part)}</text>
+            <text class="t" x="13" y="38">{SHORT[p.part] ?? p.title}</text>
+            <rect class="bar-bg" x="13" y="46" width={W - 26} height="4" rx="2" />
+            <rect class="bar" x="13" y="46" width="0" height="4" rx="2" data-bar-w={W - 26} />
+            {p.part !== 0 && <circle class="port" cx="0" cy={H / 2} r="4" />}
+            {p.part !== 9 && <circle class="port" cx={W} cy={H / 2} r="4" />}
+          </g>
+        </a>
+      );
+    })}
+  </svg>
+</div>
+
+<style>
+  .dag { overflow-x: auto; }
+  svg { display: block; width: 100%; min-width: 960px; height: auto; }
+  .compact svg { min-width: 900px; }
+  .edge { fill: none; stroke: var(--line-strong); stroke-width: 2; }
+  .edge[data-done] { stroke: var(--ink); }
+  .node .box { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1.5; transition: fill .2s; }
+  .node text { fill: var(--ink); font-family: var(--sans); }
+  .node .k { font-size: 12px; font-weight: 500; opacity: .78; }
+  .node .t { font-size: 14.5px; font-weight: 700; }
+  .node .bar-bg { fill: var(--line); }
+  .node .bar { fill: var(--accent); }
+  .node .port { fill: var(--surface); stroke: var(--line-strong); stroke-width: 1.5; }
+  .node[data-state="done"] .box { fill: var(--ink); stroke: var(--ink); }
+  .node[data-state="done"] text { fill: var(--surface); }
+  .node[data-state="done"] .bar-bg { fill: color-mix(in srgb, var(--surface) 30%, transparent); }
+  .node[data-state="done"] .bar { fill: var(--surface); }
+  .node[data-state="now"] .box { fill: var(--accent); stroke: var(--accent); }
+  .node[data-state="now"] text { fill: var(--on-accent); }
+  .node[data-state="now"] .bar-bg { fill: color-mix(in srgb, var(--on-accent) 30%, transparent); }
+  .node[data-state="now"] .bar { fill: var(--on-accent); }
+  .node-link:focus-visible { outline: none; }
+  .node-link:focus-visible .box { stroke: var(--focus); stroke-width: 3; }
+  .node-link:hover .box { stroke: var(--ink); }
+</style>

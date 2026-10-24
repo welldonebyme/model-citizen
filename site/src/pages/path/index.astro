@@ -1,0 +1,85 @@
+---
+import Base from '../../layouts/Base.astro';
+import CourseDag from '../../components/ui/CourseDag.astro';
+import { Inline } from '../../components/content/Inline';
+import { parts, partName, routes, lessons } from '../../lib/content';
+import { url } from '../../lib/url';
+const totalLessons = lessons.length;
+const totalChapters = parts.reduce((n, p) => n + p.chapters.length, 0);
+const hours = Math.round(lessons.reduce((m, l) => m + l.lesson.minutes, 0) / 60);
+---
+<Base title="Your path" section="path">
+  <div class="wrap path">
+    <header class="head">
+      <h1>Your path</h1>
+      <p>{parts.length} parts, {totalChapters} chapters, {totalLessons} lessons, about {hours} hours of reading plus the labs. Nothing is locked: follow the order, or jump to what you need.</p>
+    </header>
+    <section class="panel map" aria-label="Course map"><CourseDag /></section>
+    {parts.map((p) => (
+      <section class="part" aria-labelledby={`part-${p.part}`} data-part-lessons={p.part} data-lessons={p.chapters.flatMap((c) => c.lessons.map((l) => l.id)).join(',')}>
+        <h2 id={`part-${p.part}`}><span class="pn">{partName(p.part)}</span>{p.title}</h2>
+        <ol class="chapters">
+          {p.chapters.map((c) => (
+            <li class="ch" data-chapter-progress={c.id} data-lessons={c.lessons.map((l) => l.id).join(',')}>
+              <span class="ring" aria-hidden="true"><span>{c.number}</span></span>
+              <div class="ch-main">
+                <a class="ch-title" href={url(routes.chapter(c))}>{c.title}</a>
+                <p class="meta">
+                  <span>{c.lessons.length} lessons</span>
+                  <span>about {Math.max(5, Math.round(c.minutes / 5) * 5)} min</span>
+                  {c.lessons.some((l) => l.labs.length) && <span class="pill pill-lab">{c.lessons.reduce((n, l) => n + l.labs.length, 0)} labs</span>}
+                  {c.quiz.length > 0 && <a class="pill pill-quiz" href={url(routes.quiz(c))}>{c.quiz.length} questions</a>}
+                  <span class="prog" data-progress-label></span>
+                </p>
+                <details class="lessons">
+                  <summary>Lessons</summary>
+                  <ol>
+                    {c.lessons.map((l) => (
+                      <li data-lesson-row={l.id}>
+                        <a href={url(routes.lesson(l, c.id))}><span class="num">{l.number}</span> <Inline c={l.title} /></a>
+                        <span class="min">{l.minutes} min{l.labs.length > 0 && ', lab'}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </details>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))}
+  </div>
+  <script>import '../../lib/path-progress';</script>
+</Base>
+<style>
+  .path { padding-block: 40px 24px; }
+  .head h1 { margin-bottom: 8px; }
+  .head p { color: var(--muted); font-size: var(--fs-lg); max-width: 70ch; }
+  .map { margin: 24px 0 40px; padding: 18px; }
+  .part { margin: 0 0 40px; }
+  .part h2 { display: flex; align-items: baseline; gap: 12px; font-size: var(--fs-xl); margin-bottom: 14px; }
+  .pn { font-size: var(--fs-sm); font-weight: 700; color: var(--accent-strong); }
+  .chapters { list-style: none; margin: 0; padding: 0; position: relative; display: grid; gap: 4px; }
+  .chapters::before { content: ""; position: absolute; left: 25px; top: 26px; bottom: 26px; width: 2px; background: var(--line); }
+  .ch { position: relative; display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 16px; padding: 10px 0; }
+  .ring { --p: 0; position: relative; z-index: 1; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: conic-gradient(var(--accent) calc(var(--p) * 1%), var(--line) 0); }
+  .ring span { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: var(--surface); color: var(--ink); font-weight: 800; font-size: var(--fs-md); }
+  .ch[data-state="done"] .ring { background: var(--ink); }
+  .ch[data-state="done"] .ring span { background: var(--ink); color: var(--surface); }
+  .ch[data-state="now"] .ring span { box-shadow: inset 0 0 0 2px var(--accent); }
+  .ch-title { font-size: var(--fs-lg); font-weight: 700; color: var(--ink); text-decoration: none; }
+  .ch-title:hover { text-decoration: underline; }
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 4px 0 6px; color: var(--muted); font-size: var(--fs-sm); }
+  .meta a.pill { text-decoration: none; }
+  .prog { color: var(--accent-strong); font-weight: 700; }
+  .lessons summary { cursor: pointer; color: var(--muted); font-size: var(--fs-sm); font-weight: 600; width: max-content; }
+  .lessons ol { list-style: none; margin: 8px 0 0; padding: 0; border-left: 2px solid var(--line); }
+  .lessons li { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0 5px 14px; font-size: var(--fs-md); }
+  .lessons li a { color: var(--text); text-decoration: none; }
+  .lessons li a:hover { color: var(--ink); text-decoration: underline; }
+  .lessons li[data-state="done"] a { color: var(--muted); }
+  .lessons li[data-state="done"] a::after { content: "  ✓"; color: var(--ok); font-weight: 700; }
+  .lessons li[data-current] { border-left: 2px solid var(--accent); margin-left: -2px; }
+  .lessons .num { font-variant-numeric: tabular-nums; color: var(--muted); }
+  .lessons .min { color: var(--muted); font-size: var(--fs-sm); white-space: nowrap; }
+</style>

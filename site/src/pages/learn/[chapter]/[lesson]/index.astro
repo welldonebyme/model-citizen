@@ -53,7 +53,7 @@ const isLast = !next || next.chapter.id !== chapter.id;
 
     <article class="read">
       <header class="lesson-head">
-        <p class="kicker">Lesson {lesson.number} <span class="sep" aria-hidden="true"></span> about {lesson.minutes} minutes</p>
+        <p class="kicker">Lesson {lesson.number}, about {lesson.minutes} minutes</p>
         <h1><Inline c={lesson.title} /></h1>
         {lesson.objectives.length > 0 && (
           <p class="objs"><span class="visually-hidden">Exam objectives:</span>{lesson.objectives.map((o) => <Inline c={[{ t: 'obj', id: o }]} />)}</p>
@@ -122,7 +122,6 @@ const isLast = !next || next.chapter.id !== chapter.id;
   .read { min-width: 0; padding: 36px 48px 64px; }
   .lesson-head { max-width: var(--measure); margin-bottom: 8px; }
   .kicker { color: var(--muted); font-size: var(--fs-md); margin: 0 0 6px; display: flex; align-items: center; gap: 10px; }
-  .sep { width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong); }
   .lesson-head h1 { font-size: var(--fs-3xl); }
   .objs { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 0; }
 

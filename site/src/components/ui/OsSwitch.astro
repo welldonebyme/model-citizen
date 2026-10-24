@@ -1,0 +1,10 @@
+---
+// The learner's computer: swaps terminal commands (macOS/Linux, Windows PowerShell, WSL). Remembered per browser.
+interface Props { label?: string }
+const { label = 'Your computer' } = Astro.props;
+---
+<div class="seg os-switch" data-os-switch role="group" aria-label={label}>
+  <button type="button" data-os-value="mac" aria-pressed="true">macOS</button>
+  <button type="button" data-os-value="win" aria-pressed="false">Windows</button>
+  <button type="button" data-os-value="wsl" aria-pressed="false">WSL</button>
+</div>
